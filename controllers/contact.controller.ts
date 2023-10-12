@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
-import { IContactBody } from "../types"
 import { Contact } from "../models/contact/contact.model"
 import isMongoId from "validator/lib/isMongoId"
 import { ContactReport } from "../models/contact/contact.report.model"
 import xlsx from "xlsx"
+import { IContactBody } from "../types/contact.types"
 
 export const CreateContact = async (req: Request, res: Response, next: NextFunction) => {
     const { mobile, name } = req.body as IContactBody

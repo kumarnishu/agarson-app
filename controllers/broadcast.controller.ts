@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express"
-import { IBroadcastBody, IMessage, IMessageTemplate } from "../types"
 import { MessageTemplate } from "../models/watemplates/watemplate.model"
 import isMongoId from "validator/lib/isMongoId"
 import { BroadCastWithTemplates, BroadCastWithMessage, timeouts } from "../utils/HandleBroadcast"
@@ -16,6 +15,8 @@ import { isvalidDate } from "../utils/isValidDate"
 import { GetDailyCronString } from "../utils/GetDailyCronString"
 import cron from "cron"
 import { BroadcastManager } from "../app"
+import { IBroadcastBody } from "../types/broadcast.types"
+import { IMessage, IMessageTemplate } from "../types/template.types"
 
 export const CreateBroadcastByTemplate = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)

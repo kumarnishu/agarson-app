@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
 import isMongoId from "validator/lib/isMongoId"
-import { IMessageTemplateBody } from "../types"
 import { MessageTemplate } from "../models/watemplates/watemplate.model"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { destroyFile } from "../utils/destroyFile.util"
+import { IMessageTemplateBody } from "../types/template.types"
 
 
 export const CreateMessagetemplate = async (req: Request, res: Response, next: NextFunction) => {

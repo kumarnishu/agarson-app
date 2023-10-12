@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { IMenuTracker, TFlowBody, TrackerBody } from "../types"
 import { Flow } from "../models/bot/Flow";
 import { MenuTracker } from "../models/bot/MenuTracker";
 import { KeywordTracker } from "../models/bot/KeywordTracker";
 import { User } from "../models/users/user.model";
-import { IUser } from "../types"
 import isMongoId from "validator/lib/isMongoId";
+import { IUser } from "../types/user.types";
+import { IMenuTracker, TFlowBody, TrackerBody } from "../types/bot.types";
 
 export const CreateFlow = async (req: Request, res: Response, next: NextFunction) => {
     const { flow_name, nodes, edges, trigger_keywords } = req.body as TFlowBody

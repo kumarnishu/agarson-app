@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
-import { IAlps, IAlpsBody } from "../types"
 import { Alps } from "../models/alps/alps.model"
 import isMongoId from "validator/lib/isMongoId"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { destroyFile } from "../utils/destroyFile.util"
+import { IAlps, IAlpsBody } from "../types/alps.types"
 
 export const CreateAlpsRecord = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)

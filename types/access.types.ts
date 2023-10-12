@@ -5,3 +5,5 @@ export type AccessType = {
     is_hidden: boolean,
     is_deletion_allowed: boolean
 }
+
+export const Features = ["users", "crm", "contacts", "reminders", "templates", "alps", "broadcast", "backup", "bot"]

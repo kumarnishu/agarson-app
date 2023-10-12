@@ -3,11 +3,12 @@ import isEmail from "validator/lib/isEmail";
 import { uploadFileToCloud } from '../utils/uploadFile.util';
 import { deleteToken, sendUserToken } from '../middlewares/auth.middleware';
 import { User } from '../models/users/user.model';
-import { BotField, BroadcastField, ContactField, GlobalFeatureField, LeadField, ReminderField, TemplateField, all_Bot_fields, all_broadcast_fields, all_contact_fields, all_global_fields, all_lead_fields, all_reminder_fields, all_template_fields } from "../types/access.types"
-import { Asset, TUserBody, } from "../types"
 import isMongoId from "validator/lib/isMongoId";
 import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
+import { TUserBody } from '../types/user.types';
+import { Asset } from '../types/asset.types';
+import { AccessType, Features } from '../types/access.types';
 
 
 // Create Owner account
@@ -43,63 +44,17 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-    let LeadFields: LeadField[] = []
-    all_lead_fields.map((field) => {
-        LeadFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let BotFields: BotField[] = []
-    all_Bot_fields.map((field) => {
-        BotFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let TemplateFields: TemplateField[] = []
-    all_template_fields.map((field) => {
-        TemplateFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let ContactFields: ContactField[] = []
-    all_contact_fields.map((field) => {
-        ContactFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let BroadcastFields: BroadcastField[] = []
-    all_broadcast_fields.map((field) => {
-        BroadcastFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let GlobalFeatureFields: GlobalFeatureField[] = []
-    all_global_fields.map((field) => {
-        GlobalFeatureFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let ReminderFields: ReminderField[] = []
-    all_reminder_fields.map((field) => {
-        ReminderFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
+    let accessFields: AccessType[] = []
 
+    Features.map((feature) => {
+        accessFields.push({
+            feature: feature,
+            is_readonly: false,
+            is_hidden: false,
+            is_editable: true,
+            is_deletion_allowed: true
+        })
+    })
     let owner = new User({
         username,
         password,
@@ -111,14 +66,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         client_data_path: username.replace(" ", "") + `${Number(new Date())}`
 
     })
-    owner.lead_fields = LeadFields
-    owner.bot_fields = BotFields
-    owner.global_fields = GlobalFeatureFields
-    owner.reminder_fields = ReminderFields
-    owner.contact_fields = ContactFields
-    owner.broadcast_fields = BroadcastFields
-    owner.template_fields = TemplateFields
-    owner.created_by = owner
+    owner.access_fields = accessFields
     owner.created_by_username = owner.username
     owner.updated_by = owner
     owner.updated_by_username = owner.username
@@ -158,60 +106,15 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         }
     }
 
-    let LeadFields: LeadField[] = []
-    all_lead_fields.map((field) => {
-        LeadFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let BotFields: BotField[] = []
-    all_Bot_fields.map((field) => {
-        BotFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let TemplateFields: TemplateField[] = []
-    all_template_fields.map((field) => {
-        TemplateFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let ContactFields: ContactField[] = []
-    all_contact_fields.map((field) => {
-        ContactFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let BroadcastFields: BroadcastField[] = []
-    all_broadcast_fields.map((field) => {
-        BroadcastFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let GlobalFeatureFields: GlobalFeatureField[] = []
-    all_global_fields.map((field) => {
-        GlobalFeatureFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let ReminderFields: ReminderField[] = []
-    all_reminder_fields.map((field) => {
-        ReminderFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
+    let accessFields: AccessType[] = []
+
+    Features.map((feature) => {
+        accessFields.push({
+            feature: feature,
+            is_readonly: true,
+            is_hidden: false,
+            is_editable: false,
+            is_deletion_allowed: false
         })
     })
     let user = new User({
@@ -231,13 +134,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         user.created_by_username = req.user.username
         user.updated_by_username = req.user.username
     }
-    user.lead_fields = LeadFields
-    user.bot_fields = BotFields
-    user.global_fields = GlobalFeatureFields
-    user.reminder_fields = ReminderFields
-    user.contact_fields = ContactFields
-    user.broadcast_fields = BroadcastFields
-    user.template_fields = TemplateFields
+    user.access_fields = accessFields
     await user.save()
     user = await User.findById(user._id).populate("created_by").populate("updated_by") || user
     res.status(201).json(user)
@@ -283,9 +180,9 @@ export const Logout = async (req: Request, res: Response, next: NextFunction) =>
 }
 
 // update user lead fields and its roles
-export const UpdateCrmFieldRoles = async (req: Request, res: Response, next: NextFunction) => {
-    const { lead_fields } = req.body as TUserBody
-    if (lead_fields.length === 0)
+export const UpdateAccessFields = async (req: Request, res: Response, next: NextFunction) => {
+    const { access_fields } = req.body as TUserBody
+    if (access_fields.length === 0)
         return res.status(400).json({ message: "please fill all required fields" })
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
@@ -294,102 +191,11 @@ export const UpdateCrmFieldRoles = async (req: Request, res: Response, next: Nex
         return res.status(404).json({ message: "user not found" })
     }
     await User.findByIdAndUpdate(user._id, {
-        lead_fields
+        access_fields
     })
     res.status(200).json({ message: " updated" })
 }
 
-export const UpdateBotFieldRoles = async (req: Request, res: Response, next: NextFunction) => {
-    const { bot_fields } = req.body as TUserBody
-    if (bot_fields.length === 0)
-        return res.status(400).json({ message: "please fill all required fields" })
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id);
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    await User.findByIdAndUpdate(user._id, {
-        bot_fields
-    })
-    res.status(200).json({ message: " updated" })
-}
-export const UpdateTemplateFieldRoles = async (req: Request, res: Response, next: NextFunction) => {
-    const { template_fields } = req.body as TUserBody
-    if (template_fields.length === 0)
-        return res.status(400).json({ message: "please fill all required fields" })
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id);
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    await User.findByIdAndUpdate(user._id, {
-        template_fields
-    })
-    res.status(200).json({ message: " updated" })
-}
-
-export const UpdateContactFieldRoles = async (req: Request, res: Response, next: NextFunction) => {
-    const { contact_fields } = req.body as TUserBody
-    if (contact_fields.length === 0)
-        return res.status(400).json({ message: "please fill all required fields" })
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id);
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    await User.findByIdAndUpdate(user._id, {
-        contact_fields
-    })
-    res.status(200).json({ message: " updated" })
-}
-export const UpdateGlobalFieldRoles = async (req: Request, res: Response, next: NextFunction) => {
-    const { global_fields } = req.body as TUserBody
-    if (global_fields.length === 0)
-        return res.status(400).json({ message: "please fill all required fields" })
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id);
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    await User.findByIdAndUpdate(user._id, {
-        global_fields
-    })
-    res.status(200).json({ message: " updated" })
-}
-export const UpdateReminderFieldRoles = async (req: Request, res: Response, next: NextFunction) => {
-    const { reminder_fields } = req.body as TUserBody
-    if (reminder_fields.length === 0)
-        return res.status(400).json({ message: "please fill all required fields" })
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id);
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    await User.findByIdAndUpdate(user._id, {
-        reminder_fields
-    })
-    res.status(200).json({ message: " updated" })
-}
-export const UpdateBroadcastFieldRoles = async (req: Request, res: Response, next: NextFunction) => {
-    const { broadcast_fields } = req.body as TUserBody
-    if (broadcast_fields.length === 0)
-        return res.status(400).json({ message: "please fill all required fields" })
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id);
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    await User.findByIdAndUpdate(user._id, {
-        broadcast_fields
-    })
-    res.status(200).json({ message: " updated" })
-}
 
 // update user only admin can do
 export const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -791,73 +597,22 @@ export const testRoute = async (req: Request, res: Response, next: NextFunction)
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
     let user = await User.findById(id);
 
-    let LeadFields: LeadField[] = []
-    all_lead_fields.map((field) => {
-        LeadFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let BotFields: BotField[] = []
-    all_Bot_fields.map((field) => {
-        BotFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let TemplateFields: TemplateField[] = []
-    all_template_fields.map((field) => {
-        TemplateFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let ContactFields: ContactField[] = []
-    all_contact_fields.map((field) => {
-        ContactFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let BroadcastFields: BroadcastField[] = []
-    all_broadcast_fields.map((field) => {
-        BroadcastFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let GlobalFeatureFields: GlobalFeatureField[] = []
-    all_global_fields.map((field) => {
-        GlobalFeatureFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
-        })
-    })
-    let ReminderFields: ReminderField[] = []
-    all_reminder_fields.map((field) => {
-        ReminderFields.push({
-            field: field,
-            readonly: true,
-            hidden: false
+    let accessFields: AccessType[] = []
+
+    Features.map((feature) => {
+        accessFields.push({
+            feature: feature,
+            is_readonly: true,
+            is_hidden: true,
+            is_editable: false,
+            is_deletion_allowed: false
         })
     })
 
     if (!user) {
         return res.status(404).json({ message: "user not found" })
     }
-    user.lead_fields = LeadFields
-    user.bot_fields = BotFields
-    user.global_fields = GlobalFeatureFields
-    user.reminder_fields = ReminderFields
-    user.contact_fields = ContactFields
-    user.broadcast_fields = BroadcastFields
-    user.template_fields = TemplateFields
+    user.access_fields = accessFields
     await user.save()
     res.status(200).json({ message: "user bot fields roles updated" })
 }

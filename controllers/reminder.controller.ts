@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express"
-import { IMessage, IMessageTemplate, IReminderBody } from "../types"
 import { MessageTemplate } from "../models/watemplates/watemplate.model"
 import isMongoId from "validator/lib/isMongoId"
 import { User } from "../models/users/user.model"
@@ -17,6 +16,8 @@ import { ReminderWithMessage, ReminderWithTemplates, reminder_timeouts } from ".
 import { GetRunningCronString } from "../utils/GetRunningCronString"
 import { GetRefreshCronString } from "../utils/GetRefreshCronString"
 import { Contact } from "../models/contact/contact.model"
+import { IReminderBody } from "../types/reminder.types"
+import { IMessage, IMessageTemplate } from "../types/template.types"
 
 export const CreateReminderByTemplate = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
