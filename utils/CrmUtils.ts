@@ -1,4 +1,4 @@
-import { ILead, ILeadTemplate } from "../types"
+import { ILead, ILeadTemplate } from "../types/crm.types"
 import { ExportToExcel } from "./ExportToExcel"
 
 export function ExportLeads(leads: ILead[]) {

@@ -3,7 +3,7 @@ import RefreshWhatsappDialog from '../dialogs/bot/RefreshWhatsappDialog'
 import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
 import { Button } from '@mui/material'
-import { useBotFields } from '../hooks/BotFieldsHooks'
+import { useBotFields } from '../hooks/UserAccessFieldsHooks'
 
 function RefreshWhatsappButton() {
     const { setChoice } = useContext(ChoiceContext)

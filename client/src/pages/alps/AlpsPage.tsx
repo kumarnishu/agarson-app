@@ -8,11 +8,11 @@ import { FuzzySearchAlps, GetAlps } from '../../services/AlpsServices'
 import DBPagination from '../../components/pagination/DBpagination';
 import AlpsTable from '../../components/tables/AlpsTable';
 import ReactPagination from '../../components/pagination/ReactPagination'
-import { IAlps } from '../../types'
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
+import { IAlps } from '../../types/alps.types'
 
 type SelectedData = {
   serial_number: number,

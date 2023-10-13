@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IMenuTracker } from "../../types"
+import { IMenuTracker } from "../../types/bot.types"
 const MenuTrackerSchema = new mongoose.Schema<IMenuTracker, mongoose.Model<IMenuTracker, {}, {}>, {}>({
 
     customer_name: {

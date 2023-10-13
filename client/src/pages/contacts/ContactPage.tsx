@@ -4,7 +4,6 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { IContact } from '../../types'
 import { BackendError } from '../..'
 import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
@@ -18,6 +17,7 @@ import NewContactDialog from '../../components/dialogs/contacts/NewContactDialog
 import ContactsTable from '../../components/tables/ContactTable'
 import UploadContactsFromExcelButton from '../../components/buttons/UploadContactsFromExcelButton'
 import { UserContext } from '../../contexts/userContext'
+import { IContact } from '../../types/contact.types'
 
 
 type SelectedData = {

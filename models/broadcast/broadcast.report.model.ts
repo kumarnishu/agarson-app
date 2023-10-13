@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IBroadcastReport } from "../../types"
+import { IBroadcastReport } from "../../types/broadcast.types"
 
 const BroadcastSchema = new mongoose.Schema<IBroadcastReport, mongoose.Model<IBroadcastReport, {}, {}>, {}>({
     mobile: { type: String, required: true },

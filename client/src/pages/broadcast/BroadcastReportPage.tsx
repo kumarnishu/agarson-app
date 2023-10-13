@@ -2,7 +2,6 @@ import { Search } from '@mui/icons-material'
 import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem,  TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import React, { useEffect, useState } from 'react'
-import { IBroadcast, IBroadcastReport } from '../../types'
 import BroadcastsReportsTable from '../../components/tables/BroadcastsReportsTable'
 import { useQuery } from 'react-query'
 import { AxiosResponse } from 'axios'
@@ -12,6 +11,7 @@ import DBPagination from '../../components/pagination/DBpagination'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import FileSaver from 'file-saver'
 import AlertBar from '../../components/snacks/AlertBar'
+import { IBroadcast, IBroadcastReport } from '../../types/broadcast.types'
 
 
 export default function BroadcastReportPage({ broadcast }: { broadcast: IBroadcast }) {

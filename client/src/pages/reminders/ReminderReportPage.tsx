@@ -11,7 +11,8 @@ import FileSaver from 'file-saver'
 import AlertBar from '../../components/snacks/AlertBar'
 import { GetReminderPaginatedReports, GetReminderReportsByMobile } from '../../services/ReminderServices'
 import { BackendError } from '../..'
-import { IContactReport, IReminder } from '../../types'
+import { IContactReport } from '../../types/contact.types'
+import { IReminder } from '../../types/reminder.types'
 
 
 export default function ReminderReportPage({ reminder }: { reminder: IReminder }) {

@@ -11,7 +11,6 @@ import { BroadcastReport } from "../models/broadcast/broadcast.report.model";
 import { BroadCastWithMessage, BroadCastWithTemplates } from "./HandleBroadcast";
 import { Broadcast } from "../models/broadcast/broadcast.model";
 import { ReminderWithMessage, ReminderWithTemplates } from "./HandleReminder";
-import { GetDailyCronString } from "./GetDailyCronString";
 import { Reminder } from "../models/reminder/reminder.model";
 import { ContactReport } from "../models/contact/contact.report.model";
 import { Contact } from "../models/contact/contact.model";

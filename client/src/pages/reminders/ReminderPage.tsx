@@ -7,7 +7,6 @@ import { useQuery } from 'react-query'
 import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
 import { BackendError } from '../..'
-import { IReminder } from '../../types'
 import RemindersTable from '../../components/tables/ReminderTable'
 import { ReminderChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
@@ -17,6 +16,7 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import ReactPagination from '../../components/pagination/ReactPagination'
 import AlertBar from '../../components/snacks/AlertBar'
 import { GetReminders } from '../../services/ReminderServices'
+import { IReminder } from '../../types/reminder.types'
 
 type SelectedData = {
   name?: string,

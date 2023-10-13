@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IAlps } from "../../types"
+import { IAlps } from "../../types/alps.types"
 
 
 const AlpsSchema = new mongoose.Schema<IAlps, mongoose.Model<IAlps, {}, {}>, {}>({

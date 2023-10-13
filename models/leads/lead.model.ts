@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { ILead } from "../../types"
+import { ILead } from "../../types/crm.types";
+
 const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
     name: {
         type: String,

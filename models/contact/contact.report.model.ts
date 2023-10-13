@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IContactReport } from "../../types"
+import { IContactReport } from "../../types/contact.types"
 
 const ContactReportSchema = new mongoose.Schema<IContactReport, mongoose.Model<IContactReport, {}, {}>, {}>({
     whatsapp_status: { type: String },

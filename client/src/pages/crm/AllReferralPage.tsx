@@ -1,9 +1,8 @@
-import { ILead } from '../../types'
 import { Box, Button, Paper,  Stack, Typography } from "@mui/material"
 import ExportToExcel from "../../utils/ExportToExcel"
 import { useEffect, useState } from "react"
-import { ILeadTemplate } from "../../types"
 import AlertBar from '../../components/snacks/AlertBar'
+import { ILead, ILeadTemplate } from "../../types/crm.types"
 
 function AllReferralPage({ leads }: { leads: ILead[] }) {
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>([])

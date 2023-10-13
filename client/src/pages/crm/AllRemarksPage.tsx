@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { Stack, Typography, Paper } from "@mui/material";
-import { ILead } from "../../types";
+import { ILead } from "../../types/crm.types";
 
 const MainContainer = styled.div`
 

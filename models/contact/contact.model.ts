@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IContact } from "../../types"
+import { IContact } from "../../types/contact.types"
 
 const ContactSchema = new mongoose.Schema<IContact, mongoose.Model<IContact, {}, {}>, {}>({
     name: {

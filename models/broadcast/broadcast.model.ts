@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IBroadcast } from "../../types"
+import { IBroadcast } from "../../types/broadcast.types"
 
 const BroadcastSchema = new mongoose.Schema<IBroadcast, mongoose.Model<IBroadcast, {}, {}>, {}>({
     name: {

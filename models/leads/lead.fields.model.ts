@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
-import { ILeadUpdatableField } from "../../types"
+import { ILeadUpdatableField } from "../../types/crm.types"
+
 const LeadUpdatableFieldSchema = new mongoose.Schema<ILeadUpdatableField, mongoose.Model<ILeadUpdatableField, {}, {}>, {}>({
     stages: [{
         type: String,

@@ -1,4 +1,4 @@
-import { AccessType } from "./access.types"
+import { BackupAccess, BotAccess, BroadcastAccess, ContactsAccess, CrmAccess, RemindersAccess, TemplatesAccess, UserAccess } from "./access.types"
 import { Asset } from "./asset.types"
 
 export type IUser = {
@@ -16,8 +16,14 @@ export type IUser = {
     is_whatsapp_active: Boolean,
     //auth properties
     is_admin: Boolean,
-    access_fields: AccessType[],
-   
+    user_access_fields: UserAccess,
+    crm_access_fields: CrmAccess,
+    contacts_access_fields: ContactsAccess,
+    templates_access_fields: TemplatesAccess,
+    bot_access_fields: BotAccess,
+    broadcast_access_fields: BroadcastAccess,
+    backup_access_fields: BackupAccess,
+    reminders_access_fields: RemindersAccess,
     email_verified: Boolean,
     is_active: Boolean,
     last_login: Date,
@@ -34,10 +40,3 @@ export type IUser = {
     emailVerifyToken: string | null,
     emailVerifyExpire: Date | null
 }
-export type IUserMethods = {
-    getAccessToken: () => string,
-    comparePassword: (password: string) => boolean,
-    getResetPasswordToken: () => string,
-    getEmailVerifyToken: () => string
-}
-export type TUserBody = Request['body'] & IUser;

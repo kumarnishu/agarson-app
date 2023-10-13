@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IFlow } from "../../types"
+import { IFlow } from "../../types/bot.types"
 
 const FlowSchema = new mongoose.Schema<IFlow, mongoose.Model<IFlow, {}, {}>, {}>({
     flow_name: {

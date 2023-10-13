@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IKeywordTracker } from "../../types"
+import { IKeywordTracker } from "../../types/bot.types"
 const KeywordTrackerSchema = new mongoose.Schema<IKeywordTracker, mongoose.Model<IKeywordTracker, {}, {}>, {}>({
     phone_number: {
         type: String,

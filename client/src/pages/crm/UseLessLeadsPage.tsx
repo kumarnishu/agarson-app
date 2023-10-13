@@ -9,7 +9,6 @@ import { UserContext } from '../../contexts/userContext'
 import DBPagination from '../../components/pagination/DBpagination';
 import LeadsTable from '../../components/tables/LeadsTable';
 import ReactPagination from '../../components/pagination/ReactPagination'
-import { ILead, ILeadTemplate, IUser } from '../../types'
 import { BackendError } from '../..'
 import { GetUsers } from '../../services/UserServices'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
@@ -18,7 +17,8 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
-import { useCrmFields } from '../../components/hooks/CrmFieldsHook'
+import { ILead, ILeadTemplate } from '../../types/crm.types'
+import { IUser } from '../../types/user.types'
 
 let template: ILeadTemplate[] = [
   {
@@ -82,7 +82,6 @@ export default function UseLessLeadsPage() {
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
-  const { hiddenFields, readonlyFields } = useCrmFields()
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   function handleExcel() {
@@ -283,20 +282,16 @@ export default function UseLessLeadsPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {!hiddenFields?.includes('New Lead') &&
                 <MenuItem
                   onClick={() => {
                     setChoice({ type: LeadChoiceActions.create_lead })
                     setAnchorEl(null)
                   }}
-                  disabled={readonlyFields?.includes('New Lead')}
-                > Add New</MenuItem>}
+                > Add New</MenuItem>
 
-              {!hiddenFields?.includes('Export To Excel') &&
                 < MenuItem onClick={handleExcel}
-                  disabled={readonlyFields?.includes('Export To Excel')}
                 >Export To Excel</MenuItem>
-              }
+              
             </Menu >
             <NewLeadDialog />
           </>

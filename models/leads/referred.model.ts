@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IReferredParty } from "../../types"
+import { IReferredParty } from "../../types/crm.types"
 
 const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<IReferredParty, {}, {}>, {}>({
     name: {

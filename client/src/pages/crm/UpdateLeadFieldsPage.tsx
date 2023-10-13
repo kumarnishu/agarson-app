@@ -4,9 +4,9 @@ import { useMutation, useQuery } from 'react-query'
 import { useEffect, useState } from 'react'
 import { Button, Grid,  Stack, TextField, Typography } from '@mui/material'
 import { Delete } from '@mui/icons-material'
-import { ILeadUpdatableField } from '../../types'
 import { BackendError } from '../..'
 import AlertBar from '../../components/snacks/AlertBar'
+import { ILeadUpdatableField } from '../../types/crm.types'
 
 
 function UpdateLeadFieldsPage() {

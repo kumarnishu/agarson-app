@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 
-import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateBotFieldRoles, UpdateBroadcastFieldRoles, UpdateContactFieldRoles, UpdateCrmFieldRoles, UpdateGlobalFieldRoles, UpdateProfile, UpdateReminderFieldRoles, UpdateTemplateFieldRoles, UpdateUser, VerifyEmail, testRoute, updatePassword, updateUserPassword } from "../controllers/user.controller";
+import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateAccessFields, UpdateProfile, UpdateUser, VerifyEmail, testRoute, updatePassword, updateUserPassword } from "../controllers/user.controller";
 import { isOwner, isAuthenticatedUser, isProfileAuthenticated, } from "../middlewares/auth.middleware";
 
 export const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1024 * 1024 * 50 } })
@@ -17,13 +17,8 @@ router.patch("/make-admin/user/:id", isAuthenticatedUser, isOwner, MakeAdmin)
 router.patch("/block/user/:id", isAuthenticatedUser, isOwner, BlockUser)
 router.patch("/unblock/user/:id", isAuthenticatedUser, isOwner, UnBlockUser)
 router.patch("/remove-admin/user/:id", isAuthenticatedUser, isOwner, RemoveAdmin)
-router.patch("/update-crm-field-roles/user/:id", isAuthenticatedUser, isOwner, UpdateCrmFieldRoles)
-router.patch("/update-bot-field-roles/user/:id", isAuthenticatedUser, isOwner, UpdateBotFieldRoles)
-router.patch("/update-template-field-roles/user/:id", isAuthenticatedUser, isOwner, UpdateTemplateFieldRoles)
-router.patch("/update-contact-field-roles/user/:id", isAuthenticatedUser, isOwner, UpdateContactFieldRoles)
-router.patch("/update-reminder-field-roles/user/:id", isAuthenticatedUser, isOwner, UpdateReminderFieldRoles)
-router.patch("/update-broadcast-field-roles/user/:id", isAuthenticatedUser, isOwner, UpdateBroadcastFieldRoles)
-router.patch("/update-global-field-roles/user/:id", isAuthenticatedUser, isOwner, UpdateGlobalFieldRoles)
+router.patch("/update/access/user/:id", isAuthenticatedUser, isOwner, UpdateAccessFields)
+
 router.post("/login", Login)
 router.post("/logout", Logout)
 router.route("/profile")

@@ -9,13 +9,13 @@ import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
 import UsersTable from '../../components/tables/UsersTable'
 import { BackendError } from '../..'
-import { IUser } from '../../types'
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import NewUserDialog from '../../components/dialogs/users/NewUserDialog'
 import ReactPagination from '../../components/pagination/ReactPagination'
 import AlertBar from '../../components/snacks/AlertBar'
+import { IUser } from '../../types/user.types'
 
 type SelectedData = {
     username?: string,

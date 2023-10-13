@@ -1,10 +1,11 @@
 import { Client } from "whatsapp-web.js";
-import { IBroadcast, IUser } from "../types";
 import { Broadcast } from "../models/broadcast/broadcast.model";
 import { BroadcastReport } from "../models/broadcast/broadcast.report.model";
 import { BroadcastManager } from "../app";
 import cron from "cron"
 import { sendMessage, sendTemplates } from "./SendMessage";
+import { IBroadcast } from "../types/broadcast.types";
+import { IUser } from "../types/user.types";
 
 export var timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 

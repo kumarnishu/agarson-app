@@ -1,5 +1,5 @@
 import { Client, MessageMedia } from "whatsapp-web.js"
-import { IMessage, IMessageTemplate } from "../types"
+import { IMessage, IMessageTemplate } from "../types/template.types"
 
 export async function sendTemplates(client: Client, mobile: string, time_gap: number, templates: IMessageTemplate[], is_random: boolean, msg_id?: string, is_todo?: boolean) {
     let response = "error"

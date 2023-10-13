@@ -4,22 +4,16 @@ import Person3Icon from '@mui/icons-material/Person3';
 import BackupIcon from '@mui/icons-material/Backup';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
 import CampaignIcon from '@mui/icons-material/Campaign';
-import { useContext } from "react";
-import { UserContext } from "../contexts/userContext";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { Link } from "react-router-dom";
 import { Apartment, Article, Phone, PunchClock } from "@mui/icons-material";
-import { useGlobalFields } from "../components/hooks/GlobalFieldsHook";
 
 function DashBoardPage() {
-  const { user } = useContext(UserContext)
-  const { hiddenFields } = useGlobalFields()
   return (
     <>
       <Box sx={{ bgcolor: "white", m: 0, pt: 2 }}>
         <Grid container >
 
-          {user?.created_by._id === user?._id &&
             <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={paths.users} style={{ textDecoration: 'none' }}>
                 <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
@@ -32,8 +26,8 @@ function DashBoardPage() {
 
                 </Card>
               </Link>
-            </Grid>}
-          {!hiddenFields?.includes('Crm') && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+            </Grid>
+         <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
             <Link to={paths.crm} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
@@ -45,7 +39,7 @@ function DashBoardPage() {
 
               </Card>
             </Link>
-          </Grid>}
+          </Grid>
           <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
             <Link to={paths.alps} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
@@ -59,7 +53,7 @@ function DashBoardPage() {
             </Link>
           </Grid>
 
-          {!hiddenFields?.includes('Bot') &&
+         
             <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={paths.bot} style={{ textDecoration: 'none' }}>
                 <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
@@ -72,8 +66,8 @@ function DashBoardPage() {
 
                 </Card>
               </Link>
-            </Grid>}
-          {!hiddenFields?.includes('Templates') &&
+            </Grid>
+         
             <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={paths.templates} style={{ textDecoration: 'none' }}>
                 <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
@@ -86,8 +80,8 @@ function DashBoardPage() {
 
                 </Card>
               </Link>
-            </Grid>}
-          {!hiddenFields?.includes('Broadcasts') &&
+            </Grid>
+          
             <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={paths.broadcast} style={{ textDecoration: 'none' }}>
                 <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
@@ -100,8 +94,8 @@ function DashBoardPage() {
 
                 </Card>
               </Link>
-            </Grid>}
-          {!hiddenFields?.includes('Contacts') &&
+            </Grid>
+      
             <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={paths.contacts} style={{ textDecoration: 'none' }}>
                 <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
@@ -114,9 +108,9 @@ function DashBoardPage() {
 
                 </Card>
               </Link>
-            </Grid>}
+            </Grid>
 
-          {!hiddenFields?.includes('Reminders') &&
+          
             <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={paths.reminders} style={{ textDecoration: 'none' }}>
                 <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
@@ -129,8 +123,8 @@ function DashBoardPage() {
 
                 </Card>
               </Link>
-            </Grid>}
-          {!hiddenFields?.includes('Backup Database') &&
+            </Grid>
+         
             <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={paths.backup_page} style={{ textDecoration: 'none' }}>
                 <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
@@ -143,7 +137,7 @@ function DashBoardPage() {
 
                 </Card>
               </Link>
-            </Grid>}
+            </Grid>
         </Grid>
       </Box >
     </>

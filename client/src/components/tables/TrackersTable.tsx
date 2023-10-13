@@ -9,7 +9,7 @@ import UpdateTrackerDialog from '../dialogs/bot/UpdateTrackerDialog'
 import ToogleBotDialog from '../dialogs/bot/ToogleBotDialog'
 import { IMenuTracker } from '../../types'
 import PopUp from '../popup/PopUp'
-import { useBotFields } from '../hooks/BotFieldsHooks'
+import { useBotFields } from '../hooks/UserAccessFieldsHooks'
 
 
 

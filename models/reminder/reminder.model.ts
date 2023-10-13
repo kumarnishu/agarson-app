@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IReminder } from "../../types"
+import { IReminder } from "../../types/reminder.types"
 
 const ReminderSchema = new mongoose.Schema<IReminder, mongoose.Model<IReminder, {}, {}>, {}>({
     name: {

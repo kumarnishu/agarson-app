@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, LinearProgress, Menu, MenuItem,  TextField, Typography } from '@mui/material'
+import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -8,12 +8,11 @@ import DBPagination from '../../components/pagination/DBpagination';
 import TrackersTable from '../../components/tables/TrackersTable';
 import ReactPagination from '../../components/pagination/ReactPagination'
 import { FuzzySearchTrackers, GetTrackers } from '../../services/BotServices'
-import { IMenuTracker } from '../../types'
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import { useBotFields } from '../../components/hooks/BotFieldsHooks'
+import { IMenuTracker } from '../../types/bot.types'
 
 
 export default function TrackersPage() {
@@ -45,7 +44,8 @@ export default function TrackersPage() {
     })
     const [selectedData, setSelectedData] = useState<any[]>([])
     const [sent, setSent] = useState(false)
-    const { hiddenFields, readonlyFields } = useBotFields()
+
+
     function handleExcel() {
         setAnchorEl(null)
         try {
@@ -199,14 +199,8 @@ export default function TrackersPage() {
                             }}
                             sx={{ borderRadius: 2 }}
                         >
-
-
-                            {!hiddenFields?.includes('Export To Excel') &&
-                                < MenuItem onClick={handleExcel}
-                                    disabled={readonlyFields?.includes('Export To Excel')}
-                                >Export To Excel</MenuItem>
-                            }
-
+                            < MenuItem onClick={handleExcel}
+                            >Export To Excel</MenuItem>
                         </Menu >
                     </>
                 </Stack>

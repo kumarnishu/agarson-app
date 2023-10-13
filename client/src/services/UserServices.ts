@@ -1,4 +1,4 @@
-import { BotField, BroadcastField, ContactField, GlobalFeatureField, LeadField, ReminderField, TemplateField } from "../types/access.types";
+import { BackupAccess, BotAccess, BroadcastAccess, ContactsAccess, CrmAccess, RemindersAccess, TemplatesAccess, UserAccess } from "../types/access.types";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 // login
@@ -46,26 +46,21 @@ export const UnBlockUser = async (id: string) => {
   return await apiClient.patch(`unblock/user/${id}`)
 }
 // make leads controlled
-export const UpdateUserLeadAccess = async ({ id, leadFields }: { id: string, leadFields: { lead_fields: LeadField[] } }) => {
-  return await apiClient.patch(`update-crm-field-roles/user/${id}`, leadFields)
-}
-export const UpdateUserContactAccess = async ({ id, contactFields }: { id: string, contactFields: { contact_fields: ContactField[] } }) => {
-  return await apiClient.patch(`update-contact-field-roles/user/${id}`, contactFields)
-}
-export const UpdateUserReminderAccess = async ({ id, reminderFields }: { id: string, reminderFields: { reminder_fields: ReminderField[] } }) => {
-  return await apiClient.patch(`update-reminder-field-roles/user/${id}`, reminderFields)
-}
-export const UpdateUserTemplateAccess = async ({ id, templateFields }: { id: string, templateFields: { template_fields: TemplateField[] } }) => {
-  return await apiClient.patch(`update-template-field-roles/user/${id}`, templateFields)
-}
-export const UpdateUserBroadcastAccess = async ({ id, broadcastFields }: { id: string, broadcastFields: { broadcast_fields: BroadcastField[] } }) => {
-  return await apiClient.patch(`update-broadcast-field-roles/user/${id}`, broadcastFields)
-}
-export const UpdateUserGlobalAccess = async ({ id,globalFields }: { id: string,globalFields: {global_fields: GlobalFeatureField[] } }) => {
-  return await apiClient.patch(`update-global-field-roles/user/${id}`,globalFields)
-}
-export const UpdateUserBotAccess = async ({ id, botFields }: { id: string, botFields: { bot_fields: BotField[] } }) => {
-  return await apiClient.patch(`update-bot-field-roles/user/${id}`, botFields)
+
+export const UpdateUserAccess = async ({ id, access_fields }: {
+  id: string, user_access_fields: UserAccess,
+  access_fields: {
+    crm_access_fields: CrmAccess,
+    contacts_access_fields: ContactsAccess,
+    templates_access_fields: TemplatesAccess,
+    bot_access_fields: BotAccess,
+    broadcast_access_fields: BroadcastAccess,
+    backup_access_fields: BackupAccess,
+    reminders_access_fields: RemindersAccess
+  }
+
+}) => {
+  return await apiClient.patch(`update-bot-field-roles/user/${id}`, access_fields)
 }
 
 // make admin

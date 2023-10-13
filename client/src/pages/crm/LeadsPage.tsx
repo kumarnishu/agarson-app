@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem,  TextField, Typography } from '@mui/material'
+import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -10,7 +10,6 @@ import UploadLeadsExcelButton from '../../components/buttons/UploadLeadsExcelBut
 import DBPagination from '../../components/pagination/DBpagination';
 import LeadsTable from '../../components/tables/LeadsTable';
 import ReactPagination from '../../components/pagination/ReactPagination'
-import { ILead, ILeadTemplate, IUser } from '../../types'
 import { BackendError } from '../..'
 import { GetUsers } from '../../services/UserServices'
 import { Menu as MenuIcon } from '@mui/icons-material';
@@ -18,7 +17,8 @@ import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
-import { useCrmFields } from '../../components/hooks/CrmFieldsHook'
+import { ILead, ILeadTemplate } from '../../types/crm.types'
+import { IUser } from '../../types/user.types'
 
 let template: ILeadTemplate[] = [
   {
@@ -85,7 +85,6 @@ export default function LeadsPage() {
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
-  const { hiddenFields, readonlyFields } = useCrmFields()
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   function handleExcel() {
@@ -281,20 +280,16 @@ export default function LeadsPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {!hiddenFields?.includes('New Lead') &&
-                <MenuItem
-                  onClick={() => {
-                    setChoice({ type: LeadChoiceActions.create_lead })
-                    setAnchorEl(null)
-                  }}
-                  disabled={readonlyFields?.includes('New Lead')}
-                > Add New</MenuItem>}
+              <MenuItem
+                onClick={() => {
+                  setChoice({ type: LeadChoiceActions.create_lead })
+                  setAnchorEl(null)
+                }}
+              > Add New</MenuItem>
 
-              {!hiddenFields?.includes('Export To Excel') &&
-                < MenuItem onClick={handleExcel}
-                  disabled={readonlyFields?.includes('Export To Excel')}
-                >Export To Excel</MenuItem>
-              }
+              < MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>
+
             </Menu >
             <NewLeadDialog />
           </>

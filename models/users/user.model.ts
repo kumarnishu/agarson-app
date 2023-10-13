@@ -63,15 +63,55 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     default: false,
     required: true,
   },
-  access_fields: [
-    {
-      feature: { type: String },
-      is_readonly: { type: Boolean, default: true },
-      is_hidden: { type: Boolean, default: false },
-      is_deletion_allowed: { type: Boolean, default: false },
-      is_editable: { type: Boolean, default: false },
-    }
-  ],
+
+  user_access_fields: {
+    is_readonly: { type: Boolean, default: true },
+    is_hidden: { type: Boolean, default: false },
+    is_deletion_allowed: { type: Boolean, default: false },
+    is_editable: { type: Boolean, default: false },
+  },
+  crm_access_fields: {
+    is_readonly: { type: Boolean, default: true },
+    is_hidden: { type: Boolean, default: false },
+    is_deletion_allowed: { type: Boolean, default: false },
+    is_editable: { type: Boolean, default: false },
+  },
+  contacts_access_fields: {
+    is_readonly: { type: Boolean, default: true },
+    is_hidden: { type: Boolean, default: false },
+    is_deletion_allowed: { type: Boolean, default: false },
+    is_editable: { type: Boolean, default: false },
+  },
+  templates_access_fields: {
+    is_readonly: { type: Boolean, default: true },
+    is_hidden: { type: Boolean, default: false },
+    is_deletion_allowed: { type: Boolean, default: false },
+    is_editable: { type: Boolean, default: false },
+  },
+  bot_access_fields: {
+    is_readonly: { type: Boolean, default: true },
+    is_hidden: { type: Boolean, default: false },
+    is_deletion_allowed: { type: Boolean, default: false },
+    is_editable: { type: Boolean, default: false },
+  },
+  broadcast_access_fields: {
+    is_readonly: { type: Boolean, default: true },
+    is_hidden: { type: Boolean, default: false },
+    is_deletion_allowed: { type: Boolean, default: false },
+    is_editable: { type: Boolean, default: false },
+  },
+  backup_access_fields: {
+    is_readonly: { type: Boolean, default: true },
+    is_hidden: { type: Boolean, default: false },
+    is_deletion_allowed: { type: Boolean, default: false },
+    is_editable: { type: Boolean, default: false },
+  },
+  reminders_access_fields: {
+    is_readonly: { type: Boolean, default: true },
+    is_hidden: { type: Boolean, default: false },
+    is_deletion_allowed: { type: Boolean, default: false },
+    is_editable: { type: Boolean, default: false },
+  },
   email_verified: {
     type: Boolean,
     default: false,

@@ -8,7 +8,6 @@ import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
 import { TUserBody } from '../types/user.types';
 import { Asset } from '../types/asset.types';
-import { AccessType, Features } from '../types/access.types';
 
 
 // Create Owner account
@@ -44,17 +43,8 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-    let accessFields: AccessType[] = []
 
-    Features.map((feature) => {
-        accessFields.push({
-            feature: feature,
-            is_readonly: false,
-            is_hidden: false,
-            is_editable: true,
-            is_deletion_allowed: true
-        })
-    })
+
     let owner = new User({
         username,
         password,
@@ -66,7 +56,54 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         client_data_path: username.replace(" ", "") + `${Number(new Date())}`
 
     })
-    owner.access_fields = accessFields
+    owner.user_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
+    owner.crm_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
+    owner.contacts_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
+    owner.templates_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
+    owner.bot_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
+    owner.broadcast_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
+    owner.backup_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
+    owner.reminders_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
     owner.created_by_username = owner.username
     owner.updated_by = owner
     owner.updated_by_username = owner.username
@@ -106,17 +143,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         }
     }
 
-    let accessFields: AccessType[] = []
 
-    Features.map((feature) => {
-        accessFields.push({
-            feature: feature,
-            is_readonly: true,
-            is_hidden: false,
-            is_editable: false,
-            is_deletion_allowed: false
-        })
-    })
     let user = new User({
         username,
         password,
@@ -134,7 +161,54 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         user.created_by_username = req.user.username
         user.updated_by_username = req.user.username
     }
-    user.access_fields = accessFields
+    user.user_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.crm_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.contacts_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.templates_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.bot_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.broadcast_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.backup_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.reminders_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
     await user.save()
     user = await User.findById(user._id).populate("created_by").populate("updated_by") || user
     res.status(201).json(user)
@@ -181,9 +255,16 @@ export const Logout = async (req: Request, res: Response, next: NextFunction) =>
 
 // update user lead fields and its roles
 export const UpdateAccessFields = async (req: Request, res: Response, next: NextFunction) => {
-    const { access_fields } = req.body as TUserBody
-    if (access_fields.length === 0)
-        return res.status(400).json({ message: "please fill all required fields" })
+    const { user_access_fields,
+        crm_access_fields,
+        contacts_access_fields,
+        templates_access_fields,
+        bot_access_fields,
+        broadcast_access_fields,
+        backup_access_fields,
+        reminders_access_fields,
+    } = req.body as TUserBody
+
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
     let user = await User.findById(id);
@@ -191,7 +272,14 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         return res.status(404).json({ message: "user not found" })
     }
     await User.findByIdAndUpdate(user._id, {
-        access_fields
+        user_access_fields,
+        crm_access_fields,
+        contacts_access_fields,
+        templates_access_fields,
+        bot_access_fields,
+        broadcast_access_fields,
+        backup_access_fields,
+        reminders_access_fields,
     })
     res.status(200).json({ message: " updated" })
 }
@@ -597,22 +685,58 @@ export const testRoute = async (req: Request, res: Response, next: NextFunction)
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
     let user = await User.findById(id);
 
-    let accessFields: AccessType[] = []
-
-    Features.map((feature) => {
-        accessFields.push({
-            feature: feature,
-            is_readonly: true,
-            is_hidden: true,
-            is_editable: false,
-            is_deletion_allowed: false
-        })
-    })
-
+    
     if (!user) {
         return res.status(404).json({ message: "user not found" })
     }
-    user.access_fields = accessFields
+    user.user_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.crm_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.contacts_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.templates_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.bot_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.broadcast_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.backup_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.reminders_access_fields = {
+        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
     await user.save()
-    res.status(200).json({ message: "user bot fields roles updated" })
+    res.status(200).json({ message: "user access updated" })
 }

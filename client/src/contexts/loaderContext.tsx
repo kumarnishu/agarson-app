@@ -3,8 +3,8 @@ import { useQuery } from 'react-query'
 import { AxiosResponse } from 'axios'
 import { GetProfile } from "../services/UserServices";
 import { UserContext } from "./userContext";
-import { IUser } from "../types";
 import { BackendError } from "..";
+import { IUser } from "../types/user.types";
 
 function useRemoteLoading() {
     const { data, isLoading, isError } = useQuery<AxiosResponse<IUser>, BackendError>("profile", GetProfile, { retry: false, refetchOnWindowFocus: true })

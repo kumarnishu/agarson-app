@@ -7,7 +7,6 @@ import { useQuery } from 'react-query'
 import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
 import { BackendError } from '../..'
-import { IBroadcast } from '../../types'
 import { GetBroadCasts } from '../../services/BroadCastServices'
 import BroadcastsTable from '../../components/tables/BroadcastTable'
 import { BroadcastChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
@@ -17,6 +16,7 @@ import NewBroadcastMessageDialog from '../../components/dialogs/broadcasts/NewBr
 import { Menu as MenuIcon } from '@mui/icons-material';
 import ReactPagination from '../../components/pagination/ReactPagination'
 import AlertBar from '../../components/snacks/AlertBar'
+import { IBroadcast } from '../../types/broadcast.types'
 
 type SelectedData = {
   name?: string,

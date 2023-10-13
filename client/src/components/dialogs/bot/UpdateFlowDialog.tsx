@@ -8,7 +8,7 @@ import SaveUpdateFlowModal from "./SaveUpdateFlowDialog";
 import { BotChoiceActions, ChoiceContext } from "../../../contexts/dialogContext";
 import { IFlow } from "../../../types";
 import { Box, Dialog, Stack } from "@mui/material";
-import { useBotFields } from "../../hooks/BotFieldsHooks";
+import { useBotFields } from "../../hooks/UserAccessFieldsHooks";
 
 const nodeTypes = { MenuNode, DefaultNode, StartNode, OutputNode, CommonNode }
 

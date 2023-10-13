@@ -7,7 +7,6 @@ import { useQuery } from 'react-query'
 import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
 import { BackendError } from '../..'
-import { IMessageTemplate } from '../../types'
 import TemplatesTable from '../../components/tables/TemplateTable'
 import { GetTemplates } from '../../services/TemplateServices'
 import { Menu as MenuIcon } from '@mui/icons-material';
@@ -16,6 +15,7 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import NewTemplateDialog from '../../components/dialogs/templates/NewTemplateDialog'
 import ReactPagination from '../../components/pagination/ReactPagination'
 import AlertBar from '../../components/snacks/AlertBar'
+import { IMessageTemplate } from '../../types/template.types'
 
 
 

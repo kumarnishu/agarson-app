@@ -1,11 +1,11 @@
 import WAWebJS, { Client, MessageMedia } from "whatsapp-web.js";
 import { Flow } from "../models/bot/Flow";
-import { FlowNode, IKeywordTracker } from "../types";
 import { toTitleCase } from "./ToTitleCase";
 import { MenuTracker } from "../models/bot/MenuTracker";
 import { KeywordTracker } from "../models/bot/KeywordTracker";
 import { CronJob } from "cron";
 import { User } from "../models/users/user.model";
+import { FlowNode, IKeywordTracker } from "../types/bot.types";
 
 
 export const ControlMessage = async (client: Client, msg: WAWebJS.Message) => {

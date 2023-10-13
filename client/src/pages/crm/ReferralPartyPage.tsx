@@ -4,7 +4,6 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { ILead, IReferredParty } from '../../types'
 import { BackendError } from '../..'
 import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
@@ -16,6 +15,7 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import CreateReferDialog from '../../components/dialogs/crm/CreateReferDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import ReactPagination from '../../components/pagination/ReactPagination'
+import { ILead, IReferredParty } from '../../types/crm.types'
 
 
 type SelectedData = {

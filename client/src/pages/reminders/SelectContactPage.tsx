@@ -2,7 +2,7 @@ import { Checkbox, InputAdornment, Stack, TextField, Typography } from '@mui/mat
 
 import { headColor } from '../../utils/colors'
 import { Search } from '@mui/icons-material'
-import { IContact } from '../../types'
+import { IContact } from '../../types/contact.types'
 
 type Props = {
     contact: IContact | undefined,

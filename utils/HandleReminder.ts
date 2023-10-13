@@ -1,10 +1,11 @@
 import { Client } from "whatsapp-web.js";
-import { IReminder, IUser } from "../types";
 import { Reminder } from "../models/reminder/reminder.model";
 import { ContactReport } from "../models/contact/contact.report.model";
 import { ReminderManager } from "../app";
 import { sendMessage, sendTemplates } from "./SendMessage";
 import { GetRunOnceCronString } from "./GetRunOnceCronString";
+import { IReminder } from "../types/reminder.types";
+import { IUser } from "../types/user.types";
 
 export var reminder_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
