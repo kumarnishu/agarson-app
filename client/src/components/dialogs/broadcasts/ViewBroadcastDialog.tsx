@@ -1,7 +1,7 @@
 import { Dialog, Button, DialogActions } from '@mui/material';
 import { useContext } from 'react';
 import { ChoiceContext, BroadcastChoiceActions } from '../../../contexts/dialogContext';
-import { IBroadcast } from '../../../types';
+import { IBroadcast } from '../../../types/broadcast.types';
 import BroadcastReportPage from '../../../pages/broadcast/BroadcastReportPage';
 
 function ViewBroadcastDialog({ broadcast }: { broadcast: IBroadcast }) {

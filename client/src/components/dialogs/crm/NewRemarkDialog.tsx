@@ -2,12 +2,13 @@ import { Dialog, DialogContent, DialogActions, Typography, CircularProgress, Ico
 import { useContext, useEffect, useState } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import NewRemarkForm from '../../forms/crm/NewRemarkForm'
-import { ILead, IUser } from '../../../types'
 import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { BackendError } from '../../..'
 import { GetUsers } from '../../../services/UserServices'
 import { Cancel } from '@mui/icons-material'
+import { ILead } from '../../../types/crm.types'
+import { IUser } from '../../../types/user.types'
 
 function NewRemarkDialog({ lead }: { lead: ILead }) {
     const [users, setUsers] = useState<IUser[]>([])

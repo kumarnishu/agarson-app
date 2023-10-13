@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import AllRemarksPage from '../../../pages/crm/AllRemarksPage';
-import { ILead } from '../../../types';
+import { ILead } from '../../../types/crm.types';
 import { Cancel } from '@mui/icons-material';
 
 function ViewRemarksDialog({ lead }: { lead: ILead }) {

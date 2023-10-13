@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { BotChoiceActions, ChoiceContext } from "../../../contexts/dialogContext";
-import { IFlow } from "../../../types";
+import { IFlow } from "../../../types/bot.types";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import UpdateConnectedUserForm from "../../forms/bot/UpdateConnectedUserForm";
 import { Cancel } from "@mui/icons-material";

@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, CircularProgress, IconButton } from '@mui/material'
 import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { IReferredParty } from '../../../types'
+import { IReferredParty } from '../../../types/crm.types'
 import UpdateReferForm from '../../forms/crm/UpdateReferForm'
 import { Cancel } from '@mui/icons-material'
 

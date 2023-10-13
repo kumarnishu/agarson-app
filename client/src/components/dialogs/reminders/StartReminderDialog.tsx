@@ -1,13 +1,14 @@
 import { Dialog, DialogTitle, IconButton } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { ReminderChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { IReminder, IUser } from '../../../types';
 import { GetUsers } from '../../../services/UserServices';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';
 import { useQuery } from 'react-query';
 import { Cancel } from '@mui/icons-material';
 import StartReminderForm from '../../forms/reminders/StartReminderForm';
+import { IUser } from '../../../types/user.types';
+import { IReminder } from '../../../types/reminder.types';
 
 function StartReminderMessageDialog({ reminder }: { reminder: IReminder }) {
     const { choice, setChoice } = useContext(ChoiceContext)

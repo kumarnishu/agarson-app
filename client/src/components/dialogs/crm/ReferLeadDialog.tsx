@@ -1,9 +1,9 @@
 import { Dialog, DialogContent, DialogActions, Typography, CircularProgress, IconButton, DialogTitle } from '@mui/material'
 import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { ILead } from '../../../types'
 import ReferLeadForm from '../../forms/crm/ReferLeadForm'
 import { Cancel } from '@mui/icons-material'
+import { ILead } from '../../../types/crm.types'
 
 function ReferLeadDialog({ lead }: { lead: ILead }) {
     const { choice, setChoice } = useContext(ChoiceContext)

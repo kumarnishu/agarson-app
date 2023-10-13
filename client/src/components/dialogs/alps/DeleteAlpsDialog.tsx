@@ -4,11 +4,11 @@ import { BackendError } from '../../..'
 import { useMutation } from 'react-query'
 import { ChoiceContext, AlpsChoiceActions } from '../../../contexts/dialogContext'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
-import { IAlps } from '../../../types'
 import { queryClient } from '../../../main'
 import { Cancel } from '@mui/icons-material'
 import AlertBar from '../../snacks/AlertBar'
 import { DeleteAlps } from '../../../services/AlpsServices'
+import { IAlps } from '../../../types/alps.types'
 
 function DeleteAlpsDialog({ alp }: { alp: IAlps }) {
     const { choice, setChoice } = useContext(ChoiceContext)

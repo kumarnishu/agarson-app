@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import { ChoiceContext, UserChoiceActions } from "../../../contexts/dialogContext"
 import { Avatar, Dialog, DialogContent, DialogTitle, IconButton, Stack, Typography } from "@mui/material"
-import { IUser } from "../../../types"
+import { IUser } from "../../../types/user.types"
 import BotControlAccessForm from "../../forms/user/BotControlAccessForm"
 import { Cancel } from "@mui/icons-material"
 import BroadcastControlAccessForm from "../../forms/user/BroadcastControlAccessForm"

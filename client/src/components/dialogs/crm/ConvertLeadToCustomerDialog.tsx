@@ -4,7 +4,7 @@ import { useContext, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { ConvertCustomer } from '../../../services/LeadsServices';
-import { ILead } from '../../../types';
+import { ILead } from '../../../types/crm.types';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';

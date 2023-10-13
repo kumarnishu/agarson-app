@@ -7,7 +7,7 @@ import { BackendError } from '../../..'
 import { UpdateFlow } from '../../../services/BotServices'
 import { Button, Dialog, DialogContent, DialogTitle, Snackbar, TextField } from '@mui/material'
 import { BotChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { IFlow } from '../../../types'
+import { IFlow } from "../../../types/bot.types";
 import { queryClient } from '../../../main'
 
 type Props = {

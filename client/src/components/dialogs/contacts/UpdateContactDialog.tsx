@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { ContactChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import UpdateContactForm from '../../forms/contacts/UpdateContactForm';
 import { Cancel } from '@mui/icons-material';
-import { IContact } from '../../../types';
+import { IContact } from '../../../types/contact.types';
 
 
 function UpdateContactDialog({ contact }: { contact: IContact }) {

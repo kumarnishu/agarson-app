@@ -6,7 +6,7 @@ import { MenuNode, DefaultNode, StartNode, OutputNode, CommonNode } from "../../
 import SaveNewFlow from "./SaveNewFlowDialog";
 import { Box, Dialog, Stack } from "@mui/material";
 import { BotChoiceActions, ChoiceContext } from "../../../contexts/dialogContext";
-import { IFlow } from "../../../types";
+import { IFlow } from "../../../types/bot.types";
 import UpdateNodeDialog from "./UpdateNodeDialog";
 
 const nodeTypes = { MenuNode, DefaultNode, StartNode, OutputNode, CommonNode }

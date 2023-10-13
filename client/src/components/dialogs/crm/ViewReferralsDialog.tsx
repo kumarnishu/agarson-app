@@ -1,7 +1,7 @@
 import { Dialog, DialogContent,  DialogTitle,  IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { ILead } from '../../../types';
+import { ILead } from '../../../types/crm.types';
 import AllReferralPage from '../../../pages/crm/AllReferralPage';
 import { Cancel } from '@mui/icons-material';
 

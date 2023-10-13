@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, Button, DialogActions, CircularProgress, IconButton } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { ContactChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { IContact } from '../../../types';
+import { IContact } from '../../../types/contact.types';
 import { queryClient } from '../../../main';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';

@@ -6,9 +6,9 @@ import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContex
 import {  RemoveLeadReferrals } from '../../../services/LeadsServices';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
-import { ILead } from '../../../types';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
+import { ILead } from '../../../types/crm.types';
 
 
 function RemoveLeadReferralDialog({ lead }: { lead: ILead }) {

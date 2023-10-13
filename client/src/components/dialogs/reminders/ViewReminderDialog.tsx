@@ -1,8 +1,8 @@
 import { Dialog, Button, DialogActions } from '@mui/material';
 import { useContext } from 'react';
 import { ChoiceContext, ReminderChoiceActions } from '../../../contexts/dialogContext';
-import { IReminder } from '../../../types';
 import ReminderReportPage from '../../../pages/reminders/ReminderReportPage';
+import { IReminder } from '../../../types/reminder.types';
 
 function ViewReminderDialog({ reminder }: { reminder: IReminder }) {
     const { choice, setChoice } = useContext(ChoiceContext)

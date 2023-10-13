@@ -1,9 +1,9 @@
 import { Dialog, DialogTitle, IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { ReminderChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { IReminder } from '../../../types';
 import { Cancel } from '@mui/icons-material';
 import EditReminderMessageForm from '../../forms/reminders/EditReminderMessageForm';
+import { IReminder } from '../../../types/reminder.types';
 
 function UpdateReminderMessageDialog({ reminder }: { reminder: IReminder }) {
     const { choice, setChoice } = useContext(ChoiceContext)

@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle,  IconButton } from '@mui/material'
 import { useContext } from 'react'
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { IUser } from '../../../types'
+import { IUser } from "../../../types/user.types"
 import UpdateUserForm from '../../forms/user/UpdateUserForm'
 import { Cancel } from '@mui/icons-material'
 

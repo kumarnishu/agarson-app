@@ -1,7 +1,7 @@
 import { Dialog, DialogTitle,   IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { BroadcastChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { IBroadcast } from '../../../types';
+import { IBroadcast } from '../../../types/broadcast.types';
 import EditBroadcastMessageForm from '../../forms/broadcast/EditBroadcastMessageForm';
 import { Cancel } from '@mui/icons-material';
 

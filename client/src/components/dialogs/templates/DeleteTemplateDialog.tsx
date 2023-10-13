@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, Button, DialogActions, Stack, Typography,  CircularProgress, IconButton } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
-import { IMessageTemplate } from '../../../types';
 import { queryClient } from '../../../main';
 import { DeleteTemplate } from '../../../services/TemplateServices';
 import { AxiosResponse } from 'axios';
@@ -9,6 +8,7 @@ import { BackendError } from '../../..';
 import { useMutation } from 'react-query';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
+import { IMessageTemplate } from '../../../types/template.types';
 
 function DeleteTemplateDialog({ template }: { template: IMessageTemplate }) {
     const { choice, setChoice } = useContext(ChoiceContext)

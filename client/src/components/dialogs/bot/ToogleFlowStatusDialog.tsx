@@ -5,7 +5,7 @@ import { BackendError } from '../../..'
 import { useMutation } from 'react-query'
 import { BotChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
-import { IFlow } from '../../../types'
+import { IFlow } from "../../../types/bot.types";
 import { queryClient } from '../../../main'
 import { Cancel } from '@mui/icons-material'
 import AlertBar from '../../snacks/AlertBar'

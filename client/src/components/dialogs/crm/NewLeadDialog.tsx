@@ -5,7 +5,7 @@ import NewLeadForm from '../../forms/crm/NewLeadForm';
 import { GetUsers } from '../../../services/UserServices';
 import { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
-import { IUser } from '../../../types';
+import { IUser } from '../../../types/user.types';
 import { BackendError } from '../../..';
 import { Cancel } from '@mui/icons-material';
 

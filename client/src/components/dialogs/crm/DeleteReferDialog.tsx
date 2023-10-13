@@ -6,7 +6,7 @@ import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContex
 import {  DeleteReferParty } from '../../../services/LeadsServices';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
-import { IReferredParty } from '../../../types';
+import { IReferredParty } from '../../../types/crm.types';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
 

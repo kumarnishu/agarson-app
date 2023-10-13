@@ -3,12 +3,11 @@ import React from "react"
 import { useMutation } from "react-query"
 import { styled } from "styled-components"
 import { BackendError } from "../.."
-import { BulkLeadUpdateFromExcel } from "../../services/LeadsServices"
-import { ILeadTemplate } from "../../types"
 import { Button, CircularProgress, Snackbar } from "@mui/material"
 import ExportToExcel from "../../utils/ExportToExcel"
 import { Upload } from "@mui/icons-material"
 import { BulkContactUpdateFromExcel } from "../../services/ContactServices"
+import { ILeadTemplate } from "../../types/crm.types"
 
 const FileInput = styled.input`
 background:none;

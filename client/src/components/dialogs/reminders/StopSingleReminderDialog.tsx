@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogTitle, Button, DialogActions, CircularProgress, IconButton } from '@mui/material';
 import { useEffect } from 'react';
-import { IContactReport } from '../../../types';
 import { queryClient } from '../../../main';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';
@@ -8,6 +7,7 @@ import { useMutation } from 'react-query';
 import { StopSingleReportReminder } from '../../../services/ReminderServices';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
+import { IContactReport } from '../../../types/contact.types';
 
 function StopSingleReminderDialog({ report, setReport }: { report: IContactReport | undefined, setReport: React.Dispatch<React.SetStateAction<IContactReport | undefined>> }) {
     const { mutate, isLoading, isSuccess, error, isError } = useMutation

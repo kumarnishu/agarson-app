@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, Button, DialogActions,   CircularProgress, IconButton } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { BroadcastChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { IBroadcast } from '../../../types';
 import { queryClient } from '../../../main';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';
@@ -9,6 +8,7 @@ import { useMutation } from 'react-query';
 import { DeleteBroadCast } from '../../../services/BroadCastServices';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
+import { IBroadcast } from '../../../types/broadcast.types';
 
 function DeleteBroadcastDialog({ broadcast }: { broadcast: IBroadcast }) {
     const { choice, setChoice } = useContext(ChoiceContext)

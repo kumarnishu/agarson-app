@@ -4,11 +4,11 @@ import { useContext, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { BulkDeleteUselessLeads } from '../../../services/LeadsServices';
-import { ILead } from '../../../types';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
+import { ILead } from '../../../types/crm.types';
 
 
 function BulkDeleteUselessLeadsDialog({ selectedLeads }: { selectedLeads: ILead[] }) {

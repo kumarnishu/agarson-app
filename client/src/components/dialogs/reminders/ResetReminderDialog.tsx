@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, Button, DialogActions, CircularProgress, IconButton } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { ReminderChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { IReminder } from '../../../types';
+import { IReminder } from '../../../types/reminder.types';
 import { queryClient } from '../../../main';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';

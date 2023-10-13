@@ -1,9 +1,9 @@
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
-import { IMessageTemplate } from '../../../types';
 import UpdateTemplateForm from '../../forms/templates/UpdateTemplateForm';
 import { Cancel } from '@mui/icons-material';
+import { IMessageTemplate } from '../../../types/template.types';
 
 function UpdateTemplateDialog({ template }: { template: IMessageTemplate }) {
     const { choice, setChoice } = useContext(ChoiceContext)

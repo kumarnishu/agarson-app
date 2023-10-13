@@ -1,13 +1,14 @@
 import { Dialog, DialogTitle, IconButton } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { BroadcastChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { IBroadcast, IUser } from '../../../types';
+import { IBroadcast } from '../../../types/broadcast.types';
 import StartBroadCastForm from '../../forms/broadcast/StartBroadCastForm';
 import { GetUsers } from '../../../services/UserServices';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';
 import { useQuery } from 'react-query';
 import { Cancel } from '@mui/icons-material';
+import { IUser } from '../../../types/user.types';
 
 function StartBroadcastDialog({ broadcast }: { broadcast: IBroadcast }) {
     const { choice, setChoice } = useContext(ChoiceContext)

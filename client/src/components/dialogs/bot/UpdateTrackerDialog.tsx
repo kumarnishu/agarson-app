@@ -7,9 +7,9 @@ import { BackendError } from '../../..'
 import { UpdateCustomerName } from '../../../services/BotServices'
 import { Button, Dialog, DialogContent, DialogTitle, IconButton, Snackbar, TextField } from '@mui/material'
 import { BotChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { IMenuTracker } from '../../../types'
 import { queryClient } from '../../../main'
 import { Cancel } from '@mui/icons-material'
+import { IMenuTracker } from '../../../types/bot.types'
 
 type Props = {
     tracker: IMenuTracker

@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, Button, DialogActions, CircularProgress, IconButton } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { ReminderChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { IReminder } from '../../../types';
 import { queryClient } from '../../../main';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';
@@ -9,6 +8,7 @@ import { useMutation } from 'react-query';
 import { StopReminder } from '../../../services/ReminderServices';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
+import { IReminder } from '../../../types/reminder.types';
 
 function StopReminderDialog({ reminder }: { reminder: IReminder }) {
     const { choice, setChoice } = useContext(ChoiceContext)

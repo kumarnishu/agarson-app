@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle,  IconButton } from '@mui/material'
 import { useContext } from 'react';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import UpdateUserPasswordForm from '../../forms/user/UpdateUserPasswordForm';
-import { IUser } from '../../../types';
+import { IUser } from "../../../types/user.types"
 import { Cancel } from '@mui/icons-material';
 
 

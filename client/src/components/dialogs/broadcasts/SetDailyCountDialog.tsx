@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, Button, DialogActions, CircularProgress, IconButton, TextField } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { BroadcastChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { IBroadcast } from '../../../types';
+import { IBroadcast } from '../../../types/broadcast.types';
 import { queryClient } from '../../../main';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';

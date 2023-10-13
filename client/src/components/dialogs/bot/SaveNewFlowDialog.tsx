@@ -6,7 +6,7 @@ import { useMutation } from 'react-query'
 import { BackendError } from '../../..'
 import { CreateFlow } from '../../../services/BotServices'
 import { BotChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { IFlow } from '../../../types'
+import { IFlow } from "../../../types/bot.types";
 import { Button, Dialog, DialogContent, DialogTitle, Snackbar, TextField } from '@mui/material'
 import { queryClient } from '../../../main'
 

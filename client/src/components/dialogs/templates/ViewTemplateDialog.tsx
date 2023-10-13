@@ -1,8 +1,8 @@
 import { Dialog, DialogTitle, Stack, Typography, DialogContent, IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
-import { IMessageTemplate } from '../../../types';
 import { Cancel } from '@mui/icons-material';
+import { IMessageTemplate } from '../../../types/template.types';
 
 function ViewTemplateDialog({ template }: { template: IMessageTemplate }) {
     const { choice, setChoice } = useContext(ChoiceContext)

@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, Button, DialogActions,  CircularProgress, IconButton } from '@mui/material';
 import { useEffect } from 'react';
-import { IBroadcastReport } from '../../../types';
+import { IBroadcastReport } from '../../../types/broadcast.types';
 import { queryClient } from '../../../main';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';
