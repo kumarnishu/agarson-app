@@ -8,7 +8,7 @@ import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
 import { ContactField, ContactFieldType } from '../../../types/access.types';
-import { IUser } from '../../../types';
+import { IUser } from '../../../types/user.types';
 
 
 

@@ -8,7 +8,7 @@ import * as Yup from "yup"
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { NewUser } from '../../../services/UserServices';
 import { BackendError, Target } from '../../..';
-import { IUser } from '../../../types';
+import { IUser } from '../../../types/user.types';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 

@@ -7,7 +7,7 @@ import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
 import { ReminderField, ReminderFieldType } from '../../../types/access.types';
-import { IUser } from '../../../types';
+import { IUser } from '../../../types/user.types';
 import { UpdateUserReminderAccess } from '../../../services/UserServices';
 
 

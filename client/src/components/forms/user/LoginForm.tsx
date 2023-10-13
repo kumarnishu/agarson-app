@@ -11,7 +11,7 @@ import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContex
 import { UserContext } from '../../../contexts/userContext';
 import { paths } from '../../../Routes';
 import { Login } from '../../../services/UserServices';
-import { IUser } from '../../../types';
+import { IUser } from '../../../types/user.types';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
 

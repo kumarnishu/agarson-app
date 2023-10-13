@@ -7,7 +7,7 @@ import { Button, Checkbox, FormControlLabel, Typography, CircularProgress, Stack
 import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types';
+import { IUser } from '../../../types/user.types';
 import { LeadField, LeadFieldType } from '../../../types/access.types';
 
 
