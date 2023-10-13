@@ -5,12 +5,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { BackendError } from '../../..';
-import { IBroadcast, IBroadcastReport, IMessageTemplate, IUser } from '../../../types';
+import { IBroadcast, IBroadcastReport } from '../../../types/broadcast.types';
 import { queryClient } from '../../../main';
 import { GetTemplates } from '../../../services/TemplateServices';
 import { GetBroadcastReports, UpdateBroadCast } from '../../../services/BroadCastServices';
 import AlertBar from '../../snacks/AlertBar';
 import { BroadcastChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
+import { IMessageTemplate } from '../../../types/template.types';
+import { IUser } from '../../../types/user.types';
 
 
 type TformData = {

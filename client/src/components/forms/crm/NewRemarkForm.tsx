@@ -7,9 +7,10 @@ import * as Yup from "yup"
 import { NewRemark } from '../../../services/LeadsServices';
 import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
-import { ILead, IUser } from '../../../types';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
+import { IUser } from '../../../types/user.types';
+import { ILead } from '../../../types/crm.types';
 
 
 function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {

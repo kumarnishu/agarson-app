@@ -10,9 +10,10 @@ import { Countries } from '../../../utils/countries';
 import { States } from '../../../utils/states';
 import { Cities } from '../../../utils/cities';
 import { BackendError, Target } from '../../..';
-import { IUser, ILead, ILeadUpdatableField } from '../../../types';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
+import { ILead, ILeadUpdatableField } from '../../../types/crm.types';
+import { IUser } from '../../../types/user.types';
 
 export type TformData = {
   name: string,

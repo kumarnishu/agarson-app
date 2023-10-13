@@ -6,13 +6,15 @@ import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { ChoiceContext, ReminderChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError, Target } from '../../..';
-import { IContact, IReminder, IUser } from '../../../types';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { UpdateReminderWithMessage } from '../../../services/ReminderServices';
 import { GetContacts } from '../../../services/ContactServices';
 import FuzzySearch from "fuzzy-search";
 import SelectContactPage from '../../../pages/reminders/SelectContactPage';
+import { IReminder } from '../../../types/reminder.types';
+import { IContact } from '../../../types/contact.types';
+import { IUser } from '../../../types/user.types';
 
 
 type TformData = {

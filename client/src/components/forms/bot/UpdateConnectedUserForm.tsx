@@ -1,15 +1,15 @@
 import { AxiosResponse } from 'axios'
 import { queryClient } from '../../../main'
-import { IFlow } from '../../../types'
 import { AssignFlow, GetConnectedUsers } from '../../../services/BotServices'
 import { useMutation, useQuery } from 'react-query'
 import { BackendError } from '../../..'
 import {  Button, CircularProgress, Stack, TextField } from '@mui/material'
 import { useFormik } from 'formik'
 import * as Yup from "yup"
-import { IUser } from '../../../types'
 import { useEffect, useState } from 'react'
 import AlertBar from '../../snacks/AlertBar'
+import { IFlow } from '../../../types/bot.types'
+import { IUser } from '../../../types/user.types'
 
 function UpdateConnectedUserForm({ flow }: { flow: IFlow }) {
     const { data } = useQuery<AxiosResponse<IUser[]>, BackendError>("connected_users", GetConnectedUsers)

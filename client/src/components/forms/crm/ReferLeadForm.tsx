@@ -8,9 +8,8 @@ import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContex
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { GetReferralParties, ReferLead } from '../../../services/LeadsServices';
-import { IReferredParty } from '../../../types';
-import { ILead } from '../../../types';
 import AlertBar from '../../snacks/AlertBar';
+import { ILead, IReferredParty } from '../../../types/crm.types';
 
 
 

@@ -6,10 +6,10 @@ import { useMutation } from 'react-query';
 import * as Yup from "yup"
 import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError, Target } from '../../..';
-import { IUser } from '../../../types';
 import { queryClient } from '../../../main';
 import { CreateTemplate } from '../../../services/TemplateServices';
 import AlertBar from '../../snacks/AlertBar';
+import { IUser } from '../../../types/user.types';
 
 
 type TformData = {

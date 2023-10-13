@@ -6,11 +6,12 @@ import { useMutation } from 'react-query';
 import * as Yup from "yup"
 import { ChoiceContext, ReminderChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
-import { IReminder, IUser } from '../../../types';
 import { queryClient } from '../../../main';
 import { StartReminder } from '../../../services/ReminderServices';
 import moment from 'moment'
 import AlertBar from '../../snacks/AlertBar';
+import { IReminder } from '../../../types/reminder.types';
+import { IUser } from '../../../types/user.types';
 
 
 type TformData = {

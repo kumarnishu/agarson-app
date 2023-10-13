@@ -6,10 +6,11 @@ import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError, Target } from '../../..';
-import { IBroadcast, IBroadcastReport, IUser } from '../../../types';
 import { queryClient } from '../../../main';
 import { GetBroadcastReports, UpdateBroadCastWithMessage } from '../../../services/BroadCastServices';
 import AlertBar from '../../snacks/AlertBar';
+import { IBroadcast, IBroadcastReport } from '../../../types/broadcast.types';
+import { IUser } from '../../../types/user.types';
 
 
 type TformData = {

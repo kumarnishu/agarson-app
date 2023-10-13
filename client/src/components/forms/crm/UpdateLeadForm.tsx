@@ -10,11 +10,10 @@ import { Countries } from '../../../utils/countries';
 import { States } from '../../../utils/states';
 import { Cities } from '../../../utils/cities';
 import { BackendError, Target } from '../../..';
-import { ILead, ILeadUpdatableField } from '../../../types';
-import { IUser } from '../../../types';
 import { queryClient } from '../../../main';
 import { UserContext } from '../../../contexts/userContext';
-import { useCrmFields } from '../../hooks/CrmFieldsHook';
+import { ILead, ILeadUpdatableField } from '../../../types/crm.types';
+import { IUser } from '../../../types/user.types';
 
 export type TformData = {
   name: string,
@@ -40,7 +39,6 @@ export type TformData = {
   visiting_card: string | Blob | File
 }
 function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
-  const { hiddenFields, readonlyFields } = useCrmFields()
   const { mutate, isLoading, isSuccess, isError, error } = useMutation
     <AxiosResponse<ILead>, BackendError, { id: string, body: FormData }>
     (UpdateLead, {
@@ -192,589 +190,530 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
         pt={2}
       >
         {/* name */}
-        {
-          !hiddenFields?.includes('Lead Name') ?
-            <TextField
-              autoFocus
 
-              fullWidth
-              disabled={Boolean(readonlyFields?.includes('Lead Name'))}
-              error={
-                formik.touched.name && formik.errors.name ? true : false
-              }
-              id="name"
-              label="Lead Name"
-              helperText={
-                formik.touched.name && formik.errors.name ? formik.errors.name : ""
-              }
-              {...formik.getFieldProps('name')}
-            />
-            : null
-        }
+        <TextField
+          autoFocus
+
+          fullWidth
+
+          error={
+            formik.touched.name && formik.errors.name ? true : false
+          }
+          id="name"
+          label="Lead Name"
+          helperText={
+            formik.touched.name && formik.errors.name ? formik.errors.name : ""
+          }
+          {...formik.getFieldProps('name')}
+        />
+
 
         {/* customer name */}
-        {
 
-          !hiddenFields?.includes('Customer Name') ?
-            < TextField
 
-              fullWidth
-              disabled={Boolean(readonlyFields?.includes('Customer Name'))}
-              error={
-                formik.touched.customer_name && formik.errors.customer_name ? true : false
-              }
-              id="customer_name"
-              label="Customer Name"
-              helperText={
-                formik.touched.customer_name && formik.errors.customer_name ? formik.errors.customer_name : ""
-              }
-              {...formik.getFieldProps('customer_name')}
-            />
+        < TextField
 
-            : null
-        }
+          fullWidth
+          error={
+            formik.touched.customer_name && formik.errors.customer_name ? true : false
+          }
+          id="customer_name"
+          label="Customer Name"
+          helperText={
+            formik.touched.customer_name && formik.errors.customer_name ? formik.errors.customer_name : ""
+          }
+          {...formik.getFieldProps('customer_name')}
+        />
+
+
         {/* customer designiation */}
 
-        {
-          !hiddenFields?.includes('Customer Desigination') ?
-            < TextField
 
-              fullWidth
-              disabled={Boolean(readonlyFields?.includes('Customer Desigination'))}
+        < TextField
 
-              error={
-                formik.touched.customer_designation && formik.errors.customer_designation ? true : false
-              }
-              id="customer_designation"
-              label="Customer Designation"
-              helperText={
-                formik.touched.customer_designation && formik.errors.customer_designation ? formik.errors.customer_designation : ""
-              }
-              {...formik.getFieldProps('customer_designation')}
-            />
-            : null
-        }
+          fullWidth
+
+          error={
+            formik.touched.customer_designation && formik.errors.customer_designation ? true : false
+          }
+          id="customer_designation"
+          label="Customer Designation"
+          helperText={
+            formik.touched.customer_designation && formik.errors.customer_designation ? formik.errors.customer_designation : ""
+          }
+          {...formik.getFieldProps('customer_designation')}
+        />
+
         {/* mobile */}
 
-        {
-          !hiddenFields?.includes('Mobile1') ?
-            < TextField
-              required
 
-              disabled={Boolean(readonlyFields?.includes('Mobile1'))}
-              type="string"
-              error={
-                formik.touched.mobile && formik.errors.mobile ? true : false
-              }
-              id="mobile"
-              label="Mobile"
-              fullWidth
-              helperText={
-                formik.touched.mobile && formik.errors.mobile ? formik.errors.mobile : ""
-              }
-              {...formik.getFieldProps('mobile')}
-            />
-            : null
-        }
+        < TextField
+          required
+
+
+          type="string"
+          error={
+            formik.touched.mobile && formik.errors.mobile ? true : false
+          }
+          id="mobile"
+          label="Mobile"
+          fullWidth
+          helperText={
+            formik.touched.mobile && formik.errors.mobile ? formik.errors.mobile : ""
+          }
+          {...formik.getFieldProps('mobile')}
+        />
+
         {/* email */}
 
-        {
-          !hiddenFields?.includes('Email') ?
-            < TextField
 
-              fullWidth
-              disabled={Boolean(readonlyFields?.includes('Email'))}
+        < TextField
 
-              error={
-                formik.touched.email && formik.errors.email ? true : false
-              }
-              id="email"
-              label="Email"
-              helperText={
-                formik.touched.email && formik.errors.email ? formik.errors.email : ""
-              }
-              {...formik.getFieldProps('email')}
-            />
-            : null
-        }
+          fullWidth
+
+
+          error={
+            formik.touched.email && formik.errors.email ? true : false
+          }
+          id="email"
+          label="Email"
+          helperText={
+            formik.touched.email && formik.errors.email ? formik.errors.email : ""
+          }
+          {...formik.getFieldProps('email')}
+        />
+
         {/* alternate mobile */}
 
-        {
-          !hiddenFields?.includes('Mobile2') ?
 
-            < TextField
 
-              fullWidth
-              disabled={Boolean(readonlyFields?.includes('Mobile2'))}
-              type="string"
-              error={
-                formik.touched.alternate_mobile1 && formik.errors.alternate_mobile1 ? true : false
-              }
-              id="alternate_mobile1"
-              label="Alternate Mobile1"
-              helperText={
-                formik.touched.alternate_mobile1 && formik.errors.alternate_mobile1 ? formik.errors.alternate_mobile1 : ""
-              }
-              {...formik.getFieldProps('alternate_mobile1')}
-            />
-            : null
-        }
+        < TextField
+
+          fullWidth
+
+          type="string"
+          error={
+            formik.touched.alternate_mobile1 && formik.errors.alternate_mobile1 ? true : false
+          }
+          id="alternate_mobile1"
+          label="Alternate Mobile1"
+          helperText={
+            formik.touched.alternate_mobile1 && formik.errors.alternate_mobile1 ? formik.errors.alternate_mobile1 : ""
+          }
+          {...formik.getFieldProps('alternate_mobile1')}
+        />
+
         {/* alternate mobile */}
 
-        {
-          !hiddenFields?.includes('Mobile3') ?
 
-            < TextField
 
-              fullWidth
-              disabled={Boolean(readonlyFields?.includes('Mobile3'))}
-              type="string"
-              error={
-                formik.touched.alternate_mobile2 && formik.errors.alternate_mobile2 ? true : false
-              }
-              id="alternate_mobile2"
-              label="Alternate Mobile2"
-              helperText={
-                formik.touched.alternate_mobile2 && formik.errors.alternate_mobile2 ? formik.errors.alternate_mobile2 : ""
-              }
-              {...formik.getFieldProps('alternate_mobile2')}
-            />
-            : null
-        }
+        < TextField
+
+          fullWidth
+
+          type="string"
+          error={
+            formik.touched.alternate_mobile2 && formik.errors.alternate_mobile2 ? true : false
+          }
+          id="alternate_mobile2"
+          label="Alternate Mobile2"
+          helperText={
+            formik.touched.alternate_mobile2 && formik.errors.alternate_mobile2 ? formik.errors.alternate_mobile2 : ""
+          }
+          {...formik.getFieldProps('alternate_mobile2')}
+        />
+
         {/* turnover */}
-        {
-          !hiddenFields?.includes('Turn Over') ?
-            <TextField
 
-              fullWidth
-              error={
-                formik.touched.turnover && formik.errors.turnover ? true : false
-              }
-              disabled={Boolean(readonlyFields?.includes('Turn Over'))}
+        <TextField
 
-              id="turnover"
-              label="TurnOver"
-              helperText={
-                formik.touched.turnover && formik.errors.turnover ? formik.errors.turnover : ""
-              }
-              {...formik.getFieldProps('turnover')}
-            />
-            : null
-        }
+          fullWidth
+          error={
+            formik.touched.turnover && formik.errors.turnover ? true : false
+          }
+
+
+          id="turnover"
+          label="TurnOver"
+          helperText={
+            formik.touched.turnover && formik.errors.turnover ? formik.errors.turnover : ""
+          }
+          {...formik.getFieldProps('turnover')}
+        />
+
         {/* alternate_email */}
 
-        {
-          !hiddenFields?.includes('Email2') ?
 
-            < TextField
 
-              fullWidth
-              disabled={Boolean(readonlyFields?.includes('Email2'))}
+        < TextField
 
-              error={
-                formik.touched.alternate_email && formik.errors.alternate_email ? true : false
-              }
-              id="alternate_email"
-              label="Alternate Email"
-              helperText={
-                formik.touched.alternate_email && formik.errors.alternate_email ? formik.errors.alternate_email : ""
-              }
-              {...formik.getFieldProps('alternate_email')}
-            />
-            : null
-        }
+          fullWidth
+
+
+          error={
+            formik.touched.alternate_email && formik.errors.alternate_email ? true : false
+          }
+          id="alternate_email"
+          label="Alternate Email"
+          helperText={
+            formik.touched.alternate_email && formik.errors.alternate_email ? formik.errors.alternate_email : ""
+          }
+          {...formik.getFieldProps('alternate_email')}
+        />
+
         {/* city */}
 
-        {
-          !hiddenFields?.includes('City') ?
-            < TextField
 
-              select
-              disabled={Boolean(readonlyFields?.includes('City'))}
+        < TextField
 
-              SelectProps={{
-                native: true
-              }}
-              focused
-              error={
-                formik.touched.city && formik.errors.city ? true : false
-              }
-              id="city"
-              label="City"
-              fullWidth
-              helperText={
-                formik.touched.city && formik.errors.city ? formik.errors.city : ""
-              }
-              {...formik.getFieldProps('city')}
-            >
-              <option value="">
-              </option>
-              {
-                Cities.map((city, index) => {
-                  return (<option key={index} value={String(city).toLocaleUpperCase()}>
-                    {city}
-                  </option>)
-                })
-              }
-            </TextField>
-            : null
-        }
+          select
+
+
+          SelectProps={{
+            native: true
+          }}
+          focused
+          error={
+            formik.touched.city && formik.errors.city ? true : false
+          }
+          id="city"
+          label="City"
+          fullWidth
+          helperText={
+            formik.touched.city && formik.errors.city ? formik.errors.city : ""
+          }
+          {...formik.getFieldProps('city')}
+        >
+          <option value="">
+          </option>
+          {
+            Cities.map((city, index) => {
+              return (<option key={index} value={String(city).toLocaleUpperCase()}>
+                {city}
+              </option>)
+            })
+          }
+        </TextField>
+
         {/* state */}
+        < TextField
+          select
+          SelectProps={{
+            native: true
+          }}
+          focused
+          error={
+            formik.touched.state && formik.errors.state ? true : false
+          }
+          id="state"
+          label="State"
+          fullWidth
+          helperText={
+            formik.touched.state && formik.errors.state ? formik.errors.state : ""
+          }
+          {...formik.getFieldProps('state')}
+        >
+          <option value="">
 
-        {
-          !hiddenFields?.includes('State') ?
-            < TextField
+          </option>
+          {
+            States.map(state => {
+              return (<option key={state.code} value={state.state.toLowerCase()}>
+                {state.state}
+              </option>)
+            })
+          }
+        </TextField>
 
-              select
-              disabled={Boolean(readonlyFields?.includes('State'))}
+        < TextField
+          select
+          SelectProps={{
+            native: true
+          }}
+          focused
+          error={
+            formik.touched.stage && formik.errors.stage ? true : false
+          }
+          id="stage"
+          label="Stage"
+          fullWidth
+          helperText={
+            formik.touched.stage && formik.errors.stage ? formik.errors.stage : ""
+          }
+          {...formik.getFieldProps('stage')}
+        >
+          <option value="">
 
-              SelectProps={{
-                native: true
-              }}
-              focused
-              error={
-                formik.touched.state && formik.errors.state ? true : false
-              }
-              id="state"
-              label="State"
-              fullWidth
-              helperText={
-                formik.touched.state && formik.errors.state ? formik.errors.state : ""
-              }
-              {...formik.getFieldProps('state')}
-            >
-              <option value="">
+          </option>
+          {
 
-              </option>
-              {
-                States.map(state => {
-                  return (<option key={state.code} value={state.state.toLowerCase()}>
-                    {state.state}
-                  </option>)
-                })
-              }
-            </TextField>
-            : null
-        }
-        {/* stage */}
+            fields && fields.stages && fields.stages.map(stage => {
+              return (
+                <option key={stage} value={stage}>
+                  {stage}
+                </option>)
+            })
+          }
+        </TextField>
 
-        {
-          !hiddenFields?.includes('Stage') ?
-            < TextField
-
-              disabled={Boolean(readonlyFields?.includes('Stage'))}
-              select
-              SelectProps={{
-                native: true
-              }}
-              focused
-              error={
-                formik.touched.stage && formik.errors.stage ? true : false
-              }
-              id="stage"
-              label="Stage"
-              fullWidth
-              helperText={
-                formik.touched.stage && formik.errors.stage ? formik.errors.stage : ""
-              }
-              {...formik.getFieldProps('stage')}
-            >
-              <option value="">
-
-              </option>
-              {
-
-                fields && fields.stages && fields.stages.map(stage => {
-                  return (
-                    <option key={stage} value={stage}>
-                      {stage}
-                    </option>)
-                })
-              }
-            </TextField>
-            : null
-        }
         {/* lead type */}
 
-        {
-          !hiddenFields?.includes('Lead Type') ?
 
-            < TextField
 
-              disabled={Boolean(readonlyFields?.includes('Lead Type'))}
+        < TextField
 
-              select
-              SelectProps={{
-                native: true
-              }}
-              focused
-              error={
-                formik.touched.lead_type && formik.errors.lead_type ? true : false
-              }
 
-              id="lead_type"
-              label="Lead Type"
-              fullWidth
-              helperText={
-                formik.touched.lead_type && formik.errors.lead_type ? formik.errors.lead_type : ""
-              }
-              {...formik.getFieldProps('lead_type')}
-            >
-              <option value="">
 
-              </option>
-              {
+          select
+          SelectProps={{
+            native: true
+          }}
+          focused
+          error={
+            formik.touched.lead_type && formik.errors.lead_type ? true : false
+          }
 
-                fields && fields.lead_types && fields.lead_types.map(type => {
-                  return (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>)
-                })
-              }
+          id="lead_type"
+          label="Lead Type"
+          fullWidth
+          helperText={
+            formik.touched.lead_type && formik.errors.lead_type ? formik.errors.lead_type : ""
+          }
+          {...formik.getFieldProps('lead_type')}
+        >
+          <option value="">
 
-            </TextField>
+          </option>
+          {
 
-            : null
-        }
+            fields && fields.lead_types && fields.lead_types.map(type => {
+              return (
+                <option key={type} value={type}>
+                  {type}
+                </option>)
+            })
+          }
+
+        </TextField>
+
+
         {/* lead_source */}
 
-        {
-          !hiddenFields?.includes('Lead Source') ?
-            < TextField
 
-              select
-              disabled={Boolean(readonlyFields?.includes('Lead Source'))}
+        < TextField
 
-              SelectProps={{
-                native: true
-              }}
-              focused
-              error={
-                formik.touched.lead_source && formik.errors.lead_source ? true : false
-              }
-              id="lead_source"
-              label="Lead Source"
-              fullWidth
-              helperText={
-                formik.touched.lead_source && formik.errors.lead_source ? formik.errors.lead_source : ""
-              }
-              {...formik.getFieldProps('lead_source')}
-            >
-              <option value="">
-              </option>
-              {
+          select
 
-                fields && fields.lead_sources && fields.lead_sources.map(source => {
-                  return (
-                    <option key={source} value={source}>
-                      {source}
-                    </option>)
-                })
-              }
-            </TextField>
-            : null
-        }
+
+          SelectProps={{
+            native: true
+          }}
+          focused
+          error={
+            formik.touched.lead_source && formik.errors.lead_source ? true : false
+          }
+          id="lead_source"
+          label="Lead Source"
+          fullWidth
+          helperText={
+            formik.touched.lead_source && formik.errors.lead_source ? formik.errors.lead_source : ""
+          }
+          {...formik.getFieldProps('lead_source')}
+        >
+          <option value="">
+          </option>
+          {
+
+            fields && fields.lead_sources && fields.lead_sources.map(source => {
+              return (
+                <option key={source} value={source}>
+                  {source}
+                </option>)
+            })
+          }
+        </TextField>
+
         {/* country */}
 
-        {
-          !hiddenFields?.includes('Country') ?
 
-            < TextField
 
-              disabled={Boolean(readonlyFields?.includes('Country'))}
-              select
-              SelectProps={{
-                native: true
-              }}
-              focused
-              error={
-                formik.touched.country && formik.errors.country ? true : false
-              }
-              id="country"
-              label="country"
-              fullWidth
-              helperText={
-                formik.touched.country && formik.errors.country ? formik.errors.country : ""
-              }
-              {...formik.getFieldProps('country')}
-            >
-              {
-                Countries.map(country => {
-                  return (<option key={country.unicode} value={country.name}>
-                    {country.name}
-                  </option>)
-                })
-              }
-            </TextField>
-            : null
-        }
+        < TextField
+
+
+          select
+          SelectProps={{
+            native: true
+          }}
+          focused
+          error={
+            formik.touched.country && formik.errors.country ? true : false
+          }
+          id="country"
+          label="country"
+          fullWidth
+          helperText={
+            formik.touched.country && formik.errors.country ? formik.errors.country : ""
+          }
+          {...formik.getFieldProps('country')}
+        >
+          {
+            Countries.map(country => {
+              return (<option key={country.unicode} value={country.name}>
+                {country.name}
+              </option>)
+            })
+          }
+        </TextField>
+
         {/* address */}
-        {
-          !hiddenFields?.includes('Address') ?
-            < TextField
-              disabled={Boolean(readonlyFields?.includes('Address'))}
+
+        < TextField
 
 
-              multiline
-              minRows={2}
-              error={
-                formik.touched.address && formik.errors.address ? true : false
-              }
-              id="address"
-              label="Address"
-              fullWidth
-              helperText={
-                formik.touched.address && formik.errors.address ? formik.errors.address : ""
-              }
-              {...formik.getFieldProps('address')}
-            />
-            : null
-        }
+
+          multiline
+          minRows={2}
+          error={
+            formik.touched.address && formik.errors.address ? true : false
+          }
+          id="address"
+          label="Address"
+          fullWidth
+          helperText={
+            formik.touched.address && formik.errors.address ? formik.errors.address : ""
+          }
+          {...formik.getFieldProps('address')}
+        />
+
         {/* work_description */}
 
-        {
-          !hiddenFields?.includes('Work Description') ?
 
-            < TextField
 
-              multiline
-              minRows={2}
-              disabled={Boolean(readonlyFields?.includes('Work Description'))}
+        < TextField
 
-              error={
-                formik.touched.work_description && formik.errors.work_description ? true : false
-              }
-              id="work_description"
-              label="Work Description"
-              fullWidth
-              helperText={
-                formik.touched.work_description && formik.errors.work_description ? formik.errors.work_description : ""
-              }
-              {...formik.getFieldProps('work_description')}
-            />
-            : null
-        }
+          multiline
+          minRows={2}
+
+          error={
+            formik.touched.work_description && formik.errors.work_description ? true : false
+          }
+          id="work_description"
+          label="Work Description"
+          fullWidth
+          helperText={
+            formik.touched.work_description && formik.errors.work_description ? formik.errors.work_description : ""
+          }
+          {...formik.getFieldProps('work_description')}
+        />
+
 
         {/* lead owners */}
 
-        {
-          !hiddenFields?.includes('Lead Owners') ?
 
-            < TextField
 
-              disabled={Boolean(readonlyFields?.includes('Lead Owners'))}
-              select
-              SelectProps={{
-                native: true,
-                multiple: true
-              }}
-              focused
-              required
-              error={
-                formik.touched.lead_owners && formik.errors.lead_owners ? true : false
+        < TextField
+
+
+          select
+          SelectProps={{
+            native: true,
+            multiple: true
+          }}
+          focused
+          required
+          error={
+            formik.touched.lead_owners && formik.errors.lead_owners ? true : false
+          }
+          id="lead_owners"
+          label="Lead Owners"
+          fullWidth
+          helperText={
+            formik.touched.lead_owners && formik.errors.lead_owners ? formik.errors.lead_owners : ""
+          }
+          {...formik.getFieldProps('lead_owners')}
+        >
+          {
+            lead.lead_owners.map(owner => {
+              return (<option key={owner._id} value={owner._id}>
+                {owner.username}
+              </option>)
+            })
+          }
+          {
+            users.map((user, index) => {
+              let leadowners = lead.lead_owners.map(owner => {
+                return owner.username
+              })
+              if (!leadowners.includes(user.username)) {
+                return (<option key={index} value={user._id}>
+                  {user.username}
+                </option>)
               }
-              id="lead_owners"
-              label="Lead Owners"
-              fullWidth
-              helperText={
-                formik.touched.lead_owners && formik.errors.lead_owners ? formik.errors.lead_owners : ""
-              }
-              {...formik.getFieldProps('lead_owners')}
-            >
-              {
-                lead.lead_owners.map(owner => {
-                  return (<option key={owner._id} value={owner._id}>
-                    {owner.username}
-                  </option>)
-                })
-              }
-              {
-                users.map((user, index) => {
-                  let leadowners = lead.lead_owners.map(owner => {
-                    return owner.username
-                  })
-                  if (!leadowners.includes(user.username)) {
-                    return (<option key={index} value={user._id}>
-                      {user.username}
-                    </option>)
-                  }
-                  else return null
-                })
-              }
-            </TextField>
-            : null
-        }
+              else return null
+            })
+          }
+        </TextField>
+
         {/* remark */}
 
-        {
-          !hiddenFields?.includes('Last Remark') ?
-            < TextField
 
-              multiline
-              disabled={Boolean(readonlyFields?.includes('Last Remark'))}
-              minRows={2}
-              error={
-                formik.touched.remark && formik.errors.remark ? true : false
-              }
-              id="remark"
-              label="Remark"
-              fullWidth
-              helperText={
-                formik.touched.remark && formik.errors.remark ? formik.errors.remark : ""
-              }
-              {...formik.getFieldProps('remark')}
-            />
-            : null
-        }
+        < TextField
+
+          multiline
+
+          minRows={2}
+          error={
+            formik.touched.remark && formik.errors.remark ? true : false
+          }
+          id="remark"
+          label="Remark"
+          fullWidth
+          helperText={
+            formik.touched.remark && formik.errors.remark ? formik.errors.remark : ""
+          }
+          {...formik.getFieldProps('remark')}
+        />
+
         {
           user?.created_by._id === user?._id ? <>
-            {
-              !hiddenFields?.includes('Convert To Customer') ?
-                <FormGroup>
-                  <FormControlLabel control={<Checkbox
-                    disabled={Boolean(readonlyFields?.includes('Convert To Customer'))}
-                    defaultChecked={Boolean(formik.values.is_customer)}
-                    {...formik.getFieldProps('is_customer')}
-                  />} label="Is A Customer" />
-                  <p>
-                    {formik.touched.is_customer && formik.errors.is_customer ? formik.errors.is_customer : ""}
-                  </p>
-                </FormGroup>
-                : null
-            }
+            <FormGroup>
+              <FormControlLabel control={<Checkbox
+                {...formik.getFieldProps('is_customer')}
+              />} label="Is A Customer" />
+              <p>
+                {formik.touched.is_customer && formik.errors.is_customer ? formik.errors.is_customer : ""}
+              </p>
+            </FormGroup>
+
           </> : null
-
         }
-        {
-          !hiddenFields?.includes('Vsting Card') ?
-            <TextField
-              fullWidth
-              error={
-                formik.touched.visiting_card && formik.errors.visiting_card ? true : false
-              }
-              helperText={
-                formik.touched.visiting_card && formik.errors.visiting_card ? (formik.errors.visiting_card) : ""
-              }
-              disabled={Boolean(readonlyFields?.includes('Vsting Card'))}
-              label="Visting Card"
-              focused
 
-              type="file"
-              name="visiting_card"
-              onBlur={formik.handleBlur}
-              onChange={(e) => {
-                e.preventDefault()
-                const target: Target = e.currentTarget
-                let files = target.files
-                if (files) {
-                  let file = files[0]
-                  formik.setFieldValue("visiting_card", file)
-                }
-              }}
-            />
-            : null
-        }
+        <TextField
+          fullWidth
+          error={
+            formik.touched.visiting_card && formik.errors.visiting_card ? true : false
+          }
+          helperText={
+            formik.touched.visiting_card && formik.errors.visiting_card ? (formik.errors.visiting_card) : ""
+          }
+
+          label="Visting Card"
+          focused
+
+          type="file"
+          name="visiting_card"
+          onBlur={formik.handleBlur}
+          onChange={(e) => {
+            e.preventDefault()
+            const target: Target = e.currentTarget
+            let files = target.files
+            if (files) {
+              let file = files[0]
+              formik.setFieldValue("visiting_card", file)
+            }
+          }}
+        />
+
         <Button variant="contained" color="primary" type="submit"
           disabled={isLoading}
           fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Update Lead"}

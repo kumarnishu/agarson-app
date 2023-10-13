@@ -10,7 +10,7 @@ import { queryClient } from '../../../main';
 
 import AlertBar from '../../snacks/AlertBar';
 import { CreateContact } from '../../../services/ContactServices';
-import { IContact } from '../../../types';
+import { IContact } from '../../../types/contact.types';
 
 
 

@@ -2,13 +2,12 @@ import { AxiosResponse } from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { UpdateUserBotAccess } from '../../../services/UserServices';
+import { UpdateUserAccess } from '../../../services/UserServices';
 import { Button, Checkbox, FormControlLabel, Typography, CircularProgress, Stack } from '@mui/material'
 import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
-import { BotField, BotFieldType } from '../../../types/access.types';
-import { IUser } from '../../../types';
+
 
 
 
@@ -17,7 +16,7 @@ function BotControlAccessForm({ user }: { user: IUser }) {
     const [BotFields, setBotFields] = useState(user.bot_fields)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any>, BackendError, { id: string, botFields: { bot_fields: BotField[] } }>
-        (UpdateUserBotAccess, {
+        (UpdateUserAccess, {
             onSuccess: () => {
                 queryClient.invalidateQueries('users')
             }
