@@ -2,7 +2,6 @@ import { Comment, Delete, DeleteOutline, Edit, Share, Visibility } from '@mui/ic
 import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
-import { ILead } from '../../types'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
@@ -18,7 +17,7 @@ import BackHandIcon from '@mui/icons-material/BackHand';
 import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
 import ToogleUselessLead from '../dialogs/crm/ToogleUselessLead'
-import { useCrmFields } from '../hooks/CrmFieldsHook'
+import { ILead } from '../../types/crm.types'
 
 
 
@@ -37,7 +36,6 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
   const { setChoice } = useContext(ChoiceContext)
   const { user } = useContext(UserContext)
   const [data, setData] = useState<ILead[]>(leads)
-  const { hiddenFields, readonlyFields } = useCrmFields()
 
   useEffect(() => {
     setData(leads)
@@ -98,388 +96,352 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
 
 
               {/* visitin card */}
-              {!hiddenFields?.includes('Vsting Card') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Visiting Card
-                  </Stack>
-                </TableCell>
-                :
-                null}
-
-              {!hiddenFields?.includes('Lead Name') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Lead Name
-                  </Stack>
-                </TableCell>
-                :
-                null}
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Visiting Card
+                </Stack>
+              </TableCell>
 
 
-              {/* stage */}
-              {!hiddenFields?.includes('Stage') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Stage
-                  </Stack>
-                </TableCell>
-                :
-                null}
-              {!hiddenFields?.includes('Mobile1') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Mobile
-                  </Stack>
-                </TableCell>
-                :
-                null}
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Lead Name
+                </Stack>
+              </TableCell>
+
+
+
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Stage
+                </Stack>
+              </TableCell>
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Mobile
+                </Stack>
+              </TableCell>
+
               {/* alternate mobile 1 */}
-              {!hiddenFields?.includes('Mobile2') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Mobile2
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Mobile2
+                </Stack>
+              </TableCell>
+
               {/* alternate mobile 2 */}
-              {!hiddenFields?.includes('Mobile3') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Mobile3
-                  </Stack>
-                </TableCell>
-                :
-                null}
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Mobile3
+                </Stack>
+              </TableCell>
+
 
               {/* city */}
-              {!hiddenFields?.includes('City') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    City
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  City
+                </Stack>
+              </TableCell>
+
               {/* state */}
-              {!hiddenFields?.includes('State') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    State
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  State
+                </Stack>
+              </TableCell>
+
               {/* lead type */}
-              {!hiddenFields?.includes('Lead Type') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Lead Type
-                  </Stack>
-                </TableCell>
-                :
-                null}
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Lead Type
+                </Stack>
+              </TableCell>
+
               {/* lead owners */}
-              {!hiddenFields?.includes('Lead Owners') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Lead Owners
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Lead Owners
+                </Stack>
+              </TableCell>
+
               {/* turn over */}
-              {!hiddenFields?.includes('Turn Over') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    TurnOver
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  TurnOver
+                </Stack>
+              </TableCell>
+
               {/* work description */}
-              {!hiddenFields?.includes('Work Description') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Work Description
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Work Description
+                </Stack>
+              </TableCell>
+
               {/* customer name */}
-              {!hiddenFields?.includes('Customer Name') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Customer Name
-                  </Stack>
-                </TableCell>
-                :
-                null}
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Customer Name
+                </Stack>
+              </TableCell>
+
               {/* designiaton */}
-              {!hiddenFields?.includes('Customer Desigination') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Customer Desigination
-                  </Stack>
-                </TableCell>
-                :
-                null}
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Customer Desigination
+                </Stack>
+              </TableCell>
+
               {/* last remark */}
-              {!hiddenFields?.includes('Last Remark') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Last Remark
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Last Remark
+                </Stack>
+              </TableCell>
+
               {/* mobile */}
 
 
               {/* email */}
-              {!hiddenFields?.includes('Email') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Email
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Email
+                </Stack>
+              </TableCell>
+
               {/* alternate email */}
-              {!hiddenFields?.includes('Email2') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Email2
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Email2
+                </Stack>
+              </TableCell>
+
               {/* address */}
-              {!hiddenFields?.includes('Address') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Address
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Address
+                </Stack>
+              </TableCell>
+
 
 
               {/* source */}
-              {!hiddenFields?.includes('Lead Source') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Lead Source
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Lead Source
+                </Stack>
+              </TableCell>
+
               {/* country */}
-              {!hiddenFields?.includes('Country') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Country
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Country
+                </Stack>
+              </TableCell>
+
               {/* created at */}
-              {!hiddenFields?.includes('Created At') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Created At
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Created At
+                </Stack>
+              </TableCell>
+
               {/* updated at */}
-              {!hiddenFields?.includes('Updated At') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Updated At
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Updated At
+                </Stack>
+              </TableCell>
+
               {/* created by */}
-              {!hiddenFields?.includes('Created By') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Created By
-                  </Stack>
-                </TableCell>
-                :
-                null}
-              {/* updated by */}
-              {!hiddenFields?.includes('Updated By') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Updated By
-                  </Stack>
-                </TableCell>
-                :
-                null}
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Created By
+                </Stack>
+              </TableCell>
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Updated By
+                </Stack>
+              </TableCell>
+
 
               {/* last whatsapp */}
-              {!hiddenFields?.includes('Last Whatsapp') ?
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Last Whatsapp
-                  </Stack>
-                </TableCell>
-                :
-                null}
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Last Whatsapp
+                </Stack>
+              </TableCell>
+
 
             </TableRow>
           </TableHead>
@@ -576,7 +538,7 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                                     </Tooltip>}
 
                                   {
-                                    !hiddenFields?.includes('Delete Lead') && <Tooltip title="delete">
+                                    <Tooltip title="delete">
                                       <IconButton color="error"
                                         onClick={() => {
 
@@ -584,14 +546,12 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                                           setLead(lead)
 
                                         }}
-                                        disabled={readonlyFields?.includes('Delete Lead')}
                                       >
                                         <Delete />
                                       </IconButton>
                                     </Tooltip>
                                   }
                                   {
-                                    !hiddenFields?.includes('Convert To Customer') &&
                                     <Tooltip title="Convert to Customer">
                                       <IconButton color="secondary"
                                         onClick={() => {
@@ -599,7 +559,6 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                                           setChoice({ type: LeadChoiceActions.convert_customer })
                                           setLead(lead)
                                         }}
-                                        disabled={readonlyFields?.includes('Convert To Customer')}
                                       >
                                         <AddTaskIcon />
                                       </IconButton>
@@ -634,7 +593,6 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                                   }
 
                                   {
-                                    !hiddenFields?.includes('Edit Lead') &&
                                     <Tooltip title="edit">
                                       <IconButton color="secondary"
                                         onClick={() => {
@@ -642,18 +600,15 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                                           setChoice({ type: LeadChoiceActions.update_lead })
                                           setLead(lead)
                                         }}
-                                        disabled={readonlyFields?.includes('Edit Lead')}
 
                                       >
                                         <Edit />
                                       </IconButton>
                                     </Tooltip>}
                                 </>
-                                :
-                                null
-                            }
+
+                                : null}
                             {
-                              !hiddenFields?.includes('View Remarks') &&
                               <Tooltip title="view remarks">
                                 <IconButton color="primary"
                                   onClick={() => {
@@ -663,13 +618,11 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
 
 
                                   }}
-                                  disabled={readonlyFields?.includes('View Remarks')}
                                 >
                                   <Visibility />
                                 </IconButton>
                               </Tooltip>}
                             {
-                              !hiddenFields?.includes('Add Remark') &&
                               <Tooltip title="Add Remark">
                                 <IconButton
                                   color="success"
@@ -679,7 +632,6 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                                     setLead(lead)
 
                                   }}
-                                  disabled={readonlyFields?.includes('Add Remark')}
                                 >
                                   <Comment />
                                 </IconButton>
@@ -690,253 +642,203 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                     </TableCell>
                     {/* visitin card */}
                     {
-                      !hiddenFields?.includes('Vsting Card') ?
-                        <TableCell 
-                          title="double click to download"
+                      <TableCell
+                        title="double click to download"
                         onDoubleClick={() => {
                           if (lead.visiting_card && lead.visiting_card?.public_url) {
                             DownloadFile(lead.visiting_card.public_url, lead.visiting_card.filename)
                           }
                         }}>
-                          <img height="50" width="75" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" />
-                        </TableCell>
-                        :
-                        null
+                        <img height="50" width="75" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" />
+                      </TableCell>
+
                     }
 
                     {/* lead name */}
                     {
-                      !hiddenFields?.includes('Lead Name') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.name}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.name}</Typography>
+                      </TableCell>
+
                     }
                     {/* stage */}
                     {
-                      !hiddenFields?.includes('Stage') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.stage}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.stage}</Typography>
+                      </TableCell>
+
                     }
                     {
-                      !hiddenFields?.includes('Mobile1') ?
-                        <TableCell>
-                          <Stack>
-                            <Typography variant="body1"  >{lead.mobile}</Typography>
-                          </Stack>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Stack>
+                          <Typography variant="body1"  >{lead.mobile}</Typography>
+                        </Stack>
+                      </TableCell>
+
                     }
                     {/* alternate mobile 1 */}
                     {
-                      !hiddenFields?.includes('Mobile2') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.alternate_mobile1}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.alternate_mobile1}</Typography>
+                      </TableCell>
+
                     }
                     {/* alternate mobile 2 */}
                     {
-                      !hiddenFields?.includes('Mobile3') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.alternate_mobile2}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.alternate_mobile2}</Typography>
+                      </TableCell>
+
                     }
 
                     {/* city */}
                     {
-                      !hiddenFields?.includes('City') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.city}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.city}</Typography>
+                      </TableCell>
+
                     }
                     {/* state */}
                     {
-                      !hiddenFields?.includes('State') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.state}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.state}</Typography>
+                      </TableCell>
+
                     }
                     {/* lead type */}
                     {
-                      !hiddenFields?.includes('Lead Type') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.lead_type}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.lead_type}</Typography>
+                      </TableCell>
+
                     }
                     {/* lead owners */}
                     {
-                      !hiddenFields?.includes('Lead Owners') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.lead_owners ? lead.lead_owners.map((owner) => { return owner.username + ", " }) : [""]}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.lead_owners ? lead.lead_owners.map((owner) => { return owner.username + ", " }) : [""]}</Typography>
+                      </TableCell>
+
                     }
                     {/* turn over */}
                     {
-                      !hiddenFields?.includes('Turn Over') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.turnover ? lead.turnover : 'na'}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.turnover ? lead.turnover : 'na'}</Typography>
+                      </TableCell>
+
                     }
                     {/* work description */}
                     {
-                      !hiddenFields?.includes('Work Description') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.work_description ? lead.work_description.slice(0, 50) : ""}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.work_description ? lead.work_description.slice(0, 50) : ""}</Typography>
+                      </TableCell>
+
                     }
                     {/* customer name */}
                     {
-                      !hiddenFields?.includes('Customer Name') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.customer_name}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.customer_name}</Typography>
+                      </TableCell>
+
                     }
                     {/* designiaton */}
                     {
-                      !hiddenFields?.includes('Customer Desigination') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>{lead.customer_designation}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }}>{lead.customer_designation}</Typography>
+                      </TableCell>
+
                     }
                     {/* last remark */}
                     {
-                      !hiddenFields?.includes('Last Remark') ?
-                        <TableCell>
-                          {lead.remarks ?
-                            <Typography sx={{ textTransform: "capitalize" }}> {lead.last_remark && lead.last_remark.slice(0, 50)}
-                            </Typography> : null
-                          }
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        {lead.remarks ?
+                          <Typography sx={{ textTransform: "capitalize" }}> {lead.last_remark && lead.last_remark.slice(0, 50)}
+                          </Typography> : null
+                        }
+                      </TableCell>
+
                     }
                     {/* mobile */}
 
                     {/* email */}
                     {
-                      !hiddenFields?.includes('Email') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.email}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.email}</Typography>
+                      </TableCell>
+
                     }
                     {/* alternate email */}
                     {
-                      !hiddenFields?.includes('Email2') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.alternate_email}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.alternate_email}</Typography>
+                      </TableCell>
+
                     }
                     {/* address */}
                     {
-                      !hiddenFields?.includes('Address') ?
-                        <TableCell>
-                          <Stack>
-                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.address ? lead.address.slice(0, 50) : "..."}</Typography>
-                          </Stack>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Stack>
+                          <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.address ? lead.address.slice(0, 50) : "..."}</Typography>
+                        </Stack>
+                      </TableCell>
+
                     }
 
 
                     {/* source */}
                     {
-                      !hiddenFields?.includes('Lead Source') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.lead_source}</Typography>
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.lead_source}</Typography>
 
-                        </TableCell>
-                        :
-                        null
+                      </TableCell>
+
                     }
                     {/* country */}
                     {
-                      !hiddenFields?.includes('Country') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.country}</Typography>
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.country}</Typography>
 
-                        </TableCell>
-                        :
-                        null
+                      </TableCell>
+
                     }
                     {/* created at */}
                     {
-                      !hiddenFields?.includes('Created At') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.created_at).toLocaleString()}</Typography>
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.created_at).toLocaleString()}</Typography>
 
-                        </TableCell>
-                        :
-                        null
+                      </TableCell>
+
                     }
                     {/* updated at */}
                     {
-                      !hiddenFields?.includes('Updated At') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.updated_at).toLocaleString()}</Typography>
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.updated_at).toLocaleString()}</Typography>
 
-                        </TableCell>
-                        :
-                        null
+                      </TableCell>
+
                     }
                     {/* created by */}
                     {
-                      !hiddenFields?.includes('Created By') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.created_by.username}</Typography>
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.created_by.username}</Typography>
 
-                        </TableCell>
-                        :
-                        null
+                      </TableCell>
+
                     }
                     {/* updated by */}
                     {
-                      !hiddenFields?.includes('Updated By') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.updated_by.username}</Typography>
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.updated_by.username}</Typography>
 
-                        </TableCell>
-                        :
-                        null
+                      </TableCell>
+
                     }
 
                     {/* last whatsapp */}
                     {
-                      !hiddenFields?.includes('Last Whatsapp') ?
-                        <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.last_whatsapp_date).toLocaleString()}</Typography>
-                        </TableCell>
-                        :
-                        null
+                      <TableCell>
+                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.last_whatsapp_date).toLocaleString()}</Typography>
+                      </TableCell>
+
                     }
 
                   </TableRow>

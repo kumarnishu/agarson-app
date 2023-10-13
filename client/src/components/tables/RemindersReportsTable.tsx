@@ -4,8 +4,7 @@ import { color1, color2, headColor } from '../../utils/colors'
 import { useEffect, useState } from 'react'
 import { Block } from '@mui/icons-material'
 import StopSingleReminderDialog from '../dialogs/reminders/StopSingleReminderDialog'
-import { IContactReport } from '../../types'
-import { useReminderFields } from '../hooks/ReminderFieldsHooks'
+import { IContactReport } from '../../types/contact.types'
 
 type Props = {
     report: IContactReport | undefined,
@@ -15,7 +14,6 @@ type Props = {
 }
 function RemindersReportsTable({ setReport, report, reports }: Props) {
     const [data, setData] = useState<IContactReport[] | undefined>(reports)
-    const { hiddenFields } = useReminderFields()
     useEffect(() => {
         if (data && reports)
             setData(reports)
@@ -34,7 +32,6 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                     <TableHead
                     >
                         <TableRow>
-                            {!hiddenFields?.includes('Actions') &&
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -45,8 +42,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                     >
                                         Action
                                     </Stack>
-                                </TableCell>}
-                            {!hiddenFields?.includes('Connected Number') &&
+                                </TableCell>
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -57,8 +53,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                     >
                                         Mobile
                                     </Stack>
-                                </TableCell>}
-                            {!hiddenFields?.includes('Reminder Status') &&
+                                </TableCell>
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -69,8 +64,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                     >
                                         Whatsapp Status
                                     </Stack>
-                                </TableCell>}
-                            {!hiddenFields?.includes('Reminder Status') &&
+                                </TableCell>
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -81,8 +75,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                     >
                                         Reminder Status
                                     </Stack>
-                                </TableCell>}
-                            {!hiddenFields?.includes('Updated At') &&
+                                </TableCell>
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -93,8 +86,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                     >
                                         Timestamp
                                     </Stack>
-                                </TableCell>}
-                            {!hiddenFields?.includes('Updated At') &&
+                                </TableCell>
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -105,8 +97,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                     >
                                         Created at
                                     </Stack>
-                                </TableCell>}
-                            {!hiddenFields?.includes('Created By') &&
+                                </TableCell>
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -117,8 +108,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                     >
                                         Created By
                                     </Stack>
-                                </TableCell>}
-                            {!hiddenFields?.includes('Updated by') &&
+                                </TableCell>
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -129,7 +119,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                     >
                                         Updated By
                                     </Stack>
-                                </TableCell>}
+                                </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody >
@@ -143,7 +133,6 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                             '&:nth-of-type(even)': { bgcolor: color2 },
                                             '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
                                         }}>
-                                        {!hiddenFields?.includes('Start And Stop') &&
                                             <TableCell>
                                                 <Tooltip title="Stop">
                                                     <IconButton
@@ -157,36 +146,29 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                                     </IconButton>
                                                 </Tooltip>
 
-                                            </TableCell>}
-                                        {!hiddenFields?.includes('Connected Number') &&
+                                            </TableCell>
                                             <TableCell>
                                                 <Typography variant="body1">{report.contact && report.contact.mobile.replace("91", "").replace("@c.us", "")}</Typography>
-                                            </TableCell>}
-                                        {!hiddenFields?.includes('Reminder Status') &&
+                                            </TableCell>
                                             <TableCell>
                                                 <Typography variant="body1">{report.whatsapp_status}</Typography>
-                                            </TableCell>}
-                                        {!hiddenFields?.includes('Reminder Status') &&
+                                            </TableCell>
                                             <TableCell>
                                                 <Typography variant="body1">{report.reminder_status}</Typography>
-                                            </TableCell>}
-                                        {!hiddenFields?.includes('Updated At') &&
+                                            </TableCell>
                                             <TableCell>
                                                 <Typography variant="body1">{report.updated_at && new Date(report.updated_at).toLocaleString()}</Typography>
-                                            </TableCell>}
-                                        {!hiddenFields?.includes('Updated At') &&
+                                            </TableCell>
                                             <TableCell>
                                                 <Typography variant="body1">{report.created_at && new Date(report.created_at).toLocaleString()}</Typography>
                                             </TableCell>
-                                        }
-                                        {!hiddenFields?.includes('Created By') &&
+                                        
                                         <TableCell>
                                             <Typography variant="body1">{report.created_by.username}</Typography>
-                                        </TableCell>}
-                                        {!hiddenFields?.includes('Updated by') &&
+                                        </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">{report.updated_by.username}</Typography>
-                                        </TableCell>}
+                                        </TableCell>
                                     </TableRow>
                                 )
                             })

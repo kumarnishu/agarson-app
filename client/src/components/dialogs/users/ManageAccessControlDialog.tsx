@@ -2,14 +2,9 @@ import { useContext } from "react"
 import { ChoiceContext, UserChoiceActions } from "../../../contexts/dialogContext"
 import { Avatar, Dialog, DialogContent, DialogTitle, IconButton, Stack, Typography } from "@mui/material"
 import { IUser } from "../../../types/user.types"
-import BotControlAccessForm from "../../forms/user/BotControlAccessForm"
+
+import AccessControlForm from "../../forms/user/AccessControlForm"
 import { Cancel } from "@mui/icons-material"
-import BroadcastControlAccessForm from "../../forms/user/BroadcastControlAccessForm"
-import GlobalControlAccessForm from "../../forms/user/GlobalControlAccessForm"
-import ContactControlAccessForm from "../../forms/user/ContactControlAccessForm"
-import ReminderControlAccessForm from "../../forms/user/ReminderControlAccessForm"
-import CrmControlAccessForm from "../../forms/user/CrmControlAccessForm"
-import TemplateControlAccessForm from "../../forms/user/TemplateControlAccessForm"
 
 function ManageAccessControlDialog({ user }: { user: IUser }) {
   const { choice, setChoice } = useContext(ChoiceContext)
@@ -41,23 +36,10 @@ function ManageAccessControlDialog({ user }: { user: IUser }) {
 
           </Stack>
         </DialogTitle>
-        <DialogContent>
-          {user && <GlobalControlAccessForm user={user} />}
-          <Stack direction="row" gap={2}>
-            {
-              user ?
-                <>
-                  <CrmControlAccessForm user={user} />
-                  <BotControlAccessForm user={user} />
-                  <BroadcastControlAccessForm user={user} />
-                  <ContactControlAccessForm user={user} />
-                  <ReminderControlAccessForm user={user} />
-                  <TemplateControlAccessForm user={user} />
-                </>
-                : null
-            }
-          </Stack>
-        </DialogContent>
+        {
+          user &&
+          <AccessControlForm user={user} />
+        }
 
       </Dialog >
     </>

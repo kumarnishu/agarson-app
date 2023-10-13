@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { UpdateUserPassword } from '../../../services/UserServices';
 import { BackendError } from '../../..';
-import { IUser } from '../../../types';
+import { IUser } from '../../../types/user.types';
 import AlertBar from '../../snacks/AlertBar';
 
 

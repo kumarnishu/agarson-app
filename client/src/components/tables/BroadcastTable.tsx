@@ -4,7 +4,6 @@ import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { BroadcastChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
-import { IBroadcast } from '../../types'
 import UpdateBroadcastDialog from '../dialogs/broadcasts/UpdateBroadcastDialog'
 import DeleteBroadcastDialog from '../dialogs/broadcasts/DeleteBroadcastDialog'
 import ViewBroadcastDialog from '../dialogs/broadcasts/ViewBroadcastDialog'
@@ -15,6 +14,7 @@ import UpdateBroadcastMessageDialog from '../dialogs/broadcasts/UpdateBroadcastM
 import StartBroadcastMessageDialog from '../dialogs/broadcasts/StartBroadcastMessageDialog'
 import PopUp from '../popup/PopUp'
 import SetDailyCountBroadcastDialog from '../dialogs/broadcasts/SetDailyCountDialog'
+import { IBroadcast } from '../../types/broadcast.types'
 
 
 type Props = {

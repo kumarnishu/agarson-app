@@ -2,7 +2,6 @@ import { Box,  Checkbox, FormControlLabel, IconButton,  Table, TableBody, TableC
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
-import { ILead, IReferredParty } from '../../types'
 import UpdateReferDialog from '../dialogs/crm/UpdateReferDialog'
 import DeleteReferDialog from '../dialogs/crm/DeleteReferDialog'
 import {  Delete, Edit, RemoveRedEye } from '@mui/icons-material'
@@ -10,6 +9,7 @@ import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ViewReferralsDialog from '../dialogs/crm/ViewReferralsDialog'
 import { UserContext } from '../../contexts/userContext'
 import PopUp from '../popup/PopUp'
+import { ILead, IReferredParty } from '../../types/crm.types'
 
 type Props = {
     refer: IReferredParty | undefined,

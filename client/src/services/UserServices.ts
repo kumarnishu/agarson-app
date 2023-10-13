@@ -47,17 +47,20 @@ export const UnBlockUser = async (id: string) => {
 }
 // make leads controlled
 
+export type AccessTypes = {
+  user_access_fields: UserAccess,
+  crm_access_fields: CrmAccess,
+  contacts_access_fields: ContactsAccess,
+  templates_access_fields: TemplatesAccess,
+  bot_access_fields: BotAccess,
+  broadcast_access_fields: BroadcastAccess,
+  backup_access_fields: BackupAccess,
+  reminders_access_fields: RemindersAccess
+
+}
 export const UpdateUserAccess = async ({ id, access_fields }: {
-  id: string, user_access_fields: UserAccess,
-  access_fields: {
-    crm_access_fields: CrmAccess,
-    contacts_access_fields: ContactsAccess,
-    templates_access_fields: TemplatesAccess,
-    bot_access_fields: BotAccess,
-    broadcast_access_fields: BroadcastAccess,
-    backup_access_fields: BackupAccess,
-    reminders_access_fields: RemindersAccess
-  }
+  id: string,
+  access_fields: AccessTypes
 
 }) => {
   return await apiClient.patch(`update-bot-field-roles/user/${id}`, access_fields)

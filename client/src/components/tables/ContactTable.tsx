@@ -2,12 +2,12 @@ import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCel
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
-import { IContact } from '../../types'
 import { ChoiceContext, ContactChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../popup/PopUp'
 import { Delete, Edit } from '@mui/icons-material'
 import UpdateContactDialog from '../dialogs/contacts/UpdateContactDialog'
 import DeleteContactDialog from '../dialogs/contacts/DeleteContactDialog'
+import { IContact } from '../../types/contact.types'
 
 
 type Props = {

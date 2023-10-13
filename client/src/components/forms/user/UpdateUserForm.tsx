@@ -6,7 +6,7 @@ import { useMutation } from 'react-query';
 import * as Yup from "yup"
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { UpdateUser } from '../../../services/UserServices';
-import { IUser } from '../../../types';
+import { IUser } from '../../../types/user.types';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';

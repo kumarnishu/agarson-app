@@ -11,7 +11,7 @@ import { UserContext } from '../../../contexts/userContext';
 import { paths } from '../../../Routes';
 import { Signup } from '../../../services/UserServices';
 import { BackendError, Target } from '../../..';
-import { IUser } from '../../../types';
+import { IUser } from '../../../types/user.types';
 import AlertBar from '../../snacks/AlertBar';
 
 type TFormData = {

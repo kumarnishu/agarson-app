@@ -1,10 +1,10 @@
 import { Box, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
-import { IBroadcastReport } from '../../types'
 import { useEffect, useState } from 'react'
 import { Block } from '@mui/icons-material'
 import StopSingleBroadcastDialog from '../dialogs/broadcasts/StopSingleBroadcastDialog'
+import { IBroadcastReport } from '../../types/broadcast.types'
 
 type Props = {
     report: IBroadcastReport | undefined,

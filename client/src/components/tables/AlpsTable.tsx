@@ -1,13 +1,13 @@
 import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
-import { IAlps } from '../../types'
 import { useContext, useEffect, useState } from 'react'
 import { DownloadFile } from '../../utils/DownloadFile'
 import DeleteAlpsDialog from '../dialogs/alps/DeleteAlpsDialog'
 import { Delete } from '@mui/icons-material'
 import { AlpsChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
+import { IAlps } from '../../types/alps.types'
 
 
 type Props = {
