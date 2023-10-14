@@ -14,6 +14,7 @@ import UpdateReminderMessageDialog from '../dialogs/reminders/UpdateReminderMess
 import StartReminderMessageDialog from '../dialogs/reminders/StartReminderMessageDialog'
 import PopUp from '../popup/PopUp'
 import { IReminder } from '../../types/reminder.types'
+import { UserContext } from '../../contexts/userContext'
 
 
 type Props = {
@@ -28,6 +29,7 @@ type Props = {
 function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setReminder, selectedReminders, setSelectedReminders }: Props) {
     const [data, setData] = useState<IReminder[]>(reminders)
     const { setChoice } = useContext(ChoiceContext)
+    const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
             setData(reminders)
@@ -295,98 +297,99 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                             null
                                         }
                                         {/* actions */}
-
-                                        <TableCell>
-                                            <PopUp element={<Stack direction="row">{
-                                                !reminder.is_active ?
-                                                    <>
-                                                        <Tooltip title="Start Reminder">
+                                        {!user?.reminders_access_fields.is_readonly && user?.reminders_access_fields.is_editable &&
+                                            <TableCell>
+                                                <PopUp element={<Stack direction="row">{
+                                                    !reminder.is_active ?
+                                                        <>
+                                                            <Tooltip title="Start Reminder">
+                                                                <IconButton
+                                                                    color="info"
+                                                                    size="medium"
+                                                                    onClick={() => {
+                                                                        if (reminder.templates)
+                                                                            setChoice({ type: ReminderChoiceActions.start_reminder })
+                                                                        if (reminder.message)
+                                                                            setChoice({ type: ReminderChoiceActions.start_message_reminder })
+                                                                        setReminder(reminder)
+                                                                    }}>
+                                                                    <RestartAlt />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </>
+                                                        :
+                                                        <Tooltip title="Stop">
                                                             <IconButton
-                                                                color="info"
+                                                                color="error"
                                                                 size="medium"
                                                                 onClick={() => {
-                                                                    if (reminder.templates)
-                                                                        setChoice({ type: ReminderChoiceActions.start_reminder })
-                                                                    if (reminder.message)
-                                                                        setChoice({ type: ReminderChoiceActions.start_message_reminder })
+
+                                                                    setChoice({ type: ReminderChoiceActions.stop_reminder })
                                                                     setReminder(reminder)
                                                                 }}>
-                                                                <RestartAlt />
+                                                                <Stop />
                                                             </IconButton>
                                                         </Tooltip>
-                                                    </>
-                                                    :
-                                                    <Tooltip title="Stop">
+                                                }
+
+
+                                                    <Tooltip title="Reset Reminder">
                                                         <IconButton
                                                             color="error"
                                                             size="medium"
                                                             onClick={() => {
 
-                                                                setChoice({ type: ReminderChoiceActions.stop_reminder })
+                                                                setChoice({ type: ReminderChoiceActions.reset_reminder })
                                                                 setReminder(reminder)
                                                             }}>
-                                                            <Stop />
+                                                            <Block />
                                                         </IconButton>
                                                     </Tooltip>
-                                            }
 
 
-                                                <Tooltip title="Reset Reminder">
-                                                    <IconButton
-                                                        color="error"
-                                                        size="medium"
-                                                        onClick={() => {
+                                                    <Tooltip title="edit">
+                                                        <IconButton
+                                                            color="success"
+                                                            size="medium"
+                                                            disabled={Boolean(reminder.is_active)}
+                                                            onClick={() => {
 
-                                                            setChoice({ type: ReminderChoiceActions.reset_reminder })
-                                                            setReminder(reminder)
-                                                        }}>
-                                                        <Block />
-                                                    </IconButton>
-                                                </Tooltip>
+                                                                if (reminder.templates)
+                                                                    setChoice({ type: ReminderChoiceActions.update_reminder })
+                                                                if (reminder.message)
+                                                                    setChoice({ type: ReminderChoiceActions.update_message_reminder })
+                                                                setReminder(reminder)
+                                                            }}>
+                                                            <Edit />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    {user?.reminders_access_fields.is_deletion_allowed &&
+                                                    <Tooltip title="delete">
+                                                        <IconButton
+                                                            color="error"
+                                                            size="medium"
+                                                            onClick={() => {
 
+                                                                setChoice({ type: ReminderChoiceActions.delete_reminder })
+                                                                setReminder(reminder)
+                                                            }}>
+                                                            <Delete />
+                                                        </IconButton>
+                                                    </Tooltip>}
+                                                    <Tooltip title="view reports">
+                                                        <IconButton
+                                                            color="success"
+                                                            size="medium"
+                                                            onClick={() => {
 
-                                                <Tooltip title="edit">
-                                                    <IconButton
-                                                        color="success"
-                                                        size="medium"
-                                                        disabled={Boolean(reminder.is_active)}
-                                                        onClick={() => {
-
-                                                            if (reminder.templates)
-                                                                setChoice({ type: ReminderChoiceActions.update_reminder })
-                                                            if (reminder.message)
-                                                                setChoice({ type: ReminderChoiceActions.update_message_reminder })
-                                                            setReminder(reminder)
-                                                        }}>
-                                                        <Edit />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Tooltip title="delete">
-                                                    <IconButton
-                                                        color="error"
-                                                        size="medium"
-                                                        onClick={() => {
-
-                                                            setChoice({ type: ReminderChoiceActions.delete_reminder })
-                                                            setReminder(reminder)
-                                                        }}>
-                                                        <Delete />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Tooltip title="view reports">
-                                                    <IconButton
-                                                        color="success"
-                                                        size="medium"
-                                                        onClick={() => {
-
-                                                            setChoice({ type: ReminderChoiceActions.view_reminder })
-                                                            setReminder(reminder)
-                                                        }}>
-                                                        <RemoveRedEye />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </Stack>} />
-                                        </TableCell>
+                                                                setChoice({ type: ReminderChoiceActions.view_reminder })
+                                                                setReminder(reminder)
+                                                            }}>
+                                                            <RemoveRedEye />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Stack>} />
+                                            </TableCell>}
                                         <TableCell>
                                             <Typography variant="body1">{reminder.name}</Typography>
                                         </TableCell>
@@ -403,9 +406,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                             }
 
                                         </TableCell>
-                                            < TableCell >
-                                                <Typography variant="body1">{reminder.start_date && new Date(reminder.start_date).toLocaleString()}</Typography>
-                                            </TableCell>
+                                        < TableCell >
+                                            <Typography variant="body1">{reminder.start_date && new Date(reminder.start_date).toLocaleString()}</Typography>
+                                        </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">{new Date(reminder.next_run_date).toLocaleString()}</Typography>
                                         </TableCell>

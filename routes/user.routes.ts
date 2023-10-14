@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 
-import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateAccessFields, UpdateProfile, UpdateUser, VerifyEmail, testRoute, updatePassword, updateUserPassword } from "../controllers/user.controller";
+import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateAccessFields, UpdateProfile, UpdateUser, VerifyEmail,  updatePassword, updateUserPassword } from "../controllers/user.controller";
 import { isOwner, isAuthenticatedUser, isProfileAuthenticated, } from "../middlewares/auth.middleware";
 
 export const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1024 * 1024 * 50 } })
@@ -31,7 +31,6 @@ router.post("/email/verify", isAuthenticatedUser, SendVerifyEmail)
 router.patch("/email/verify/:token", VerifyEmail)
 router.post("/password/reset", SendPasswordResetMail)
 router.patch("/password/reset/:token", ResetPassword)
-router.patch("/test/:id", testRoute)
 
 
 export default router;

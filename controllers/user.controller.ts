@@ -62,6 +62,12 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
+    owner.alps_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
     owner.crm_access_fields = {
         is_readonly: false,
         is_hidden: false,
@@ -105,6 +111,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_deletion_allowed: true
     }
     owner.created_by_username = owner.username
+    owner.created_by = owner
     owner.updated_by = owner
     owner.updated_by_username = owner.username
     sendUserToken(res, owner.getAccessToken())
@@ -160,6 +167,12 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         user.updated_by = req.user
         user.created_by_username = req.user.username
         user.updated_by_username = req.user.username
+    }
+    user.alps_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
     }
     user.user_access_fields = {
         is_readonly: true,
@@ -263,6 +276,7 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         broadcast_access_fields,
         backup_access_fields,
         reminders_access_fields,
+        alps_access_fields
     } = req.body as TUserBody
 
     const id = req.params.id;
@@ -280,6 +294,7 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         broadcast_access_fields,
         backup_access_fields,
         reminders_access_fields,
+        alps_access_fields
     })
     res.status(200).json({ message: " updated" })
 }
@@ -680,63 +695,3 @@ export const VerifyEmail = async (req: Request, res: Response, next: NextFunctio
     });
 }
 
-export const testRoute = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id);
-
-    
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    user.user_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.crm_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.contacts_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.templates_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.bot_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.broadcast_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.backup_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.reminders_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    await user.save()
-    res.status(200).json({ message: "user access updated" })
-}

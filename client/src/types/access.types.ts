@@ -4,6 +4,12 @@ export type UserAccess = {
     is_hidden: boolean,
     is_deletion_allowed: boolean
 }
+export type AlpsAccess = {
+    is_editable: boolean,
+    is_readonly: boolean,
+    is_hidden: boolean,
+    is_deletion_allowed: boolean
+}
 export type BroadcastAccess = {
     is_editable: boolean,
     is_readonly: boolean,

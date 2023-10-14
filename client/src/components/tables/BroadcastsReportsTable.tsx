@@ -1,10 +1,11 @@
 import { Box, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Block } from '@mui/icons-material'
 import StopSingleBroadcastDialog from '../dialogs/broadcasts/StopSingleBroadcastDialog'
 import { IBroadcastReport } from '../../types/broadcast.types'
+import { UserContext } from '../../contexts/userContext'
 
 type Props = {
     report: IBroadcastReport | undefined,
@@ -14,6 +15,7 @@ type Props = {
 }
 function BroadcastsReportsTable({ setReport, report, reports }: Props) {
     const [data, setData] = useState<IBroadcastReport[] | undefined>(reports)
+    const { user } = useContext(UserContext)
     useEffect(() => {
         if (data && reports)
             setData(reports)
@@ -149,20 +151,21 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                             '&:nth-of-type(even)': { bgcolor: color2 },
                                             '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
                                         }}>
-                                        <TableCell>
-                                            <Tooltip title="Stop">
-                                                <IconButton
-                                                    disabled={report.status !== "pending"}
-                                                    color="error"
-                                                    size="medium"
-                                                    onClick={() => {
-                                                        setReport(report)
-                                                    }}>
-                                                    <Block />
-                                                </IconButton>
-                                            </Tooltip>
+                                        {!user?.broadcast_access_fields.is_readonly && user?.broadcast_access_fields.is_editable &&
+                                            <TableCell>
+                                                <Tooltip title="Stop">
+                                                    <IconButton
+                                                        disabled={report.status !== "pending"}
+                                                        color="error"
+                                                        size="medium"
+                                                        onClick={() => {
+                                                            setReport(report)
+                                                        }}>
+                                                        <Block />
+                                                    </IconButton>
+                                                </Tooltip>
 
-                                        </TableCell>
+                                            </TableCell>}
                                         <TableCell>
                                             <Typography variant="body1">{report.mobile.replace("91", "").replace("@c.us", "")}</Typography>
                                         </TableCell>
@@ -195,7 +198,7 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                         }
                     </TableBody>
                 </Table>
-               
+
             </Box>
             <StopSingleBroadcastDialog report={report} setReport={setReport} />
         </>

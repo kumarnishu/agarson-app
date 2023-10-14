@@ -1667,7 +1667,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
 
         let count = await Lead.countDocuments()
         leads = leads.filter((lead) => {
-            return String(lead.stage).toLowerCase() === "useless"
+            return lead.stage === "useless"
         })
         if (req.user?.is_admin)
             return res.status(200).json({
@@ -2070,7 +2070,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
         }).sort('-created_at')
     }
     leads = leads.filter((lead) => {
-        return String(lead.stage).toLowerCase() === "useless"
+        return lead.stage === "useless"
     })
     if (id) {
         leads = leads.filter((lead) => {

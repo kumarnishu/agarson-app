@@ -210,20 +210,22 @@ function AlpsTable({ alp, alps, selectableAlps, setAlp, selectAll, setSelectAll,
                                             :
                                             null
                                         }
-                                        <TableCell>
-                                            <Tooltip title="delete">
-                                                <IconButton color="error"
-                                                    onClick={() => {
-                                                        setChoice({ type: AlpsChoiceActions.delete_alps })
-                                                        setAlp(alp)
-                                                    }}
-                                                    disabled={user?._id !== user?.created_by._id}
+                                        {!user?.alps_access_fields.is_readonly && user?.alps_access_fields.is_editable &&
+                                            <TableCell>
+                                                {user?.reminders_access_fields.is_deletion_allowed &&
+                                                    <Tooltip title="delete">
+                                                        <IconButton color="error"
+                                                            onClick={() => {
+                                                                setChoice({ type: AlpsChoiceActions.delete_alps })
+                                                                setAlp(alp)
+                                                            }}
+                                                            disabled={user?._id !== user?.created_by._id}
 
-                                                >
-                                                    <Delete />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </TableCell>
+                                                        >
+                                                            <Delete />
+                                                        </IconButton>
+                                                    </Tooltip>}
+                                            </TableCell>}
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{alp.serial_number}</Typography>
                                         </TableCell>

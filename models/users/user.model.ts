@@ -63,7 +63,12 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     default: false,
     required: true,
   },
-
+  alps_access_fields:{
+    is_readonly: { type: Boolean, default: true },
+    is_hidden: { type: Boolean, default: false },
+    is_deletion_allowed: { type: Boolean, default: false },
+    is_editable: { type: Boolean, default: false },
+  },
   user_access_fields: {
     is_readonly: { type: Boolean, default: true },
     is_hidden: { type: Boolean, default: false },
