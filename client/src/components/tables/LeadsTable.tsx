@@ -81,7 +81,7 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
               </TableCell>
 
               {/* actions popup */}
-
+              {!user?.crm_access_fields.is_readonly && user?.crm_access_fields.is_editable &&
               <TableCell
                 sx={{ bgcolor: headColor }}                         >
                 <Stack
@@ -92,7 +92,7 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                 >
                   Actions
                 </Stack>
-              </TableCell>
+              </TableCell>}
 
 
               {/* visitin card */}

@@ -34,17 +34,18 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                     <TableHead
                     >
                         <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Action
-                                </Stack>
-                            </TableCell>
+                            {!user?.broadcast_access_fields.is_readonly && user?.broadcast_access_fields.is_editable &&
+                                <TableCell
+                                    sx={{ bgcolor: headColor }}                         >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="left"
+                                        alignItems="left"
+                                        spacing={2}
+                                    >
+                                        Action
+                                    </Stack>
+                                </TableCell>}
 
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >

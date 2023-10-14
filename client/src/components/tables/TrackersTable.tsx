@@ -74,7 +74,7 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
 
                             {/* actions popup */}
 
-
+                            {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -85,7 +85,7 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
 
 
 

@@ -34,6 +34,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                     <TableHead
                     >
                         <TableRow>
+                            {!user?.reminders_access_fields.is_readonly && user?.reminders_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -44,7 +45,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Action
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack

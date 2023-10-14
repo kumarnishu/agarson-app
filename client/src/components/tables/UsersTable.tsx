@@ -75,6 +75,7 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                     />
                                 </Stack>
                             </TableCell>
+                            {!LoggedInUser?.user_access_fields.is_readonly && LoggedInUser?.user_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -85,7 +86,7 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack

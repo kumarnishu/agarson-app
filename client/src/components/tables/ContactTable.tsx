@@ -66,6 +66,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                     />
                                 </Stack>
                             </TableCell>
+                            {!user?.contacts_access_fields.is_readonly && user?.contacts_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -76,7 +77,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack

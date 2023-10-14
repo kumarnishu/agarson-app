@@ -73,17 +73,18 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                     />
                                 </Stack>
                             </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Actions
-                                </Stack>
-                            </TableCell>
+                            {!user?.broadcast_access_fields.is_readonly && user?.broadcast_access_fields.is_editable &&
+                                <TableCell
+                                    sx={{ bgcolor: headColor }}                         >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="left"
+                                        alignItems="left"
+                                        spacing={2}
+                                    >
+                                        Actions
+                                    </Stack>
+                                </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack

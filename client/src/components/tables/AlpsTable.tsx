@@ -70,18 +70,18 @@ function AlpsTable({ alp, alps, selectableAlps, setAlp, selectAll, setSelectAll,
                                     />
                                 </Stack>
                             </TableCell>
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Actions
-                                </Stack>
-                            </TableCell>
+                            {!user?.alps_access_fields.is_readonly && user?.alps_access_fields.is_editable &&
+                                <TableCell
+                                    sx={{ bgcolor: headColor }}                         >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="left"
+                                        alignItems="left"
+                                        spacing={2}
+                                    >
+                                        Actions
+                                    </Stack>
+                                </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack

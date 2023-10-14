@@ -72,6 +72,7 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                     />
                                 </Stack>
                             </TableCell>
+                            {!user?.reminders_access_fields.is_readonly && user?.reminders_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -82,7 +83,7 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack

@@ -76,7 +76,7 @@ function CustomersTable({ lead, leads, selectableLeads, setLead, selectAll, setS
                             </TableCell>
 
                             {/* actions popup */}
-
+                            {!LoggedInUser?.crm_access_fields.is_readonly && LoggedInUser?.crm_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -87,7 +87,7 @@ function CustomersTable({ lead, leads, selectableLeads, setLead, selectAll, setS
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
                             {/* visitin card */}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
