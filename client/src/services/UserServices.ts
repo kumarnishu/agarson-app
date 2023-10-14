@@ -63,7 +63,7 @@ export const UpdateUserAccess = async ({ id, access_fields }: {
   access_fields: AccessTypes
 
 }) => {
-  return await apiClient.patch(`update-bot-field-roles/user/${id}`, access_fields)
+  return await apiClient.patch(`update/access/user/${id}`, access_fields)
 }
 
 // make admin
