@@ -73,17 +73,17 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 </Stack>
                             </TableCell>
                             {!user?.reminders_access_fields.is_readonly && user?.reminders_access_fields.is_editable &&
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Actions
-                                </Stack>
-                            </TableCell>}
+                                <TableCell
+                                    sx={{ bgcolor: headColor }}                         >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="left"
+                                        alignItems="left"
+                                        spacing={2}
+                                    >
+                                        Actions
+                                    </Stack>
+                                </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -93,6 +93,17 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                     spacing={2}
                                 >
                                     Reminder Name
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Serial Number
                                 </Stack>
                             </TableCell>
                             <TableCell
@@ -365,18 +376,18 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                                         </IconButton>
                                                     </Tooltip>
                                                     {user?.reminders_access_fields.is_deletion_allowed &&
-                                                    <Tooltip title="delete">
-                                                        <IconButton
-                                                            color="error"
-                                                            size="medium"
-                                                            onClick={() => {
+                                                        <Tooltip title="delete">
+                                                            <IconButton
+                                                                color="error"
+                                                                size="medium"
+                                                                onClick={() => {
 
-                                                                setChoice({ type: ReminderChoiceActions.delete_reminder })
-                                                                setReminder(reminder)
-                                                            }}>
-                                                            <Delete />
-                                                        </IconButton>
-                                                    </Tooltip>}
+                                                                    setChoice({ type: ReminderChoiceActions.delete_reminder })
+                                                                    setReminder(reminder)
+                                                                }}>
+                                                                <Delete />
+                                                            </IconButton>
+                                                        </Tooltip>}
                                                     <Tooltip title="view reports">
                                                         <IconButton
                                                             color="success"
@@ -393,6 +404,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                             </TableCell>}
                                         <TableCell>
                                             <Typography variant="body1">{reminder.name}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant="body1">{reminder.serial_number || "not available"}</Typography>
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant="body1">{reminder.is_todo ? "todo" : "reminder"}</Typography>
