@@ -1684,7 +1684,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                 return lead
         })
         return res.status(200).json({
-            leads,
+            leads: leads,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
