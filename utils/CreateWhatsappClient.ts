@@ -14,6 +14,7 @@ import { ReminderWithMessage, ReminderWithTemplates } from "./HandleReminder";
 import { Reminder } from "../models/reminder/reminder.model";
 import { ContactReport } from "../models/contact/contact.report.model";
 import { Contact } from "../models/contact/contact.model";
+import { ReminderManager } from "../app";
 
 export var clients: { client_id: string, client: Client }[] = []
 export let users: { id: string }[] = []
@@ -180,6 +181,10 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                     if (done) {
                         reminder.is_active = false
                         await reminder.save()
+                        if (ReminderManager.exists(reminder.refresh_key))
+                            ReminderManager.deleteJob(reminder.refresh_key)
+                        if (ReminderManager.exists(reminder.running_key))
+                            ReminderManager.deleteJob(reminder.running_key)
                     }
 
                 }
@@ -217,6 +222,8 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                     await report.save()
                     if (msg.from === msg.to)
                         client.sendMessage(msg.from, "successfully stopped this todo for you")
+
+
                     let reports = await ContactReport.find({ reminder: reminder })
                     let done = false
                     reports.forEach((report) => {
@@ -228,6 +235,10 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                     if (done) {
                         reminder.is_active = false
                         await reminder.save()
+                        if (ReminderManager.exists(reminder.refresh_key))
+                            ReminderManager.deleteJob(reminder.refresh_key)
+                        if (ReminderManager.exists(reminder.running_key))
+                            ReminderManager.deleteJob(reminder.running_key)
                     }
 
                 }
