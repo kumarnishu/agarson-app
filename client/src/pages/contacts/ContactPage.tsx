@@ -79,7 +79,8 @@ export default function ContactPage() {
         updated_at: new Date(contact.updated_at).toLocaleDateString()
       })
     })
-    setSelectedData(data)
+    if (data.length > 0)
+      setSelectedData(data)
   }, [selectedContacts])
 
   useEffect(() => {
@@ -111,7 +112,6 @@ export default function ContactPage() {
       setContacts(preFilteredData)
 
   }, [filter, contacts])
-
   return (
     <>
       {

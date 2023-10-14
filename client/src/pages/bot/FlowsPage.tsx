@@ -51,16 +51,17 @@ export default function FlowsPage() {
         overflow: "scroll",
         maxHeight: '70vh'
       }}>
+        {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
+          <Button sx={{ m: 1 }} variant="outlined" color="warning"
+            onClick={() => setChoice({ type: BotChoiceActions.create_flow })}
 
-        <Button sx={{ m: 1 }} variant="outlined" color="warning"
-          onClick={() => setChoice({ type: BotChoiceActions.create_flow })}
+          >
+            <Stack direction="row" alignItems="center" gap={1}>
+              <AddOutlined />
+              <span> New Flow</span>
+            </Stack>
+          </Button>}
 
-        >
-          <Stack direction="row" alignItems="center" gap={1}>
-            <AddOutlined />
-            <span> New Flow</span>
-          </Stack>
-        </Button>
         <Table
           stickyHeader
           sx={{ minWidth: "1400px" }}
@@ -68,17 +69,18 @@ export default function FlowsPage() {
           <TableHead
           >
             <TableRow>
-              <TableCell
-                sx={{ bgcolor: headColor }}                         >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Actions
-                </Stack>
-              </TableCell>
+              {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
+                <TableCell
+                  sx={{ bgcolor: headColor }}                         >
+                  <Stack
+                    direction="row"
+                    justifyContent="left"
+                    alignItems="left"
+                    spacing={2}
+                  >
+                    Actions
+                  </Stack>
+                </TableCell>}
               <TableCell
                 sx={{ bgcolor: headColor }}                         >
                 <Stack
@@ -178,95 +180,97 @@ export default function FlowsPage() {
                     }}>
 
                     {/* actions */}
-                    <TableCell>
-                      <div>
-                        <Button onClick={(e) => setPopup(e.currentTarget)}>
-                          <AdsClickOutlined />
-                        </Button>
-                        <Popover
-                          open={Boolean(popup)}
-                          anchorEl={popup}
-                          onClose={() => setPopup(null)}
-                          anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                          }}
-                        >
-                          <Stack direction="row">
-                            {
-                              user?.is_admin ?
-                                <>
-                                  {flow.is_active ?
-                                    <Tooltip title="Disable">
-                                      <IconButton color="warning"
-                                        onClick={() => {
-                                          setFlow(flow)
-                                          setChoice({ type: BotChoiceActions.toogle_flow_status })
-                                          setPopup(null)
-                                        }}
-                                      >
-                                        <Stop />
-                                      </IconButton>
-                                    </Tooltip>
-                                    : <Tooltip title="Enable">
-                                      <IconButton color="warning"
-                                        onClick={() => {
-                                          setFlow(flow)
-                                          setChoice({ type: BotChoiceActions.toogle_flow_status })
-                                          setPopup(null)
-                                        }}
-                                      >
-                                        <Start />
-                                      </IconButton>
-                                    </Tooltip>}
-                                </>
-                                : null
-                            }
+                    {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
+                      <TableCell>
+                        <div>
+                          <Button onClick={(e) => setPopup(e.currentTarget)}>
+                            <AdsClickOutlined />
+                          </Button>
+                          <Popover
+                            open={Boolean(popup)}
+                            anchorEl={popup}
+                            onClose={() => setPopup(null)}
+                            anchorOrigin={{
+                              vertical: 'bottom',
+                              horizontal: 'left',
+                            }}
+                          >
+                            <Stack direction="row">
+                              {
+                                user?.is_admin ?
+                                  <>
+                                    {flow.is_active ?
+                                      <Tooltip title="Disable">
+                                        <IconButton color="warning"
+                                          onClick={() => {
+                                            setFlow(flow)
+                                            setChoice({ type: BotChoiceActions.toogle_flow_status })
+                                            setPopup(null)
+                                          }}
+                                        >
+                                          <Stop />
+                                        </IconButton>
+                                      </Tooltip>
+                                      : <Tooltip title="Enable">
+                                        <IconButton color="warning"
+                                          onClick={() => {
+                                            setFlow(flow)
+                                            setChoice({ type: BotChoiceActions.toogle_flow_status })
+                                            setPopup(null)
+                                          }}
+                                        >
+                                          <Start />
+                                        </IconButton>
+                                      </Tooltip>}
+                                  </>
+                                  : null
+                              }
 
-                            <Tooltip title="Edit">
-                              <IconButton color="success"
-                                onClick={() => {
-                                  setFlow(flow)
-                                  setChoice({ type: BotChoiceActions.update_flow })
-                                  setPopup(null)
-                                }}
-                              >
-                                <Edit />
-                              </IconButton>
-                            </Tooltip>
+                              <Tooltip title="Edit">
+                                <IconButton color="success"
+                                  onClick={() => {
+                                    setFlow(flow)
+                                    setChoice({ type: BotChoiceActions.update_flow })
+                                    setPopup(null)
+                                  }}
+                                >
+                                  <Edit />
+                                </IconButton>
+                              </Tooltip>
+
+                              {user.bot_access_fields.is_deletion_allowed &&
+                                <Tooltip title="Delete">
+                                  <IconButton color="error"
+                                    onClick={() => {
+                                      setFlow(flow)
+                                      setChoice({ type: BotChoiceActions.delete_flow })
+                                      setPopup(null)
+                                    }}
+
+                                  >
+                                    <Delete />
+                                  </IconButton>
+                                </Tooltip>}
 
 
-                            <Tooltip title="Delete">
-                              <IconButton color="error"
-                                onClick={() => {
-                                  setFlow(flow)
-                                  setChoice({ type: BotChoiceActions.delete_flow })
-                                  setPopup(null)
-                                }}
-                              >
-                                <Delete />
-                              </IconButton>
-                            </Tooltip>
+                              <Tooltip title="Edit Connected users">
+                                <IconButton color="primary"
+                                  onClick={() => {
+                                    setChoice({ type: BotChoiceActions.update_connected_users })
+                                    setFlow(flow)
+                                    setPopup(null)
+                                  }}
+                                >
+                                  <AdUnitsIcon />
+                                </IconButton>
+                              </Tooltip>
 
+                            </Stack>
+                          </Popover>
 
-                            <Tooltip title="Edit Connected users">
-                              <IconButton color="primary"
-                                onClick={() => {
-                                  setChoice({ type: BotChoiceActions.update_connected_users })
-                                  setFlow(flow)
-                                  setPopup(null)
-                                }}
-                              >
-                                <AdUnitsIcon />
-                              </IconButton>
-                            </Tooltip>
+                        </div>
 
-                          </Stack>
-                        </Popover>
-
-                      </div>
-
-                    </TableCell >
+                      </TableCell >}
 
                     <TableCell>
                       <Typography sx={{ textTransform: "capitalize" }}>{index + 1}</Typography>

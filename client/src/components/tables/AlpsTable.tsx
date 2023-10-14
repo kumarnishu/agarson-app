@@ -212,7 +212,7 @@ function AlpsTable({ alp, alps, selectableAlps, setAlp, selectAll, setSelectAll,
                                         }
                                         {!user?.alps_access_fields.is_readonly && user?.alps_access_fields.is_editable &&
                                             <TableCell>
-                                                {user?.reminders_access_fields.is_deletion_allowed &&
+                                                {user?.alps_access_fields.is_deletion_allowed &&
                                                     <Tooltip title="delete">
                                                         <IconButton color="error"
                                                             onClick={() => {
