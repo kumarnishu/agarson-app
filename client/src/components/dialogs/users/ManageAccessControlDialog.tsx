@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { ChoiceContext, UserChoiceActions } from "../../../contexts/dialogContext"
-import { Avatar, Dialog, DialogContent, DialogTitle, IconButton, Stack, Typography } from "@mui/material"
+import { Avatar, Dialog,  DialogTitle, IconButton, Stack, Typography } from "@mui/material"
 import { IUser } from "../../../types/user.types"
 
 import AccessControlForm from "../../forms/user/AccessControlForm"

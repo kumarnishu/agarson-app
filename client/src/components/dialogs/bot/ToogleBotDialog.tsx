@@ -6,9 +6,9 @@ import { useMutation } from 'react-query'
 import { BotChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
 import { queryClient } from '../../../main'
-import { IMenuTracker } from '../../../types'
 import { Cancel } from '@mui/icons-material'
 import AlertBar from '../../snacks/AlertBar'
+import { IMenuTracker } from '../../../types/bot.types'
 
 function ToogleBotDialog({ tracker }: { tracker: IMenuTracker }) {
     const { choice, setChoice } = useContext(ChoiceContext)
