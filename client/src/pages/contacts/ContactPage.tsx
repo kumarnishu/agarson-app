@@ -29,6 +29,12 @@ type SelectedData = {
   created_at?: string,
   updated_at?: string
 }
+let template: SelectedData[] = [
+  {
+    name: "nishu",
+    mobile: "6787876765"
+  }
+]
 
 export default function ContactPage() {
   const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IContact[]>, BackendError>("contacts", GetContacts)
@@ -39,7 +45,7 @@ export default function ContactPage() {
   const [preFilteredData, setPreFilteredData] = useState<IContact[]>([])
   const [selectedContacts, setSelectedContacts] = useState<IContact[]>([])
   const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<SelectedData[]>([])
+  const [selectedData, setSelectedData] = useState<SelectedData[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -53,8 +59,6 @@ export default function ContactPage() {
   function handleExcel() {
     setAnchorEl(null)
     try {
-      if (selectedData.length === 0)
-        return alert("please select some rows")
       ExportToExcel(selectedData, "contacts_data")
       setSent(true)
     }
