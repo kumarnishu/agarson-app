@@ -45,7 +45,7 @@ export const CreateReminderByTemplate = async (req: Request, res: Response, next
     let count = await Reminder.countDocuments()
     let rem = await Reminder.findOne({ serial_number: String(count + 1) })
     if (rem)
-        count = count + 1
+        count = count + 2
     if (count === 0)
         count = 1
     let reminder = new Reminder({
@@ -129,7 +129,7 @@ export const CreateReminderByMessage = async (req: Request, res: Response, next:
     let count = await Reminder.countDocuments()
     let rem = await Reminder.findOne({ serial_number: String(count + 1) })
     if (rem)
-        count = count + 1
+        count = count + 2
     if (count === 0)
         count = 1
 
@@ -222,7 +222,7 @@ export const UpdateReminderByMessage = async (req: Request, res: Response, next:
     let count = await Reminder.countDocuments()
     let rem = await Reminder.findOne({ serial_number: String(count + 1) })
     if (rem)
-        count = count + 1
+        count = count + 2
     if (count === 0)
         count = 1
     await Reminder.findByIdAndUpdate(reminder._id, {
@@ -300,7 +300,7 @@ export const UpdateReminderByTemplate = async (req: Request, res: Response, next
     let count = await Reminder.countDocuments()
     let rem = await Reminder.findOne({ serial_number: String(count + 1) })
     if (rem)
-        count = count + 1
+        count = count + 2
     if (count === 0)
         count = 1
     await Reminder.findByIdAndUpdate(reminder._id, {
