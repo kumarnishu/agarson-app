@@ -9,12 +9,10 @@ export type IUser = {
     email: string,
     mobile: string,
     dp: Asset,
-    //bot properties
     client_id: string,
     client_data_path: string,
     connected_number: string,
     is_whatsapp_active: Boolean,
-    //auth properties
     is_admin: Boolean,
     user_access_fields: UserAccess,
     crm_access_fields: CrmAccess,
@@ -29,12 +27,8 @@ export type IUser = {
     last_login: Date,
     created_at: Date,
     updated_at: Date,
-    //ref properties
-    created_by_username: string,
     created_by: IUser,
-    updated_by_username: string,
     updated_by: IUser
-    //tokens
     resetPasswordToken: string | null,
     resetPasswordExpire: Date | null,
     emailVerifyToken: string | null,

@@ -76,7 +76,7 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                 BroadCastWithTemplates(latest_broadcast, client, user)
             }
         }
-        if (!start_by_server && daily_limit > 0 && broadcast?.daily_count === 0) {
+        if (!start_by_server && daily_limit > 0) {
             BroadcastManager.add(broadcast.cron_key
                 , broadcast.cron_string, async () => {
                     let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
@@ -293,7 +293,7 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                 BroadCastWithMessage(latest_broadcast, client, user)
             }
         }
-        if (!start_by_server && daily_limit > 0 && broadcast?.daily_count === 0) {
+        if (!start_by_server && daily_limit > 0) {
             BroadcastManager.add(broadcast.cron_key
                 , broadcast.cron_string, async () => {
                     let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')

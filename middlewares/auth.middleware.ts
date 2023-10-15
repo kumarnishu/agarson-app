@@ -53,11 +53,7 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
     return res.status(403).json({ message: "!must be admin" });
 }
 
-export const isOwner = async (req: Request, res: Response, next: NextFunction) => {
-    if (req.user?.created_by_username === req.user?.username)
-        return next();
-    return res.status(403).json({ message: "!must be owner" });
-}
+
 
 // login
 export const sendUserToken = (res: Response, accessToken: string) => {

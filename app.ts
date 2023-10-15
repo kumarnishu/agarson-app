@@ -13,7 +13,7 @@ import BroadCastRoutes from "./routes/brodcast.route";
 import ContactRoutes from "./routes/contact.routes";
 import ReminderRoutes from "./routes/reminder.route";
 import WaTemplateRoutes from "./routes/watemplate.routes";
-import BillRoutes from "./routes/alps.route";
+import AlpsRoutes from "./routes/alps.route";
 import CronJobManager from "cron-job-manager";
 
 
@@ -137,7 +137,7 @@ app.use("/api/v1", WaTemplateRoutes)
 app.use("/api/v1", BroadCastRoutes)
 app.use("/api/v1", ReminderRoutes)
 app.use("/api/v1", ContactRoutes)
-app.use("/api/v1", BillRoutes)
+app.use("/api/v1", AlpsRoutes)
 
 
 

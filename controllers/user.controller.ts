@@ -14,7 +14,8 @@ import { Asset } from '../types/asset.types';
 export const SignUp = async (req: Request, res: Response, next: NextFunction) => {
     let users = await User.find()
     if (users.length > 0)
-        return res.status(400).json({ message: "not allowed here" })
+        return res.status(400).json({ message: "not allowed" })
+
     let { username, email, password, mobile } = req.body as TUserBody
     // validations
     if (!username || !email || !password || !mobile)
@@ -104,9 +105,10 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-    owner.created_by_username = owner.username
     owner.updated_by = owner
-    owner.updated_by_username = owner.username
+    owner.created_by = owner
+    owner.created_at = new Date()
+    owner.updated_at = new Date()
     sendUserToken(res, owner.getAccessToken())
     await owner.save()
     owner = await User.findById(owner._id).populate("created_by").populate("updated_by") || owner
@@ -158,9 +160,10 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
     if (req.user) {
         user.created_by = req.user
         user.updated_by = req.user
-        user.created_by_username = req.user.username
-        user.updated_by_username = req.user.username
+
     }
+    user.created_at = new Date()
+    user.updated_at = new Date()
     user.user_access_fields = {
         is_readonly: true,
         is_hidden: false,
@@ -452,7 +455,6 @@ export const updatePassword = async (req: Request, res: Response, next: NextFunc
         return res.status(401).json({ message: "Old password is incorrect" })
     user.password = newPassword;
     user.updated_by = user
-    user.updated_by_username = user.username
     await user.save();
     res.status(200).json({ message: "password updated" });
 }
@@ -473,7 +475,6 @@ export const updateUserPassword = async (req: Request, res: Response, next: Next
     }
     user.password = newPassword;
     user.updated_by = user
-    user.updated_by_username = user.username
     await user.save();
     res.status(200).json({ message: "password updated" });
 }
@@ -491,7 +492,6 @@ export const MakeAdmin = async (req: Request, res: Response, next: NextFunction)
     user.is_admin = true
     if (req.user) {
         user.updated_by = user
-        user.updated_by_username = user.username
     }
     await user.save();
     res.status(200).json({ message: "admin role provided successfully" });
@@ -517,7 +517,6 @@ export const BlockUser = async (req: Request, res: Response, next: NextFunction)
     user.is_active = false
     if (req.user) {
         user.updated_by = user
-        user.updated_by_username = user.username
     }
     await user.save();
     res.status(200).json({ message: "user blocked successfully" });
@@ -536,7 +535,6 @@ export const UnBlockUser = async (req: Request, res: Response, next: NextFunctio
     user.is_active = true
     if (req.user) {
         user.updated_by = user
-        user.updated_by_username = user.username
     }
     await user.save();
     res.status(200).json({ message: "user unblocked successfully" });
@@ -685,7 +683,7 @@ export const testRoute = async (req: Request, res: Response, next: NextFunction)
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
     let user = await User.findById(id);
 
-    
+
     if (!user) {
         return res.status(404).json({ message: "user not found" })
     }

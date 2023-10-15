@@ -1,6 +1,6 @@
 import express from "express";
 import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads, getAllReferParties, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless } from "../controllers/lead.controller";
-import { isAdmin, isAuthenticatedUser, isOwner } from "../middlewares/auth.middleware";
+import { isAdmin, isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
 const router = express.Router()
@@ -31,6 +31,6 @@ router.route("/refers").get(isAuthenticatedUser, getAllReferParties)
 router.route("/refers").post(isAuthenticatedUser, CreateReferParty)
 router.route("/refers/:id").put(isAuthenticatedUser, UpdateReferParty)
 router.route("/refers/:id").delete(isAuthenticatedUser, DeleteReferParty)
-router.route("/bulk/leads/delete").post(isAuthenticatedUser, isOwner, BulkDeleteUselessLeads)
+router.route("/bulk/leads/delete").post(isAuthenticatedUser,  BulkDeleteUselessLeads)
 
 export default router

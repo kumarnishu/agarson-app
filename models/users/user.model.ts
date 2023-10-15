@@ -134,12 +134,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     required: true,
 
   },
-  created_by_username: {
-    type: String,
-    trim: true,
-    lowercase: true,
-    required: true,
-  },
+
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -151,12 +146,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     required: true,
 
   },
-  updated_by_username: {
-    type: String,
-    trim: true,
-    lowercase: true,
-    required: true,
-  },
+
   updated_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
