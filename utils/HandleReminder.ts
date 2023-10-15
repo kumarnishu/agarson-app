@@ -6,7 +6,7 @@ import { sendMessage, sendTemplates } from "./SendMessage";
 import { GetRunOnceCronString } from "./GetRunOnceCronString";
 import { IReminder } from "../types/reminder.types";
 import { IUser } from "../types/user.types";
-
+import cron from "cron"
 export var reminder_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 export async function ReminderWithTemplates(reminder: IReminder, client: Client, user: IUser) {
@@ -62,6 +62,9 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
                         }
                     }
                 }
+                await Reminder.findByIdAndUpdate(reminder._id, {
+                    next_run_date: reminder.next_run_date = new Date(cron.sendAt(reminder.cron_string))
+                })
             })
         ReminderManager.add(reminder.refresh_key, reminder.refresh_cron_string, async () => {
             await Reminder.findByIdAndUpdate(reminder._id, { is_active: true, is_paused: false })
@@ -75,6 +78,9 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
                         report.updated_by = user
                         await report.save()
                     }
+            })
+            await Reminder.findByIdAndUpdate(reminder._id, {
+                next_run_date: reminder.next_run_date = new Date(cron.sendAt(reminder.cron_string))
             })
         })
         if (!reminder.run_once)
@@ -155,6 +161,9 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
                         }
                     }
                 }
+                await Reminder.findByIdAndUpdate(reminder._id, {
+                    next_run_date: reminder.next_run_date = new Date(cron.sendAt(reminder.cron_string))
+                })
             })
         ReminderManager.add(reminder.refresh_key, reminder.refresh_cron_string, async () => {
             await Reminder.findByIdAndUpdate(reminder._id, { is_active: true, is_paused: false })

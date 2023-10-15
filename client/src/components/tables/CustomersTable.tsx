@@ -76,7 +76,7 @@ function CustomersTable({ lead, leads, selectableLeads, setLead, selectAll, setS
                             </TableCell>
 
                             {/* actions popup */}
-
+                            {!LoggedInUser?.crm_access_fields.is_readonly && LoggedInUser?.crm_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -87,7 +87,7 @@ function CustomersTable({ lead, leads, selectableLeads, setLead, selectAll, setS
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
                             {/* visitin card */}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
@@ -505,75 +505,75 @@ function CustomersTable({ lead, leads, selectableLeads, setLead, selectAll, setS
                                             null
                                         }
                                         {/* actions popup */}
+                                        {!LoggedInUser?.crm_access_fields.is_readonly && LoggedInUser?.crm_access_fields.is_editable &&
+                                            <TableCell>
+                                                <PopUp element={<Stack direction="row" spacing={1}>
+                                                    {
+                                                        LoggedInUser?.created_by._id === LoggedInUser?._id ?
+                                                            <>
+                                                                {LoggedInUser?.crm_access_fields.is_deletion_allowed &&
+                                                                    <Tooltip title="delete">
+                                                                        <IconButton color="error"
+                                                                            onClick={() => {
 
-                                        <TableCell>
-                                            <PopUp element={<Stack direction="row" spacing={1}>
-                                                {
-                                                    LoggedInUser?.created_by._id === LoggedInUser?._id ?
-                                                        <>
+                                                                                setChoice({ type: LeadChoiceActions.delete_lead })
+                                                                                setLead(lead)
 
-                                                            <Tooltip title="delete">
-                                                                <IconButton color="error"
-                                                                    onClick={() => {
+                                                                            }}
+                                                                        >
+                                                                            <Delete />
+                                                                        </IconButton>
+                                                                    </Tooltip>}
 
-                                                                        setChoice({ type: LeadChoiceActions.delete_lead })
-                                                                        setLead(lead)
+                                                                <Tooltip title="edit">
+                                                                    <IconButton color="secondary"
+                                                                        onClick={() => {
 
-                                                                    }}
-                                                                >
-                                                                    <Delete />
-                                                                </IconButton>
-                                                            </Tooltip>
-
-                                                            <Tooltip title="edit">
-                                                                <IconButton color="secondary"
-                                                                    onClick={() => {
-
-                                                                        setChoice({ type: LeadChoiceActions.update_lead })
-                                                                        setLead(lead)
-
-
-                                                                    }}
-                                                                >
-                                                                    <Edit />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        </>
-                                                        :
-                                                        null
-                                                }
+                                                                            setChoice({ type: LeadChoiceActions.update_lead })
+                                                                            setLead(lead)
 
 
-                                                <Tooltip title="view remarks">
-                                                    <IconButton color="primary"
-                                                        onClick={() => {
+                                                                        }}
+                                                                    >
+                                                                        <Edit />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            </>
+                                                            :
+                                                            null
+                                                    }
 
-                                                            setChoice({ type: LeadChoiceActions.view_remarks })
-                                                            setLead(lead)
+
+                                                    <Tooltip title="view remarks">
+                                                        <IconButton color="primary"
+                                                            onClick={() => {
+
+                                                                setChoice({ type: LeadChoiceActions.view_remarks })
+                                                                setLead(lead)
 
 
-                                                        }}
-                                                    >
-                                                        <Visibility />
-                                                    </IconButton>
-                                                </Tooltip>
+                                                            }}
+                                                        >
+                                                            <Visibility />
+                                                        </IconButton>
+                                                    </Tooltip>
 
-                                                <Tooltip title="Add Remark">
-                                                    <IconButton
-                                                        color="success"
-                                                        onClick={() => {
+                                                    <Tooltip title="Add Remark">
+                                                        <IconButton
+                                                            color="success"
+                                                            onClick={() => {
 
-                                                            setChoice({ type: LeadChoiceActions.update_remark })
-                                                            setLead(lead)
+                                                                setChoice({ type: LeadChoiceActions.update_remark })
+                                                                setLead(lead)
 
-                                                        }}
+                                                            }}
 
-                                                    >
-                                                        <Comment />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </Stack>} />
-                                        </TableCell>
+                                                        >
+                                                            <Comment />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Stack>} />
+                                            </TableCell>}
                                         {/* visitin card */}
 
                                         <TableCell
@@ -734,7 +734,7 @@ function CustomersTable({ lead, leads, selectableLeads, setLead, selectAll, setS
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.created_by.username}</Typography>
 
                                         </TableCell>
-                                      
+
                                         {/* updated by */}
 
                                         <TableCell>

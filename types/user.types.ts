@@ -1,4 +1,4 @@
-import { BackupAccess, BotAccess, BroadcastAccess, ContactsAccess, CrmAccess, RemindersAccess, TemplatesAccess, UserAccess } from "./access.types"
+import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, ContactsAccess, CrmAccess, RemindersAccess, TemplatesAccess, UserAccess } from "./access.types"
 import { Asset } from "./asset.types"
 
 export type IUser = {
@@ -22,6 +22,7 @@ export type IUser = {
     broadcast_access_fields: BroadcastAccess,
     backup_access_fields: BackupAccess,
     reminders_access_fields: RemindersAccess,
+    alps_access_fields: AlpsAccess,
     email_verified: Boolean,
     is_active: Boolean,
     last_login: Date,

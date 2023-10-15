@@ -10,6 +10,7 @@ import DeleteTemplateDialog from '../dialogs/templates/DeleteTemplateDialog'
 import PopUp from '../popup/PopUp'
 import { DownloadFile } from '../../utils/DownloadFile'
 import { IMessageTemplate } from '../../types/template.types'
+import { UserContext } from '../../contexts/userContext'
 
 type Props = {
     template: IMessageTemplate | undefined,
@@ -24,6 +25,7 @@ type Props = {
 function TemplatesTable({ templates, selectAll, template, setSelectAll, setTemplate, selectedTemplates, setSelectedTemplates }: Props) {
     const [data, setData] = useState<IMessageTemplate[]>(templates)
     const { setChoice } = useContext(ChoiceContext)
+    const { user } = useContext(UserContext)
     useEffect(() => {
         setData(templates)
     }, [templates])
@@ -68,7 +70,7 @@ function TemplatesTable({ templates, selectAll, template, setSelectAll, setTempl
                             </TableCell>
 
                             {/* actions popup */}
-
+                            {!user?.templates_access_fields.is_readonly && user?.templates_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -79,7 +81,7 @@ function TemplatesTable({ templates, selectAll, template, setSelectAll, setTempl
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
 
 
 
@@ -205,50 +207,51 @@ function TemplatesTable({ templates, selectAll, template, setSelectAll, setTempl
                                             null
                                         }
                                         {/* actions popup */}
+                                        {!user?.templates_access_fields.is_readonly && user?.templates_access_fields.is_editable &&
+                                            <TableCell>
+                                                <PopUp
+                                                    element={
+                                                        <Stack direction="row" spacing={1}>
+                                                            {
 
-                                        <TableCell>
-                                            <PopUp
-                                                element={
-                                                    <Stack direction="row" spacing={1}>
-                                                        {
+                                                                <>
+                                                                    <Tooltip title="Edit">
+                                                                        <IconButton color="info"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: TemplateChoiceActions.update_template })
+                                                                                setTemplate(template)
+                                                                            }}
+                                                                        >
+                                                                            <Edit />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                    {user?.templates_access_fields.is_deletion_allowed &&
+                                                                        <Tooltip title="Delete">
+                                                                            <IconButton color="error"
+                                                                                onClick={() => {
+                                                                                    setChoice({ type: TemplateChoiceActions.delete_template })
+                                                                                    setTemplate(template)
+                                                                                }}
+                                                                            >
+                                                                                <Delete />
+                                                                            </IconButton>
+                                                                        </Tooltip>}
+                                                                    <Tooltip title="View">
+                                                                        <IconButton color="success"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: TemplateChoiceActions.view_template })
+                                                                                setTemplate(template)
+                                                                            }}
+                                                                        >
+                                                                            <RemoveRedEye />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                </>
 
-                                                            <>
-                                                                <Tooltip title="Edit">
-                                                                    <IconButton color="info"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: TemplateChoiceActions.update_template })
-                                                                            setTemplate(template)
-                                                                        }}
-                                                                    >
-                                                                        <Edit />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                                <Tooltip title="Delete">
-                                                                    <IconButton color="error"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: TemplateChoiceActions.delete_template })
-                                                                            setTemplate(template)
-                                                                        }}
-                                                                    >
-                                                                        <Delete />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                                <Tooltip title="View">
-                                                                    <IconButton color="success"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: TemplateChoiceActions.view_template })
-                                                                            setTemplate(template)
-                                                                        }}
-                                                                    >
-                                                                        <RemoveRedEye />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                            </>
-
-                                                        }
-                                                    </Stack>
-                                                } />
-                                        </TableCell>
+                                                            }
+                                                        </Stack>
+                                                    } />
+                                            </TableCell>}
 
                                         {/* template name */}
                                         <TableCell>

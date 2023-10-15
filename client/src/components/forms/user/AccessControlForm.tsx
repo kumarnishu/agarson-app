@@ -7,8 +7,8 @@ import { Button, Checkbox, CircularProgress, Stack, Box, Table, TableHead, Table
 import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types/user.types';
 import { color1, color2, headColor } from '../../../utils/colors';
+import { IUser } from '../../../types/user.types';
 
 
 function AccessControlForm({ user }: { user: IUser }) {
@@ -21,7 +21,8 @@ function AccessControlForm({ user }: { user: IUser }) {
         bot_access_fields: user.bot_access_fields,
         broadcast_access_fields: user.broadcast_access_fields,
         backup_access_fields: user.backup_access_fields,
-        reminders_access_fields: user.reminders_access_fields
+        reminders_access_fields: user.reminders_access_fields,
+        alps_access_fields: user.alps_access_fields
     })
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any>, BackendError, {
@@ -122,6 +123,172 @@ function AccessControlForm({ user }: { user: IUser }) {
                     </TableHead>
 
                     <TableBody >
+                        {/* user access fields */}
+                        <TableRow
+                            sx={{
+                                '&:nth-of-type(odd)': { bgcolor: color1 },
+                                '&:nth-of-type(even)': { bgcolor: color2 },
+                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
+                            }}>
+
+                            <TableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Users
+                                </Stack>
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.user_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            user_access_fields: {
+                                                is_editable: Boolean(!AccessFields.user_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.user_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.user_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.user_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                    disabled={user.created_by._id === user._id}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.user_access_fields.is_readonly)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            user_access_fields: {
+                                                is_editable: Boolean(AccessFields.user_access_fields.is_editable),
+                                                is_readonly: Boolean(!AccessFields.user_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.user_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.user_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                    disabled={user.created_by._id === user._id}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.user_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            user_access_fields: {
+                                                is_editable: Boolean(AccessFields.user_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.user_access_fields.is_readonly),
+                                                is_hidden: Boolean(!AccessFields.user_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.user_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                    disabled={user.created_by._id === user._id}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.user_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            user_access_fields: {
+                                                is_editable: Boolean(AccessFields.user_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.user_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.user_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.user_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                    disabled={user.created_by._id === user._id}
+                                />
+                            </TableCell>
+                        </TableRow>
+                        {/* crm access fields */}
+                        <TableRow
+                            sx={{
+                                '&:nth-of-type(odd)': { bgcolor: color1 },
+                                '&:nth-of-type(even)': { bgcolor: color2 },
+                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
+                            }}>
+
+                            <TableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    CRM
+                                </Stack>
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.crm_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            crm_access_fields: {
+                                                is_editable: Boolean(!AccessFields.crm_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.crm_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.crm_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.crm_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.crm_access_fields.is_readonly)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            crm_access_fields: {
+                                                is_editable: Boolean(AccessFields.crm_access_fields.is_editable),
+                                                is_readonly: Boolean(!AccessFields.crm_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.crm_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.crm_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.crm_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            crm_access_fields: {
+                                                is_editable: Boolean(AccessFields.crm_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.crm_access_fields.is_readonly),
+                                                is_hidden: Boolean(!AccessFields.crm_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.crm_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.crm_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            crm_access_fields: {
+                                                is_editable: Boolean(AccessFields.crm_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.crm_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.crm_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.crm_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+
+
+
+
+
+                        </TableRow>
+
+                        {/* bot access fields */}
                         <TableRow
                             sx={{
                                 '&:nth-of-type(odd)': { bgcolor: color1 },
@@ -147,11 +314,12 @@ function AccessControlForm({ user }: { user: IUser }) {
                                             ...AccessFields,
                                             bot_access_fields: {
                                                 is_editable: Boolean(!AccessFields.bot_access_fields.is_editable),
-                                                is_readonly: Boolean(user.bot_access_fields.is_readonly),
-                                                is_hidden: Boolean(user.bot_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(user.bot_access_fields.is_deletion_allowed),
+                                                is_readonly: Boolean(AccessFields.bot_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.bot_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.bot_access_fields.is_deletion_allowed),
                                             }
                                         })}
+
                                 />
                             </TableCell>
                             <TableCell>
@@ -160,10 +328,10 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         {
                                             ...AccessFields,
                                             bot_access_fields: {
-                                                is_editable: Boolean(user.bot_access_fields.is_editable),
+                                                is_editable: Boolean(AccessFields.bot_access_fields.is_editable),
                                                 is_readonly: Boolean(!AccessFields.bot_access_fields.is_readonly),
-                                                is_hidden: Boolean(user.bot_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(user.bot_access_fields.is_deletion_allowed),
+                                                is_hidden: Boolean(AccessFields.bot_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.bot_access_fields.is_deletion_allowed),
                                             }
                                         })}
                                 />
@@ -174,12 +342,13 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         {
                                             ...AccessFields,
                                             bot_access_fields: {
-                                                is_editable: Boolean(user.bot_access_fields.is_editable),
-                                                is_readonly: Boolean(user.bot_access_fields.is_readonly),
+                                                is_editable: Boolean(AccessFields.bot_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.bot_access_fields.is_readonly),
                                                 is_hidden: Boolean(!AccessFields.bot_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(user.bot_access_fields.is_deletion_allowed),
+                                                is_deletion_allowed: Boolean(AccessFields.bot_access_fields.is_deletion_allowed),
                                             }
                                         })}
+
                                 />
                             </TableCell>
                             <TableCell>
@@ -188,12 +357,507 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         {
                                             ...AccessFields,
                                             bot_access_fields: {
-                                                is_editable: Boolean(user.bot_access_fields.is_editable),
-                                                is_readonly: Boolean(user.bot_access_fields.is_readonly),
-                                                is_hidden: Boolean(user.bot_access_fields.is_hidden),
+                                                is_editable: Boolean(AccessFields.bot_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.bot_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.bot_access_fields.is_hidden),
                                                 is_deletion_allowed: Boolean(!AccessFields.bot_access_fields.is_deletion_allowed),
                                             }
                                         })}
+
+                                />
+                            </TableCell>
+
+
+
+
+
+                        </TableRow>
+
+
+                        {/* templates access fields */}
+                        <TableRow
+                            sx={{
+                                '&:nth-of-type(odd)': { bgcolor: color1 },
+                                '&:nth-of-type(even)': { bgcolor: color2 },
+                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
+                            }}>
+
+                            <TableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Templates
+                                </Stack>
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.templates_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            templates_access_fields: {
+                                                is_editable: Boolean(!AccessFields.templates_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.templates_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.templates_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.templates_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.templates_access_fields.is_readonly)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            templates_access_fields: {
+                                                is_editable: Boolean(AccessFields.templates_access_fields.is_editable),
+                                                is_readonly: Boolean(!AccessFields.templates_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.templates_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.templates_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.templates_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            templates_access_fields: {
+                                                is_editable: Boolean(AccessFields.templates_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.templates_access_fields.is_readonly),
+                                                is_hidden: Boolean(!AccessFields.templates_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.templates_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.templates_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            templates_access_fields: {
+                                                is_editable: Boolean(AccessFields.templates_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.templates_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.templates_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.templates_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+
+
+                        </TableRow>
+
+                        {/* broadcast access fields */}
+                        <TableRow
+                            sx={{
+                                '&:nth-of-type(odd)': { bgcolor: color1 },
+                                '&:nth-of-type(even)': { bgcolor: color2 },
+                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
+                            }}>
+
+                            <TableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Broadcast
+                                </Stack>
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.broadcast_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            broadcast_access_fields: {
+                                                is_editable: Boolean(!AccessFields.broadcast_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.broadcast_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.broadcast_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.broadcast_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.broadcast_access_fields.is_readonly)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            broadcast_access_fields: {
+                                                is_editable: Boolean(AccessFields.broadcast_access_fields.is_editable),
+                                                is_readonly: Boolean(!AccessFields.broadcast_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.broadcast_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.broadcast_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.broadcast_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            broadcast_access_fields: {
+                                                is_editable: Boolean(AccessFields.broadcast_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.broadcast_access_fields.is_readonly),
+                                                is_hidden: Boolean(!AccessFields.broadcast_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.broadcast_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.broadcast_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            broadcast_access_fields: {
+                                                is_editable: Boolean(AccessFields.broadcast_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.broadcast_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.broadcast_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.broadcast_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+
+
+
+
+
+                        </TableRow>
+
+                        {/* contacts access fields */}
+                        <TableRow
+                            sx={{
+                                '&:nth-of-type(odd)': { bgcolor: color1 },
+                                '&:nth-of-type(even)': { bgcolor: color2 },
+                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
+                            }}>
+
+                            <TableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Contacts
+                                </Stack>
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.contacts_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            contacts_access_fields: {
+                                                is_editable: Boolean(!AccessFields.contacts_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.contacts_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.contacts_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.contacts_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.contacts_access_fields.is_readonly)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            contacts_access_fields: {
+                                                is_editable: Boolean(AccessFields.contacts_access_fields.is_editable),
+                                                is_readonly: Boolean(!AccessFields.contacts_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.contacts_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.contacts_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.contacts_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            contacts_access_fields: {
+                                                is_editable: Boolean(AccessFields.contacts_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.contacts_access_fields.is_readonly),
+                                                is_hidden: Boolean(!AccessFields.contacts_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.contacts_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.contacts_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            contacts_access_fields: {
+                                                is_editable: Boolean(AccessFields.contacts_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.contacts_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.contacts_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.contacts_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+
+
+
+
+
+                        </TableRow>
+                        {/* reminder access fields */}
+                        <TableRow
+                            sx={{
+                                '&:nth-of-type(odd)': { bgcolor: color1 },
+                                '&:nth-of-type(even)': { bgcolor: color2 },
+                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
+                            }}>
+
+                            <TableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Reminders
+                                </Stack>
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.reminders_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            reminders_access_fields: {
+                                                is_editable: Boolean(!AccessFields.reminders_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.reminders_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.reminders_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.reminders_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.reminders_access_fields.is_readonly)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            reminders_access_fields: {
+                                                is_editable: Boolean(AccessFields.reminders_access_fields.is_editable),
+                                                is_readonly: Boolean(!AccessFields.reminders_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.reminders_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.reminders_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.reminders_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            reminders_access_fields: {
+                                                is_editable: Boolean(AccessFields.reminders_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.reminders_access_fields.is_readonly),
+                                                is_hidden: Boolean(!AccessFields.reminders_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.reminders_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.reminders_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            reminders_access_fields: {
+                                                is_editable: Boolean(AccessFields.reminders_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.reminders_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.reminders_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.reminders_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+
+
+
+
+
+                        </TableRow>
+                        {/* backup access fields */}
+                        <TableRow
+                            sx={{
+                                '&:nth-of-type(odd)': { bgcolor: color1 },
+                                '&:nth-of-type(even)': { bgcolor: color2 },
+                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
+                            }}>
+
+                            <TableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Backup
+                                </Stack>
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.backup_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            backup_access_fields: {
+                                                is_editable: Boolean(!AccessFields.backup_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.backup_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.backup_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.backup_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.backup_access_fields.is_readonly)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            backup_access_fields: {
+                                                is_editable: Boolean(AccessFields.backup_access_fields.is_editable),
+                                                is_readonly: Boolean(!AccessFields.backup_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.backup_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.backup_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.backup_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            backup_access_fields: {
+                                                is_editable: Boolean(AccessFields.backup_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.backup_access_fields.is_readonly),
+                                                is_hidden: Boolean(!AccessFields.backup_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.backup_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.backup_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            backup_access_fields: {
+                                                is_editable: Boolean(AccessFields.backup_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.backup_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.backup_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.backup_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                        </TableRow>
+                        {/* alps access fields */}
+                        <TableRow
+                            sx={{
+                                '&:nth-of-type(odd)': { bgcolor: color1 },
+                                '&:nth-of-type(even)': { bgcolor: color2 },
+                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
+                            }}>
+
+                            <TableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    ALPS
+                                </Stack>
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.alps_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            alps_access_fields: {
+                                                is_editable: Boolean(!AccessFields.alps_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.alps_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.alps_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.alps_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.alps_access_fields.is_readonly)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            alps_access_fields: {
+                                                is_editable: Boolean(AccessFields.alps_access_fields.is_editable),
+                                                is_readonly: Boolean(!AccessFields.alps_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.alps_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.alps_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.alps_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            alps_access_fields: {
+                                                is_editable: Boolean(AccessFields.alps_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.alps_access_fields.is_readonly),
+                                                is_hidden: Boolean(!AccessFields.alps_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.alps_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.alps_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            alps_access_fields: {
+                                                is_editable: Boolean(AccessFields.alps_access_fields.is_editable),
+                                                is_readonly: Boolean(AccessFields.alps_access_fields.is_readonly),
+                                                is_hidden: Boolean(AccessFields.alps_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.alps_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
                                 />
                             </TableCell>
                         </TableRow>
@@ -218,7 +882,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                     onClick={() => {
                         mutate({ id: user._id, access_fields: AccessFields })
                     }}
-                    disabled={isLoading}
+
                 >
                     {isLoading ? <CircularProgress /> :
                         "Save"}
@@ -227,7 +891,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                     onClick={() => {
                         setChoice({ type: UserChoiceActions.close_user })
                     }}
-                    disabled={isLoading}
+
                 >
                     {isLoading ? <CircularProgress /> :
                         "Cancel"}

@@ -638,7 +638,7 @@ export const GetPaginatedBroadcastReports = async (req: Request, res: Response, 
         return res.status(404).json({ message: "broadcast not found" })
 
     if (!Number.isNaN(limit) && !Number.isNaN(page) && id) {
-        let reports = await BroadcastReport.find({ broadcast: broadcast }).populate('created_by').populate('updated_by').sort('created_at')
+        let reports = await BroadcastReport.find({ broadcast: broadcast }).populate('created_by').populate('updated_by').sort('-updated_at')
             .limit(limit * 1)
             .skip((page - 1) * limit)
 
@@ -668,7 +668,7 @@ export const SearchBroadcastReportByMobile = async (req: Request, res: Response,
     if (!mobile)
         return res.status(400).json({ message: "mobile not provided" })
 
-    let reports = await BroadcastReport.find({ broadcast: broadcast, mobile: mobile }).populate('created_by').populate('updated_by').sort('created_at')
+    let reports = await BroadcastReport.find({ broadcast: broadcast, mobile: mobile }).populate('created_by').populate('updated_by').sort('-updated_at')
     return res.status(200).json(reports)
 }
 
@@ -679,7 +679,7 @@ export const DownloadBroadcastReports = async (req: Request, res: Response, next
         return res.status(400).json({ message: "please provide correct broadcast id" })
     }
     let broadcast = await Broadcast.findById(id)
-    let reports = await BroadcastReport.find({ broadcast: broadcast }).populate('created_by').populate('updated_by').sort('created_at')
+    let reports = await BroadcastReport.find({ broadcast: broadcast }).populate('created_by').populate('updated_by').sort('-updated_at')
     let newreports = reports.map((report) => {
         return {
             mobile: report.mobile.replace("91", "").replace("@c.us", ""),

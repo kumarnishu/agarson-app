@@ -92,7 +92,7 @@ function AppRoutes() {
             />
           </Route>
           {/* users nav bar */}
-          {user._id === user.created_by._id &&
+          {!user.user_access_fields.is_hidden &&
             < Route path={paths.users} element={<UsersNavBar />}>
               <Route index
                 element={
@@ -106,121 +106,132 @@ function AppRoutes() {
               />
             </Route>}
           {/* crm nav bar */}
-          < Route path={paths.crm} element={<CrmNavBar />
-          }>
-            <Route index element={
-              <LeadsPage />
-            }
-            />
-            <Route path={paths.leads} index element={
-              <Suspense fallback={<LinearProgress />}><LeadsPage /></Suspense>
-            }
-            />
-            <Route
-              path={paths.customers} element={
-                <Suspense fallback={<LinearProgress />}><CustomersPage /></Suspense>
 
+          {!user.crm_access_fields.is_hidden &&
+            < Route path={paths.crm} element={<CrmNavBar />
+            }>
+              <Route index element={
+                <LeadsPage />
               }
-            />
-            <Route
-              path={paths.refers} element={
-                <Suspense fallback={<LinearProgress />}><ReferralPartyPage /></Suspense>
+              />
+              <Route path={paths.leads} index element={
+                <Suspense fallback={<LinearProgress />}><LeadsPage /></Suspense>
+              }
+              />
+              <Route
+                path={paths.customers} element={
+                  <Suspense fallback={<LinearProgress />}><CustomersPage /></Suspense>
 
-              }
-            />
-            <Route
-              path={paths.updateble_fields_lead} element={
-                <Suspense fallback={<LinearProgress />}><UpdateLeadFieldsPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path={paths.useless_leads} element={
-                <Suspense fallback={<LinearProgress />}><UseLessLeadsPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path={paths.lead_reports} element={
-                <Suspense fallback={<LinearProgress />}><LeadReportsPage />
-                </Suspense>
-              }
-            />
-          </Route>
+                }
+              />
+              <Route
+                path={paths.refers} element={
+                  <Suspense fallback={<LinearProgress />}><ReferralPartyPage /></Suspense>
+
+                }
+              />
+              <Route
+                path={paths.updateble_fields_lead} element={
+                  <Suspense fallback={<LinearProgress />}><UpdateLeadFieldsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path={paths.useless_leads} element={
+                  <Suspense fallback={<LinearProgress />}><UseLessLeadsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path={paths.lead_reports} element={
+                  <Suspense fallback={<LinearProgress />}><LeadReportsPage />
+                  </Suspense>
+                }
+              />
+            </Route>}
           {/* bot nav bar */}
-          < Route path={paths.bot} element={<BotNavBar />
-          }>
-            <Route
-              index element={
-                <FlowsPage />
+          {!user.bot_access_fields.is_hidden &&
+            < Route path={paths.bot} element={<BotNavBar />
+            }>
+              <Route
+                index element={
+                  <FlowsPage />
+                }
+              />
+              <Route path={paths.flows} element={
+                < FlowsPage />
               }
-            />
-            <Route path={paths.flows} element={
-              < FlowsPage />
-            }
-            />
-            <Route path={paths.trackers} element={
-              <Suspense fallback={<LinearProgress />}>
-                < TrackersPage />
-              </Suspense>
-            }
-            />
-          </Route>
+              />
+              <Route path={paths.trackers} element={
+                <Suspense fallback={<LinearProgress />}>
+                  < TrackersPage />
+                </Suspense>
+              }
+              />
+            </Route>}
+
           {/* templates nav bar */}
-          < Route path={paths.templates} element={<TemplatesNavBar />
-          }>
-            <Route
-              index element={
-                <TemplatesPage />
+          {!user.templates_access_fields.is_hidden &&
+            < Route path={paths.templates} element={<TemplatesNavBar />
+            }>
+
+              <Route
+                index element={
+                  <TemplatesPage />
+                }
+              />
+              <Route path={paths.templates} element={
+                < TemplatesPage />
               }
-            />
-            <Route path={paths.templates} element={
-              < TemplatesPage />
-            }
-            />
-          </Route>
+              />
+            </Route>}
 
           {/* broadcast nav bar */}
-          < Route path={paths.broadcast} element={<BroadcastNavBar />
-          }>
-            <Route
-              index element={
-                <BroadcastPage />
-              }
-            />
+          {!user.broadcast_access_fields.is_hidden &&
+            < Route path={paths.broadcast} element={<BroadcastNavBar />
+            }>
+              <Route
+                index element={
+                  <BroadcastPage />
+                }
+              />
 
-          </Route>
+            </Route>}
           {/* todo nav bar */}
-          < Route path={paths.contacts} element={<ContactNavBar />
-          }>
-            <Route
-              index element={
-                <ContactPage />
-              }
-            />
+          {!user.contacts_access_fields.is_hidden &&
+            < Route path={paths.contacts} element={<ContactNavBar />
+            }>
+              <Route
+                index element={
+                  <ContactPage />
+                }
+              />
 
-          </Route>
+            </Route>}
           {/* reminder nav bar */}
-          < Route path={paths.reminders} element={<ReminderNavBar />
-          }>
-            <Route
-              index element={
-                <ReminderPage />
-              }
-            />
-          </Route>
+          {!user.reminders_access_fields.is_hidden &&
+            < Route path={paths.reminders} element={<ReminderNavBar />
+            }>
+              <Route
+                index element={
+                  <ReminderPage />
+                }
+              />
+            </Route>}
 
           {/* crm nav bar */}
-          < Route path={paths.alps} element={<AlpsNavBar />
-          }>
-            <Route
-              index element={
-                <AlpsPage />
-              }
-            />
-          </Route>
+          {!user.alps_access_fields.is_hidden &&
+            < Route path={paths.alps} element={<AlpsNavBar />
+            }>
+              <Route
+                index element={
+                  <AlpsPage />
+                }
+              />
+            </Route>}
           {/* backup */}
-          {user._id === user.created_by._id &&
+
+          {!user.backup_access_fields.is_hidden &&
             <Route path={paths.backup_page} element={<DashBoardNavBar />}>
               <Route index
                 element={

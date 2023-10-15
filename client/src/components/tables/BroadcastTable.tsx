@@ -1,4 +1,4 @@
-import { Block, Delete, Edit, Pause, RemoveRedEye, ResetTv, RestartAlt,  Stop } from '@mui/icons-material'
+import { Block, Delete, Edit, Pause, RemoveRedEye, ResetTv, RestartAlt, Stop } from '@mui/icons-material'
 import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
@@ -15,6 +15,7 @@ import StartBroadcastMessageDialog from '../dialogs/broadcasts/StartBroadcastMes
 import PopUp from '../popup/PopUp'
 import SetDailyCountBroadcastDialog from '../dialogs/broadcasts/SetDailyCountDialog'
 import { IBroadcast } from '../../types/broadcast.types'
+import { UserContext } from '../../contexts/userContext'
 
 
 type Props = {
@@ -29,6 +30,7 @@ type Props = {
 function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBroadcast, selectedBroadcasts, setSelectedBroadcasts }: Props) {
     const [data, setData] = useState<IBroadcast[]>(broadcasts)
     const { setChoice } = useContext(ChoiceContext)
+    const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
             setData(broadcasts)
@@ -71,17 +73,18 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                     />
                                 </Stack>
                             </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Actions
-                                </Stack>
-                            </TableCell>
+                            {!user?.broadcast_access_fields.is_readonly && user?.broadcast_access_fields.is_editable &&
+                                <TableCell
+                                    sx={{ bgcolor: headColor }}                         >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="left"
+                                        alignItems="left"
+                                        spacing={2}
+                                    >
+                                        Actions
+                                    </Stack>
+                                </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -306,109 +309,110 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                             null
                                         }
                                         {/* actions */}
+                                        {!user?.broadcast_access_fields.is_readonly && user?.broadcast_access_fields.is_editable &&
+                                            <TableCell>
+                                                <PopUp element={<Stack direction="row">{
+                                                    !broadcast.is_active ?
+                                                        <>
+                                                            <Tooltip title="Start Broadcasting">
+                                                                <IconButton
+                                                                    color="info"
+                                                                    size="medium"
+                                                                    onClick={() => {
 
-                                        <TableCell>
-                                            <PopUp element={<Stack direction="row">{
-                                                !broadcast.is_active ?
-                                                    <>
-                                                        <Tooltip title="Start Broadcasting">
+                                                                        if (broadcast.templates)
+                                                                            setChoice({ type: BroadcastChoiceActions.start_broadcast })
+                                                                        if (broadcast.message)
+                                                                            setChoice({ type: BroadcastChoiceActions.start_message_broadcast })
+                                                                        setBroadcast(broadcast)
+                                                                    }}>
+                                                                    <RestartAlt />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </>
+                                                        :
+                                                        <Tooltip title="Stop">
                                                             <IconButton
-                                                                color="info"
+                                                                color="error"
                                                                 size="medium"
                                                                 onClick={() => {
 
-                                                                    if (broadcast.templates)
-                                                                        setChoice({ type: BroadcastChoiceActions.start_broadcast })
-                                                                    if (broadcast.message)
-                                                                        setChoice({ type: BroadcastChoiceActions.start_message_broadcast })
+                                                                    setChoice({ type: BroadcastChoiceActions.stop_broadcast })
                                                                     setBroadcast(broadcast)
                                                                 }}>
-                                                                <RestartAlt />
+                                                                <Stop />
                                                             </IconButton>
                                                         </Tooltip>
-                                                    </>
-                                                    :
-                                                    <Tooltip title="Stop">
+                                                }
+
+
+                                                    <Tooltip title="Reset Broadcasting">
                                                         <IconButton
                                                             color="error"
                                                             size="medium"
                                                             onClick={() => {
 
-                                                                setChoice({ type: BroadcastChoiceActions.stop_broadcast })
+                                                                setChoice({ type: BroadcastChoiceActions.reset_broadcast })
                                                                 setBroadcast(broadcast)
                                                             }}>
-                                                            <Stop />
+                                                            <Block />
                                                         </IconButton>
                                                     </Tooltip>
-                                            }
+                                                    <Tooltip title="Set Daily Count">
+                                                        <IconButton
+                                                            color="warning"
+                                                            size="medium"
+                                                            onClick={() => {
 
+                                                                setChoice({ type: BroadcastChoiceActions.set_daily_count })
+                                                                setBroadcast(broadcast)
+                                                            }}>
+                                                            <ResetTv />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    <Tooltip title="edit">
+                                                        <IconButton
+                                                            color="success"
+                                                            size="medium"
+                                                            disabled={Boolean(broadcast.is_active)}
+                                                            onClick={() => {
 
-                                                <Tooltip title="Reset Broadcasting">
-                                                    <IconButton
-                                                        color="error"
-                                                        size="medium"
-                                                        onClick={() => {
+                                                                if (broadcast.templates)
+                                                                    setChoice({ type: BroadcastChoiceActions.update_broadcast })
+                                                                if (broadcast.message)
+                                                                    setChoice({ type: BroadcastChoiceActions.update_message_broadcast })
+                                                                setBroadcast(broadcast)
+                                                            }}>
+                                                            <Edit />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    {user?.broadcast_access_fields.is_deletion_allowed &&
+                                                        <Tooltip title="delete">
+                                                            <IconButton
+                                                                color="error"
+                                                                size="medium"
+                                                                onClick={() => {
 
-                                                            setChoice({ type: BroadcastChoiceActions.reset_broadcast })
-                                                            setBroadcast(broadcast)
-                                                        }}>
-                                                        <Block />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Tooltip title="Set Daily Count">
-                                                    <IconButton
-                                                        color="warning"
-                                                        size="medium"
-                                                        onClick={() => {
+                                                                    setChoice({ type: BroadcastChoiceActions.delete_broadcast })
+                                                                    setBroadcast(broadcast)
+                                                                }}>
+                                                                <Delete />
+                                                            </IconButton>
+                                                        </Tooltip>}
+                                                    <Tooltip title="view reports">
+                                                        <IconButton
+                                                            color="success"
+                                                            size="medium"
+                                                            onClick={() => {
 
-                                                            setChoice({ type: BroadcastChoiceActions.set_daily_count })
-                                                            setBroadcast(broadcast)
-                                                        }}>
-                                                        <ResetTv />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Tooltip title="edit">
-                                                    <IconButton
-                                                        color="success"
-                                                        size="medium"
-                                                        disabled={Boolean(broadcast.is_active)}
-                                                        onClick={() => {
-
-                                                            if (broadcast.templates)
-                                                                setChoice({ type: BroadcastChoiceActions.update_broadcast })
-                                                            if (broadcast.message)
-                                                                setChoice({ type: BroadcastChoiceActions.update_message_broadcast })
-                                                            setBroadcast(broadcast)
-                                                        }}>
-                                                        <Edit />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Tooltip title="delete">
-                                                    <IconButton
-                                                        color="error"
-                                                        size="medium"
-                                                        onClick={() => {
-
-                                                            setChoice({ type: BroadcastChoiceActions.delete_broadcast })
-                                                            setBroadcast(broadcast)
-                                                        }}>
-                                                        <Delete />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Tooltip title="view reports">
-                                                    <IconButton
-                                                        color="success"
-                                                        size="medium"
-                                                        onClick={() => {
-
-                                                            setChoice({ type: BroadcastChoiceActions.view_broadcast })
-                                                            setBroadcast(broadcast)
-                                                        }}>
-                                                        <RemoveRedEye />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </Stack>} />
-                                        </TableCell>
+                                                                setChoice({ type: BroadcastChoiceActions.view_broadcast })
+                                                                setBroadcast(broadcast)
+                                                            }}>
+                                                            <RemoveRedEye />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Stack>} />
+                                            </TableCell>}
                                         <TableCell>
                                             <Typography variant="body1">{broadcast.name}</Typography>
                                         </TableCell>

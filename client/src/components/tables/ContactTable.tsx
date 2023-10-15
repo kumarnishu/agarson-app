@@ -8,6 +8,7 @@ import { Delete, Edit } from '@mui/icons-material'
 import UpdateContactDialog from '../dialogs/contacts/UpdateContactDialog'
 import DeleteContactDialog from '../dialogs/contacts/DeleteContactDialog'
 import { IContact } from '../../types/contact.types'
+import { UserContext } from '../../contexts/userContext'
 
 
 type Props = {
@@ -22,6 +23,7 @@ type Props = {
 function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact, selectedContacts, setSelectedContacts }: Props) {
     const [data, setData] = useState<IContact[]>(contacts)
     const { setChoice } = useContext(ChoiceContext)
+    const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
             setData(contacts)
@@ -64,6 +66,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                     />
                                 </Stack>
                             </TableCell>
+                            {!user?.contacts_access_fields.is_readonly && user?.contacts_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -74,7 +77,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -199,42 +202,42 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                             null
                                         }
                                         {/* actions */}
+                                        {!user?.contacts_access_fields.is_readonly && user?.contacts_access_fields.is_editable &&
+                                            <TableCell>
+                                                <PopUp
+                                                    element={
+                                                        <Stack direction="row">
+                                                            <>
+                                                                <Tooltip title="edit">
+                                                                    <IconButton
+                                                                        onClick={() => {
+                                                                            setContact(contact)
+                                                                            setChoice({ type: ContactChoiceActions.update_contact })
 
-                                        <TableCell>
-                                            <PopUp
-                                                element={
-                                                    <Stack direction="row">
-                                                        <>
-                                                            <Tooltip title="edit">
-                                                                <IconButton
-                                                                    onClick={() => {
-                                                                        setContact(contact)
-                                                                        setChoice({ type: ContactChoiceActions.update_contact })
+                                                                        }}
 
-                                                                    }}
+                                                                    >
+                                                                        <Edit />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                                {user?.contacts_access_fields.is_deletion_allowed &&
+                                                                <Tooltip title="Delete">
+                                                                    <IconButton color="primary"
+                                                                        onClick={() => {
+                                                                            setContact(contact)
+                                                                            setChoice({ type: ContactChoiceActions.delete_contact })
 
-                                                                >
-                                                                    <Edit />
-                                                                </IconButton>
-                                                            </Tooltip>
+                                                                        }}
+                                                                    >
+                                                                        <Delete />
+                                                                    </IconButton>
+                                                                </Tooltip>}
+                                                            </>
+                                                        </Stack>
+                                                    }
+                                                />
 
-                                                            <Tooltip title="Delete">
-                                                                <IconButton color="primary"
-                                                                    onClick={() => {
-                                                                        setContact(contact)
-                                                                        setChoice({ type: ContactChoiceActions.delete_contact })
-
-                                                                    }}
-                                                                >
-                                                                    <Delete />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        </>
-                                                    </Stack>
-                                                }
-                                            />
-
-                                        </TableCell>
+                                            </TableCell>}
                                         <TableCell>
                                             <Typography variant="body1">{contact.name}</Typography>
                                         </TableCell>

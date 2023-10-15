@@ -1,4 +1,4 @@
-import { BackupAccess, BotAccess, BroadcastAccess, ContactsAccess, CrmAccess, RemindersAccess, TemplatesAccess, UserAccess } from "../types/access.types";
+import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, ContactsAccess, CrmAccess, RemindersAccess, TemplatesAccess, UserAccess } from "../types/access.types";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 // login
@@ -55,7 +55,8 @@ export type AccessTypes = {
   bot_access_fields: BotAccess,
   broadcast_access_fields: BroadcastAccess,
   backup_access_fields: BackupAccess,
-  reminders_access_fields: RemindersAccess
+  reminders_access_fields: RemindersAccess,
+  alps_access_fields:AlpsAccess
 
 }
 export const UpdateUserAccess = async ({ id, access_fields }: {

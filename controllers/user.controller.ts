@@ -63,6 +63,12 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
+    owner.alps_access_fields = {
+        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
     owner.crm_access_fields = {
         is_readonly: false,
         is_hidden: false,
@@ -162,8 +168,6 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         user.updated_by = req.user
 
     }
-    user.created_at = new Date()
-    user.updated_at = new Date()
     user.user_access_fields = {
         is_readonly: true,
         is_hidden: false,
@@ -266,6 +270,7 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         broadcast_access_fields,
         backup_access_fields,
         reminders_access_fields,
+        alps_access_fields
     } = req.body as TUserBody
 
     const id = req.params.id;
@@ -283,6 +288,7 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         broadcast_access_fields,
         backup_access_fields,
         reminders_access_fields,
+        alps_access_fields
     })
     res.status(200).json({ message: " updated" })
 }
@@ -683,7 +689,7 @@ export const testRoute = async (req: Request, res: Response, next: NextFunction)
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
     let user = await User.findById(id);
 
-
+    
     if (!user) {
         return res.status(404).json({ message: "user not found" })
     }

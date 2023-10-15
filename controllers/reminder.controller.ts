@@ -43,9 +43,14 @@ export const CreateReminderByTemplate = async (req: Request, res: Response, next
             newMobiles.push("91" + mobile + "@c.us")
     })
     let count = await Reminder.countDocuments()
+    let rem = await Reminder.findOne({ serial_number: String(count + 1) })
+    if (rem)
+        count = count + 2
+    if (count === 0)
+        count = 1
     let reminder = new Reminder({
         name,
-        serial_number: String(count + 1),
+        serial_number: String(count),
         is_active: false,
         connected_number: undefined,
         templates: new_templates,
@@ -122,10 +127,15 @@ export const CreateReminderByMessage = async (req: Request, res: Response, next:
 
 
     let count = await Reminder.countDocuments()
+    let rem = await Reminder.findOne({ serial_number: String(count + 1) })
+    if (rem)
+        count = count + 2
+    if (count === 0)
+        count = 1
 
     let reminder = new Reminder({
         name,
-        serial_number: String(count + 1),
+        serial_number: String(count),
         is_active: false,
         connected_number: undefined,
         message: new_message,
@@ -210,12 +220,17 @@ export const UpdateReminderByMessage = async (req: Request, res: Response, next:
 
 
     let count = await Reminder.countDocuments()
+    let rem = await Reminder.findOne({ serial_number: String(count + 1) })
+    if (rem)
+        count = count + 2
+    if (count === 0)
+        count = 1
     await Reminder.findByIdAndUpdate(reminder._id, {
         name: name,
         message: new_message,
         updated_at: new Date(),
         updated_by: req.user,
-        serial_number: String(count + 1)
+        serial_number: String(count)
     })
     if (newMobiles.length > 0) {
         let reports = await ContactReport.find({ reminder: reminder })
@@ -283,12 +298,17 @@ export const UpdateReminderByTemplate = async (req: Request, res: Response, next
 
 
     let count = await Reminder.countDocuments()
+    let rem = await Reminder.findOne({ serial_number: String(count + 1) })
+    if (rem)
+        count = count + 2
+    if (count === 0)
+        count = 1
     await Reminder.findByIdAndUpdate(reminder._id, {
         name: name,
         templates: new_templates,
         updated_at: new Date(),
         updated_by: req.user,
-        serial_number: String(count + 1)
+        serial_number: String(count)
     })
 
     if (newMobiles.length > 0) {

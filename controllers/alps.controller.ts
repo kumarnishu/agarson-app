@@ -12,13 +12,18 @@ export const CreateAlpsRecord = async (req: Request, res: Response, next: NextFu
         return res.status(400).json({ message: "please fill all required fields" })
     }
     let count = await Alps.countDocuments()
+    let alp = await Alps.findOne({ serial_number: String(count + 1) })
+    if (alp)
+        count = count + 2
+    if (count === 0)
+        count = 1
 
     let bill = new Alps({
         name: name,
         mobile: mobile,
         city: city,
         gst: gst,
-        serial_number: String(count + 1)
+        serial_number: String(count)
     })
     if (!req.file) {
         return res.status(400).json({ message: "please provide bill" })

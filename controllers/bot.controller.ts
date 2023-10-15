@@ -133,7 +133,7 @@ export const GetTrackers = async (req: Request, res: Response, next: NextFunctio
                 }
             ]
         })
-            .sort('-created_at')
+            .sort('-updated_at')
             .limit(limit * 1)
             .skip((page - 1) * limit)
         let count = await MenuTracker.countDocuments()
@@ -172,7 +172,7 @@ export const FuzzySearchTrackers = async (req: Request, res: Response, next: Nex
             }
         ]
     })
-        .sort('-created_at')
+        .sort('-updated_at')
     return res.status(200).json(trackers)
 }
 export const UpdateTrackerName = async (req: Request, res: Response, next: NextFunction) => {

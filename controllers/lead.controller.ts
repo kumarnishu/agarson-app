@@ -617,50 +617,49 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             if (lead._id && isMongoId(String(lead._id))) {
                 console.log(new_lead_owners)
                 create_operation = false
-                if (String(req.user?._id) === String(req.user?.created_by._id)) {
-                    let targetLead = await Lead.findById(lead._id)
-                    if (targetLead) {
-                        if (lead.remarks) {
-                            if (!lead.remarks.length) {
-                                let new_remark = new Remark({
-                                    remark: lead.remarks,
-                                    lead: lead,
-                                    created_at: new Date(),
-                                    created_by: req.user,
-                                    updated_at: new Date(),
-                                    updated_by: req.user
-                                })
-                                await new_remark.save()
-                                targetLead.last_remark = lead.remarks
-                                targetLead.remarks = [new_remark]
-                            }
-                            else {
-                                let last_remark = targetLead.remarks[targetLead.remarks.length - 1]
-                                await Remark.findByIdAndUpdate(last_remark._id, {
-                                    remark: lead.remarks,
-                                    lead: lead,
-                                    updated_at: new Date(),
-                                    updated_by: req.user
-                                })
-                                targetLead.last_remark = last_remark.remark
-                            }
-
+                let targetLead = await Lead.findById(lead._id)
+                if (targetLead) {
+                    if (lead.remarks) {
+                        if (!lead.remarks.length) {
+                            let new_remark = new Remark({
+                                remark: lead.remarks,
+                                lead: lead,
+                                created_at: new Date(),
+                                created_by: req.user,
+                                updated_at: new Date(),
+                                updated_by: req.user
+                            })
+                            await new_remark.save()
+                            targetLead.last_remark = lead.remarks
+                            targetLead.remarks = [new_remark]
+                        }
+                        else {
+                            let last_remark = targetLead.remarks[targetLead.remarks.length - 1]
+                            await Remark.findByIdAndUpdate(last_remark._id, {
+                                remark: lead.remarks,
+                                lead: lead,
+                                updated_at: new Date(),
+                                updated_by: req.user
+                            })
+                            targetLead.last_remark = last_remark.remark
                         }
 
-                        await Lead.findByIdAndUpdate(lead._id, {
-                            ...lead,
-                            remarks: targetLead.remarks,
-                            mobile: uniqueNumbers[0] || mobile,
-                            alternate_mobile1: uniqueNumbers[1] || alternate_mobile1 || null,
-                            alternate_mobile2: uniqueNumbers[2] || alternate_mobile2 || null,
-                            lead_owners: new_lead_owners,
-                            lead_owners_username: new_lead_owners.map(user => { return user.username }),
-                            updated_by: req.user,
-                            updated_by_username: req.user?.username,
-                            updated_at: new Date(Date.now())
-                        })
                     }
+
+                    await Lead.findByIdAndUpdate(lead._id, {
+                        ...lead,
+                        remarks: targetLead.remarks,
+                        mobile: uniqueNumbers[0] || mobile,
+                        alternate_mobile1: uniqueNumbers[1] || alternate_mobile1 || null,
+                        alternate_mobile2: uniqueNumbers[2] || alternate_mobile2 || null,
+                        lead_owners: new_lead_owners,
+                        lead_owners_username: new_lead_owners.map(user => { return user.username }),
+                        updated_by: req.user,
+                        updated_by_username: req.user?.username,
+                        updated_at: new Date(Date.now())
+                    })
                 }
+
             }
 
             if (validated) {
@@ -1667,7 +1666,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
 
         let count = await Lead.countDocuments()
         leads = leads.filter((lead) => {
-            return String(lead.stage).toLowerCase() === "useless"
+            return lead.stage === "useless"
         })
         if (req.user?.is_admin)
             return res.status(200).json({
@@ -1685,7 +1684,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                 return lead
         })
         return res.status(200).json({
-            leads,
+            leads: leads,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
@@ -2070,7 +2069,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
         }).sort('-created_at')
     }
     leads = leads.filter((lead) => {
-        return String(lead.stage).toLowerCase() === "useless"
+        return lead.stage === "useless"
     })
     if (id) {
         leads = leads.filter((lead) => {

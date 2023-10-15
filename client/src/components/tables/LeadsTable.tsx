@@ -81,7 +81,7 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
               </TableCell>
 
               {/* actions popup */}
-
+              {!user?.crm_access_fields.is_readonly && user?.crm_access_fields.is_editable &&
               <TableCell
                 sx={{ bgcolor: headColor }}                         >
                 <Stack
@@ -92,7 +92,7 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                 >
                   Actions
                 </Stack>
-              </TableCell>
+              </TableCell>}
 
 
               {/* visitin card */}
@@ -503,7 +503,7 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                       null
                     }
                     {/* actions popup */}
-
+                    {!user?.crm_access_fields.is_readonly && user?.crm_access_fields.is_editable &&
                     <TableCell>
                       <PopUp
                         element={
@@ -537,7 +537,7 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                                       </IconButton>
                                     </Tooltip>}
 
-                                  {
+                                    {user?.crm_access_fields.is_deletion_allowed &&
                                     <Tooltip title="delete">
                                       <IconButton color="error"
                                         onClick={() => {
@@ -639,7 +639,7 @@ function LeadsTable({ lead, leads, selectableLeads, setLead, selectAll, setSelec
                           </Stack>
                         }
                       />
-                    </TableCell>
+                    </TableCell>}
                     {/* visitin card */}
                     {
                       <TableCell
