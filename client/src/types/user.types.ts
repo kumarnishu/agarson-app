@@ -31,9 +31,7 @@ export type IUser = {
     created_at: Date,
     updated_at: Date,
     //ref properties
-    created_by_username: string,
     created_by: IUser,
-    updated_by_username: string,
     updated_by: IUser
     //tokens
     resetPasswordToken: string | null,

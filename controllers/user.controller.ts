@@ -168,6 +168,8 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         user.updated_by = req.user
 
     }
+    user.created_at=new Date()
+    user.updated_at=new Date()
     user.user_access_fields = {
         is_readonly: true,
         is_hidden: false,
@@ -260,6 +262,19 @@ export const Logout = async (req: Request, res: Response, next: NextFunction) =>
     res.status(200).json({ message: "logged out" })
 }
 
+export const GetUsers =
+    async (req: Request, res: Response, next: NextFunction) => {
+        const users = await User.find().populate("created_by").populate("updated_by")
+        res.status(200).json(users)
+    }
+
+export const GetProfile =
+    async (req: Request, res: Response, next: NextFunction) => {
+        let id = req.user?._id
+        const user = await User.findById(id).populate("created_by").populate("updated_by")
+        res.status(200).json(user)
+    }
+
 // update user lead fields and its roles
 export const UpdateAccessFields = async (req: Request, res: Response, next: NextFunction) => {
     const { user_access_fields,
@@ -320,9 +335,9 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
         if (await User.findOne({ email: String(email).toLowerCase().trim() }))
             return res.status(403).json({ message: `${email} already exists` });
     }
-    // check first owner to update himself
+    // check  owner to update himself
     if ((String(user.created_by._id) === String(user._id)))
-        if ((String(user.created_by._id) !== String(req.user?._id)))
+        if ((String(user._id) === String(req.user?._id)))
             return res.status(403).json({ message: "not allowed contact crm administrator" })
 
     //handle dp
@@ -358,7 +373,6 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
         username,
         mobile,
         dp,
-        updated_by_username: req.user?.username,
         updated_by: req.user,
         updated_at: new Date(),
     }).then(() => {
@@ -366,19 +380,7 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
     })
 }
 
-// get all users only admin can do
-export const GetUsers =
-    async (req: Request, res: Response, next: NextFunction) => {
-        const users = await User.find().populate("created_by").populate("updated_by")
-        res.status(200).json(users)
-    }
 
-export const GetProfile =
-    async (req: Request, res: Response, next: NextFunction) => {
-        let id = req.user?._id
-        const user = await User.findById(id).populate("created_by").populate("updated_by")
-        res.status(200).json(user)
-    }
 
 
 //update profile 
@@ -428,7 +430,6 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
             dp,
             mobile,
             email_verified: false,
-            updated_by_username: user.username,
             updated_by: user
         })
             .then(() => { return res.status(200).json({ message: "profile updated" }) })
@@ -437,7 +438,6 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
         email,
         mobile,
         dp,
-        updated_by_username: user.username,
         updated_by: user
     })
         .then(() => res.status(200).json({ message: "profile updated" }))
@@ -465,7 +465,7 @@ export const updatePassword = async (req: Request, res: Response, next: NextFunc
     res.status(200).json({ message: "password updated" });
 }
 
-export const updateUserPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const resetUserPassword = async (req: Request, res: Response, next: NextFunction) => {
     const { newPassword, confirmPassword } = req.body as TUserBody & { oldPassword: string, newPassword: string, confirmPassword: string };
     if (!newPassword || !confirmPassword)
         return res.status(400).json({ message: "please fill required fields" })
@@ -682,65 +682,4 @@ export const VerifyEmail = async (req: Request, res: Response, next: NextFunctio
     res.status(200).json({
         message: `congrats ${user.email} verification successful`
     });
-}
-
-export const testRoute = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id);
-
-    
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    user.user_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.crm_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.contacts_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.templates_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.bot_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.broadcast_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.backup_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.reminders_access_fields = {
-        is_readonly: true,
-        is_hidden: false,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    await user.save()
-    res.status(200).json({ message: "user access updated" })
 }

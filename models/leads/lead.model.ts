@@ -95,15 +95,7 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         index: true,
         lowercase: true
     },
-    lead_owners_username: [
-        {
-            type: String,
-            trim: true,
-            index: true,
-            lowercase: true,
-            required: true
-        }
-    ],
+    
     remarks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Remark'
@@ -146,16 +138,7 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
     referred_date: {
         type: Date
     },
-    last_whatsapp_date: {
-        type: Date
-    },
-    created_by_username: {
-        type: String,
-        trim: true,
-        index: true,
-        lowercase: true,
-        required: true,
-    },
+    
     created_at: {
         type: Date,
         default: new Date(),
@@ -173,13 +156,7 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         required: true,
 
     },
-    updated_by_username: {
-        type: String,
-        trim: true,
-        index: true,
-        lowercase: true,
-        required: true,
-    },
+    
     updated_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

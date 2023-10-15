@@ -89,7 +89,7 @@ export const UpdatePassword = async (body: { oldPassword: string, newPassword: s
   return await apiClient.patch("password/update", body)
 };
 export const UpdateUserPassword = async ({ id, body }: { id: string, body: { newPassword: string, confirmPassword: string } }) => {
-  return await apiClient.patch(`password/update/${id}`, body)
+  return await apiClient.patch(`password/reset/${id}`, body)
 };
 // //update password
 export const ResetPassword = async ({ token, body }:

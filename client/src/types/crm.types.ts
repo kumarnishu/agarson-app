@@ -23,11 +23,8 @@ export type ILeadTemplate = {
     remarks: string,
     lead_owners: string,
     is_customer: boolean,
-    last_whatsapp_date: Date,
     created_at: Date,
-    created_by_username: string,
     updated_at: Date,
-    updated_by_username: string,
     status?: string
 }
 export type ILeadUpdatableField = {
@@ -85,7 +82,6 @@ export type ILead = {
     lead_source: string
     remarks: IRemark[]
     last_remark: string,
-    lead_owners_username: string[]
     lead_owners: IUser[],
     visiting_card: Asset,
     is_customer: boolean,
@@ -93,12 +89,9 @@ export type ILead = {
     referred_party_name?: string,
     referred_party_mobile?: string,
     referred_date?: Date,
-    last_whatsapp_date: Date,
     created_at: Date,
     updated_at: Date,
-    created_by_username: string,
     created_by: IUser,
-    updated_by_username: string,
     updated_by: IUser
 }
 export type TLeadBody = Request['body'] & ILead;
