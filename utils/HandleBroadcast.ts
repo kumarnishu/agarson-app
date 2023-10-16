@@ -12,7 +12,7 @@ export var timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Client, user: IUser, start_by_server?: boolean) {
     if (broadcast && client) {
         let daily_limit = broadcast.daily_limit
-        if (start_by_server && broadcast?.daily_limit !== broadcast?.daily_count) {
+        if (start_by_server && broadcast?.daily_count !== 0 && broadcast?.daily_count < broadcast.daily_limit) {
             let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
             if (latest_broadcast && latest_broadcast.is_active) {
                 latest_broadcast.is_paused = false
@@ -229,7 +229,7 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
     console.log("started broadcast with message")
     if (broadcast && client) {
         let daily_limit = Number(broadcast.daily_limit)
-        if (start_by_server && broadcast?.daily_limit !== broadcast?.daily_count) {
+        if (start_by_server && broadcast?.daily_count !== 0 && broadcast?.daily_count < broadcast.daily_limit) {
             let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
             if (latest_broadcast && latest_broadcast.is_active) {
                 latest_broadcast.is_paused = false
