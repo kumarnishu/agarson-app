@@ -33,19 +33,13 @@ type BotChoices = "create_flow"
   | "update_connected_users"
   | "toogle_flow_status"
 
-type AlpsChoices = "delete_alps" | "close_alps"
 
 
-type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | BroadcastChoices | TaskSchedulerChoices | TODOChoices | ReminderChoices | ContactChoices | AlpsChoices
+type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | BroadcastChoices | TaskSchedulerChoices | TODOChoices | ReminderChoices | ContactChoices 
 
 const initialState: ChoiceState | null = null
 
 
-
-export enum AlpsChoiceActions {
-  delete_alps = "delete_alps",
-  close_alps = "close_alps",
-}
 
 export enum ContactChoiceActions {
   create_contact = "create_contact",
@@ -167,7 +161,7 @@ export enum UserChoiceActions {
 }
 
 type Action = {
-  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions | AlpsChoiceActions
+  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions 
 }
 
 // reducer
@@ -225,9 +219,6 @@ function reducer(state: ChoiceState | null, action: Action) {
     case BotChoiceActions.toogle_flow_status: return type
     case BotChoiceActions.update_connected_users: return type
 
-
-    case AlpsChoiceActions.delete_alps: return type
-    case AlpsChoiceActions.close_alps: return type
 
     // template choice action
     case TemplateChoiceActions.create_template: return type

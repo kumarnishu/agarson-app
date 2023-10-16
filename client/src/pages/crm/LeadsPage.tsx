@@ -43,11 +43,8 @@ let template: ILeadTemplate[] = [
     remarks: "remarks",
     lead_owners: "nishu,sandeep",
     is_customer: false,
-    last_whatsapp_date: new Date(),
     created_at: new Date(),
-    created_by_username: "nishu",
     updated_at: new Date(),
-    updated_by_username: "nishu",
   }
 ]
 
@@ -126,12 +123,9 @@ export default function LeadsPage() {
           lead_source: lead.lead_source,
           remarks: lead.last_remark || "",
           is_customer: lead.is_customer,
-          last_whatsapp_date: lead.last_whatsapp_date,
           created_at: lead.created_at,
-          created_by_username: lead.created_by.username,
           updated_at: lead.updated_at,
-          updated_by_username: lead.updated_by.username,
-          lead_owners: lead.lead_owners_username.toString()
+          lead_owners: lead.lead_owners.map(owner => { owner.username + "," }).toString()
         })
     })
     if (data.length > 0)

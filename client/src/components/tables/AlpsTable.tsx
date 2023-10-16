@@ -1,12 +1,8 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel,  Table, TableBody, TableCell, TableHead, TableRow,  Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
-import { useContext, useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
 import { DownloadFile } from '../../utils/DownloadFile'
-import DeleteAlpsDialog from '../dialogs/alps/DeleteAlpsDialog'
-import { Delete } from '@mui/icons-material'
-import { AlpsChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
-import { UserContext } from '../../contexts/userContext'
 import { IAlps } from '../../types/alps.types'
 
 
@@ -21,10 +17,8 @@ type Props = {
     selectableAlps: IAlps[]
 }
 
-function AlpsTable({ alp, alps, selectableAlps, setAlp, selectAll, setSelectAll, selectedAlps, setSelectedAlps }: Props) {
+function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, selectedAlps, setSelectedAlps }: Props) {
     const [data, setData] = useState<IAlps[]>(alps)
-    const { setChoice } = useContext(ChoiceContext)
-    const { user } = useContext(UserContext)
 
     useEffect(() => {
         setData(alps)
@@ -70,18 +64,7 @@ function AlpsTable({ alp, alps, selectableAlps, setAlp, selectAll, setSelectAll,
                                     />
                                 </Stack>
                             </TableCell>
-                            {!user?.alps_access_fields.is_readonly && user?.alps_access_fields.is_editable &&
-                                <TableCell
-                                    sx={{ bgcolor: headColor }}                         >
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="left"
-                                        alignItems="left"
-                                        spacing={2}
-                                    >
-                                        Actions
-                                    </Stack>
-                                </TableCell>}
+
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -210,22 +193,7 @@ function AlpsTable({ alp, alps, selectableAlps, setAlp, selectAll, setSelectAll,
                                             :
                                             null
                                         }
-                                        {!user?.alps_access_fields.is_readonly && user?.alps_access_fields.is_editable &&
-                                            <TableCell>
-                                                {user?.alps_access_fields.is_deletion_allowed &&
-                                                    <Tooltip title="delete">
-                                                        <IconButton color="error"
-                                                            onClick={() => {
-                                                                setChoice({ type: AlpsChoiceActions.delete_alps })
-                                                                setAlp(alp)
-                                                            }}
-                                                            disabled={user?._id !== user?.created_by._id}
 
-                                                        >
-                                                            <Delete />
-                                                        </IconButton>
-                                                    </Tooltip>}
-                                            </TableCell>}
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{alp.serial_number}</Typography>
                                         </TableCell>
@@ -258,12 +226,7 @@ function AlpsTable({ alp, alps, selectableAlps, setAlp, selectAll, setSelectAll,
                     </TableBody>
                 </Table>
             </Box >
-            {
-                alp ?
-                    <>
-                        <DeleteAlpsDialog alp={alp} />
-                    </> : null
-            }
+
         </>
 
     )

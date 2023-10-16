@@ -429,22 +429,6 @@ function CustomersTable({ lead, leads, selectableLeads, setLead, selectAll, setS
                                 </Stack>
                             </TableCell>
 
-
-                            {/* last whatsapp */}
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Last Whatsapp
-                                </Stack>
-                            </TableCell>
-
-
                         </TableRow>
                     </TableHead>
                     <TableBody >
@@ -742,12 +726,6 @@ function CustomersTable({ lead, leads, selectableLeads, setLead, selectAll, setS
 
                                         </TableCell>
 
-
-                                        {/* last whatsapp */}
-
-                                        <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.last_whatsapp_date).toLocaleString()}</Typography>
-                                        </TableCell>
 
 
                                     </TableRow>

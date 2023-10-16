@@ -43,11 +43,8 @@ function AllReferralPage({ leads }: { leads: ILead[] }) {
           lead_source: lead.lead_source,
           remarks: lead.last_remark || "",
           is_customer: lead.is_customer,
-          last_whatsapp_date: lead.last_whatsapp_date,
           created_at: lead.created_at,
-          created_by_username: lead.created_by.username,
           updated_at: lead.updated_at,
-          updated_by_username: lead.updated_by.username,
           lead_owners: lead.lead_owners.map((owner) => {
             return owner.username + ","
           }).toString()
