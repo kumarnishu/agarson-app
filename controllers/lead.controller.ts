@@ -168,8 +168,8 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 }
             ]
         }).sort('-created_at')
-            // .limit(limit * 1)
-            // .skip((page - 1) * limit)
+        // .limit(limit * 1)
+        // .skip((page - 1) * limit)
 
         let count = await Lead.countDocuments()
         leads = leads.filter((lead) => {
@@ -182,7 +182,8 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 })
                 if (owners.length > 0)
                     return lead
-            })
+            }).slice((page - 1) * limit, limit * 1)
+          
         }
         if (req.user?.is_admin) {
             return res.status(200).json({
@@ -273,8 +274,8 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                 }
             ]
         }).sort('-created_at')
-            // .limit(limit * 1)
-            // .skip((page - 1) * limit)
+        // .limit(limit * 1)
+        // .skip((page - 1) * limit)
 
         let count = await Lead.countDocuments()
         leads = leads.filter((lead) => {
@@ -287,7 +288,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                 })
                 if (owners.length > 0)
                     return lead
-            })
+            }).slice((page - 1) * limit, limit * 1)
         }
         if (req.user?.is_admin) {
             return res.status(200).json({
@@ -556,7 +557,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                 validated = false
                 statusText = "invalid mobile"
             }
-         
+
             if (lead.created_at && !isvalidDate(new Date(lead.created_at))) {
                 validated = false
                 statusText = "invalid date"
@@ -821,7 +822,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { stage: { $regex: key[1], $options: 'i' } },
                         { lead_source: { $regex: key[1], $options: 'i' } },
                         { last_remark: { $regex: key[1], $options: 'i' } },
-                       
+
                     ]
                 }
             ]
@@ -889,7 +890,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { stage: { $regex: key[1], $options: 'i' } },
                         { lead_source: { $regex: key[1], $options: 'i' } },
                         { last_remark: { $regex: key[1], $options: 'i' } },
-                       
+
                     ]
                 },
                 {
@@ -912,7 +913,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { stage: { $regex: key[2], $options: 'i' } },
                         { lead_source: { $regex: key[2], $options: 'i' } },
                         { last_remark: { $regex: key[2], $options: 'i' } },
-                       
+
                     ]
                 }
             ]
@@ -980,7 +981,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { stage: { $regex: key[1], $options: 'i' } },
                         { lead_source: { $regex: key[1], $options: 'i' } },
                         { last_remark: { $regex: key[1], $options: 'i' } },
-                       
+
                     ]
                 },
                 {
@@ -1003,7 +1004,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { stage: { $regex: key[2], $options: 'i' } },
                         { lead_source: { $regex: key[2], $options: 'i' } },
                         { last_remark: { $regex: key[2], $options: 'i' } },
-                       
+
                     ]
                 },
                 {
@@ -1026,7 +1027,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { stage: { $regex: key[3], $options: 'i' } },
                         { lead_source: { $regex: key[3], $options: 'i' } },
                         { last_remark: { $regex: key[3], $options: 'i' } },
-                       
+
                     ]
                 }
             ]
@@ -1166,7 +1167,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         { stage: { $regex: key[1], $options: 'i' } },
                         { lead_source: { $regex: key[1], $options: 'i' } },
                         { last_remark: { $regex: key[1], $options: 'i' } },
-                       
+
                     ]
                 }
             ]
@@ -1234,7 +1235,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         { stage: { $regex: key[1], $options: 'i' } },
                         { lead_source: { $regex: key[1], $options: 'i' } },
                         { last_remark: { $regex: key[1], $options: 'i' } },
-                       
+
                     ]
                 },
                 {
@@ -1257,7 +1258,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         { stage: { $regex: key[2], $options: 'i' } },
                         { lead_source: { $regex: key[2], $options: 'i' } },
                         { last_remark: { $regex: key[2], $options: 'i' } },
-                       
+
                     ]
                 }
             ]
@@ -1325,7 +1326,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         { stage: { $regex: key[1], $options: 'i' } },
                         { lead_source: { $regex: key[1], $options: 'i' } },
                         { last_remark: { $regex: key[1], $options: 'i' } },
-                       
+
                     ]
                 },
                 {
@@ -1348,7 +1349,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         { stage: { $regex: key[2], $options: 'i' } },
                         { lead_source: { $regex: key[2], $options: 'i' } },
                         { last_remark: { $regex: key[2], $options: 'i' } },
-                       
+
                     ]
                 },
                 {
@@ -1371,7 +1372,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         { stage: { $regex: key[3], $options: 'i' } },
                         { lead_source: { $regex: key[3], $options: 'i' } },
                         { last_remark: { $regex: key[3], $options: 'i' } },
-                       
+
                     ]
                 }
             ]
@@ -1686,8 +1687,8 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                 }
             ]
         }).sort('-created_at')
-            // .limit(limit * 1)
-            // .skip((page - 1) * limit)
+        // .limit(limit * 1)
+        // .skip((page - 1) * limit)
 
         let count = await Lead.countDocuments()
         leads = leads.filter((lead) => {
@@ -1700,7 +1701,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                 })
                 if (owners.length > 0)
                     return lead
-            })
+            }).slice((page - 1) * limit, limit * 1)
         }
         if (req.user?.is_admin) {
             return res.status(200).json({
@@ -1824,7 +1825,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         { stage: { $regex: key[1], $options: 'i' } },
                         { lead_source: { $regex: key[1], $options: 'i' } },
                         { last_remark: { $regex: key[1], $options: 'i' } },
-                       
+
                     ]
                 }
             ]
@@ -1892,7 +1893,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         { stage: { $regex: key[1], $options: 'i' } },
                         { lead_source: { $regex: key[1], $options: 'i' } },
                         { last_remark: { $regex: key[1], $options: 'i' } },
-                       
+
                     ]
                 },
                 {
@@ -1915,7 +1916,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         { stage: { $regex: key[2], $options: 'i' } },
                         { lead_source: { $regex: key[2], $options: 'i' } },
                         { last_remark: { $regex: key[2], $options: 'i' } },
-                       
+
                     ]
                 }
             ]
@@ -1983,7 +1984,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         { stage: { $regex: key[1], $options: 'i' } },
                         { lead_source: { $regex: key[1], $options: 'i' } },
                         { last_remark: { $regex: key[1], $options: 'i' } },
-                       
+
                     ]
                 },
                 {
@@ -2006,7 +2007,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         { stage: { $regex: key[2], $options: 'i' } },
                         { lead_source: { $regex: key[2], $options: 'i' } },
                         { last_remark: { $regex: key[2], $options: 'i' } },
-                       
+
                     ]
                 },
                 {
@@ -2029,7 +2030,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         { stage: { $regex: key[3], $options: 'i' } },
                         { lead_source: { $regex: key[3], $options: 'i' } },
                         { last_remark: { $regex: key[3], $options: 'i' } },
-                       
+
                     ]
                 }
             ]
