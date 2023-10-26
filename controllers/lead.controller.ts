@@ -182,8 +182,8 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 })
                 if (owners.length > 0)
                     return lead
-            }).slice((page - 1) * limit, limit * 1)
-          
+            }).slice((page - 1) * limit, limit * page)
+
         }
         if (req.user?.is_admin) {
             return res.status(200).json({
@@ -288,7 +288,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                 })
                 if (owners.length > 0)
                     return lead
-            }).slice((page - 1) * limit, limit * 1)
+            }).slice((page - 1) * limit, limit * page)
         }
         if (req.user?.is_admin) {
             return res.status(200).json({
@@ -1701,7 +1701,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                 })
                 if (owners.length > 0)
                     return lead
-            }).slice((page - 1) * limit, limit * 1)
+            }).slice((page - 1) * limit, limit * page)
         }
         if (req.user?.is_admin) {
             return res.status(200).json({
