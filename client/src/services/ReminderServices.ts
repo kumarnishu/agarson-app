@@ -20,9 +20,7 @@ export const StartMessageReminder = async ({ id, body }: { id: string, body: For
     return await apiClient.post(`start/message/reminders/${id}`, body);
 };
 
-export const DeleteReminder = async (id: string) => {
-    return await apiClient.delete(`reminders/${id}`);
-};
+
 export const StartReminder = async ({ id, body }: { id: string, body: FormData }) => {
     return await apiClient.post(`start/reminders/${id}`, body);
 };

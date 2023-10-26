@@ -448,33 +448,33 @@ export const GetReminders = async (req: Request, res: Response, next: NextFuncti
     return res.status(200).json(reminders)
 }
 
-export const DeleteReminder = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct reminder id" })
-    }
-    let reminder = await Reminder.findById(id)
-    if (reminder) {
-        let reports = await ContactReport.find({ reminder: reminder })
-        reports.forEach(async (report) => {
-            await report.remove()
-        })
-        if (reminder.message && reminder.message.media?.public_url) {
-            await destroyFile(reminder.message.media._id)
-        }
-        await reminder.remove()
-        if (ReminderManager.exists(reminder.running_key))
-            ReminderManager.deleteJob(reminder.running_key)
-    }
+// export const DeleteReminder = async (req: Request, res: Response, next: NextFunction) => {
+//     const id = req.params.id
+//     if (!isMongoId(id)) {
+//         return res.status(400).json({ message: "please provide correct reminder id" })
+//     }
+//     let reminder = await Reminder.findById(id)
+//     if (reminder) {
+//         let reports = await ContactReport.find({ reminder: reminder })
+//         reports.forEach(async (report) => {
+//             await report.remove()
+//         })
+//         if (reminder.message && reminder.message.media?.public_url) {
+//             await destroyFile(reminder.message.media._id)
+//         }
+//         await reminder.remove()
+//         if (ReminderManager.exists(reminder.running_key))
+//             ReminderManager.deleteJob(reminder.running_key)
+//     }
 
-    reminder_timeouts.forEach((item) => {
-        if (String(item.id) === String(reminder?._id)) {
-            clearTimeout(item.timeout)
-        }
-    })
+//     reminder_timeouts.forEach((item) => {
+//         if (String(item.id) === String(reminder?._id)) {
+//             clearTimeout(item.timeout)
+//         }
+//     })
 
-    return res.status(200).json({ "messgae": "deleted reminder" })
-}
+//     return res.status(200).json({ "messgae": "deleted reminder" })
+// }
 
 export const ResetReminder = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id

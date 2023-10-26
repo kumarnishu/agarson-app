@@ -1,11 +1,10 @@
-import { Block, Delete, Edit, Pause, RemoveRedEye, RestartAlt, Stop } from '@mui/icons-material'
+import { Block,  Edit, Pause, RemoveRedEye, RestartAlt, Stop } from '@mui/icons-material'
 import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { ReminderChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import UpdateReminderDialog from '../dialogs/reminders/UpdateReminderDialog'
-import DeleteReminderDialog from '../dialogs/reminders/DeleteReminderDialog'
 import ViewReminderDialog from '../dialogs/reminders/ViewReminderDialog'
 import StartReminderDialog from '../dialogs/reminders/StartReminderDialog'
 import ResetReminderDialog from '../dialogs/reminders/ResetReminderDialog'
@@ -375,19 +374,7 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                                             <Edit />
                                                         </IconButton>
                                                     </Tooltip>
-                                                    {user?.reminders_access_fields.is_deletion_allowed &&
-                                                        <Tooltip title="delete">
-                                                            <IconButton
-                                                                color="error"
-                                                                size="medium"
-                                                                onClick={() => {
-
-                                                                    setChoice({ type: ReminderChoiceActions.delete_reminder })
-                                                                    setReminder(reminder)
-                                                                }}>
-                                                                <Delete />
-                                                            </IconButton>
-                                                        </Tooltip>}
+                                                   
                                                     <Tooltip title="view reports">
                                                         <IconButton
                                                             color="success"
@@ -464,7 +451,6 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                     reminder ?
                         <>
                             <UpdateReminderDialog reminder={reminder} />
-                            <DeleteReminderDialog reminder={reminder} />
                             <ViewReminderDialog reminder={reminder} />
                             <StartReminderDialog reminder={reminder} />
                             <ResetReminderDialog reminder={reminder} />

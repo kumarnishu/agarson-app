@@ -12,7 +12,7 @@ export var timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Client, user: IUser, start_by_server?: boolean) {
     if (broadcast && client) {
         let daily_limit = broadcast.daily_limit
-        if (start_by_server && broadcast?.daily_count !== 0 && broadcast?.daily_count < broadcast.daily_limit) {
+        if (start_by_server && daily_limit > 0) {
             let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
             if (latest_broadcast && latest_broadcast.is_active) {
                 latest_broadcast.is_paused = false
@@ -24,7 +24,7 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                 let timeinsec = 5000
                 let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).limit(daily_limit)
                 if (reports.length > 0) {
-                    for (let i = 0; i < latest_broadcast.daily_limit - latest_broadcast.daily_count; i++) {
+                    for (let i = 0; i < latest_broadcast.daily_limit - latest_broadcast.daily_count + 1; i++) {
                         let report = reports[i]
                         if (report?.status === "pending") {
                             const timeout = setTimeout(async () => {
@@ -224,12 +224,11 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
     }
 }
 
-
 export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client, user: IUser, start_by_server?: boolean) {
     console.log("started broadcast with message")
     if (broadcast && client) {
         let daily_limit = Number(broadcast.daily_limit)
-        if (start_by_server && broadcast?.daily_count !== 0 && broadcast?.daily_count < broadcast.daily_limit) {
+        if (start_by_server && daily_limit > 0) {
             let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
             if (latest_broadcast && latest_broadcast.is_active) {
                 latest_broadcast.is_paused = false
@@ -240,7 +239,7 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                 let timeinsec = 5000
                 let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).limit(daily_limit)
                 if (reports.length > 0) {
-                    for (let i = 0; i < latest_broadcast.daily_limit - latest_broadcast.daily_count; i++) {
+                    for (let i = 0; i < latest_broadcast.daily_limit - latest_broadcast.daily_count + 1; i++) {
                         let report = reports[i]
                         if (report?.status === "pending") {
                             const timeout = setTimeout(async () => {
@@ -438,3 +437,6 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
         }
     }
 }
+
+
+
