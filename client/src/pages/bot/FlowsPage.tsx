@@ -1,331 +1,213 @@
-import { useQuery } from "react-query"
-import { GetFlows } from "../../services/BotServices"
-import { AxiosResponse } from "axios"
-import { useEffect, useContext, useState } from "react"
-import { BotChoiceActions, ChoiceContext } from "../../contexts/dialogContext"
-import { UserContext } from "../../contexts/userContext"
-import { Box, Button, IconButton, Popover, Stack, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from "@mui/material"
-import UpdateFlowDialog from "../../components/dialogs/bot/UpdateFlowDialog"
-import CreateFlowDialog from "../../components/dialogs/bot/CreateFlowDialog"
-import DeleteFlowDialog from "../../components/dialogs/bot/DeleteFlowDialog"
-import { color1, color2, headColor } from "../../utils/colors"
-import { AddOutlined, AdsClickOutlined, Delete, Edit, Start, Stop } from "@mui/icons-material"
-import UpdateConnectedUsersDialog from "../../components/dialogs/bot/UpdateConnectedUsersDialog"
-import ToogleFlowStatusDialog from "../../components/dialogs/bot/ToogleFlowStatusDialog"
-import { BackendError } from "../.."
-import AdUnitsIcon from '@mui/icons-material/AdUnits';
-import ReactPagination from "../../components/pagination/ReactPagination"
-import { IFlow } from "../../types/bot.types"
 
+import { Search } from '@mui/icons-material'
+import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Stack } from '@mui/system'
+import { AxiosResponse } from 'axios'
+import React, { useContext, useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
+import { headColor } from '../../utils/colors'
+import FuzzySearch from "fuzzy-search";
+import FlowsTable from '../../components/tables/FlowsTable'
+import { BackendError } from '../..'
+import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
+import ExportToExcel from '../../utils/ExportToExcel'
+import { Menu as MenuIcon } from '@mui/icons-material';
+import ReactPagination from '../../components/pagination/ReactPagination'
+import AlertBar from '../../components/snacks/AlertBar'
+import { GetFlows } from '../../services/BotServices'
+import { IFlow } from '../../types/bot.types'
+import CreateFlowDialog from '../../components/dialogs/bot/CreateFlowDialog'
+
+type SelectedData = {
+  flow_name: string,
+  connected_numbers: string,
+  connected_users: string
+}
+
+
+// react component
 export default function FlowsPage() {
-  const [flows, setFlows] = useState<IFlow[]>()
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IFlow[]>, BackendError>("flows", GetFlows)
   const [flow, setFlow] = useState<IFlow>()
+  const [flows, setFlows] = useState<IFlow[]>([])
+  const [selectAll, setSelectAll] = useState(false)
+  const MemoData = React.useMemo(() => flows, [flows])
+  const [preFilteredData, setPreFilteredData] = useState<IFlow[]>([])
+  const [selectedFlows, setSelectedFlows] = useState<IFlow[]>([])
+  const [filter, setFilter] = useState<string | undefined>()
+  const [selectedData, setSelectedData] = useState<SelectedData[]>([])
+  const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
-  const { user } = useContext(UserContext)
-  const { data, isLoading } = useQuery<AxiosResponse<IFlow[]>, BackendError>("flows", GetFlows)
-  const [popup, setPopup] = useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   // pagination  states
   const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + reactPaginationData.limit;
-  const currentItems = flows?.slice(itemOffset, endOffset)
+  const currentItems = MemoData.slice(itemOffset, endOffset)
 
+  // export selected flows into excel
+  function handleExcel() {
+    setAnchorEl(null)
+    try {
+      if (selectedData.length === 0)
+        return alert("please select some rows")
+      ExportToExcel(selectedData, "flows_data")
+      setSent(true)
+    }
+    catch (err) {
+      console.log(err)
+      setSent(false)
+    }
 
+  }
+
+  // convert select data in to proper format
   useEffect(() => {
-    if (data)
+    let data: any[] = []
+    selectedFlows.map((flow) => {
+      return data.push(
+        {
+          flow_name: flow.flow_name,
+          connected_numbers: flow.connected_users && flow.connected_users.map((user) => {
+            return user.username + ","
+          }).toString() || "",
+          connected_users: flow.connected_users && flow.connected_users.map((user) => {
+            return user.connected_number + ","
+          }).toString() || ""
+        })
+    })
+    if (data.length > 0)
+      setSelectedData(data)
+  }, [selectedFlows])
+
+  // setup data again after filter
+  useEffect(() => {
+    if (isSuccess) {
       setFlows(data.data)
-    if (data?.data)
+      setPreFilteredData(data.data)
       setReactPaginationData({
         ...reactPaginationData,
         total: Math.ceil(data.data.length / reactPaginationData.limit)
       })
-  }, [data])
+    }
+  }, [isSuccess, data])
 
   useEffect(() => {
     setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
   }, [reactPaginationData])
 
+  //handle fuzzy search
+  useEffect(() => {
+    if (filter) {
+      if (flows) {
+        const searcher = new FuzzySearch(flows, ["flow_name", "trigger_keywords"], {
+          caseSensitive: false,
+        });
+        const result = searcher.search(filter);
+        setFlows(result)
+      }
+    }
+    if (!filter)
+      setFlows(preFilteredData)
+
+  }, [filter, flows])
+  console.log(flow)
   return (
     <>
-      <Box sx={{
-        overflow: "scroll",
-        maxHeight: '70vh'
-      }}>
-        {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
-          <Button sx={{ m: 1 }} variant="outlined" color="warning"
-            onClick={() => setChoice({ type: BotChoiceActions.create_flow })}
-
-          >
-            <Stack direction="row" alignItems="center" gap={1}>
-              <AddOutlined />
-              <span> New Flow</span>
-            </Stack>
-          </Button>}
-
-        <Table
-          stickyHeader
-          sx={{ minWidth: "1400px" }}
-          size="small">
-          <TableHead
-          >
-            <TableRow>
-              {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Actions
-                  </Stack>
-                </TableCell>}
-              <TableCell
-                sx={{ bgcolor: headColor }}                         >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Index
-                </Stack>
-              </TableCell>
-
-              <TableCell
-                sx={{ bgcolor: headColor }}                         >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Status
-                </Stack>
-              </TableCell>
-
-              <TableCell
-                sx={{ bgcolor: headColor }}                         >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Triggers
-                </Stack>
-              </TableCell>
-
-              <TableCell
-                sx={{ bgcolor: headColor }}                         >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Flow Name
-                </Stack>
-              </TableCell>
-
-              <TableCell
-                sx={{ bgcolor: headColor }}                         >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Updated By
-                </Stack>
-              </TableCell>
-
-              <TableCell
-                sx={{ bgcolor: headColor }}                         >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Created By
-                </Stack>
-              </TableCell>
-
-              <TableCell
-                sx={{ bgcolor: headColor }}                         >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Last Updated
-                </Stack>
-              </TableCell>
-
-            </TableRow>
-          </TableHead>
-          <TableBody >
-            {
-              currentItems && currentItems.length > 0 && currentItems.map((flow, index) => {
-                return (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      '&:nth-of-type(odd)': { bgcolor: color1 },
-                      '&:nth-of-type(even)': { bgcolor: color2 },
-                      '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                    }}>
-
-                    {/* actions */}
-                    {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
-                      <TableCell>
-                        <div>
-                          <Button onClick={(e) => setPopup(e.currentTarget)}>
-                            <AdsClickOutlined />
-                          </Button>
-                          <Popover
-                            open={Boolean(popup)}
-                            anchorEl={popup}
-                            onClose={() => setPopup(null)}
-                            anchorOrigin={{
-                              vertical: 'bottom',
-                              horizontal: 'left',
-                            }}
-                          >
-                            <Stack direction="row">
-                              {
-                                user?.is_admin ?
-                                  <>
-                                    {flow.is_active ?
-                                      <Tooltip title="Disable">
-                                        <IconButton color="warning"
-                                          onClick={() => {
-                                            setFlow(flow)
-                                            setChoice({ type: BotChoiceActions.toogle_flow_status })
-                                            setPopup(null)
-                                          }}
-                                        >
-                                          <Stop />
-                                        </IconButton>
-                                      </Tooltip>
-                                      : <Tooltip title="Enable">
-                                        <IconButton color="warning"
-                                          onClick={() => {
-                                            setFlow(flow)
-                                            setChoice({ type: BotChoiceActions.toogle_flow_status })
-                                            setPopup(null)
-                                          }}
-                                        >
-                                          <Start />
-                                        </IconButton>
-                                      </Tooltip>}
-                                  </>
-                                  : null
-                              }
-
-                              <Tooltip title="Edit">
-                                <IconButton color="success"
-                                  onClick={() => {
-                                    setFlow(flow)
-                                    setChoice({ type: BotChoiceActions.update_flow })
-                                    setPopup(null)
-                                  }}
-                                >
-                                  <Edit />
-                                </IconButton>
-                              </Tooltip>
-
-                              {user.bot_access_fields.is_deletion_allowed &&
-                                <Tooltip title="Delete">
-                                  <IconButton color="error"
-                                    onClick={() => {
-                                      setFlow(flow)
-                                      setChoice({ type: BotChoiceActions.delete_flow })
-                                      setPopup(null)
-                                    }}
-
-                                  >
-                                    <Delete />
-                                  </IconButton>
-                                </Tooltip>}
-
-
-                              <Tooltip title="Edit Connected users">
-                                <IconButton color="primary"
-                                  onClick={() => {
-                                    setChoice({ type: BotChoiceActions.update_connected_users })
-                                    setFlow(flow)
-                                    setPopup(null)
-                                  }}
-                                >
-                                  <AdUnitsIcon />
-                                </IconButton>
-                              </Tooltip>
-
-                            </Stack>
-                          </Popover>
-
-                        </div>
-
-                      </TableCell >}
-
-                    <TableCell>
-                      <Typography sx={{ textTransform: "capitalize" }}>{index + 1}</Typography>
-                    </TableCell>
-                    <>
-
-                      {
-                        isLoading ? <TableCell>
-                          <Typography sx={{ textTransform: "capitalize" }}>Loading..</Typography>
-                        </TableCell> :
-                          <TableCell>
-                            <Typography sx={{ textTransform: "capitalize" }}>{flow.is_active ? "active" : "disabled"}</Typography>
-                          </TableCell>
-
-                      }
-                    </>
-
-                    <TableCell>
-                      <Typography sx={{ textTransform: "capitalize" }}>{flow.trigger_keywords.slice(0, 50)}</Typography>
-                    </TableCell>
-
-
-                    <TableCell>
-                      <Typography sx={{ textTransform: "capitalize" }}>{flow.flow_name}</Typography>
-                    </TableCell>
-
-
-                    <TableCell>
-                      <Typography sx={{ textTransform: "capitalize" }}>{flow.updated_by?.username}</Typography>
-                    </TableCell>
-
-
-                    <TableCell>
-                      <Typography sx={{ textTransform: "capitalize" }}>{flow.created_by?.username}</Typography>
-                    </TableCell>
-
-
-                    <TableCell>
-                      <Typography sx={{ textTransform: "capitalize" }}>{flow.updated_at && new Date(flow.updated_at).toLocaleString()}</Typography>
-                    </TableCell>
-
-                  </TableRow >
-                )
-              })}
-          </TableBody >
-        </Table >
-
-      </Box >
-      {flow ? <UpdateFlowDialog selectedFlow={flow} /> : null
+      {
+        isLoading && <LinearProgress />
       }
-      <CreateFlowDialog />
-      {flow ? <DeleteFlowDialog flow={flow} /> : null}
-      {flow ? <UpdateConnectedUsersDialog selectedFlow={flow} /> : null}
-      {flow ? <ToogleFlowStatusDialog flow={flow} /> : null}
-      {currentItems && <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={currentItems} />}
+      {/*heading, search bar and table menu */}
+      <Stack
+        spacing={2}
+        padding={1}
+        direction="row"
+        justifyContent="space-between"
+        width="100vw"
+      >
+        <Typography
+          variant={'h6'}
+          component={'h1'}
+          sx={{ pl: 1 }}
+        >
+          Flows
+        </Typography>
+
+        <Stack
+          direction="row"
+        >
+          {/* search bar */}
+          < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
+          }>
+            <TextField
+              fullWidth
+              size="small"
+              onChange={(e) => setFilter(e.currentTarget.value)}
+              autoFocus
+              InputProps={{
+                startAdornment: <InputAdornment position="start">
+                  <Search />
+                </InputAdornment>,
+              }}
+              placeholder={`${MemoData?.length} records...`}
+              style={{
+                fontSize: '1.1rem',
+                border: '0',
+              }}
+            />
+          </Stack >
+          {/* flow menu */}
+          <>
+            {sent && <AlertBar message="File Exported Successfuly" color="success" />}
+            <IconButton size="medium"
+              onClick={(e) => setAnchorEl(e.currentTarget)
+              }
+              sx={{ border: 1, borderRadius: 2, marginLeft: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)
+              }
+              TransitionComponent={Fade}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+              sx={{ borderRadius: 2 }}
+            >
+              <MenuItem onClick={() => {
+                setChoice({ type: BotChoiceActions.create_flow })
+                setAnchorEl(null)
+              }}
+              >New Flow</MenuItem>
+
+              <MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>
+
+            </Menu>
+            <CreateFlowDialog />
+          </>
+        </Stack>
+      </Stack>
+
+      {/*  table */}
+      <FlowsTable
+        flow={flow}
+        selectAll={selectAll}
+        selectedFlows={selectedFlows}
+        setSelectedFlows={setSelectedFlows}
+        setSelectAll={setSelectAll}
+        flows={MemoData}
+        setFlow={setFlow}
+      />
+      <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={MemoData}
+      />
     </>
+
   )
+
 }
+

@@ -13,7 +13,6 @@ import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import NewUserDialog from '../../components/dialogs/users/NewUserDialog'
-import ReactPagination from '../../components/pagination/ReactPagination'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IUser } from '../../types/user.types'
 
@@ -44,11 +43,6 @@ export default function UsersPage() {
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    // pagination  states
-    const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
-    const [itemOffset, setItemOffset] = useState(0);
-    const endOffset = itemOffset + reactPaginationData.limit;
-    const currentItems = MemoData.slice(itemOffset, endOffset)
 
     // export selected users into excel
     function handleExcel() {
@@ -95,16 +89,11 @@ export default function UsersPage() {
         if (isSuccess) {
             setUsers(data.data)
             setPreFilteredData(data.data)
-            setReactPaginationData({
-                ...reactPaginationData,
-                total: Math.ceil(data.data.length / reactPaginationData.limit)
-            })
+          
         }
     }, [isSuccess, users, data])
 
-    useEffect(() => {
-        setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
-    }, [reactPaginationData])
+    
 
     //handle fuzzy search
     useEffect(() => {
@@ -193,7 +182,7 @@ export default function UsersPage() {
                                 setAnchorEl(null)
                             }}
                             >New User</MenuItem>
-                            
+
                             <MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
 
@@ -212,11 +201,10 @@ export default function UsersPage() {
                 selectedUsers={selectedUsers}
                 setSelectedUsers={setSelectedUsers}
                 setSelectAll={setSelectAll}
-                users={currentItems}
+                users={MemoData}
                 setUser={setUser}
             />
-            <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={MemoData}
-            />
+
         </>
 
     )
