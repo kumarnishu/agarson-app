@@ -49,7 +49,6 @@ let template: ILeadTemplate[] = [
 ]
 
 
-
 export default function LeadsPage() {
   const [paginationData, setPaginationData] = useState({ limit: 10, page: 1, total: 1 });
   const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
@@ -205,8 +204,7 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.is_admin ?
-              < UploadLeadsExcelButton /> : null}
+              <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)} /> 
             <Box sx={{
               display: { xs: 'none', md: 'block' }
             }}>

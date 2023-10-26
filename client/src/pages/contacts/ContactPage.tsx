@@ -139,8 +139,8 @@ export default function ContactPage() {
           {/* search bar */}
           < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
           }>
-            {LoggedInUser?.is_admin ?
-              < UploadContactsFromExcelButton /> : null}
+            {!LoggedInUser?.contacts_access_fields.is_hidden ?
+              < UploadContactsFromExcelButton disabled={Boolean(LoggedInUser?.contacts_access_fields.is_readonly)} /> : null}
             <TextField
               fullWidth
               size="small"

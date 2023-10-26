@@ -168,8 +168,8 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 }
             ]
         }).sort('-created_at')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
+            // .limit(limit * 1)
+            // .skip((page - 1) * limit)
 
         let count = await Lead.countDocuments()
         leads = leads.filter((lead) => {
@@ -273,8 +273,8 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                 }
             ]
         }).sort('-created_at')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
+            // .limit(limit * 1)
+            // .skip((page - 1) * limit)
 
         let count = await Lead.countDocuments()
         leads = leads.filter((lead) => {
@@ -1686,8 +1686,8 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                 }
             ]
         }).sort('-created_at')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
+            // .limit(limit * 1)
+            // .skip((page - 1) * limit)
 
         let count = await Lead.countDocuments()
         leads = leads.filter((lead) => {

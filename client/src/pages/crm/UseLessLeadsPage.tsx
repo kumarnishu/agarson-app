@@ -203,13 +203,14 @@ export default function UseLessLeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser && LoggedInUser._id === LoggedInUser?.created_by._id && <Tooltip title="Delete Selected Leads">
+            <Tooltip title="Delete Selected Leads">
               <IconButton color="error"
+                disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)}
                 onClick={() => setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })}
               >
                 <Delete />
               </IconButton>
-            </Tooltip>}
+            </Tooltip>
             <Box sx={{ display: { xs: 'none', md: 'block' } }}>
               <select onChange={(e) => { setUserid(e.target.value) }}
                 style={{ borderColor: 'blue', border: 'none', height: '40px' }}

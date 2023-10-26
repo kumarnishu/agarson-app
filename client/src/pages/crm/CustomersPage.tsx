@@ -208,8 +208,7 @@ export default function CustomersPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.is_admin ?
-              < UploadLeadsExcelButton /> : null}
+            <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)} /> 
             <Box sx={{ display: { xs: 'none', md: 'block' } }}>
 
               <select onChange={(e) => { setUserid(e.target.value) }}

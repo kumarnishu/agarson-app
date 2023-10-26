@@ -13,7 +13,7 @@ const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadContactsFromExcelButton() {
+function UploadContactsFromExcelButton({ disabled }: { disabled: boolean }) {
     const [leads, setLeads] = React.useState<ILeadTemplate[]>()
     const { data, mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<ILeadTemplate[]>, BackendError, FormData>
@@ -47,7 +47,7 @@ function UploadContactsFromExcelButton() {
                 ExportToExcel(data.data, "errors_leads_data")
         }
     }, [isSuccess])
-    
+
     return (
         <>
 
@@ -74,6 +74,7 @@ function UploadContactsFromExcelButton() {
                         <Button
                             variant="outlined"
                             component="label"
+                            disabled={Boolean(disabled)}
                         >
                             <Upload />
                             <FileInput
