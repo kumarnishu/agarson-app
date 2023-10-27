@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, FormControlLabel, IconButton, Popover, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
 import { IFlow } from '../../types/bot.types'
@@ -24,8 +24,13 @@ type Props = {
 
 function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlows, setSelectedFlows }: Props) {
     const { setChoice } = useContext(ChoiceContext)
+    const [data, setData] = useState<IFlow[]>(flows)
     const { user } = useContext(UserContext)
     const [popup, setPopup] = useState<HTMLButtonElement | null>(null);
+
+    useEffect(() => {
+        setData(flows)
+    }, [flows])
     return (
         <>
             <Box sx={{
@@ -151,7 +156,7 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                     </TableHead>
                     <TableBody >
                         {
-                            flows && flows.map((flow, index) => {
+                            data && data.map((flow, index) => {
                                 return (
                                     <TableRow
                                         key={index}
@@ -225,34 +230,31 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                                     }}
                                                 >
                                                     <Stack direction="row">
-                                                        {
-                                                            user?.is_admin ?
-                                                                <>
-                                                                    {flow.is_active ?
-                                                                        <Tooltip title="Disable">
-                                                                            <IconButton color="warning"
-                                                                                onClick={() => {
 
-                                                                                    setChoice({ type: BotChoiceActions.toogle_flow_status })
-                                                                                    setPopup(null)
-                                                                                }}
-                                                                            >
-                                                                                <Stop />
-                                                                            </IconButton>
-                                                                        </Tooltip>
-                                                                        : <Tooltip title="Enable">
-                                                                            <IconButton color="warning"
-                                                                                onClick={() => {
-                                                                                    setChoice({ type: BotChoiceActions.toogle_flow_status })
-                                                                                    setPopup(null)
-                                                                                }}
-                                                                            >
-                                                                                <Start />
-                                                                            </IconButton>
-                                                                        </Tooltip>}
-                                                                </>
-                                                                : null
+                                                        {flow.is_active ?
+                                                            <Tooltip title="Disable">
+                                                                <IconButton color="warning"
+                                                                    onClick={() => {
+
+                                                                        setChoice({ type: BotChoiceActions.toogle_flow_status })
+                                                                        setPopup(null)
+                                                                    }}
+                                                                >
+                                                                    <Stop />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                            : <Tooltip title="Start">
+                                                                <IconButton color="warning"
+                                                                    onClick={() => {
+                                                                        setChoice({ type: BotChoiceActions.toogle_flow_status })
+                                                                        setPopup(null)
+                                                                    }}
+                                                                >
+                                                                    <Start />
+                                                                </IconButton>
+                                                            </Tooltip>
                                                         }
+
 
                                                         <Tooltip title="Edit">
                                                             <IconButton color="success"

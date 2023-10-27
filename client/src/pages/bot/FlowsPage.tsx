@@ -12,6 +12,7 @@ import { BackendError } from '../..'
 import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import { Menu as MenuIcon } from '@mui/icons-material';
+import ReactPagination from '../../components/pagination/ReactPagination'
 import AlertBar from '../../components/snacks/AlertBar'
 import { GetFlows } from '../../services/BotServices'
 import { IFlow } from '../../types/bot.types'
@@ -38,7 +39,11 @@ export default function FlowsPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+  // pagination  states
+  const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+  const [itemOffset, setItemOffset] = useState(0);
+  const endOffset = itemOffset + reactPaginationData.limit;
+  const currentItems = MemoData.slice(itemOffset, endOffset)
 
   // export selected flows into excel
   function handleExcel() {
@@ -80,10 +85,16 @@ export default function FlowsPage() {
     if (isSuccess) {
       setFlows(data.data)
       setPreFilteredData(data.data)
+      setReactPaginationData({
+        ...reactPaginationData,
+        total: Math.ceil(data.data.length / reactPaginationData.limit)
+      })
     }
-  }, [isSuccess])
+  }, [isSuccess, data])
 
- 
+  useEffect(() => {
+    setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
+  }, [reactPaginationData])
 
   //handle fuzzy search
   useEffect(() => {
@@ -100,8 +111,7 @@ export default function FlowsPage() {
       setFlows(preFilteredData)
 
   }, [filter, flows])
-
-
+  console.log(flow)
   return (
     <>
       {
@@ -192,6 +202,8 @@ export default function FlowsPage() {
         setSelectAll={setSelectAll}
         flows={MemoData}
         setFlow={setFlow}
+      />
+      <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={MemoData}
       />
     </>
 
