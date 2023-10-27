@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material'
 import { useContext } from 'react'
 import { HelpChoiceContext, HelpLeadChoiceActions } from '../../contexts/HelpChoiceContext'
-import NewLeadHelpDialog from '../../components/dialogs/help/crm/NewLeadHelpDialog'
+import LeadsHelpDialog from '../../components/dialogs/help/crm/LeadsHelpDialog'
 
 function CrmHelpPage() {
   const { setChoice } = useContext(HelpChoiceContext)
@@ -15,7 +15,7 @@ function CrmHelpPage() {
           How to Update an existing Lead ?
         </Typography>
       </Stack>
-      <NewLeadHelpDialog />
+      <LeadsHelpDialog />
     </>
   )
 }

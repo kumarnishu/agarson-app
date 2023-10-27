@@ -9,7 +9,7 @@ import UpdateFlowDialog from '../dialogs/bot/UpdateFlowDialog'
 import DeleteFlowDialog from '../dialogs/bot/DeleteFlowDialog'
 import UpdateConnectedUsersDialog from '../dialogs/bot/UpdateConnectedUsersDialog'
 import ToogleFlowStatusDialog from '../dialogs/bot/ToogleFlowStatusDialog'
-import { AdsClickOutlined, Delete, Edit, Start, Stop } from '@mui/icons-material'
+import { AdsClickOutlined, Delete, Edit, RestartAlt, Stop } from '@mui/icons-material'
 import AdUnitsIcon from '@mui/icons-material/AdUnits';
 
 type Props = {
@@ -243,14 +243,14 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                                                     <Stop />
                                                                 </IconButton>
                                                             </Tooltip>
-                                                            : <Tooltip title="Start">
+                                                            : <Tooltip title="ReStart">
                                                                 <IconButton color="warning"
                                                                     onClick={() => {
                                                                         setChoice({ type: BotChoiceActions.toogle_flow_status })
                                                                         setPopup(null)
                                                                     }}
                                                                 >
-                                                                    <Start />
+                                                                    <RestartAlt />
                                                                 </IconButton>
                                                             </Tooltip>
                                                         }
