@@ -49,8 +49,8 @@ export default function BroadcastNavBar() {
                                     }}
                                 >
 
-                                    {
-                                        user.is_admin ? <StyledLink to={paths.users}>Broadcast</StyledLink> : null}
+                                    <StyledLink to={paths.broadcast}>Broadcast</StyledLink>
+                                    <StyledLink to={paths.broadcast_help}>Help</StyledLink>
                                 </Stack>
 
                                 {/* stack2 right icons*/}

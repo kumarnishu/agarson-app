@@ -49,15 +49,12 @@ export default function CrmNavBar() {
                                 display: { xs: 'none', md: 'flex' }
                             }}
                         >
-                            <StyledLink to={paths.lead_reports}>Reports</StyledLink>
                             <StyledLink to={paths.leads}>Leads</StyledLink>
                             <StyledLink to={paths.customers}>Customers</StyledLink>
                             <StyledLink to={paths.refers}>Refers</StyledLink>
                             <StyledLink to={paths.useless_leads}>Useless</StyledLink>
-                            {
-                                user?.created_by._id === user?._id &&
-                                <StyledLink to={paths.updateble_fields_lead}>Fields</StyledLink>
-                            }
+                            <StyledLink to={paths.updateble_fields_lead}>Fields</StyledLink>
+                            <StyledLink to={paths.crm_help}>Help</StyledLink>
                         </Stack>
 
                         {/* stack2 right icons*/}

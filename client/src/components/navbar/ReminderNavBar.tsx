@@ -49,8 +49,8 @@ export default function ReminderNavBar() {
                                     }}
                                 >
 
-                                    {
-                                        user.is_admin ? <StyledLink to={paths.users}>Reminder</StyledLink> : null}
+                                    <StyledLink to={paths.reminders}>Reminder</StyledLink>
+                                    <StyledLink to={paths.reminder_help}>Help</StyledLink>
                                 </Stack>
 
                                 {/* stack2 right icons*/}

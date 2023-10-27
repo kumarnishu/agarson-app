@@ -25,6 +25,13 @@ import ContactNavBar from './components/navbar/ContactNavBar'
 import ContactPage from './pages/contacts/ContactPage'
 import AlpsNavBar from './components/navbar/AlpsNavBar'
 import AlpsPage from './pages/alps/AlpsPage'
+import UsersHelpPage from './pages/users/UsersHelpPage'
+import CrmHelpPage from './pages/crm/CrmHelpPage'
+import BotHelpPage from './pages/bot/BotHelpPage'
+import TemplatesHelpPage from './pages/templates/TemplatesHelpPage'
+import BroadcastHelpPage from './pages/broadcast/BroadcastHelpPage'
+import ContactHelpPage from './pages/contacts/ContactHelpPage'
+import ReminderHelpPage from './pages/reminders/ReminderHelpPage'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -34,6 +41,15 @@ const UpdateLeadFieldsPage = React.lazy(() => import('./pages/crm/UpdateLeadFiel
 const TrackersPage = React.lazy(() => import('./pages/bot/TrackersPage'))
 
 export enum paths {
+
+  //helppage
+  crm_help = "help/crm",
+  bot_help = "help/bot",
+  broadcast_help = "help/broadcast",
+  templates_help = "help/templates",
+  reminder_help = "help/reminder",
+  contact_help = "help/contact",
+  users_help = "help/users",
   //crm
   crm = "/crm",
   leads = "leads",
@@ -104,6 +120,11 @@ function AppRoutes() {
                   <UsersPage />
                 }
               />
+              <Route
+                path={paths.users_help} element={
+                  <UsersHelpPage />
+                }
+              />
             </Route>}
           {/* crm nav bar */}
 
@@ -148,6 +169,11 @@ function AppRoutes() {
                   </Suspense>
                 }
               />
+              <Route
+                path={paths.crm_help} element={
+                  <CrmHelpPage />
+                }
+              />
             </Route>}
           {/* bot nav bar */}
           {!user.bot_access_fields.is_hidden &&
@@ -168,6 +194,11 @@ function AppRoutes() {
                 </Suspense>
               }
               />
+              <Route
+                path={paths.bot_help} element={
+                  <BotHelpPage />
+                }
+              />
             </Route>}
 
           {/* templates nav bar */}
@@ -184,6 +215,11 @@ function AppRoutes() {
                 < TemplatesPage />
               }
               />
+              <Route
+                path={paths.templates_help} element={
+                  <TemplatesHelpPage />
+                }
+              />
             </Route>}
 
           {/* broadcast nav bar */}
@@ -193,6 +229,15 @@ function AppRoutes() {
               <Route
                 index element={
                   <BroadcastPage />
+                }
+              />
+              <Route path={paths.broadcast} element={
+                < BroadcastPage />
+              }
+              />
+              <Route
+                path={paths.broadcast_help} element={
+                  <BroadcastHelpPage />
                 }
               />
 
@@ -206,6 +251,15 @@ function AppRoutes() {
                   <ContactPage />
                 }
               />
+              <Route path={paths.contacts} element={
+                < ContactPage />
+              }
+              />
+              <Route
+                path={paths.contact_help} element={
+                  <ContactHelpPage />
+                }
+              />
 
             </Route>}
           {/* reminder nav bar */}
@@ -215,6 +269,15 @@ function AppRoutes() {
               <Route
                 index element={
                   <ReminderPage />
+                }
+              />
+              <Route path={paths.reminders} element={
+                < ReminderPage />
+              }
+              />
+              <Route
+                path={paths.reminder_help} element={
+                  <ReminderHelpPage />
                 }
               />
             </Route>}
@@ -227,6 +290,10 @@ function AppRoutes() {
                 index element={
                   <AlpsPage />
                 }
+              />
+              <Route path={paths.alps} element={
+                < AlpsPage />
+              }
               />
             </Route>}
           {/* backup */}

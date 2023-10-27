@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, FormControlLabel, IconButton, Popover, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
 import { IFlow } from '../../types/bot.types'
@@ -23,15 +23,9 @@ type Props = {
 }
 
 function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlows, setSelectedFlows }: Props) {
-    const [data, setData] = useState<IFlow[]>(flows)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     const [popup, setPopup] = useState<HTMLButtonElement | null>(null);
-
-    useEffect(() => {
-        setData(flows)
-    }, [flows])
-
     return (
         <>
             <Box sx={{
@@ -157,7 +151,7 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                     </TableHead>
                     <TableBody >
                         {
-                            data && data.map((flow, index) => {
+                            flows && flows.map((flow, index) => {
                                 return (
                                     <TableRow
                                         key={index}
@@ -192,7 +186,7 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                                 >
                                                     <Checkbox size="small"
                                                         onChange={(e) => {
-                                                            setFlow(flow)
+
                                                             if (e.target.checked) {
                                                                 setSelectedFlows([...selectedFlows, flow])
                                                             }
@@ -201,7 +195,9 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                                                     return item._id !== flow._id
                                                                 }))
                                                             }
-                                                        }}
+                                                            setFlow(flow)
+                                                        }
+                                                        }
                                                     />
                                                 </Stack>
                                             </TableCell>
@@ -212,97 +208,97 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                         {/* actions */}
                                         {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
                                             <TableCell>
-                                                <div>
-                                                    <Button onClick={(e) => setPopup(e.currentTarget)}>
-                                                        <AdsClickOutlined />
-                                                    </Button>
-                                                    <Popover
-                                                        open={Boolean(popup)}
-                                                        anchorEl={popup}
-                                                        onClose={() => setPopup(null)}
-                                                        anchorOrigin={{
-                                                            vertical: 'bottom',
-                                                            horizontal: 'left',
-                                                        }}
-                                                    >
-                                                        <Stack direction="row">
-                                                            {
-                                                                user?.is_admin ?
-                                                                    <>
-                                                                        {flow.is_active ?
-                                                                            <Tooltip title="Disable">
-                                                                                <IconButton color="warning"
-                                                                                    onClick={() => {
-                                                                                        setFlow(flow)
-                                                                                        setChoice({ type: BotChoiceActions.toogle_flow_status })
-                                                                                        setPopup(null)
-                                                                                    }}
-                                                                                >
-                                                                                    <Stop />
-                                                                                </IconButton>
-                                                                            </Tooltip>
-                                                                            : <Tooltip title="Enable">
-                                                                                <IconButton color="warning"
-                                                                                    onClick={() => {
-                                                                                        setFlow(flow)
-                                                                                        setChoice({ type: BotChoiceActions.toogle_flow_status })
-                                                                                        setPopup(null)
-                                                                                    }}
-                                                                                >
-                                                                                    <Start />
-                                                                                </IconButton>
-                                                                            </Tooltip>}
-                                                                    </>
-                                                                    : null
-                                                            }
+                                                <Button onClick={(e) => {
+                                                    setPopup(e.currentTarget)
+                                                    setFlow(flow)
+                                                }
+                                                }>
+                                                    <AdsClickOutlined />
+                                                </Button>
+                                                <Popover
+                                                    open={Boolean(popup)}
+                                                    anchorEl={popup}
+                                                    onClose={() => setPopup(null)}
+                                                    anchorOrigin={{
+                                                        vertical: 'bottom',
+                                                        horizontal: 'left',
+                                                    }}
+                                                >
+                                                    <Stack direction="row">
+                                                        {
+                                                            user?.is_admin ?
+                                                                <>
+                                                                    {flow.is_active ?
+                                                                        <Tooltip title="Disable">
+                                                                            <IconButton color="warning"
+                                                                                onClick={() => {
 
-                                                            <Tooltip title="Edit">
-                                                                <IconButton color="success"
+                                                                                    setChoice({ type: BotChoiceActions.toogle_flow_status })
+                                                                                    setPopup(null)
+                                                                                }}
+                                                                            >
+                                                                                <Stop />
+                                                                            </IconButton>
+                                                                        </Tooltip>
+                                                                        : <Tooltip title="Enable">
+                                                                            <IconButton color="warning"
+                                                                                onClick={() => {
+                                                                                    setChoice({ type: BotChoiceActions.toogle_flow_status })
+                                                                                    setPopup(null)
+                                                                                }}
+                                                                            >
+                                                                                <Start />
+                                                                            </IconButton>
+                                                                        </Tooltip>}
+                                                                </>
+                                                                : null
+                                                        }
+
+                                                        <Tooltip title="Edit">
+                                                            <IconButton color="success"
+                                                                onClick={() => {
+                                                                    setChoice({ type: BotChoiceActions.update_flow })
+                                                                    setPopup(null)
+
+                                                                }}
+                                                            >
+                                                                <Edit />
+                                                            </IconButton>
+                                                        </Tooltip>
+
+                                                        {user.bot_access_fields.is_deletion_allowed &&
+                                                            <Tooltip title="Delete">
+                                                                <IconButton color="error"
                                                                     onClick={() => {
-                                                                        setFlow(flow)
-                                                                        setChoice({ type: BotChoiceActions.update_flow })
+                                                                        setChoice({ type: BotChoiceActions.delete_flow })
                                                                         setPopup(null)
+
                                                                     }}
+
                                                                 >
-                                                                    <Edit />
+                                                                    <Delete />
                                                                 </IconButton>
-                                                            </Tooltip>
-
-                                                            {user.bot_access_fields.is_deletion_allowed &&
-                                                                <Tooltip title="Delete">
-                                                                    <IconButton color="error"
-                                                                        onClick={() => {
-                                                                            setFlow(flow)
-                                                                            setChoice({ type: BotChoiceActions.delete_flow })
-                                                                            setPopup(null)
-                                                                        }}
-
-                                                                    >
-                                                                        <Delete />
-                                                                    </IconButton>
-                                                                </Tooltip>}
+                                                            </Tooltip>}
 
 
-                                                            <Tooltip title="Edit Connected users">
-                                                                <IconButton color="primary"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: BotChoiceActions.update_connected_users })
-                                                                        setFlow(flow)
-                                                                        setPopup(null)
-                                                                    }}
-                                                                >
-                                                                    <AdUnitsIcon />
-                                                                </IconButton>
-                                                            </Tooltip>
+                                                        <Tooltip title="Edit Connected users">
+                                                            <IconButton color="primary"
+                                                                onClick={() => {
+                                                                    setChoice({ type: BotChoiceActions.update_connected_users })
+                                                                    setPopup(null)
 
-                                                        </Stack>
-                                                    </Popover>
+                                                                }}
+                                                            >
+                                                                <AdUnitsIcon />
+                                                            </IconButton>
+                                                        </Tooltip>
 
-                                                </div>
+                                                    </Stack>
+                                                </Popover>
 
                                             </TableCell >}
 
-                                      
+
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{flow.is_active ? "active" : "disabled"}</Typography>
                                         </TableCell>
@@ -339,12 +335,12 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                             })}
                     </TableBody>
                 </Table>
+                {flow ? <UpdateFlowDialog selectedFlow={flow} /> : null
+                }
+                {flow ? <DeleteFlowDialog flow={flow} /> : null}
+                {flow ? <UpdateConnectedUsersDialog selectedFlow={flow} /> : null}
+                {flow ? <ToogleFlowStatusDialog flow={flow} /> : null}
             </Box >
-            {flow ? <UpdateFlowDialog selectedFlow={flow} /> : null
-            }
-            {flow ? <DeleteFlowDialog flow={flow} /> : null}
-            {flow ? <UpdateConnectedUsersDialog selectedFlow={flow} /> : null}
-            {flow ? <ToogleFlowStatusDialog flow={flow} /> : null}
 
         </>
     )

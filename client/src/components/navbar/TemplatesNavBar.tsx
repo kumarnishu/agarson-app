@@ -49,8 +49,8 @@ export default function TemplatesNavBar() {
                                     }}
                                 >
 
-                                    {
-                                        user.is_admin ? <StyledLink to={paths.templates}>Templates</StyledLink> : null}
+                                    <StyledLink to={paths.templates}>Templates</StyledLink>
+                                    <StyledLink to={paths.templates_help}>Help</StyledLink>
                                 </Stack>
 
                                 {/* stack2 right icons*/}

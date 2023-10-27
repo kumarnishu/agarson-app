@@ -49,8 +49,8 @@ export default function ContactNavBar() {
                                     }}
                                 >
 
-                                    {
-                                        user.is_admin ? <StyledLink to={paths.users}>Contact</StyledLink> : null}
+                                    <StyledLink to={paths.contacts}>Contact</StyledLink>
+                                    <StyledLink to={paths.contact_help}>Help</StyledLink>
                                 </Stack>
 
                                 {/* stack2 right icons*/}

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Menu, MenuItem } from '@mui/material'
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BotMenuActions, MenuContext } from '../../contexts/menuContext';
 import { paths } from '../../Routes';
 
@@ -13,6 +13,7 @@ export const StyledLink = styled(Link)`
 
 function BotMenu() {
     const { menu, setMenu } = useContext(MenuContext)
+    const goto = useNavigate()
     return (
         <Menu
             anchorEl={menu?.anchorEl}
@@ -30,6 +31,13 @@ function BotMenu() {
                     () => setMenu({ type: BotMenuActions.close_bot_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.trackers}>Trackers</StyledLink>
+
+            </MenuItem>
+            <MenuItem
+                onClick={
+                    () => goto(paths.bot_help)
+                }>
+                <StyledLink to={paths.bot_help}>Help</StyledLink>
             </MenuItem>
         </Menu>
     )

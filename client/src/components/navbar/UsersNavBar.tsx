@@ -50,8 +50,8 @@ export default function UsersNavBar() {
                                 >
 
 
-                                    {
-                                        user.is_admin ? <StyledLink to={paths.users}>Users</StyledLink> : null}
+                                    <StyledLink to={paths.users}>Users</StyledLink>
+                                    <StyledLink to={paths.users_help}>Help</StyledLink>
                                 </Stack>
 
                                 {/* stack2 right icons*/}

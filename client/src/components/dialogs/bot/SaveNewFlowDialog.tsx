@@ -112,7 +112,7 @@ function SaveNewFlowDialog({ flow, setFlow, setDisplaySaveModal }: Props) {
                     />
                     <Button sx={{ mt: 2 }} fullWidth variant="contained" type="submit"
                         disabled={isLoading}
-                    >{isLoading ? "saving..." : "Change"}</Button>
+                    >{isLoading ? "saving..." : "Save"}</Button>
                 </DialogContent>
 
             </form>
