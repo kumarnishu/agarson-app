@@ -1,21 +1,34 @@
-import { Stack, Typography } from '@mui/material'
-import { useContext } from 'react'
-import { HelpChoiceContext, HelpLeadChoiceActions } from '../../contexts/HelpChoiceContext'
-import LeadsHelpDialog from '../../components/dialogs/help/crm/LeadsHelpDialog'
-
+import { Grid } from '@mui/material'
+import createLeadUrl from "../../assets/crm/new lead.mp4"
 function CrmHelpPage() {
-  const { setChoice } = useContext(HelpChoiceContext)
   return (
     <>
-      <Stack direction={'column'} gap={2} padding={2} sx={{ textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}>
-        <Typography onClick={() => { setChoice({ type: HelpLeadChoiceActions.create_lead }) }}>
-          How to Add new Lead ?
-        </Typography>
-        <Typography>
-          How to Update an existing Lead ?
-        </Typography>
-      </Stack>
-      <LeadsHelpDialog />
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <video width="320" height="240" controls>
+            <source src={createLeadUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <video width="320" height="240" controls>
+            <source src={createLeadUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <video width="320" height="240" controls>
+            <source src={createLeadUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <video width="320" height="240" controls>
+            <source src={createLeadUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </Grid>
+      </Grid>
     </>
   )
 }
