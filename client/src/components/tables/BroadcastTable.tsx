@@ -346,7 +346,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                 }
 
 
-                                                    <Tooltip title="Reset Broadcasting">
+                                                    {broadcast.daily_limit ? <Tooltip title="Reset Broadcasting">
                                                         <IconButton
                                                             color="error"
                                                             size="medium"
@@ -357,8 +357,8 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                             }}>
                                                             <Block />
                                                         </IconButton>
-                                                    </Tooltip>
-                                                    <Tooltip title="Set Daily Count">
+                                                    </Tooltip> : null}
+                                                    {broadcast.daily_limit? <Tooltip title="Set Daily Count">
                                                         <IconButton
                                                             color="warning"
                                                             size="medium"
@@ -369,7 +369,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                             }}>
                                                             <ResetTv />
                                                         </IconButton>
-                                                    </Tooltip>
+                                                    </Tooltip> : null}
                                                     <Tooltip title="edit">
                                                         <IconButton
                                                             color="success"
