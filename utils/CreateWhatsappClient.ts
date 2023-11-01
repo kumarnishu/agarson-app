@@ -191,7 +191,7 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
             }
         }
 
-        if (msg.body === "STOP") {
+        if (String(msg.body).toLowerCase() === "stop") {
             let lead = await Lead.findOne({ $or: [{ mobile: msg.from.replace("91", "").replace("@c.us", "") }, { alternate_mobile1: msg.from.replace("91", "").replace("@c.us", "") }] })
             if (!lead)
                 lead = await Lead.findOne({ alternate_mobile2: msg.from.replace("91", "").replace("@c.us", "") })

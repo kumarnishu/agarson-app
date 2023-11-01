@@ -318,7 +318,6 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
 
 }
 
-
 // update lead only admin can do
 export const UpdateLead = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
