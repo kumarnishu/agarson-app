@@ -49,7 +49,7 @@ function DeleteReferDialog({ refer }: { refer: IReferredParty }) {
             }
             <DialogContent>
                 <Typography variant="body1" color="error">
-                    {`Warning ! This will delete  ${refer.name}`}
+                    {`Warning ! This will remove referral for ${refer.name}`}
 
                 </Typography>
             </DialogContent>

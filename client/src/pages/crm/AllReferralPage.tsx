@@ -9,6 +9,7 @@ import { ChoiceContext, LeadChoiceActions } from "../../contexts/dialogContext"
 
 function AllReferralPage({ leads }: { leads: ILead[] }) {
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>([])
+  const [selectedlead, setSelectedLead] = useState<ILead>()
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   function handleExcel() {
@@ -94,12 +95,22 @@ function AllReferralPage({ leads }: { leads: ILead[] }) {
                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                       Refer Date : <b>{lead.referred_date && new Date(lead.referred_date).toLocaleString()}</b>
                     </Typography>
-                    <Button onClick={() => setChoice({ type: LeadChoiceActions.update_remark })}>Add Remark</Button>
-                    <Button onClick={() => setChoice({ type: LeadChoiceActions.view_remarks })}>View Remarks</Button>
+                    <Button onClick={() => {
+                      setSelectedLead(lead)
+                      setChoice({ type: LeadChoiceActions.update_remark })
+                    }}>Add Remark</Button>
+                    <Button onClick={() => {
+                      setSelectedLead(lead)
+                      setChoice({ type: LeadChoiceActions.view_remarks })
+                    }}>View Remarks</Button>
                   </Paper>
+                  {selectedlead ?
+                    <>
+                      <NewRemarkDialog lead={selectedlead} />
+                      <ViewRemarksDialog lead={selectedlead} />
+                    </> : null
+                  }
                 </Stack >
-                <NewRemarkDialog lead={lead} />
-                <ViewRemarksDialog lead={lead} />
               </>
             )
           })}

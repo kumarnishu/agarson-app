@@ -14,7 +14,6 @@ import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import CreateReferDialog from '../../components/dialogs/crm/CreateReferDialog'
 import AlertBar from '../../components/snacks/AlertBar'
-import ReactPagination from '../../components/pagination/ReactPagination'
 import { ILead, IReferredParty } from '../../types/crm.types'
 
 
@@ -53,10 +52,7 @@ export default function ReferralPartyPage() {
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
-    const [itemOffset, setItemOffset] = useState(0);
-    const endOffset = itemOffset + reactPaginationData.limit;
-    const currentItems = MemoData.slice(itemOffset, endOffset)
+
 
 
     function handleExcel() {
@@ -95,16 +91,11 @@ export default function ReferralPartyPage() {
         if (isSuccess) {
             setRefers(data.data)
             setPreFilteredData(data.data)
-            setReactPaginationData({
-                ...reactPaginationData,
-                total: Math.ceil(data.data.length / reactPaginationData.limit)
-            })
+
         }
     }, [isSuccess, refers, data])
 
-    useEffect(() => {
-        setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
-    }, [reactPaginationData])
+
 
     useEffect(() => {
         if (filter) {
@@ -211,10 +202,8 @@ export default function ReferralPartyPage() {
                 selectedRefers={selectedRefers}
                 setSelectedRefers={setSelectedRefers}
                 setSelectAll={setSelectAll}
-                refers={currentItems}
+                refers={MemoData}
                 setRefer={setRefer}
-            />
-            <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={MemoData}
             />
         </>
 
