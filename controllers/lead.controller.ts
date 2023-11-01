@@ -111,53 +111,44 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let id = req.query.id
-    if (!Number.isNaN(limit) && !Number.isNaN(page) && !id) {
-        let leads = await Lead.find({ is_customer: false }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-            path: 'remarks',
-            populate: [
-                {
-                    path: 'created_by',
-                    model: 'User'
-                },
-                {
-                    path: 'updated_by',
-                    model: 'User'
-                }
-            ]
-        }).sort('-created_at')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
+    if (req.user.is_admin)
+        if (!Number.isNaN(limit) && !Number.isNaN(page) && !id) {
+            let leads = await Lead.find({ is_customer: false }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-created_at')
+                .limit(limit * 1)
+                .skip((page - 1) * limit)
 
-        let count = await Lead.countDocuments()
-        leads = leads.filter((lead) => {
-            return String(lead.stage).toLowerCase() !== "useless"
-        })
-        if (req.user?.is_admin)
+            let count = await Lead.countDocuments()
+            leads = leads.filter((lead) => {
+                return String(lead.stage).toLowerCase() !== "useless"
+            })
             return res.status(200).json({
                 leads,
                 total: Math.ceil(count / limit),
                 page: page,
                 limit: limit
             })
-
-        leads = leads.filter((lead) => {
-            let owners = lead.lead_owners.filter((owner) => {
-                return owner.username === req.user?.username
-            })
-            if (owners.length > 0)
-                return lead
-        })
-        return res.status(200).json({
-            leads,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
+        }
+    if (!id) {
+        let user = await User.findById(req.user._id)
+        console.log(user)
+        console.log(user?._id)
     }
-    if (!id && !req.user.is_admin)
-        id = req.user._id
-
+    id = req.user._id
+    console.log(id)
     if (!Number.isNaN(limit) && !Number.isNaN(page) && id) {
+        console.log(id)
         let leads = await Lead.find({ is_customer: false }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
             path: 'remarks',
             populate: [
@@ -213,58 +204,43 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     }
     else
         return res.status(500).json({ message: "bad request" })
-
 }
 
 export const GetCustomers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let id = req.query.id
-    if (!Number.isNaN(limit) && !Number.isNaN(page) && !id) {
-        let leads = await Lead.find({ is_customer: true }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-            path: 'remarks',
-            populate: [
-                {
-                    path: 'created_by',
-                    model: 'User'
-                },
-                {
-                    path: 'updated_by',
-                    model: 'User'
-                }
-            ]
-        }).sort('-created_at')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
+    if (req.user.is_admin)
+        if (!Number.isNaN(limit) && !Number.isNaN(page) && !id) {
+            let leads = await Lead.find({ is_customer: true }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-created_at')
+                .limit(limit * 1)
+                .skip((page - 1) * limit)
 
-        let count = await Lead.countDocuments()
-        leads = leads.filter((lead) => {
-            return String(lead.stage).toLowerCase() !== "useless"
-        })
-        if (req.user?.is_admin)
+            let count = await Lead.countDocuments()
+            leads = leads.filter((lead) => {
+                return String(lead.stage).toLowerCase() !== "useless"
+            })
             return res.status(200).json({
                 leads,
                 total: Math.ceil(count / limit),
                 page: page,
                 limit: limit
             })
+        }
 
-        leads = leads.filter((lead) => {
-            let owners = lead.lead_owners.filter((owner) => {
-                return owner.username === req.user?.username
-            })
-            if (owners.length > 0)
-                return lead
-        })
-        return res.status(200).json({
-            leads,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    if (!id && !req.user.is_admin)
-        id = req.user._id
+
     if (!Number.isNaN(limit) && !Number.isNaN(page) && id) {
         let leads = await Lead.find({ is_customer: true }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
             path: 'remarks',
@@ -1486,16 +1462,28 @@ export const BackUpAllLeads = async (req: Request, res: Response, next: NextFunc
 }
 
 export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, customer_name, city, state, mobile } = req.body as TReferredPartyBody
-    if (!name || !city || !state || !mobile) {
+    const { name, customer_name, city, state, mobile, lead_owners } = req.body as TReferredPartyBody
+    if (!name || !city || !state || !mobile || !lead_owners) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
+    if (!lead_owners)
+        return res.status(400).json({ message: "assign at least one lead owner" });
+    if (lead_owners.length < 1)
+        return res.status(400).json({ message: "assign at least one lead owner" });
     let resultParty = await ReferredParty.findOne({ $or: [{ name: name }, { mobile: mobile }] })
     if (resultParty) {
         return res.status(400).json({ message: "this party already exists,check phone or name" })
     }
+    let new_lead_owners: IUser[] = []
+    let owners = String(lead_owners).split(",")
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
     let party = await new ReferredParty({
         name, customer_name, city, state, mobile,
+        lead_owners: new_lead_owners,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -1509,11 +1497,22 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
     if (!isMongoId(id))
         return res.status(400).json({ message: "bad mongo id" })
 
-    const { name, customer_name, city, state, mobile } = req.body as TReferredPartyBody
+    const { name, customer_name, city, state, mobile, lead_owners } = req.body as TReferredPartyBody
     if (!name || !city || !state || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
+    if (!lead_owners)
+        return res.status(400).json({ message: "assign at least one lead owner" });
+    if (lead_owners.length < 1)
+        return res.status(400).json({ message: "assign at least one lead owner" });
     let party = await ReferredParty.findById(id)
+    let new_lead_owners: IUser[] = []
+    let owners = String(lead_owners).split(",")
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
     if (!party)
         return res.status(404).json({ message: "party not found" })
     if (name !== party.name || mobile !== party.mobile) {
@@ -1525,6 +1524,7 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
 
     party = await ReferredParty.findByIdAndUpdate(id, {
         name, customer_name, city, state, mobile,
+        lead_owners: new_lead_owners,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -1633,49 +1633,35 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let id = req.query.id
-    if (!Number.isNaN(limit) && !Number.isNaN(page) && !id) {
-        let leads = await Lead.find({ is_customer: false }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-            path: 'remarks',
-            populate: [
-                {
-                    path: 'created_by',
-                    model: 'User'
-                },
-                {
-                    path: 'updated_by',
-                    model: 'User'
-                }
-            ]
-        }).sort('-created_at')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
+    if (req.user.is_admin)
+        if (!Number.isNaN(limit) && !Number.isNaN(page) && !id) {
+            let leads = await Lead.find({ is_customer: false }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-created_at')
+                .limit(limit * 1)
+                .skip((page - 1) * limit)
 
-        let count = await Lead.countDocuments()
-        leads = leads.filter((lead) => {
-            return lead.stage === "useless"
-        })
-        if (req.user?.is_admin)
+            let count = await Lead.countDocuments()
+            leads = leads.filter((lead) => {
+                return lead.stage === "useless"
+            })
             return res.status(200).json({
                 leads,
                 total: Math.ceil(count / limit),
                 page: page,
                 limit: limit
             })
-
-        leads = leads.filter((lead) => {
-            let owners = lead.lead_owners.filter((owner) => {
-                return owner.username === req.user?.username
-            })
-            if (owners.length > 0)
-                return lead
-        })
-        return res.status(200).json({
-            leads: leads,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
+        }
     if (!Number.isNaN(limit) && !Number.isNaN(page) && id) {
         let leads = await Lead.find({ is_customer: false }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
             path: 'remarks',

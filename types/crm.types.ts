@@ -43,6 +43,7 @@ export type IReferredParty = {
     name: string,
     customer_name: string,
     mobile: string,
+    lead_owners: IUser[],
     city: string,
     state: string,
     created_at: Date,

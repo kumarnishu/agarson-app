@@ -9,7 +9,7 @@ const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<I
         index: true,
         lowercase: true,
     },
-    customer_name:{
+    customer_name: {
         type: String,
         trim: true,
         index: true,
@@ -48,6 +48,11 @@ const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<I
         ref: 'User',
         required: true
     },
+    lead_owners: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }],
     updated_at: {
         type: Date,
         default: new Date(),
