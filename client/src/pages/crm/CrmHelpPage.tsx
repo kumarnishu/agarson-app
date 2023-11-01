@@ -17,6 +17,10 @@ import viewAllocatedPartiesLeadUrl from "../../assets/crm/View allocated parties
 import viewAllocatedPartiesLeadPosterUrl from "../../assets/crm/view referred parties.jpg"
 import referLeadUrl from "../../assets/crm/Refer lead.mp4"
 import referLeadPosterUrl from "../../assets/crm/refer  lead.jpg"
+import manageUselessLeadUrl from "../../assets/crm/manage useless leads.mp4"
+import manageUselessLeadPosterUrl from "../../assets/crm/manage useless.jpg"
+import bulkUploadLeadUrl from "../../assets/crm/bulk upload leads.mp4"
+import bulkUploadLeadPosterUrl from "../../assets/crm/bulk upload.jpg"
 
 function CrmHelpPage() {
   return (
@@ -37,7 +41,7 @@ function CrmHelpPage() {
             <source src={addRemarkLeadUrl} type="video/mp4" />
           </video>
         </Grid>
-     
+
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <video width="320" height="240" controls poster={convertCustomerLeadPosterUrl}>
             <source src={convertCustomerLeadUrl} type="video/mp4" />
@@ -68,6 +72,17 @@ function CrmHelpPage() {
             <source src={referLeadUrl} type="video/mp4" />
           </video>
         </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <video width="320" height="240" controls poster={manageUselessLeadPosterUrl}>
+            <source src={manageUselessLeadUrl} type="video/mp4" />
+          </video>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <video width="320" height="240" controls poster={bulkUploadLeadPosterUrl}>
+            <source src={bulkUploadLeadUrl} type="video/mp4" />
+          </video>
+        </Grid>
+
       </Grid>
     </>
   )

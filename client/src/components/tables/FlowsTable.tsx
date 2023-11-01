@@ -9,7 +9,7 @@ import UpdateFlowDialog from '../dialogs/bot/UpdateFlowDialog'
 import DeleteFlowDialog from '../dialogs/bot/DeleteFlowDialog'
 import UpdateConnectedUsersDialog from '../dialogs/bot/UpdateConnectedUsersDialog'
 import ToogleFlowStatusDialog from '../dialogs/bot/ToogleFlowStatusDialog'
-import { AdsClickOutlined, Delete, Edit, RestartAlt, Stop } from '@mui/icons-material'
+import { AdsClickOutlined, Delete, Edit, RestartAlt } from '@mui/icons-material'
 import AdUnitsIcon from '@mui/icons-material/AdUnits';
 
 type Props = {
@@ -230,32 +230,16 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                                     }}
                                                 >
                                                     <Stack direction="row">
-
-                                                        {flow.is_active ?
-                                                            <Tooltip title="Disable">
-                                                                <IconButton color="warning"
-                                                                    onClick={() => {
-
-                                                                        setChoice({ type: BotChoiceActions.toogle_flow_status })
-                                                                        setPopup(null)
-                                                                    }}
-                                                                >
-                                                                    <Stop />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                            : <Tooltip title="ReStart">
-                                                                <IconButton color="warning"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: BotChoiceActions.toogle_flow_status })
-                                                                        setPopup(null)
-                                                                    }}
-                                                                >
-                                                                    <RestartAlt />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        }
-
-
+                                                        <Tooltip title="Toogle Status">
+                                                            <IconButton color="warning"
+                                                                onClick={() => {
+                                                                    setChoice({ type: BotChoiceActions.toogle_flow_status })
+                                                                    setPopup(null)
+                                                                }}
+                                                            >
+                                                                <RestartAlt />
+                                                            </IconButton>
+                                                        </Tooltip>
                                                         <Tooltip title="Edit">
                                                             <IconButton color="success"
                                                                 onClick={() => {
