@@ -75,6 +75,21 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                             {/* actions popup */}
 
                             {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
+                                <TableCell
+                                    sx={{ bgcolor: headColor }}                         >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="left"
+                                        alignItems="left"
+                                        spacing={2}
+                                    >
+                                        Actions
+                                    </Stack>
+                                </TableCell>}
+
+
+
+                            {/* tracker name */}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -83,14 +98,9 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    Actions
+                                    Status
                                 </Stack>
-                            </TableCell>}
-
-
-
-                            {/* tracker name */}
-
+                            </TableCell>
 
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
@@ -273,7 +283,9 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                                 />
                                             </TableCell>}
                                         {/* tracker name */}
-
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{tracker.is_active ? "Active" : "Disabled"}</Typography>
+                                        </TableCell>
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{tracker.customer_name || "NA"}</Typography>
                                         </TableCell>

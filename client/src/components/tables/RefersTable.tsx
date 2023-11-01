@@ -37,6 +37,7 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
     const [leads, setLeads] = useState<ILead[]>([])
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
+    const [display, setDisplay] = useState<boolean>(false)
 
     useEffect(() => {
         setData(refers)
@@ -82,17 +83,17 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 </Stack>
                             </TableCell>
                             {!user?.crm_access_fields.is_readonly && user?.crm_access_fields.is_editable &&
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Actions
-                                </Stack>
-                            </TableCell>}
+                                <TableCell
+                                    sx={{ bgcolor: headColor }}                         >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="left"
+                                        alignItems="left"
+                                        spacing={2}
+                                    >
+                                        Actions
+                                    </Stack>
+                                </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -298,7 +299,7 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                                     <IconButton color="success"
                                                                         onClick={() => {
                                                                             setLeads(refer.leads)
-                                                                            setChoice({ type: LeadChoiceActions.view_referrals })
+                                                                            setDisplay(true)
 
                                                                         }}
                                                                     >
@@ -436,7 +437,8 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                     </>
                     : null
             }
-            {leads && <ViewReferralsDialog leads={leads} />}
+            {leads && <ViewReferralsDialog setDisplay={setDisplay} display={display} leads={leads} />}
+
         </>
     )
 }

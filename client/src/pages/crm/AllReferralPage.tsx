@@ -1,13 +1,16 @@
-import { Box, Button, Paper,  Stack, Typography } from "@mui/material"
+import { Box, Button, Paper, Stack, Typography } from "@mui/material"
 import ExportToExcel from "../../utils/ExportToExcel"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from "../../types/crm.types"
+import NewRemarkDialog from "../../components/dialogs/crm/NewRemarkDialog"
+import ViewRemarksDialog from "../../components/dialogs/crm/ViewRemarksDialog"
+import { ChoiceContext, LeadChoiceActions } from "../../contexts/dialogContext"
 
 function AllReferralPage({ leads }: { leads: ILead[] }) {
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>([])
   const [sent, setSent] = useState(false)
-
+  const { setChoice } = useContext(ChoiceContext)
   function handleExcel() {
     try {
       ExportToExcel(selectedData, "referral_leads")
@@ -67,31 +70,37 @@ function AllReferralPage({ leads }: { leads: ILead[] }) {
         <Box>
           {leads && leads.slice(0).reverse().map((lead, index) => {
             return (
-              <Stack key={index}
-                sx={{ borderRadius: 1 }}
-                direction="column"
-              >
-                <Paper elevation={8} sx={{ p: 2, mt: 1, boxShadow: 2, backgroundColor: 'whitesmoke' }}>
-                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                    Lead Name : <b>{lead.name}</b>
-                  </Typography>
-                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                    Mobile : <b>{lead.mobile}</b>
-                  </Typography>
-                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                    City : <b>{lead.city}</b>
-                  </Typography>
-                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                    State : <b>{lead.state}</b>
-                  </Typography>
-                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                    Remarks : <b>{lead.last_remark}</b>
-                  </Typography>
-                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                    Refer Date : <b>{lead.referred_date && new Date(lead.referred_date).toLocaleString()}</b>
-                  </Typography>
-                </Paper>
-              </Stack >
+              <>
+                <Stack key={index}
+                  sx={{ borderRadius: 1 }}
+                  direction="column"
+                >
+                  <Paper elevation={8} sx={{ p: 2, mt: 1, boxShadow: 2, backgroundColor: 'whitesmoke' }}>
+                    <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                      Lead Name : <b>{lead.name}</b>
+                    </Typography>
+                    <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                      Mobile : <b>{lead.mobile}</b>
+                    </Typography>
+                    <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                      City : <b>{lead.city}</b>
+                    </Typography>
+                    <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                      State : <b>{lead.state}</b>
+                    </Typography>
+                    <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                      Remarks : <b>{lead.last_remark}</b>
+                    </Typography>
+                    <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                      Refer Date : <b>{lead.referred_date && new Date(lead.referred_date).toLocaleString()}</b>
+                    </Typography>
+                    <Button onClick={() => setChoice({ type: LeadChoiceActions.update_remark })}>Add Remark</Button>
+                    <Button onClick={() => setChoice({ type: LeadChoiceActions.view_remarks })}>View Remarks</Button>
+                  </Paper>
+                </Stack >
+                <NewRemarkDialog lead={lead} />
+                <ViewRemarksDialog lead={lead} />
+              </>
             )
           })}
         </Box >
