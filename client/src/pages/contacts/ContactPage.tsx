@@ -11,7 +11,6 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import { ChoiceContext, ContactChoiceActions } from '../../contexts/dialogContext'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
-import ReactPagination from '../../components/pagination/ReactPagination'
 import { GetContacts } from '../../services/ContactServices'
 import NewContactDialog from '../../components/dialogs/contacts/NewContactDialog'
 import ContactsTable from '../../components/tables/ContactTable'
@@ -49,10 +48,6 @@ export default function ContactPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
-  const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + reactPaginationData.limit;
-  const currentItems = MemoData.slice(itemOffset, endOffset)
   const { user: LoggedInUser } = useContext(UserContext)
 
 
@@ -87,16 +82,9 @@ export default function ContactPage() {
     if (isSuccess) {
       setContacts(data.data)
       setPreFilteredData(data.data)
-      setReactPaginationData({
-        ...reactPaginationData,
-        total: Math.ceil(data.data.length / reactPaginationData.limit)
-      })
     }
   }, [isSuccess, contacts, data])
 
-  useEffect(() => {
-    setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
-  }, [reactPaginationData])
 
   useEffect(() => {
     if (filter) {
@@ -205,11 +193,10 @@ export default function ContactPage() {
         selectedContacts={selectedContacts}
         setSelectedContacts={setSelectedContacts}
         setSelectAll={setSelectAll}
-        contacts={currentItems}
+        contacts={MemoData}
         setContact={setContact}
       />
-      <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={MemoData}
-      />
+
     </>
 
   )

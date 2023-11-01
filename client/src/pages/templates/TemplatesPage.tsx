@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem,  TextField, Typography } from '@mui/material'
+import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -13,7 +13,6 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, TemplateChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import NewTemplateDialog from '../../components/dialogs/templates/NewTemplateDialog'
-import ReactPagination from '../../components/pagination/ReactPagination'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IMessageTemplate } from '../../types/template.types'
 
@@ -40,11 +39,8 @@ export default function TemplatesPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
-  const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + reactPaginationData.limit;
-  const currentItems = MemoData.slice(itemOffset, endOffset)
-  
+
+
   function handleExcel() {
     setAnchorEl(null)
     try {
@@ -82,10 +78,7 @@ export default function TemplatesPage() {
     if (isSuccess) {
       setTemplates(data.data)
       setPreFilteredData(data.data)
-      setReactPaginationData({
-        ...reactPaginationData,
-        total: Math.ceil(data.data.length / reactPaginationData.limit)
-      })
+     
     }
   }, [isSuccess, templates, data])
 
@@ -103,9 +96,7 @@ export default function TemplatesPage() {
       setTemplates(preFilteredData)
 
   }, [filter, templates])
-  useEffect(() => {
-    setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
-  }, [reactPaginationData])
+ 
   return (
     <>
       {
@@ -196,10 +187,8 @@ export default function TemplatesPage() {
         selectedTemplates={selectedTemplates}
         setSelectedTemplates={setSelectedTemplates}
         setSelectAll={setSelectAll}
-        templates={currentItems}
+        templates={MemoData}
         setTemplate={setTemplate}
-      />
-      <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={MemoData}
       />
     </>
 
