@@ -83,11 +83,11 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                     if (br.templates && br.templates.length > 0)
                         sentMessage = false
                     if (sentMessage) {
-                        if (user)
+                        if (user && br.is_active)
                             await BroadCastWithMessage(br, client, user, true)
                     }
                     else {
-                        if (user)
+                        if (user&&br.is_active)
                             await BroadCastWithTemplates(br, client, user, true)
                     }
                 })
@@ -99,11 +99,11 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                     if (td.templates && td.templates.length > 0)
                         sentMessage = false
                     if (sentMessage) {
-                        if (user)
+                        if (user&&td.is_active)
                             await ReminderWithMessage(td, client, user)
                     }
                     else {
-                        if (user)
+                        if (user&&td.is_active)
                             await ReminderWithTemplates(td, client, user)
                     }
                 })
@@ -115,11 +115,11 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                     if (rs.templates && rs.templates.length > 0)
                         sentMessage = false
                     if (sentMessage) {
-                        if (user)
+                        if (user&&rs.is_active)
                             await ReminderWithMessage(rs, client, user)
                     }
                     else {
-                        if (user)
+                        if (user&&rs.is_active)
                             await ReminderWithTemplates(rs, client, user)
                     }
                 })
