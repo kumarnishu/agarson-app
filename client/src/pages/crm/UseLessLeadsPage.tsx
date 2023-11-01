@@ -211,7 +211,7 @@ export default function UseLessLeadsPage() {
                 <Delete />
               </IconButton>
             </Tooltip>
-            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+            {LoggedInUser?.is_admin &&<Box sx={{ display: { xs: 'none', md: 'block' } }}>
               <select onChange={(e) => { setUserid(e.target.value) }}
                 style={{ borderColor: 'blue', border: 'none', height: '40px' }}
               >
@@ -226,7 +226,7 @@ export default function UseLessLeadsPage() {
                   )
                 })}
               </select>
-            </Box>
+            </Box>}
             <TextField
               fullWidth
               size="small"

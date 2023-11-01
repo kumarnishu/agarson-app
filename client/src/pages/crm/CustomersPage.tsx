@@ -209,7 +209,7 @@ export default function CustomersPage() {
           {/* search bar */}
           < Stack direction="row" spacing={2}>
             <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)} /> 
-            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+            {LoggedInUser?.is_admin &&<Box sx={{ display: { xs: 'none', md: 'block' } }}>
 
               <select onChange={(e) => { setUserid(e.target.value) }}
                 style={{ borderColor: 'blue', border: 'none', height: '40px' }}
@@ -225,7 +225,7 @@ export default function CustomersPage() {
                   )
                 })}
               </select>
-            </Box>
+            </Box>}
             <TextField
               fullWidth
               size="small"

@@ -204,25 +204,26 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-              <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)} /> 
-            <Box sx={{
-              display: { xs: 'none', md: 'block' }
-            }}>
-              <select onChange={(e) => { setUserid(e.target.value) }}
-                style={{ borderColor: 'blue', border: 'none', height: '40px' }}
-              >
-                <option key={0} value={undefined}>
+            <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)} />
+            {LoggedInUser?.is_admin &&
+              <Box sx={{
+                display: { xs: 'none', md: 'block' }
+              }}>
+                <select onChange={(e) => { setUserid(e.target.value) }}
+                  style={{ borderColor: 'blue', border: 'none', height: '40px' }}
+                >
+                  <option key={0} value={undefined}>
 
-                </option>
-                {users?.data && users.data.map((user) => {
-                  return (
-                    <option key={user._id} value={user._id}>
-                      {user.username}
-                    </option>
-                  )
-                })}
-              </select>
-            </Box>
+                  </option>
+                  {users?.data && users.data.map((user) => {
+                    return (
+                      <option key={user._id} value={user._id}>
+                        {user.username}
+                      </option>
+                    )
+                  })}
+                </select>
+              </Box>}
             <TextField
               fullWidth
               size="small"
