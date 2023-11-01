@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem,  TextField, Typography } from '@mui/material'
+import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -14,7 +14,6 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import NewBroadcastDialog from '../../components/dialogs/broadcasts/NewBroadcastDialog'
 import NewBroadcastMessageDialog from '../../components/dialogs/broadcasts/NewBroadcastMessageDialog'
 import { Menu as MenuIcon } from '@mui/icons-material';
-import ReactPagination from '../../components/pagination/ReactPagination'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IBroadcast } from '../../types/broadcast.types'
 
@@ -44,12 +43,8 @@ export default function BroadcastPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  // pagination  states
-  const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
-  const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + reactPaginationData.limit;
-  const currentItems = MemoData.slice(itemOffset, endOffset)
-  
+ 
+
   function handleExcel() {
     setAnchorEl(null)
     try {
@@ -88,16 +83,11 @@ export default function BroadcastPage() {
     if (isSuccess) {
       setBroadcasts(data.data)
       setPreFilteredData(data.data)
-      setReactPaginationData({
-        ...reactPaginationData,
-        total: Math.ceil(data.data.length / reactPaginationData.limit)
-      })
+     
     }
   }, [isSuccess, broadcasts, data])
 
-  useEffect(() => {
-    setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
-  }, [reactPaginationData])
+  
 
   useEffect(() => {
     if (filter) {
@@ -208,11 +198,10 @@ export default function BroadcastPage() {
         selectedBroadcasts={selectedBroadcasts}
         setSelectedBroadcasts={setSelectedBroadcasts}
         setSelectAll={setSelectAll}
-        broadcasts={currentItems }
+        broadcasts={MemoData}
         setBroadcast={setBroadcast}
       />
-      <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={MemoData}
-      />
+
     </>
 
   )

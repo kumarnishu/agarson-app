@@ -13,7 +13,6 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import NewReminderDialog from '../../components/dialogs/reminders/NewReminderDialog'
 import NewReminderMessageDialog from '../../components/dialogs/reminders/NewReminderMessageDialog'
 import { Menu as MenuIcon } from '@mui/icons-material';
-import ReactPagination from '../../components/pagination/ReactPagination'
 import AlertBar from '../../components/snacks/AlertBar'
 import { GetReminders } from '../../services/ReminderServices'
 import { IReminder } from '../../types/reminder.types'
@@ -41,11 +40,7 @@ export default function ReminderPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  // pagination  states
-  const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
-  const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + reactPaginationData.limit;
-  const currentItems = MemoData.slice(itemOffset, endOffset)
+  
 
   function handleExcel() {
     setAnchorEl(null)
@@ -82,16 +77,9 @@ export default function ReminderPage() {
     if (isSuccess) {
       setReminders(data.data)
       setPreFilteredData(data.data)
-      setReactPaginationData({
-        ...reactPaginationData,
-        total: Math.ceil(data.data.length / reactPaginationData.limit)
-      })
     }
   }, [isSuccess, reminders, data])
 
-  useEffect(() => {
-    setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
-  }, [reactPaginationData])
 
   useEffect(() => {
     if (filter) {
@@ -202,11 +190,10 @@ export default function ReminderPage() {
         selectedReminders={selectedReminders}
         setSelectedReminders={setSelectedReminders}
         setSelectAll={setSelectAll}
-        reminders={currentItems}
+        reminders={MemoData}
         setReminder={setReminder}
       />
-      <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={MemoData}
-      />
+    
     </>
 
   )
