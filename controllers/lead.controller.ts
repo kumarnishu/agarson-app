@@ -154,6 +154,9 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
             limit: limit
         })
     }
+    if (!id && !req.user.is_admin)
+        id = req.user._id
+
     if (!Number.isNaN(limit) && !Number.isNaN(page) && id) {
         let leads = await Lead.find({ is_customer: false }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
             path: 'remarks',
@@ -260,6 +263,8 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
             limit: limit
         })
     }
+    if (!id && !req.user.is_admin)
+        id = req.user._id
     if (!Number.isNaN(limit) && !Number.isNaN(page) && id) {
         let leads = await Lead.find({ is_customer: true }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
             path: 'remarks',
@@ -315,7 +320,6 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
     }
     else
         return res.status(500).json({ message: "bad request" })
-
 }
 
 // update lead only admin can do
