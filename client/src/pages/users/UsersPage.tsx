@@ -129,6 +129,7 @@ export default function UsersPage() {
             setFilterCount(count)
         }
     }, [fuzzyusers])
+    
     return (
         <>
             {

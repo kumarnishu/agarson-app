@@ -56,6 +56,7 @@ export default function LeadsPage() {
   const MemoData = React.useMemo(() => leads, [leads])
   const [preFilteredData, setPreFilteredData] = useState<ILead[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+  const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
 
   const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page }))
@@ -124,36 +125,40 @@ export default function LeadsPage() {
   }, [filter])
 
   useEffect(() => {
-    if (data) {
+    if (filter) {
+      refetchFuzzy()
+    }
+  }, [paginationData])
+
+  useEffect(() => {
+    if (data && !filter) {
       setLeads(data.data.leads)
       setPreFilteredData(data.data.leads)
       setPreFilteredPaginationData({
         ...paginationData,
-        page: data.data.page,
-        limit: data.data.limit,
         total: data.data.total
       })
       setPaginationData({
         ...paginationData,
-        page: data.data.page,
-        limit: data.data.limit,
         total: data.data.total
       })
     }
   }, [data])
 
   useEffect(() => {
-    if (fuzzyleads) {
+    if (fuzzyleads && filter) {
       setLeads(fuzzyleads.data.leads)
-      setPaginationData({
-        ...paginationData,
-        page: fuzzyleads.data.page,
-        limit: fuzzyleads.data.limit,
-        total: fuzzyleads.data.total
-      })
+      let count = filterCount
+      if (count === 0)
+        setPaginationData({
+          ...paginationData,
+          total: fuzzyleads.data.total
+        })
+      count = filterCount + 1
+      setFilterCount(count)
     }
   }, [fuzzyleads])
-  console.log(selectedLeads)
+  
   return (
     <>
 
@@ -190,7 +195,10 @@ export default function LeadsPage() {
             <TextField
               fullWidth
               size="small"
-              onChange={(e) => setFilter(e.currentTarget.value)}
+              onChange={(e) => {
+                setFilter(e.currentTarget.value)
+                setFilterCount(0)
+              }}
               autoFocus
               placeholder={`${MemoData?.length} records...`}
               style={{

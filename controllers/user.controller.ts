@@ -280,11 +280,10 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
         return res.status(400).json({ message: "bad request" })
 }
 
-export const GetUsers =
-    async (req: Request, res: Response, next: NextFunction) => {
-        const users = await User.find().populate("created_by").populate("-created_at")
-        res.status(200).json(users)
-    }
+export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const users = await User.find().populate("created_by").populate("updated_by")
+    res.status(200).json(users)
+}
 
 export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
