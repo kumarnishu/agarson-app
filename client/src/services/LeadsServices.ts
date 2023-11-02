@@ -1,26 +1,18 @@
 import { apiClient } from "./utils/AxiosInterceptor"
 
 
-export const GetLeads = async ({ id, limit, page }: { id?: string, limit: number | undefined, page: number | undefined }) => {
-  if (id) {
-    return await apiClient.get(`leads/?limit=${limit}&page=${page}&id=${id}`)
-  }
+export const GetLeads = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
   return await apiClient.get(`leads/?limit=${limit}&page=${page}`)
 
 }
 
-export const GetUselessLeads = async ({ id, limit, page }: { id?: string, limit: number | undefined, page: number | undefined }) => {
-  if (id) {
-    return await apiClient.get(`useless/leads/?limit=${limit}&page=${page}&id=${id}`)
-  }
+export const GetUselessLeads = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
+
   return await apiClient.get(`useless/leads/?limit=${limit}&page=${page}`)
 
 }
-export const FuzzySearchUselessLeads = async ({ searchString, id }: { searchString?: string, id?: string }) => {
-  if (id) {
-    return await apiClient.get(`search/leads/useless/?key=${searchString}&id=${id}`)
-  }
-  return await apiClient.get(`search/leads/useless?key=${searchString}`)
+export const FuzzySearchUselessLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
+  return await apiClient.get(`search/leads/useless?key=${searchString}&limit=${limit}&page=${page}`)
 }
 export const GetReferralParties = async () => {
   return await apiClient.get(`refers`)
@@ -58,24 +50,15 @@ export const RemoveLeadReferrals = async (id: string) => {
 }
 
 
-export const FuzzySearchLeads = async ({ searchString, id }: { searchString?: string, id?: string }) => {
-  if (id) {
-    return await apiClient.get(`search/leads?key=${searchString}&id=${id}`)
-  }
-  return await apiClient.get(`search/leads?key=${searchString}`)
+export const FuzzySearchLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
+  return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}`)
 }
 
-export const FuzzySearchCustomers = async ({ searchString, id }: { searchString?: string, id?: string }) => {
-  if (id) {
-    return await apiClient.get(`search/customers?key=${searchString}&id=${id}`)
-  }
-  return await apiClient.get(`search/customers?key=${searchString}`)
+export const FuzzySearchCustomers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
+  return await apiClient.get(`search/customers?key=${searchString}&limit=${limit}&page=${page}`)
 }
 
-export const GetCustomers = async ({ id, limit, page }: { id?: string, limit: number | undefined, page: number | undefined }) => {
-  if (id) {
-    return await apiClient.get(`customers/?limit=${limit}&page=${page}&id=${id}`)
-  }
+export const GetCustomers = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
   return await apiClient.get(`customers?limit=${limit}&page=${page}`)
 }
 

@@ -6,7 +6,7 @@ import { User } from '../models/users/user.model';
 import isMongoId from "validator/lib/isMongoId";
 import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
-import { TUserBody } from '../types/user.types';
+import { IUser, TUserBody } from '../types/user.types';
 import { Asset } from '../types/asset.types';
 
 
@@ -168,8 +168,8 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         user.updated_by = req.user
 
     }
-    user.created_at=new Date()
-    user.updated_at=new Date()
+    user.created_at = new Date()
+    user.updated_at = new Date()
     user.user_access_fields = {
         is_readonly: true,
         is_hidden: false,
@@ -262,18 +262,157 @@ export const Logout = async (req: Request, res: Response, next: NextFunction) =>
     res.status(200).json({ message: "logged out" })
 }
 
+export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        let users = await User.find().populate("created_by").populate("updated_by")
+        users = users.slice((page - 1) * limit, limit * page)
+        let count = await User.countDocuments()
+        return res.status(200).json({
+            users,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
+
 export const GetUsers =
     async (req: Request, res: Response, next: NextFunction) => {
         const users = await User.find().populate("created_by").populate("updated_by")
         res.status(200).json(users)
     }
 
-export const GetProfile =
-    async (req: Request, res: Response, next: NextFunction) => {
-        let id = req.user?._id
-        const user = await User.findById(id).populate("created_by").populate("updated_by")
-        res.status(200).json(user)
+export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let key = String(req.query.key).split(",")
+    if (!key)
+        return res.status(500).json({ message: "bad request" })
+    let users: IUser[] = []
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        if (key.length == 1 || key.length > 4) {
+            users = await User.find({
+                $or: [
+                    { username: { $regex: key[0], $options: 'i' } },
+                    { email: { $regex: key[0], $options: 'i' } },
+                    { mobile: { $regex: key[0], $options: 'i' } },
+                ]
+
+            }
+            ).populate('updated_by').populate('created_by').sort('-created_at')
+        }
+        if (key.length == 2) {
+            users = await User.find({
+                $and: [
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).populate('updated_by').populate('created_by').sort('-created_at')
+        }
+        if (key.length == 3) {
+            users = await User.find({
+                $and: [
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).populate('updated_by').populate('created_by').sort('-created_at')
+        }
+        if (key.length == 4) {
+            users = await User.find({
+                $and: [
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).populate('updated_by').populate('created_by').sort('-created_at')
+        }
+        let count = users.length
+        users = users.slice((page - 1) * limit, limit * page)
+        return res.status(200).json({
+            users,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
     }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
+
+export const GetProfile = async (req: Request, res: Response, next: NextFunction) => {
+    let id = req.user?._id
+    const user = await User.findById(id).populate("created_by").populate("updated_by")
+    res.status(200).json(user)
+}
 
 // update user lead fields and its roles
 export const UpdateAccessFields = async (req: Request, res: Response, next: NextFunction) => {
@@ -307,7 +446,6 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
     })
     res.status(200).json({ message: " updated" })
 }
-
 
 // update user only admin can do
 export const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -379,9 +517,6 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
         return res.status(200).json({ message: "user updated" })
     })
 }
-
-
-
 
 //update profile 
 export const UpdateProfile = async (req: Request, res: Response, next: NextFunction) => {
@@ -502,8 +637,6 @@ export const MakeAdmin = async (req: Request, res: Response, next: NextFunction)
     await user.save();
     res.status(200).json({ message: "admin role provided successfully" });
 }
-
-
 // block user
 export const BlockUser = async (req: Request, res: Response, next: NextFunction) => {
     //update role of user

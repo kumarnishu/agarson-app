@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 
-import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateAccessFields, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword } from "../controllers/user.controller";
+import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateAccessFields, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword, FuzzySearchUsers, GetPaginatedUsers } from "../controllers/user.controller";
 import { isAdmin, isAuthenticatedUser, isProfileAuthenticated, } from "../middlewares/auth.middleware";
 
 export const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1024 * 1024 * 50 } })
@@ -11,6 +11,8 @@ const router = express.Router()
 router.post("/signup", upload.single("dp"), SignUp)
 router.route("/users").get(isAuthenticatedUser, GetUsers)
     .post(isAuthenticatedUser, upload.single("dp"), NewUser)
+router.route("/search/users").get(isAuthenticatedUser, FuzzySearchUsers)
+router.route("/users/paginated").get(isAuthenticatedUser, GetPaginatedUsers)
 router.route("/users/:id")
     .put(isAuthenticatedUser, upload.single("dp"), UpdateUser)
 router.patch("/make-admin/user/:id", isAuthenticatedUser, isAdmin, MakeAdmin)

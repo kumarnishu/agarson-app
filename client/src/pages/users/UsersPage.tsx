@@ -4,9 +4,8 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { GetUsers } from '../../services/UserServices'
+import { FuzzySearchUsers, GetPaginatedUsers } from '../../services/UserServices'
 import { headColor } from '../../utils/colors'
-import FuzzySearch from "fuzzy-search";
 import UsersTable from '../../components/tables/UsersTable'
 import { BackendError } from '../..'
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
@@ -15,6 +14,7 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import NewUserDialog from '../../components/dialogs/users/NewUserDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IUser } from '../../types/user.types'
+import DBPagination from '../../components/pagination/DBpagination'
 
 type SelectedData = {
     username?: string,
@@ -28,15 +28,15 @@ type SelectedData = {
     createdBy?: string
 }
 
-
 // react component
 export default function UsersPage() {
-    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const [paginationData, setPaginationData] = useState({ limit: 10, page: 1, total: 1 });
     const [user, setUser] = useState<IUser>()
     const [users, setUsers] = useState<IUser[]>([])
     const [selectAll, setSelectAll] = useState(false)
     const MemoData = React.useMemo(() => users, [users])
     const [preFilteredData, setPreFilteredData] = useState<IUser[]>([])
+    const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 10, page: 1, total: 1 });
     const [selectedUsers, setSelectedUsers] = useState<IUser[]>([])
     const [filter, setFilter] = useState<string | undefined>()
     const [selectedData, setSelectedData] = useState<SelectedData[]>([])
@@ -44,7 +44,12 @@ export default function UsersPage() {
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-    // export selected users into excel
+    const { data, isLoading } = useQuery<AxiosResponse<{ users: IUser[], page: number, total: number, limit: number }>, BackendError>(["users", paginationData], async () => GetPaginatedUsers({ limit: paginationData?.limit, page: paginationData?.page }))
+
+    const { data: fuzzyusers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ users: IUser[], page: number, total: number, limit: number }>, BackendError>(["fuzzyusers", filter], async () => FuzzySearchUsers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
+        enabled: false
+    })
+
     function handleExcel() {
         setAnchorEl(null)
         try {
@@ -60,7 +65,6 @@ export default function UsersPage() {
 
     }
 
-    // convert select data in to proper format
     useEffect(() => {
         let data: SelectedData[] = []
         selectedUsers.map((user) => {
@@ -84,37 +88,51 @@ export default function UsersPage() {
         setSelectedData(data)
     }, [selectedUsers])
 
-    // setup data again after filter
     useEffect(() => {
-        if (isSuccess) {
-            setUsers(data.data)
-            setPreFilteredData(data.data)
-          
+        if (!filter) {
+            setUsers(preFilteredData)
+            setPaginationData(preFilteredPaginationData)
         }
-    }, [isSuccess, users, data])
+    }, [filter])
 
-    
+    useEffect(() => {
+        if (data && !filter) {
+            setUsers(data.data.users)
+            setPreFilteredData(data.data.users)
+            setPreFilteredPaginationData({
+                ...paginationData,
+                total: data.data.total
+            })
+            setPaginationData({
+                ...paginationData,
+                total: data.data.total
+            })
+        }
+    }, [data])
 
-    //handle fuzzy search
+    useEffect(() => {
+        if (fuzzyusers && filter) {
+            setUsers(fuzzyusers.data.users)
+            setPaginationData({
+                ...paginationData,
+                total: fuzzyusers.data.total
+            })
+        }
+    }, [refetchFuzzy, fuzzyusers])
+
     useEffect(() => {
         if (filter) {
-            if (users) {
-                const searcher = new FuzzySearch(users, ["username", "email", "mobile", "is_active", "is_admin", "is_email_verified", "last_login", "created_at", "updated_at"], {
-                    caseSensitive: false,
-                });
-                const result = searcher.search(filter);
-                setUsers(result)
-            }
+            refetchFuzzy()
         }
-        if (!filter)
-            setUsers(preFilteredData)
-
-    }, [filter, users])
+    }, [paginationData])
 
     return (
         <>
             {
                 isLoading && <LinearProgress />
+            }
+            {
+                isFuzzyLoading && <LinearProgress />
             }
             {/*heading, search bar and table menu */}
             <Stack
@@ -153,6 +171,11 @@ export default function UsersPage() {
                                 fontSize: '1.1rem',
                                 border: '0',
                             }}
+                            onKeyUp={(e) => {
+                                if (e.key === "Enter") {
+                                    refetchFuzzy()
+                                }
+                            }}
                         />
                     </Stack >
                     {/* user menu */}
@@ -185,7 +208,7 @@ export default function UsersPage() {
 
                             <MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
-                            
+
 
                         </Menu>
                         <NewUserDialog />
@@ -205,7 +228,7 @@ export default function UsersPage() {
                 users={MemoData}
                 setUser={setUser}
             />
-
+            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
         </>
 
     )

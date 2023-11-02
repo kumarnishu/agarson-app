@@ -1,6 +1,18 @@
 import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, ContactsAccess, CrmAccess, RemindersAccess, TemplatesAccess, UserAccess } from "../types/access.types";
 import { apiClient } from "./utils/AxiosInterceptor";
 
+export type AccessTypes = {
+  user_access_fields: UserAccess,
+  crm_access_fields: CrmAccess,
+  contacts_access_fields: ContactsAccess,
+  templates_access_fields: TemplatesAccess,
+  bot_access_fields: BotAccess,
+  broadcast_access_fields: BroadcastAccess,
+  backup_access_fields: BackupAccess,
+  reminders_access_fields: RemindersAccess,
+  alps_access_fields: AlpsAccess
+
+}
 // login
 export const Login = async (
   body: {
@@ -29,9 +41,19 @@ export const Logout = async () => {
   return await apiClient.post("logout");
 };
 // get users
+
 export const GetUsers = async () => {
   return await apiClient.get("users")
 }
+
+export const GetPaginatedUsers = async ({ limit, page }: { limit?: number | undefined, page?: number | undefined }) => {
+  return await apiClient.get(`users/paginated/?limit=${limit}&page=${page}`)
+}
+
+export const FuzzySearchUsers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
+  return await apiClient.get(`search/users?key=${searchString}&limit=${limit}&page=${page}`)
+}
+
 // get user
 export const GetUser = async (id: string) => {
   return await apiClient.get(`users/${id}`)
@@ -47,18 +69,7 @@ export const UnBlockUser = async (id: string) => {
 }
 // make leads controlled
 
-export type AccessTypes = {
-  user_access_fields: UserAccess,
-  crm_access_fields: CrmAccess,
-  contacts_access_fields: ContactsAccess,
-  templates_access_fields: TemplatesAccess,
-  bot_access_fields: BotAccess,
-  broadcast_access_fields: BroadcastAccess,
-  backup_access_fields: BackupAccess,
-  reminders_access_fields: RemindersAccess,
-  alps_access_fields:AlpsAccess
 
-}
 export const UpdateUserAccess = async ({ id, access_fields }: {
   id: string,
   access_fields: AccessTypes

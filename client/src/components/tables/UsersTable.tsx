@@ -31,8 +31,6 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
     const [data, setData] = useState<IUser[]>(users)
     const { setChoice } = useContext(ChoiceContext)
     const { user: LoggedInUser } = useContext(UserContext)
-
-
     useEffect(() => {
         setData(users)
     }, [users])
