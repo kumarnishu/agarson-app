@@ -102,7 +102,7 @@ export default function UsersPage() {
     }, [paginationData])
 
     useEffect(() => {
-        if (data) {
+        if (data && !filter) {
             setUsers(data.data.users)
             setPreFilteredData(data.data.users)
             setPreFilteredPaginationData({
@@ -119,16 +119,16 @@ export default function UsersPage() {
     useEffect(() => {
         if (fuzzyusers && filter) {
             setUsers(fuzzyusers.data.users)
-            let count = filterCount + 1
-            setFilterCount(count)
+            let count = filterCount
             if (count === 0)
                 setPaginationData({
                     ...paginationData,
                     total: fuzzyusers.data.total
                 })
+            count = filterCount + 1
+            setFilterCount(count)
         }
     }, [fuzzyusers])
-    console.log(filterCount)
     return (
         <>
             {
