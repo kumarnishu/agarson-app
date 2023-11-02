@@ -43,7 +43,7 @@ export default function UsersPage() {
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+    const [filterCount, setFilterCount] = useState(0)
     const { data, isLoading } = useQuery<AxiosResponse<{ users: IUser[], page: number, total: number, limit: number }>, BackendError>(["users", paginationData], async () => GetPaginatedUsers({ limit: paginationData?.limit, page: paginationData?.page }))
 
     const { data: fuzzyusers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ users: IUser[], page: number, total: number, limit: number }>, BackendError>(["fuzzyusers", filter], async () => FuzzySearchUsers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
@@ -96,7 +96,13 @@ export default function UsersPage() {
     }, [filter])
 
     useEffect(() => {
-        if (data && !filter) {
+        if (filter) {
+            refetchFuzzy()
+        }
+    }, [paginationData])
+
+    useEffect(() => {
+        if (data) {
             setUsers(data.data.users)
             setPreFilteredData(data.data.users)
             setPreFilteredPaginationData({
@@ -113,19 +119,16 @@ export default function UsersPage() {
     useEffect(() => {
         if (fuzzyusers && filter) {
             setUsers(fuzzyusers.data.users)
-            setPaginationData({
-                ...paginationData,
-                total: fuzzyusers.data.total
-            })
+            let count = filterCount + 1
+            setFilterCount(count)
+            if (count === 0)
+                setPaginationData({
+                    ...paginationData,
+                    total: fuzzyusers.data.total
+                })
         }
-    }, [refetchFuzzy, fuzzyusers])
-
-    useEffect(() => {
-        if (filter) {
-            refetchFuzzy()
-        }
-    }, [paginationData])
-
+    }, [fuzzyusers])
+    console.log(filterCount)
     return (
         <>
             {
@@ -159,7 +162,10 @@ export default function UsersPage() {
                         <TextField
                             fullWidth
                             size="small"
-                            onChange={(e) => setFilter(e.currentTarget.value)}
+                            onChange={(e) => {
+                                setFilter(e.currentTarget.value)
+                                setFilterCount(0)
+                            }}
                             autoFocus
                             InputProps={{
                                 startAdornment: <InputAdornment position="start">

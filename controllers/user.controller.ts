@@ -282,7 +282,7 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
 
 export const GetUsers =
     async (req: Request, res: Response, next: NextFunction) => {
-        const users = await User.find().populate("created_by").populate("updated_by")
+        const users = await User.find().populate("created_by").populate("-created_at")
         res.status(200).json(users)
     }
 
