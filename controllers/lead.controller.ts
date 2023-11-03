@@ -181,7 +181,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
         })
         let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
-       
+
         return res.status(200).json({
             leads,
             total: Math.ceil(count / limit),
@@ -1428,7 +1428,61 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
     return res.status(200).json({ message: "party updated" })
 }
 
-export const getAllReferParties = async (req: Request, res: Response, next: NextFunction) => {
+export const GetPaginatedRefers = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        let parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+        let result: {
+            party: IReferredParty,
+            leads: ILead[]
+        }[] = []
+        for (let i = 0; i < parties.length; i++) {
+            let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-created_at')
+            result.push({
+                party: parties[i],
+                leads: leads
+            })
+        }
+        if (!req.user?.is_admin) {
+            result = result.filter((item) => {
+                let owners = item.party.lead_owners.filter((owner) => {
+                    return owner.username == req.user.username
+                })
+                if (owners.length > 0)
+                    return item
+            })
+        }
+
+        let count = result.length
+        result = result.slice((page - 1) * limit, limit * page)
+
+        return res.status(200).json({
+            result,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else return res.status(400).json({ message: 'bad request' })
+
+
+
+}
+
+export const GetRefers = async (req: Request, res: Response, next: NextFunction) => {
     let parties = await ReferredParty.find().populate('created_by').populate('updated_by').sort('-created_at')
     let result: {
         party: IReferredParty,
@@ -1455,6 +1509,250 @@ export const getAllReferParties = async (req: Request, res: Response, next: Next
     }
 
     return res.status(200).json(result)
+}
+
+export const FuzzySearchRefers = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let key = String(req.query.key).split(",")
+    if (!key)
+        return res.status(500).json({ message: "bad request" })
+    let result: {
+        party: IReferredParty,
+        leads: ILead[]
+    }[] = []
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        if (key.length == 1 || key.length > 4) {
+            let parties = await ReferredParty.find({
+                $or: [
+                    { name: { $regex: key[0], $options: 'i' } },
+                    { city: { $regex: key[0], $options: 'i' } },
+                    { customer_name: { $regex: key[0], $options: 'i' } },
+                    { mobile: { $regex: key[0], $options: 'i' } },
+                    { state: { $regex: key[0], $options: 'i' } },
+                ]
+            }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+
+
+            for (let i = 0; i < parties.length; i++) {
+                let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
+                }).sort('-created_at')
+                result.push({
+                    party: parties[i],
+                    leads: leads
+                })
+            }
+
+        }
+        if (key.length == 2) {
+            let parties = await ReferredParty.find({
+                is_customer: false,
+                $and: [
+                    {
+                        $or: [
+                            { name: { $regex: key[0], $options: 'i' } },
+                            { city: { $regex: key[0], $options: 'i' } },
+                            { customer_name: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                            { state: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { name: { $regex: key[0], $options: 'i' } },
+                            { city: { $regex: key[0], $options: 'i' } },
+                            { customer_name: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                            { state: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+
+
+            for (let i = 0; i < parties.length; i++) {
+                let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
+                }).sort('-created_at')
+                result.push({
+                    party: parties[i],
+                    leads: leads
+                })
+            }
+        }
+        if (key.length == 3) {
+            let parties = await ReferredParty.find({
+                is_customer: false,
+                $and: [
+                    {
+                        $or: [
+                            { name: { $regex: key[0], $options: 'i' } },
+                            { city: { $regex: key[0], $options: 'i' } },
+                            { customer_name: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                            { state: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { name: { $regex: key[0], $options: 'i' } },
+                            { city: { $regex: key[0], $options: 'i' } },
+                            { customer_name: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                            { state: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { name: { $regex: key[0], $options: 'i' } },
+                            { city: { $regex: key[0], $options: 'i' } },
+                            { customer_name: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                            { state: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+
+
+            for (let i = 0; i < parties.length; i++) {
+                let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
+                }).sort('-created_at')
+                result.push({
+                    party: parties[i],
+                    leads: leads
+                })
+            }
+        }
+        if (key.length == 4) {
+            let parties = await ReferredParty.find({
+                is_customer: false,
+                $and: [
+                    {
+                        $or: [
+                            { name: { $regex: key[0], $options: 'i' } },
+                            { city: { $regex: key[0], $options: 'i' } },
+                            { customer_name: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                            { state: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { name: { $regex: key[0], $options: 'i' } },
+                            { city: { $regex: key[0], $options: 'i' } },
+                            { customer_name: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                            { state: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { name: { $regex: key[0], $options: 'i' } },
+                            { city: { $regex: key[0], $options: 'i' } },
+                            { customer_name: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                            { state: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { name: { $regex: key[0], $options: 'i' } },
+                            { city: { $regex: key[0], $options: 'i' } },
+                            { customer_name: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                            { state: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+
+
+            for (let i = 0; i < parties.length; i++) {
+                let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
+                }).sort('-created_at')
+                result.push({
+                    party: parties[i],
+                    leads: leads
+                })
+            }
+        }
+
+        if (!req.user?.is_admin) {
+            result = result.filter((item) => {
+                let owners = item.party.lead_owners.filter((owner) => {
+                    return owner.username == req.user.username
+                })
+                if (owners.length > 0)
+                    return item
+            })
+        }
+
+        let count = result.length
+        result = result.slice((page - 1) * limit, limit * page)
+
+        return res.status(200).json({
+            result,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+
 }
 
 export const DeleteReferParty = async (req: Request, res: Response, next: NextFunction) => {

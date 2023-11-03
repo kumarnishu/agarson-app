@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads, getAllReferParties, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads,  CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless, FuzzySearchRefers, GetRefers, GetPaginatedRefers } from "../controllers/lead.controller";
 import { isAdmin, isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
@@ -27,10 +27,12 @@ router.route("/lead-updatable-fields").get(isAuthenticatedUser, isAdmin, GetUpda
 router.route("/backup/leads").get(isAuthenticatedUser, isAdmin, BackUpAllLeads)
 router.route("/refers/leads/:id").post(isAuthenticatedUser, ReferLead)
 router.route("/refers/leads/:id").patch(isAuthenticatedUser, RemoveLeadReferrals)
-router.route("/refers").get(isAuthenticatedUser, getAllReferParties)
+router.route("/refers").get(isAuthenticatedUser, GetRefers)
+router.route("/refers/paginated").get(isAuthenticatedUser, GetPaginatedRefers)
+router.route("/search/refers").get(isAuthenticatedUser, FuzzySearchRefers)
 router.route("/refers").post(isAuthenticatedUser, CreateReferParty)
 router.route("/refers/:id").put(isAuthenticatedUser, UpdateReferParty)
 router.route("/refers/:id").delete(isAuthenticatedUser, DeleteReferParty)
-router.route("/bulk/leads/delete").post(isAuthenticatedUser,  BulkDeleteUselessLeads)
+router.route("/bulk/leads/delete").post(isAuthenticatedUser, BulkDeleteUselessLeads)
 
 export default router
