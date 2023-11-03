@@ -30,13 +30,13 @@ type SelectedData = {
 
 // react component
 export default function UsersPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+    const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [user, setUser] = useState<IUser>()
     const [users, setUsers] = useState<IUser[]>([])
     const [selectAll, setSelectAll] = useState(false)
     const MemoData = React.useMemo(() => users, [users])
     const [preFilteredData, setPreFilteredData] = useState<IUser[]>([])
-    const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+    const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [selectedUsers, setSelectedUsers] = useState<IUser[]>([])
     const [filter, setFilter] = useState<string | undefined>()
     const [selectedData, setSelectedData] = useState<SelectedData[]>([])

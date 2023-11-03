@@ -30,6 +30,7 @@ function DBPagination({ paginationData, setPaginationData }: Props) {
                             setPaginationData({
                                 ...paginationData,
                                 limit: Number(e.target.value)
+                               
                             })
                         }}
                     >

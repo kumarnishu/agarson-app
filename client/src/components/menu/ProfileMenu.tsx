@@ -53,17 +53,15 @@ function ProfileMenu() {
                     }
 
                 >View Profile</MenuItem>
-                {user?.created_by._id === user?._id
-                    ?
 
-                    <MenuItem onClick={() => {
-                        setChoice({ type: UserChoiceActions.update_password })
-                        setMenu({ type: UserMenuActions.close_user_menu, anchorEl: null })
-                    }}>
-                        Update Password
-                    </MenuItem>
-                    : null
-                }
+
+                <MenuItem onClick={() => {
+                    setChoice({ type: UserChoiceActions.update_password })
+                    setMenu({ type: UserMenuActions.close_user_menu, anchorEl: null })
+                }}>
+                    Update Password
+                </MenuItem>
+
                 {
                     !user?.email_verified ?
 

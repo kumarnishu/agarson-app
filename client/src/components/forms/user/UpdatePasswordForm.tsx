@@ -29,15 +29,15 @@ function UpdatePasswordForm() {
         validationSchema: Yup.object({
 
             oldPassword: Yup.string()
-                .min(6, 'Must be 6 characters or more')
+                .min(4, 'Must be 4 characters or more')
                 .max(30, 'Must be 30 characters or less')
                 .required('Required field'),
             newPassword: Yup.string()
-                .min(6, 'Must be 6 characters or more')
+                .min(4, 'Must be 4 characters or more')
                 .max(30, 'Must be 30 characters or less')
                 .required('Required field'),
             confirmPassword: Yup.string()
-                .min(6, 'Must be 6 characters or more')
+                .min(4, 'Must be 4 characters or more')
                 .max(30, 'Must be 30 characters or less')
                 .required('Required field')
         }),

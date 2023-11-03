@@ -48,7 +48,7 @@ let template: ILeadTemplate[] = [
 
 
 export default function LeadsPage() {
-  const [paginationData, setPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+  const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<ILead>()
@@ -56,7 +56,7 @@ export default function LeadsPage() {
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => leads, [leads])
   const [preFilteredData, setPreFilteredData] = useState<ILead[]>([])
-  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
 
