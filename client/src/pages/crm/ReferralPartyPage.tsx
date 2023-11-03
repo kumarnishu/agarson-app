@@ -15,6 +15,8 @@ import CreateReferDialog from '../../components/dialogs/crm/CreateReferDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, IReferredParty } from '../../types/crm.types'
 import DBPagination from '../../components/pagination/DBpagination'
+import BulkAssignRefersDialog from '../../components/dialogs/crm/BulkAssignRefersDialog'
+import { UserContext } from '../../contexts/userContext'
 
 
 type SelectedData = {
@@ -29,6 +31,7 @@ type SelectedData = {
 }
 
 export default function ReferralPartyPage() {
+    const { user: LoggedInUser } = useContext(UserContext)
     const [refer, setRefer] = useState<IReferredParty>()
     const [refers, setRefers] = useState<{
         party: IReferredParty,
@@ -238,11 +241,23 @@ export default function ReferralPartyPage() {
                                 setAnchorEl(null)
                             }}
                             >New Refer</MenuItem>
+                            {LoggedInUser?.is_admin &&
+                                <MenuItem
+                                    onClick={() => {
+                                        if (selectedRefers.length === 0)
+                                            alert("please select some refers")
+                                        else
+                                            setChoice({ type: LeadChoiceActions.bulk_assign_refers })
+                                        setAnchorEl(null)
+                                    }}
+                                > Assign Refers</MenuItem>}
+
                             <MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
 
                         </Menu>
                         <CreateReferDialog />
+                        <BulkAssignRefersDialog refers={selectedRefers} />
                     </>
 
                 </Stack>

@@ -39,7 +39,7 @@ function ToogleUselessLead({ lead }: { lead: ILead }) {
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-                Make Useless
+                Change Useless
             </DialogTitle>
             {
                 isError ? (

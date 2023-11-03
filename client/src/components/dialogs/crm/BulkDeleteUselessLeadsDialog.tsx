@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Button, Typography, Stack, CircularProgress,  IconButton } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Button, Typography, Stack, CircularProgress, IconButton } from '@mui/material'
 import { AxiosResponse } from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
@@ -63,7 +63,7 @@ function BulkDeleteUselessLeadsDialog({ selectedLeads }: { selectedLeads: ILead[
             }
             <DialogContent>
                 <Typography variant="body1" color="error">
-                    {`Warning ! This will delete selected leads permanently and associated remarks to it.`}
+                    {`Warning ! This will delete selected ${selectedLeads.length} leads permanently and associated remarks to it.`}
 
                 </Typography>
             </DialogContent>

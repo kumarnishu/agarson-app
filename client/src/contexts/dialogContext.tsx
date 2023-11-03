@@ -7,7 +7,7 @@ type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "
 
 
 type LeadChoices = "create_lead" | "update_lead" | "update_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
-  | "refer_lead" | "remove_referral" | "assign_refer"
+  | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers"
 
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
 type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadcast" | "close_broadcast" | "view_broadcast" | 'start_broadcast' | "reset_broadcast" | "stop_broadcast" | "create_message_broadcast" | "update_message_broadcast"
@@ -137,7 +137,9 @@ export enum LeadChoiceActions {
   remove_referral = "remove_referral",
   bulk_delete_useless_leads = "bulk_delete_useless_leads",
   convert_useless = "convert_useless",
-  assign_refer = "assign_refer"
+  assign_refer = "assign_refer",
+  bulk_assign_leads = "bulk_assign_leads",
+  bulk_assign_refers = "bulk_assign_refers"
 }
 
 export enum UserChoiceActions {
@@ -207,6 +209,8 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.bulk_delete_useless_leads: return type
     case LeadChoiceActions.assign_refer: return type
     case LeadChoiceActions.convert_useless: return type
+    case LeadChoiceActions.bulk_assign_leads: return type
+    case LeadChoiceActions.bulk_assign_refers: return type
 
 
     //bot choice actions

@@ -16,6 +16,7 @@ import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from '../../types/crm.types'
 import LeadsTable from '../../components/tables/LeadsTable'
+import BulkAssignLeadsDialog from '../../components/dialogs/crm/BulkAssignLeadsDialog'
 
 let template: ILeadTemplate[] = [
   {
@@ -200,7 +201,7 @@ export default function CustomersPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)} />
+            <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_editable)} />
             <TextField
               fullWidth
               size="small"
@@ -259,12 +260,23 @@ export default function CustomersPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
+              {LoggedInUser?.is_admin &&
+                <MenuItem
+                  onClick={() => {
+                    if (selectedLeads.length === 0)
+                      alert("please select some leads")
+                    else
+                      setChoice({ type: LeadChoiceActions.bulk_assign_leads })
+                    setAnchorEl(null)
+                  }}
+                > Assign customers</MenuItem>}
 
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
             </Menu >
             <NewLeadDialog />
+            <BulkAssignLeadsDialog leads={selectedLeads} />
           </>
         </Stack >
       </Stack >

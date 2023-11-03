@@ -32,7 +32,7 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
             }}>
                 <Table
                     stickyHeader
-                    sx={{ width: "100%" }}
+                    sx={{ width: "1400px" }}
                     size="small">
 
 

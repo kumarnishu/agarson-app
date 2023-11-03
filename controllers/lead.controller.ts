@@ -1833,7 +1833,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let leads = await Lead.find({ is_customer: false }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+        let leads = await Lead.find().populate('lead_owners').populate('updated_by').populate('created_by').populate({
             path: 'remarks',
             populate: [
                 {

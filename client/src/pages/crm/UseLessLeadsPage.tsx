@@ -1,12 +1,11 @@
-import { Search } from '@mui/icons-material'
-import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Delete, Search } from '@mui/icons-material'
+import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchUselessLeads, GetUselessLeads } from '../../services/LeadsServices'
 import { UserContext } from '../../contexts/userContext'
-import UploadLeadsExcelButton from '../../components/buttons/UploadLeadsExcelButton';
 import DBPagination from '../../components/pagination/DBpagination';
 import LeadsTable from '../../components/tables/LeadsTable';
 import { BackendError } from '../..'
@@ -16,6 +15,8 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from '../../types/crm.types'
+import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
+import BulkAssignLeadsDialog from '../../components/dialogs/crm/BulkAssignLeadsDialog'
 
 let template: ILeadTemplate[] = [
   {
@@ -200,7 +201,20 @@ export default function UselessLeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)} />
+            <Tooltip title="Delete Selected Leads">
+              <IconButton color="error"
+                disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)}
+                onClick={() => {
+                  if (selectedLeads.length == 0)
+                    alert("select some useless leads")
+                  else
+                    setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })
+                }}
+              >
+                <Delete />
+              </IconButton>
+            </Tooltip>
+
             <TextField
               fullWidth
               size="small"
@@ -259,12 +273,23 @@ export default function UselessLeadsPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
+              {LoggedInUser?.is_admin &&
+                <MenuItem
+                  onClick={() => {
+                    if (selectedLeads.length === 0)
+                      alert("please select some leads")
+                    else
+                      setChoice({ type: LeadChoiceActions.bulk_assign_leads })
+                    setAnchorEl(null)
+                  }}
+                > Assign Useless</MenuItem>}
 
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
             </Menu >
             <NewLeadDialog />
+            <BulkAssignLeadsDialog leads={selectedLeads} />
           </>
         </Stack >
       </Stack >
@@ -279,6 +304,8 @@ export default function UselessLeadsPage() {
         leads={MemoData}
       />
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+      {selectedLeads && selectedLeads.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
+
     </>
 
   )
