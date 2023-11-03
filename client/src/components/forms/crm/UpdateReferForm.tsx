@@ -25,6 +25,9 @@ function UpdateReferForm({ refer }: { refer: IReferredParty }) {
         (UpdateReferParty, {
             onSuccess: () => {
                 queryClient.invalidateQueries('refers')
+                queryClient.invalidateQueries('leads')
+                queryClient.invalidateQueries('customers')
+                queryClient.invalidateQueries('uselessleads')
             }
         })
 

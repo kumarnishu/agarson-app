@@ -1,24 +1,21 @@
-import { Delete, Search } from '@mui/icons-material'
-import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
+import { Search } from '@mui/icons-material'
+import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchUselessLeads, GetUselessLeads } from '../../services/LeadsServices'
 import { UserContext } from '../../contexts/userContext'
+import UploadLeadsExcelButton from '../../components/buttons/UploadLeadsExcelButton';
 import DBPagination from '../../components/pagination/DBpagination';
 import LeadsTable from '../../components/tables/LeadsTable';
-import ReactPagination from '../../components/pagination/ReactPagination'
 import { BackendError } from '../..'
-import { GetUsers } from '../../services/UserServices'
-import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
-import ExportToExcel from '../../utils/ExportToExcel'
 import { Menu as MenuIcon } from '@mui/icons-material';
+import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
+import ExportToExcel from '../../utils/ExportToExcel'
 import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from '../../types/crm.types'
-import { IUser } from '../../types/user.types'
 
 let template: ILeadTemplate[] = [
   {
@@ -47,35 +44,26 @@ let template: ILeadTemplate[] = [
     updated_at: new Date(),
   }
 ]
-export default function UseLessLeadsPage() {
+
+
+export default function UselessLeadsPage() {
   const [paginationData, setPaginationData] = useState({ limit: 10, page: 1, total: 1 });
-  const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
-  const [userId, setUserid] = useState<string>()
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<ILead>()
   const [leads, setLeads] = useState<ILead[]>([])
-  const [allfuzzyleads, setAllFuzzyLeads] = useState<ILead[]>([])
-  const FuzzyMemoData = React.useMemo(() => allfuzzyleads, [allfuzzyleads])
-
-  // pagination  states
-  const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + reactPaginationData.limit;
-  const currentItems = FuzzyMemoData.slice(itemOffset, endOffset)
-
-
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => leads, [leads])
   const [preFilteredData, setPreFilteredData] = useState<ILead[]>([])
+  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+  const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
-  const { data: users } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
 
-  const { data, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads_useless", paginationData], async () => GetUselessLeads({ id: userId, limit: paginationData?.limit, page: paginationData?.page }))
+  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["uselessleads", paginationData], async () => GetUselessLeads({ limit: paginationData?.limit, page: paginationData?.page }))
 
-  const { data: fuzzyLeads, isSuccess: isFuzzySuccess, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<ILead[]>, BackendError>(["fuzzyleads_useless", filter], async () => FuzzySearchUselessLeads({ searchString: filter, id: userId }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyuselessleads", filter], async () => FuzzySearchUselessLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
   })
-
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
@@ -84,7 +72,7 @@ export default function UseLessLeadsPage() {
   function handleExcel() {
     setAnchorEl(null)
     try {
-      ExportToExcel(selectedData, "leads_data")
+      ExportToExcel(selectedData, "useless_leads_data")
       setSent(true)
     }
     catch (err) {
@@ -129,11 +117,29 @@ export default function UseLessLeadsPage() {
       setSelectedData(data)
   }, [selectedLeads])
 
+  useEffect(() => {
+    if (!filter) {
+      setLeads(preFilteredData)
+      setPaginationData(preFilteredPaginationData)
+    }
+  }, [filter])
 
   useEffect(() => {
-    if (isSuccess) {
-      setLeads((data.data.leads))
+    if (filter) {
+      refetchFuzzy()
+    }
+  }, [paginationData])
+
+  useEffect(() => {
+    if (data && !filter) {
+      setLeads(data.data.leads)
       setPreFilteredData(data.data.leads)
+      setPreFilteredPaginationData({
+        ...paginationData,
+        page: data.data.page,
+        limit: data.data.limit,
+        total: data.data.total
+      })
       setPaginationData({
         ...paginationData,
         page: data.data.page,
@@ -141,37 +147,24 @@ export default function UseLessLeadsPage() {
         total: data.data.total
       })
     }
-  }, [isSuccess, data])
-
-
+  }, [data])
 
   useEffect(() => {
-    if (userId && filter) {
-      refetchFuzzy()
+    if (fuzzyleads && filter) {
+      setLeads(fuzzyleads.data.leads)
+      let count = filterCount
+      if (count === 0)
+        setPaginationData({
+          ...paginationData,
+          page: fuzzyleads.data.page,
+          limit: fuzzyleads.data.limit,
+          total: fuzzyleads.data.total
+        })
+      count = filterCount + 1
+      setFilterCount(count)
     }
-    else
-      refetch()
-  }, [userId, filter])
+  }, [fuzzyleads])
 
-  useEffect(() => {
-    if (!filter)
-      setLeads(preFilteredData)
-  }, [filter])
-
-
-  useEffect(() => {
-    if (isFuzzySuccess) {
-      setAllFuzzyLeads(fuzzyLeads.data)
-      setReactPaginationData({
-        ...reactPaginationData,
-        total: Math.ceil(fuzzyLeads.data.length / reactPaginationData.limit)
-      })
-    }
-  }, [isFuzzySuccess, fuzzyLeads])
-
-  useEffect(() => {
-    setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
-  }, [reactPaginationData])
   return (
     <>
 
@@ -190,47 +183,28 @@ export default function UseLessLeadsPage() {
         justifyContent="space-between"
         width="100vw"
       >
+
         <Typography
           variant={'h6'}
           component={'h1'}
-          sx={{ pl: 1, color: 'grey' }}
-
+          sx={{ pl: 1 }}
         >
           Useless
         </Typography>
+
         <Stack
           direction="row"
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            <Tooltip title="Delete Selected Leads">
-              <IconButton color="error"
-                disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)}
-                onClick={() => setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })}
-              >
-                <Delete />
-              </IconButton>
-            </Tooltip>
-            {LoggedInUser?.is_admin &&<Box sx={{ display: { xs: 'none', md: 'block' } }}>
-              <select onChange={(e) => { setUserid(e.target.value) }}
-                style={{ borderColor: 'blue', border: 'none', height: '40px' }}
-              >
-                <option key={0} value={undefined}>
-
-                </option>
-                {users?.data && users.data.map((user) => {
-                  return (
-                    <option key={user._id} value={user._id}>
-                      {user.username}
-                    </option>
-                  )
-                })}
-              </select>
-            </Box>}
+            <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)} />
             <TextField
               fullWidth
               size="small"
-              onChange={(e) => setFilter(e.currentTarget.value)}
+              onChange={(e) => {
+                setFilter(e.currentTarget.value)
+                setFilterCount(0)
+              }}
               autoFocus
               placeholder={`${MemoData?.length} records...`}
               style={{
@@ -289,25 +263,19 @@ export default function UseLessLeadsPage() {
             </Menu >
             <NewLeadDialog />
           </>
-        </Stack>
+        </Stack >
       </Stack >
       {/* table */}
-      <LeadsTable
+      < LeadsTable
         lead={lead}
         setLead={setLead}
         selectAll={selectAll}
         selectedLeads={selectedLeads}
         setSelectedLeads={setSelectedLeads}
         setSelectAll={setSelectAll}
-        leads={filter ? currentItems : MemoData}
-        selectableLeads={filter ? allfuzzyleads : leads}
+        leads={MemoData}
       />
-
-      {!filter ? <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} /> :
-        <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={FuzzyMemoData}
-        />
-      }
-      {selectedLeads && selectedLeads.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
+      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
     </>
 
   )

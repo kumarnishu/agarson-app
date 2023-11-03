@@ -18,6 +18,9 @@ function RemoveLeadReferralDialog({ lead }: { lead: ILead }) {
         (RemoveLeadReferrals, {
             onSuccess: () => {
                 queryClient.invalidateQueries('refers')
+                queryClient.invalidateQueries('leads')
+                queryClient.invalidateQueries('customers')
+                queryClient.invalidateQueries('uselessleads')
             }
         })
 

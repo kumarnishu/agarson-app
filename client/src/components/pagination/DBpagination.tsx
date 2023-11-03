@@ -61,14 +61,16 @@ function DBPagination({ paginationData, setPaginationData }: Props) {
                         <ArrowBackIcon />
                     </IconButton>
                     <label htmlFor="page">Goto Page</label>
-                    <input type="text" id="page" value={paginationData.page} onChange={(e) => {
-                        if (Number(e.target.value) > 0)
-                            setPaginationData({
-                                ...paginationData,
-                                page: Number(e.target.value)
-                            })
-                    }
-                    }
+                    <input type="text" id="page" value={paginationData.page}
+                        disabled={paginationData.page == paginationData.total}
+                        onChange={(e) => {
+                            if (Number(e.target.value) > 0)
+                                setPaginationData({
+                                    ...paginationData,
+                                    page: Number(e.target.value)
+                                })
+                        }
+                        }
                         style={{ width: '40px' }}
                     />
                     <IconButton

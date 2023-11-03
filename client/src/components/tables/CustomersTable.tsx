@@ -23,10 +23,9 @@ type Props = {
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
     selectedLeads: ILead[]
     setSelectedLeads: React.Dispatch<React.SetStateAction<ILead[]>>,
-    selectableLeads: ILead[]
 }
 
-function CustomersTable({ lead, leads, selectableLeads, setLead, selectAll, setSelectAll, selectedLeads, setSelectedLeads }: Props) {
+function CustomersTable({ lead, leads,  setLead, selectAll, setSelectAll, selectedLeads, setSelectedLeads }: Props) {
     const { setChoice } = useContext(ChoiceContext)
     const { user: LoggedInUser } = useContext(UserContext)
     const [data, setData] = useState<ILead[]>(leads)
@@ -62,7 +61,7 @@ function CustomersTable({ lead, leads, selectableLeads, setLead, selectAll, setS
                                             indeterminate={selectAll ? true : false}
                                             size="small" onChange={(e) => {
                                                 if (e.currentTarget.checked) {
-                                                    setSelectedLeads(selectableLeads)
+                                                    setSelectedLeads(leads)
                                                     setSelectAll(true)
                                                 }
                                                 if (!e.currentTarget.checked) {

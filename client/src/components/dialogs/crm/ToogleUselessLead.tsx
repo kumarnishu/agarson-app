@@ -17,7 +17,9 @@ function ToogleUselessLead({ lead }: { lead: ILead }) {
         <AxiosResponse<any>, BackendError, { id: string }>
         (ToogleUseless, {
             onSuccess: () => {
-                queryClient.invalidateQueries('leads_useless')
+                queryClient.invalidateQueries('leads')
+                queryClient.invalidateQueries('customers')
+                queryClient.invalidateQueries('uselessleads')
             }
         })
 

@@ -18,8 +18,9 @@ function BulkDeleteUselessLeadsDialog({ selectedLeads }: { selectedLeads: ILead[
         <AxiosResponse<any>, BackendError, { leads_ids: string[] }>
         (BulkDeleteUselessLeads, {
             onSuccess: () => {
-                queryClient.invalidateQueries('fuzzyleads_useless')
-                queryClient.invalidateQueries('leads_useless')
+                queryClient.invalidateQueries('leads')
+                queryClient.invalidateQueries('customers')
+                queryClient.invalidateQueries('uselessleads')
             }
         })
 

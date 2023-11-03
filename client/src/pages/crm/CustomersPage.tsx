@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -8,17 +8,14 @@ import { FuzzySearchCustomers, GetCustomers } from '../../services/LeadsServices
 import { UserContext } from '../../contexts/userContext'
 import UploadLeadsExcelButton from '../../components/buttons/UploadLeadsExcelButton';
 import DBPagination from '../../components/pagination/DBpagination';
-import CustomersTable from '../../components/tables/CustomersTable'
-import ReactPagination from '../../components/pagination/ReactPagination'
 import { BackendError } from '../..'
-import { GetUsers } from '../../services/UserServices'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from '../../types/crm.types'
-import { IUser } from '../../types/user.types'
+import CustomersTable from '../../components/tables/CustomersTable'
 
 let template: ILeadTemplate[] = [
   {
@@ -49,11 +46,8 @@ let template: ILeadTemplate[] = [
 ]
 
 
-
 export default function CustomersPage() {
-  const [userId, setUserid] = useState<string>()
   const [paginationData, setPaginationData] = useState({ limit: 10, page: 1, total: 1 });
-  const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<ILead>()
@@ -61,30 +55,24 @@ export default function CustomersPage() {
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => leads, [leads])
   const [preFilteredData, setPreFilteredData] = useState<ILead[]>([])
+  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+  const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
 
-  const [allfuzzyleads, setAllFuzzyLeads] = useState<ILead[]>([])
-  const FuzzyMemoData = React.useMemo(() => allfuzzyleads, [allfuzzyleads])
+  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["customers", paginationData], async () => GetCustomers({ limit: paginationData?.limit, page: paginationData?.page }))
 
-  // pagination  states
-  const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + reactPaginationData.limit;
-  const currentItems = FuzzyMemoData.slice(itemOffset, endOffset)
-
-  const { data: users } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
-  const { data, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["customers", paginationData], async () => GetCustomers({ id: userId, limit: paginationData?.limit, page: paginationData?.page }))
-
-  const { data: fuzzyLeads, isSuccess: isFuzzySuccess, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<ILead[]>, BackendError>(["fuzzycustomers", filter], async () => FuzzySearchCustomers({ searchString: filter, id: userId }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzycustomers", filter], async () => FuzzySearchCustomers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
   })
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
   function handleExcel() {
     setAnchorEl(null)
     try {
-      ExportToExcel(selectedData, "leads_data")
+      ExportToExcel(selectedData, "customers_data")
       setSent(true)
     }
     catch (err) {
@@ -129,20 +117,29 @@ export default function CustomersPage() {
       setSelectedData(data)
   }, [selectedLeads])
 
+  useEffect(() => {
+    if (!filter) {
+      setLeads(preFilteredData)
+      setPaginationData(preFilteredPaginationData)
+    }
+  }, [filter])
 
   useEffect(() => {
-    if (userId && filter) {
+    if (filter) {
       refetchFuzzy()
     }
-    else
-      refetch()
-  }, [userId, filter])
-
+  }, [paginationData])
 
   useEffect(() => {
-    if (isSuccess) {
+    if (data && !filter) {
       setLeads(data.data.leads)
       setPreFilteredData(data.data.leads)
+      setPreFilteredPaginationData({
+        ...paginationData,
+        page: data.data.page,
+        limit: data.data.limit,
+        total: data.data.total
+      })
       setPaginationData({
         ...paginationData,
         page: data.data.page,
@@ -150,33 +147,23 @@ export default function CustomersPage() {
         total: data.data.total
       })
     }
-  }, [isSuccess, data])
-
-
-  useEffect(() => {
-    if (!filter)
-      setLeads(preFilteredData)
-  }, [filter])
-
-
+  }, [data])
 
   useEffect(() => {
-    if (isFuzzySuccess) {
-      setAllFuzzyLeads(fuzzyLeads.data)
-      setReactPaginationData({
-        ...reactPaginationData,
-        total: Math.ceil(fuzzyLeads.data.length / reactPaginationData.limit)
-      })
+    if (fuzzyleads && filter) {
+      setLeads(fuzzyleads.data.leads)
+      let count = filterCount
+      if (count === 0)
+        setPaginationData({
+          ...paginationData,
+          page: fuzzyleads.data.page,
+          limit: fuzzyleads.data.limit,
+          total: fuzzyleads.data.total
+        })
+      count = filterCount + 1
+      setFilterCount(count)
     }
-  }, [isFuzzySuccess, fuzzyLeads])
-
-
-
-  useEffect(() => {
-    setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
-  }, [reactPaginationData])
-
-
+  }, [fuzzyleads])
 
   return (
     <>
@@ -188,6 +175,7 @@ export default function CustomersPage() {
         isFuzzyLoading && <LinearProgress />
       }
       {/*heading, search bar and table menu */}
+
       <Stack
         spacing={2}
         padding={1}
@@ -195,6 +183,7 @@ export default function CustomersPage() {
         justifyContent="space-between"
         width="100vw"
       >
+
         <Typography
           variant={'h6'}
           component={'h1'}
@@ -208,38 +197,24 @@ export default function CustomersPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)} /> 
-            {LoggedInUser?.is_admin &&<Box sx={{ display: { xs: 'none', md: 'block' } }}>
-
-              <select onChange={(e) => { setUserid(e.target.value) }}
-                style={{ borderColor: 'blue', border: 'none', height: '40px' }}
-              >
-                <option key={0} value={undefined}>
-
-                </option>
-                {users?.data && users.data.map((user) => {
-                  return (
-                    <option key={user._id} value={user._id}>
-                      {user.username}
-                    </option>
-                  )
-                })}
-              </select>
-            </Box>}
+            <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_deletion_allowed)} />
             <TextField
               fullWidth
               size="small"
-              onChange={(e) => setFilter(e.currentTarget.value)}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
-                  refetchFuzzy()
-                }
+              onChange={(e) => {
+                setFilter(e.currentTarget.value)
+                setFilterCount(0)
               }}
               autoFocus
               placeholder={`${MemoData?.length} records...`}
               style={{
                 fontSize: '1.1rem',
                 border: '0',
+              }}
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  refetchFuzzy()
+                }
               }}
             />
             <IconButton
@@ -252,6 +227,7 @@ export default function CustomersPage() {
             </IconButton>
           </Stack >
           <>
+
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
 
@@ -280,13 +256,15 @@ export default function CustomersPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
+
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
+
             </Menu >
             <NewLeadDialog />
           </>
-        </Stack>
-      </Stack>
+        </Stack >
+      </Stack >
       {/* table */}
       <CustomersTable
         lead={lead}
@@ -295,13 +273,9 @@ export default function CustomersPage() {
         selectedLeads={selectedLeads}
         setSelectedLeads={setSelectedLeads}
         setSelectAll={setSelectAll}
-        leads={filter ? currentItems : MemoData}
-        selectableLeads={filter ? allfuzzyleads : leads}
+        leads={MemoData}
       />
-
-      {!filter ? <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} /> :
-        <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={FuzzyMemoData} />
-      }
+      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
     </>
 
   )

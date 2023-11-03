@@ -136,10 +136,14 @@ export default function LeadsPage() {
       setPreFilteredData(data.data.leads)
       setPreFilteredPaginationData({
         ...paginationData,
+        page: data.data.page,
+        limit: data.data.limit,
         total: data.data.total
       })
       setPaginationData({
         ...paginationData,
+        page: data.data.page,
+        limit: data.data.limit,
         total: data.data.total
       })
     }
@@ -152,6 +156,8 @@ export default function LeadsPage() {
       if (count === 0)
         setPaginationData({
           ...paginationData,
+          page: fuzzyleads.data.page,
+          limit: fuzzyleads.data.limit,
           total: fuzzyleads.data.total
         })
       count = filterCount + 1

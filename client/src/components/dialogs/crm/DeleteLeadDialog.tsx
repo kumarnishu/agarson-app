@@ -17,8 +17,9 @@ function DeleteLeadDialog({ lead }: { lead: ILead }) {
         <AxiosResponse<any>, BackendError, { id: string }>
         (DeleteLead, {
             onSuccess: () => {
-                queryClient.invalidateQueries('customers')
                 queryClient.invalidateQueries('leads')
+                queryClient.invalidateQueries('customers')
+                queryClient.invalidateQueries('uselessleads')
             }
         })
 

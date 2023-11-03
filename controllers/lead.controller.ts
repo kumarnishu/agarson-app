@@ -133,8 +133,12 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     return lead
             })
         }
+        leads = leads.filter((lead) => {
+            return String(lead.stage).toLowerCase() !== "useless"
+        })
+        let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
-        let count = await Lead.countDocuments()
+
         return res.status(200).json({
             leads,
             total: Math.ceil(count / limit),
@@ -172,8 +176,12 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                     return lead
             })
         }
+        leads = leads.filter((lead) => {
+            return String(lead.stage).toLowerCase() !== "useless"
+        })
+        let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
-        let count = await Lead.countDocuments()
+       
         return res.status(200).json({
             leads,
             total: Math.ceil(count / limit),
@@ -1542,7 +1550,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
             })
         }
         leads = leads.filter((lead) => {
-            return lead.stage === "useless"
+            return String(lead.stage).toLowerCase() === "useless"
         })
         let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
@@ -1881,7 +1889,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
             }).sort('-created_at')
         }
         leads = leads.filter((lead) => {
-            return lead.stage === "useless"
+            return String(lead.stage).toLowerCase() === "useless"
         })
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
@@ -1892,10 +1900,11 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                     return lead
             })
         }
+        let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
         return res.status(200).json({
             leads,
-            total: Math.ceil(leads.length / limit),
+            total: Math.ceil(count / limit),
             page: page,
             limit: limit
         })

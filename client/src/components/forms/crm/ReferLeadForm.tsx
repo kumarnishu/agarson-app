@@ -20,6 +20,8 @@ function ReferLeadForm({ lead }: { lead: ILead }) {
             onSuccess: () => {
                 queryClient.invalidateQueries('refers')
                 queryClient.invalidateQueries('leads')
+                queryClient.invalidateQueries('customers')
+                queryClient.invalidateQueries('uselessleads')
             }
         })
     const { data, isSuccess: isReferSuccess } = useQuery<AxiosResponse<{

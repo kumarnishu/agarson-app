@@ -107,10 +107,14 @@ export default function UsersPage() {
             setPreFilteredData(data.data.users)
             setPreFilteredPaginationData({
                 ...paginationData,
+                page: data.data.page,
+                limit: data.data.limit,
                 total: data.data.total
             })
             setPaginationData({
                 ...paginationData,
+                page: data.data.page,
+                limit: data.data.limit,
                 total: data.data.total
             })
         }
@@ -123,6 +127,8 @@ export default function UsersPage() {
             if (count === 0)
                 setPaginationData({
                     ...paginationData,
+                    page: fuzzyusers.data.page,
+                    limit: fuzzyusers.data.limit,
                     total: fuzzyusers.data.total
                 })
             count = filterCount + 1
