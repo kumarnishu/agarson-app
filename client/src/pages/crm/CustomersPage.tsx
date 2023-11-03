@@ -201,7 +201,7 @@ export default function CustomersPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            <UploadLeadsExcelButton disabled={Boolean(!LoggedInUser?.crm_access_fields.is_editable)} />
+            {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton />}
             <TextField
               fullWidth
               size="small"

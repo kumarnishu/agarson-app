@@ -13,7 +13,7 @@ const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadLeadsExcelButton({ disabled }: { disabled: boolean }) {
+function UploadLeadsExcelButton() {
   const [leads, setLeads] = React.useState<ILeadTemplate[]>()
   const { data, mutate, isLoading, isSuccess, isError, error } = useMutation
     <AxiosResponse<ILeadTemplate[]>, BackendError, FormData>
@@ -73,7 +73,6 @@ function UploadLeadsExcelButton({ disabled }: { disabled: boolean }) {
             <Button
               variant="outlined"
               component="label"
-              disabled={disabled}
             >
               <Upload />
               <FileInput
