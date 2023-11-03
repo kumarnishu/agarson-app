@@ -52,6 +52,9 @@ export default function BroadcastPage() {
         return alert("please select some rows")
       ExportToExcel(selectedData, "broadcast_data")
       setSent(true)
+      setSelectAll(false)
+      setSelectedData([])
+      setSelectedBroadcasts([])
     }
     catch (err) {
       console.log(err)

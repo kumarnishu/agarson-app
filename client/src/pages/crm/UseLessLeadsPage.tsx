@@ -74,6 +74,9 @@ export default function UselessLeadsPage() {
     try {
       ExportToExcel(selectedData, "useless_leads_data")
       setSent(true)
+      setSelectAll(false)
+      setSelectedData([])
+      setSelectedLeads([])
     }
     catch (err) {
       console.log(err)

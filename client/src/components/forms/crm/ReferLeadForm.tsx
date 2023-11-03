@@ -1,4 +1,4 @@
-import {  Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
@@ -7,7 +7,7 @@ import * as Yup from "yup"
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
-import { GetReferralParties, ReferLead } from '../../../services/LeadsServices';
+import { GetRefers, ReferLead } from '../../../services/LeadsServices';
 import AlertBar from '../../snacks/AlertBar';
 import { ILead, IReferredParty } from '../../../types/crm.types';
 
@@ -19,6 +19,7 @@ function ReferLeadForm({ lead }: { lead: ILead }) {
         (ReferLead, {
             onSuccess: () => {
                 queryClient.invalidateQueries('refers')
+                queryClient.invalidateQueries('paginatedrefers')
                 queryClient.invalidateQueries('leads')
                 queryClient.invalidateQueries('customers')
                 queryClient.invalidateQueries('uselessleads')
@@ -27,7 +28,7 @@ function ReferLeadForm({ lead }: { lead: ILead }) {
     const { data, isSuccess: isReferSuccess } = useQuery<AxiosResponse<{
         party: IReferredParty,
         leads: ILead[]
-    }[]>, BackendError>("refers", GetReferralParties)
+    }[]>, BackendError>("refers", GetRefers)
 
     const { setChoice } = useContext(ChoiceContext)
     const [refers, setRefers] = useState<{

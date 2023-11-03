@@ -48,6 +48,9 @@ export default function TemplatesPage() {
         return alert("please select some rows")
       ExportToExcel(selectedData, "template_data")
       setSent(true)
+      setSelectAll(false)
+      setSelectedData([])
+      setSelectedTemplates([])
     }
     catch (err) {
       console.log(err)

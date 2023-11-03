@@ -57,6 +57,7 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
+                                            checked={Boolean(selectAll)}
                                             size="small" onChange={(e) => {
                                                 if (e.currentTarget.checked) {
                                                     setSelectedTrackers(selectableTrackers)

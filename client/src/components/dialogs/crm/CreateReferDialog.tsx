@@ -1,12 +1,25 @@
-import { Dialog, DialogContent, DialogTitle,  Stack, IconButton } from '@mui/material'
-import { useContext } from 'react';
+import { Dialog, DialogContent, DialogTitle, Stack, IconButton } from '@mui/material'
+import { useContext, useEffect, useState } from 'react';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import CreateReferForm from '../../forms/crm/CreateReferForm';
 import { Cancel } from '@mui/icons-material';
+import { IUser } from '../../../types/user.types';
+import { AxiosResponse } from 'axios';
+import { BackendError } from '../../..';
+import { GetUsers } from '../../../services/UserServices';
+import { useQuery } from 'react-query';
 
 
 function CreateReferDialog() {
+    const [users, setUsers] = useState<IUser[]>([])
     const { choice, setChoice } = useContext(ChoiceContext)
+    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+
+    useEffect(() => {
+        if (isSuccess)
+            setUsers(data?.data)
+    }, [users, isSuccess, data])
+
     return (
         <Dialog open={choice === LeadChoiceActions.create_refer ? true : false}
             onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
@@ -19,7 +32,7 @@ function CreateReferDialog() {
             </DialogTitle>
 
             <DialogContent>
-                <CreateReferForm />
+                <CreateReferForm users={users} />
             </DialogContent>
             <Stack
                 direction="column"

@@ -54,6 +54,8 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                 >
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
+                                            indeterminate={selectAll ? true : false}
+                                            checked={Boolean(selectAll)}
                                             size="small" onChange={(e) => {
                                                 if (e.currentTarget.checked) {
                                                     setSelectedFlows(flows)

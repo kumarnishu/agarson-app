@@ -49,6 +49,9 @@ export default function ReminderPage() {
         return alert("please select some rows")
       ExportToExcel(selectedData, "reminder_data")
       setSent(true)
+      setSelectAll(false)
+      setSelectedData([])
+      setSelectedReminders([])
     }
     catch (err) {
       console.log(err)

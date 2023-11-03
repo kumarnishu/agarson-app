@@ -1,4 +1,4 @@
-import {  Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
@@ -12,17 +12,20 @@ import { Cities } from '../../../utils/cities';
 import { States } from '../../../utils/states';
 import AlertBar from '../../snacks/AlertBar';
 import { IReferredParty } from '../../../types/crm.types';
+import { IUser } from '../../../types/user.types';
 
 
 
-function CreateReferForm() {
+function CreateReferForm({ users }: { users: IUser[] }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IReferredParty>, BackendError, {
-            name: string, customer_name?: string, city: string, state: string, mobile: string
+            name: string, customer_name?: string, city: string, state: string, mobile: string, lead_owners: string,
         }>
         (NewReferParty, {
             onSuccess: () => {
                 queryClient.invalidateQueries('refers')
+                queryClient.invalidateQueries('paginatedrefers')
+                
             }
         })
 
@@ -34,11 +37,14 @@ function CreateReferForm() {
             customer_name: "",
             city: "",
             state: "",
-            mobile: ""
+            mobile: "",
+            lead_owners: [""],
         },
         validationSchema: Yup.object({
             name: Yup.string()
                 .required('Required field'),
+            lead_owners: Yup.array()
+                .required('field'),
             customer_name: Yup.string(),
             city: Yup.string().required(),
             state: Yup.string().required(),
@@ -49,7 +55,22 @@ function CreateReferForm() {
 
         }),
         onSubmit: (values) => {
-            mutate(values)
+            let data: {
+                name: string,
+                lead_owners: string,
+                customer_name: string,
+                city: string,
+                state: string,
+                mobile: string
+            } = {
+                name: values.name,
+                customer_name: values.customer_name,
+                city: values.city,
+                state: values.state,
+                mobile: values.mobile,
+                lead_owners: values.lead_owners.toString()
+            }
+            mutate(data)
         }
     });
 
@@ -72,7 +93,7 @@ function CreateReferForm() {
                 pt={2}
             >
                 <TextField
-                    
+
 
                     required
                     fullWidth
@@ -123,7 +144,7 @@ function CreateReferForm() {
                     SelectProps={{
                         native: true
                     }}
-                    
+
 
                     error={
                         formik.touched.city && formik.errors.city ? true : false
@@ -158,7 +179,7 @@ function CreateReferForm() {
                     SelectProps={{
                         native: true
                     }}
-                    
+
 
                     error={
                         formik.touched.state && formik.errors.state ? true : false
@@ -182,6 +203,36 @@ function CreateReferForm() {
                         })
                     }
                 </TextField>
+                < TextField
+
+                    select
+                    SelectProps={{
+                        native: true,
+                        multiple: true
+                    }}
+                    focused
+
+                    error={
+                        formik.touched.lead_owners && formik.errors.lead_owners ? true : false
+                    }
+                    id="lead_owners"
+                    label="Lead Owners"
+                    fullWidth
+                    required
+                    helperText={
+                        formik.touched.lead_owners && formik.errors.lead_owners ? formik.errors.lead_owners : ""
+                    }
+                    {...formik.getFieldProps('lead_owners')}
+                >
+                    {
+                        users.map(user => {
+                            return (<option key={user._id} value={user._id}>
+                                {user.username}
+                            </option>)
+                        })
+                    }
+                </TextField>
+
 
                 {
                     isError ? (

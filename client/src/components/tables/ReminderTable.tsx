@@ -56,7 +56,8 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
-
+                                            indeterminate={selectAll ? true : false}
+                                            checked={Boolean(selectAll)}
                                             size="small" onChange={(e) => {
                                                 if (e.currentTarget.checked) {
                                                     setSelectedReminders(reminders)

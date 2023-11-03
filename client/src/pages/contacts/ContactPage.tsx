@@ -56,6 +56,9 @@ export default function ContactPage() {
     try {
       ExportToExcel(selectedData, "contacts_data")
       setSent(true)
+      setSelectAll(false)
+      setSelectedData([])
+      setSelectedContacts([])
     }
     catch (err) {
       console.log(err)

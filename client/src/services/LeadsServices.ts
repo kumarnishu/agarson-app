@@ -6,6 +6,10 @@ export const GetLeads = async ({ limit, page }: { limit: number | undefined, pag
 
 }
 
+export const GetRefers = async () => {
+  return await apiClient.get("refers")
+}
+
 export const GetUselessLeads = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
 
   return await apiClient.get(`useless/leads/?limit=${limit}&page=${page}`)
@@ -14,12 +18,14 @@ export const GetUselessLeads = async ({ limit, page }: { limit: number | undefin
 export const FuzzySearchUselessLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
   return await apiClient.get(`search/leads/useless?key=${searchString}&limit=${limit}&page=${page}`)
 }
-export const GetReferralParties = async () => {
-  return await apiClient.get(`refers`)
+
+
+export const GetPaginatedRefers = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
+  return await apiClient.get(`refers/paginated?limit=${limit}&page=${page}`)
 }
 
 export const NewReferParty = async (body: {
-  name: string, customer_name?: string, city: string, state: string, mobile: string
+  name: string, customer_name?: string, city: string, state: string, mobile: string, lead_owners: string,
 }) => {
   return await apiClient.post("refers", body)
 }
@@ -27,7 +33,7 @@ export const NewReferParty = async (body: {
 export const UpdateReferParty = async ({ id, body }: {
   id: string,
   body: {
-    name: string, customer_name?: string, city: string, state: string, mobile: string
+    name: string, customer_name?: string, city: string, state: string, mobile: string, lead_owners: string,
   }
 }) => {
   return await apiClient.put(`refers/${id}`, body)
@@ -52,6 +58,9 @@ export const RemoveLeadReferrals = async (id: string) => {
 
 export const FuzzySearchLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
   return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}`)
+}
+export const FuzzySearchRefers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
+  return await apiClient.get(`search/refers?key=${searchString}&limit=${limit}&page=${page}`)
 }
 
 export const FuzzySearchCustomers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {

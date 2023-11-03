@@ -59,6 +59,7 @@ function CustomersTable({ lead, leads,  setLead, selectAll, setSelectAll, select
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
+                                            checked={Boolean(selectAll)}
                                             size="small" onChange={(e) => {
                                                 if (e.currentTarget.checked) {
                                                     setSelectedLeads(leads)

@@ -67,7 +67,8 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
-
+                                            indeterminate={selectAll ? true : false}
+                                            checked={Boolean(selectAll)}
                                             size="small" onChange={(e) => {
                                                 if (e.currentTarget.checked) {
                                                     setSelectedRefers(refers)
@@ -127,6 +128,7 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                     Party Assigned
                                 </Stack>
                             </TableCell>
+
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -158,6 +160,17 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                     spacing={2}
                                 >
                                     State
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Lead Owners
                                 </Stack>
                             </TableCell>
                             <TableCell
@@ -378,6 +391,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.state}</Typography>
 
                                             </Stack>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{refer.party.lead_owners ? refer.party.lead_owners.map((owner) => { return owner.username + ", " }) : [""]}</Typography>
                                         </TableCell>
                                         <TableCell                     >
                                             <Stack

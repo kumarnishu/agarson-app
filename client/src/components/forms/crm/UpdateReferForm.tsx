@@ -1,4 +1,4 @@
-import {  Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
@@ -12,19 +12,21 @@ import { Cities } from '../../../utils/cities';
 import { States } from '../../../utils/states';
 import AlertBar from '../../snacks/AlertBar';
 import { IReferredParty } from '../../../types/crm.types';
+import { IUser } from '../../../types/user.types';
 
 
 
-function UpdateReferForm({ refer }: { refer: IReferredParty }) {
+function UpdateReferForm({ refer, users }: { refer: IReferredParty, users: IUser[] }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IReferredParty>, BackendError, {
             id: string, body: {
-                name: string, customer_name?: string, city: string, state: string, mobile: string
+                name: string, customer_name?: string, city: string, state: string, mobile: string, lead_owners: string
             }
         }>
         (UpdateReferParty, {
             onSuccess: () => {
                 queryClient.invalidateQueries('refers')
+                queryClient.invalidateQueries('paginatedrefers')
                 queryClient.invalidateQueries('leads')
                 queryClient.invalidateQueries('customers')
                 queryClient.invalidateQueries('uselessleads')
@@ -40,10 +42,13 @@ function UpdateReferForm({ refer }: { refer: IReferredParty }) {
             city: refer.city,
             state: refer.state,
             mobile: refer.mobile,
+            lead_owners: [""],
         },
         validationSchema: Yup.object({
             name: Yup.string()
                 .required('Required field'),
+            lead_owners: Yup.array()
+                .required('field'),
             customer_name: Yup.string(),
             city: Yup.string().required(),
             state: Yup.string().required(),
@@ -54,9 +59,24 @@ function UpdateReferForm({ refer }: { refer: IReferredParty }) {
 
         }),
         onSubmit: (values) => {
+            let data: {
+                name: string,
+                lead_owners: string,
+                customer_name: string,
+                city: string,
+                state: string,
+                mobile: string
+            } = {
+                name: values.name,
+                customer_name: values.customer_name,
+                city: values.city,
+                state: values.state,
+                mobile: values.mobile,
+                lead_owners: values.lead_owners.toString()
+            }
             mutate({
                 id: refer._id,
-                body: values
+                body: data
             })
         }
     });
@@ -184,6 +204,35 @@ function UpdateReferForm({ refer }: { refer: IReferredParty }) {
                         States.map(state => {
                             return (<option key={state.code} value={state.state.toLowerCase()}>
                                 {state.state}
+                            </option>)
+                        })
+                    }
+                </TextField>
+                < TextField
+
+                    select
+                    SelectProps={{
+                        native: true,
+                        multiple: true
+                    }}
+                    focused
+
+                    error={
+                        formik.touched.lead_owners && formik.errors.lead_owners ? true : false
+                    }
+                    id="lead_owners"
+                    label="Lead Owners"
+                    fullWidth
+                    required
+                    helperText={
+                        formik.touched.lead_owners && formik.errors.lead_owners ? formik.errors.lead_owners : ""
+                    }
+                    {...formik.getFieldProps('lead_owners')}
+                >
+                    {
+                        users.map(user => {
+                            return (<option key={user._id} value={user._id}>
+                                {user.username}
                             </option>)
                         })
                     }

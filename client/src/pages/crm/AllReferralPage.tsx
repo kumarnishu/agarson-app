@@ -16,6 +16,8 @@ function AllReferralPage({ leads }: { leads: ILead[] }) {
     try {
       ExportToExcel(selectedData, "referral_leads")
       setSent(true)
+      setSelectedLead(undefined)
+      setSelectedData([])
     }
     catch (err) {
       console.log(err)

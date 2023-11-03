@@ -13,10 +13,12 @@ function NewLeadDialog() {
   const [users, setUsers] = useState<IUser[]>([])
   const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
   const { choice, setChoice } = useContext(ChoiceContext)
+  
   useEffect(() => {
     if (isSuccess)
       setUsers(data?.data)
   }, [users, isSuccess, data])
+
   return (
     <>
       <Dialog open={choice === LeadChoiceActions.create_lead ? true : false}

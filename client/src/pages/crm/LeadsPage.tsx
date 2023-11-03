@@ -74,6 +74,9 @@ export default function LeadsPage() {
     try {
       ExportToExcel(selectedData, "leads_data")
       setSent(true)
+      setSelectAll(false)
+      setSelectedData([])
+      setSelectedLeads([])
     }
     catch (err) {
       console.log(err)

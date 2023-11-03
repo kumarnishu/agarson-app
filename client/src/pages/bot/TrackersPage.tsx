@@ -55,6 +55,9 @@ export default function TrackersPage() {
             }
             ExportToExcel(selectedData, "trackers_data")
             setSent(true)
+            setSelectAll(false)
+            setSelectedData([])
+            setSelectedTrackers([])
         }
         catch (err) {
             console.log(err)

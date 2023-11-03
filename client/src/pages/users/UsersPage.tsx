@@ -57,6 +57,9 @@ export default function UsersPage() {
                 return alert("please select some rows")
             ExportToExcel(selectedData, "users_data")
             setSent(true)
+            setSelectAll(false)
+            setSelectedData([])
+            setSelectedUsers([])
         }
         catch (err) {
             console.log(err)
@@ -135,7 +138,7 @@ export default function UsersPage() {
             setFilterCount(count)
         }
     }, [fuzzyusers])
-    
+
     return (
         <>
             {

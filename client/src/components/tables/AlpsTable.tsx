@@ -50,6 +50,7 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
+                                            checked={Boolean(selectAll)}
                                             size="small" onChange={(e) => {
                                                 if (e.currentTarget.checked) {
                                                     setSelectedAlps(selectableAlps)

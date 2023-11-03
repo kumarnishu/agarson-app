@@ -48,6 +48,9 @@ export default function FlowsPage() {
         return alert("please select some rows")
       ExportToExcel(selectedData, "flows_data")
       setSent(true)
+      setSelectAll(false)
+      setSelectedData([])
+      setSelectedFlows([])
     }
     catch (err) {
       console.log(err)
@@ -80,6 +83,7 @@ export default function FlowsPage() {
     if (isSuccess) {
       setFlows(data.data)
       setPreFilteredData(data.data)
+
     }
   }, [isSuccess, data])
 
