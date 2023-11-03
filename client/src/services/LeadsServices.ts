@@ -100,6 +100,33 @@ export const NewRemark = async ({ id, body }: {
 }) => {
   return await apiClient.patch(`remarks/leads/${id}`, body)
 }
+
+
+export const AssignRefer = async ({ id, body }: {
+  id: string, body: {
+    lead_owners: string[]
+  }
+}) => {
+  return await apiClient.patch(`assign/refer/${id}`, body)
+}
+
+export const BulkAssignRefers = async ({ body }: {
+  body: {
+    lead_owners: string[],
+    refers: string[],
+  }
+}) => {
+  return await apiClient.put(`bulk/assign/refers`, body)
+}
+export const BulkAssignLeads = async ({ body }: {
+  body: {
+    lead_owners: string[],
+    leads: string[]
+  }
+}) => {
+  return await apiClient.put(`bulk/assign/leads`, body)
+}
+
 export const UpdateLeadFieldsUpdatable = async (
   body: {
     stages: string[],

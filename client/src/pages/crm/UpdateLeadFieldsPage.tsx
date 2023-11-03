@@ -1,15 +1,17 @@
 import { GetLeadFieldsUpdatable, UpdateLeadFieldsUpdatable } from '../../services/LeadsServices'
 import { AxiosResponse } from 'axios'
 import { useMutation, useQuery } from 'react-query'
-import { useEffect, useState } from 'react'
-import { Button, Grid,  Stack, TextField, Typography } from '@mui/material'
+import { useContext, useEffect, useState } from 'react'
+import { Button, Grid, Stack, TextField, Typography } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import { BackendError } from '../..'
 import AlertBar from '../../components/snacks/AlertBar'
 import { ILeadUpdatableField } from '../../types/crm.types'
+import { UserContext } from '../../contexts/userContext'
 
 
 function UpdateLeadFieldsPage() {
+    const { user } = useContext(UserContext)
     const { data: updated_fields, mutate, isLoading, isSuccess } = useMutation
         <AxiosResponse<ILeadUpdatableField>, BackendError, {
             stages: string[],
@@ -52,7 +54,7 @@ function UpdateLeadFieldsPage() {
                     mutate(fields)
                 }
             }}
-                disabled={isLoading}
+                disabled={isLoading || !user?.is_admin}
             >
                 Save
             </Button>

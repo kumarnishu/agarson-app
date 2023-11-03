@@ -4,12 +4,13 @@ import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import UpdateReferDialog from '../dialogs/crm/UpdateReferDialog'
 import DeleteReferDialog from '../dialogs/crm/DeleteReferDialog'
-import { Delete, Edit, RemoveRedEye } from '@mui/icons-material'
+import { Delete, Edit, Handshake, RemoveRedEye } from '@mui/icons-material'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ViewReferralsDialog from '../dialogs/crm/ViewReferralsDialog'
 import { UserContext } from '../../contexts/userContext'
 import PopUp from '../popup/PopUp'
 import { ILead, IReferredParty } from '../../types/crm.types'
+import AssignReferDialog from '../dialogs/crm/AssignReferDialog'
 
 type Props = {
     refer: IReferredParty | undefined,
@@ -273,60 +274,70 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                             null
                                         }
                                         {/* actions */}
-                                        {!user?.crm_access_fields.is_readonly && user?.crm_access_fields.is_editable &&
-                                            <TableCell>
-                                                <PopUp
-                                                    element={
-                                                        <Stack direction="row">
-                                                            <>
-                                                                {user?.is_admin &&
-                                                                    <>
-                                                                        <Tooltip title="edit">
-                                                                            <IconButton
+                                        <TableCell>
+                                            <PopUp
+                                                element={
+                                                    <Stack direction="row">
+                                                        <>
+                                                            {user?.is_admin &&
+                                                                <>
+                                                                    <Tooltip title="edit">
+                                                                        <IconButton
+                                                                            onClick={() => {
+                                                                                setRefer(refer.party)
+                                                                                setChoice({ type: LeadChoiceActions.update_refer })
+
+                                                                            }}
+
+                                                                        >
+                                                                            <Edit />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                    {user?.crm_access_fields.is_deletion_allowed &&
+                                                                        <Tooltip title="Delete">
+                                                                            <IconButton color="primary"
                                                                                 onClick={() => {
                                                                                     setRefer(refer.party)
-                                                                                    setChoice({ type: LeadChoiceActions.update_refer })
+                                                                                    setChoice({ type: LeadChoiceActions.delete_refer })
 
                                                                                 }}
-
                                                                             >
-                                                                                <Edit />
+                                                                                <Delete />
                                                                             </IconButton>
-                                                                        </Tooltip>
-                                                                        {user?.crm_access_fields.is_deletion_allowed &&
-                                                                            <Tooltip title="Delete">
-                                                                                <IconButton color="primary"
-                                                                                    onClick={() => {
-                                                                                        setRefer(refer.party)
-                                                                                        setChoice({ type: LeadChoiceActions.delete_refer })
+                                                                        </Tooltip>}
+                                                                </>
+                                                            }
 
-                                                                                    }}
-                                                                                >
-                                                                                    <Delete />
-                                                                                </IconButton>
-                                                                            </Tooltip>}
-                                                                    </>
-                                                                }
+                                                            <Tooltip title="View Allocated Parties">
+                                                                <IconButton color="success"
+                                                                    onClick={() => {
+                                                                        setLeads(refer.leads)
+                                                                        setDisplay(true)
 
-                                                                <Tooltip title="View Allocated Parties">
-                                                                    <IconButton color="success"
+                                                                    }}
+                                                                >
+                                                                    <RemoveRedEye />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                            {user?.crm_access_fields.is_editable &&
+                                                                < Tooltip title="Assign Refer">
+                                                                    <IconButton color="warning"
                                                                         onClick={() => {
-                                                                            setLeads(refer.leads)
-                                                                            setDisplay(true)
-
+                                                                            setRefer(refer.party)
+                                                                            setChoice({ type: LeadChoiceActions.assign_refer })
                                                                         }}
                                                                     >
-                                                                        <RemoveRedEye />
+                                                                        <Handshake />
                                                                     </IconButton>
-                                                                </Tooltip>
-                                                            </>
-                                                        </Stack>
-                                                    }
-                                                />
+                                                                </Tooltip>}
+                                                        </>
+                                                    </Stack>
+                                                }
+                                            />
 
-                                            </TableCell>}
+                                        </TableCell>
                                         {/* party name */}
-                                        <TableCell                     >
+                                        < TableCell >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -443,13 +454,14 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 )
                             })}
                     </TableBody>
-                </Table>
-            </Box>
+                </Table >
+            </Box >
             {
                 refer ?
                     <>
-                        <UpdateReferDialog refer={refer} />
+                        < UpdateReferDialog refer={refer} />
                         <DeleteReferDialog refer={refer} />
+                        <AssignReferDialog refer={refer} />
                     </>
                     : null
             }

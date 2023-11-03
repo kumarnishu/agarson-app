@@ -123,7 +123,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     model: 'User'
                 }
             ]
-        }).sort('-created_at')
+        }).sort('-updated_at')
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
@@ -166,7 +166,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                     model: 'User'
                 }
             ]
-        }).sort('-created_at')
+        }).sort('-updated_at')
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
@@ -339,7 +339,7 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
         return res.status(404).json({ message: "lead not found" })
     }
     let new_lead_owners: IUser[] = []
-    let owners = String(lead_owners).split(",")
+    let owners = lead_owners
     for (let i = 0; i < owners.length; i++) {
         let owner = await User.findById(owners[i])
         if (owner)
@@ -648,7 +648,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         if (key.length == 2) {
             leads = await Lead.find({
@@ -716,7 +716,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         if (key.length == 3) {
             leads = await Lead.find({
@@ -807,7 +807,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         if (key.length == 4) {
             leads = await Lead.find({
@@ -921,7 +921,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         leads = leads.filter((lead) => {
             return String(lead.stage).toLowerCase() !== "useless"
@@ -994,7 +994,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         if (key.length == 2) {
             leads = await Lead.find({
@@ -1062,7 +1062,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         if (key.length == 3) {
             leads = await Lead.find({
@@ -1153,7 +1153,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         if (key.length == 4) {
             leads = await Lead.find({
@@ -1267,7 +1267,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         leads = leads.filter((lead) => {
             return String(lead.stage).toLowerCase() !== "useless"
@@ -1432,7 +1432,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+        let parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
         let result: {
             party: IReferredParty,
             leads: ILead[]
@@ -1450,7 +1450,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
             result.push({
                 party: parties[i],
                 leads: leads
@@ -1483,7 +1483,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
 }
 
 export const GetRefers = async (req: Request, res: Response, next: NextFunction) => {
-    let parties = await ReferredParty.find().populate('created_by').populate('updated_by').sort('-created_at')
+    let parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
     let result: {
         party: IReferredParty,
         leads: ILead[]
@@ -1501,13 +1501,21 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
                     model: 'User'
                 }
             ]
-        }).sort('-created_at')
+        }).sort('-updated_at')
         result.push({
             party: parties[i],
             leads: leads
         })
     }
-
+    if (!req.user?.is_admin) {
+        result = result.filter((item) => {
+            let owners = item.party.lead_owners.filter((owner) => {
+                return owner.username == req.user.username
+            })
+            if (owners.length > 0)
+                return item
+        })
+    }
     return res.status(200).json(result)
 }
 
@@ -1531,7 +1539,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     { mobile: { $regex: key[0], $options: 'i' } },
                     { state: { $regex: key[0], $options: 'i' } },
                 ]
-            }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+            }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
 
 
             for (let i = 0; i < parties.length; i++) {
@@ -1547,7 +1555,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
                 result.push({
                     party: parties[i],
                     leads: leads
@@ -1581,7 +1589,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 ,
 
             }
-            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
 
 
             for (let i = 0; i < parties.length; i++) {
@@ -1597,7 +1605,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
                 result.push({
                     party: parties[i],
                     leads: leads
@@ -1639,7 +1647,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 ,
 
             }
-            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
 
 
             for (let i = 0; i < parties.length; i++) {
@@ -1655,7 +1663,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
                 result.push({
                     party: parties[i],
                     leads: leads
@@ -1706,7 +1714,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 ,
 
             }
-            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
 
 
             for (let i = 0; i < parties.length; i++) {
@@ -1722,7 +1730,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
                 result.push({
                     party: parties[i],
                     leads: leads
@@ -1837,7 +1845,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                     model: 'User'
                 }
             ]
-        }).sort('-created_at')
+        }).sort('-updated_at')
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
@@ -1911,7 +1919,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         if (key.length == 2) {
             leads = await Lead.find({
@@ -1979,7 +1987,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         if (key.length == 3) {
             leads = await Lead.find({
@@ -2070,7 +2078,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         if (key.length == 4) {
             leads = await Lead.find({
@@ -2184,7 +2192,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
         }
         leads = leads.filter((lead) => {
             return String(lead.stage).toLowerCase() === "useless"
@@ -2254,4 +2262,89 @@ export const GetLeadsReport = async (req: Request, res: Response, next: NextFunc
 }
 
 
+export const AssignRefer = async (req: Request, res: Response, next: NextFunction) => {
+    const { lead_owners } = req.body as { lead_owners: string[] }
+    if (lead_owners && lead_owners.length === 0)
+        return res.status(403).json({ message: "please select one lead owner" })
+    const user = await User.findById(req.user?._id)
+    if (!user)
+        return res.status(403).json({ message: "please login to access this resource" })
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "refer id not valid" })
 
+    let refer = await ReferredParty.findById(id);
+    if (!refer) {
+        return res.status(404).json({ message: "refer party not found" })
+    }
+    let new_lead_owners: IUser[] = []
+    let owners = lead_owners
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
+    if (req.user) {
+        refer.updated_by = req.user
+        refer.lead_owners = new_lead_owners
+        refer.updated_at = new Date(Date.now())
+    }
+    await refer.save()
+    return res.status(200).json({ message: "assigned successfully" })
+}
+
+export const BulkAssignRefer = async (req: Request, res: Response, next: NextFunction) => {
+    const { lead_owners, refers } = req.body as { lead_owners: string[], refers: string[] }
+    if (lead_owners && lead_owners.length === 0)
+        return res.status(403).json({ message: "please select one lead owner" })
+    if (refers && refers.length === 0)
+        return res.status(403).json({ message: "please select one refer" })
+    const user = await User.findById(req.user?._id)
+
+    if (!user)
+        return res.status(403).json({ message: "please login to access this resource" })
+
+    let new_lead_owners: IUser[] = []
+    let owners = String(lead_owners).split(",")
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
+    refers.forEach(async (referid) => {
+        await ReferredParty.findByIdAndUpdate(referid, {
+            lead_owners: new_lead_owners,
+            updated_by: req.user,
+            updated_at: new Date(Date.now())
+        })
+    })
+
+    return res.status(200).json({ message: "assigned successfully" })
+}
+export const BulkAssignLeads = async (req: Request, res: Response, next: NextFunction) => {
+    const { leads, lead_owners } = req.body as { leads: string[], lead_owners: string[] }
+    if (leads && leads.length === 0)
+        return res.status(403).json({ message: "please select one lead " })
+    if (lead_owners && lead_owners.length === 0)
+        return res.status(403).json({ message: "please select one lead owner" })
+
+    const user = await User.findById(req.user?._id)
+    if (!user)
+        return res.status(403).json({ message: "please login to access this resource" })
+
+    let new_lead_owners: IUser[] = []
+    let owners = lead_owners
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
+    leads.forEach(async (leadid) => {
+        await Lead.findByIdAndUpdate(leadid, {
+            updated_by: req.user,
+            lead_owners: new_lead_owners,
+            updated_at: new Date(Date.now())
+        })
+    })
+
+    return res.status(200).json({ message: "new remark added successfully" })
+}

@@ -183,7 +183,6 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
       setFields(data.data)
     }
   }, [isFieldsSuccess, data])
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <Stack

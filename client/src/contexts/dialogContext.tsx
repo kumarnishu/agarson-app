@@ -7,7 +7,7 @@ type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "
 
 
 type LeadChoices = "create_lead" | "update_lead" | "update_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
-  | "refer_lead" | "remove_referral"
+  | "refer_lead" | "remove_referral" | "assign_refer"
 
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
 type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadcast" | "close_broadcast" | "view_broadcast" | 'start_broadcast' | "reset_broadcast" | "stop_broadcast" | "create_message_broadcast" | "update_message_broadcast"
@@ -35,7 +35,7 @@ type BotChoices = "create_flow"
 
 
 
-type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | BroadcastChoices | TaskSchedulerChoices | TODOChoices | ReminderChoices | ContactChoices 
+type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | BroadcastChoices | TaskSchedulerChoices | TODOChoices | ReminderChoices | ContactChoices
 
 const initialState: ChoiceState | null = null
 
@@ -136,7 +136,8 @@ export enum LeadChoiceActions {
   refer_lead = "refer_lead",
   remove_referral = "remove_referral",
   bulk_delete_useless_leads = "bulk_delete_useless_leads",
-  convert_useless = "convert_useless"
+  convert_useless = "convert_useless",
+  assign_refer = "assign_refer"
 }
 
 export enum UserChoiceActions {
@@ -161,7 +162,7 @@ export enum UserChoiceActions {
 }
 
 type Action = {
-  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions 
+  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions
 }
 
 // reducer
@@ -204,6 +205,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.refer_lead: return type
     case LeadChoiceActions.remove_referral: return type
     case LeadChoiceActions.bulk_delete_useless_leads: return type
+    case LeadChoiceActions.assign_refer: return type
     case LeadChoiceActions.convert_useless: return type
 
 

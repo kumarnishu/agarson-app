@@ -15,7 +15,7 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from '../../types/crm.types'
-import CustomersTable from '../../components/tables/CustomersTable'
+import LeadsTable from '../../components/tables/LeadsTable'
 
 let template: ILeadTemplate[] = [
   {
@@ -269,7 +269,7 @@ export default function CustomersPage() {
         </Stack >
       </Stack >
       {/* table */}
-      <CustomersTable
+      <LeadsTable
         lead={lead}
         setLead={setLead}
         selectAll={selectAll}

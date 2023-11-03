@@ -81,18 +81,17 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               </TableCell>
 
               {/* actions popup */}
-              {!user?.crm_access_fields.is_readonly && user?.crm_access_fields.is_editable &&
-                <TableCell
-                  sx={{ bgcolor: headColor }}                         >
-                  <Stack
-                    direction="row"
-                    justifyContent="left"
-                    alignItems="left"
-                    spacing={2}
-                  >
-                    Actions
-                  </Stack>
-                </TableCell>}
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Actions
+                </Stack>
+              </TableCell>
 
 
               {/* visitin card */}
@@ -486,143 +485,139 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       null
                     }
                     {/* actions popup */}
-                    {!user?.crm_access_fields.is_readonly && user?.crm_access_fields.is_editable &&
-                      <TableCell>
-                        <PopUp
-                          element={
-                            <Stack direction="row" spacing={1}>
-                              {
-                                user?.is_admin ?
-                                  <>
-                                    {lead.referred_party ?
-                                      <Tooltip title="Remove Refrerral">
-                                        <IconButton color="error"
-                                          onClick={() => {
 
-                                            setChoice({ type: LeadChoiceActions.remove_referral })
-                                            setLead(lead)
+                    <TableCell>
+                      <PopUp
+                        element={
+                          <Stack direction="row" spacing={1}>
 
-                                          }}
-                                        >
-                                          <BackHandIcon />
-                                        </IconButton>
-                                      </Tooltip> :
-                                      <Tooltip title="refer">
-                                        <IconButton color="primary"
-                                          onClick={() => {
+                            {user?.is_admin && lead.referred_party &&
+                              <Tooltip title="Remove Refrerral">
+                                <IconButton color="error"
+                                  onClick={() => {
 
-                                            setChoice({ type: LeadChoiceActions.refer_lead })
-                                            setLead(lead)
+                                    setChoice({ type: LeadChoiceActions.remove_referral })
+                                    setLead(lead)
 
-                                          }}
-                                        >
-                                          <Share />
-                                        </IconButton>
-                                      </Tooltip>}
+                                  }}
+                                >
+                                  <BackHandIcon />
+                                </IconButton>
+                              </Tooltip>}
+                            {!lead.referred_party &&
+                              <Tooltip title="refer">
+                                <IconButton color="primary"
+                                  onClick={() => {
 
-                                    {user?.crm_access_fields.is_deletion_allowed &&
-                                      <Tooltip title="delete">
-                                        <IconButton color="error"
-                                          onClick={() => {
+                                    setChoice({ type: LeadChoiceActions.refer_lead })
+                                    setLead(lead)
 
-                                            setChoice({ type: LeadChoiceActions.delete_lead })
-                                            setLead(lead)
+                                  }}
+                                >
+                                  <Share />
+                                </IconButton>
+                              </Tooltip>}
 
-                                          }}
-                                        >
-                                          <Delete />
-                                        </IconButton>
-                                      </Tooltip>
-                                    }
-                                    {
-                                      <Tooltip title="Convert to Customer">
-                                        <IconButton color="secondary"
-                                          onClick={() => {
+                            {user?.crm_access_fields.is_deletion_allowed &&
+                              <Tooltip title="delete">
+                                <IconButton color="error"
+                                  onClick={() => {
+                                    setChoice({ type: LeadChoiceActions.delete_lead })
+                                    setLead(lead)
 
-                                            setChoice({ type: LeadChoiceActions.convert_customer })
-                                            setLead(lead)
-                                          }}
-                                        >
-                                          <AddTaskIcon />
-                                        </IconButton>
-                                      </Tooltip>
-                                    }
-                                    {
-                                      lead.stage === "useless" ?
-                                        <Tooltip title="remove from useless">
-                                          <IconButton color="success"
-                                            onClick={() => {
+                                  }}
+                                >
+                                  <Delete />
+                                </IconButton>
+                              </Tooltip>
+                            }
+                            {!lead.is_customer &&
+                              <Tooltip title="Convert to Customer">
+                                <IconButton color="secondary"
+                                  onClick={() => {
 
-                                              setChoice({ type: LeadChoiceActions.convert_useless })
-                                              setLead(lead)
-                                            }}
+                                    setChoice({ type: LeadChoiceActions.convert_customer })
+                                    setLead(lead)
+                                  }}
+                                >
+                                  <AddTaskIcon />
+                                </IconButton>
+                              </Tooltip>}
 
-                                          >
-                                            <DeleteOutline />
-                                          </IconButton>
-                                        </Tooltip> :
-                                        <Tooltip title="make useless">
-                                          <IconButton color="warning"
-                                            onClick={() => {
+                            {
+                              user?.is_admin && lead.stage === "useless" &&
+                              <Tooltip title="remove from useless">
+                                <IconButton color="success"
+                                  onClick={() => {
 
-                                              setChoice({ type: LeadChoiceActions.convert_useless })
-                                              setLead(lead)
-                                            }}
+                                    setChoice({ type: LeadChoiceActions.convert_useless })
+                                    setLead(lead)
+                                  }}
 
-                                          >
-                                            <DeleteOutline />
-                                          </IconButton>
-                                        </Tooltip>
-                                    }
+                                >
+                                  <DeleteOutline />
+                                </IconButton>
+                              </Tooltip>}
+                            {lead.stage !== "useless" &&
+                              <Tooltip title="make useless">
+                                <IconButton color="warning"
+                                  onClick={() => {
 
-                                    {
-                                      <Tooltip title="edit">
-                                        <IconButton color="secondary"
-                                          onClick={() => {
+                                    setChoice({ type: LeadChoiceActions.convert_useless })
+                                    setLead(lead)
+                                  }}
 
-                                            setChoice({ type: LeadChoiceActions.update_lead })
-                                            setLead(lead)
-                                          }}
+                                >
+                                  <DeleteOutline />
+                                </IconButton>
+                              </Tooltip>}
 
-                                        >
-                                          <Edit />
-                                        </IconButton>
-                                      </Tooltip>}
-                                  </>
+                            {user?.crm_access_fields.is_editable &&
+                              <Tooltip title="edit">
+                                <IconButton color="secondary"
+                                  onClick={() => {
 
-                                  : null}
-                              {
-                                <Tooltip title="view remarks">
-                                  <IconButton color="primary"
-                                    onClick={() => {
+                                    setChoice({ type: LeadChoiceActions.update_lead })
+                                    setLead(lead)
+                                  }}
 
-                                      setChoice({ type: LeadChoiceActions.view_remarks })
-                                      setLead(lead)
+                                >
+                                  <Edit />
+                                </IconButton>
+                              </Tooltip>}
 
 
-                                    }}
-                                  >
-                                    <Visibility />
-                                  </IconButton>
-                                </Tooltip>}
-                              {
-                                <Tooltip title="Add Remark">
-                                  <IconButton
-                                    color="success"
-                                    onClick={() => {
+                            <Tooltip title="view remarks">
+                              <IconButton color="primary"
+                                onClick={() => {
 
-                                      setChoice({ type: LeadChoiceActions.update_remark })
-                                      setLead(lead)
+                                  setChoice({ type: LeadChoiceActions.view_remarks })
+                                  setLead(lead)
 
-                                    }}
-                                  >
-                                    <Comment />
-                                  </IconButton>
-                                </Tooltip>}
-                            </Stack>
-                          }
-                        />
-                      </TableCell>}
+
+                                }}
+                              >
+                                <Visibility />
+                              </IconButton>
+                            </Tooltip>
+
+                            <Tooltip title="Add Remark">
+                              <IconButton
+                                color="success"
+                                onClick={() => {
+
+                                  setChoice({ type: LeadChoiceActions.update_remark })
+                                  setLead(lead)
+
+                                }}
+                              >
+                                <Comment />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        }
+                      />
+                    </TableCell>
                     {/* visitin card */}
                     {
                       <TableCell
@@ -829,7 +824,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
       {
         lead ?
           <>
-            <UpdateLeadDialog lead={lead} />
+            < UpdateLeadDialog lead={lead} />
             <DeleteLeadDialog lead={lead} />
             <ConvertLeadToCustomerDialog lead={lead} />
             <ViewRemarksDialog lead={lead} />

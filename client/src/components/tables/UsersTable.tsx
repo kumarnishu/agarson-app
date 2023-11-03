@@ -58,8 +58,7 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                 >
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
-                                            indeterminate={selectAll ? true : false}
-                                            checked={Boolean(selectAll)}
+
                                             size="small" onChange={(e) => {
                                                 if (e.currentTarget.checked) {
                                                     setSelectedUsers(users)
@@ -75,17 +74,17 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                 </Stack>
                             </TableCell>
                             {!LoggedInUser?.user_access_fields.is_readonly && LoggedInUser?.user_access_fields.is_editable &&
-                                <TableCell
-                                    sx={{ bgcolor: headColor }}                         >
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="left"
-                                        alignItems="left"
-                                        spacing={2}
-                                    >
-                                        Actions
-                                    </Stack>
-                                </TableCell>}
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Actions
+                                </Stack>
+                            </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack

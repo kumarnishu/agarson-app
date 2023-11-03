@@ -1,4 +1,4 @@
-import {  Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
@@ -11,9 +11,11 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import { ILead } from '../../../types/crm.types';
+import { UserContext } from '../../../contexts/userContext';
 
 
 function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
+    const { user } = useContext(UserContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             id: string, body: {
@@ -25,7 +27,6 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')
                 queryClient.invalidateQueries('customers')
-                queryClient.invalidateQueries('uselessleads')
             }
         })
 
@@ -93,47 +94,48 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                     }
                     {...formik.getFieldProps('remark')}
                 />
-                < TextField
+                {user?.is_admin &&
+                    < TextField
 
-                    select
-                    SelectProps={{
-                        native: true,
-                        multiple: true
-                    }}
-                    focused
-                    required
-                    error={
-                        formik.touched.lead_owners && formik.errors.lead_owners ? true : false
-                    }
-                    id="lead_owners"
-                    label="Lead Owners"
-                    fullWidth
-                    helperText={
-                        formik.touched.lead_owners && formik.errors.lead_owners ? formik.errors.lead_owners : ""
-                    }
-                    {...formik.getFieldProps('lead_owners')}
-                >
-                    {
-                        lead.lead_owners.map(owner => {
-                            return (<option key={owner._id} value={owner._id}>
-                                {owner.username}
-                            </option>)
-                        })
-                    }
-                    {
-                        users.map((user, index) => {
-                            let leadowners = lead.lead_owners.map(owner => {
-                                return owner.username
-                            })
-                            if (!leadowners.includes(user.username)) {
-                                return (<option key={index} value={user._id}>
-                                    {user.username}
+                        select
+                        SelectProps={{
+                            native: true,
+                            multiple: true
+                        }}
+                        focused
+                        required
+                        error={
+                            formik.touched.lead_owners && formik.errors.lead_owners ? true : false
+                        }
+                        id="lead_owners"
+                        label="Lead Owners"
+                        fullWidth
+                        helperText={
+                            formik.touched.lead_owners && formik.errors.lead_owners ? formik.errors.lead_owners : ""
+                        }
+                        {...formik.getFieldProps('lead_owners')}
+                    >
+                        {
+                            lead.lead_owners.map(owner => {
+                                return (<option key={owner._id} value={owner._id}>
+                                    {owner.username}
                                 </option>)
-                            }
-                            else return null
-                        })
-                    }
-                </TextField>
+                            })
+                        }
+                        {
+                            users.map((user, index) => {
+                                let leadowners = lead.lead_owners.map(owner => {
+                                    return owner.username
+                                })
+                                if (!leadowners.includes(user.username)) {
+                                    return (<option key={index} value={user._id}>
+                                        {user.username}
+                                    </option>)
+                                }
+                                else return null
+                            })
+                        }
+                    </TextField>}
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Add Remark"}
