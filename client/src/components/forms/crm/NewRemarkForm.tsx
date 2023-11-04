@@ -41,7 +41,8 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
             remark: "",
             lead_owners: lead.lead_owners.map((owner) => {
                 return owner._id
-            })
+            }),
+            remind_date: undefined
         },
         validationSchema: Yup.object({
             remark: Yup.string().required("required field")
@@ -49,7 +50,8 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                 .max(200, 'Must be 200 characters or less')
                 .required('Required field'),
             lead_owners: Yup.array()
-                .required('Required field')
+                .required('Required field'),
+            remind_date: Yup.string().required()
         }),
         onSubmit: (values: {
             remark: string,
@@ -116,47 +118,47 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                     }
                     {...formik.getFieldProps('remind_date')}
                 />}
-                    < TextField
+                < TextField
 
-                        select
-                        SelectProps={{
-                            native: true,
-                            multiple: true
-                        }}
-                        focused
-                        required
-                        error={
-                            formik.touched.lead_owners && formik.errors.lead_owners ? true : false
-                        }
-                        id="lead_owners"
-                        label="Lead Owners"
-                        fullWidth
-                        helperText={
-                            formik.touched.lead_owners && formik.errors.lead_owners ? formik.errors.lead_owners : ""
-                        }
-                        {...formik.getFieldProps('lead_owners')}
-                    >
-                        {
-                            lead.lead_owners.map(owner => {
-                                return (<option key={owner._id} value={owner._id}>
-                                    {owner.username}
+                    select
+                    SelectProps={{
+                        native: true,
+                        multiple: true
+                    }}
+                    focused
+                    required
+                    error={
+                        formik.touched.lead_owners && formik.errors.lead_owners ? true : false
+                    }
+                    id="lead_owners"
+                    label="Lead Owners"
+                    fullWidth
+                    helperText={
+                        formik.touched.lead_owners && formik.errors.lead_owners ? formik.errors.lead_owners : ""
+                    }
+                    {...formik.getFieldProps('lead_owners')}
+                >
+                    {
+                        lead.lead_owners.map(owner => {
+                            return (<option key={owner._id} value={owner._id}>
+                                {owner.username}
+                            </option>)
+                        })
+                    }
+                    {
+                        users.map((user, index) => {
+                            let leadowners = lead.lead_owners.map(owner => {
+                                return owner.username
+                            })
+                            if (!leadowners.includes(user.username)) {
+                                return (<option key={index} value={user._id}>
+                                    {user.username}
                                 </option>)
-                            })
-                        }
-                        {
-                            users.map((user, index) => {
-                                let leadowners = lead.lead_owners.map(owner => {
-                                    return owner.username
-                                })
-                                if (!leadowners.includes(user.username)) {
-                                    return (<option key={index} value={user._id}>
-                                        {user.username}
-                                    </option>)
-                                }
-                                else return null
-                            })
-                        }
-                    </TextField>
+                            }
+                            else return null
+                        })
+                    }
+                </TextField>
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Add Remark"}
