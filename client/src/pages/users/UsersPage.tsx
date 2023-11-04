@@ -244,7 +244,7 @@ export default function UsersPage() {
                 users={MemoData}
                 setUser={setUser}
             />
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 
     )

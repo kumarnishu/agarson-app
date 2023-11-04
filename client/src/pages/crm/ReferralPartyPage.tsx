@@ -272,8 +272,7 @@ export default function ReferralPartyPage() {
                 refers={MemoData}
                 setRefer={setRefer}
             />
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
-
+            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 
     )

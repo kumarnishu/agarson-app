@@ -303,7 +303,7 @@ export default function UselessLeadsPage() {
         setSelectAll={setSelectAll}
         leads={MemoData}
       />
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
       {selectedLeads && selectedLeads.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
 
     </>

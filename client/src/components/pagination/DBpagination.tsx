@@ -12,9 +12,10 @@ type Props = {
         limit: number;
         page: number;
         total: number;
-    }>>
+    }>>,
+    setFilterCount: React.Dispatch<React.SetStateAction<number>>
 }
-function DBPagination({ paginationData, setPaginationData }: Props) {
+function DBPagination({ paginationData, setFilterCount, setPaginationData }: Props) {
     return (
         <Grid sx={{ bgcolor: "whitesmoke" }} container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid item xs={12} md={6} >
@@ -27,10 +28,11 @@ function DBPagination({ paginationData, setPaginationData }: Props) {
                         style={{ width: '55px' }}
                         value={paginationData.limit}
                         onChange={(e) => {
+                            setFilterCount(0)
                             setPaginationData({
                                 ...paginationData,
                                 limit: Number(e.target.value)
-                               
+
                             })
                         }}
                     >

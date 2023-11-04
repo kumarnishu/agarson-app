@@ -290,7 +290,7 @@ export default function LeadsPage() {
         setSelectAll={setSelectAll}
         leads={MemoData}
       />
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
     </>
 
   )
