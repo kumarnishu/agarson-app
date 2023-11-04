@@ -35,55 +35,58 @@ function CrmReminderPage() {
   return (
     <Box>
       <Stack direction={"column"}>
-        <DialogTitle sx={{textAlign:'center'}}>Reminders</DialogTitle>
-      <Box>
-        <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
-          {remarks.length ? "" : "no reminders yet"}
-        </Typography>
-        {remarks && remarks.map((remark, index) => {
-          return (
-            <Stack key={index}
-              direction="column"
-            >
-              <Paper elevation={8} sx={{ p: 2, mt: 1, boxShadow: 2, backgroundColor: 'whitesmoke' }}>
-                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                  Lead : <b>{remark.lead && remark.lead.name}</b>
-                </Typography>
-                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                  Lead Phone : <b>{remark.lead && remark.lead.mobile}</b>
-                </Typography>
-                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                  Lead Address : <b>{remark.lead && remark.lead.address}</b>
-                </Typography>
-                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                  Remark : <b>{remark.remark}</b>
-                </Typography>
-                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                  Remark Added On : {new Date(remark.created_at).toLocaleString()}
-                </Typography>
-                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                  Remind date : {new Date(remark.remind_date).toLocaleString()}
-                </Typography>
-                <Button onClick={() => {
-                  setId(remark.lead._id)
-                  setChoice({ type: LeadChoiceActions.update_remark })
-                }}>Add Remark</Button>
-                <Button onClick={() => {
-                  setId(remark.lead._id)
-                  setChoice({ type: LeadChoiceActions.view_remarks })
-                }}>View Remarks</Button>
-                {lead ?
-                  <>
-                    <NewRemarkDialog lead={lead} />
-                    <ViewRemarksDialog lead={lead} />
-                  </> : null
-                }
-              </Paper>
-            </Stack>
-          )
-        })}
-      </Box >
-    </Stack >
+        <DialogTitle sx={{ textAlign: 'center' }}>Reminders</DialogTitle>
+        <Box>
+          <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
+            {remarks.length ? "" : "no reminders yet"}
+          </Typography>
+          {remarks && remarks.map((remark, index) => {
+            return (
+              <Stack key={index}
+                direction="column"
+              >
+                <Paper elevation={8} sx={{ p: 2, mt: 1, boxShadow: 2, backgroundColor: 'whitesmoke' }}>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Lead : <b>{remark.lead && remark.lead.name}</b>
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Lead Phone : <b>{remark.lead && remark.lead.mobile}</b>
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Lead Address : <b>{remark.lead && remark.lead.address}</b>
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Remark : <b>{remark.remark}</b>
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Remark Added By : <b>{remark.created_by.username}</b>
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Remark Added On : {new Date(remark.created_at).toLocaleString()}
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Remind date : <b>{new Date(remark.remind_date).toLocaleString()}</b>
+                  </Typography>
+                  <Button onClick={() => {
+                    setId(remark.lead._id)
+                    setChoice({ type: LeadChoiceActions.update_remark })
+                  }}>Add Remark</Button>
+                  <Button onClick={() => {
+                    setId(remark.lead._id)
+                    setChoice({ type: LeadChoiceActions.view_remarks })
+                  }}>View Remarks</Button>
+                  {lead ?
+                    <>
+                      <NewRemarkDialog lead={lead} />
+                      <ViewRemarksDialog lead={lead} />
+                    </> : null
+                  }
+                </Paper>
+              </Stack>
+            )
+          })}
+        </Box >
+      </Stack >
     </Box >
   )
 }

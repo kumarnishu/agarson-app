@@ -19,7 +19,7 @@ function UpdateLeadDialog({ lead }: { lead: ILead}) {
             setUsers(data?.data)
     }, [users, isSuccess, data])
     return (
-        <Dialog  
+        <Dialog  fullScreen
         open={choice === LeadChoiceActions.update_lead ? true : false}
         
         >

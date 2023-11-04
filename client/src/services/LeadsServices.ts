@@ -106,7 +106,7 @@ export const NewRemark = async ({ id, body }: {
   id: string, body: {
     remark: string,
     lead_owners: string[],
-    remind_date: string
+    remind_date?: string
   }
 }) => {
   return await apiClient.patch(`remarks/leads/${id}`, body)

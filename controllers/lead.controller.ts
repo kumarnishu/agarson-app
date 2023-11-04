@@ -373,12 +373,13 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
     let new_remark = new Remark({
         remark,
         lead: lead,
-        remind_date: new Date(remind_date),
         created_at: new Date(Date.now()),
         created_by: req.user,
         updated_at: new Date(Date.now()),
         updated_by: req.user
     })
+    if (remind_date)
+        new_remark.remind_date = new Date(remind_date)
     await new_remark.save()
     let updatedRemarks = lead.remarks
     updatedRemarks.push(new_remark)

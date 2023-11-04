@@ -21,7 +21,7 @@ function NewLeadDialog() {
 
   return (
     <>
-      <Dialog open={choice === LeadChoiceActions.create_lead ? true : false}
+      <Dialog fullScreen open={choice === LeadChoiceActions.create_lead ? true : false}
       >
         <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
           <Cancel fontSize='large' />

@@ -11,7 +11,6 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import { ILead } from '../../../types/crm.types';
-import moment from 'moment'
 
 
 function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
@@ -21,7 +20,7 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
             id: string, body: {
                 remark: string,
                 lead_owners: string[],
-                remind_date: string
+                remind_date?: string
             }
         }>
         (NewRemark, {
@@ -36,14 +35,13 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
     const formik = useFormik<{
         remark: string,
         lead_owners?: string[],
-        remind_date: string
+        remind_date?: string
     }>({
         initialValues: {
             remark: "",
             lead_owners: lead.lead_owners.map((owner) => {
                 return owner._id
-            }),
-            remind_date: moment(new Date()).format("YYYY-MM-DDThh:mm")
+            })
         },
         validationSchema: Yup.object({
             remark: Yup.string().required("required field")
@@ -56,7 +54,7 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
         onSubmit: (values: {
             remark: string,
             lead_owners?: string[],
-            remind_date: string
+            remind_date?: string
         }) => {
             mutate({
                 id: lead._id,
@@ -113,7 +111,6 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                     id="remind_date"
                     label="Remind Date"
                     fullWidth
-                    required
                     helperText={
                         formik.touched.remind_date && formik.errors.remind_date ? formik.errors.remind_date : ""
                     }
