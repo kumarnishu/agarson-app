@@ -24,7 +24,7 @@ function CrmMenu() {
                 onClick={
                     () => setMenu({ type: CrmMenuActions.close_crm_menu, anchorEl: null })
                 }>
-                <StyledLink to={paths.lead_reports}>Reports</StyledLink>
+                <StyledLink to={paths.crm_reminders}>Reminders</StyledLink>
             </MenuItem>
             <MenuItem
                 onClick={

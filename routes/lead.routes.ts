@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless, FuzzySearchRefers, GetRefers, GetPaginatedRefers, AssignRefer, BulkAssignLeads, BulkAssignRefer } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless, FuzzySearchRefers, GetRefers, GetPaginatedRefers, AssignRefer, BulkAssignLeads, BulkAssignRefer, GetReminderRemarks, GetLead } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
@@ -12,6 +12,7 @@ router.route("/leads")
 router.route("/customers").get(isAuthenticatedUser, GetCustomers)
     .post(isAuthenticatedUser, upload.single('visiting_card'), CreateLead)
 router.route("/leads/:id")
+    .get(isAuthenticatedUser, GetLead)
     .put(isAuthenticatedUser, upload.single('visiting_card'), UpdateLead)
     .patch(isAuthenticatedUser, ConvertCustomer)
     .delete(isAuthenticatedUser, DeleteLead)
@@ -36,5 +37,6 @@ router.route("/refers/:id").delete(isAuthenticatedUser, DeleteReferParty)
 router.route("/bulk/leads/delete").post(isAuthenticatedUser, BulkDeleteUselessLeads)
 router.route("/bulk/assign/leads").put(isAuthenticatedUser, BulkAssignLeads)
 router.route("/bulk/assign/refers").put(isAuthenticatedUser, BulkAssignRefer)
+router.route("/reminder/remarks").get(isAuthenticatedUser, GetReminderRemarks)
 
 export default router

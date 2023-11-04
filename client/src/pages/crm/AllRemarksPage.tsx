@@ -1,19 +1,13 @@
-import styled from "styled-components"
-import { Stack, Typography, Paper } from "@mui/material";
+import { Stack, Typography, Paper, Box } from "@mui/material";
 import { ILead } from "../../types/crm.types";
 
-const MainContainer = styled.div`
 
-`
-const RemarksContainer = styled.div`
-
-`
 
 function AllRemarksPage({ lead }: { lead: ILead }) {
     return (
-        <MainContainer>
+        <Box>
             <Stack direction={"column"}>
-                <RemarksContainer>
+                <Box>
                     <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
                         {lead.remarks.length ? "" : "no remarks yet"}
                     </Typography>
@@ -31,16 +25,21 @@ function AllRemarksPage({ lead }: { lead: ILead }) {
                                     </Typography>
                                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                                         Remark Added On : {new Date(remark.created_at).toLocaleString()}
-                                    </Typography>  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+
+                                    </Typography>
+                                    {remark.remind_date && <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                                        Remind date : {new Date(remark.remind_date).toLocaleString()}</Typography>}
+
+                                    <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                                         Last updated By:<i>{remark.updated_by.username}</i>
                                     </Typography>
                                 </Paper>
                             </Stack>
                         )
                     })}
-                </RemarksContainer >
+                </Box >
             </Stack >
-        </MainContainer >
+        </Box >
     )
 }
 export default AllRemarksPage

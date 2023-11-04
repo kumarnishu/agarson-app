@@ -1,7 +1,7 @@
-import { Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Button, Checkbox, CircularProgress, FormControlLabel, FormGroup, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
 import { NewRemark } from '../../../services/LeadsServices';
@@ -17,12 +17,13 @@ import moment from 'moment'
 
 function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
     const { user } = useContext(UserContext)
+    const [display, setDisplay] = useState(false)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             id: string, body: {
                 remark: string,
                 lead_owners: string[],
-                remind_date:string
+                remind_date: string
             }
         }>
         (NewRemark, {
@@ -52,8 +53,7 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                 .max(200, 'Must be 200 characters or less')
                 .required('Required field'),
             lead_owners: Yup.array()
-                .required('Required field'),
-            remind_date: Yup.string().required('Required field'),
+                .required('Required field')
         }),
         onSubmit: (values: {
             remark: string,
@@ -101,7 +101,13 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                     }
                     {...formik.getFieldProps('remark')}
                 />
-                < TextField
+                <FormGroup>
+                    <FormControlLabel control={<Checkbox
+                        checked={Boolean(display)}
+                        onChange={() => setDisplay(!display)}
+                    />} label="Make Reminder" />
+                </FormGroup>
+                {display && < TextField
                     type="datetime-local"
                     error={
                         formik.touched.remind_date && formik.errors.remind_date ? true : false
@@ -114,7 +120,7 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                         formik.touched.remind_date && formik.errors.remind_date ? formik.errors.remind_date : ""
                     }
                     {...formik.getFieldProps('remind_date')}
-                />
+                />}
                 {user?.is_admin &&
                     < TextField
 

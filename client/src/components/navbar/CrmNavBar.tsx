@@ -49,6 +49,7 @@ export default function CrmNavBar() {
                                 display: { xs: 'none', md: 'flex' }
                             }}
                         >
+                            <StyledLink to={paths.crm_reminders}>Reminders</StyledLink>
                             <StyledLink to={paths.leads}>Leads</StyledLink>
                             <StyledLink to={paths.customers}>Customers</StyledLink>
                             <StyledLink to={paths.refers}>Refers</StyledLink>

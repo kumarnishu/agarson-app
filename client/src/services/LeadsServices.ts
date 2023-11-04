@@ -6,6 +6,11 @@ export const GetLeads = async ({ limit, page }: { limit: number | undefined, pag
 
 }
 
+export const GetRemindrRemarks = async () => {
+  return await apiClient.get(`reminder/remarks`)
+
+}
+
 export const GetRefers = async () => {
   return await apiClient.get("refers")
 }
@@ -54,6 +59,11 @@ export const ReferLead = async ({ id, body }: {
 export const RemoveLeadReferrals = async (id: string) => {
   return await apiClient.patch(`refers/leads/${id}`)
 }
+
+export const GetLead = async (id: string) => {
+  return await apiClient.get(`leads/${id}`)
+}
+
 
 
 export const FuzzySearchLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {

@@ -150,6 +150,8 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         return res.status(400).json({ message: "bad request" })
 }
 
+
+
 export const GetCustomers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
@@ -304,6 +306,29 @@ export const UpdateLead = async (req: Request, res: Response, next: NextFunction
     return res.status(200).json({ message: "lead updated" })
 }
 
+export const GetLead = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id))
+        return res.status(400).json({ message: "lead id not valid" })
+    let lead = await Lead.findById(id).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+        path: 'remarks',
+        populate: [
+            {
+                path: 'created_by',
+                model: 'User'
+            },
+            {
+                path: 'updated_by',
+                model: 'User'
+            }
+        ]
+    })
+    if (!lead)
+        return res.status(404).json({ message: "lead not found" })
+    return res.status(200).json(lead)
+}
+
+
 //delete lead
 export const DeleteLead = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
@@ -324,7 +349,7 @@ export const DeleteLead = async (req: Request, res: Response, next: NextFunction
 
 // add new remarks on lead
 export const NewRemark = async (req: Request, res: Response, next: NextFunction) => {
-    const { remark, lead_owners } = req.body as { remark: string, lead_owners: string[] }
+    const { remark, lead_owners, remind_date } = req.body as { remark: string, lead_owners: string[], remind_date: string }
     if (!remark) return res.status(403).json({ message: "please fill required fields" })
     if (lead_owners && lead_owners.length === 0)
         return res.status(403).json({ message: "please select one lead owner" })
@@ -348,6 +373,7 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
     let new_remark = new Remark({
         remark,
         lead: lead,
+        remind_date: new Date(remind_date),
         created_at: new Date(Date.now()),
         created_by: req.user,
         updated_at: new Date(Date.now()),
@@ -2261,7 +2287,6 @@ export const GetLeadsReport = async (req: Request, res: Response, next: NextFunc
     return res.status(200).json(response)
 }
 
-
 export const AssignRefer = async (req: Request, res: Response, next: NextFunction) => {
     const { lead_owners } = req.body as { lead_owners: string[] }
     if (lead_owners && lead_owners.length === 0)
@@ -2346,5 +2371,17 @@ export const BulkAssignLeads = async (req: Request, res: Response, next: NextFun
         })
     })
 
-    return res.status(200).json({ message: "new remark added successfully" })
+    return res.status(200).json({ message: "assigned successfully" })
+}
+
+export const GetReminderRemarks = async (req: Request, res: Response, next: NextFunction) => {
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 7
+    previous_date.setDate(day)
+
+    let reminders = await Remark.find({ remind_date: { $lte: new Date() } }).populate('created_by').populate('updated_by').populate('lead').sort('-remind_date')
+    reminders = reminders.filter((reminder) => {
+        return reminder.created_by.username = req.user.username
+    })
+    return res.status(200).json(reminders)
 }
