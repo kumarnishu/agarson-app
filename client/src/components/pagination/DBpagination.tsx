@@ -13,7 +13,7 @@ type Props = {
         page: number;
         total: number;
     }>>,
-    setFilterCount: React.Dispatch<React.SetStateAction<number>>
+    setFilterCount?: React.Dispatch<React.SetStateAction<number>>
 }
 function DBPagination({ paginationData, setFilterCount, setPaginationData }: Props) {
     return (
