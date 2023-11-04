@@ -11,7 +11,6 @@ const RemarkSchema = new mongoose.Schema<IRemark, mongoose.Model<IRemark, {}, {}
     },
     remind_date: {
         type: Date,
-        default: new Date(),
     },
     created_at: {
         type: Date,
