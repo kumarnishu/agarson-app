@@ -55,6 +55,7 @@ export type IRemark = {
     _id: string,
     remark: string,
     lead: ILead,
+    remind_date:Date,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

@@ -9,6 +9,10 @@ const RemarkSchema = new mongoose.Schema<IRemark, mongoose.Model<IRemark, {}, {}
         index: true,
         lowercase: true,
     },
+    remind_date: {
+        type: Date,
+        default: new Date(),
+    },
     created_at: {
         type: Date,
         default: new Date(),
@@ -16,9 +20,9 @@ const RemarkSchema = new mongoose.Schema<IRemark, mongoose.Model<IRemark, {}, {}
 
     },
     created_by: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
     updated_at: {
         type: Date,
@@ -27,9 +31,9 @@ const RemarkSchema = new mongoose.Schema<IRemark, mongoose.Model<IRemark, {}, {}
 
     },
     updated_by: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
     lead: {
         type: mongoose.Schema.Types.ObjectId,

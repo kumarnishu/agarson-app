@@ -12,6 +12,7 @@ import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import { ILead } from '../../../types/crm.types';
 import { UserContext } from '../../../contexts/userContext';
+import moment from 'moment'
 
 
 function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
@@ -20,7 +21,8 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
         <AxiosResponse<string>, BackendError, {
             id: string, body: {
                 remark: string,
-                lead_owners: string[]
+                lead_owners: string[],
+                remind_date:string
             }
         }>
         (NewRemark, {
@@ -35,12 +37,14 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
     const formik = useFormik<{
         remark: string,
         lead_owners?: string[],
+        remind_date: string
     }>({
         initialValues: {
             remark: "",
             lead_owners: lead.lead_owners.map((owner) => {
                 return owner._id
             }),
+            remind_date: moment(new Date()).format("YYYY-MM-DDThh:mm")
         },
         validationSchema: Yup.object({
             remark: Yup.string().required("required field")
@@ -48,17 +52,20 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                 .max(200, 'Must be 200 characters or less')
                 .required('Required field'),
             lead_owners: Yup.array()
-                .required('Required field')
+                .required('Required field'),
+            remind_date: Yup.string().required('Required field'),
         }),
         onSubmit: (values: {
             remark: string,
-            lead_owners?: string[]
+            lead_owners?: string[],
+            remind_date: string
         }) => {
             mutate({
                 id: lead._id,
                 body: {
                     remark: values.remark,
-                    lead_owners: values.lead_owners || []
+                    lead_owners: values.lead_owners || [],
+                    remind_date: values.remind_date
                 }
             })
         }
@@ -93,6 +100,20 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                         formik.touched.remark && formik.errors.remark ? formik.errors.remark : ""
                     }
                     {...formik.getFieldProps('remark')}
+                />
+                < TextField
+                    type="datetime-local"
+                    error={
+                        formik.touched.remind_date && formik.errors.remind_date ? true : false
+                    }
+                    id="remind_date"
+                    label="Remind Date"
+                    fullWidth
+                    required
+                    helperText={
+                        formik.touched.remind_date && formik.errors.remind_date ? formik.errors.remind_date : ""
+                    }
+                    {...formik.getFieldProps('remind_date')}
                 />
                 {user?.is_admin &&
                     < TextField
