@@ -13,7 +13,7 @@ function CrmReminderPage() {
   const [remarks, setRemarks] = useState<IRemark[]>([])
   const [lead, setLead] = useState<ILead>()
   const [id, setId] = useState("")
-  const { data, isSuccess } = useQuery<AxiosResponse<IRemark[]>, BackendError>("reminderremarks", GetReminderRemarks)
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IRemark[]>, BackendError>("reminderremarks", GetReminderRemarks)
   const { data: remotelead, isSuccess: isLeadSuccess, refetch } = useQuery<AxiosResponse<ILead>, BackendError>(["lead", id], async () => GetLead(id), { enabled: false })
 
   const { setChoice } = useContext(ChoiceContext)
@@ -37,8 +37,10 @@ function CrmReminderPage() {
       <Stack direction={"column"}>
         <DialogTitle sx={{ textAlign: 'center' }}>Reminders</DialogTitle>
         <Box>
-          <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
-            {remarks.length ? "" : "no reminders yet"}
+          <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>{
+            isLoading && "Loading.."
+          }
+            {remarks.length ? null : "no reminders yet"}
           </Typography>
           {remarks && remarks.map((remark, index) => {
             return (
