@@ -51,7 +51,12 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                 .required('Required field'),
             lead_owners: Yup.array()
                 .required('Required field'),
-            remind_date: Yup.string().required()
+            remind_date: Yup.string().test(() => {
+                if (display && !formik.values.remind_date)
+                    return false
+                else
+                    return true
+            })
         }),
         onSubmit: (values: {
             remark: string,
