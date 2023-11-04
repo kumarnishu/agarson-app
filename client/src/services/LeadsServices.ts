@@ -6,7 +6,7 @@ export const GetLeads = async ({ limit, page }: { limit: number | undefined, pag
 
 }
 
-export const GetRemindrRemarks = async () => {
+export const GetReminderRemarks = async () => {
   return await apiClient.get(`reminder/remarks`)
 
 }
