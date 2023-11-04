@@ -8,7 +8,7 @@ import { ILead } from '../../../types/crm.types'
 function ReferLeadDialog({ lead }: { lead: ILead }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
-        <Dialog fullScreen
+        <Dialog fullScreen={Boolean(window.screen.width < 500)}
             open={choice === LeadChoiceActions.refer_lead ? true : false}
             onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
         >

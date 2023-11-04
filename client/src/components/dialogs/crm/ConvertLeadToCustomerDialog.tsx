@@ -31,7 +31,7 @@ function ConvertLeadToCustomerDialog({ lead }: { lead: ILead }) {
     }, [setChoice, isSuccess])
 
     return (
-        <Dialog open={choice === LeadChoiceActions.convert_customer ? true : false}
+        <Dialog  open={choice === LeadChoiceActions.convert_customer ? true : false}
             onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>

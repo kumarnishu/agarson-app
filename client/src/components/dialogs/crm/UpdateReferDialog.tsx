@@ -20,7 +20,7 @@ function UpdateReferDialog({ refer }: { refer: IReferredParty }) {
             setUsers(data?.data)
     }, [users, isSuccess, data])
     return (
-        <Dialog
+        <Dialog fullScreen={Boolean(window.screen.width < 500)}
             open={choice === LeadChoiceActions.update_refer ? true : false}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>

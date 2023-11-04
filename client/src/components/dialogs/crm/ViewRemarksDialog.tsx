@@ -10,7 +10,7 @@ function ViewRemarksDialog({ lead }: { lead: ILead }) {
   return (
     <>
 
-      <Dialog fullScreen open={choice === LeadChoiceActions.view_remarks ? true : false}
+      <Dialog open={choice === LeadChoiceActions.view_remarks ? true : false}
         scroll="paper"
         onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
       >

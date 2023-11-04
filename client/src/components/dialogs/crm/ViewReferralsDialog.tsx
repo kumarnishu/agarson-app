@@ -10,7 +10,7 @@ function ViewReferralsDialog({ leads, display, setDisplay }: { leads: ILead[], d
 
     return (
         <>
-            <Dialog open={display || choice === LeadChoiceActions.update_remark || choice === LeadChoiceActions.view_remarks ? true : false}
+            <Dialog fullScreen={Boolean(window.screen.width < 500)}  open={display || choice === LeadChoiceActions.update_remark || choice === LeadChoiceActions.view_remarks ? true : false}
                 scroll="paper"
                 onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
             >
