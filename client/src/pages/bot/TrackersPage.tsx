@@ -36,7 +36,7 @@ export default function TrackersPage() {
     const [preFilteredData, setPreFilteredData] = useState<IMenuTracker[]>([])
     const [selectedTrackers, setSelectedTrackers] = useState<IMenuTracker[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+    const [filterCount, setFilterCount] = useState(0)
     const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ trackers: IMenuTracker[], page: number, total: number, limit: number }>, BackendError>(["trackers", paginationData], async () => GetTrackers({ limit: paginationData?.limit, page: paginationData?.page }))
 
     const { data: fuzzyTrackers, isSuccess: isFuzzySuccess, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<IMenuTracker[]>, BackendError>(["fuzzytrackers", filter], async () => FuzzySearchTrackers(filter), {
@@ -122,6 +122,7 @@ export default function TrackersPage() {
     useEffect(() => {
         setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
     }, [reactPaginationData])
+    console.log(filterCount)
     return (
         <>
 
@@ -220,7 +221,7 @@ export default function TrackersPage() {
                 selectableTrackers={filter ? allfuzzytrackers : trackers}
             />
 
-            {!filter ? <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} /> :
+            {!filter ? <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} /> :
                 <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={FuzzyMemoData}
                 />
             }

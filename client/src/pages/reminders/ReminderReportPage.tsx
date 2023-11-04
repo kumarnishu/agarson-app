@@ -27,7 +27,7 @@ export default function ReminderReportPage({ reminder }: { reminder: IReminder }
   const MemoData = React.useMemo(() => reports, [reports])
   const [sent, setSent] = useState(false)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+  const [filterCount, setFilterCount] = useState(0)
   function HandleExport() {
     if (reminder)
       FileSaver.saveAs(`/api/v1/download/reports/reminders?id=${reminder._id}`, "reminder_report.xlsx")
@@ -66,7 +66,7 @@ export default function ReminderReportPage({ reminder }: { reminder: IReminder }
       setReports(filteredReports.data)
     }
   }, [isSearchSuccess, filteredReports])
-
+  console.log(filterCount)
   return (
     <>
       {isLoading && <LinearProgress />}
@@ -160,7 +160,7 @@ export default function ReminderReportPage({ reminder }: { reminder: IReminder }
         report={report}
         reports={MemoData}
       />
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
     </>
   )
 

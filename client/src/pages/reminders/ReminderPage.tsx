@@ -40,7 +40,6 @@ export default function ReminderPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  
 
   function handleExcel() {
     setAnchorEl(null)

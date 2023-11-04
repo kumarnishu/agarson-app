@@ -32,7 +32,7 @@ export default function AlpsPage() {
   const [filter, setFilter] = useState<string | undefined>()
   const [alp, setAlp] = useState<IAlps>()
   const [alps, setAlps] = useState<IAlps[]>([])
-
+  const [filterCount, setFilterCount] = useState(0)
   const [allfuzzyalps, setAllFuzzyAlps] = useState<IAlps[]>([])
   const FuzzyMemoData = React.useMemo(() => allfuzzyalps, [allfuzzyalps])
 
@@ -124,6 +124,7 @@ export default function AlpsPage() {
   useEffect(() => {
     setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
   }, [reactPaginationData])
+  console.log(filterCount)
   return (
     <>
 
@@ -223,7 +224,7 @@ export default function AlpsPage() {
         selectableAlps={filter ? allfuzzyalps : alps}
       />
 
-      {!filter ? <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} /> :
+      {!filter ? <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} /> :
         <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={FuzzyMemoData}
         />
       }
