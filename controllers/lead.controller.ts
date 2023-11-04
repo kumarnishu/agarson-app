@@ -2380,8 +2380,10 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
     previous_date.setDate(day)
 
     let reminders = await Remark.find({ remind_date: { $lte: new Date() } }).populate('created_by').populate('updated_by').populate('lead').sort('-remind_date')
-    reminders = reminders.filter((reminder) => {
-        return reminder.created_by.username = req.user.username
-    })
+    if (!req.user?.is_admin) {
+        reminders = reminders.filter((reminder) => {
+            return reminder.created_by.username = req.user.username
+        })
+    }
     return res.status(200).json(reminders)
 }
