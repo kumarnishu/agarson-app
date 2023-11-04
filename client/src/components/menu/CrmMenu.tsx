@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CrmMenuActions, MenuContext } from '../../contexts/menuContext';
 import { paths } from '../../Routes';
+import { UserContext } from '../../contexts/userContext';
 
 
 export const StyledLink = styled(Link)`
@@ -13,6 +14,7 @@ export const StyledLink = styled(Link)`
 
 function CrmMenu() {
     const { menu, setMenu } = useContext(MenuContext)
+    const { user } = useContext(UserContext)
     const goto = useNavigate()
     return (
         <Menu
@@ -46,12 +48,12 @@ function CrmMenu() {
                 <StyledLink to={paths.refers}>Refers</StyledLink>
             </MenuItem>
 
-            <MenuItem
+            {user?.is_admin && <MenuItem
                 onClick={
                     () => setMenu({ type: CrmMenuActions.close_crm_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.updateble_fields_lead}>Fields</StyledLink>
-            </MenuItem>
+            </MenuItem>}
             <MenuItem
                 onClick={
                     () => setMenu({ type: CrmMenuActions.close_crm_menu, anchorEl: null })

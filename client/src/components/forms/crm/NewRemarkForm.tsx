@@ -11,12 +11,10 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import { ILead } from '../../../types/crm.types';
-import { UserContext } from '../../../contexts/userContext';
 import moment from 'moment'
 
 
 function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
-    const { user } = useContext(UserContext)
     const [display, setDisplay] = useState(false)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
@@ -121,7 +119,6 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                     }
                     {...formik.getFieldProps('remind_date')}
                 />}
-                {user?.is_admin &&
                     < TextField
 
                         select
@@ -162,7 +159,7 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                                 else return null
                             })
                         }
-                    </TextField>}
+                    </TextField>
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Add Remark"}
