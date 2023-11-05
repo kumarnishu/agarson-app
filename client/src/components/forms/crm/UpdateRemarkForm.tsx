@@ -23,8 +23,11 @@ function UpdateRemarkForm({ remark, show, setShow }: { remark: IRemark, show: bo
         }>
         (UpdateRemark, {
             onSuccess: () => {
+                queryClient.invalidateQueries('reminderremarks')
+                queryClient.invalidateQueries('remarks')
                 queryClient.invalidateQueries('leads')
                 queryClient.invalidateQueries('customers')
+                queryClient.invalidateQueries('uselessremarks')
             }
         })
 

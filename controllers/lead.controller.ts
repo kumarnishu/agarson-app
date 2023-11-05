@@ -2377,7 +2377,7 @@ export const BulkAssignLeads = async (req: Request, res: Response, next: NextFun
 
 export const GetReminderRemarks = async (req: Request, res: Response, next: NextFunction) => {
     let previous_date = new Date()
-    let day = previous_date.getDate() - 7
+    let day = previous_date.getDate() - 30
     previous_date.setDate(day)
 
     let reminders = await Remark.find({ remind_date: { $lte: new Date() } }).populate('created_by').populate('updated_by').populate('lead').sort('-remind_date')
