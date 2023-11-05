@@ -2450,7 +2450,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
     previous_date.setDate(day)
 
     let remarks = await Remark.find({ created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate('lead').sort('-created_at')
-    if (!req.user.ia_admin)
+    if (!req.user.is_admin)
         remarks = remarks.filter((remark) => {
             return remark.created_by.username === req.user.username
         })
