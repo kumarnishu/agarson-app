@@ -1,9 +1,20 @@
-import { Stack, Typography, Paper, Box } from "@mui/material";
-import { ILead } from "../../types/crm.types";
+import { Stack, Typography, Paper, Box, IconButton } from "@mui/material";
+import { ILead, IRemark } from "../../types/crm.types";
+import { Delete, Edit } from "@mui/icons-material";
+import DeleteRemarkDialog from "../../components/dialogs/crm/DeleteRemarkDialog";
+import { useEffect, useState } from "react";
 
 
 
 function AllRemarksPage({ lead }: { lead: ILead }) {
+    const [display, setDisplay] = useState<boolean>(false)
+    const [remark, setRemark] = useState<IRemark>()
+    const [remarks, setRemarks] = useState<IRemark[]>(lead.remarks)
+
+    useEffect(() => {
+        setRemarks(lead.remarks)
+    }, [lead, remarks])
+
     return (
         <Box>
             <Stack direction={"column"}>
@@ -11,7 +22,7 @@ function AllRemarksPage({ lead }: { lead: ILead }) {
                     <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
                         {lead.remarks.length ? "" : "no remarks yet"}
                     </Typography>
-                    {lead.remarks.slice(0).reverse().map((remark, index) => {
+                    {remarks.slice(0).reverse().map((remark, index) => {
                         return (
                             <Stack key={index}
                                 direction="column"
@@ -33,12 +44,23 @@ function AllRemarksPage({ lead }: { lead: ILead }) {
                                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                                         Last updated By:<i>{remark.updated_by.username}</i>
                                     </Typography>
+                                    <Stack direction="row" gap={2}>
+                                        <IconButton size="small" color="error" onClick={() => {
+                                            setRemark(remark)
+                                            setDisplay(true)
+                                        }}><Delete /></IconButton>
+                                        <IconButton size="small" color="success"><Edit /></IconButton>
+                                    </Stack>
                                 </Paper>
+
+
                             </Stack>
+
                         )
                     })}
                 </Box >
             </Stack >
+            {remark && <DeleteRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
         </Box >
     )
 }

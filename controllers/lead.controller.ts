@@ -2388,3 +2388,69 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
     }
     return res.status(200).json(reminders)
 }
+
+export const UpdateRemark = async (req: Request, res: Response, next: NextFunction) => {
+    const { remark, lead_owners, remind_date } = req.body as { remark: string, lead_owners: string[], remind_date: string }
+    if (!remark) return res.status(403).json({ message: "please fill required fields" })
+    if (lead_owners && lead_owners.length === 0)
+        return res.status(403).json({ message: "please select one lead owner" })
+    const user = await User.findById(req.user?._id)
+    if (!user)
+        return res.status(403).json({ message: "please login to access this resource" })
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
+    let rremark = await Remark.findById(id).populate('lead')
+    if (!rremark) {
+        return res.status(404).json({ message: "remark not found" })
+    }
+    rremark.remark = remark
+    if (remind_date)
+        rremark.remind_date = new Date(remind_date)
+    await rremark.save()
+
+    let new_lead_owners: IUser[] = []
+
+    let owners = lead_owners
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
+    let lead = await Lead.findById(rremark.lead._id).populate('remarks')
+    if (req.user && lead) {
+        let updatedRemarks = lead.remarks
+        let last_remark = updatedRemarks[updatedRemarks.length - 1]
+        if (String(rremark._id) === String(last_remark._id))
+            lead.last_remark = last_remark.remark
+        lead.updated_by = req.user
+        lead.lead_owners = new_lead_owners
+        lead.updated_at = new Date(Date.now())
+        await lead.save()
+    }
+    return res.status(200).json({ message: "remark updated successfully" })
+}
+
+export const DeleteRemark = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
+    let rremark = await Remark.findById(id).populate('lead')
+    if (!rremark) {
+        return res.status(404).json({ message: "remark not found" })
+    }
+
+    let lead = await Lead.findById(rremark.lead._id).populate('remarks')
+    if (req.user && lead) {
+        let updatedRemarks = lead.remarks
+        updatedRemarks = updatedRemarks.filter((rr) => {
+            return String(rr._id) !== String(rremark?._id)
+        })
+        lead.last_remark = updatedRemarks[updatedRemarks.length - 1].remark
+        lead.remarks = updatedRemarks
+        lead.updated_by = req.user
+        lead.updated_at = new Date(Date.now())
+        await lead.save()
+    }
+    await rremark.remove()
+    return res.status(200).json({ message: " remark deleted successfully" })
+
+}

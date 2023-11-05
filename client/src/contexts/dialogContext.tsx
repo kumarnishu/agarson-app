@@ -6,8 +6,8 @@ type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
 
-type LeadChoices = "create_lead" | "update_lead" | "update_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
-  | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers"
+type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
+  | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" |"update_remark"
 
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
 type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadcast" | "close_broadcast" | "view_broadcast" | 'start_broadcast' | "reset_broadcast" | "stop_broadcast" | "create_message_broadcast" | "update_message_broadcast"
@@ -123,11 +123,13 @@ export enum LeadChoiceActions {
   create_lead = "create_lead",
   update_lead = "update_lead",
   delete_lead = "delete_lead",
+  delete_remark = "delete_remark",
+  update_remark = "update_remark",
   view_remarks = "view_remarks",
   close_lead = "close_lead",
   convert_customer = "convert_customer",
   display_filter = "display_filter",
-  update_remark = "update_remark",
+  add_remark = "add_remark",
   lead_advance_filter = "lead_advance_filter",
   create_refer = "create_refer",
   update_refer = "update_refer",
@@ -194,7 +196,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.create_lead: return type
     case LeadChoiceActions.update_lead: return type
     case LeadChoiceActions.view_remarks: return type
-    case LeadChoiceActions.update_remark: return type
+    case LeadChoiceActions.add_remark: return type
     case LeadChoiceActions.display_filter: return type
     case LeadChoiceActions.delete_lead: return type
     case LeadChoiceActions.convert_customer: return type
@@ -208,6 +210,8 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.remove_referral: return type
     case LeadChoiceActions.bulk_delete_useless_leads: return type
     case LeadChoiceActions.assign_refer: return type
+    case LeadChoiceActions.delete_remark: return type
+    case LeadChoiceActions.update_remark: return type
     case LeadChoiceActions.convert_useless: return type
     case LeadChoiceActions.bulk_assign_leads: return type
     case LeadChoiceActions.bulk_assign_refers: return type

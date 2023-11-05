@@ -111,8 +111,18 @@ export const NewRemark = async ({ id, body }: {
 }) => {
   return await apiClient.patch(`remarks/leads/${id}`, body)
 }
-
-
+export const UpdateRemark = async ({ id, body }: {
+  id: string, body: {
+    remark: string,
+    lead_owners: string[],
+    remind_date?: string
+  }
+}) => {
+  return await apiClient.put(`remarks/${id}`, body)
+}
+export const DeleteRemark = async (id: string) => {
+  return await apiClient.delete(`remarks/${id}`)
+}
 export const AssignRefer = async ({ id, body }: {
   id: string, body: {
     lead_owners: string[]

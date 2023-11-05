@@ -4,10 +4,12 @@ import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { GetLead, GetReminderRemarks } from '../../services/LeadsServices'
 import { BackendError } from '../..'
-import { Box, Button, DialogTitle, Paper, Stack, Typography } from '@mui/material'
+import { Box, Button, DialogTitle, IconButton, Paper, Stack, Typography } from '@mui/material'
 import NewRemarkDialog from '../../components/dialogs/crm/NewRemarkDialog'
 import ViewRemarksDialog from '../../components/dialogs/crm/ViewRemarksDialog'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
+import DeleteRemarkDialog from '../../components/dialogs/crm/DeleteRemarkDialog'
+import { Delete, Edit } from '@mui/icons-material'
 
 function CrmReminderPage() {
   const [remarks, setRemarks] = useState<IRemark[]>([])
@@ -69,20 +71,24 @@ function CrmReminderPage() {
                   <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                     Remind date : <b>{new Date(remark.remind_date).toLocaleString()}</b>
                   </Typography>
-                  <Button onClick={() => {
-                    setId(remark.lead._id)
-                    setChoice({ type: LeadChoiceActions.update_remark })
-                  }}>Add Remark</Button>
-                  <Button onClick={() => {
-                    setId(remark.lead._id)
-                    setChoice({ type: LeadChoiceActions.view_remarks })
-                  }}>View Remarks</Button>
+                  <Stack direction={'row'} gap={2}>
+                    <Button onClick={() => {
+                      setId(remark.lead._id)
+                      setChoice({ type: LeadChoiceActions.update_remark })
+                    }}>Add Remark</Button>
+                    <Button onClick={() => {
+                      setId(remark.lead._id)
+                      setChoice({ type: LeadChoiceActions.view_remarks })
+                    }}>View Remarks</Button>
+                    <IconButton size="small" color="error" onClick={() => setChoice({ type: LeadChoiceActions.delete_remark })}><Delete /></IconButton>
+                    <IconButton size="small" color="success" onClick={() => setChoice({ type: LeadChoiceActions.update_remark })}><Edit /></IconButton></Stack>
                   {lead ?
                     <>
                       <NewRemarkDialog lead={lead} />
                       <ViewRemarksDialog lead={lead} />
                     </> : null
                   }
+                  {remark && <DeleteRemarkDialog remark={remark} />}
                 </Paper>
               </Stack>
             )

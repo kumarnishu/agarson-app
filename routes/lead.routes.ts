@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless, FuzzySearchRefers, GetRefers, GetPaginatedRefers, AssignRefer, BulkAssignLeads, BulkAssignRefer, GetReminderRemarks, GetLead } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless, FuzzySearchRefers, GetRefers, GetPaginatedRefers, AssignRefer, BulkAssignLeads, BulkAssignRefer, GetReminderRemarks, GetLead, UpdateRemark, DeleteRemark } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
@@ -20,6 +20,8 @@ router.route("/assign/refer/:id").patch(isAuthenticatedUser, AssignRefer)
 router.route("/toogle/useless/:id").patch(isAuthenticatedUser, ToogleUseless)
 router.route("/update/leads/bulk").put(isAuthenticatedUser, upload.single('file'), BulkLeadUpdateFromExcel)
 router.route("/remarks/leads/:id").patch(isAuthenticatedUser, NewRemark)
+router.route("/remarks/:id").put(isAuthenticatedUser, UpdateRemark)
+router.route("/remarks/:id").delete(isAuthenticatedUser, DeleteRemark)
 router.route("/search/leads").get(isAuthenticatedUser, FuzzySearchLeads)
 router.route("/search/leads/useless").get(isAuthenticatedUser, FuzzySearchUseLessLeads)
 router.route("/search/customers").get(isAuthenticatedUser, FuzzySearchCustomers)

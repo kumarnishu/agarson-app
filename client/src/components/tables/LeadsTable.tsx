@@ -606,7 +606,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                 color="success"
                                 onClick={() => {
 
-                                  setChoice({ type: LeadChoiceActions.update_remark })
+                                  setChoice({ type: LeadChoiceActions.add_remark })
                                   setLead(lead)
 
                                 }}
