@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { GetLead, GetReminderRemarks } from '../../services/LeadsServices'
 import { BackendError } from '../..'
-import { Box, Button, DialogTitle, IconButton, Paper, Stack, Typography } from '@mui/material'
+import { Box, Button, DialogTitle, IconButton, LinearProgress, Paper, Stack, Typography } from '@mui/material'
 import NewRemarkDialog from '../../components/dialogs/crm/NewRemarkDialog'
 import ViewRemarksDialog from '../../components/dialogs/crm/ViewRemarksDialog'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
@@ -42,9 +42,9 @@ function CrmReminderPage() {
         <DialogTitle sx={{ textAlign: 'center' }}>Reminders</DialogTitle>
         <Box>
           <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>{
-            isLoading && "Loading.."
+            isLoading && <LinearProgress/>
           }
-            {remarks.length ? null : "no reminders yet"}
+            
           </Typography>
           {remarks && remarks.map((remark, index) => {
             return (
