@@ -2382,7 +2382,7 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
 
     let reminders = await Remark.find({ remind_date: { $lte: new Date() } }).populate('created_by').populate('updated_by').populate('lead').sort('-remind_date')
     reminders = reminders.filter((reminder) => {
-        return reminder.created_by.username = req.user.username
+        return reminder.created_by.username === req.user.username
     })
     return res.status(200).json(reminders)
 }
@@ -2432,7 +2432,8 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
         updatedRemarks = updatedRemarks.filter((rr) => {
             return String(rr._id) !== String(rremark?._id)
         })
-        lead.last_remark = updatedRemarks[updatedRemarks.length - 1].remark
+        if (updatedRemarks[updatedRemarks.length - 1])
+            lead.last_remark = updatedRemarks[updatedRemarks.length - 1].remark
         lead.remarks = updatedRemarks
         lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
@@ -2449,5 +2450,9 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
     previous_date.setDate(day)
 
     let remarks = await Remark.find({ created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate('lead').sort('-created_at')
+    if (!req.user.ia_admin)
+        remarks = remarks.filter((remark) => {
+            return remark.created_by.username === req.user.username
+        })
     return res.status(200).json(remarks)
 }
