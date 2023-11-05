@@ -33,6 +33,7 @@ import BroadcastHelpPage from './pages/broadcast/BroadcastHelpPage'
 import ContactHelpPage from './pages/contacts/ContactHelpPage'
 import ReminderHelpPage from './pages/reminders/ReminderHelpPage'
 import CrmReminderPage from './pages/crm/CrmReminderPage'
+import CrmActivitiesPage from './pages/crm/CrmActivitiesPage'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -54,6 +55,7 @@ export enum paths {
   //crm
   crm = "/crm",
   crm_reminders = "crm_reminders",
+  crm_activities = "crm_activities",
   leads = "leads",
   customers = "customers",
   updateble_fields_lead = "updateble_fields_lead",
@@ -139,6 +141,10 @@ function AppRoutes() {
               />
               <Route path={paths.leads} index element={
                 <Suspense fallback={<LinearProgress />}><LeadsPage /></Suspense>
+              }
+              />
+              <Route path={paths.crm_activities} element={
+                <Suspense fallback={<LinearProgress />}><CrmActivitiesPage /></Suspense>
               }
               />
               <Route path={paths.crm_reminders} element={

@@ -53,8 +53,9 @@ export default function CrmNavBar() {
                             <StyledLink to={paths.leads}>Leads</StyledLink>
                             <StyledLink to={paths.customers}>Customers</StyledLink>
                             <StyledLink to={paths.refers}>Refers</StyledLink>
+                            <StyledLink to={paths.crm_activities}>Activities</StyledLink>
                             <StyledLink to={paths.useless_leads}>Useless</StyledLink>
-                            {user?.is_admin &&<StyledLink to={paths.updateble_fields_lead}>Fields</StyledLink>}
+                            {user?.is_admin && <StyledLink to={paths.updateble_fields_lead}>Fields</StyledLink>}
                             <StyledLink to={paths.crm_help}>Help</StyledLink>
                         </Stack>
 

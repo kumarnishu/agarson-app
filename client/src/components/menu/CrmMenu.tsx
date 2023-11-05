@@ -47,6 +47,12 @@ function CrmMenu() {
                 }>
                 <StyledLink to={paths.refers}>Refers</StyledLink>
             </MenuItem>
+            <MenuItem
+                onClick={
+                    () => setMenu({ type: CrmMenuActions.close_crm_menu, anchorEl: null })
+                }>
+                <StyledLink to={paths.crm_activities}>Activities</StyledLink>
+            </MenuItem>
 
             {user?.is_admin && <MenuItem
                 onClick={

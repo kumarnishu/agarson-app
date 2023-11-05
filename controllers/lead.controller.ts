@@ -2381,19 +2381,16 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
     previous_date.setDate(day)
 
     let reminders = await Remark.find({ remind_date: { $lte: new Date() } }).populate('created_by').populate('updated_by').populate('lead').sort('-remind_date')
-    if (!req.user?.is_admin) {
-        reminders = reminders.filter((reminder) => {
-            return reminder.created_by.username = req.user.username
-        })
-    }
+    reminders = reminders.filter((reminder) => {
+        return reminder.created_by.username = req.user.username
+    })
     return res.status(200).json(reminders)
 }
 
 export const UpdateRemark = async (req: Request, res: Response, next: NextFunction) => {
-    const { remark, lead_owners, remind_date } = req.body as { remark: string, lead_owners: string[], remind_date: string }
+    const { remark, remind_date } = req.body as { remark: string, remind_date: string }
     if (!remark) return res.status(403).json({ message: "please fill required fields" })
-    if (lead_owners && lead_owners.length === 0)
-        return res.status(403).json({ message: "please select one lead owner" })
+
     const user = await User.findById(req.user?._id)
     if (!user)
         return res.status(403).json({ message: "please login to access this resource" })
@@ -2408,14 +2405,6 @@ export const UpdateRemark = async (req: Request, res: Response, next: NextFuncti
         rremark.remind_date = new Date(remind_date)
     await rremark.save()
 
-    let new_lead_owners: IUser[] = []
-
-    let owners = lead_owners
-    for (let i = 0; i < owners.length; i++) {
-        let owner = await User.findById(owners[i])
-        if (owner)
-            new_lead_owners.push(owner)
-    }
     let lead = await Lead.findById(rremark.lead._id).populate('remarks')
     if (req.user && lead) {
         let updatedRemarks = lead.remarks
@@ -2423,7 +2412,6 @@ export const UpdateRemark = async (req: Request, res: Response, next: NextFuncti
         if (String(rremark._id) === String(last_remark._id))
             lead.last_remark = last_remark.remark
         lead.updated_by = req.user
-        lead.lead_owners = new_lead_owners
         lead.updated_at = new Date(Date.now())
         await lead.save()
     }
@@ -2453,4 +2441,13 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
     await rremark.remove()
     return res.status(200).json({ message: " remark deleted successfully" })
 
+}
+
+export const GetRemarks = async (req: Request, res: Response, next: NextFunction) => {
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 30
+    previous_date.setDate(day)
+
+    let remarks = await Remark.find({ created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate('lead').sort('-created_at')
+    return res.status(200).json(remarks)
 }

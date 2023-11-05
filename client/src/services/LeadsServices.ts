@@ -64,7 +64,9 @@ export const GetLead = async (id: string) => {
   return await apiClient.get(`leads/${id}`)
 }
 
-
+export const GetRemarks = async () => {
+  return await apiClient.get(`remarks`)
+}
 
 export const FuzzySearchLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
   return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}`)
@@ -114,7 +116,6 @@ export const NewRemark = async ({ id, body }: {
 export const UpdateRemark = async ({ id, body }: {
   id: string, body: {
     remark: string,
-    lead_owners: string[],
     remind_date?: string
   }
 }) => {
