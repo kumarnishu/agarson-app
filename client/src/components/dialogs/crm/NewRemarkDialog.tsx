@@ -19,7 +19,7 @@ function NewRemarkDialog({ lead }: { lead: ILead }) {
             setUsers(data?.data)
     }, [users, isSuccess, data])
     return (
-        <Dialog fullScreen={Boolean(window.screen.width < 500)}
+        <Dialog fullWidth={Boolean(window.screen.width < 500)}
             open={choice === LeadChoiceActions.add_remark ? true : false}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
