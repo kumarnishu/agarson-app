@@ -2376,7 +2376,11 @@ export const BulkAssignLeads = async (req: Request, res: Response, next: NextFun
 }
 
 export const GetReminderRemarks = async (req: Request, res: Response, next: NextFunction) => {
-    let reminders = await Remark.find({ remind_date: { $lte: new Date() } }).populate('created_by').populate('updated_by').populate('lead').sort('-remind_date')
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 7
+    previous_date.setDate(day)
+
+    let reminders = await Remark.find({ remind_date: { $lte: new Date() } }, { created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate('lead').sort('-remind_date')
     reminders = reminders.filter((reminder) => {
         return reminder.created_by.username === req.user.username
     })
@@ -2442,7 +2446,7 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
 
 export const GetRemarks = async (req: Request, res: Response, next: NextFunction) => {
     let previous_date = new Date()
-    let day = previous_date.getDate() - 30
+    let day = previous_date.getDate() - 7
     previous_date.setDate(day)
 
     let remarks = await Remark.find({ created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate('lead').sort('-created_at')
