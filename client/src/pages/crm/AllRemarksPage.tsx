@@ -14,6 +14,10 @@ function AllRemarksPage({ lead }: { lead: ILead }) {
     const [remark, setRemark] = useState<IRemark>()
     const [remarks, setRemarks] = useState<IRemark[]>(lead.remarks)
     const { user } = useContext(UserContext)
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 1
+    previous_date.setDate(day)
+
     useEffect(() => {
         setRemarks(lead.remarks)
     }, [lead, remarks])
@@ -47,7 +51,7 @@ function AllRemarksPage({ lead }: { lead: ILead }) {
                                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                                         Last updated By:<i>{remark.updated_by.username}</i>
                                     </Typography>
-                                    {user?.username === remark.created_by.username && <Stack direction="row" gap={2}>
+                                    {user?.username === remark.created_by.username && new Date(remark.created_at) > new Date(previous_date) && <Stack direction="row" gap={2}>
                                         <IconButton size="small" color="error" onClick={() => {
                                             setRemark(remark)
                                             setDisplay(true)

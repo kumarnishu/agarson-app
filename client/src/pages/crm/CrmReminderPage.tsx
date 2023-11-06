@@ -11,6 +11,7 @@ import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import DeleteRemarkDialog from '../../components/dialogs/crm/DeleteRemarkDialog'
 import { Delete, Edit } from '@mui/icons-material'
 import UpdateRemarkDialog from '../../components/dialogs/crm/UpdateRemarkDialog'
+import { UserContext } from '../../contexts/userContext'
 
 function CrmReminderPage() {
   const [remarks, setRemarks] = useState<IRemark[]>([])
@@ -21,6 +22,10 @@ function CrmReminderPage() {
   const { data: remotelead, isSuccess: isLeadSuccess, refetch } = useQuery<AxiosResponse<ILead>, BackendError>(["lead", id], async () => GetLead(id), { enabled: false })
   const [display, setDisplay] = useState<boolean>(false)
   const { setChoice } = useContext(ChoiceContext)
+  let previous_date = new Date()
+  let day = previous_date.getDate() - 1
+  previous_date.setDate(day)
+  const { user } = useContext(UserContext)
 
   useEffect(() => {
     if (isLeadSuccess)
@@ -83,14 +88,14 @@ function CrmReminderPage() {
                       setId(remark.lead._id)
                       setChoice({ type: LeadChoiceActions.view_remarks })
                     }}>View Remarks</Button>
-                    <IconButton size="small" color="error" onClick={() => {
+                    {user?.username === remark.created_by.username  && new Date(remark.created_at) > new Date(previous_date) &&<IconButton size="small" color="error" onClick={() => {
                       setRemark(remark)
                       setChoice({ type: LeadChoiceActions.delete_remark })
-                    }}><Delete /></IconButton>
-                    <IconButton size="small" color="success" onClick={() => {
+                    }}><Delete /></IconButton>}
+                    {user?.username === remark.created_by.username && new Date(remark.created_at) > new Date(previous_date) &&<IconButton size="small" color="success" onClick={() => {
                       setRemark(remark)
                       setChoice({ type: LeadChoiceActions.update_remark })
-                    }}><Edit /></IconButton></Stack>
+                    }}><Edit /></IconButton>}</Stack>
                   {lead ?
                     <>
                       <NewRemarkDialog lead={lead} />

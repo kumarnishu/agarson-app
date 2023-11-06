@@ -18,6 +18,9 @@ function CrmActivitiesPage() {
     const [lead, setLead] = useState<ILead>()
     const [remark, setRemark] = useState<IRemark>()
     const [id, setId] = useState("")
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 1
+    previous_date.setDate(day)
     const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IRemark[]>, BackendError>("remarks", GetRemarks)
     const { data: remotelead, isSuccess: isLeadSuccess, refetch } = useQuery<AxiosResponse<ILead>, BackendError>(["lead", id], async () => GetLead(id), { enabled: false })
     const { user } = useContext(UserContext)
@@ -83,11 +86,11 @@ function CrmActivitiesPage() {
                                             setId(remark.lead._id)
                                             setChoice({ type: LeadChoiceActions.view_remarks })
                                         }}>View Remarks</Button>
-                                        {user?.username === remark.created_by.username && <IconButton size="small" color="error" onClick={() => {
+                                        {user?.username === remark.created_by.username && new Date(remark.created_at) > new Date(previous_date) && <IconButton size="small" color="error" onClick={() => {
                                             setRemark(remark)
                                             setChoice({ type: LeadChoiceActions.delete_remark })
                                         }}><Delete /></IconButton>}
-                                        {user?.username === remark.created_by.username && <IconButton size="small" color="success" onClick={() => {
+                                        {user?.username === remark.created_by.username && new Date(remark.created_at) > new Date(previous_date) && <IconButton size="small" color="success" onClick={() => {
                                             setRemark(remark)
                                             setChoice({ type: LeadChoiceActions.update_remark })
                                         }}><Edit /></IconButton>}
