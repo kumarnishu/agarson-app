@@ -9,7 +9,7 @@ function ViewRemarksDialog({ lead }: { lead: ILead }) {
   const { choice, setChoice } = useContext(ChoiceContext)
   return (
     <>
-      <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === LeadChoiceActions.view_remarks ? true : false}
+      <Dialog fullWidth={Boolean(window.screen.width < 500)} open={choice === LeadChoiceActions.view_remarks ? true : false}
         scroll="paper"
         onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
       >
