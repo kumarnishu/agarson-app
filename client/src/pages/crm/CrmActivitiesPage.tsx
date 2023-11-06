@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ILead, IRemark } from '../../types/crm.types'
 import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
@@ -12,6 +12,7 @@ import DeleteRemarkDialog from '../../components/dialogs/crm/DeleteRemarkDialog'
 import { Delete, Edit } from '@mui/icons-material'
 import UpdateRemarkDialog from '../../components/dialogs/crm/UpdateRemarkDialog'
 import { UserContext } from '../../contexts/userContext'
+import { FixedSizeList as List } from 'react-window';
 
 function CrmActivitiesPage() {
     const [remarks, setRemarks] = useState<IRemark[]>([])
@@ -26,36 +27,19 @@ function CrmActivitiesPage() {
     const { user } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
     const [display, setDisplay] = useState<boolean>(false)
-
-    useEffect(() => {
-        if (isLeadSuccess)
-            setLead(remotelead.data)
-    }, [isLeadSuccess, remotelead])
-
-    useEffect(() => {
-        refetch()
-    }, [id])
-
-    useEffect(() => {
-        if (isSuccess)
-            setRemarks(data?.data)
-    }, [remarks, isSuccess, data])
-
-    return (
-        <Box>
-            <Stack direction={"column"}>
-                <DialogTitle sx={{ textAlign: 'center' }}>Activities</DialogTitle>
-                <Box>
-                    <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>{
-                        isLoading && <LinearProgress />
-                    }
-                    </Typography>
-                    {remarks && remarks.map((remark, index) => {
+    const ItemSize = Boolean(window.screen.width < 500) ? 380 : 280
+    const Row = ({ style }: { style: React.CSSProperties }) => {
+        return (
+            <>
+                {
+                    remarks && remarks.map((remark, index) => {
                         return (
                             <Stack key={index}
                                 direction="column"
+                                style={style}
+                                sx={{ paddingX: 2 }}
                             >
-                                <Paper elevation={8} sx={{ p: 2, mt: 1, boxShadow: 2, backgroundColor: 'whitesmoke' }}>
+                                <Paper elevation={8} sx={{ p:1, mt: 1, boxShadow: 2, backgroundColor: 'whitesmoke' }}>
                                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                                         Lead : <b>{remark.lead && remark.lead.name}</b>
                                     </Typography>
@@ -95,22 +79,59 @@ function CrmActivitiesPage() {
                                             setChoice({ type: LeadChoiceActions.update_remark })
                                         }}><Edit /></IconButton>}
                                     </Stack>
-                                    {lead ?
-                                        <>
-                                            <NewRemarkDialog lead={lead} />
-                                            <ViewRemarksDialog lead={lead} />
-                                        </> : null
-                                    }
-
                                 </Paper>
-                            </Stack>
+                            </Stack >
                         )
-                    })}
+                    })
+                }
+            </>
+        )
+    }
+
+    useEffect(() => {
+        if (isLeadSuccess)
+            setLead(remotelead.data)
+    }, [isLeadSuccess, remotelead])
+
+    useEffect(() => {
+        refetch()
+    }, [id])
+
+    useEffect(() => {
+        if (isSuccess)
+            setRemarks(data?.data)
+    }, [remarks, isSuccess, data])
+
+    return (
+        <Box>
+            <Stack direction={"column"}>
+                <DialogTitle sx={{ textAlign: 'center' }}>Activities</DialogTitle>
+                <Box>
+                    <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>{
+                        isLoading && <LinearProgress />
+                    }
+                    </Typography>
+                    <List
+                        className="List"
+                        height={500}
+                        itemCount={remarks.length}
+                        itemSize={ItemSize}
+                        width={'100vw'}
+                    >
+                        {Row}
+                    </List>
                 </Box >
+                {lead ?
+                    <>
+                        <NewRemarkDialog lead={lead} />
+                        <ViewRemarksDialog lead={lead} />
+                    </> : null
+                }
                 {remark && <DeleteRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
                 {remark && <UpdateRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
             </Stack >
         </Box >
+
     )
 }
 
