@@ -1,91 +1,39 @@
-import { Grid } from '@mui/material'
-import createLeadUrl from "../../assets/crm/new lead.mp4"
-import createLeadPosterUrl from "../../assets/crm/add lead.jpg"
-import updateLeadUrl from "../../assets/crm/update lead.mp4"
-import updateLeadPosterUrl from "../../assets/crm/update lead.jpg"
-import addRemarkLeadUrl from "../../assets/crm/add remark.mp4"
-import addRemarkLeadPosterUrl from "../../assets/crm/add remark.jpg"
-import convertCustomerLeadUrl from "../../assets/crm/convert to customer.mp4"
-import convertCustomerLeadPosterUrl from "../../assets/crm/convert a customer.jpg"
-import addFieldsLeadUrl from "../../assets/crm/manage lead fields.mp4"
-import addFieldsLeadPosterUrl from "../../assets/crm/add fields.jpg"
-import createReferLeadUrl from "../../assets/crm/Refer lead.mp4"
-import createReferLeadPosterUrl from "../../assets/crm/create refer.jpg"
-import viewRemarksLeadUrl from "../../assets/crm/view remarks.mp4"
-import viewRemarksLeadPosterUrl from "../../assets/crm/view remarks.jpg"
-import viewAllocatedPartiesLeadUrl from "../../assets/crm/View allocated parties.mp4"
-import viewAllocatedPartiesLeadPosterUrl from "../../assets/crm/view referred parties.jpg"
-import referLeadUrl from "../../assets/crm/Refer lead.mp4"
-import referLeadPosterUrl from "../../assets/crm/refer  lead.jpg"
-import manageUselessLeadUrl from "../../assets/crm/manage useless leads.mp4"
-import manageUselessLeadPosterUrl from "../../assets/crm/manage useless.jpg"
-import bulkUploadLeadUrl from "../../assets/crm/bulk upload leads.mp4"
-import bulkUploadLeadPosterUrl from "../../assets/crm/bulk upload.jpg"
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-function CrmHelpPage() {
+export default function CrmHelpPage() {
+  const data: { title: string, subtitle: string }[] = [
+    { title: "Reminders", subtitle: "On This page we can See Reminders of last 7 days." },
+    { title: "Activities", subtitle: "On This page we can See all Remarks (included reminders) added within 7 days." },
+    { title: "Leads", subtitle: "On This page we can See all leads in tabular form" },
+    { title: "Customers", subtitle: "On This page we can See Customers conveted from leads " },
+    { title: "Useless", subtitle: "On This page we can See Leads conveted into useless " },
+    { title: "Refer", subtitle: "On This page we can See all our parties that we have assigned leads in the past " },
+    { title: "Fields", subtitle: "On This page we can manage editable fields on the leads " },
+  ]
   return (
     <>
-      <Grid container spacing={2} paddingX={1}>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={createLeadPosterUrl}>
-            <source src={createLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={updateLeadPosterUrl}>
-            <source src={updateLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={addRemarkLeadPosterUrl}>
-            <source src={addRemarkLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={convertCustomerLeadPosterUrl}>
-            <source src={convertCustomerLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={addFieldsLeadPosterUrl}>
-            <source src={addFieldsLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={createReferLeadPosterUrl}>
-            <source src={createReferLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={viewRemarksLeadPosterUrl}>
-            <source src={viewRemarksLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={viewAllocatedPartiesLeadPosterUrl}>
-            <source src={viewAllocatedPartiesLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={referLeadPosterUrl}>
-            <source src={referLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={manageUselessLeadPosterUrl}>
-            <source src={manageUselessLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <video width="320" height="240" controls poster={bulkUploadLeadPosterUrl}>
-            <source src={bulkUploadLeadUrl} type="video/mp4" />
-          </video>
-        </Grid>
-
-      </Grid>
+      {data.map((dt, index) => {
+        return (
+          <Accordion key={index}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>{dt.title}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                {dt.subtitle}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        )
+      })}
     </>
   )
 }
-
-export default CrmHelpPage

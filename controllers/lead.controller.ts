@@ -1477,7 +1477,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-referred_date')
             result.push({
                 party: parties[i],
                 leads: leads
@@ -1528,7 +1528,7 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
                     model: 'User'
                 }
             ]
-        }).sort('-updated_at')
+        }).sort('-referred_date')
         result.push({
             party: parties[i],
             leads: leads

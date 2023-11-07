@@ -71,7 +71,7 @@ function AllReferralPage({ leads }: { leads: ILead[] }) {
           }}
         >Export To Excel</Button>
         <Box>
-          {leads && leads.slice(0).reverse().map((lead, index) => {
+          {leads && leads.map((lead, index) => {
             return (
               <>
                 <Stack key={index}
