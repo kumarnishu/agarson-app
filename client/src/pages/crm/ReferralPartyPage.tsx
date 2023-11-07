@@ -102,7 +102,7 @@ export default function ReferralPartyPage() {
                 mobile: refer.party.mobile,
                 city: refer.party.city,
                 state: refer.party.state,
-                lead_owners: refer.party.lead_owners.map(owner => { owner.username + "," }).toString(),
+                lead_owners: refer.party.lead_owners.map((owner) => { return owner.username + "," }).toString(),
                 created_at: new Date(refer.party.created_at).toLocaleDateString(),
                 updated_at: new Date(refer.party.updated_at).toLocaleDateString()
             })

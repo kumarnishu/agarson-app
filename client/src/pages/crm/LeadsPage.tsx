@@ -114,7 +114,7 @@ export default function LeadsPage() {
           is_customer: lead.is_customer,
           created_at: lead.created_at,
           updated_at: lead.updated_at,
-          lead_owners: lead.lead_owners.map(owner => { owner.username + "," }).toString()
+          lead_owners: lead.lead_owners.map((owner) => { return owner.username + "," }).toString()
         })
     })
     if (data.length > 0)
@@ -168,7 +168,7 @@ export default function LeadsPage() {
       setFilterCount(count)
     }
   }, [fuzzyleads])
-
+  console.log(selectedData)
   return (
     <>
 
