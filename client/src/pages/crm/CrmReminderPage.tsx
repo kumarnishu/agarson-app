@@ -96,17 +96,17 @@ function CrmReminderPage() {
                       setRemark(remark)
                       setChoice({ type: LeadChoiceActions.update_remark })
                     }}><Edit /></IconButton>}</Stack>
-                  {lead ?
-                    <>
-                      <NewRemarkDialog lead={lead} />
-                      <ViewRemarksDialog lead={lead} />
-                    </> : null
-                  }
                 </Paper>
               </Stack>
             )
           })}
         </Box >
+        {lead ?
+          <>
+            <NewRemarkDialog lead={lead} />
+            <ViewRemarksDialog lead={lead} />
+          </> : null
+        }
         {remark && <DeleteRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
         {remark && <UpdateRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
       </Stack >
