@@ -678,6 +678,7 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
           user?.created_by._id === user?._id ? <>
             <FormGroup>
               <FormControlLabel control={<Checkbox
+                checked={Boolean(lead.is_customer)}
                 {...formik.getFieldProps('is_customer')}
               />} label="Is A Customer" />
               <p>
