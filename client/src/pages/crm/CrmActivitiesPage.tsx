@@ -50,7 +50,7 @@ function CrmActivitiesPage() {
         if (isSuccess)
             setRemarks(data?.data)
     }, [remarks, isSuccess, data])
-    console.log(userId)
+    
     return (
         <Box>
             <Stack direction={"column"}>

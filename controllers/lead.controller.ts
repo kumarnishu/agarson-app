@@ -2460,13 +2460,13 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
     }).sort('-created_at')
 
 
-    if (!req.user.is_admin)
+    if (!id)
         remarks = remarks.filter((remark) => {
             return remark.created_by.username === req.user.username
         })
     if (id) {
         let user = await User.findById(id)
-        if (user && user?.is_admin) {
+        if (user) {
             remarks = remarks.filter((remark) => {
                 return remark.created_by.username === user?.username
             })
