@@ -2448,11 +2448,28 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
     let previous_date = new Date()
     let day = previous_date.getDate() - 7
     previous_date.setDate(day)
-
-    let remarks = await Remark.find({ created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate('lead').sort('-created_at')
+    let id = req.query.id
+    let remarks = await Remark.find({ created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate({
+        path: 'lead',
+        populate: [
+            {
+                path: 'lead_owners',
+                model: 'User'
+            }
+        ]
+    }).sort('-created_at')
     if (!req.user.is_admin)
         remarks = remarks.filter((remark) => {
             return remark.created_by.username === req.user.username
         })
+    if (id) {
+        let user = await User.findById(id)
+        if (user)
+            remarks = remarks.filter((remark) => {
+                let owners = remark.lead.lead_owners.map((own) => { return own.username })
+                if (user && owners.includes(user.username))
+                    return remark
+            })
+    }
     return res.status(200).json(remarks)
 }

@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { GetLead, GetRemarks } from '../../services/LeadsServices'
 import { BackendError } from '../..'
-import { Box, Button, DialogTitle, IconButton, LinearProgress, Paper, Stack, Typography } from '@mui/material'
+import { Box, Button, DialogTitle, IconButton, LinearProgress, Paper, Stack, TextField, Typography } from '@mui/material'
 import NewRemarkDialog from '../../components/dialogs/crm/NewRemarkDialog'
 import ViewRemarksDialog from '../../components/dialogs/crm/ViewRemarksDialog'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
@@ -12,20 +12,30 @@ import DeleteRemarkDialog from '../../components/dialogs/crm/DeleteRemarkDialog'
 import { Delete, Edit } from '@mui/icons-material'
 import UpdateRemarkDialog from '../../components/dialogs/crm/UpdateRemarkDialog'
 import { UserContext } from '../../contexts/userContext'
+import { IUser } from '../../types/user.types'
+import { GetUsers } from '../../services/UserServices'
 
 function CrmActivitiesPage() {
+    const [users, setUsers] = useState<IUser[]>([])
     const [remarks, setRemarks] = useState<IRemark[]>([])
     const [lead, setLead] = useState<ILead>()
     const [remark, setRemark] = useState<IRemark>()
     const [id, setId] = useState("")
+    const [userId, setUserId] = useState<string>()
     let previous_date = new Date()
     let day = previous_date.getDate() - 1
     previous_date.setDate(day)
-    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IRemark[]>, BackendError>("remarks", GetRemarks)
+    const { data, isSuccess, isLoading, refetch: ReftechRemarks } = useQuery<AxiosResponse<IRemark[]>, BackendError>(["remarks", userId], () => GetRemarks(userId))
     const { data: remotelead, isSuccess: isLeadSuccess, refetch } = useQuery<AxiosResponse<ILead>, BackendError>(["lead", id], async () => GetLead(id), { enabled: false })
     const { user } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
     const [display, setDisplay] = useState<boolean>(false)
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+
+    useEffect(() => {
+        if (isUsersSuccess)
+            setUsers(usersData?.data)
+    }, [users, isUsersSuccess, usersData])
 
     useEffect(() => {
         if (isLeadSuccess)
@@ -44,7 +54,35 @@ function CrmActivitiesPage() {
     return (
         <Box>
             <Stack direction={"column"}>
-                <DialogTitle sx={{ textAlign: 'center' }}>Activities</DialogTitle>
+                <Stack padding={2} gap={2}>
+                    <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
+                    {user?.is_admin &&
+                        < TextField
+                            select
+                            SelectProps={{
+                                native: true,
+                            }}
+                            onChange={(e) => {
+                                setUserId(e.target.value)
+                                ReftechRemarks()
+                            }}
+                            required
+                            id="lead_owners"
+                            label="Lead Owners"
+                            fullWidth
+                        >
+                            <option key={'00'} value={undefined}>
+                                View All
+                            </option>
+                            {
+                                users.map((user, index) => {
+                                    return (<option key={index} value={user._id}>
+                                        {user.username}
+                                    </option>)
+                                })
+                            }
+                        </TextField>}
+                </Stack>
                 <Box>
                     <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>{
                         isLoading && <LinearProgress />
@@ -64,6 +102,9 @@ function CrmActivitiesPage() {
                                     </Typography>
                                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                                         Lead Address : <b>{remark.lead && remark.lead.address}</b>
+                                    </Typography>
+                                    <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                                        Lead Owners : <b>{remark.lead.lead_owners.map((owner) => { return owner.username }).toString() || "NA"}</b>
                                     </Typography>
                                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                                         Remark : <b>{remark.remark}</b>

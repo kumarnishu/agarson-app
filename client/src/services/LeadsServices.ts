@@ -64,7 +64,9 @@ export const GetLead = async (id: string) => {
   return await apiClient.get(`leads/${id}`)
 }
 
-export const GetRemarks = async () => {
+export const GetRemarks = async (id?: string) => {
+  if (id)
+    return await apiClient.get(`remarks/?id=${id}`)
   return await apiClient.get(`remarks`)
 }
 
