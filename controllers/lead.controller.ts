@@ -2458,17 +2458,19 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
             }
         ]
     }).sort('-created_at')
-    remarks = remarks.filter((remark) => {
-        return remark.created_by.username === req.user.username
-    })
+
+
+    if (!req.user.is_admin)
+        remarks = remarks.filter((remark) => {
+            return remark.created_by.username === req.user.username
+        })
     if (id) {
         let user = await User.findById(id)
-        if (user)
+        if (user && user?.is_admin) {
             remarks = remarks.filter((remark) => {
-                let owners = remark.lead.lead_owners.map((own) => { return own.username })
-                if (user && owners.includes(user.username))
-                    return remark
+                return remark.created_by.username === user?.username
             })
+        }
     }
     return res.status(200).json(remarks)
 }

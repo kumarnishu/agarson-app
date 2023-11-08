@@ -68,7 +68,7 @@ function CrmActivitiesPage() {
                             }}
                             required
                             id="lead_owners"
-                            label="Lead Owners"
+                            label="Filter Remarks Of Indivdual"
                             fullWidth
                         >
                             <option key={'00'} value={undefined}>
