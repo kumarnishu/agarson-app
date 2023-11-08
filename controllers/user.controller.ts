@@ -53,8 +53,8 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         mobile,
         is_admin: true,
         dp,
-        client_id: username.replace(" ", "") + `${Number(new Date())}`,
-        client_data_path: username.replace(" ", "") + `${Number(new Date())}`
+        client_id: username.split(" ")[0] + `${Number(new Date())}`,
+        client_data_path: username.split(" ")[0] + `${Number(new Date())}`
 
     })
     owner.user_access_fields = {
@@ -159,8 +159,8 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         mobile,
         is_admin: false,
         dp,
-        client_id: username.replace(" ", "") + `${Number(new Date())}`,
-        client_data_path: username.replace(" ", "") + `${Number(new Date())}`
+        client_id: username.split(" ")[0] + `${Number(new Date())}`,
+        client_data_path: username.split(" ")[0] + `${Number(new Date())}`
 
     })
     if (req.user) {
