@@ -50,7 +50,7 @@ function CrmActivitiesPage() {
         if (isSuccess)
             setRemarks(data?.data)
     }, [remarks, isSuccess, data])
-
+    console.log(userId)
     return (
         <Box>
             <Stack direction={"column"}>
@@ -72,7 +72,7 @@ function CrmActivitiesPage() {
                             fullWidth
                         >
                             <option key={'00'} value={undefined}>
-                                View All
+
                             </option>
                             {
                                 users.map((user, index) => {
