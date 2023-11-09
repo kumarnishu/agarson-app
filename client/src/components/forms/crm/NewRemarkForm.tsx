@@ -96,6 +96,7 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                     error={
                         formik.touched.remark && formik.errors.remark ? true : false
                     }
+                    autoFocus
                     id="remark"
                     label="Remark"
                     fullWidth

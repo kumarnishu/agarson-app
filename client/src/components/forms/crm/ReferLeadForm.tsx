@@ -78,7 +78,7 @@ function ReferLeadForm({ lead }: { lead: ILead }) {
                 pt={2}
             >
                 <TextField
-
+                    autoFocus
                     required
                     fullWidth
                     multiline
