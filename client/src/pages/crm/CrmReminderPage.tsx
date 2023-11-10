@@ -43,13 +43,13 @@ function CrmReminderPage() {
 
   return (
     <Box>
+      {
+        isLoading && <LinearProgress />
+      }
+      <DialogTitle sx={{ textAlign: 'center' }}>Reminders</DialogTitle>
       <Stack direction={"column"}>
-        <DialogTitle sx={{ textAlign: 'center' }}>Reminders</DialogTitle>
         <Box>
-          <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>{
-            isLoading && <LinearProgress />
-          }
-
+          <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
           </Typography>
           {remarks && remarks.map((remark, index) => {
             return (

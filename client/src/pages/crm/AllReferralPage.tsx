@@ -99,7 +99,7 @@ function AllReferralPage({ leads }: { leads: ILead[] }) {
                     </Typography>
                     <Button onClick={() => {
                       setSelectedLead(lead)
-                      setChoice({ type: LeadChoiceActions.update_remark })
+                      setChoice({ type: LeadChoiceActions.add_remark })
                     }}>Add Remark</Button>
                     <Button onClick={() => {
                       setSelectedLead(lead)

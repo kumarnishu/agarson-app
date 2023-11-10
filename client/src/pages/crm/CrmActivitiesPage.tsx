@@ -43,12 +43,12 @@ function CrmActivitiesPage() {
     }, [remarks, isSuccess, data])
     return (
         <Box>
+            {
+                isLoading && <LinearProgress />
+            }
+            <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
             <Stack direction={"column"}>
                 <Stack padding={2} gap={2}>
-                    {
-                        isLoading && <LinearProgress />
-                    }
-                    <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
                     <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'}>
                         < TextField
                             type="date"
