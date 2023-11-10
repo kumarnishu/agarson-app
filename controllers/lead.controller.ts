@@ -11,7 +11,7 @@ import { LeadUpdatableField } from "../models/leads/lead.fields.model.js"
 import { destroyFile } from "../utils/destroyFile.util.js"
 import { ReferredParty } from "../models/leads/referred.model.js"
 import { ExportLeadMobiles, ExportLeads } from "../utils/CrmUtils.js"
-import { ILead, ILeadTemplate, IReferredParty, TLeadBody, TLeadUpdatableFieldBody, TReferredPartyBody } from "../types/crm.types.js"
+import { ILead, ILeadTemplate, IReferredParty, IRemark, TLeadBody, TLeadUpdatableFieldBody, TReferredPartyBody } from "../types/crm.types.js"
 import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
 
@@ -2445,19 +2445,34 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
 }
 
 export const GetRemarks = async (req: Request, res: Response, next: NextFunction) => {
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 7
-    previous_date.setDate(day)
     let id = req.query.id
-    let remarks = await Remark.find({ created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate({
-        path: 'lead',
-        populate: [
-            {
-                path: 'lead_owners',
-                model: 'User'
-            }
-        ]
-    }).sort('-created_at')
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let remarks: IRemark[] = []
+    if (start_date && end_date) {
+        let dt1 = new Date(String(start_date))
+        let dt2 = new Date(String(end_date))
+
+        remarks = await Remark.find({ created_at: { $gte: dt1, $lte: dt2 } }).populate('created_by').populate('updated_by').populate({
+            path: 'lead',
+            populate: [
+                {
+                    path: 'lead_owners',
+                    model: 'User'
+                }
+            ]
+        }).sort('-created_at')
+    }
+    if (!start_date && !end_date)
+        remarks = await Remark.find({ created_at: { $gte: new Date() } }).populate('created_by').populate('updated_by').populate({
+            path: 'lead',
+            populate: [
+                {
+                    path: 'lead_owners',
+                    model: 'User'
+                }
+            ]
+        }).sort('-created_at')
 
 
     if (!id)

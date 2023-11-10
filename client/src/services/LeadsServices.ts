@@ -64,10 +64,17 @@ export const GetLead = async (id: string) => {
   return await apiClient.get(`leads/${id}`)
 }
 
-export const GetRemarks = async (id?: string) => {
-  if (id)
+export const GetRemarks = async (id?: string, start_date?: string, end_date?: string) => {
+  if (id && !start_date && !end_date)
     return await apiClient.get(`remarks/?id=${id}`)
-  return await apiClient.get(`remarks`)
+  if (id && start_date && end_date)
+    return await apiClient.get(`remarks/?id=${id}&start_date=${start_date}&end_date=${end_date}`)
+  if (!id && start_date && end_date)
+    return await apiClient.get(`remarks/?start_date=${start_date}&end_date=${end_date}`)
+  if (!id && !start_date && !end_date)
+    return await apiClient.get(`remarks`)
+  else
+    return await apiClient.get(`remarks`)
 }
 
 export const FuzzySearchLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
