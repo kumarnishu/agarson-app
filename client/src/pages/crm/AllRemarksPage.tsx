@@ -7,7 +7,6 @@ import UpdateRemarkDialog from "../../components/dialogs/crm/UpdateRemarkDialog"
 import { UserContext } from "../../contexts/userContext";
 
 
-
 function AllRemarksPage({ lead }: { lead: ILead }) {
     const [display, setDisplay] = useState<boolean>(false)
     const [show, setShow] = useState(false)
@@ -27,7 +26,7 @@ function AllRemarksPage({ lead }: { lead: ILead }) {
             <Stack direction={"column"}>
                 <Box>
                     <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
-                        {lead.remarks.length ? "" : "no remarks yet"}
+                        {lead.name}:{lead.mobile}
                     </Typography>
                     {remarks.slice(0).reverse().map((remark, index) => {
                         return (

@@ -47,9 +47,9 @@ function CrmReminderPage() {
         <DialogTitle sx={{ textAlign: 'center' }}>Reminders</DialogTitle>
         <Box>
           <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>{
-            isLoading && <LinearProgress/>
+            isLoading && <LinearProgress />
           }
-            
+
           </Typography>
           {remarks && remarks.map((remark, index) => {
             return (
@@ -87,12 +87,12 @@ function CrmReminderPage() {
                       setRemark(remark)
                       setId(remark.lead._id)
                       setChoice({ type: LeadChoiceActions.view_remarks })
-                    }}>View Remarks</Button>
-                    {user?.username === remark.created_by.username  && new Date(remark.created_at) > new Date(previous_date) &&<IconButton size="small" color="error" onClick={() => {
+                    }}>View {remark && remark.lead && remark.lead.remarks && remark.lead.remarks.length ? remark.lead.remarks.length : null} Remarks</Button>
+                    {user?.username === remark.created_by.username && new Date(remark.created_at) > new Date(previous_date) && <IconButton size="small" color="error" onClick={() => {
                       setRemark(remark)
                       setChoice({ type: LeadChoiceActions.delete_remark })
                     }}><Delete /></IconButton>}
-                    {user?.username === remark.created_by.username && new Date(remark.created_at) > new Date(previous_date) &&<IconButton size="small" color="success" onClick={() => {
+                    {user?.username === remark.created_by.username && new Date(remark.created_at) > new Date(previous_date) && <IconButton size="small" color="success" onClick={() => {
                       setRemark(remark)
                       setChoice({ type: LeadChoiceActions.update_remark })
                     }}><Edit /></IconButton>}</Stack>

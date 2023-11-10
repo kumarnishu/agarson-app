@@ -2448,6 +2448,9 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
     let id = req.query.id
     let start_date = req.query.start_date
     let end_date = req.query.end_date
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 7
+    previous_date.setDate(day)
     let remarks: IRemark[] = []
     if (start_date && end_date) {
         let dt1 = new Date(String(start_date))
@@ -2459,17 +2462,43 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                 {
                     path: 'lead_owners',
                     model: 'User'
+                },
+                {
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
                 }
             ]
         }).sort('-created_at')
     }
     if (!start_date && !end_date)
-        remarks = await Remark.find({ created_at: { $gte: new Date() } }).populate('created_by').populate('updated_by').populate({
+        remarks = await Remark.find({ created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate({
             path: 'lead',
             populate: [
                 {
                     path: 'lead_owners',
                     model: 'User'
+                },
+                {
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
                 }
             ]
         }).sort('-created_at')

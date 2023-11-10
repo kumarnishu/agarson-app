@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
-import { ILead, IRemark } from '../../types/crm.types'
+import { IRemark } from '../../types/crm.types'
 import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
-import { GetLead, GetRemarks } from '../../services/LeadsServices'
+import { GetRemarks } from '../../services/LeadsServices'
 import { BackendError } from '../..'
 import { Box, Button, DialogTitle, IconButton, LinearProgress, Paper, Stack, TextField, Typography } from '@mui/material'
 import NewRemarkDialog from '../../components/dialogs/crm/NewRemarkDialog'
@@ -19,16 +19,13 @@ import moment from 'moment'
 function CrmActivitiesPage() {
     const [users, setUsers] = useState<IUser[]>([])
     const [remarks, setRemarks] = useState<IRemark[]>([])
-    const [lead, setLead] = useState<ILead>()
     const [remark, setRemark] = useState<IRemark>()
-    const [id, setId] = useState("")
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>()
     let previous_date = new Date()
     let day = previous_date.getDate() - 1
     previous_date.setDate(day)
     const { data, isSuccess, isLoading, refetch: ReftechRemarks } = useQuery<AxiosResponse<IRemark[]>, BackendError>(["remarks", userId, dates?.start_date, dates?.end_date], () => GetRemarks(userId, dates?.start_date, dates?.end_date))
-    const { data: remotelead, isSuccess: isLeadSuccess, refetch } = useQuery<AxiosResponse<ILead>, BackendError>(["lead", id], async () => GetLead(id), { enabled: false })
     const { user } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
     const [display, setDisplay] = useState<boolean>(false)
@@ -39,14 +36,6 @@ function CrmActivitiesPage() {
             setUsers(usersData?.data)
     }, [users, isUsersSuccess, usersData])
 
-    useEffect(() => {
-        if (isLeadSuccess)
-            setLead(remotelead.data)
-    }, [isLeadSuccess, remotelead])
-
-    useEffect(() => {
-        refetch()
-    }, [id])
 
     useEffect(() => {
         if (isSuccess)
@@ -56,64 +45,63 @@ function CrmActivitiesPage() {
         <Box>
             <Stack direction={"column"}>
                 <Stack padding={2} gap={2}>
-                    <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
-                    {user?.is_admin &&
-                        <Stack direction={{ xs: 'column', sm: 'row' }} gap={2} >
-                            <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'}>
-                                < TextField
-                                    type="date"
-                                    id="start_date"
-                                    label="Start Date"
-                                    fullWidth
-                                    focused
-                                    onChange={(e) => setDates({
-                                        ...dates,
-                                        start_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
-                                    })}
-                                />
-                                < TextField
-                                    type="date"
-                                    id="end_date"
-                                    label="End Date"
-                                    focused
-                                    fullWidth
-                                    onChange={(e) => setDates({
-                                        ...dates,
-                                        end_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
-                                    })}
-                                />
-                            </Stack>
-                            < TextField
-                                select
-                                SelectProps={{
-                                    native: true,
-                                }}
-                                onChange={(e) => {
-                                    setUserId(e.target.value)
-                                    ReftechRemarks()
-                                }}
-                                required
-                                id="lead_owners"
-                                label="Filter Remarks Of Indivdual"
-                                fullWidth
-                            >
-                                <option key={'00'} value={undefined}>
-
-                                </option>
-                                {
-                                    users.map((user, index) => {
-                                        return (<option key={index} value={user._id}>
-                                            {user.username}
-                                        </option>)
-                                    })
-                                }
-                            </TextField>
-                        </Stack>}
-                </Stack>
-                <Box>
-                    <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>{
+                    {
                         isLoading && <LinearProgress />
                     }
+                    <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
+                    <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'}>
+                        < TextField
+                            type="date"
+                            id="start_date"
+                            label="Start Date"
+                            fullWidth
+                            focused
+                            onChange={(e) => setDates({
+                                ...dates,
+                                start_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
+                            })}
+                        />
+                        < TextField
+                            type="date"
+                            id="end_date"
+                            label="End Date"
+                            focused
+                            fullWidth
+                            onChange={(e) => setDates({
+                                ...dates,
+                                end_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
+                            })}
+                        />
+                    </Stack>
+                    {user?.is_admin &&
+                        < TextField
+                            select
+                            SelectProps={{
+                                native: true,
+                            }}
+                            onChange={(e) => {
+                                setUserId(e.target.value)
+                                ReftechRemarks()
+                            }}
+                            required
+                            id="lead_owners"
+                            label="Filter Remarks Of Indivdual"
+                            fullWidth
+                        >
+                            <option key={'00'} value={undefined}>
+
+                            </option>
+                            {
+                                users.map((user, index) => {
+                                    return (<option key={index} value={user._id}>
+                                        {user.username}
+                                    </option>)
+                                })
+                            }
+                        </TextField>}
+                </Stack>
+                <Box>
+                    <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
                     </Typography>
                     {remarks && remarks.map((remark, index) => {
                         return (
@@ -131,7 +119,7 @@ function CrmActivitiesPage() {
                                         Lead Address : <b>{remark.lead && remark.lead.address}</b>
                                     </Typography>
                                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                                        Lead Owners : <b>{remark.lead.lead_owners.map((owner) => { return owner.username }).toString() || "NA"}</b>
+                                        Lead Owners : <b>{remark.lead.lead_owners && remark.lead.lead_owners.map((owner) => { return owner.username }).toString() || "NA"}</b>
                                     </Typography>
                                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                                         Remark : <b>{remark.remark}</b>
@@ -147,13 +135,13 @@ function CrmActivitiesPage() {
                                     </Typography>
                                     <Stack direction={'row'} gap={2}>
                                         <Button onClick={() => {
-                                            setId(remark.lead._id)
+                                            setRemark(remark)
                                             setChoice({ type: LeadChoiceActions.add_remark })
                                         }}>Add Remark</Button>
                                         <Button onClick={() => {
-                                            setId(remark.lead._id)
+                                            setRemark(remark)
                                             setChoice({ type: LeadChoiceActions.view_remarks })
-                                        }}>View Remarks</Button>
+                                        }}>View {remark && remark.lead && remark.lead.remarks && remark.lead.remarks.length ? remark.lead.remarks.length : null} Remarks</Button>
                                         {user?.username === remark.created_by.username && new Date(remark.created_at) > new Date(previous_date) && <IconButton size="small" color="error" onClick={() => {
                                             setRemark(remark)
                                             setChoice({ type: LeadChoiceActions.delete_remark })
@@ -168,10 +156,10 @@ function CrmActivitiesPage() {
                         )
                     })}
                 </Box >
-                {lead ?
+                {remark && remark.lead ?
                     <>
-                        <NewRemarkDialog lead={lead} />
-                        <ViewRemarksDialog lead={lead} />
+                        <NewRemarkDialog lead={remark.lead} />
+                        <ViewRemarksDialog lead={remark.lead} />
                     </> : null
                 }
                 {remark && <DeleteRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
