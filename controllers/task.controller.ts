@@ -7,16 +7,16 @@ import isMongoId from "validator/lib/isMongoId";
 
 export const CreateTask = async (req: Request, res: Response, next: NextFunction) => {
     const { task_description, frequency_type } = req.body as ITaskBody
-    let id = req.query.id
+    let id = req.params.id
     if (!task_description || !frequency_type || !id)
         return res.status(400).json({ message: "please provide all required fields" })
     let user = await User.findById(id)
     if (!user)
         return res.status(404).json({ message: 'user not exists' })
     if (user) {
-        let boxes = [{ id: "day1", is_completed: false }]
+        let boxes = [{ date: new Date(), is_completed: false }]
         await new Task({
-            task_description, frequency_type, boxes
+            task_description, frequency_type, boxes, created_at: new Date(), updated_at: new Date(), created_by: user, updated_by: user
         }).save()
     }
     return res.status(201).json({ message: `new Task added` });

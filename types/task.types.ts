@@ -3,7 +3,7 @@ import { IUser } from "./user.types"
 export type ITask = {
     _id: string,
     boxes: {
-        id: string,
+        date: Date,
         is_completed: boolean
     }[]
     task_description: string,

@@ -8,8 +8,8 @@ const TaskSchema = new mongoose.Schema<ITask, mongoose.Model<ITask, {}, {}>, {}>
         required: true
     },
     boxes: [{
-        id: { type: String },
-        is_completed: { type: Boolean, default: false }
+        date: { type: Date },
+        is_completed: { type: Boolean }
     }],
     frequency_type: { type: String },
     created_at: {
