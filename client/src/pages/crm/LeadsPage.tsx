@@ -168,7 +168,6 @@ export default function LeadsPage() {
       setFilterCount(count)
     }
   }, [fuzzyleads])
-  console.log(selectedData)
   return (
     <>
 

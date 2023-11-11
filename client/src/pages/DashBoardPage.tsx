@@ -6,7 +6,7 @@ import Diversity3Icon from '@mui/icons-material/Diversity3';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { Link } from "react-router-dom";
-import { Apartment, Article, Phone, PunchClock } from "@mui/icons-material";
+import { Apartment, Article, Phone, PunchClock, TaskAlt } from "@mui/icons-material";
 import { useContext } from "react";
 import { UserContext } from "../contexts/userContext";
 
@@ -24,6 +24,19 @@ function DashBoardPage() {
                   <Person3Icon sx={{ color: 'blue', height: 50, width: 50 }} />
                   <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
                     Users
+                  </Typography>
+                </CardContent>
+
+              </Card>
+            </Link>
+          </Grid>}
+          {!user?.user_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+            <Link to={paths.tasks} style={{ textDecoration: 'none' }}>
+              <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                  <TaskAlt sx={{ color: 'blue', height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
+                    Tasks
                   </Typography>
                 </CardContent>
 

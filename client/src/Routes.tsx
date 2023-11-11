@@ -34,6 +34,9 @@ import ContactHelpPage from './pages/contacts/ContactHelpPage'
 import ReminderHelpPage from './pages/reminders/ReminderHelpPage'
 import CrmReminderPage from './pages/crm/CrmReminderPage'
 import CrmActivitiesPage from './pages/crm/CrmActivitiesPage'
+import TasksPage from './pages/tasks/TaskPage'
+import TaskHelpPage from './pages/tasks/TaskHelpPage'
+import TaskNavBar from './components/navbar/TaskNavBar'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -52,6 +55,12 @@ export enum paths {
   reminder_help = "help/reminder",
   contact_help = "help/contact",
   users_help = "help/users",
+
+  //task
+  tasks = "/tasks",
+  task_help_page = "task_help_page",
+
+
   //crm
   crm = "/crm",
   crm_reminders = "crm_reminders",
@@ -254,6 +263,25 @@ function AppRoutes() {
               />
 
             </Route>}
+          {/* task nav bar */}
+          < Route path={paths.tasks} element={<TaskNavBar />
+          }>
+            <Route
+              index element={
+                <TasksPage />
+              }
+            />
+            <Route path={paths.tasks} element={
+              < TasksPage />
+            }
+            />
+            <Route
+              path={paths.task_help_page} element={
+                <TaskHelpPage />
+              }
+            />
+
+          </Route>
           {/* todo nav bar */}
           {!user.contacts_access_fields.is_hidden &&
             < Route path={paths.contacts} element={<ContactNavBar />

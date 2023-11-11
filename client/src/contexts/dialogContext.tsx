@@ -5,9 +5,10 @@ type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" 
 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
+type TaskChoices = "create_task" | "add_boxes_task" | "delete_task" | "close_task"
 
 type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
-  | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" |"update_remark"
+  | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark"
 
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
 type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadcast" | "close_broadcast" | "view_broadcast" | 'start_broadcast' | "reset_broadcast" | "stop_broadcast" | "create_message_broadcast" | "update_message_broadcast"
@@ -20,6 +21,7 @@ type ReminderChoices = "create_reminder" | "update_reminder" | "delete_reminder"
   | "start_message_reminder"
 
 type TaskSchedulerChoices = "create_task_scheduler" | "update_task_scheduler" | "delete_task_scheduler" | "close_task_scheduler" | "view_task_scheduler" | 'start_task_scheduler' | "stop_task_scheduler"
+
 
 
 type BotChoices = "create_flow"
@@ -35,7 +37,8 @@ type BotChoices = "create_flow"
 
 
 
-type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | BroadcastChoices | TaskSchedulerChoices | TODOChoices | ReminderChoices | ContactChoices
+type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | TaskChoices
+  | BroadcastChoices | TaskSchedulerChoices | TODOChoices | ReminderChoices | ContactChoices
 
 const initialState: ChoiceState | null = null
 
@@ -48,6 +51,13 @@ export enum ContactChoiceActions {
   bulk_contact = "bulk_contact",
   close_contact = "close_contact"
 }
+export enum TaskChoiceActions {
+  create_task = "create_task",
+  add_boxes_task = "add_boxes_task",
+  delete_task = "delete_task",
+  close_task = "close_task"
+}
+
 
 export enum TemplateChoiceActions {
   create_template = "create_template",
@@ -166,7 +176,7 @@ export enum UserChoiceActions {
 }
 
 type Action = {
-  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions
+  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions
 }
 
 // reducer
@@ -236,6 +246,11 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TemplateChoiceActions.delete_template: return type
     case TemplateChoiceActions.close_template: return type
     case TemplateChoiceActions.view_template: return type
+
+    case TaskChoiceActions.create_task: return type
+    case TaskChoiceActions.add_boxes_task: return type
+    case TaskChoiceActions.delete_task: return type
+    case TaskChoiceActions.close_task: return type
 
 
     // /contact choice actions
