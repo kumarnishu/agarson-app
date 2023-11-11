@@ -7,6 +7,7 @@ export type ITask = {
         is_completed: boolean
     }[]
     task_description: string,
+    frequency_value: number,
     person: IUser,
     frequency_type: string,
     created_at: Date,

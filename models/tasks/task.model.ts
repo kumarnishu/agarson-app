@@ -11,12 +11,18 @@ const TaskSchema = new mongoose.Schema<ITask, mongoose.Model<ITask, {}, {}>, {}>
         date: { type: Date },
         is_completed: { type: Boolean }
     }],
+    frequency_value: Number,
     frequency_type: { type: String },
     created_at: {
         type: Date,
         default: new Date(),
         required: true,
 
+    },
+    person: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
