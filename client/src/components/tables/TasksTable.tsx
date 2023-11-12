@@ -23,7 +23,7 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
     useEffect(() => {
         setData(tasks)
     }, [tasks])
-
+    console.log(data)
     return (
         <>
             <Box sx={{
@@ -102,6 +102,18 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                     Person
                                 </Stack>
                             </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Result
+                                </Stack>
+                            </TableCell>
+
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -255,13 +267,23 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                         }
                                         {
                                             <TableCell>
+                                                Checked : {task.boxes.filter((box) => {
+                                                    return box.is_completed && new Date(box.date) < new Date()
+                                                }).length}
+
+                                                / {task.boxes.filter((box) => {
+                                                    return new Date(box.date).getDay() !== 0 || new Date(box.date) < new Date()
+                                                }).length}
+
+                                            </TableCell>
+
+                                        }
+                                        {
+                                            <TableCell>
                                                 {
                                                     task.boxes.map((box, index) => {
                                                         return (
-                                                            <Stack key={index} direction={'row'} gap={2}>
-                                                                <Typography variant="body1"  >{new Date(box.date).toDateString()}</Typography>
-                                                                <Typography variant="body1"  >{box.is_completed ? "completed" : "pending"}</Typography>
-                                                            </Stack>
+                                                            <Checkbox color="success" disabled={new Date(box.date).getDay() === 0 || Boolean(!box.is_completed && new Date(box.date) < new Date())} key={index} checked={Boolean(box.is_completed)} />
                                                         )
                                                     })}
 

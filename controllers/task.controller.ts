@@ -142,8 +142,23 @@ export const DeleteTask = async (req: Request, res: Response, next: NextFunction
 }
 
 export const GetTasks = async (req: Request, res: Response, next: NextFunction) => {
-    let tasks = await Task.find().populate('updated_by').populate('created_by')
-    return res.status(200).json(tasks);
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        let tasks = await Task.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
+       
+        let count = tasks.length
+        tasks = tasks.slice((page - 1) * limit, limit * page)
+
+        return res.status(200).json({
+            tasks,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
 }
 
 

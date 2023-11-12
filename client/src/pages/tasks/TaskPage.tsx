@@ -133,6 +133,7 @@ export default function TasksPage() {
             setFilterCount(count)
         }
     }, [fuzzytasks])
+
     return (
         <>
 
