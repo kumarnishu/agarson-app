@@ -13,11 +13,17 @@ import { ChoiceContext, TaskChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import { ITask } from '../../types/task.types'
+import { IUser } from '../../types/user.types'
+import { GetUsers } from '../../services/UserServices'
+import moment from 'moment'
+import { UserContext } from '../../contexts/userContext'
 
 
 
 
 export default function TasksPage() {
+    const { user } = useContext(UserContext)
+    const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
     const [task, setTask] = useState<ITask>()
@@ -28,8 +34,11 @@ export default function TasksPage() {
     const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filterCount, setFilterCount] = useState(0)
     const [selectedTasks, setSelectedTasks] = useState<ITask[]>([])
+    const [userId, setUserId] = useState<string>()
+    const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>()
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
 
-    const { data, isLoading } = useQuery<AxiosResponse<{ tasks: ITask[], page: number, total: number, limit: number }>, BackendError>(["tasks", paginationData], async () => GetTasks({ limit: paginationData?.limit, page: paginationData?.page }))
+    const { data, isLoading, refetch: ReftechTasks } = useQuery<AxiosResponse<{ tasks: ITask[], page: number, total: number, limit: number }>, BackendError>(["tasks", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetTasks({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date:dates?.end_date }))
 
     const { data: fuzzytasks, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ tasks: ITask[], page: number, total: number, limit: number }>, BackendError>(["fuzzytasks", filter], async () => FuzzySearchTasks({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
         enabled: false
@@ -61,6 +70,7 @@ export default function TasksPage() {
         }
     }
 
+
     // refine data
     useEffect(() => {
         let data: {
@@ -85,6 +95,11 @@ export default function TasksPage() {
         if (data.length > 0)
             setSelectedData(data)
     }, [selectedTasks])
+
+    useEffect(() => {
+        if (isUsersSuccess)
+            setUsers(usersData?.data)
+    }, [users, isUsersSuccess, usersData])
 
     useEffect(() => {
         if (!filter) {
@@ -231,6 +246,61 @@ export default function TasksPage() {
                     </>
                 </Stack >
             </Stack >
+
+            {/* filter dates and person */}
+            <Stack padding={2} gap={2}>
+                <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'}>
+                    < TextField
+                        type="date"
+                        id="start_date"
+                        label="Start Date"
+                        fullWidth
+                        focused
+                        onChange={(e) => setDates({
+                            ...dates,
+                            start_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
+                        })}
+                    />
+                    < TextField
+                        type="date"
+                        id="end_date"
+                        label="End Date"
+                        focused
+                        fullWidth
+                        onChange={(e) => setDates({
+                            ...dates,
+                            end_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
+                        })}
+                    />
+                </Stack>
+                {user?.is_admin &&
+                    < TextField
+                        select
+                        SelectProps={{
+                            native: true,
+                        }}
+                        onChange={(e) => {
+                            setUserId(e.target.value)
+                            ReftechTasks()
+                        }}
+                        required
+                        id="task_owner"
+                        label="Filter Tasks Of Indivdual"
+                        fullWidth
+                    >
+                        <option key={'00'} value={undefined}>
+
+                        </option>
+                        {
+                            users.map((user, index) => {
+                                return (<option key={index} value={user._id}>
+                                    {user.username}
+                                </option>)
+                            })
+                        }
+                    </TextField>}
+            </Stack>
+
             {/* table */}
             < TasksTable
                 task={task}

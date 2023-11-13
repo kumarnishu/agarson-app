@@ -144,9 +144,51 @@ export const DeleteTask = async (req: Request, res: Response, next: NextFunction
 export const GetTasks = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
+    let id = req.query.id
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 30
+    previous_date.setDate(day)
+
+
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let tasks = await Task.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
-       
+
+        if (start_date && end_date) {
+            let dt1 = new Date(String(start_date))
+            let dt2 = new Date(String(end_date))
+            tasks = tasks.map((task) => {
+                let updated_task_boxes = task.boxes
+                updated_task_boxes = task.boxes.filter((box) => {
+                    if (box.date >= dt1 && box.date <= dt2)
+                        return box
+                })
+                task.boxes = updated_task_boxes
+                return task
+            })
+        }
+        if (!start_date && !end_date) {
+            tasks = tasks.map((task) => {
+                let updated_task_boxes = task.boxes
+                updated_task_boxes = task.boxes.filter((box) => {
+                    if (box.date >= previous_date && box.date <= new Date())
+                        return box
+                })
+                task.boxes = updated_task_boxes
+                return task
+            })
+        }
+
+        if (id) {
+            let user = await User.findById(id)
+            if (user) {
+                tasks = tasks.filter((task) => {
+                    return task.person.username === user?.username
+                })
+            }
+        }
+
         let count = tasks.length
         tasks = tasks.slice((page - 1) * limit, limit * page)
 

@@ -28,11 +28,11 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
         <>
             <Box sx={{
                 overflow: "scroll",
-                height: '73.5vh'
+                minHeight: '43.5vh'
             }}>
                 <Table
                     stickyHeader
-                    sx={{ width: "5000px" }}
+                    sx={{ width: "2000px" }}
                     size="small">
                     <TableHead
                     >
