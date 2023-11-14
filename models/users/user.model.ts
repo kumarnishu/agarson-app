@@ -194,6 +194,7 @@ UserSchema.method(
 UserSchema.method("comparePassword", function (password: string) {
   return bcrypt.compare(password, this.password);
 })
+
 // Generating Password Reset Token
 UserSchema.method("getResetPasswordToken", function () {
   const resetToken = crypto.randomBytes(32).toString('hex');

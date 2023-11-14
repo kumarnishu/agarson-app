@@ -66,6 +66,27 @@ export const CreateTask = async (req: Request, res: Response, next: NextFunction
     return res.status(201).json({ message: `new Task added` });
 }
 
+export const EditTask = async (req: Request, res: Response, next: NextFunction) => {
+    const { task_description, user_id } = req.body as ITaskBody & { upto_date: string, user_id: string }
+
+    let id = req.params.id
+    if (!task_description)
+        return res.status(400).json({ message: "please provide all required fields" })
+
+    let user = await User.findById(user_id)
+    let task = await Task.findById(id)
+    if (!task)
+        return res.status(404).json({ message: 'task not exists' })
+
+    task.task_description = task_description
+    if (user) {
+        task.person = user
+    }
+    await task.save()
+    return res.status(200).json({ message: `Task updated` });
+}
+
+
 export const AddMoreBoxes = async (req: Request, res: Response, next: NextFunction) => {
     const { upto_date } = req.body as ITaskBody & { upto_date: string }
     let id = req.params.id
@@ -147,11 +168,7 @@ export const GetTasks = async (req: Request, res: Response, next: NextFunction) 
     let id = req.query.id
     let start_date = req.query.start_date
     let end_date = req.query.end_date
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 30
-    previous_date.setDate(day)
-
-
+   
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let tasks = await Task.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
 
@@ -168,17 +185,7 @@ export const GetTasks = async (req: Request, res: Response, next: NextFunction) 
                 return task
             })
         }
-        if (!start_date && !end_date) {
-            tasks = tasks.map((task) => {
-                let updated_task_boxes = task.boxes
-                updated_task_boxes = task.boxes.filter((box) => {
-                    if (box.date >= previous_date && box.date <= new Date())
-                        return box
-                })
-                task.boxes = updated_task_boxes
-                return task
-            })
-        }
+       
 
         if (id) {
             let user = await User.findById(id)

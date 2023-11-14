@@ -17,6 +17,7 @@ import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
 import { UserContext } from '../../contexts/userContext'
+import NewTaskDialog from '../../components/dialogs/tasks/NewTaskDialog'
 
 
 
@@ -38,7 +39,7 @@ export default function TasksPage() {
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>()
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
 
-    const { data, isLoading, refetch: ReftechTasks } = useQuery<AxiosResponse<{ tasks: ITask[], page: number, total: number, limit: number }>, BackendError>(["tasks", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetTasks({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date:dates?.end_date }))
+    const { data, isLoading, refetch: ReftechTasks } = useQuery<AxiosResponse<{ tasks: ITask[], page: number, total: number, limit: number }>, BackendError>(["tasks", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetTasks({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
     const { data: fuzzytasks, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ tasks: ITask[], page: number, total: number, limit: number }>, BackendError>(["fuzzytasks", filter], async () => FuzzySearchTasks({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
         enabled: false
@@ -243,6 +244,7 @@ export default function TasksPage() {
                             >Export To Excel</MenuItem>
 
                         </Menu >
+                        <NewTaskDialog />
                     </>
                 </Stack >
             </Stack >

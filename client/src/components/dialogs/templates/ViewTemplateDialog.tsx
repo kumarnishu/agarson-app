@@ -8,7 +8,7 @@ function ViewTemplateDialog({ template }: { template: IMessageTemplate }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
         <>
-            <Dialog open={choice === TemplateChoiceActions.view_template ? true : false}
+            <Dialog fullScreen={Boolean(window.screen.width < 500)}  open={choice === TemplateChoiceActions.view_template ? true : false}
                 onClose={() => setChoice({ type: TemplateChoiceActions.close_template })}
             >
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: TemplateChoiceActions.close_template })}>

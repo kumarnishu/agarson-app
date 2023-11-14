@@ -1,9 +1,15 @@
-import { Box, Checkbox, FormControlLabel, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
 import { ITask } from '../../types/task.types'
+import { Add, Delete, Edit, RemoveRedEye } from '@mui/icons-material'
+import { ChoiceContext, TaskChoiceActions } from '../../contexts/dialogContext'
+import ViewTaskDialog from '../dialogs/tasks/ViewCheckBoxesDialog'
+import EditTaskDialog from '../dialogs/tasks/EditTaskDialog'
+import DeleteTaskDialog from '../dialogs/tasks/DeleteTaskDialog'
+import AddBoxesDialog from '../dialogs/tasks/AddBoxesDialog'
 
 
 
@@ -19,11 +25,12 @@ type Props = {
 
 function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTasks, setSelectedTasks }: Props) {
     const [data, setData] = useState<ITask[]>(tasks)
+    const { setChoice } = useContext(ChoiceContext)
 
     useEffect(() => {
         setData(tasks)
     }, [tasks])
-    console.log(data)
+
     return (
         <>
             <Box sx={{
@@ -110,10 +117,9 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    Result
+                                    Frequency
                                 </Stack>
                             </TableCell>
-
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -122,13 +128,9 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    Dates
+                                    Status
                                 </Stack>
                             </TableCell>
-
-
-
-                            {/* created at */}
 
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
@@ -211,8 +213,7 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                                 </Stack>
                                             </TableCell>
                                             :
-                                            null
-                                        }
+                                            null}
                                         {!selectAll ?
 
                                             <TableCell>
@@ -237,90 +238,104 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                                 </Stack>
                                             </TableCell>
                                             :
-                                            null
-                                        }
-                                        {/* actions popup */}
+                                            null/* actions popup */}
 
                                         <TableCell>
                                             <PopUp
                                                 element={
                                                     <Stack direction="row" spacing={1}>
+                                                        {
+
+                                                            <>
+                                                                <Tooltip title="Edit">
+                                                                    <IconButton color="info"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: TaskChoiceActions.edit_task })
+                                                                            setTask(task)
+                                                                        }}
+                                                                    >
+                                                                        <Edit />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                                <Tooltip title="Add More">
+                                                                    <IconButton color="info"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: TaskChoiceActions.add_more_boxes })
+                                                                            setTask(task)
+                                                                        }}
+                                                                    >
+                                                                        <Add />
+                                                                    </IconButton>
+                                                                </Tooltip>
+
+                                                                <Tooltip title="Delete">
+                                                                    <IconButton color="error"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: TaskChoiceActions.delete_task })
+                                                                            setTask(task)
+                                                                        }}
+                                                                    >
+                                                                        <Delete />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                                <Tooltip title="View">
+                                                                    <IconButton color="success"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: TaskChoiceActions.view_boxes })
+                                                                            setTask(task)
+                                                                        }}
+                                                                    >
+                                                                        <RemoveRedEye />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            </>
+
+                                                        }
                                                     </Stack>
-                                                }
-                                            />
+                                                } />
                                         </TableCell>
 
 
-                                        {/* task name */}
-                                        {
-                                            <TableCell>
-                                                <Typography sx={{ textTransform: "capitalize" }}>{task.task_description}</Typography>
-                                            </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{task.task_description}</Typography>
+                                        </TableCell>
 
-                                        }
-                                        {/* stage */}
-                                        {
-                                            <TableCell>
-                                                <Typography sx={{ textTransform: "capitalize" }}>{task.person.username}</Typography>
-                                            </TableCell>
 
-                                        }
-                                        {
-                                            <TableCell>
-                                                Checked : {task.boxes.filter((box) => {
-                                                    return box.is_completed && new Date(box.date) < new Date()
-                                                }).length}
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{task.person.username}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{task.frequency_value ? `${task.frequency_value} days` : task.frequency_type}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            Checked : {task.boxes.filter((box) => {
+                                                return box.is_completed && new Date(box.date) <= new Date()
+                                            }).length}
 
-                                                / {task.boxes.filter((box) => {
-                                                    return new Date(box.date).getDay() !== 0 || new Date(box.date) < new Date()
-                                                }).length}
+                                            / {task.boxes.filter((box) => {
+                                                return new Date(box.date).getDay() !== 0 && new Date(box.date) <= new Date()
+                                            }).length}
 
-                                            </TableCell>
+                                        </TableCell>
 
-                                        }
-                                        {
-                                            <TableCell>
-                                                {
-                                                    task.boxes.map((box, index) => {
-                                                        return (
-                                                            <Checkbox color="success" disabled={new Date(box.date).getDay() === 0 || Boolean(!box.is_completed && new Date(box.date) < new Date())} key={index} checked={Boolean(box.is_completed)} />
-                                                        )
-                                                    })}
 
-                                            </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.created_at).toLocaleString()}</Typography>
 
-                                        }
-                                        {
-                                            <TableCell>
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.created_at).toLocaleString()}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.updated_at).toLocaleString()}</Typography>
 
-                                            </TableCell>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.created_by.username}</Typography>
 
-                                        }
-                                        {/* updated at */}
-                                        {
-                                            <TableCell>
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.updated_at).toLocaleString()}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.updated_by.username}</Typography>
 
-                                            </TableCell>
+                                        </TableCell>
 
-                                        }
-                                        {/* created by */}
-                                        {
-                                            <TableCell>
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.created_by.username}</Typography>
-
-                                            </TableCell>
-
-                                        }
-                                        {/* updated by */}
-                                        {
-                                            <TableCell>
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.updated_by.username}</Typography>
-
-                                            </TableCell>
-
-                                        }
 
 
 
@@ -335,7 +350,10 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
             {
                 task ?
                     <>
-
+                        <ViewTaskDialog task={task} />
+                        <EditTaskDialog task={task} />
+                        <DeleteTaskDialog task={task} />
+                        <AddBoxesDialog task={task} />
                     </>
                     : null
             }

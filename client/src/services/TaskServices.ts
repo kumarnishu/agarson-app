@@ -5,8 +5,12 @@ export const CreateTask = async ({ body, id }: { body: { task_description: strin
 };
 
 export const AddMoreBoxes = async ({ body, id }: { body: { upto_date: string }, id: string }) => {
+    return await apiClient.patch(`tasks/${id}`, body);
+};
+export const EditTask = async ({ body, id }: { body: { task_description: string, user_id: string }, id: string }) => {
     return await apiClient.put(`tasks/${id}`, body);
 };
+
 
 export const GetTasks = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
 

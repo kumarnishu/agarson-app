@@ -26,6 +26,7 @@ function TemplatesTable({ templates, selectAll, template, setSelectAll, setTempl
     const [data, setData] = useState<IMessageTemplate[]>(templates)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
+    
     useEffect(() => {
         setData(templates)
     }, [templates])

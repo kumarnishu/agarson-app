@@ -5,7 +5,7 @@ type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" 
 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
-type TaskChoices = "create_task" | "add_boxes_task" | "delete_task" | "close_task"
+type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" |"edit_task"
 
 type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
   | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark"
@@ -53,9 +53,11 @@ export enum ContactChoiceActions {
 }
 export enum TaskChoiceActions {
   create_task = "create_task",
-  add_boxes_task = "add_boxes_task",
+  add_more_boxes = "add_more_boxes",
   delete_task = "delete_task",
-  close_task = "close_task"
+  close_task = "close_task",
+  view_boxes ="view_boxes",
+  edit_task ="edit_task"
 }
 
 
@@ -248,9 +250,11 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TemplateChoiceActions.view_template: return type
 
     case TaskChoiceActions.create_task: return type
-    case TaskChoiceActions.add_boxes_task: return type
+    case TaskChoiceActions.add_more_boxes: return type
+    case TaskChoiceActions.view_boxes: return type
     case TaskChoiceActions.delete_task: return type
     case TaskChoiceActions.close_task: return type
+    case TaskChoiceActions.edit_task: return type
 
 
     // /contact choice actions

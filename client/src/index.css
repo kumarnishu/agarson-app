@@ -12,29 +12,3 @@ input[type=file]::file-selector-button {
   display: none;
   cursor: pointer;
 }
-
-.list {
-  height: 100vh;
-  width: 100vw;
-  padding: 0 1rem;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.item {
-  flex: 0 0 auto;
-  padding: 1rem;
-  border-radius: 1rem;
-  background-color: rgb(44, 44, 46);
-  overflow: hidden;
-  max-width: 75%;
-  min-height: 42px;
-  margin-bottom: 16px;
-}
-
-.item.odd {
-  align-self: flex-end;
-  background-color: rgb(10, 132, 255);
-}
