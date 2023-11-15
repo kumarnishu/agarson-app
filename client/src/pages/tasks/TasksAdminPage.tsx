@@ -22,7 +22,7 @@ import NewTaskDialog from '../../components/dialogs/tasks/NewTaskDialog'
 
 
 
-export default function TasksPage() {
+export default function TasksAdminPage() {
     const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
@@ -174,7 +174,7 @@ export default function TasksPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    Tasks
+                    Tasks Admin
                 </Typography>
 
                 <Stack

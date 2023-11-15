@@ -168,7 +168,7 @@ export const GetTasks = async (req: Request, res: Response, next: NextFunction) 
     let id = req.query.id
     let start_date = req.query.start_date
     let end_date = req.query.end_date
-   
+
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let tasks = await Task.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
 
@@ -185,7 +185,7 @@ export const GetTasks = async (req: Request, res: Response, next: NextFunction) 
                 return task
             })
         }
-       
+
 
         if (id) {
             let user = await User.findById(id)
@@ -210,4 +210,59 @@ export const GetTasks = async (req: Request, res: Response, next: NextFunction) 
         return res.status(400).json({ message: "bad request" })
 }
 
+export const GetMyTasks = async (req: Request, res: Response, next: NextFunction) => {
+    let tasks = await Task.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
+    tasks = tasks.filter((task) => {
+        return task.person.username === req.user?.username
+    })
+    let tmpTasks: {
+        task: ITask,
+        previous_date: Date,
+        next_date: Date,
+        box: {
+            date: Date,
+            is_completed: boolean
+        }
 
+    }[] = []
+
+    tasks.map((task) => {
+        let small_dates = task.boxes.filter((box) => {
+            return new Date(box.date) <= new Date()
+        })
+        let large_dates = task.boxes.filter((box) => {
+            return new Date(box.date) > new Date()
+        })
+        tmpTasks.push({
+            task: task,
+            previous_date: small_dates[small_dates.length - 1].date,
+            next_date: large_dates[0].date,
+            box: small_dates[small_dates.length - 1]
+        })
+    })
+    return res.status(200).json(tmpTasks)
+}
+
+export const ToogleMyTask = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    let date = new Date(String(req.query.date))
+    if (!isMongoId(id)) return res.status(400).json({ message: " id not valid" })
+
+    let task = await Task.findById(id)
+    if (!task) {
+        return res.status(404).json({ message: "Task not found" })
+    }
+
+    let updated_task_boxes = task.boxes
+    updated_task_boxes = task.boxes.map((box) => {
+        let updated_box = box
+        console.log(updated_box.date)
+        console.log(date)
+        if (updated_box.date === date)
+            updated_box.is_completed = !updated_box.is_completed
+        return updated_box
+    })
+    task.boxes = updated_task_boxes
+    await task.save()
+    return res.status(200).json("successfully changed")
+}

@@ -13,7 +13,7 @@ import { IUser } from '../../../types/user.types';
 import { ITask } from '../../../types/task.types';
 
 function EditTaskForm({ task, users }: { task: ITask, users: IUser[] }) {
-    const [personId, setPersonId] = useState<string>()
+    const [personId, setPersonId] = useState<string>(task.person._id)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             id: string, body: {

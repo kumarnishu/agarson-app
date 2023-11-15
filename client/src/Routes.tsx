@@ -34,9 +34,10 @@ import ContactHelpPage from './pages/contacts/ContactHelpPage'
 import ReminderHelpPage from './pages/reminders/ReminderHelpPage'
 import CrmReminderPage from './pages/crm/CrmReminderPage'
 import CrmActivitiesPage from './pages/crm/CrmActivitiesPage'
-import TasksPage from './pages/tasks/TaskPage'
+import TasksPage from './pages/tasks/TasksPage'
 import TaskHelpPage from './pages/tasks/TaskHelpPage'
 import TaskNavBar from './components/navbar/TaskNavBar'
+import TasksAdminPage from './pages/tasks/TasksAdminPage'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -59,6 +60,7 @@ export enum paths {
   //task
   tasks = "/tasks",
   task_help_page = "task_help_page",
+  task_admin_page = "task_admin_page",
 
 
   //crm
@@ -271,9 +273,15 @@ function AppRoutes() {
                 <TasksPage />
               }
             />
+            
             <Route path={paths.tasks} element={
               < TasksPage />
             }
+            />
+            <Route
+              path={paths.task_admin_page} element={
+                <TasksAdminPage />
+              }
             />
             <Route
               path={paths.task_help_page} element={

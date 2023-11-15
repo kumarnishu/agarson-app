@@ -26,6 +26,13 @@ export const GetTasks = async ({ limit, page, start_date, end_date, id }: { limi
         return await apiClient.get(`tasks?limit=${limit}&page=${page}`)
 }
 
+export const GetMyTasks = async () => {
+    return await apiClient.get(`tasks/self`)
+}
+
+export const ToogleMyTasks = async ({ id, date }: { id: string, date: string }) => {
+    return await apiClient.patch(`tasks/self/${id}/?date=${date}`)
+}
 
 
 export const DeleteTask = async (id: string) => {

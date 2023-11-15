@@ -131,6 +131,17 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                     Status
                                 </Stack>
                             </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Last Date
+                                </Stack>
+                            </TableCell>
 
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
@@ -318,7 +329,9 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
 
                                         </TableCell>
 
-
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.boxes[task.boxes.length - 1].date).toLocaleString()}</Typography>
+                                        </TableCell>
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.created_at).toLocaleString()}</Typography>
 

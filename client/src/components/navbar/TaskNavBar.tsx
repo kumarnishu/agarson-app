@@ -49,7 +49,8 @@ export default function TaskNavBar() {
                                     }}
                                 >
 
-                                    <StyledLink to={paths.tasks}>Task</StyledLink>
+                                    <StyledLink to={paths.tasks}>Tasks</StyledLink>
+                                    <StyledLink to={paths.task_admin_page}>Task Admin</StyledLink>
                                     <StyledLink to={paths.task_help_page}>Help</StyledLink>
                                 </Stack>
 
