@@ -7,7 +7,7 @@ import { isvalidDate } from "../utils/isValidDate";
 
 
 export const CreateTask = async (req: Request, res: Response, next: NextFunction) => {
-    const { task_description, frequency_type, upto_date, frequency_value } = req.body as ITaskBody & { upto_date: string }
+    const { task_description, frequency_type, upto_date, frequency_value, start_date } = req.body as ITaskBody & { upto_date: string, start_date:string }
 
     let id = req.params.id
     if (!task_description || !frequency_type || !id || !upto_date)
@@ -26,28 +26,28 @@ export const CreateTask = async (req: Request, res: Response, next: NextFunction
     let boxes: ITask['boxes'] = []
     if (upto_date) {
         if (frequency_type === "daily") {
-            let current_date = new Date()
+            let current_date = new Date(start_date)
             while (current_date <= new Date(upto_date)) {
                 boxes.push({ date: new Date(current_date), is_completed: false })
                 current_date.setDate(new Date(current_date).getDate() + 1)
             }
         }
         if (frequency_type === "custom days") {
-            let current_date = new Date()
+            let current_date = new Date(start_date)
             while (current_date <= new Date(upto_date)) {
                 boxes.push({ date: new Date(current_date), is_completed: false })
                 current_date.setDate(new Date(current_date).getDate() + frequency_value)
             }
         }
         if (frequency_type === "weekly") {
-            let current_date = new Date()
+            let current_date = new Date(start_date)
             while (current_date <= new Date(upto_date)) {
                 boxes.push({ date: new Date(current_date), is_completed: false })
                 current_date.setDate(new Date(current_date).getDate() + 7)
             }
         }
         if (frequency_type === "monthly") {
-            let current_date = new Date()
+            let current_date = new Date(start_date)
             while (current_date <= new Date(upto_date)) {
                 boxes.push({ date: new Date(current_date), is_completed: false })
                 current_date.setMonth(new Date(current_date).getMonth() + 1)
@@ -231,8 +231,7 @@ export const ToogleMyTask = async (req: Request, res: Response, next: NextFuncti
     let updated_task_boxes = task.boxes
     updated_task_boxes = task.boxes.map((box) => {
         let updated_box = box
-
-        if (updated_box.date.getDate() === date.getDate())
+        if (updated_box.date.getDate() === date.getDate() && updated_box.date.getMonth() === date.getMonth() && updated_box.date.getFullYear() === date.getFullYear())
             updated_box.is_completed = !updated_box.is_completed
         return updated_box
     })

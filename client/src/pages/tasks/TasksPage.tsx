@@ -7,6 +7,7 @@ import { BackendError } from '../..'
 import { ITask } from '../../types/task.types'
 import { Button, Checkbox, Paper, Tooltip, Typography } from '@mui/material'
 import { queryClient } from '../../main'
+import moment from 'moment'
 
 
 export default function TasksPage() {
@@ -133,9 +134,11 @@ export default function TasksPage() {
                                 </Tooltip>
                             </Typography>
                             <Typography variant="caption" sx={{ textTransform: "capitalize" }}>{task.task.frequency_value ? `every ${task.task.frequency_value} days` : task.task.frequency_type}
-                                : {task.box.is_completed ? `Completed` : "Pending"}
+                                : {task.box.is_completed ? `Completed & ` : "Pending & "}
                             </Typography>
-                            <Typography variant="caption" sx={{ textTransform: "capitalize" }}>  Last Date : {new Date(task.next_date).toDateString()}
+                            <Typography variant="caption" sx={{ textTransform: "capitalize" }}>  Last Date : {
+                                moment(new Date(task.next_date).setDate(new Date(task.next_date).getDate() - 1)).format("YYYY-MM-DD")
+                            }
                             </Typography>
                         </Paper>
                     </Stack>

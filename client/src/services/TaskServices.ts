@@ -1,6 +1,6 @@
 import { apiClient } from "./utils/AxiosInterceptor";
 
-export const CreateTask = async ({ body, id }: { body: { task_description: string, frequency_type: string, frequency_value?: number, upto_date: string }, id: string }) => {
+export const CreateTask = async ({ body, id }: { body: { task_description: string, frequency_type: string, frequency_value?: number, upto_date: string, start_date: string }, id: string }) => {
     return await apiClient.post(`tasks/${id}`, body);
 };
 

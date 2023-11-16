@@ -260,7 +260,7 @@ export default function TasksAdminPage() {
                         focused
                         onChange={(e) => setDates({
                             ...dates,
-                            start_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
+                            start_date: moment(e.target.value).format("YYYY-MM-DD")
                         })}
                     />
                     < TextField
@@ -271,7 +271,7 @@ export default function TasksAdminPage() {
                         fullWidth
                         onChange={(e) => setDates({
                             ...dates,
-                            end_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
+                            end_date: moment(e.target.value).format("YYYY-MM-DD")
                         })}
                     />
                 </Stack>

@@ -3,33 +3,32 @@ import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
-import { ITask } from '../../types/task.types'
-import { Add, Delete, Edit, RemoveRedEye } from '@mui/icons-material'
-import { ChoiceContext, TaskChoiceActions } from '../../contexts/dialogContext'
-import ViewTaskDialog from '../dialogs/tasks/ViewCheckBoxesDialog'
-import EditTaskDialog from '../dialogs/tasks/EditTaskDialog'
-import DeleteTaskDialog from '../dialogs/tasks/DeleteTaskDialog'
-import AddBoxesDialog from '../dialogs/tasks/AddBoxesDialog'
+import { IChecklist } from '../../types/checklist.types'
+import { Add, Delete, Edit } from '@mui/icons-material'
+import { ChoiceContext, CheckListChoiceActions } from '../../contexts/dialogContext'
+import EditCheckListDialog from '../dialogs/checklists/EditCheckListDialog'
+import DeleteCheckListDialog from '../dialogs/checklists/DeleteCheckListDialog'
+import AddCheckBoxesDialog from '../dialogs/checklists/AddCheckBoxesDialog'
 
 
 
 type Props = {
-    task: ITask | undefined
-    setTask: React.Dispatch<React.SetStateAction<ITask | undefined>>,
-    tasks: ITask[],
+    checklist: IChecklist | undefined
+    setCheckList: React.Dispatch<React.SetStateAction<IChecklist | undefined>>,
+    checklists: IChecklist[],
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    selectedTasks: ITask[]
-    setSelectedTasks: React.Dispatch<React.SetStateAction<ITask[]>>,
+    selectedCheckLists: IChecklist[]
+    setSelectedCheckLists: React.Dispatch<React.SetStateAction<IChecklist[]>>,
 }
 
-function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTasks, setSelectedTasks }: Props) {
-    const [data, setData] = useState<ITask[]>(tasks)
+function CheckListTable({ checklist, checklists, setCheckList, selectAll, setSelectAll, selectedCheckLists, setSelectedCheckLists }: Props) {
+    const [data, setData] = useState<IChecklist[]>(checklists)
     const { setChoice } = useContext(ChoiceContext)
 
     useEffect(() => {
-        setData(tasks)
-    }, [tasks])
+        setData(checklists)
+    }, [checklists])
 
     return (
         <>
@@ -39,7 +38,7 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
             }}>
                 <Table
                     stickyHeader
-                    sx={{ width: "2000px" }}
+                    sx={{ width: "5000px" }}
                     size="small">
                     <TableHead
                     >
@@ -58,11 +57,11 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                             checked={Boolean(selectAll)}
                                             size="small" onChange={(e) => {
                                                 if (e.currentTarget.checked) {
-                                                    setSelectedTasks(tasks)
+                                                    setSelectedCheckLists(checklists)
                                                     setSelectAll(true)
                                                 }
                                                 if (!e.currentTarget.checked) {
-                                                    setSelectedTasks([])
+                                                    setSelectedCheckLists([])
                                                     setSelectAll(false)
                                                 }
                                             }} />}
@@ -93,7 +92,7 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    Task Description
+                                    CheckList Description
                                 </Stack>
                             </TableCell>
 
@@ -117,20 +116,10 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    Frequency
+                                    Check Boxes
                                 </Stack>
                             </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Status
-                                </Stack>
-                            </TableCell>
+
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -199,7 +188,7 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                     <TableBody >
                         {
 
-                            data && data.map((task, index) => {
+                            data && data.map((checklist, index) => {
                                 return (
                                     <TableRow
                                         key={index}
@@ -235,13 +224,13 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                                 >
                                                     <Checkbox size="small"
                                                         onChange={(e) => {
-                                                            setTask(task)
+                                                            setCheckList(checklist)
                                                             if (e.target.checked) {
-                                                                setSelectedTasks([...selectedTasks, task])
+                                                                setSelectedCheckLists([...selectedCheckLists, checklist])
                                                             }
                                                             if (!e.target.checked) {
-                                                                setSelectedTasks((tasks) => tasks.filter((item) => {
-                                                                    return item._id !== task._id
+                                                                setSelectedCheckLists((checklists) => checklists.filter((item) => {
+                                                                    return item._id !== checklist._id
                                                                 }))
                                                             }
                                                         }}
@@ -261,8 +250,8 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                                                 <Tooltip title="Edit">
                                                                     <IconButton color="info"
                                                                         onClick={() => {
-                                                                            setChoice({ type: TaskChoiceActions.edit_task })
-                                                                            setTask(task)
+                                                                            setChoice({ type: CheckListChoiceActions.edit_checklist })
+                                                                            setCheckList(checklist)
                                                                         }}
                                                                     >
                                                                         <Edit />
@@ -271,8 +260,8 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                                                 <Tooltip title="Add More">
                                                                     <IconButton color="info"
                                                                         onClick={() => {
-                                                                            setChoice({ type: TaskChoiceActions.add_more_boxes })
-                                                                            setTask(task)
+                                                                            setChoice({ type: CheckListChoiceActions.add_more_check_boxes })
+                                                                            setCheckList(checklist)
                                                                         }}
                                                                     >
                                                                         <Add />
@@ -282,23 +271,14 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                                                                 <Tooltip title="Delete">
                                                                     <IconButton color="error"
                                                                         onClick={() => {
-                                                                            setChoice({ type: TaskChoiceActions.delete_task })
-                                                                            setTask(task)
+                                                                            setChoice({ type: CheckListChoiceActions.delete_checklist })
+                                                                            setCheckList(checklist)
                                                                         }}
                                                                     >
                                                                         <Delete />
                                                                     </IconButton>
                                                                 </Tooltip>
-                                                                <Tooltip title="View">
-                                                                    <IconButton color="success"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: TaskChoiceActions.view_boxes })
-                                                                            setTask(task)
-                                                                        }}
-                                                                    >
-                                                                        <RemoveRedEye />
-                                                                    </IconButton>
-                                                                </Tooltip>
+
                                                             </>
 
                                                         }
@@ -308,49 +288,50 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
 
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{task.task_description}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }}>
+                                                <a href="https://docs.google.com/spreadsheets/u/0/?usp=sheets_alc" target='blank' >
+                                                    {checklist.title}
+                                                </a>
+                                            </Typography>
                                         </TableCell>
 
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{task.person.username}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{task.frequency_value ? `${task.frequency_value} days` : task.frequency_type}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            Checked : {task.boxes.filter((box) => {
-                                                return box.is_completed && new Date(box.date) <= new Date()
-                                            }).length}
-
-                                            / {task.boxes.filter((box) => {
-                                                return new Date(box.date).getDay() !== 0 && new Date(box.date) <= new Date()
-                                            }).length}
-
+                                            <Typography sx={{ textTransform: "capitalize" }}>{checklist.owner.username}</Typography>
                                         </TableCell>
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.boxes.length > 0 && new Date(task.boxes[task.boxes.length - 1].date).toLocaleString()}</Typography>
+                                            {checklist.boxes.map((box, index) => {
+                                                return (
+                                                    <Tooltip key={index} title={new Date(box.desired_date).toDateString()}>
+                                                        <Checkbox
+                                                            disabled={Boolean(new Date(box.desired_date).getDay() === 0)}
+                                                            color={Boolean(box.desired_date === box.actual_date) ? "success" : "error"} checked={Boolean(box.desired_date && box.actual_date)} />
+                                                    </Tooltip>
+                                                )
+                                            })
+                                            }
+                                        </TableCell>
+
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{checklist.boxes.length > 0 && new Date(checklist.boxes[checklist.boxes.length - 1].desired_date).toLocaleString()}</Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.created_at).toLocaleString()}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(checklist.created_at).toLocaleString()}</Typography>
 
                                         </TableCell>
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.updated_at).toLocaleString()}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(checklist.updated_at).toLocaleString()}</Typography>
 
                                         </TableCell>
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.created_by.username}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{checklist.created_by.username}</Typography>
 
                                         </TableCell>
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.updated_by.username}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{checklist.updated_by.username}</Typography>
 
                                         </TableCell>
-
-
-
 
                                     </TableRow>
                                 )
@@ -361,12 +342,11 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
                 </Table>
             </Box >
             {
-                task ?
+                checklist ?
                     <>
-                        <ViewTaskDialog task={task} />
-                        <EditTaskDialog task={task} />
-                        <DeleteTaskDialog task={task} />
-                        <AddBoxesDialog task={task} />
+                        <EditCheckListDialog checklist={checklist} />
+                        <DeleteCheckListDialog checklist={checklist} />
+                        <AddCheckBoxesDialog checklist={checklist} />
                     </>
                     : null
             }
@@ -374,4 +354,4 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
     )
 }
 
-export default TaskTable
+export default CheckListTable

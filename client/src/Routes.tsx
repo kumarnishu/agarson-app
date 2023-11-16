@@ -38,6 +38,10 @@ import TasksPage from './pages/tasks/TasksPage'
 import TaskHelpPage from './pages/tasks/TaskHelpPage'
 import TaskNavBar from './components/navbar/TaskNavBar'
 import TasksAdminPage from './pages/tasks/TasksAdminPage'
+import CheckListPage from './pages/checklists/CheckListPage'
+import CheckListAdminPage from './pages/checklists/CheckListAdminPage'
+import CheckListHelpPage from './pages/checklists/CheckListHelpPage'
+import CheckListNavBar from './components/navbar/CheckListNavBar'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -61,6 +65,11 @@ export enum paths {
   tasks = "/tasks",
   task_help_page = "task_help_page",
   task_admin_page = "task_admin_page",
+
+  //checklists
+  checklists = "/checklists",
+  checklist_help_page = "checklist_help_page",
+  checklist_admin_page = "checklist_admin_page",
 
 
   //crm
@@ -273,7 +282,7 @@ function AppRoutes() {
                 <TasksPage />
               }
             />
-            
+
             <Route path={paths.tasks} element={
               < TasksPage />
             }
@@ -290,6 +299,33 @@ function AppRoutes() {
             />
 
           </Route>
+
+          {/* checklist routes */}
+          < Route path={paths.checklists} element={<CheckListNavBar />
+          }>
+            <Route
+              index element={
+                <CheckListPage />
+              }
+            />
+
+            <Route path={paths.checklists} element={
+              < CheckListPage />
+            }
+            />
+            <Route
+              path={paths.checklist_admin_page} element={
+                <CheckListAdminPage />
+              }
+            />
+            <Route
+              path={paths.checklist_help_page} element={
+                <CheckListHelpPage />
+              }
+            />
+
+          </Route>
+
           {/* todo nav bar */}
           {!user.contacts_access_fields.is_hidden &&
             < Route path={paths.contacts} element={<ContactNavBar />

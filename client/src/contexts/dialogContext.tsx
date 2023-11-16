@@ -5,7 +5,10 @@ type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" 
 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
-type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" |"edit_task"
+type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" | "edit_task"
+
+type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist"  | "edit_checklist"
+
 
 type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
   | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark"
@@ -38,7 +41,7 @@ type BotChoices = "create_flow"
 
 
 type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | TaskChoices
-  | BroadcastChoices | TaskSchedulerChoices | TODOChoices | ReminderChoices | ContactChoices
+  | BroadcastChoices | TaskSchedulerChoices | TODOChoices | ReminderChoices | ContactChoices | CheckListChoices
 
 const initialState: ChoiceState | null = null
 
@@ -56,8 +59,15 @@ export enum TaskChoiceActions {
   add_more_boxes = "add_more_boxes",
   delete_task = "delete_task",
   close_task = "close_task",
-  view_boxes ="view_boxes",
-  edit_task ="edit_task"
+  view_boxes = "view_boxes",
+  edit_task = "edit_task"
+}
+export enum CheckListChoiceActions {
+  create_checklist = "create_checklist",
+  add_more_check_boxes = "add_more_check_boxes",
+  delete_checklist = "delete_checklist",
+  close_checklist = "close_checklist",
+  edit_checklist = "edit_checklist"
 }
 
 
@@ -178,7 +188,7 @@ export enum UserChoiceActions {
 }
 
 type Action = {
-  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions
+  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions
 }
 
 // reducer
@@ -249,6 +259,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TemplateChoiceActions.close_template: return type
     case TemplateChoiceActions.view_template: return type
 
+    // task
     case TaskChoiceActions.create_task: return type
     case TaskChoiceActions.add_more_boxes: return type
     case TaskChoiceActions.view_boxes: return type
@@ -256,6 +267,12 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TaskChoiceActions.close_task: return type
     case TaskChoiceActions.edit_task: return type
 
+    // checklist actions
+    case CheckListChoiceActions.create_checklist: return type
+    case CheckListChoiceActions.add_more_check_boxes: return type
+    case CheckListChoiceActions.delete_checklist: return type
+    case CheckListChoiceActions.close_checklist: return type
+    case CheckListChoiceActions.edit_checklist: return type
 
     // /contact choice actions
     case ContactChoiceActions.create_contact: return type

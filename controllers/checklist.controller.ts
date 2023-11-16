@@ -7,7 +7,7 @@ import { Checklist } from "../models/checklist/checklist.model";
 
 
 export const CreateChecklist = async (req: Request, res: Response, next: NextFunction) => {
-    const { title, sheet_url, upto_date } = req.body as IChecklistBody & { upto_date: string }
+    const { title, sheet_url, upto_date, start_date } = req.body as IChecklistBody & { upto_date: string, start_date: string }
 
     let id = req.params.id
     if (!title || !sheet_url || !id || !upto_date)
@@ -23,7 +23,7 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
 
     let boxes: IChecklist['boxes'] = []
     if (upto_date) {
-        let current_date = new Date()
+        let current_date = new Date(start_date)
         while (current_date <= new Date(upto_date)) {
             boxes.push({ desired_date: new Date(current_date) })
             current_date.setDate(new Date(current_date).getDate() + 1)
@@ -70,7 +70,7 @@ export const EditChecklist = async (req: Request, res: Response, next: NextFunct
 }
 
 
-export const AddMoreBoxes = async (req: Request, res: Response, next: NextFunction) => {
+export const AddMoreCheckBoxes = async (req: Request, res: Response, next: NextFunction) => {
     const { upto_date } = req.body as IChecklistBody & { upto_date: string }
     let id = req.params.id
     if (!id || !upto_date)
@@ -86,6 +86,7 @@ export const AddMoreBoxes = async (req: Request, res: Response, next: NextFuncti
     let boxes: IChecklist['boxes'] = checklist.boxes
     if (upto_date) {
         if (boxes.length > 0) {
+            console.log("entered")
             let current_date = new Date(boxes[boxes.length - 1].desired_date)
             current_date.setDate(new Date(current_date).getDate() + 1)
             while (current_date <= new Date(upto_date)) {
@@ -121,7 +122,7 @@ export const GetCheckLists = async (req: Request, res: Response, next: NextFunct
     let end_date = req.query.end_date
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let checklists = await Checklist.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
+        let checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
 
         if (start_date && end_date) {
             let dt1 = new Date(String(start_date))
@@ -162,7 +163,7 @@ export const GetCheckLists = async (req: Request, res: Response, next: NextFunct
 }
 
 export const GetMyCheckLists = async (req: Request, res: Response, next: NextFunction) => {
-    let checklists = await Checklist.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
+    let checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
     checklists = checklists.filter((checklist) => {
         return checklist.owner.username === req.user?.username
     })
@@ -182,7 +183,7 @@ export const ToogleMyChecklist = async (req: Request, res: Response, next: NextF
     let updated_checklist_boxes = checklist.boxes
     updated_checklist_boxes = checklist.boxes.map((box) => {
         let updated_box = box
-        if (updated_box.desired_date.getDate() === date.getDate())
+        if (updated_box.desired_date.getDate() === date.getDate() && updated_box.desired_date.getMonth() === date.getMonth() && updated_box.desired_date.getFullYear() === date.getFullYear())
             updated_box.actual_date = new Date()
         return updated_box
     })

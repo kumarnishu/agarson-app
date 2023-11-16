@@ -4,59 +4,51 @@ import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
-import { ChoiceContext, TaskChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext, CheckListChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import moment from 'moment'
-import { CreateTask } from '../../../services/TaskServices';
+import { CreateCheckList } from '../../../services/CheckListServices';
 import { IUser } from '../../../types/user.types';
 
-function NewTaskForm({ users }: { users: IUser[] }) {
+function NewCheckListForm({ users }: { users: IUser[] }) {
     const [personId, setPersonId] = useState<string>()
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             id: string, body: {
-                task_description: string;
-                frequency_type: string;
-                frequency_value?: number;
+                title: string;
+                sheet_url: string;
                 upto_date: string;
                 start_date: string;
             }
         }>
-        (CreateTask, {
+        (CreateCheckList, {
             onSuccess: () => {
-                queryClient.invalidateQueries('tasks')
+                queryClient.invalidateQueries('checklists')
             }
         })
 
     const { setChoice } = useContext(ChoiceContext)
 
     const formik = useFormik<{
-        task_description: string;
-        frequency_type: string;
-        frequency_value?: number;
+        title: string;
+        sheet_url: string;
         upto_date: string;
         start_date: string;
     }>({
         initialValues: {
-            task_description: "",
-            upto_date: moment(new Date().setDate(30)).format("YYYY-MM-DD"),
+            title: "",
+            sheet_url: "",
             start_date: moment(new Date()).format("YYYY-MM-DD"),
-            frequency_type: "daily",
+            upto_date: moment(new Date().setDate(30)).format("YYYY-MM-DD"),
         },
         validationSchema: Yup.object({
-            task_description: Yup.string().required("required field")
+            title: Yup.string().required("required field")
                 .min(5, 'Must be 5 characters or more')
                 .max(200, 'Must be 200 characters or less')
                 .required('Required field'),
-            frequency_type: Yup.string().required("required field"),
-            frequency_value: Yup.string().test("frequency_value", "must provide a value", () => {
-                if (formik.values.frequency_value && formik.values.frequency_value <= 0 && formik.values.frequency_type === "custom")
-                    return false
-                else
-                    return true
-            }),
+            sheet_url: Yup.string().required("required field"),
             upto_date: Yup.string().required("required field").test("upto_date", "provide valid last date", () => {
                 if (new Date(formik.values.upto_date) <= new Date())
                     return false
@@ -71,9 +63,8 @@ function NewTaskForm({ users }: { users: IUser[] }) {
             })
         }),
         onSubmit: (values: {
-            task_description: string;
-            frequency_type: string;
-            frequency_value?: number;
+            title: string;
+            sheet_url: string;
             upto_date: string;
             start_date: string;
         }) => {
@@ -81,11 +72,10 @@ function NewTaskForm({ users }: { users: IUser[] }) {
                 mutate({
                     id: personId,
                     body: {
-                        task_description: values.task_description,
+                        title: values.title,
                         upto_date: values.upto_date,
                         start_date: values.start_date,
-                        frequency_type: values.frequency_type,
-                        frequency_value: values?.frequency_value
+                        sheet_url: values.sheet_url,
                     }
                 })
         }
@@ -94,7 +84,7 @@ function NewTaskForm({ users }: { users: IUser[] }) {
     useEffect(() => {
         if (isSuccess) {
             setTimeout(() => {
-                setChoice({ type: TaskChoiceActions.close_task })
+                setChoice({ type: CheckListChoiceActions.close_checklist })
             }, 1000)
         }
     }, [isSuccess, setChoice])
@@ -104,69 +94,36 @@ function NewTaskForm({ users }: { users: IUser[] }) {
                 gap={2}
                 pt={2}
             >
-                {/* task_descriptions */}
+                {/* titles */}
                 <TextField
                     multiline
                     minRows={4}
                     required
                     error={
-                        formik.touched.task_description && formik.errors.task_description ? true : false
+                        formik.touched.title && formik.errors.title ? true : false
                     }
-                    id="task_description"
-                    label="Task Description"
+                    id="title"
+                    label="Checklist Title"
                     fullWidth
                     helperText={
-                        formik.touched.task_description && formik.errors.task_description ? formik.errors.task_description : ""
+                        formik.touched.title && formik.errors.title ? formik.errors.title : ""
                     }
-                    {...formik.getFieldProps('task_description')}
+                    {...formik.getFieldProps('title')}
                 />
                 < TextField
-                    select
-                    SelectProps={{
-                        native: true
-                    }}
                     focused
                     error={
-                        formik.touched.frequency_type && formik.errors.frequency_type ? true : false
+                        formik.touched.sheet_url && formik.errors.sheet_url ? true : false
                     }
-                    id="frequency_type"
-                    label="Frequency"
+                    id="sheet_url"
+                    label="Sheet url"
                     fullWidth
                     required
                     helperText={
-                        formik.touched.frequency_type && formik.errors.frequency_type ? formik.errors.frequency_type : ""
+                        formik.touched.sheet_url && formik.errors.sheet_url ? formik.errors.sheet_url : ""
                     }
-                    {...formik.getFieldProps('frequency_type')}
-                >
-                    <option value="daily" >
-                        daily
-                    </option>
-                    <option value="weekly" >
-                        weekly
-                    </option>
-                    <option value="monthly" >
-                        monthly
-                    </option>
-                    <option value="custom" >
-                        custom days
-                    </option>
-                </TextField>
-
-
-                {formik.values.frequency_type === "custom" && <TextField
-                    type="number"
-                    required
-                    error={
-                        formik.touched.frequency_value && formik.errors.frequency_value ? true : false
-                    }
-                    id="frequency_value"
-                    label="Enter Days"
-                    fullWidth
-                    helperText={
-                        formik.touched.frequency_value && formik.errors.frequency_value ? formik.errors.frequency_value : ""
-                    }
-                    {...formik.getFieldProps('frequency_value')}
-                />}
+                    {...formik.getFieldProps('sheet_url')}
+                />
                 < TextField
                     select
                     SelectProps={{
@@ -194,6 +151,7 @@ function NewTaskForm({ users }: { users: IUser[] }) {
                         })
                     }
                 </TextField>
+
                 < TextField
                     type="date"
                     error={
@@ -207,6 +165,7 @@ function NewTaskForm({ users }: { users: IUser[] }) {
                     }
                     {...formik.getFieldProps('start_date')}
                 />
+
                 < TextField
                     type="date"
                     error={
@@ -220,7 +179,7 @@ function NewTaskForm({ users }: { users: IUser[] }) {
                     }
                     {...formik.getFieldProps('upto_date')}
                 />
-               
+
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
@@ -233,7 +192,7 @@ function NewTaskForm({ users }: { users: IUser[] }) {
             }
             {
                 isSuccess ? (
-                    <AlertBar message="new task added" color="success" />
+                    <AlertBar message="new checklist added" color="success" />
                 ) : null
             }
 
@@ -241,4 +200,4 @@ function NewTaskForm({ users }: { users: IUser[] }) {
     )
 }
 
-export default NewTaskForm
+export default NewCheckListForm
