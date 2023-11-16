@@ -259,7 +259,6 @@ export default function LeadsPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              {LoggedInUser?.is_admin &&
                 <MenuItem
                   onClick={() => {
                     if (selectedLeads.length === 0)
@@ -268,7 +267,7 @@ export default function LeadsPage() {
                       setChoice({ type: LeadChoiceActions.bulk_assign_leads })
                     setAnchorEl(null)
                   }}
-                > Assign Leads</MenuItem>}
+                > Assign Leads</MenuItem>
 
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>

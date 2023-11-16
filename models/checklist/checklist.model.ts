@@ -12,17 +12,17 @@ const ChecklistSchema = new mongoose.Schema<IChecklist, mongoose.Model<IChecklis
         lowercase: true,
         required: true
     },
-    dates: [{
-        date: { type: Date },
-        is_completed: { type: Boolean }
+    boxes: [{
+        desired_date: { type: Date },
+        actual_date: { type: Date }
     }],
-    owners: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-        }
-    ],
+    owner:
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
+    ,
     created_at: {
         type: Date,
         default: new Date(),

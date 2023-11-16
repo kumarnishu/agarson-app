@@ -215,32 +215,7 @@ export const GetMyTasks = async (req: Request, res: Response, next: NextFunction
     tasks = tasks.filter((task) => {
         return task.person.username === req.user?.username
     })
-    let tmpTasks: {
-        task: ITask,
-        previous_date: Date,
-        next_date: Date,
-        box: {
-            date: Date,
-            is_completed: boolean
-        }
-
-    }[] = []
-
-    tasks.map((task) => {
-        let small_dates = task.boxes.filter((box) => {
-            return new Date(box.date) <= new Date()
-        })
-        let large_dates = task.boxes.filter((box) => {
-            return new Date(box.date) > new Date()
-        })
-        tmpTasks.push({
-            task: task,
-            previous_date: small_dates[small_dates.length - 1].date,
-            next_date: large_dates[0].date,
-            box: small_dates[small_dates.length - 1]
-        })
-    })
-    return res.status(200).json(tmpTasks)
+    return res.status(200).json(tasks)
 }
 
 export const ToogleMyTask = async (req: Request, res: Response, next: NextFunction) => {
@@ -256,9 +231,8 @@ export const ToogleMyTask = async (req: Request, res: Response, next: NextFuncti
     let updated_task_boxes = task.boxes
     updated_task_boxes = task.boxes.map((box) => {
         let updated_box = box
-        console.log(updated_box.date)
-        console.log(date)
-        if (updated_box.date === date)
+
+        if (updated_box.date.getDate() === date.getDate())
             updated_box.is_completed = !updated_box.is_completed
         return updated_box
     })

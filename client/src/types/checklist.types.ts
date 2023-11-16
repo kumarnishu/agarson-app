@@ -4,11 +4,11 @@ export type IChecklist = {
     _id: string,
     title: string,
     sheet_url: string,
-    dates: {
-        date: Date,
-        is_completed: boolean
+    boxes: {
+        desired_date: Date,
+        actual_date?: Date,
     }[],
-    owners: IUser[]
+    owner: IUser,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

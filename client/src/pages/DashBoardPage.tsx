@@ -30,7 +30,7 @@ function DashBoardPage() {
               </Card>
             </Link>
           </Grid>}
-          {!user?.user_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+          <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
             <Link to={paths.tasks} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
@@ -42,7 +42,7 @@ function DashBoardPage() {
 
               </Card>
             </Link>
-          </Grid>}
+          </Grid>
           {/* crm */}
           {!user?.crm_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
             <Link to={paths.crm} style={{ textDecoration: 'none' }}>
