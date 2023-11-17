@@ -7,7 +7,7 @@ type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "
 
 type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" | "edit_task"
 
-type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist"  | "edit_checklist"
+type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
 
 type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
@@ -67,7 +67,9 @@ export enum CheckListChoiceActions {
   add_more_check_boxes = "add_more_check_boxes",
   delete_checklist = "delete_checklist",
   close_checklist = "close_checklist",
-  edit_checklist = "edit_checklist"
+  edit_checklist = "edit_checklist",
+  view_checklist_boxes = "view_checklist_boxes",
+  check_my_boxes = "check_my_boxes"
 }
 
 
@@ -273,6 +275,8 @@ function reducer(state: ChoiceState | null, action: Action) {
     case CheckListChoiceActions.delete_checklist: return type
     case CheckListChoiceActions.close_checklist: return type
     case CheckListChoiceActions.edit_checklist: return type
+    case CheckListChoiceActions.view_checklist_boxes: return type
+    case CheckListChoiceActions.check_my_boxes: return type
 
     // /contact choice actions
     case ContactChoiceActions.create_contact: return type

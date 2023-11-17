@@ -287,11 +287,12 @@ function AppRoutes() {
               < TasksPage />
             }
             />
-            <Route
-              path={paths.task_admin_page} element={
-                <TasksAdminPage />
-              }
-            />
+            {user.created_by._id === user._id &&
+              < Route
+                path={paths.task_admin_page} element={
+                  <TasksAdminPage />
+                }
+              />}
             <Route
               path={paths.task_help_page} element={
                 <TaskHelpPage />
@@ -313,11 +314,12 @@ function AppRoutes() {
               < CheckListPage />
             }
             />
-            <Route
-              path={paths.checklist_admin_page} element={
-                <CheckListAdminPage />
-              }
-            />
+            {user.created_by._id === user._id &&
+              <Route
+                path={paths.checklist_admin_page} element={
+                  <CheckListAdminPage />
+                }
+              />}
             <Route
               path={paths.checklist_help_page} element={
                 <CheckListHelpPage />

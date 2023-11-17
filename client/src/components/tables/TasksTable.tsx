@@ -6,7 +6,7 @@ import PopUp from '../popup/PopUp'
 import { ITask } from '../../types/task.types'
 import { Add, Delete, Edit, RemoveRedEye } from '@mui/icons-material'
 import { ChoiceContext, TaskChoiceActions } from '../../contexts/dialogContext'
-import ViewTaskDialog from '../dialogs/tasks/ViewCheckBoxesDialog'
+import ViewTaskBoxesDialog from '../dialogs/tasks/ViewTaskBoxesDialog'
 import EditTaskDialog from '../dialogs/tasks/EditTaskDialog'
 import DeleteTaskDialog from '../dialogs/tasks/DeleteTaskDialog'
 import AddBoxesDialog from '../dialogs/tasks/AddBoxesDialog'
@@ -21,9 +21,13 @@ type Props = {
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
     selectedTasks: ITask[]
     setSelectedTasks: React.Dispatch<React.SetStateAction<ITask[]>>,
+    dates: {
+        start_date?: string | undefined;
+        end_date?: string | undefined;
+    } | undefined
 }
 
-function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTasks, setSelectedTasks }: Props) {
+function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selectedTasks, setSelectedTasks }: Props) {
     const [data, setData] = useState<ITask[]>(tasks)
     const { setChoice } = useContext(ChoiceContext)
 
@@ -308,7 +312,7 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
 
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{task.task_description}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{task.task_description && task.task_description.slice(0, 50)}</Typography>
                                         </TableCell>
 
 
@@ -363,7 +367,8 @@ function TaskTable({ task, tasks, setTask, selectAll, setSelectAll, selectedTask
             {
                 task ?
                     <>
-                        <ViewTaskDialog task={task} />
+                        <ViewTaskBoxesDialog dates={dates}
+                            task={task} />
                         <EditTaskDialog task={task} />
                         <DeleteTaskDialog task={task} />
                         <AddBoxesDialog task={task} />

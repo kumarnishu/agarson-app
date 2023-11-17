@@ -36,7 +36,10 @@ export default function TasksAdminPage() {
     const [filterCount, setFilterCount] = useState(0)
     const [selectedTasks, setSelectedTasks] = useState<ITask[]>([])
     const [userId, setUserId] = useState<string>()
-    const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>()
+    const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
+        start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
+        , end_date: moment(new Date().setDate(30)).format("YYYY-MM-DD")
+    })
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
 
     const { data, isLoading, refetch: ReftechTasks } = useQuery<AxiosResponse<{ tasks: ITask[], page: number, total: number, limit: number }>, BackendError>(["tasks", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetTasks({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
@@ -257,6 +260,7 @@ export default function TasksAdminPage() {
                         id="start_date"
                         label="Start Date"
                         fullWidth
+                        value={dates.start_date}
                         focused
                         onChange={(e) => setDates({
                             ...dates,
@@ -267,6 +271,7 @@ export default function TasksAdminPage() {
                         type="date"
                         id="end_date"
                         label="End Date"
+                        value={dates.end_date}
                         focused
                         fullWidth
                         onChange={(e) => setDates({
@@ -305,6 +310,7 @@ export default function TasksAdminPage() {
 
             {/* table */}
             < TasksTable
+                dates={dates}
                 task={task}
                 setTask={setTask}
                 selectAll={selectAll}

@@ -5,9 +5,10 @@ import { useMutation, useQuery } from 'react-query'
 import { GetMyTasks, ToogleMyTasks } from '../../services/TaskServices'
 import { BackendError } from '../..'
 import { ITask } from '../../types/task.types'
-import { Button, Checkbox, Paper, Tooltip, Typography } from '@mui/material'
+import { Checkbox, IconButton, Paper, Tooltip, Typography } from '@mui/material'
 import { queryClient } from '../../main'
 import moment from 'moment'
+import { Save } from '@mui/icons-material'
 
 
 export default function TasksPage() {
@@ -102,9 +103,9 @@ export default function TasksPage() {
                         <Paper elevation={8} sx={{ p: 2, mt: 1, boxShadow: 2, backgroundColor: 'whitesmoke' }}>
                             <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                                 {task.box.is_completed ? <s>{
-                                    task.task.task_description}</s> :
+                                    task.task.task_description.slice(0, 50)}</s> :
                                     <b>{
-                                        task.task.task_description}</b>
+                                        task.task.task_description.slice(0, 50)}</b>
                                 }
 
                                 <Tooltip title={new Date(task.box.date).toDateString()}>
@@ -119,16 +120,16 @@ export default function TasksPage() {
                                         {
                                             task.box && task.box.is_completed && new Date(task.box.date) < new Date(task.next_date) && new Date(task.box.date) >= new Date(task.previous_date) ? null
                                                 :
-                                                <Button
-                                                    variant='contained'
-                                                    size="small"
+                                                <IconButton
                                                     disabled={isLoading}
                                                     onClick={() => {
                                                         if (localtask) {
                                                             mutate({ id: localtask.task._id, date: new Date(localtask.box.date).toString() })
                                                             setTask(undefined)
                                                         }
-                                                    }}>Save</Button>
+                                                    }}>
+                                                    <Save color="success" />
+                                                </IconButton>
                                         }
                                     </>
                                 </Tooltip>

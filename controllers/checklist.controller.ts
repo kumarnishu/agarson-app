@@ -163,7 +163,25 @@ export const GetCheckLists = async (req: Request, res: Response, next: NextFunct
 }
 
 export const GetMyCheckLists = async (req: Request, res: Response, next: NextFunction) => {
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+
     let checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
+    
+    if (start_date && end_date) {
+        let dt1 = new Date(String(start_date))
+        let dt2 = new Date(String(end_date))
+        checklists = checklists.map((checklist) => {
+            let updated_checklist_boxes = checklist.boxes
+            updated_checklist_boxes = checklist.boxes.filter((box) => {
+                if (box.desired_date >= dt1 && box.desired_date <= dt2)
+                    return box
+            })
+            checklist.boxes = updated_checklist_boxes
+            return checklist
+        })
+    }
+
     checklists = checklists.filter((checklist) => {
         return checklist.owner.username === req.user?.username
     })

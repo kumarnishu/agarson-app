@@ -1,10 +1,15 @@
-import { Dialog, DialogTitle, DialogContent, IconButton, Tooltip, Radio } from '@mui/material';
-import { useContext } from 'react';
+import { Dialog, DialogTitle, DialogContent, IconButton, Button, Typography } from '@mui/material';
+import React, { useContext } from 'react';
 import { ChoiceContext, TaskChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
 import { ITask } from '../../../types/task.types';
 
-function ViewTaskDialog({ task }: { task: ITask }) {
+function ViewTaskBoxesDialog({ task, dates }: {
+    task: ITask, dates: {
+        start_date?: string | undefined;
+        end_date?: string | undefined;
+    } | undefined
+}) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
         <>
@@ -24,16 +29,20 @@ function ViewTaskDialog({ task }: { task: ITask }) {
                     }).length}
 
                 </DialogTitle>
+                <Typography variant='caption' textAlign={"center"}>
+                    {dates?.start_date && new Date(dates?.start_date).toLocaleDateString()} to {dates?.end_date && new Date(dates?.end_date).toLocaleDateString()}
+                </Typography>
                 <DialogContent>
                     {task && task.boxes.map((box, index) => {
                         return (
-                            <Tooltip key={index} title={new Date(box.date).toLocaleDateString()}>
-                                {new Date(box.date).getDay() !== 0 && Boolean(!box.is_completed && new Date(box.date) < new Date()) ?
-                                    <Radio size='medium' color='error' disabled={new Date(box.date).getDay() === 0} checked={Boolean(!box.is_completed)} />
-                                    :
-                                    <Radio size='medium' color="success" disabled={new Date(box.date).getDay() === 0} checked={Boolean(box.is_completed)} />
+                            <React.Fragment key={index}>
+                                {
+                                    new Date(box.date).getDay() !== 0 && Boolean(!box.is_completed && new Date(box.date) < new Date()) ?
+                                        <Button variant="contained" size="small" sx={{ m: 1 }} color='error' disabled={new Date(box.date).getDay() === 0}>{new Date(box.date).getDate()}</Button>
+                                        :
+                                        <Button variant="contained" size="small" sx={{ m: 1 }} color={Boolean(box.is_completed) ? "success" : 'inherit'} disabled={new Date(box.date).getDay() === 0}>{new Date(box.date).getDate()}</Button>
                                 }
-                            </Tooltip>
+                            </React.Fragment >
                         )
                     })}
                 </DialogContent>
@@ -42,4 +51,4 @@ function ViewTaskDialog({ task }: { task: ITask }) {
     )
 }
 
-export default ViewTaskDialog
+export default ViewTaskBoxesDialog

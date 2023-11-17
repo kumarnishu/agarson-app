@@ -308,6 +308,7 @@ export default function CheckListAdminPage() {
 
       {/* table */}
       < CheckListTable
+        dates={dates}
         checklist={checklist}
         setCheckList={setCheckList}
         selectAll={selectAll}

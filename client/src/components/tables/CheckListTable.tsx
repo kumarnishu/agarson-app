@@ -4,11 +4,12 @@ import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
 import { IChecklist } from '../../types/checklist.types'
-import { Add, Delete, Edit } from '@mui/icons-material'
+import { Add, Delete, Edit, RemoveRedEye } from '@mui/icons-material'
 import { ChoiceContext, CheckListChoiceActions } from '../../contexts/dialogContext'
 import EditCheckListDialog from '../dialogs/checklists/EditCheckListDialog'
 import DeleteCheckListDialog from '../dialogs/checklists/DeleteCheckListDialog'
 import AddCheckBoxesDialog from '../dialogs/checklists/AddCheckBoxesDialog'
+import ViewCheckListBoxesDialog from '../dialogs/checklists/ViewCheckListBoxesDialog'
 
 
 
@@ -20,9 +21,13 @@ type Props = {
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
     selectedCheckLists: IChecklist[]
     setSelectedCheckLists: React.Dispatch<React.SetStateAction<IChecklist[]>>,
+    dates: {
+        start_date?: string | undefined;
+        end_date?: string | undefined;
+    } | undefined
 }
 
-function CheckListTable({ checklist, checklists, setCheckList, selectAll, setSelectAll, selectedCheckLists, setSelectedCheckLists }: Props) {
+function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll, setSelectAll, selectedCheckLists, setSelectedCheckLists }: Props) {
     const [data, setData] = useState<IChecklist[]>(checklists)
     const { setChoice } = useContext(ChoiceContext)
 
@@ -38,7 +43,7 @@ function CheckListTable({ checklist, checklists, setCheckList, selectAll, setSel
             }}>
                 <Table
                     stickyHeader
-                    sx={{ width: "5000px" }}
+                    sx={{ width: "2000px" }}
                     size="small">
                     <TableHead
                     >
@@ -92,7 +97,7 @@ function CheckListTable({ checklist, checklists, setCheckList, selectAll, setSel
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    CheckList Description
+                                    CheckList Title
                                 </Stack>
                             </TableCell>
 
@@ -116,7 +121,7 @@ function CheckListTable({ checklist, checklists, setCheckList, selectAll, setSel
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    Check Boxes
+                                    Status
                                 </Stack>
                             </TableCell>
 
@@ -278,6 +283,16 @@ function CheckListTable({ checklist, checklists, setCheckList, selectAll, setSel
                                                                         <Delete />
                                                                     </IconButton>
                                                                 </Tooltip>
+                                                                <Tooltip title="View">
+                                                                    <IconButton color="success"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: CheckListChoiceActions.view_checklist_boxes })
+                                                                            setCheckList(checklist)
+                                                                        }}
+                                                                    >
+                                                                        <RemoveRedEye />
+                                                                    </IconButton>
+                                                                </Tooltip>
 
                                                             </>
 
@@ -290,7 +305,7 @@ function CheckListTable({ checklist, checklists, setCheckList, selectAll, setSel
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>
                                                 <a href="https://docs.google.com/spreadsheets/u/0/?usp=sheets_alc" target='blank' >
-                                                    {checklist.title}
+                                                    {checklist.title && checklist.title.slice(0, 50)}
                                                 </a>
                                             </Typography>
                                         </TableCell>
@@ -301,16 +316,12 @@ function CheckListTable({ checklist, checklists, setCheckList, selectAll, setSel
                                         </TableCell>
 
                                         <TableCell>
-                                            {checklist.boxes.map((box, index) => {
-                                                return (
-                                                    <Tooltip key={index} title={new Date(box.desired_date).toDateString()}>
-                                                        <Checkbox
-                                                            disabled={Boolean(new Date(box.desired_date).getDay() === 0)}
-                                                            color={Boolean(box.desired_date === box.actual_date) ? "success" : "error"} checked={Boolean(box.desired_date && box.actual_date)} />
-                                                    </Tooltip>
-                                                )
-                                            })
-                                            }
+                                            Checked : {checklist.boxes.filter((box) => {
+                                                return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
+                                            }).length} / {checklist.boxes.filter((box) => {
+                                                return box.desired_date && new Date(box.desired_date) <= new Date()
+                                            }).length}
+
                                         </TableCell>
 
                                         <TableCell>
@@ -347,6 +358,7 @@ function CheckListTable({ checklist, checklists, setCheckList, selectAll, setSel
                         <EditCheckListDialog checklist={checklist} />
                         <DeleteCheckListDialog checklist={checklist} />
                         <AddCheckBoxesDialog checklist={checklist} />
+                        <ViewCheckListBoxesDialog dates={dates} checklist={checklist} />
                     </>
                     : null
             }

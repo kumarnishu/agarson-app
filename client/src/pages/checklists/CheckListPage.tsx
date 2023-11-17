@@ -1,42 +1,27 @@
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useEffect, useState } from 'react'
-import { useMutation, useQuery } from 'react-query'
-import { GetMyCheckLists, ToogleMyCheckLists } from '../../services/CheckListServices'
+import { useContext, useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
+import { GetMyCheckLists } from '../../services/CheckListServices'
 import { BackendError } from '../..'
 import { IChecklist } from '../../types/checklist.types'
-import { Box, Checkbox, IconButton, TextField, Tooltip, Typography } from '@mui/material'
-import { queryClient } from '../../main'
+import { Box, IconButton, TextField, Typography } from '@mui/material'
 import moment from 'moment'
-import { Save } from '@mui/icons-material'
+import { AdsClickOutlined } from '@mui/icons-material'
+import CheckMyCheckListDialog from '../../components/dialogs/checklists/CheckMyCheckListDialog'
+import { CheckListChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 
 
 export default function CheckListPage() {
-  const [localchecklist, setCheckList] = useState<{
-    checklist: IChecklist,
-    desired_date: Date,
-    actual_date?: Date
-  }>()
+  const [localchecklist, setCheckList] = useState<IChecklist>()
   const [checklists, setCheckLists] = useState<IChecklist[]>([])
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(30)).format("YYYY-MM-DD")
   })
+  const { setChoice } = useContext(ChoiceContext)
 
   const { data, isSuccess } = useQuery<AxiosResponse<IChecklist[]>, BackendError>(["self_checklists", dates?.start_date, dates?.end_date], async () => GetMyCheckLists({ start_date: dates?.start_date, end_date: dates?.end_date }))
-
-
-
-  const { mutate, isLoading } = useMutation
-    <AxiosResponse<string>, BackendError, {
-      id: string,
-      date: string
-    }>
-    (ToogleMyCheckLists, {
-      onSuccess: () => {
-        queryClient.invalidateQueries('self_checklists')
-      }
-    })
 
   useEffect(() => {
     if (isSuccess) {
@@ -45,8 +30,8 @@ export default function CheckListPage() {
   }, [isSuccess, data])
 
   return (
-    <Box sx={{ pt: 2 }}>
-      <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'}>
+    <Box >
+      <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'} sx={{ mb: 1, p: 2 }}>
         < TextField
           type="date"
           id="start_date"
@@ -56,7 +41,7 @@ export default function CheckListPage() {
           focused
           onChange={(e) => setDates({
             ...dates,
-            start_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
+            start_date: moment(e.target.value).format("YYYY-MM-DD")
           })}
         />
         < TextField
@@ -68,43 +53,35 @@ export default function CheckListPage() {
           fullWidth
           onChange={(e) => setDates({
             ...dates,
-            end_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
+            end_date: moment(e.target.value).format("YYYY-MM-DD")
           })}
         />
       </Stack>
-      <Stack padding={2} gap={2} sx={{ overflow: 'scroll' }} >
-        {checklists.map((checklist, index) => {
-          return (
-            <Stack key={index} direction={'row'} sx={{ borderBottom: 2 }} >
-              <Typography sx={{ minWidth: 400 }} variant='button'><a href={checklist.sheet_url} target="blank">{checklist.title}</a></Typography>
-              <IconButton
-                onClick={() => {
-                  if (localchecklist) {
-                    mutate({ id: localchecklist.checklist._id, date: new Date(localchecklist.desired_date).toString() })
-                    setCheckList(undefined)
-                  }
-                }}
-              >{!isLoading && <Save color='primary' />}</IconButton>
-              {
-                checklist.boxes.map((box, index) => {
-                  return (
-                    <Tooltip key={index} title={new Date(box.desired_date).toDateString()}>
-                      <Checkbox
-                        disabled={Boolean(box.desired_date && box.actual_date) || Boolean(new Date(box.desired_date).getDay() === 0) || Boolean(new Date(box.desired_date) > new Date())}
-                        onChange={() => {
-                          setCheckList({
-                            checklist: checklist,
-                            desired_date: box.desired_date
-                          })
-                        }} defaultChecked={Boolean(box.desired_date && box.actual_date)} />
-                    </Tooltip>
-                  )
-                })
-              }
-            </Stack >
-          )
-        })}
-      </Stack>
+      {checklists.map((checklist, index) => {
+        return (
+          <Stack direction={'row'} key={index} sx={{ my: 1, backgroundColor: 'whitesmoke' }} alignItems={'center'}>
+            <IconButton
+              sx={{ p: 2 }}
+              onClick={() => {
+                setCheckList(checklist)
+                setChoice({ type: CheckListChoiceActions.check_my_boxes })
+              }}
+            ><AdsClickOutlined color="primary"/>
+            </IconButton>
+            <Typography sx={{ maxWidth: 500 }} variant='body1'><a style={{ textDecoration: 'none' }} href={checklist.sheet_url} target="blank">
+              <b style={{ color: 'orange' }}>
+                {checklist.boxes.filter((box) => {
+                  return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
+                }).length}/{checklist.boxes.filter((box) => {
+                  return box.desired_date && new Date(box.desired_date) <= new Date()
+                }).length}
+              </b>
+              {" "}
+              {checklist.title}</a></Typography>
+          </Stack>
+        )
+      })}
+      {localchecklist && <CheckMyCheckListDialog checklist={localchecklist} dates={dates} />}
     </Box>
   )
 }
