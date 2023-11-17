@@ -66,9 +66,15 @@ export default function CheckListPage() {
                 setCheckList(checklist)
                 setChoice({ type: CheckListChoiceActions.check_my_boxes })
               }}
-            ><AdsClickOutlined color="primary"/>
+            ><AdsClickOutlined color="primary" />
             </IconButton>
-            <Typography sx={{ maxWidth: 500 }} variant='body1'><a style={{ textDecoration: 'none' }} href={checklist.sheet_url} target="blank">
+            <Typography sx={{ maxWidth: 500 }} variant='body1'
+              onDoubleClick={() => {
+                navigator.clipboard.writeText(`${checklist.sheet_url}`)
+                var win = window.open(`${checklist.sheet_url}`, '_blank');
+                win?.focus();
+              }}
+            >
               <b style={{ color: 'orange' }}>
                 {checklist.boxes.filter((box) => {
                   return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
@@ -77,7 +83,7 @@ export default function CheckListPage() {
                 }).length}
               </b>
               {" "}
-              {checklist.title}</a></Typography>
+              {checklist.title}</Typography>
           </Stack>
         )
       })}

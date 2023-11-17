@@ -275,58 +275,59 @@ function AppRoutes() {
 
             </Route>}
           {/* task nav bar */}
-          < Route path={paths.tasks} element={<TaskNavBar />
-          }>
-            <Route
-              index element={
-                <TasksPage />
-              }
-            />
+          {!user.tasks_access_fields.is_hidden &&
+            < Route path={paths.tasks} element={<TaskNavBar />
+            }>
+              <Route
+                index element={
+                  <TasksPage />
+                }
+              />
 
-            <Route path={paths.tasks} element={
-              < TasksPage />
-            }
-            />
-            {user.created_by._id === user._id &&
+              <Route path={paths.tasks} element={
+                < TasksPage />
+              }
+              />
               < Route
                 path={paths.task_admin_page} element={
                   <TasksAdminPage />
                 }
-              />}
-            <Route
-              path={paths.task_help_page} element={
-                <TaskHelpPage />
-              }
-            />
+              />
+              <Route
+                path={paths.task_help_page} element={
+                  <TaskHelpPage />
+                }
+              />
 
-          </Route>
+            </Route>}
 
           {/* checklist routes */}
-          < Route path={paths.checklists} element={<CheckListNavBar />
-          }>
-            <Route
-              index element={
-                <CheckListPage />
-              }
-            />
+          {!user.checklists_access_fields.is_hidden &&
+            < Route path={paths.checklists} element={<CheckListNavBar />
+            }>
+              <Route
+                index element={
+                  <CheckListPage />
+                }
+              />
 
-            <Route path={paths.checklists} element={
-              < CheckListPage />
-            }
-            />
-            {user.created_by._id === user._id &&
+              <Route path={paths.checklists} element={
+                < CheckListPage />
+              }
+              />
+
               <Route
                 path={paths.checklist_admin_page} element={
                   <CheckListAdminPage />
                 }
-              />}
-            <Route
-              path={paths.checklist_help_page} element={
-                <CheckListHelpPage />
-              }
-            />
+              />
+              <Route
+                path={paths.checklist_help_page} element={
+                  <CheckListHelpPage />
+                }
+              />
 
-          </Route>
+            </Route>}
 
           {/* todo nav bar */}
           {!user.contacts_access_fields.is_hidden &&

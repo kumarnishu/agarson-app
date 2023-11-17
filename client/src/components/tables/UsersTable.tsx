@@ -73,18 +73,18 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                     />
                                 </Stack>
                             </TableCell>
-                            {!LoggedInUser?.user_access_fields.is_readonly && LoggedInUser?.user_access_fields.is_editable &&
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Actions
-                                </Stack>
-                            </TableCell>}
+                            {LoggedInUser?.user_access_fields.is_editable &&
+                                <TableCell
+                                    sx={{ bgcolor: headColor }}                         >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="left"
+                                        alignItems="left"
+                                        spacing={2}
+                                    >
+                                        Actions
+                                    </Stack>
+                                </TableCell>}
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -209,7 +209,7 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                             null
                                         }
                                         {/* actions */}
-                                        {!LoggedInUser?.user_access_fields.is_readonly && LoggedInUser?.user_access_fields.is_editable &&
+                                        {LoggedInUser?.user_access_fields.is_editable &&
                                             <TableCell>
                                                 <div>
                                                     <PopUp

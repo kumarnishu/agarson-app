@@ -84,7 +84,7 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                     />
                                 </Stack>
                             </TableCell>
-                            {!user?.crm_access_fields.is_readonly && user?.crm_access_fields.is_editable &&
+                            { user?.crm_access_fields.is_editable &&
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack

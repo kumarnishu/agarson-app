@@ -67,7 +67,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                     />
                                 </Stack>
                             </TableCell>
-                            {!user?.contacts_access_fields.is_readonly && user?.contacts_access_fields.is_editable &&
+                            { user?.contacts_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -203,7 +203,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                             null
                                         }
                                         {/* actions */}
-                                        {!user?.contacts_access_fields.is_readonly && user?.contacts_access_fields.is_editable &&
+                                        {user?.contacts_access_fields.is_editable &&
                                             <TableCell>
                                                 <PopUp
                                                     element={

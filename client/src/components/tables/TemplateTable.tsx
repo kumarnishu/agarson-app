@@ -72,7 +72,7 @@ function TemplatesTable({ templates, selectAll, template, setSelectAll, setTempl
                             </TableCell>
 
                             {/* actions popup */}
-                            {!user?.templates_access_fields.is_readonly && user?.templates_access_fields.is_editable &&
+                            {user?.templates_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -209,7 +209,7 @@ function TemplatesTable({ templates, selectAll, template, setSelectAll, setTempl
                                             null
                                         }
                                         {/* actions popup */}
-                                        {!user?.templates_access_fields.is_readonly && user?.templates_access_fields.is_editable &&
+                                        {user?.templates_access_fields.is_editable &&
                                             <TableCell>
                                                 <PopUp
                                                     element={

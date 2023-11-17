@@ -72,7 +72,7 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                     />
                                 </Stack>
                             </TableCell>
-                            {!user?.reminders_access_fields.is_readonly && user?.reminders_access_fields.is_editable &&
+                            { user?.reminders_access_fields.is_editable &&
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -309,7 +309,7 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                             null
                                         }
                                         {/* actions */}
-                                        {!user?.reminders_access_fields.is_readonly && user?.reminders_access_fields.is_editable &&
+                                        {user?.reminders_access_fields.is_editable &&
                                             <TableCell>
                                                 <PopUp element={<Stack direction="row">{
                                                     !reminder.is_active ?

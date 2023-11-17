@@ -58,55 +58,56 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
 
     })
     owner.user_access_fields = {
-        is_readonly: false,
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
     owner.alps_access_fields = {
-        is_readonly: false,
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
     owner.crm_access_fields = {
-        is_readonly: false,
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
     owner.contacts_access_fields = {
-        is_readonly: false,
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
     owner.templates_access_fields = {
-        is_readonly: false,
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
     owner.bot_access_fields = {
-        is_readonly: false,
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
     owner.broadcast_access_fields = {
-        is_readonly: false,
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
     owner.backup_access_fields = {
-        is_readonly: false,
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
     owner.reminders_access_fields = {
-        is_readonly: false,
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
+    owner.tasks_access_fields = {
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
+    owner.checklists_access_fields = {
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
@@ -171,49 +172,51 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
     user.created_at = new Date()
     user.updated_at = new Date()
     user.user_access_fields = {
-        is_readonly: true,
         is_hidden: false,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.crm_access_fields = {
-        is_readonly: true,
         is_hidden: false,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.contacts_access_fields = {
-        is_readonly: true,
         is_hidden: false,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.templates_access_fields = {
-        is_readonly: true,
         is_hidden: false,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.bot_access_fields = {
-        is_readonly: true,
         is_hidden: false,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.broadcast_access_fields = {
-        is_readonly: true,
         is_hidden: false,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.backup_access_fields = {
-        is_readonly: true,
         is_hidden: false,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.reminders_access_fields = {
-        is_readonly: true,
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.tasks_access_fields = {
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.checklists_access_fields = {
         is_hidden: false,
         is_editable: false,
         is_deletion_allowed: false
@@ -423,7 +426,9 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         broadcast_access_fields,
         backup_access_fields,
         reminders_access_fields,
-        alps_access_fields
+        alps_access_fields,
+        tasks_access_fields,
+        checklists_access_fields
     } = req.body as TUserBody
 
     const id = req.params.id;
@@ -441,7 +446,9 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         broadcast_access_fields,
         backup_access_fields,
         reminders_access_fields,
-        alps_access_fields
+        alps_access_fields,
+        tasks_access_fields,
+        checklists_access_fields
     })
     res.status(200).json({ message: " updated" })
 }

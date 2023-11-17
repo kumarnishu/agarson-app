@@ -70,7 +70,7 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                     />
                                 </Stack>
                             </TableCell>
-                            {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
+                            { user?.bot_access_fields.is_editable &&
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -213,7 +213,7 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                         }
 
                                         {/* actions */}
-                                        {!user?.bot_access_fields.is_readonly && user?.bot_access_fields.is_editable &&
+                                        {user?.bot_access_fields.is_editable &&
                                             <TableCell>
                                                 <Button onClick={(e) => {
                                                     setPopup(e.currentTarget)

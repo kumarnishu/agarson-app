@@ -10,6 +10,7 @@ import EditCheckListDialog from '../dialogs/checklists/EditCheckListDialog'
 import DeleteCheckListDialog from '../dialogs/checklists/DeleteCheckListDialog'
 import AddCheckBoxesDialog from '../dialogs/checklists/AddCheckBoxesDialog'
 import ViewCheckListBoxesDialog from '../dialogs/checklists/ViewCheckListBoxesDialog'
+import { UserContext } from '../../contexts/userContext'
 
 
 
@@ -30,7 +31,7 @@ type Props = {
 function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll, setSelectAll, selectedCheckLists, setSelectedCheckLists }: Props) {
     const [data, setData] = useState<IChecklist[]>(checklists)
     const { setChoice } = useContext(ChoiceContext)
-
+    const { user } = useContext(UserContext)
     useEffect(() => {
         setData(checklists)
     }, [checklists])
@@ -76,7 +77,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                             </TableCell>
 
                             {/* actions popup */}
-                            <TableCell
+                            {user?.checklists_access_fields.is_editable && <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
                                     direction="row"
@@ -86,7 +87,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
 
 
                             <TableCell
@@ -244,62 +245,62 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                             </TableCell>
                                             :
                                             null/* actions popup */}
+                                        {user?.checklists_access_fields.is_editable &&
+                                            <TableCell>
+                                                <PopUp
+                                                    element={
+                                                        <Stack direction="row" spacing={1}>
+                                                            {
 
-                                        <TableCell>
-                                            <PopUp
-                                                element={
-                                                    <Stack direction="row" spacing={1}>
-                                                        {
+                                                                <>
+                                                                    <Tooltip title="Edit">
+                                                                        <IconButton color="info"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: CheckListChoiceActions.edit_checklist })
+                                                                                setCheckList(checklist)
+                                                                            }}
+                                                                        >
+                                                                            <Edit />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Add More">
+                                                                        <IconButton color="info"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: CheckListChoiceActions.add_more_check_boxes })
+                                                                                setCheckList(checklist)
+                                                                            }}
+                                                                        >
+                                                                            <Add />
+                                                                        </IconButton>
+                                                                    </Tooltip>
 
-                                                            <>
-                                                                <Tooltip title="Edit">
-                                                                    <IconButton color="info"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: CheckListChoiceActions.edit_checklist })
-                                                                            setCheckList(checklist)
-                                                                        }}
-                                                                    >
-                                                                        <Edit />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                                <Tooltip title="Add More">
-                                                                    <IconButton color="info"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: CheckListChoiceActions.add_more_check_boxes })
-                                                                            setCheckList(checklist)
-                                                                        }}
-                                                                    >
-                                                                        <Add />
-                                                                    </IconButton>
-                                                                </Tooltip>
+                                                                    <Tooltip title="Delete">
+                                                                        <IconButton color="error"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: CheckListChoiceActions.delete_checklist })
+                                                                                setCheckList(checklist)
+                                                                            }}
+                                                                        >
+                                                                            <Delete />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="View">
+                                                                        <IconButton color="success"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: CheckListChoiceActions.view_checklist_boxes })
+                                                                                setCheckList(checklist)
+                                                                            }}
+                                                                        >
+                                                                            <RemoveRedEye />
+                                                                        </IconButton>
+                                                                    </Tooltip>
 
-                                                                <Tooltip title="Delete">
-                                                                    <IconButton color="error"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: CheckListChoiceActions.delete_checklist })
-                                                                            setCheckList(checklist)
-                                                                        }}
-                                                                    >
-                                                                        <Delete />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                                <Tooltip title="View">
-                                                                    <IconButton color="success"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: CheckListChoiceActions.view_checklist_boxes })
-                                                                            setCheckList(checklist)
-                                                                        }}
-                                                                    >
-                                                                        <RemoveRedEye />
-                                                                    </IconButton>
-                                                                </Tooltip>
+                                                                </>
 
-                                                            </>
-
-                                                        }
-                                                    </Stack>
-                                                } />
-                                        </TableCell>
+                                                            }
+                                                        </Stack>
+                                                    } />
+                                            </TableCell>}
 
 
                                         <TableCell>

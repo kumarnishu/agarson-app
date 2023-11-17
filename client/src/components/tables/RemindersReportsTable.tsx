@@ -34,7 +34,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                     <TableHead
                     >
                         <TableRow>
-                            {!user?.reminders_access_fields.is_readonly && user?.reminders_access_fields.is_editable &&
+                            { user?.reminders_access_fields.is_editable &&
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -136,7 +136,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                             '&:nth-of-type(even)': { bgcolor: color2 },
                                             '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
                                         }}>
-                                        {!user?.reminders_access_fields.is_readonly && user?.reminders_access_fields.is_editable &&
+                                        { user?.reminders_access_fields.is_editable &&
                                             <TableCell>
                                                 <Tooltip title="Stop">
                                                     <IconButton

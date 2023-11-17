@@ -50,7 +50,7 @@ export default function CheckListNavBar() {
                                 >
 
                                     <StyledLink to={paths.checklists}>Checklists</StyledLink>
-                                    <StyledLink to={paths.checklist_admin_page}>Checklists Admin</StyledLink>
+                                    {user.is_admin && <StyledLink to={paths.checklist_admin_page}>Checklists Admin</StyledLink>}
                                     <StyledLink to={paths.checklist_help_page}>Help</StyledLink>
                                 </Stack>
 

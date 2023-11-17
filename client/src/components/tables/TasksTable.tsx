@@ -10,6 +10,7 @@ import ViewTaskBoxesDialog from '../dialogs/tasks/ViewTaskBoxesDialog'
 import EditTaskDialog from '../dialogs/tasks/EditTaskDialog'
 import DeleteTaskDialog from '../dialogs/tasks/DeleteTaskDialog'
 import AddBoxesDialog from '../dialogs/tasks/AddBoxesDialog'
+import { UserContext } from '../../contexts/userContext'
 
 
 
@@ -29,8 +30,8 @@ type Props = {
 
 function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selectedTasks, setSelectedTasks }: Props) {
     const [data, setData] = useState<ITask[]>(tasks)
+    const { user } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
-
     useEffect(() => {
         setData(tasks)
     }, [tasks])
@@ -76,7 +77,7 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                             </TableCell>
 
                             {/* actions popup */}
-                            <TableCell
+                            {user?.tasks_access_fields.is_editable && <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
                                     direction="row"
@@ -86,7 +87,7 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </TableCell>}
 
 
                             <TableCell
@@ -254,61 +255,61 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                             </TableCell>
                                             :
                                             null/* actions popup */}
+                                        {user?.tasks_access_fields.is_editable &&
+                                            <TableCell>
+                                                <PopUp
+                                                    element={
+                                                        <Stack direction="row" spacing={1}>
+                                                            {
 
-                                        <TableCell>
-                                            <PopUp
-                                                element={
-                                                    <Stack direction="row" spacing={1}>
-                                                        {
+                                                                <>
+                                                                    <Tooltip title="Edit">
+                                                                        <IconButton color="info"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: TaskChoiceActions.edit_task })
+                                                                                setTask(task)
+                                                                            }}
+                                                                        >
+                                                                            <Edit />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Add More">
+                                                                        <IconButton color="info"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: TaskChoiceActions.add_more_boxes })
+                                                                                setTask(task)
+                                                                            }}
+                                                                        >
+                                                                            <Add />
+                                                                        </IconButton>
+                                                                    </Tooltip>
 
-                                                            <>
-                                                                <Tooltip title="Edit">
-                                                                    <IconButton color="info"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: TaskChoiceActions.edit_task })
-                                                                            setTask(task)
-                                                                        }}
-                                                                    >
-                                                                        <Edit />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                                <Tooltip title="Add More">
-                                                                    <IconButton color="info"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: TaskChoiceActions.add_more_boxes })
-                                                                            setTask(task)
-                                                                        }}
-                                                                    >
-                                                                        <Add />
-                                                                    </IconButton>
-                                                                </Tooltip>
+                                                                    <Tooltip title="Delete">
+                                                                        <IconButton color="error"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: TaskChoiceActions.delete_task })
+                                                                                setTask(task)
+                                                                            }}
+                                                                        >
+                                                                            <Delete />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="View">
+                                                                        <IconButton color="success"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: TaskChoiceActions.view_boxes })
+                                                                                setTask(task)
+                                                                            }}
+                                                                        >
+                                                                            <RemoveRedEye />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                </>
 
-                                                                <Tooltip title="Delete">
-                                                                    <IconButton color="error"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: TaskChoiceActions.delete_task })
-                                                                            setTask(task)
-                                                                        }}
-                                                                    >
-                                                                        <Delete />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                                <Tooltip title="View">
-                                                                    <IconButton color="success"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: TaskChoiceActions.view_boxes })
-                                                                            setTask(task)
-                                                                        }}
-                                                                    >
-                                                                        <RemoveRedEye />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                            </>
-
-                                                        }
-                                                    </Stack>
-                                                } />
-                                        </TableCell>
+                                                            }
+                                                        </Stack>
+                                                    } />
+                                            </TableCell>}
 
 
                                         <TableCell>
