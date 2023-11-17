@@ -131,7 +131,7 @@ export default function ContactPage() {
           < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
           }>
             {!LoggedInUser?.contacts_access_fields.is_hidden ?
-              < UploadContactsFromExcelButton disabled={Boolean(LoggedInUser?.contacts_access_fields.is_readonly)} /> : null}
+              < UploadContactsFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
             <TextField
               fullWidth
               size="small"

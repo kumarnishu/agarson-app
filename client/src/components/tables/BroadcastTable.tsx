@@ -74,7 +74,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                     />
                                 </Stack>
                             </TableCell>
-                            {!user?.broadcast_access_fields.is_readonly && user?.broadcast_access_fields.is_editable &&
+                            { user?.broadcast_access_fields.is_editable &&
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -310,7 +310,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                             null
                                         }
                                         {/* actions */}
-                                        {!user?.broadcast_access_fields.is_readonly && user?.broadcast_access_fields.is_editable &&
+                                        {user?.broadcast_access_fields.is_editable &&
                                             <TableCell>
                                                 <PopUp element={<Stack direction="row">{
                                                     !broadcast.is_active ?

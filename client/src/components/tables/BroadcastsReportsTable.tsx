@@ -34,7 +34,7 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                     <TableHead
                     >
                         <TableRow>
-                            {!user?.broadcast_access_fields.is_readonly && user?.broadcast_access_fields.is_editable &&
+                            { user?.broadcast_access_fields.is_editable &&
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -152,7 +152,7 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                             '&:nth-of-type(even)': { bgcolor: color2 },
                                             '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
                                         }}>
-                                        {!user?.broadcast_access_fields.is_readonly && user?.broadcast_access_fields.is_editable &&
+                                        {user?.broadcast_access_fields.is_editable &&
                                             <TableCell>
                                                 <Tooltip title="Stop">
                                                     <IconButton
