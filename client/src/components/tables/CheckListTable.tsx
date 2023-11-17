@@ -304,10 +304,14 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
 
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>
-                                                <a href="https://docs.google.com/spreadsheets/u/0/?usp=sheets_alc" target='blank' >
-                                                    {checklist.title && checklist.title.slice(0, 50)}
-                                                </a>
+                                            <Typography sx={{ textTransform: "capitalize" }}
+                                            onDoubleClick={() => {
+                                                navigator.clipboard.writeText(`${checklist.sheet_url}`)
+                                                var win = window.open(`${checklist.sheet_url}`, '_blank');
+                                                win?.focus();
+                                            }}
+                                            >
+                                                {checklist.title && checklist.title.slice(0, 50)}
                                             </Typography>
                                         </TableCell>
 
