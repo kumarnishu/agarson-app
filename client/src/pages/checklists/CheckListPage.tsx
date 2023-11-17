@@ -10,7 +10,6 @@ import moment from 'moment'
 import { AdsClickOutlined } from '@mui/icons-material'
 import CheckMyCheckListDialog from '../../components/dialogs/checklists/CheckMyCheckListDialog'
 import { CheckListChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
-import PopUp from '../../components/popup/PopUp'
 
 
 export default function CheckListPage() {
@@ -20,7 +19,6 @@ export default function CheckListPage() {
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(30)).format("YYYY-MM-DD")
   })
-  const [url, setUrl] = useState<string>()
   const { setChoice } = useContext(ChoiceContext)
 
   const { data, isSuccess } = useQuery<AxiosResponse<IChecklist[]>, BackendError>(["self_checklists", dates?.start_date, dates?.end_date], async () => GetMyCheckLists({ start_date: dates?.start_date, end_date: dates?.end_date }))
@@ -70,20 +68,10 @@ export default function CheckListPage() {
               }}
             ><AdsClickOutlined color="primary" />
             </IconButton>
-            <Typography sx={{ maxWidth: 500 }} variant='body1'
-              onDoubleClick={() => {
-                setUrl(checklist.sheet_url)
-                let sheet_url = checklist.sheet_url
-                let url = "https://docs.google.com/spreadsheets/d/1hFFuDb9MugQjKdpuhCftX-nnZl2A4vA8iq6RC0hS3vk/edit?usp=sharing"
-                console.log(sheet_url)
-                console.log(url)
-                url = sheet_url
-                let win = window.Animation(sheet_url, 'blank');
-                win?.addEventListener('load', () => {
-                  win?.location.assign(sheet_url)
-                })
+            <Typography sx={{ maxWidth: 500, cursor: 'pointer' }} variant='body1'
+              onClick={() => {
+                let win = window.open(checklist.sheet_url, 'blank');
                 win?.focus();
-                // navigator.clipboard.writeText(`${checklist.sheet_url}`)
               }}
             >
               <b style={{ color: 'orange' }}>

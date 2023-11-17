@@ -9,7 +9,6 @@ const ChecklistSchema = new mongoose.Schema<IChecklist, mongoose.Model<IChecklis
     },
     sheet_url: {
         type: String,
-        lowercase: true,
         required: true
     },
     boxes: [{

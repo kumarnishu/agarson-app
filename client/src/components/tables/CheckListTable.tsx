@@ -304,18 +304,15 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
 
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}
-                                            onDoubleClick={() => {
-                                                navigator.clipboard.writeText(`${checklist.sheet_url}`)
-                                                var win = window.open(`${checklist.sheet_url}`, '_blank');
-                                                win?.focus();
-                                            }}
+                                            <Typography  sx={{ textTransform: "capitalize", cursor: 'pointer' }}
+                                                onClick={() => {
+                                                    let win = window.open(checklist.sheet_url, 'blank');
+                                                    win?.focus();
+                                                }}
                                             >
                                                 {checklist.title && checklist.title.slice(0, 50)}
                                             </Typography>
                                         </TableCell>
-
-
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{checklist.owner.username}</Typography>
                                         </TableCell>
