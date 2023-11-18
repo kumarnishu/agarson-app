@@ -37,7 +37,7 @@ function CheckMyCheckListDialog({ checklist, dates }: {
                     <Cancel fontSize='large' />
                 </IconButton>
 
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Checked : 
+                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Checked :
                     Checked : {checklist.boxes.filter((box) => {
                         return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
                     }).length} / {checklist.boxes.filter((box) => {
@@ -52,19 +52,19 @@ function CheckMyCheckListDialog({ checklist, dates }: {
                         return (
                             <React.Fragment key={index}>
                                 {
-                                    box.desired_date && !box.actual_date ?
-                                        <Button variant="contained" size="small" sx={{ m: 1 }} color='inherit'
+                                    box.desired_date && !box.actual_date &&
+                                    <Button variant="contained" size="small" sx={{ m: 1 }} color='inherit'
 
-                                            onClick={() => {
-                                                if (checklist) {
-                                                    mutate({ id: checklist._id, date: new Date(box.desired_date).toString() })
-                                                }
-                                                setChoice({ type: CheckListChoiceActions.close_checklist })
-                                            }}
+                                        onClick={() => {
+                                            if (checklist) {
+                                                mutate({ id: checklist._id, date: new Date(box.desired_date).toString() })
+                                            }
+                                            setChoice({ type: CheckListChoiceActions.close_checklist })
+                                        }}
 
-                                            disabled={new Date(box.desired_date) > new Date()}>{new Date(box.desired_date).getDate() || isLoading}</Button>
-                                        :
-                                        <Button variant="contained" size="small" sx={{ m: 1 }} color={Boolean(box.desired_date && !box.actual_date) ? "success" : 'error'} >{new Date(box.desired_date).getDate()}</Button>
+                                        disabled={new Date(box.desired_date) > new Date()}>{new Date(box.desired_date).getDate() || isLoading}</Button>}
+
+                                {box.desired_date && box.actual_date && <Button variant="contained" size="small" sx={{ m: 1 }} color={Boolean(new Date(box.desired_date).getDate() === new Date(box.actual_date).getDate() && new Date(box.desired_date).getMonth() === new Date(box.actual_date).getMonth() && new Date(box.desired_date).getFullYear() === new Date(box.actual_date).getFullYear()) ? "success" : 'warning'} >{new Date(box.desired_date).getDate()}</Button>
                                 }
                             </React.Fragment >
                         )

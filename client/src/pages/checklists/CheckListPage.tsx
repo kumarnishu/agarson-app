@@ -59,7 +59,7 @@ export default function CheckListPage() {
       </Stack>
       {checklists.map((checklist, index) => {
         return (
-          <Stack direction={'row'} key={index} sx={{ my: 1, backgroundColor: 'whitesmoke' }} alignItems={'center'}>
+          <Stack direction={'row'} key={index} sx={{ my: 1, backgroundColor: 'whitesmoke' }} alignItems={'center'} gap={2}>
             <IconButton
               sx={{ p: 2 }}
               onClick={() => {
@@ -68,21 +68,23 @@ export default function CheckListPage() {
               }}
             ><AdsClickOutlined color="primary" />
             </IconButton>
-            <Typography sx={{ maxWidth: 500, cursor: 'pointer' }} variant='body1'
+            <Typography sx={{ maxWidth: 500, cursor: 'pointer',textTransform:'capitalize' }} variant='body1'
               onClick={() => {
                 let win = window.open(checklist.sheet_url, 'blank');
                 win?.focus();
               }}
             >
-              <b style={{ color: 'orange' }}>
+              {checklist.title}</Typography>
+            <Typography>
+               <b style={{ color: 'orange' }}>
+                Score  {" "}
                 {checklist.boxes.filter((box) => {
                   return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
-                }).length}/{checklist.boxes.filter((box) => {
+                }).length - checklist.boxes.filter((box) => {
                   return box.desired_date && new Date(box.desired_date) <= new Date()
                 }).length}
               </b>
-              {" "}
-              {checklist.title}</Typography>
+            </Typography>
           </Stack>
         )
       })}

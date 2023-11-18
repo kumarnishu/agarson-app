@@ -34,10 +34,11 @@ function ViewCheckListBoxesDialog({ checklist, dates }: {
                         return (
                             <React.Fragment key={index}>
                                 {
-                                    box.desired_date && !box.actual_date ?
-                                        <Button variant="contained" size="small" sx={{ m: 1 }} color='inherit' disabled={new Date(box.desired_date) > new Date()}>{new Date(box.desired_date).getDate()}</Button>
-                                        :
-                                        <Button variant="contained" size="small" sx={{ m: 1 }} color={Boolean(box.desired_date && !box.actual_date) ? "success" : 'error'} >{new Date(box.desired_date).getDate()}</Button>
+                                    box.desired_date && !box.actual_date &&
+                                    <Button variant="contained" size="small" sx={{ m: 1 }} color='inherit'
+                                        disabled={new Date(box.desired_date) > new Date()}>{new Date(box.desired_date).getDate()}</Button>}
+
+                                {box.desired_date && box.actual_date && <Button variant="contained" size="small" sx={{ m: 1 }} color={Boolean(new Date(box.desired_date).getDate() === new Date(box.actual_date).getDate() && new Date(box.desired_date).getMonth() === new Date(box.actual_date).getMonth() && new Date(box.desired_date).getFullYear() === new Date(box.actual_date).getFullYear()) ? "success" : 'warning'} >{new Date(box.desired_date).getDate()}</Button>
                                 }
                             </React.Fragment >
                         )
