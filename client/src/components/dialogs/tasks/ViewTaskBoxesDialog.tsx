@@ -38,9 +38,9 @@ function ViewTaskBoxesDialog({ task, dates }: {
                             <React.Fragment key={index}>
                                 {
                                     new Date(box.date).getDay() !== 0 && Boolean(!box.is_completed && new Date(box.date) < new Date()) ?
-                                        <Button variant="contained" size="small" sx={{ m: 1 }} color='error' disabled={new Date(box.date).getDay() === 0}>{new Date(box.date).getDate()}</Button>
+                                        <Button title={"Desired Date:" + new Date(box.date).toLocaleDateString()} variant="contained" size="small" sx={{ m: 1 }} color='error' disabled={new Date(box.date).getDay() === 0}>{new Date(box.date).getDate()}</Button>
                                         :
-                                        <Button variant="contained" size="small" sx={{ m: 1 }} color={Boolean(box.is_completed) ? "success" : 'inherit'} disabled={new Date(box.date).getDay() === 0}>{new Date(box.date).getDate()}</Button>
+                                        <Button title={"Desired Date:" + new Date(box.date).toLocaleDateString()}  variant="contained" size="small" sx={{ m: 1 }} color={Boolean(box.is_completed) ? "success" : 'inherit'} disabled={new Date(box.date).getDay() === 0}>{new Date(box.date).getDate()}</Button>
                                 }
                             </React.Fragment >
                         )

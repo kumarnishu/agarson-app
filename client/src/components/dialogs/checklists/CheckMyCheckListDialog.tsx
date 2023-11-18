@@ -53,7 +53,7 @@ function CheckMyCheckListDialog({ checklist, dates }: {
                             <React.Fragment key={index}>
                                 {
                                     box.desired_date && !box.actual_date &&
-                                    <Button variant="contained" size="small" sx={{ m: 1 }} color='inherit'
+                                    <Button title={"Desired Date:" + new Date(box.desired_date).toLocaleDateString()} variant="contained" size="small" sx={{ m: 1 }} color='inherit'
 
                                         onClick={() => {
                                             if (checklist) {
@@ -64,13 +64,14 @@ function CheckMyCheckListDialog({ checklist, dates }: {
 
                                         disabled={new Date(box.desired_date) > new Date()}>{new Date(box.desired_date).getDate() || isLoading}</Button>}
 
-                                {box.desired_date && box.actual_date && <Button variant="contained" size="small" sx={{ m: 1 }} color={Boolean(new Date(box.desired_date).getDate() === new Date(box.actual_date).getDate() && new Date(box.desired_date).getMonth() === new Date(box.actual_date).getMonth() && new Date(box.desired_date).getFullYear() === new Date(box.actual_date).getFullYear()) ? "success" : 'warning'} >{new Date(box.desired_date).getDate()}</Button>
+                                {
+                                    box.desired_date && box.actual_date && <Button title={"Actual Date : " + new Date(box.actual_date).toLocaleDateString() + " " + "Desired Date : " + new Date(box.desired_date).toLocaleDateString()} variant="contained" size="small" sx={{ m: 1 }} color={Boolean(new Date(box.desired_date).getDate() === new Date(box.actual_date).getDate() && new Date(box.desired_date).getMonth() === new Date(box.actual_date).getMonth() && new Date(box.desired_date).getFullYear() === new Date(box.actual_date).getFullYear()) ? "success" : 'warning'} >{new Date(box.desired_date).getDate()}</Button>
                                 }
                             </React.Fragment >
                         )
                     })}
                 </DialogContent>
-            </Dialog>
+            </Dialog >
         </>
     )
 }

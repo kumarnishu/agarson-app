@@ -63,7 +63,7 @@ export default function CheckListPage() {
       </Stack>
       {checklists.map((checklist, index) => {
         return (
-          <Stack direction={'row'} key={index} sx={{ m: 1, backgroundColor: 'whitesmoke',borderRadius:5 }} alignItems={'center'} gap={2}>
+          <Stack direction={'row'} key={index} sx={{ m: 1, backgroundColor: 'whitesmoke', borderRadius: 5 }} alignItems={'center'} gap={2}>
             <IconButton
               sx={{ p: 2 }}
               onClick={() => {
@@ -84,9 +84,14 @@ export default function CheckListPage() {
                 Score  {" "}
                 {checklist.boxes.filter((box) => {
                   return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
+
                 }).length - checklist.boxes.filter((box) => {
                   return box.desired_date && new Date(box.desired_date) <= new Date()
-                }).length}
+                }).length +
+                  checklist.boxes.filter((box) => {
+                    return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date() && Boolean(new Date(box.desired_date).getDate() === new Date(box.actual_date).getDate() && new Date(box.desired_date).getMonth() === new Date(box.actual_date).getMonth() && new Date(box.desired_date).getFullYear() === new Date(box.actual_date).getFullYear())
+                  }).length
+                }
               </b>
             </Typography>
           </Stack>
