@@ -122,6 +122,7 @@ export default function TrackersPage() {
     useEffect(() => {
         setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
     }, [reactPaginationData])
+    console.log(filterCount)
     return (
         <>
 
