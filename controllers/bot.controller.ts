@@ -215,10 +215,10 @@ export const ResetTrackers = async (req: Request, res: Response, next: NextFunct
     let menuTrackers = await MenuTracker.find()
     
     trackers.forEach(async (tracker) => {
-        await KeywordTracker.findByIdAndUpdate(tracker._id, { is_active: !tracker.is_active })
+        await KeywordTracker.findByIdAndUpdate(tracker._id, { is_active: true })
     })
     menuTrackers.forEach(async (tracker) => {
-        await MenuTracker.findByIdAndUpdate(tracker._id, { is_active: !tracker.is_active })
+        await MenuTracker.findByIdAndUpdate(tracker._id, { is_active: true })
     })
     return res.status(200).json("successfully reset trackers")
 }

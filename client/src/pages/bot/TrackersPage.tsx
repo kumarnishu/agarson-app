@@ -2,7 +2,7 @@ import { Search } from '@mui/icons-material'
 import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import DBPagination from '../../components/pagination/DBpagination';
 import TrackersTable from '../../components/tables/TrackersTable';
@@ -14,10 +14,12 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IMenuTracker } from '../../types/bot.types'
 import { queryClient } from '../../main'
+import { UserContext } from '../../contexts/userContext'
 
 
 export default function TrackersPage() {
     const [paginationData, setPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+    const { user } = useContext(UserContext)
     const [reactPaginationData, setReactPaginationData] = useState({ limit: 10, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
     const [tracker, setTracker] = useState<IMenuTracker>()
@@ -227,8 +229,8 @@ export default function TrackersPage() {
                             }}
                             sx={{ borderRadius: 2 }}
                         >
-                            < MenuItem onClick={handleResetTrackers}
-                            >Reset Trackers</MenuItem>
+                            {user?.is_admin && < MenuItem onClick={handleResetTrackers}
+                            >Reset Trackers</MenuItem>}
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
                         </Menu >
