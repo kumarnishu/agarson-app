@@ -36,7 +36,7 @@ export default function CheckListAdminPage() {
   const [userId, setUserId] = useState<string>()
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
-    ,end_date: moment(new Date().setDate(30)).format("YYYY-MM-DD")
+    , end_date: moment(new Date().setDate(30)).format("YYYY-MM-DD")
   })
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
 
@@ -254,6 +254,7 @@ export default function CheckListAdminPage() {
       <Stack padding={2} gap={2}>
         <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'}>
           < TextField
+            size="small"
             type="date"
             id="start_date"
             label="Start Date"
@@ -266,6 +267,7 @@ export default function CheckListAdminPage() {
             })}
           />
           < TextField
+            size="small"
             type="date"
             id="end_date"
             label="End Date"
@@ -280,6 +282,7 @@ export default function CheckListAdminPage() {
         </Stack>
         {user?.is_admin &&
           < TextField
+            size="small"
             select
             SelectProps={{
               native: true,

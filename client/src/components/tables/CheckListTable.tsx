@@ -40,7 +40,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
         <>
             <Box sx={{
                 overflow: "scroll",
-                minHeight: '43.5vh'
+                minHeight: '53.5vh'
             }}>
                 <Table
                     stickyHeader
@@ -320,7 +320,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                         <TableCell>
                                             Checked : {checklist.boxes.filter((box) => {
                                                 return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
-                                            }).length} / {checklist.boxes.filter((box) => {
+                                            }).length}/{checklist.boxes.filter((box) => {
                                                 return box.desired_date && new Date(box.desired_date) <= new Date()
                                             }).length}
 

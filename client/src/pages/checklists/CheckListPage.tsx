@@ -33,6 +33,8 @@ export default function CheckListPage() {
     <Box >
       <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'} sx={{ mb: 1, p: 2 }}>
         < TextField
+          size='small'
+          variant='filled'
           type="date"
           id="start_date"
           label="Start Date"
@@ -45,6 +47,8 @@ export default function CheckListPage() {
           })}
         />
         < TextField
+          size='small'
+          variant='filled'
           type="date"
           id="end_date"
           label="End Date"
@@ -59,7 +63,7 @@ export default function CheckListPage() {
       </Stack>
       {checklists.map((checklist, index) => {
         return (
-          <Stack direction={'row'} key={index} sx={{ my: 1, backgroundColor: 'whitesmoke' }} alignItems={'center'} gap={2}>
+          <Stack direction={'row'} key={index} sx={{ m: 1, backgroundColor: 'whitesmoke',borderRadius:5 }} alignItems={'center'} gap={2}>
             <IconButton
               sx={{ p: 2 }}
               onClick={() => {
@@ -68,7 +72,7 @@ export default function CheckListPage() {
               }}
             ><AdsClickOutlined color="primary" />
             </IconButton>
-            <Typography sx={{ maxWidth: 500, cursor: 'pointer',textTransform:'capitalize' }} variant='body1'
+            <Typography sx={{ maxWidth: 500, cursor: 'pointer', textTransform: 'capitalize' }} variant='body1'
               onClick={() => {
                 let win = window.open(checklist.sheet_url, 'blank');
                 win?.focus();
@@ -76,7 +80,7 @@ export default function CheckListPage() {
             >
               {checklist.title}</Typography>
             <Typography>
-               <b style={{ color: 'orange' }}>
+              <b style={{ color: 'orange' }}>
                 Score  {" "}
                 {checklist.boxes.filter((box) => {
                   return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
