@@ -1,4 +1,4 @@
-import { Search } from '@mui/icons-material'
+import { Check, Search } from '@mui/icons-material'
 import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
@@ -175,7 +175,7 @@ export default function CheckListAdminPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          CheckLists Admin
+          {window.screen.width > 450 ? "CheckLists Admin" : <Check />}
         </Typography>
 
         <Stack

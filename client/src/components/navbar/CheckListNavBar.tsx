@@ -1,15 +1,17 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
-import { Avatar, Box, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Box, IconButton,  Tooltip } from '@mui/material';
 import { useContext } from 'react';
-import { MenuContext, UserMenuActions } from '../../contexts/menuContext';
+import { Menu } from '@mui/icons-material';
+import { CheckListMenuActions, MenuContext, UserMenuActions } from '../../contexts/menuContext';
 import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
 import ResetPasswordSendMailDialog from '../dialogs/users/ResetPasswordSendMailDialog';
 import SignUpDialog from '../dialogs/users/SignUpDialog';
 import AgarsonLogo from '../logo/Agarson';
 import ProfileMenu from '../menu/ProfileMenu';
+import CheckListMenu from '../menu/CheckListMenu';
 
 export const StyledLink = styled(Link)`
     text-decoration: none;
@@ -61,6 +63,20 @@ export default function CheckListNavBar() {
                                     alignItems="center"
                                     gap={2}
                                 >
+                                    <Tooltip title="open menu">
+                                        <IconButton
+                                            onClick={(e) => setMenu({ type: CheckListMenuActions.checklist_menu, anchorEl: e.currentTarget })
+                                            }
+                                            sx={{
+                                                color: "white",
+                                                display: {
+                                                    xs: 'block', md: 'none'
+                                                }
+                                            }}>
+                                            <Menu/>
+                                        </IconButton>
+                                    </Tooltip>
+
                                     <Tooltip title={user.username || "open settings"}>
                                         <IconButton
                                             onClick={(e) => setMenu({ type: UserMenuActions.profile_menu, anchorEl: e.currentTarget })
@@ -80,7 +96,7 @@ export default function CheckListNavBar() {
                 </Stack>
             </Box >
             <Outlet />
-            <CheckListNavBar />
+            <CheckListMenu />
             <ProfileMenu />
             <ResetPasswordSendMailDialog />
             <SignUpDialog />
