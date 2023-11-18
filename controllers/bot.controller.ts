@@ -213,9 +213,9 @@ export const GetConnectedUsers = async (req: Request, res: Response, next: NextF
 export const ResetTrackers = async (req: Request, res: Response, next: NextFunction) => {
     let trackers = await KeywordTracker.find()
     let menuTrackers = await MenuTracker.find()
-    
+
     trackers.forEach(async (tracker) => {
-        await KeywordTracker.findByIdAndUpdate(tracker._id, { is_active: true })
+        await KeywordTracker.findByIdAndUpdate(tracker._id, { is_active: true, skip_main_menu: false })
     })
     menuTrackers.forEach(async (tracker) => {
         await MenuTracker.findByIdAndUpdate(tracker._id, { is_active: true })
