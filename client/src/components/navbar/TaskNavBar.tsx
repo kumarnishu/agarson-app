@@ -10,6 +10,7 @@ import ResetPasswordSendMailDialog from '../dialogs/users/ResetPasswordSendMailD
 import SignUpDialog from '../dialogs/users/SignUpDialog';
 import AgarsonLogo from '../logo/Agarson';
 import ProfileMenu from '../menu/ProfileMenu';
+import TaskMenu from '../menu/TaskMenu';
 
 export const StyledLink = styled(Link)`
     text-decoration: none;
@@ -80,6 +81,7 @@ export default function TaskNavBar() {
                 </Stack>
             </Box >
             <Outlet />
+            <TaskMenu />
             <ProfileMenu />
             <ResetPasswordSendMailDialog />
             <SignUpDialog />

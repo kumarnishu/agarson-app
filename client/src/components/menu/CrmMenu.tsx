@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Menu, MenuItem } from '@mui/material'
 import { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { CrmMenuActions, MenuContext } from '../../contexts/menuContext';
 import { paths } from '../../Routes';
 import { UserContext } from '../../contexts/userContext';
@@ -15,7 +15,6 @@ export const StyledLink = styled(Link)`
 function CrmMenu() {
     const { menu, setMenu } = useContext(MenuContext)
     const { user } = useContext(UserContext)
-    const goto = useNavigate()
     return (
         <Menu
             anchorEl={menu?.anchorEl}
@@ -68,7 +67,7 @@ function CrmMenu() {
             </MenuItem>
             <MenuItem
                 onClick={
-                    () => goto(paths.crm_help)
+                    () => setMenu({ type: CrmMenuActions.close_crm_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.crm_help}>Help</StyledLink>
             </MenuItem>

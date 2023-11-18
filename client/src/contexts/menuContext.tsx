@@ -4,14 +4,14 @@ type UserMenu = "profile_menu"  | "close_user_menu" | "user_menu"
 
 type CrmMenu = | "close_crm_menu" | "crm_menu"
 
-type TemplateMenu ="close_template_menu" | "template_menu"
+type CheckListMenu ="close_checklist_menu" | "checklist_menu"
 type BotMenu =  "close_bot_menu" | "bot_menu"
 
-type BroadcastMenu =  "close_broadcast_menu" | "broadcast_menu"
+type TaskMenu = "close_task_menu" | "task_menu"
 
 
 type MenuState = {
-    type: UserMenu | CrmMenu | BotMenu | TemplateMenu | BroadcastMenu  | null,
+    type: UserMenu | CrmMenu | BotMenu | CheckListMenu | TaskMenu  | null,
     anchorEl: HTMLElement | null
 }
 
@@ -20,13 +20,13 @@ const initialState: MenuState = {
     anchorEl: null
 }
 
-export enum TemplateMenuActions {
-    close_template_menu = "close_template_menu",
-    template_menu = "template_menu"
+export enum CheckListMenuActions {
+    close_checklist_menu = "close_checklist_menu",
+    checklist_menu = "checklist_menu"
 }
-export enum BroadcastMenuActions {
-    close_broadcast_menu = "close_broadcast_menu",
-    broadcast_menu = "broadcast_menu"
+export enum TaskMenuActions {
+    close_task_menu = "close_task_menu",
+    task_menu = "task_menu"
 }
 
 
@@ -46,7 +46,7 @@ export enum UserMenuActions {
 }
 
 type Action = {
-    type: UserMenuActions | CrmMenuActions | BotMenuActions | TemplateMenuActions | BroadcastMenuActions 
+    type: UserMenuActions | CrmMenuActions | BotMenuActions | CheckListMenuActions | TaskMenuActions 
     anchorEl: HTMLElement | null
 }
 
@@ -73,14 +73,14 @@ function reducer(state: MenuState | null, action: Action) {
 
 
 
-        // template menu action
-        case TemplateMenuActions.close_template_menu: return action
-        case TemplateMenuActions.template_menu: return action
+        // checklist menu action
+        case CheckListMenuActions.close_checklist_menu: return action
+        case CheckListMenuActions.checklist_menu: return action
 
 
-        // broadcast menu action
-        case BroadcastMenuActions.close_broadcast_menu: return action
-        case BroadcastMenuActions.broadcast_menu: return action
+        // task menu action
+        case TaskMenuActions.close_task_menu: return action
+        case TaskMenuActions.task_menu: return action
 
 
         default: return state

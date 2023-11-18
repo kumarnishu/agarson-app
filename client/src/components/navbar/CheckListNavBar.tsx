@@ -80,6 +80,7 @@ export default function CheckListNavBar() {
                 </Stack>
             </Box >
             <Outlet />
+            <CheckListNavBar />
             <ProfileMenu />
             <ResetPasswordSendMailDialog />
             <SignUpDialog />
