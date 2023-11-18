@@ -3,16 +3,17 @@ import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import DBPagination from '../../components/pagination/DBpagination';
 import TrackersTable from '../../components/tables/TrackersTable';
 import ReactPagination from '../../components/pagination/ReactPagination'
-import { FuzzySearchTrackers, GetTrackers } from '../../services/BotServices'
+import { FuzzySearchTrackers, GetTrackers, ResetTrackers } from '../../services/BotServices'
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IMenuTracker } from '../../types/bot.types'
+import { queryClient } from '../../main'
 
 
 export default function TrackersPage() {
@@ -42,8 +43,16 @@ export default function TrackersPage() {
     const { data: fuzzyTrackers, isSuccess: isFuzzySuccess, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<IMenuTracker[]>, BackendError>(["fuzzytrackers", filter], async () => FuzzySearchTrackers(filter), {
         enabled: false
     })
+    const { mutate, isSuccess: idResetSuccesss } = useMutation
+        <AxiosResponse<IMenuTracker>, BackendError, { body: { ids: string[] } }>
+        (ResetTrackers, {
+            onSuccess: () => {
+                queryClient.invalidateQueries('trackers')
+            }
+        })
     const [selectedData, setSelectedData] = useState<any[]>([])
     const [sent, setSent] = useState(false)
+    const [reset, setReset] = useState(false)
 
 
     function handleExcel() {
@@ -65,6 +74,28 @@ export default function TrackersPage() {
         }
     }
 
+    function handleResetTrackers() {
+        setAnchorEl(null)
+        try {
+            if (selectedData.length === 0) {
+                alert("select at least one row")
+                return
+            }
+            let ids: string[] = []
+            selectedData.forEach((dt) => {
+                ids.push(dt._id)
+            })
+            mutate({ body: { ids: ids } })
+            setReset(true)
+            setSelectAll(false)
+            setSelectedData([])
+            setSelectedTrackers([])
+        }
+        catch (err) {
+            console.log(err)
+            setSent(false)
+        }
+    }
     // refine data
     useEffect(() => {
         let data: any[] = []
@@ -182,6 +213,7 @@ export default function TrackersPage() {
                     <>
 
                         {sent && <AlertBar message="File Exported Successfuly" color="success" />}
+                        {reset && idResetSuccesss && <AlertBar message="trackers reset Successfuly" color="success" />}
 
 
                         <IconButton size="medium"
@@ -203,9 +235,12 @@ export default function TrackersPage() {
                             }}
                             sx={{ borderRadius: 2 }}
                         >
+                            < MenuItem onClick={handleResetTrackers}
+                            >Reset Trackers</MenuItem>
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
                         </Menu >
+                     
                     </>
                 </Stack>
             </Stack>

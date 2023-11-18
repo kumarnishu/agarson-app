@@ -25,9 +25,6 @@ function AllRemarksPage({ lead }: { lead: ILead }) {
         <Box>
             <Stack direction={"column"}>
                 <Box>
-                    <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
-                        {lead.name}:{lead.mobile}
-                    </Typography>
                     {remarks.slice(0).reverse().map((remark, index) => {
                         return (
                             <Stack key={index}
