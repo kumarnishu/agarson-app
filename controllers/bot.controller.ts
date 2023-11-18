@@ -211,14 +211,14 @@ export const GetConnectedUsers = async (req: Request, res: Response, next: NextF
 
 
 export const ResetTrackers = async (req: Request, res: Response, next: NextFunction) => {
-    const { ids } = req.body as { ids: string[] }
-    if (ids.length == 0)
-        return res.status(400).json({ message: "provide at least one tracker" })
-    ids.forEach(async (id) => {
-        await KeywordTracker.findByIdAndUpdate(id, { is_active: true })
+    let trackers = await KeywordTracker.find()
+    let menuTrackers = await MenuTracker.find()
+    
+    trackers.forEach(async (tracker) => {
+        await KeywordTracker.findByIdAndUpdate(tracker._id, { is_active: !tracker.is_active })
     })
-    ids.forEach(async (id) => {
-        await MenuTracker.findByIdAndUpdate(id, { is_active: true })
+    menuTrackers.forEach(async (tracker) => {
+        await MenuTracker.findByIdAndUpdate(tracker._id, { is_active: !tracker.is_active })
     })
     return res.status(200).json("successfully reset trackers")
 }

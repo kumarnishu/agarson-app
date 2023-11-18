@@ -23,8 +23,8 @@ export const AssignFlow = async ({ id, body }: { id: string, body: { user_ids: s
 export const ToogleFlowStatus = async (id: string) => {
     return await apiClient.patch(`flows/toogle/${id}`);
 };
-export const ResetTrackers = async ({ body }: { body: { ids: string[] } }) => {
-    return await apiClient.post(`trackers`, body);
+export const ResetTrackers = async () => {
+    return await apiClient.post(`trackers`);
 };
 
 export const DestroyFlow = async (id: string) => {

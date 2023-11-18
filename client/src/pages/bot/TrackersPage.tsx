@@ -44,7 +44,7 @@ export default function TrackersPage() {
         enabled: false
     })
     const { mutate, isSuccess: idResetSuccesss } = useMutation
-        <AxiosResponse<IMenuTracker>, BackendError, { body: { ids: string[] } }>
+        <AxiosResponse<IMenuTracker>, BackendError>
         (ResetTrackers, {
             onSuccess: () => {
                 queryClient.invalidateQueries('trackers')
@@ -77,15 +77,7 @@ export default function TrackersPage() {
     function handleResetTrackers() {
         setAnchorEl(null)
         try {
-            if (selectedData.length === 0) {
-                alert("select at least one row")
-                return
-            }
-            let ids: string[] = []
-            selectedData.forEach((dt) => {
-                ids.push(dt._id)
-            })
-            mutate({ body: { ids: ids } })
+            mutate()
             setReset(true)
             setSelectAll(false)
             setSelectedData([])
@@ -240,7 +232,7 @@ export default function TrackersPage() {
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
                         </Menu >
-                     
+
                     </>
                 </Stack>
             </Stack>
