@@ -5,7 +5,7 @@ import { useMutation, useQuery } from 'react-query'
 import { GetMyTasks, ToogleMyTasks } from '../../services/TaskServices'
 import { BackendError } from '../..'
 import { ITask } from '../../types/task.types'
-import { Checkbox, IconButton, Paper, Tooltip, Typography } from '@mui/material'
+import { Checkbox, IconButton, LinearProgress, Paper, Tooltip, Typography } from '@mui/material'
 import { queryClient } from '../../main'
 import moment from 'moment'
 import { Save } from '@mui/icons-material'
@@ -32,7 +32,7 @@ export default function TasksPage() {
         }
 
     }[]>([])
-    const { data, isSuccess } = useQuery<AxiosResponse<ITask[]>, BackendError>("self_tasks", GetMyTasks)
+    const { data, isSuccess, isLoading: IsTrackerLoading } = useQuery<AxiosResponse<ITask[]>, BackendError>("self_tasks", GetMyTasks)
 
     const { mutate, isLoading } = useMutation
         <AxiosResponse<string>, BackendError, {
@@ -84,7 +84,7 @@ export default function TasksPage() {
                 justifyContent="space-between"
                 width="100vw"
             >
-
+                {IsTrackerLoading && <LinearProgress />}
                 <Typography
                     variant={'h6'}
                     component={'h1'}

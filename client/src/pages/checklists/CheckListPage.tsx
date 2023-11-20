@@ -5,7 +5,7 @@ import { useQuery } from 'react-query'
 import { GetMyCheckLists } from '../../services/CheckListServices'
 import { BackendError } from '../..'
 import { IChecklist } from '../../types/checklist.types'
-import { Box, IconButton, TextField, Typography } from '@mui/material'
+import { Box, IconButton, LinearProgress, TextField, Typography } from '@mui/material'
 import moment from 'moment'
 import { AdsClickOutlined } from '@mui/icons-material'
 import CheckMyCheckListDialog from '../../components/dialogs/checklists/CheckMyCheckListDialog'
@@ -21,7 +21,7 @@ export default function CheckListPage() {
   })
   const { setChoice } = useContext(ChoiceContext)
 
-  const { data, isSuccess } = useQuery<AxiosResponse<IChecklist[]>, BackendError>(["self_checklists", dates?.start_date, dates?.end_date], async () => GetMyCheckLists({ start_date: dates?.start_date, end_date: dates?.end_date }))
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IChecklist[]>, BackendError>(["self_checklists", dates?.start_date, dates?.end_date], async () => GetMyCheckLists({ start_date: dates?.start_date, end_date: dates?.end_date }))
 
   useEffect(() => {
     if (isSuccess) {
@@ -31,6 +31,7 @@ export default function CheckListPage() {
 
   return (
     <Box >
+      {isLoading && <LinearProgress />}
       <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'} sx={{ mb: 1, p: 2 }}>
         < TextField
           size='small'

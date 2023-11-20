@@ -1,4 +1,4 @@
-import { AccountCircle, RestartAlt, Stop } from '@mui/icons-material'
+import { AccountCircle, Delete, RestartAlt, Stop } from '@mui/icons-material'
 import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
@@ -260,7 +260,7 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                                                     }}
 
                                                                 >
-                                                                    <AccountCircle />
+                                                                    <Delete />
                                                                 </IconButton>
                                                             </Tooltip>
                                                             {
