@@ -9,6 +9,7 @@ import ToogleBotDialog from '../dialogs/bot/ToogleBotDialog'
 import { IMenuTracker } from '../../types/bot.types'
 import PopUp from '../popup/PopUp'
 import { UserContext } from '../../contexts/userContext'
+import DeleteTrackerDialog from '../dialogs/bot/DeleteTrackerDialog'
 
 
 
@@ -75,7 +76,7 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
 
                             {/* actions popup */}
 
-                            { user?.bot_access_fields.is_editable &&
+                            {user?.bot_access_fields.is_editable &&
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -234,7 +235,7 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                         }
 
                                         {/* actions */}
-                                        { user?.bot_access_fields.is_editable &&
+                                        {user?.bot_access_fields.is_editable &&
                                             <TableCell>
                                                 <PopUp
                                                     element={
@@ -245,6 +246,17 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                                                     onClick={() => {
                                                                         setTracker(tracker)
                                                                         setChoice({ type: BotChoiceActions.update_tracker })
+                                                                    }}
+
+                                                                >
+                                                                    <AccountCircle />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                            <Tooltip title="Delete Tracker">
+                                                                <IconButton color="error"
+                                                                    onClick={() => {
+                                                                        setTracker(tracker)
+                                                                        setChoice({ type: BotChoiceActions.delete_tracker })
                                                                     }}
 
                                                                 >
@@ -326,6 +338,7 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                 tracker ?
                     <>
                         <UpdateTrackerDialog tracker={tracker} />
+                        <DeleteTrackerDialog tracker={tracker} />
                         <ToogleBotDialog tracker={tracker} />
                     </>
                     : null

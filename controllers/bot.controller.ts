@@ -175,6 +175,7 @@ export const FuzzySearchTrackers = async (req: Request, res: Response, next: Nex
         .sort('-updated_at')
     return res.status(200).json(trackers)
 }
+
 export const UpdateTrackerName = async (req: Request, res: Response, next: NextFunction) => {
     const { customer_name } = req.body as TrackerBody
     const id = req.params.id
@@ -221,4 +222,17 @@ export const ResetTrackers = async (req: Request, res: Response, next: NextFunct
         await MenuTracker.findByIdAndUpdate(tracker._id, { is_active: true })
     })
     return res.status(200).json("successfully reset trackers")
+}
+
+export const DeleteTracker = async (req: Request, res: Response, next: NextFunction) => {
+    const { phone_number, bot_number } = req.body as TrackerBody
+    let trackers = await KeywordTracker.find({ phone_number: phone_number, bot_number: bot_number })
+    let menuTrackers = await MenuTracker.find({ phone_number: phone_number, bot_number: bot_number })
+    trackers.forEach(async (tracker) => {
+        await KeywordTracker.findByIdAndDelete(tracker._id)
+    })
+    menuTrackers.forEach(async (tracker) => {
+        await MenuTracker.findByIdAndDelete(tracker._id)
+    })
+    return res.status(200).json("successfully deleted")
 }

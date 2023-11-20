@@ -47,3 +47,6 @@ export const ToogleBotStatus = async ({ body }: { body: { phone_number: string, 
     return await apiClient.post(`toogle`, body);
 }
 
+export const DeleteTracker = async ({ body }: { body: { phone_number: string, bot_number: string } }) => {
+    return await apiClient.post(`trackers/delete`, body);
+}
