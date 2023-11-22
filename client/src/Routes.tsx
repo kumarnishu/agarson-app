@@ -42,6 +42,16 @@ import CheckListPage from './pages/checklists/CheckListPage'
 import CheckListAdminPage from './pages/checklists/CheckListAdminPage'
 import CheckListHelpPage from './pages/checklists/CheckListHelpPage'
 import CheckListNavBar from './components/navbar/CheckListNavBar'
+import ReportsNavBar from './components/navbar/ReportsNavBar'
+import DailySalesReportPage from './pages/reports/DailySalesReportPage'
+import ReportsPage from './pages/reports/ReportsPage'
+import ReportsHelpPage from './pages/reports/ReportsHelpPage'
+import TourReportsPage from './pages/reports/TourReportsPage'
+import TopPartyCallsPage from './pages/reports/TopPartyCallsPage'
+import EnquiryReportsPage from './pages/reports/EnquiryReportsPage'
+import MyVisitPage from './pages/visit/MyVisitPage'
+import VisitHelpPage from './pages/visit/VisitHelpPage'
+import VisitNavBar from './components/navbar/MyVisitNavBar'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -60,6 +70,10 @@ export enum paths {
   reminder_help = "help/reminder",
   contact_help = "help/contact",
   users_help = "help/users",
+
+  //visit
+  visit = 'visit',
+  visit_help = "visit_help",
 
   //task
   tasks = "/tasks",
@@ -87,6 +101,14 @@ export enum paths {
   bot = "/bot",
   flows = "flows",
   trackers = "trackers",
+
+  //reports
+  reports = "/reports",
+  daily_sales = "daily_sales",
+  top_party_calls = "top_party_calls",
+  enquiry_reports = "enquiry_reports",
+  tour_reports = "tour_reports",
+  report_help_page = "report_help_page",
 
   //broadcast 
   broadcast = "/broadcast",
@@ -147,6 +169,25 @@ function AppRoutes() {
               <Route
                 path={paths.users_help} element={
                   <UsersHelpPage />
+                }
+              />
+            </Route>}
+          {/* visit help */}
+          {!user.user_access_fields.is_hidden &&
+            < Route path={paths.visit} element={<VisitNavBar />}>
+              <Route index
+                element={
+                  <MyVisitPage />
+                }
+              />
+              <Route
+                path={paths.visit} element={
+                  <MyVisitPage />
+                }
+              />
+              <Route
+                path={paths.visit_help} element={
+                  <VisitHelpPage />
                 }
               />
             </Route>}
@@ -329,6 +370,49 @@ function AppRoutes() {
 
             </Route>}
 
+          {/* reports routes */}
+          {!user.checklists_access_fields.is_hidden &&
+            < Route path={paths.reports} element={<ReportsNavBar />
+            }>
+              <Route
+                index element={
+                  <ReportsPage />
+                }
+              />
+
+              <Route path={paths.reports} element={
+                < ReportsPage />
+              }
+              />
+
+              <Route
+                path={paths.tour_reports} element={
+                  <TourReportsPage />
+                }
+              />
+              <Route
+                path={paths.daily_sales} element={
+                  <DailySalesReportPage />
+                }
+              />
+              <Route
+                path={paths.top_party_calls} element={
+                  <TopPartyCallsPage />
+                }
+              />
+              <Route
+                path={paths.report_help_page} element={
+                  <ReportsHelpPage />
+                }
+              />
+              <Route
+                path={paths.enquiry_reports} element={
+                  <EnquiryReportsPage />
+                }
+              />
+
+            </Route>}
+
           {/* todo nav bar */}
           {!user.contacts_access_fields.is_hidden &&
             < Route path={paths.contacts} element={<ContactNavBar />
@@ -384,7 +468,6 @@ function AppRoutes() {
               />
             </Route>}
           {/* backup */}
-
           {!user.backup_access_fields.is_hidden &&
             <Route path={paths.backup_page} element={<DashBoardNavBar />}>
               <Route index

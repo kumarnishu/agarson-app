@@ -6,7 +6,7 @@ import Diversity3Icon from '@mui/icons-material/Diversity3';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { Link } from "react-router-dom";
-import { Apartment, Article, CheckBox, Phone, PunchClock, TaskAlt } from "@mui/icons-material";
+import { Apartment, Article, Book, CheckBox, Phone, PunchClock, TaskAlt, Tour } from "@mui/icons-material";
 import { useContext } from "react";
 import { UserContext } from "../contexts/userContext";
 
@@ -68,6 +68,30 @@ function DashBoardPage() {
                   </Typography>
                 </CardContent>
 
+              </Card>
+            </Link>
+          </Grid>}
+          {!user?.crm_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+            <Link to={paths.reports} style={{ textDecoration: 'none' }}>
+              <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                  <Book sx={{ color: 'black', height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ color: 'black', fontSize: 16 }} component="div">
+                    Reports
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Link>
+          </Grid>}
+          {!user?.crm_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+            <Link to={paths.visit} style={{ textDecoration: 'none' }}>
+              <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                  <Tour sx={{ color: 'black', height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ color: 'black', fontSize: 16 }} component="div">
+                    My Visit
+                  </Typography>
+                </CardContent>
               </Card>
             </Link>
           </Grid>}
