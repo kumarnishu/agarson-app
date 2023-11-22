@@ -95,7 +95,14 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         index: true,
         lowercase: true
     },
-    
+    brijesh_input: {
+        input: String,
+        created_by: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        timestamp: Date
+    },
     remarks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Remark'
@@ -138,7 +145,7 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
     referred_date: {
         type: Date
     },
-    
+
     created_at: {
         type: Date,
         default: new Date(),
@@ -156,7 +163,7 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         required: true,
 
     },
-    
+
     updated_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

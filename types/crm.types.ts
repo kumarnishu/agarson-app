@@ -63,6 +63,7 @@ export type IRemark = {
 }
 export type TRemarkBody = Request['body'] & IRemark;
 export type TReferredPartyBody = Request['body'] & IReferredParty;
+
 export type ILead = {
     _id: string,
     name: string,
@@ -87,6 +88,7 @@ export type ILead = {
     lead_owners: IUser[],
     visiting_card: Asset,
     is_customer: boolean,
+    brijesh_input: { input: string, created_by: IUser, timestamp: Date }
     referred_party?: IReferredParty,
     referred_party_name?: string,
     referred_party_mobile?: string,

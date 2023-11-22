@@ -298,6 +298,42 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 </Stack>
               </TableCell>
 
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Refer Party
+                </Stack>
+              </TableCell>
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Refer Party Mobile
+                </Stack>
+              </TableCell>
+
+              <TableCell
+                sx={{ bgcolor: headColor }}                         >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Refer Date
+                </Stack>
+              </TableCell>
               {/* mobile */}
 
 
@@ -735,7 +771,27 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       </TableCell>
 
                     }
-                    {/* mobile */}
+
+                    <TableCell>
+                      {lead.referred_party_name ?
+                        <Typography sx={{ textTransform: "capitalize" }}> {lead.referred_party_name && lead.referred_party_name}
+                        </Typography> : null
+                      }
+                    </TableCell>
+                    <TableCell>
+                      {lead.referred_party_mobile ?
+                        <Typography sx={{ textTransform: "capitalize" }}> {lead.referred_party_mobile && lead.referred_party_mobile}
+                        </Typography> : null
+                      }
+                    </TableCell>
+
+
+                    <TableCell>
+                      {lead.referred_date ?
+                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.referred_date).toLocaleString()}</Typography> : null
+                      }
+                    </TableCell>
+
 
                     {/* email */}
                     {
@@ -810,9 +866,6 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       </TableCell>
 
                     }
-
-
-
                   </TableRow>
                 )
               })

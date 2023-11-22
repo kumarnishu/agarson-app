@@ -62,8 +62,8 @@ function DashBoardPage() {
             <Link to={paths.crm} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Diversity3Icon sx={{ color: 'black', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'black', fontSize: 16 }} component="div">
+                  <Diversity3Icon sx={{ color: 'blue', height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
                     CRM
                   </Typography>
                 </CardContent>
@@ -75,8 +75,8 @@ function DashBoardPage() {
             <Link to={paths.reports} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Book sx={{ color: 'black', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'black', fontSize: 16 }} component="div">
+                  <Book sx={{ color: 'blue', height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
                     Reports
                   </Typography>
                 </CardContent>
@@ -87,8 +87,8 @@ function DashBoardPage() {
             <Link to={paths.visit} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Tour sx={{ color: 'black', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'black', fontSize: 16 }} component="div">
+                  <Tour sx={{ color: 'blue', height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
                     My Visit
                   </Typography>
                 </CardContent>
@@ -100,8 +100,8 @@ function DashBoardPage() {
             <Link to={paths.alps} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Apartment sx={{ color: 'black', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'black', fontSize: 16 }} component="div">
+                  <Apartment sx={{ color: 'blue', height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
                     ALPS
                   </Typography>
                 </CardContent>

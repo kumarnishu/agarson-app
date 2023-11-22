@@ -67,6 +67,18 @@ function CrmReminderPage() {
                     Lead Address : <b>{remark.lead && remark.lead.address}</b>
                   </Typography>
                   <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Refer Party : <b>{remark.lead.referred_party_name && remark.lead.referred_party_name}</b>
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Refer Party City : <b>{remark.lead.referred_party && remark.lead.referred_party && remark.lead.referred_party.city}</b>
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Refer Date : <b>{remark.lead.referred_date && new Date(remark.lead.referred_date).toLocaleString()}</b>
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                    Refer Party Phone : <b>{remark.lead.referred_party_mobile && remark.lead.referred_party_mobile}</b>
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                     Remark : <b>{remark.remark}</b>
                   </Typography>
                   <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
