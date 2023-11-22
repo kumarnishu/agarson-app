@@ -99,7 +99,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         refs_given,
         reviews_taken } = body as IVisitReportBody
 
-    if (!visit_in_credientials) {
+    if (!visit_in_credientials || !party_name || !city || !summary || !is_old_party) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
     let id = req.params.id
