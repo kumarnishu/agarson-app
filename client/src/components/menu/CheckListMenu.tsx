@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckListMenuActions, MenuContext } from '../../contexts/menuContext';
 import { paths } from '../../Routes';
+import { UserContext } from '../../contexts/userContext';
 
 
 export const StyledLink = styled(Link)`
@@ -13,6 +14,7 @@ export const StyledLink = styled(Link)`
 
 function CheckListMenu() {
     const { menu, setMenu } = useContext(MenuContext)
+    const { user } = useContext(UserContext)
     return (
         <Menu
             anchorEl={menu?.anchorEl}
@@ -25,13 +27,13 @@ function CheckListMenu() {
                 }>
                 <StyledLink to={paths.checklists}>Checklists</StyledLink>
             </MenuItem>
-            <MenuItem
+            {user?.is_admin && <MenuItem
                 onClick={
                     () => setMenu({ type: CheckListMenuActions.close_checklist_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.checklist_admin_page}>Admin</StyledLink>
-
-            </MenuItem>
+            </MenuItem>}
+            
             <MenuItem
                 onClick={
                     () => setMenu({ type: CheckListMenuActions.close_checklist_menu, anchorEl: null })

@@ -59,6 +59,7 @@ function StartMydayForm() {
         }),
         onSubmit: (values: TformData) => {
             if (!location) {
+                alert("enable gps of current device")
                 navigator.geolocation.getCurrentPosition((data) => {
                     setLocation({ latitude: String(data.coords.latitude), longitude: String(data.coords.longitude), timestamp: new Date(data.timestamp) })
                 })
@@ -91,7 +92,7 @@ function StartMydayForm() {
         })
     }, [])
 
-
+    console.log(location)
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>
