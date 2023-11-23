@@ -11,68 +11,22 @@ import TemplatesTable from '../../components/tables/TemplateTable'
 import { GetTemplates } from '../../services/TemplateServices'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, TemplateChoiceActions } from '../../contexts/dialogContext'
-import ExportToExcel from '../../utils/ExportToExcel'
 import NewTemplateDialog from '../../components/dialogs/templates/NewTemplateDialog'
-import AlertBar from '../../components/snacks/AlertBar'
 import { IMessageTemplate } from '../../types/template.types'
 
 
 
-type SelectedData = {
-  name?: string,
-  message?: string,
-  caption?: string,
-  media?: string
-}
 
 export default function TemplatesPage() {
   const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>("templates", GetTemplates)
   const [template, setTemplate] = useState<IMessageTemplate>()
   const [templates, setTemplates] = useState<IMessageTemplate[]>([])
-  const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => templates, [templates])
   const [preFilteredData, setPreFilteredData] = useState<IMessageTemplate[]>([])
-  const [selectedTemplates, setSelectedTemplates] = useState<IMessageTemplate[]>([])
   const [filter, setFilter] = useState<string | undefined>()
-
-  const [selectedData, setSelectedData] = useState<SelectedData[]>([])
-  const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-
-  function handleExcel() {
-    setAnchorEl(null)
-    try {
-      if (selectedData.length === 0)
-        return alert("please select some rows")
-      ExportToExcel(selectedData, "template_data")
-      setSent(true)
-      setSelectAll(false)
-      setSelectedData([])
-      setSelectedTemplates([])
-    }
-    catch (err) {
-      console.log(err)
-      setSent(false)
-    }
-
-  }
-
-  // refine data
-  useEffect(() => {
-    let data: SelectedData[] = []
-    selectedTemplates.map((template) => {
-      return data.push({
-        name: template.name,
-        message: template.message,
-        caption: template.caption,
-        media: template.media?.public_url
-      })
-    })
-    setSelectedData(data)
-  }, [selectedTemplates])
-
+  
   useEffect(() => {
     setTemplate(template)
   }, [template])
@@ -146,10 +100,6 @@ export default function TemplatesPage() {
           </Stack >
           {/* menu */}
           <>
-
-            {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-
-
             <IconButton size="medium"
               onClick={(e) => setAnchorEl(e.currentTarget)
               }
@@ -174,9 +124,6 @@ export default function TemplatesPage() {
                 setAnchorEl(null)
               }}
               >New Template</MenuItem>
-              <MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>
-
             </Menu>
             <NewTemplateDialog />
           </>
@@ -186,10 +133,6 @@ export default function TemplatesPage() {
       {/*  table */}
       <TemplatesTable
         template={template}
-        selectAll={selectAll}
-        selectedTemplates={selectedTemplates}
-        setSelectedTemplates={setSelectedTemplates}
-        setSelectAll={setSelectAll}
         templates={MemoData}
         setTemplate={setTemplate}
       />

@@ -5,12 +5,12 @@ import { IVisit } from "../../types/visit.types"
 const VisitSchema = new mongoose.Schema<IVisit, mongoose.Model<IVisit, {}, {}>, {}>({
     start_day_credientials: {
         latitude: String,
-        longitute: String,
+        longitude: String,
         timestamp: Date
     },
     end_day_credentials: {
         latitude: String,
-        longitute: String,
+        longitude: String,
         timestamp: Date
     },
     start_day_photo: {

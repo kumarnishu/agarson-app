@@ -16,6 +16,8 @@ import WaTemplateRoutes from "./routes/watemplate.routes";
 import AlpsRoutes from "./routes/alps.route";
 import CheckListkRoutes from "./routes/checklist.routes";
 import TaskRoutes from "./routes/task.routes";
+import VisitRoutes from "./routes/visit.routes";
+import ReportRoutes from "./routes/report.routes";
 import CronJobManager from "cron-job-manager";
 
 
@@ -142,6 +144,8 @@ app.use("/api/v1", ContactRoutes)
 app.use("/api/v1", AlpsRoutes)
 app.use("/api/v1", TaskRoutes)
 app.use("/api/v1", CheckListkRoutes)
+app.use("/api/v1", VisitRoutes)
+app.use("/api/v1", ReportRoutes)
 
 
 

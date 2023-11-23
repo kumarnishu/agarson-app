@@ -4,13 +4,46 @@ import { IVisitBody, IVisitReport, IVisitReportBody } from "../types/visit.types
 import { Visit } from "../models/visit/visit.model"
 import { VisitReport } from "../models/visit/visit.report.model"
 
+
+export const getVisits = async (req: Request, res: Response, next: NextFunction) => {
+    let visits = await Visit.find().populate('visit_reports').populate('created_by').populate('updated_by')
+    return res.status(200).json(visits)
+}
+
+export const getMyVisits = async (req: Request, res: Response, next: NextFunction) => {
+    let visits = await Visit.find().populate('visit_reports').populate('created_by').populate('updated_by')
+    visits = visits.filter((visit) => {
+        if (visit.created_by.username === req.user.username)
+            return visit
+    })
+    return res.status(200).json(visits)
+}
+
+export const getMyTodayVisit = async (req: Request, res: Response, next: NextFunction) => {
+    let visits = await Visit.find().populate('visit_reports').populate('created_by').populate('updated_by')
+    let visit = visits.find((visit) => {
+        if (visit.created_at.getDate() === new Date().getDate() && visit.created_at.getMonth() === new Date().getMonth() && visit.created_at.getFullYear() === new Date().getFullYear() && visit.created_by.username === req.user.username)
+            return visit
+    })
+    return res.status(200).json(visit)
+}
+
 export const StartMyDay = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
     let { start_day_credientials } = body as IVisitBody
     if (!start_day_credientials) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
-    let visit = new Visit({
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 7
+    previous_date.setDate(day)
+
+    let visits = await Visit.find({ created_at: { $gte: previous_date } })
+    let visit = visits.find((visit) => visit.created_at.getDate() === new Date().getDate() && visit.created_at.getMonth() === new Date().getMonth() && visit.created_at.getFullYear() === new Date().getFullYear())
+    if (visit)
+        return res.status(403).json({ message: "day has already started" })
+
+    visit = new Visit({
         start_day_credientials: start_day_credientials,
     })
 
@@ -48,20 +81,13 @@ export const EndMyDay = async (req: Request, res: Response, next: NextFunction) 
     if (!end_day_credentials) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 7
-    previous_date.setDate(day)
+    let id = req.params.id
+    let visit = await Visit.findById(id)
+    if (!visit)
+        return res.status(400).json({ message: "day not started yet" })
 
-    let visits = await Visit.find({ created_at: { $gte: previous_date } })
-    let visit = visits.find((vist) => {
-        if (vist.created_at.getDate() === new Date().getDate() && vist.created_at.getMonth() === new Date().getMonth() && vist.created_at.getFullYear() === new Date().getFullYear())
-            return vist
-    })
     if (visit)
         visit.end_day_credentials = end_day_credentials
-    if (!visit) {
-        return res.status(404).json({ message: "your day not started yet" })
-    }
 
     if (!req.file) {
         return res.status(400).json({ message: "please upload your selfie" })
@@ -99,9 +125,10 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         refs_given,
         reviews_taken } = body as IVisitReportBody
 
-    if (!visit_in_credientials || !party_name || !city || !summary || !is_old_party) {
+    if (!visit_in_credientials || !party_name || !city || !summary || !dealer_of || !refs_given || !reviews_taken) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
+
     let id = req.params.id
     let visit = await Visit.findById(id)
     if (!visit)
@@ -119,7 +146,11 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         is_old_party,
         dealer_of,
         refs_given,
-        reviews_taken
+        reviews_taken,
+        created_at: new Date(),
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
     })
 
     if (req.file) {
@@ -150,35 +181,19 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
 export const MakeVisitOut = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
     let { visit_out_credentials } = body as IVisitReportBody
-
     if (!visit_out_credentials) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 7
-    previous_date.setDate(day)
+    let id = req.params.id
+    let report = await VisitReport.findById(id)
+    if (!report)
+        return res.status(400).json({ message: "visit not exists" })
 
-    let visit_reports = await VisitReport.find({ created_at: { $gte: previous_date } })
-    let visit_report = visit_reports.find((report) => {
-        if (report.created_at.getDate() === new Date().getDate() && report.created_at.getMonth() === new Date().getMonth() && report.created_at.getFullYear() === new Date().getFullYear())
-            return report
-    })
-    if (visit_report)
-        visit_report.visit_out_credentials = visit_out_credentials
-    if (!visit_report) {
-        return res.status(404).json({ message: "your visit not started yet" })
-    }
-
-
-
-    visit.updated_at = new Date()
-    visit.updated_by = req.user
-    let newreports: IVisitReport[] = visit.visit_reports
-    newreports.push(report)
-    visit.visit_reports = newreports
-    await visit.save()
+    report.visit_out_credentials = visit_out_credentials
+    report.updated_at = new Date()
+    report.updated_by = req.user
     await report.save()
-    return res.status(200).json({ message: "visit in successful" })
+    return res.status(200).json({ message: "visit out successful" })
 }
 
 

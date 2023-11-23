@@ -5,12 +5,12 @@ import { IVisitReport } from "../../types/visit.types"
 const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisitReport, {}, {}>, {}>({
     visit_in_credientials: {
         latitude: String,
-        longitute: String,
+        longitude: String,
         timestamp: Date
     },
     visit_out_credentials: {
         latitude: String,
-        longitute: String,
+        longitude: String,
         timestamp: Date
     },
     visit_in_photo: {
@@ -22,7 +22,10 @@ const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisi
         bucket: { type: String },
         created_at: Date,
     },
-    person: String,
+    person: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     party_name: String,
     city: String,
     summary: String,

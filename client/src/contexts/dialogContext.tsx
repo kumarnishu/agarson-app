@@ -5,6 +5,8 @@ type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" 
 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
+type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit"
+
 type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" | "edit_task"
 
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
@@ -36,11 +38,11 @@ type BotChoices = "create_flow"
   | "close_bot"
   | "view_connected_users"
   | "update_connected_users"
-  | "toogle_flow_status" |"delete_tracker"
+  | "toogle_flow_status" | "delete_tracker"
 
 
 
-type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | TaskChoices
+type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | TaskChoices | VisitChoices
   | BroadcastChoices | TaskSchedulerChoices | TODOChoices | ReminderChoices | ContactChoices | CheckListChoices
 
 const initialState: ChoiceState | null = null
@@ -53,6 +55,14 @@ export enum ContactChoiceActions {
   delete_contact = "delete_contact",
   bulk_contact = "bulk_contact",
   close_contact = "close_contact"
+}
+export enum VisitChoiceActions {
+  start_day = "start_day",
+  end_day = "end_day",
+  visit_in = "visit_in",
+  visit_out = "visit_out",
+  close_visit = "close_visit"
+
 }
 export enum TaskChoiceActions {
   create_task = "create_task",
@@ -191,7 +201,7 @@ export enum UserChoiceActions {
 }
 
 type Action = {
-  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions
+  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions
 }
 
 // reducer
@@ -262,6 +272,14 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TemplateChoiceActions.delete_template: return type
     case TemplateChoiceActions.close_template: return type
     case TemplateChoiceActions.view_template: return type
+
+
+    case VisitChoiceActions.visit_in: return type
+    case VisitChoiceActions.visit_out: return type
+    case VisitChoiceActions.start_day: return type
+    case VisitChoiceActions.end_day: return type
+    case VisitChoiceActions.close_visit: return type
+
 
     // task
     case TaskChoiceActions.create_task: return type
