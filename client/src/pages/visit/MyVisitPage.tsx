@@ -35,9 +35,15 @@ function MyVisitPage() {
 
       {visit && visit.start_day_credientials && <Stack p={2} direction={'row'} gap={2} alignItems={'center'}>
         <Typography variant="subtitle1">Started day at  <b>{new Date(visit?.start_day_credientials.timestamp).toLocaleTimeString()}</b></Typography>
-        {!Boolean(visit.end_day_credentials) && < Button size="small" variant="outlined" onClick={() => {
-          setChoice({ type: VisitChoiceActions.visit_in })
-        }}>New Visit</Button>}
+        {!Boolean(visit.end_day_credentials) && < Button size="small"
+
+          disabled={visit.visit_reports.filter((report) => {
+            if (!Boolean(report.visit_out_credentials))
+              return report
+          }).length > 0}
+          variant="outlined" onClick={() => {
+            setChoice({ type: VisitChoiceActions.visit_in })
+          }}>New Visit</Button>}
       </Stack >}
 
       <>
@@ -84,7 +90,7 @@ function MyVisitPage() {
       {!visit && <StartMydayDialog />}
 
       {
-        visit  && < Button size="large" color="error" sx={{ position: 'relative', bottom: 0, my: 2 }} variant="outlined"
+        visit && < Button size="large" color="error" sx={{ position: 'relative', bottom: 0, my: 2 }} variant="outlined"
           disabled={isLoading || Boolean(visit.end_day_credentials) || visit.visit_reports.filter((report) => {
             if (!Boolean(report.visit_out_credentials))
               return report
