@@ -42,7 +42,7 @@ function TemplatesTable({ templates, template, setTemplate }: Props) {
                                                     DownloadFile(template.media?.public_url, template.media?.filename)
                                                 }
                                             }}
-                                            src={template.media?.public_url} height="180" style={{ borderRadius: '10px' }} />}
+                                            src={template.media?.public_url} style={{ borderRadius: '10px', minHeight: '260px' }} />}
                                         {!user?.templates_access_fields.is_hidden &&
                                             <Stack direction="row" spacing={1} sx={{ position: 'relative', top: 10 }}>
                                                 {
