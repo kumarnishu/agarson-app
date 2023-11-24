@@ -1,5 +1,5 @@
 import { Delete, Edit, RemoveRedEye } from '@mui/icons-material'
-import { Box, Grid, IconButton, Tooltip } from '@mui/material'
+import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, TemplateChoiceActions } from '../../contexts/dialogContext'
@@ -34,14 +34,15 @@ function TemplatesTable({ templates, template, setTemplate }: Props) {
                         data && data.map((template, index) => {
                             return (
                                 <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                                    <Stack sx={{ bgcolor: 'white', position: 'relative', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                                    <Stack sx={{ bgcolor: 'white', position: 'relative', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }} gap={1}>
+                                        <Typography variant="subtitle1">{template.name}</Typography>
                                         {template.media && <img
                                             onDoubleClick={() => {
                                                 if (template.media && template.media?.public_url) {
                                                     DownloadFile(template.media?.public_url, template.media?.filename)
                                                 }
                                             }}
-                                            src={template.media?.public_url} height="250" style={{ borderRadius: '10px' }} />}
+                                            src={template.media?.public_url} height="180" style={{ borderRadius: '10px' }} />}
                                         {!user?.templates_access_fields.is_hidden &&
                                             <Stack direction="row" spacing={1} sx={{ position: 'relative', top: 10 }}>
                                                 {
