@@ -33,6 +33,7 @@ const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisi
     dealer_of: String,
     refs_given: String,
     reviews_taken: Number,
+    turnover: String,
     ankit_input: {
         input: String,
         created_by: {
@@ -48,6 +49,10 @@ const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisi
             ref: 'User'
         },
         timestamp: Date
+    },
+    visit: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Visit'
     },
     created_at: {
         type: Date,

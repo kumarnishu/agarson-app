@@ -25,6 +25,12 @@ function VisitMenu() {
                 }>
                 <StyledLink to={paths.visit}>My Visit</StyledLink>
             </MenuItem>
+            <MenuItem
+                onClick={
+                    () => setMenu({ type: VisitMenuActions.close_visit_menu, anchorEl: null })
+                }>
+                <StyledLink to={paths.visit_admin}>Admin</StyledLink>
+            </MenuItem>
         
             <MenuItem
                 onClick={

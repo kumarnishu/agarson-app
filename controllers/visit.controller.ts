@@ -3,20 +3,49 @@ import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { IVisitBody, IVisitReport, IVisitReportBody } from "../types/visit.types"
 import { Visit } from "../models/visit/visit.model"
 import { VisitReport } from "../models/visit/visit.report.model"
+import { User } from "../models/users/user.model"
 
 
 export const getVisits = async (req: Request, res: Response, next: NextFunction) => {
-    let visits = await Visit.find().populate('visit_reports').populate('created_by').populate('updated_by')
-    return res.status(200).json(visits)
-}
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let id = req.query.id
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
 
-export const getMyVisits = async (req: Request, res: Response, next: NextFunction) => {
-    let visits = await Visit.find().populate('visit_reports').populate('created_by').populate('updated_by')
-    visits = visits.filter((visit) => {
-        if (visit.created_by.username === req.user.username)
-            return visit
-    })
-    return res.status(200).json(visits)
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        let visits = await VisitReport.find().populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at')
+
+        if (start_date && end_date) {
+            let dt1 = new Date(String(start_date))
+            let dt2 = new Date(String(end_date))
+            visits = visits.filter((visit) => {
+                if (visit.created_at >= dt1 && visit.created_at <= dt2)
+                    return visit
+            })
+        }
+
+        if (id) {
+            let user = await User.findById(id)
+            if (user) {
+                visits = visits.filter((visit) => {
+                    return visit.person.username === user?.username
+                })
+            }
+        }
+
+        let count = visits.length
+        visits = visits.slice((page - 1) * limit, limit * page)
+
+        return res.status(200).json({
+            visits,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
 }
 
 export const getMyTodayVisit = async (req: Request, res: Response, next: NextFunction) => {
@@ -118,14 +147,9 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
     let body = JSON.parse(req.body.body)
     let { visit_in_credientials,
         party_name,
-        city,
-        summary,
-        is_old_party,
-        dealer_of,
-        refs_given,
-        reviews_taken } = body as IVisitReportBody
+        city } = body as IVisitReportBody
 
-    if (!visit_in_credientials || !party_name || !city || !summary || !dealer_of || !refs_given || !reviews_taken) {
+    if (!visit_in_credientials || !party_name || !city) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
 
@@ -142,11 +166,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         person: req.user,
         party_name,
         city,
-        summary,
-        is_old_party,
-        dealer_of,
-        refs_given,
-        reviews_taken,
+        visit: visit,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -176,6 +196,112 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
     await visit.save()
     await report.save()
     return res.status(200).json({ message: "visit in successful" })
+}
+
+export const AddVisitSummary = async (req: Request, res: Response, next: NextFunction) => {
+    let { summary,
+        is_old_party,
+        dealer_of,
+        refs_given,
+        reviews_taken, turnover } = req.body as IVisitReportBody
+    if (!summary) {
+        return res.status(400).json({ message: "please fill all required fields" })
+    }
+    let id = req.params.id
+    let report = await VisitReport.findById(id)
+    if (!report)
+        return res.status(400).json({ message: "visit not exists" })
+
+    report.is_old_party = is_old_party
+    report.dealer_of = dealer_of
+    report.turnover = turnover
+    report.refs_given = refs_given
+    report.reviews_taken = reviews_taken
+    report.summary = summary
+    report.updated_at = new Date()
+    report.updated_by = req.user
+    await report.save()
+    return res.status(200).json({ message: "Added Summary Successfully" })
+}
+export const EditVisitSummary = async (req: Request, res: Response, next: NextFunction) => {
+    let { summary,
+        is_old_party,
+        dealer_of,
+        refs_given,
+        reviews_taken, turnover } = req.body as IVisitReportBody
+    if (!summary) {
+        return res.status(400).json({ message: "please fill all required fields" })
+    }
+    let id = req.params.id
+    let report = await VisitReport.findById(id)
+    if (!report)
+        return res.status(400).json({ message: "visit not exists" })
+    
+    report.is_old_party = is_old_party
+    report.dealer_of = dealer_of
+    report.turnover = turnover
+    report.refs_given = refs_given
+    report.reviews_taken = reviews_taken
+    report.summary = summary
+    report.updated_at = new Date()
+    report.updated_by = req.user
+    await report.save()
+    return res.status(200).json({ message: "Added Summary Successfully" })
+}
+export const ValidateVisit = async (req: Request, res: Response, next: NextFunction) => {
+    let id = req.params.id
+    let report = await VisitReport.findById(id)
+    if (!report)
+        return res.status(400).json({ message: "visit not exists" })
+
+    report.visit_validated = true
+    report.updated_at = new Date()
+    report.updated_by = req.user
+    await report.save()
+    return res.status(200).json({ message: "visit validated" })
+}
+
+export const AddAnkitInput = async (req: Request, res: Response, next: NextFunction) => {
+    let { input } = req.body as IVisitReportBody & { input: string }
+    if (!input) {
+        return res.status(400).json({ message: "please fill all required fields" })
+    }
+    let id = req.params.id
+    let report = await VisitReport.findById(id)
+    if (!report)
+        return res.status(400).json({ message: "visit not exists" })
+
+    report.ankit_input = {
+        input: input,
+        created_by: req.user,
+        timestamp: new Date()
+    }
+    report.updated_at = new Date()
+    report.updated_by = req.user
+    await report.save()
+    return res.status(200).json({ message: "added ankit input" })
+
+}
+
+export const AddBrijeshInput = async (req: Request, res: Response, next: NextFunction) => {
+    let { input } = req.body as IVisitReportBody & { input: string }
+    if (!input) {
+        return res.status(400).json({ message: "please fill all required fields" })
+    }
+    let id = req.params.id
+    let report = await VisitReport.findById(id)
+    if (!report)
+        return res.status(400).json({ message: "visit not exists" })
+
+    report.brijesh_input = {
+        input: input,
+        created_by: req.user,
+        timestamp: new Date()
+    }
+    report.updated_at = new Date()
+    report.updated_by = req.user
+    await report.save()
+    return res.status(200).json({ message: "added brijesh input" })
 }
 
 export const MakeVisitOut = async (req: Request, res: Response, next: NextFunction) => {

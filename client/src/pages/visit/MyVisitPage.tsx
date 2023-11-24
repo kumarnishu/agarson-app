@@ -10,9 +10,12 @@ import { ChoiceContext, VisitChoiceActions } from "../../contexts/dialogContext"
 import EndMydayDialog from "../../components/dialogs/visit/EndMyDayDialog"
 import MakeVisitInDialog from "../../components/dialogs/visit/MakeVisitInDialog"
 import MakeVisitOutDialog from "../../components/dialogs/visit/MakeVisitOutDialog"
+import AddSummaryInDialog from "../../components/dialogs/visit/AddSummaryDialog"
+import EditSummaryInDialog from "../../components/dialogs/visit/EditSummaryDialog"
 
 function MyVisitPage() {
   const [visits, setVisits] = useState<IVisitReport[]>([])
+  const [visitReport, setVisitReport] = useState<IVisitReport>()
   const [visit, setVisit] = useState<IVisit>()
   const { setChoice } = useContext(ChoiceContext)
   const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IVisit>, BackendError>("visit", getMyTodayVisit)
@@ -67,9 +70,18 @@ function MyVisitPage() {
                 <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                   Visit Out : {new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString()}
                 </Typography>
-                {visit && !Boolean(visit.visit_out_credentials) && <Button sx={{ fontWeight: 'bold', p: 0, mt: 2 }} color="error" onClick={() => setChoice({ type: VisitChoiceActions.visit_out })}>Visit Out</Button>}
+                <Stack gap={2} direction={'row'}>
+                  {visit && !Boolean(visit.visit_out_credentials) && <Button sx={{ fontWeight: 'bold', p: 0, mt: 2 }} color="error" onClick={() => {
+                    setVisitReport(visit)
+                    setChoice({ type: VisitChoiceActions.visit_out })
+                  }}>Visit Out</Button>}
+
+                  {!visit.summary ? <Button sx={{ fontWeight: 'bold', p: 0, mt: 2 }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.add_summary }) }}>Add Summary</Button> : <Button sx={{ fontWeight: 'bold', p: 0, mt: 2 }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.edit_summary }) }}>Edit Summary</Button>}
+                </Stack>
               </Paper>
-              {visit && !Boolean(visit.visit_out_credentials) && <MakeVisitOutDialog visit={visit} />}
+              {visitReport && !Boolean(visitReport.visit_out_credentials) && <MakeVisitOutDialog visit={visitReport} />}
+              {visitReport && !visitReport.summary && <AddSummaryInDialog visit={visitReport} />}
+              {visitReport && visitReport.summary && <EditSummaryInDialog visit={visitReport} />}
             </Stack>
           )
         })}

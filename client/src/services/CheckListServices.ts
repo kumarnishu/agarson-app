@@ -13,7 +13,6 @@ export const EditCheckList = async ({ body, id }: { body: { title: string, sheet
 
 
 export const GetCheckLists = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
-
     if (id && !start_date && !end_date)
         return await apiClient.get(`checklists/?id=${id}&limit=${limit}&page=${page}`)
     if (id && start_date && end_date)

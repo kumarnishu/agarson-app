@@ -5,7 +5,7 @@ type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" 
 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
-type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit"
+type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "edit_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input"
 
 type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" | "edit_task"
 
@@ -61,7 +61,13 @@ export enum VisitChoiceActions {
   end_day = "end_day",
   visit_in = "visit_in",
   visit_out = "visit_out",
-  close_visit = "close_visit"
+  close_visit = "close_visit",
+  edit_visit = "edit_visit",
+  validate_visit = "validate_visit",
+  add_summary = "add_summary",
+  edit_summary = "edit_summary",
+  add_brijesh_input = "add_brijesh_input",
+  add_ankit_input = "add_ankit_input"
 
 }
 export enum TaskChoiceActions {
@@ -273,12 +279,18 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TemplateChoiceActions.close_template: return type
     case TemplateChoiceActions.view_template: return type
 
-
+// visit
     case VisitChoiceActions.visit_in: return type
     case VisitChoiceActions.visit_out: return type
     case VisitChoiceActions.start_day: return type
     case VisitChoiceActions.end_day: return type
     case VisitChoiceActions.close_visit: return type
+    case VisitChoiceActions.edit_visit: return type
+    case VisitChoiceActions.edit_summary: return type
+    case VisitChoiceActions.add_summary: return type
+    case VisitChoiceActions.add_ankit_input: return type
+    case VisitChoiceActions.add_brijesh_input: return type
+    case VisitChoiceActions.validate_visit: return type
 
 
     // task
