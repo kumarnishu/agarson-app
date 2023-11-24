@@ -6,12 +6,14 @@ const VisitSchema = new mongoose.Schema<IVisit, mongoose.Model<IVisit, {}, {}>, 
     start_day_credientials: {
         latitude: String,
         longitude: String,
-        timestamp: Date
+        timestamp: Date,
+        address: String
     },
     end_day_credentials: {
         latitude: String,
         longitude: String,
-        timestamp: Date
+        timestamp: Date,
+        address: String
     },
     start_day_photo: {
         _id: { type: String },

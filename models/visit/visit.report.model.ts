@@ -6,12 +6,14 @@ const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisi
     visit_in_credientials: {
         latitude: String,
         longitude: String,
-        timestamp: Date
+        timestamp: Date,
+        address:String
     },
     visit_out_credentials: {
         latitude: String,
         longitude: String,
-        timestamp: Date
+        timestamp: Date,
+        address:String
     },
     visit_in_photo: {
         _id: { type: String },

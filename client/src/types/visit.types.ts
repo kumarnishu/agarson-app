@@ -6,12 +6,14 @@ export type IVisitReport = {
     visit_in_credientials: {
         latitude: string,
         longitude: string,
-        timestamp: Date
+        timestamp: Date,
+        address: string
     },
     visit_out_credentials: {
         latitude: string,
         longitude: string,
-        timestamp: Date
+        timestamp: Date,
+        address: string
     },
     person: IUser,
     party_name: string,
@@ -39,12 +41,14 @@ export type IVisit = {
     start_day_credientials: {
         latitude: string,
         longitude: string,
-        timestamp: Date
+        timestamp: Date,
+        address: string
     },
     end_day_credentials: {
         latitude: string,
         longitude: string,
-        timestamp: Date
+        timestamp: Date,
+        address: string
     },
     visit_reports: IVisitReport[]
     created_at: Date,

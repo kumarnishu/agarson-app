@@ -75,3 +75,7 @@ export const MakeVisitOut = async ({ id, body }: { id: string, body: FormData })
 export const FuzzySearchVisits = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
     return await apiClient.get(`search/visits?key=${searchString}&limit=${limit}&page=${page}`)
 }
+
+export const GetAddress = async ({ lat, long }: { lat?: string, long?: string }) => {
+    return await apiClient.get(`https://geocode.maps.co/reverse?lat=${lat}&lon=${long}`)
+}
