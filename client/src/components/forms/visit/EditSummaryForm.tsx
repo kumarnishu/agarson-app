@@ -10,7 +10,7 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import { EditVisitSummary } from '../../../services/VisitServices';
-import {  IVisitReport } from '../../../types/visit.types';
+import { IVisitReport } from '../../../types/visit.types';
 
 
 type TformData = {
@@ -38,6 +38,7 @@ function EditSummaryForm({ visit }: { visit: IVisitReport }) {
         (EditVisitSummary, {
             onSuccess: () => {
                 queryClient.invalidateQueries('visit')
+                queryClient.invalidateQueries('visits')
             }
         })
 
@@ -46,7 +47,7 @@ function EditSummaryForm({ visit }: { visit: IVisitReport }) {
     const formik = useFormik<TformData>({
         initialValues: {
             summary: visit.summary,
-            is_old_party: visit.is_old_party,
+            is_old_party: Boolean(visit.is_old_party),
             dealer_of: visit.dealer_of,
             refs_given: visit.refs_given,
             reviews_taken: visit.reviews_taken,
@@ -64,7 +65,7 @@ function EditSummaryForm({ visit }: { visit: IVisitReport }) {
         onSubmit: (values: TformData) => {
             let Data = {
                 summary: values.summary,
-                is_old_party: values.is_old_party,
+                is_old_party: Boolean(values.is_old_party),
                 dealer_of: values.dealer_of,
                 refs_given: values.refs_given,
                 reviews_taken: values.reviews_taken,
@@ -82,7 +83,6 @@ function EditSummaryForm({ visit }: { visit: IVisitReport }) {
             }, 1000)
         }
     }, [isSuccess, setChoice])
-
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>
@@ -150,7 +150,7 @@ function EditSummaryForm({ visit }: { visit: IVisitReport }) {
                     />
                     <FormGroup>
                         <FormControlLabel control={<Checkbox
-                            checked={Boolean(formik.values.is_old_party)}
+                            defaultChecked={Boolean(formik.values.is_old_party)}
                             {...formik.getFieldProps('is_old_party')}
                         />} label="Is Old Party ?" />
                     </FormGroup>

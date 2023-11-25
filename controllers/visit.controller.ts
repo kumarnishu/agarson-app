@@ -270,7 +270,7 @@ export const EditVisitSummary = async (req: Request, res: Response, next: NextFu
     report.updated_at = new Date()
     report.updated_by = req.user
     await report.save()
-    return res.status(200).json({ message: "Added Summary Successfully" })
+    return res.status(200).json({ message: "updated Summary Successfully" })
 }
 export const ValidateVisit = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.params.id

@@ -38,6 +38,7 @@ function AddSummaryForm({ visit }: { visit: IVisitReport }) {
         (AddVisitSummary, {
             onSuccess: () => {
                 queryClient.invalidateQueries('visit')
+                queryClient.invalidateQueries('visits')
             }
         })
 

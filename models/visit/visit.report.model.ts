@@ -36,6 +36,7 @@ const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisi
     refs_given: String,
     reviews_taken: Number,
     turnover: String,
+    visit_validated:Boolean,
     ankit_input: {
         input: String,
         created_by: {

@@ -27,7 +27,7 @@ function AddBrijeshInputForm({ visit }: { visit: IVisitReport }) {
         }>
         (AddBrijeshInput, {
             onSuccess: () => {
-                queryClient.invalidateQueries('visit')
+                queryClient.invalidateQueries('visits')
             }
         })
 

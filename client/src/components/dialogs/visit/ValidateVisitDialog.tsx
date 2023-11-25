@@ -17,7 +17,7 @@ function ValidateVisitDialog({ visit }: { visit: IVisitReport }) {
         <AxiosResponse<IUser>, BackendError, string>
         (ValidateVisit, {
             onSuccess: () => {
-                queryClient.invalidateQueries('visit')
+                queryClient.invalidateQueries('visits')
             }
         })
     return (

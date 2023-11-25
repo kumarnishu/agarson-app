@@ -13,7 +13,7 @@ function AddAnkitInputDialog({ visit }: { visit: IVisitReport }) {
             > <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: VisitChoiceActions.close_visit })}>
                     <Cancel fontSize='large' />
                 </IconButton>
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Brijesh input</DialogTitle>
+                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Ankit input</DialogTitle>
                 <DialogContent>
                     {visit && <AddAnkitInputForm visit={visit} />}
                 </DialogContent>

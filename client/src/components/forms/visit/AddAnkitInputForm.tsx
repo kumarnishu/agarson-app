@@ -27,7 +27,7 @@ function AddAnkitInputForm({ visit }: { visit: IVisitReport }) {
         }>
         (AddAnkitInput, {
             onSuccess: () => {
-                queryClient.invalidateQueries('visit')
+                queryClient.invalidateQueries('visits')
             }
         })
 

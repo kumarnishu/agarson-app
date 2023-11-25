@@ -3,11 +3,16 @@ import { Stack } from '@mui/system'
 import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
-import { Edit } from '@mui/icons-material'
+import { Chat, Check, Comment, Edit, RemoveRedEye } from '@mui/icons-material'
 import { ChoiceContext, VisitChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
 import { IVisitReport } from '../../types/visit.types'
-import { DownloadFile } from '../../utils/DownloadFile'
+import EditSummaryInDialog from '../dialogs/visit/EditSummaryDialog'
+import ValidateVisitDialog from '../dialogs/visit/ValidateVisitDialog'
+import AddAnkitInputDialog from '../dialogs/visit/AddAnkitInputDialog'
+import AddBrijeshInputDialog from '../dialogs/visit/AddBrjeshInputDialog'
+import ViewVisitDialog from '../dialogs/visit/ViewVisitDialog'
+import ViewCommentsDialog from '../dialogs/visit/ViewCommentsDialog'
 
 
 
@@ -37,7 +42,7 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
             }}>
                 <Table
                     stickyHeader
-                    sx={{ width: "2500px" }}
+                    sx={{ width: "3500px" }}
                     size="small">
                     <TableHead
                     >
@@ -89,18 +94,7 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    Start Day
-                                </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    End Day
+                                    Date
                                 </Stack>
                             </TableCell>
 
@@ -135,7 +129,7 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    Party Details
+                                    Party
                                 </Stack>
                             </TableCell>
 
@@ -147,10 +141,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    Visit Summary
+                                    Station
                                 </Stack>
                             </TableCell>
-
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -159,7 +152,62 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    Extras
+                                    Visit In Address
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Is Old ?
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Turnover
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Dealer Of
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    References taken
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Reviews Taken
                                 </Stack>
                             </TableCell>
                             <TableCell
@@ -185,7 +233,50 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 </Stack>
                             </TableCell>
 
-
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Created at
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Updated at
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Created By
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Updated By
+                                </Stack>
+                            </TableCell>
 
                         </TableRow>
                     </TableHead>
@@ -244,150 +335,124 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                             :
                                             null/* actions popup */}
                                         {user?.user_access_fields.is_editable &&
-                                            <TableCell sx={{ bgcolor: visit.visit_validated ? 'green' : 'red' }} >
+                                            <TableCell sx={{ bgcolor: visit.visit_validated ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,0,0.1)' }} >
                                                 <PopUp
                                                     element={
                                                         <Stack
                                                             direction="row" spacing={1}>
                                                             {
-
                                                                 <>
-                                                                    <Tooltip title="Edit">
-                                                                        <IconButton color="info"
+                                                                    <Tooltip title="Visit Details ">
+                                                                        <IconButton color="success"
                                                                             onClick={() => {
-                                                                                setChoice({ type: VisitChoiceActions.edit_visit })
+                                                                                setChoice({ type: VisitChoiceActions.view_visit })
+                                                                                setVisit(visit)
+                                                                            }}
+                                                                        >
+                                                                            <RemoveRedEye />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="View Comments ">
+                                                                        <IconButton color="success"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: VisitChoiceActions.view_comments })
+                                                                                setVisit(visit)
+                                                                            }}
+                                                                        >
+                                                                            <Chat />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                    {!visit.visit_validated && <Tooltip title="validate">
+                                                                        <IconButton color="error"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: VisitChoiceActions.validate_visit })
+                                                                                setVisit(visit)
+                                                                            }}
+                                                                        >
+                                                                            <Check />
+                                                                        </IconButton>
+                                                                    </Tooltip>}
+                                                                    <Tooltip title="Edit Summary">
+                                                                        <IconButton color="success"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: VisitChoiceActions.edit_summary })
                                                                                 setVisit(visit)
                                                                             }}
                                                                         >
                                                                             <Edit />
                                                                         </IconButton>
                                                                     </Tooltip>
-
-
+                                                                    <Tooltip title="ankit input">
+                                                                        <IconButton color="primary"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: VisitChoiceActions.add_ankit_input })
+                                                                                setVisit(visit)
+                                                                            }}
+                                                                        >
+                                                                            <Comment />
+                                                                        </IconButton>
+                                                                    </Tooltip>
                                                                 </>
 
                                                             }
                                                         </Stack>
                                                     } />
                                             </TableCell>}
-
                                         <TableCell>
-                                            <Stack direction="row"
-                                                spacing={2}
-                                                justifyContent="left"
-                                                alignItems="center"
-                                            >
-                                                <Stack>
-                                                    {visit.visit.start_day_photo && <img
-                                                        onDoubleClick={() => {
-                                                            if (visit.visit.start_day_photo && visit.visit.start_day_photo?.public_url) {
-                                                                DownloadFile(visit.visit.start_day_photo?.public_url, visit.visit.start_day_photo?.filename)
-                                                            }
-                                                        }}
-                                                        src={visit.visit.start_day_photo?.public_url} style={{ borderRadius: '5px', height: '100px' }} />}
-
-                                                </Stack >
-                                                <Stack>
-                                                    <Typography sx={{ textTransform: "capitalize" }}>Timestamp : <b>{new Date(visit.visit.start_day_credientials.timestamp).toLocaleString()}</b></Typography>
-                                                    <Typography variant="subtitle1">Coordinates: <b>{visit.visit.start_day_credientials.latitude},{visit.visit.start_day_credientials.longitude}</b></Typography>
-                                                    <Typography variant="subtitle1"><b>{visit.visit.start_day_credientials.address}</b></Typography>
-                                                </Stack >
-                                            </Stack>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials.timestamp).toLocaleDateString()}</Typography>
                                         </TableCell>
 
                                         <TableCell>
-                                            <Stack direction="row"
-                                                spacing={2}
-                                                justifyContent="left"
-                                                alignItems="center"
-                                            >
-                                                <Stack>
-                                                    {visit.visit.end_day_photo && <img
-                                                        onDoubleClick={() => {
-                                                            if (visit.visit.end_day_photo && visit.visit.end_day_photo?.public_url) {
-                                                                DownloadFile(visit.visit.end_day_photo?.public_url, visit.visit.end_day_photo?.filename)
-                                                            }
-                                                        }}
-                                                        src={visit.visit.end_day_photo?.public_url} style={{ borderRadius: '5px', height: '100px' }} />}
-
-                                                </Stack >
-                                                <Stack>
-                                                    <Typography sx={{ textTransform: "capitalize" }}>Timestamp : <b>{new Date(visit.visit.end_day_credentials.timestamp).toLocaleTimeString()}</b></Typography>
-                                                    <Typography variant="subtitle1">Coordinates: <b>{visit.visit.end_day_credentials.latitude},{visit.visit.end_day_credentials.longitude}</b></Typography>
-                                                    <Typography variant="subtitle1"><b>{visit.visit.end_day_credentials.address}</b></Typography>
-                                                </Stack >
-                                            </Stack>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
                                         </TableCell>
 
                                         <TableCell>
-                                            <Stack direction="row"
-                                                spacing={2}
-                                                justifyContent="left"
-                                                alignItems="center"
-                                            >
-                                                <Stack>
-                                                    {visit.visit_in_photo && <img
-                                                        onDoubleClick={() => {
-                                                            if (visit.visit_in_photo && visit.visit_in_photo?.public_url) {
-                                                                DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)
-                                                            }
-                                                        }}
-                                                        src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '100px' }} />}
+                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.party_name}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.city}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.visit_in_credientials && visit.visit_in_credientials.address && visit.visit_in_credientials.address}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.is_old_party ? "Old " : "New "}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.turnover}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.dealer_of}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.refs_given}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.reviews_taken}</Typography>
+                                        </TableCell>
 
-                                                </Stack >
-                                                <Stack>
-                                                    <Typography sx={{ textTransform: "capitalize" }}>Timestamp : <b>{new Date(visit.visit_in_credientials.timestamp).toLocaleTimeString()}</b></Typography>
-                                                    <Typography variant="subtitle1">Coordinates: <b>{visit.visit_in_credientials.latitude},{visit.visit_in_credientials.longitude}</b></Typography>
-                                                    <Typography variant="subtitle1"><b>{visit.visit_in_credientials.address}</b></Typography>
-                                                </Stack >
-                                            </Stack>
-                                        </TableCell>
                                         <TableCell>
-                                            <Stack direction="column"
-                                                justifyContent="left"
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }}>Timestamp : <b>{new Date(visit.visit_out_credentials.timestamp).toLocaleTimeString()}</b></Typography>
-                                                <Typography variant="subtitle1">Coordinates: <b>{visit.visit_out_credentials.latitude},{visit.visit_out_credentials.longitude}</b></Typography>
-                                                <Typography variant="subtitle1"><b>{visit.visit_out_credentials.address}</b></Typography>
-                                            </Stack>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.ankit_input && visit.ankit_input.input}</Typography>
                                         </TableCell>
-                                        <TableCell>
-                                            <Stack direction="row"
-                                                spacing={2}
-                                                justifyContent="left"
-                                            >
-                                                <Stack>
-                                                    <Typography variant="subtitle1">Salesperson: <b>{visit.person.username}</b></Typography>
-                                                    <Typography sx={{ textTransform: "capitalize" }}>Party : <b>{visit.party_name}</b></Typography>
-                                                    <Typography sx={{ textTransform: "capitalize" }}>Station : <b>{visit.city}</b></Typography>
-                                                    <Typography variant="subtitle1">Salesperson: <b>{visit.person.username}</b></Typography>
-                                                    <Typography variant="subtitle1">Google Reviews: <b>{visit.reviews_taken}</b></Typography>
-                                                </Stack>
-                                                <Stack>
-                                                    <Typography variant="subtitle1">Dealer Of: <b>{visit.dealer_of}</b></Typography>
-                                                    <Typography sx={{ textTransform: "capitalize" }}>Refernces : <b>{visit.refs_given}</b></Typography>
-                                                    <Typography sx={{ textTransform: "capitalize" }}>Station : <b>{visit.city}</b></Typography>
-                                                    <Typography variant="subtitle1">Is Old: <b>{visit.is_old_party ? "Yes" : "Not"}</b></Typography>
-                                                    <Typography variant="subtitle1">Turnover: <b>{visit.turnover}</b></Typography>
-                                                </Stack>
 
-                                            </Stack>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.brijesh_input && visit.brijesh_input.input}</Typography>
+                                        </TableCell>
 
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.created_at).toLocaleString()}</Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.summary}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.updated_at).toLocaleString()}</Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>Created At : <b>{new Date(visit.created_at).toLocaleTimeString()}</b></Typography>
-                                            <Typography sx={{ textTransform: "capitalize" }}>Updated At : <b>{new Date(visit.updated_at).toLocaleTimeString()}</b></Typography>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">Created By : {visit.created_by.username}</Typography>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">Updated By : {visit.updated_by.username}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.created_by.username}</Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.ankit_input && new Date(visit.ankit_input.timestamp).toLocaleTimeString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.brijesh_input && new Date(visit.brijesh_input.timestamp).toLocaleTimeString()}  {visit.brijesh_input && visit.brijesh_input.input}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.updated_by.username}</Typography>
                                         </TableCell>
 
                                     </TableRow>
@@ -401,7 +466,12 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
             {
                 visit ?
                     <>
-
+                        <ViewVisitDialog visit={visit} />
+                        <ViewCommentsDialog visit={visit} />
+                        <ValidateVisitDialog visit={visit} />
+                        <EditSummaryInDialog visit={visit} />
+                        <AddBrijeshInputDialog visit={visit} />
+                        <AddAnkitInputDialog visit={visit} />
                     </>
                     : null
             }

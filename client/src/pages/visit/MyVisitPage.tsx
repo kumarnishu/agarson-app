@@ -36,18 +36,20 @@ function MyVisitPage() {
       {isLoading && <LinearProgress />}
 
 
-      {visit && visit.start_day_credientials && <Stack p={2} direction={'row'} gap={2} alignItems={'center'}>
-        <Typography variant="subtitle1">Started day at  <b>{new Date(visit?.start_day_credientials.timestamp).toLocaleTimeString()}</b></Typography>
-        {!Boolean(visit.end_day_credentials) && < Button size="small"
-
-          disabled={visit.visit_reports.filter((report) => {
-            if (!Boolean(report.visit_out_credentials))
-              return report
-          }).length > 0}
-          variant="outlined" onClick={() => {
-            setChoice({ type: VisitChoiceActions.visit_in })
-          }}>New Visit</Button>}
-      </Stack >}
+      {visit && visit.start_day_credientials &&
+        <>
+          <Typography variant="subtitle1" textAlign={'center'} sx={{p:1}}>Started day at  <b>{new Date(visit?.start_day_credientials.timestamp).toLocaleTimeString()}</b></Typography>
+          <Stack direction={'row'} gap={2} alignItems={'center'}>
+            {!Boolean(visit.end_day_credentials) && < Button size="small"
+              disabled={visit.visit_reports.filter((report) => {
+                if (!Boolean(report.visit_out_credentials))
+                  return report
+              }).length > 0}
+              variant="outlined" onClick={() => {
+                setChoice({ type: VisitChoiceActions.visit_in })
+              }}>New Visit</Button>}
+          </Stack >
+        </>}
 
       <>
         {visits.map((visit, index) => {
