@@ -31,7 +31,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                                     DownloadFile(visit.visit.start_day_photo?.public_url, visit.visit.start_day_photo?.filename)
                                 }
                             }}
-                            src={visit.visit.start_day_photo?.public_url} style={{ borderRadius: '5px', height: '150px', width: '80px' }} />}
+                            src={visit.visit.start_day_photo?.public_url} style={{ borderRadius: '5px', height: '250px', width: '250px' }} />}
                         <Stack>
                             <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleTimeString()}</Typography>
                             <Typography variant="subtitle1">{visit.visit.start_day_credientials && visit.visit.start_day_credientials.latitude},{visit.visit.start_day_credientials && visit.visit.start_day_credientials.longitude}</Typography>
@@ -47,13 +47,13 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                         p={2}
                         justifyContent="left"
                     >
-                        {visit.visit.end_day_photo && <img
+                        {visit.visit_in_photo && <img
                             onDoubleClick={() => {
                                 if (visit.visit_in_photo && visit.visit_in_photo?.public_url) {
                                     DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)
                                 }
                             }}
-                            src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '150px', width: '80px' }} />}
+                            src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '250px', width: '250px' }} />}
                         <Stack>
                             <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
                             <Typography variant="subtitle1">{visit.visit_in_credientials && visit.visit_in_credientials.latitude},{visit.visit_in_credientials && visit.visit_in_credientials.longitude}</Typography>
@@ -92,7 +92,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                                     DownloadFile(visit.visit.end_day_photo?.public_url, visit.visit.end_day_photo?.filename)
                                 }
                             }}
-                            src={visit.visit.end_day_photo?.public_url} style={{ borderRadius: '5px', height: '150px', width: '80px' }} />}
+                            src={visit.visit.end_day_photo?.public_url} style={{ borderRadius: '5px', height: '250px', width: '250px' }} />}
                         <Stack>
                             <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.visit.end_day_credentials && visit.visit.end_day_credentials.timestamp).toLocaleTimeString()}</Typography>
                             <Typography variant="subtitle1"> {visit.visit.end_day_credentials && visit.visit.end_day_credentials.latitude},{visit.visit.end_day_credentials && visit.visit.end_day_credentials.longitude}</Typography>
