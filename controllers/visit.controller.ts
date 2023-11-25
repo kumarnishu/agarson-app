@@ -68,7 +68,7 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
     previous_date.setDate(day)
 
     let visits = await Visit.find({ created_at: { $gte: previous_date } })
-    let visit = visits.find((visit) => visit.created_at.getDate() === new Date().getDate() && visit.created_at.getMonth() === new Date().getMonth() && visit.created_at.getFullYear() === new Date().getFullYear())
+    let visit = visits.find((visit) => visit.created_at.getDate() === new Date().getDate() && visit.created_at.getMonth() === new Date().getMonth() && visit.created_at.getFullYear() === new Date().getFullYear() && visit.created_by.username == req.user.username)
     if (visit)
         return res.status(403).json({ message: "day has already started" })
 
