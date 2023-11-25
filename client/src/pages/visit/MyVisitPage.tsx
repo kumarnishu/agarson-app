@@ -38,14 +38,14 @@ function MyVisitPage() {
 
       {visit && visit.start_day_credientials &&
         <>
-          <Typography variant="subtitle1" textAlign={'center'} sx={{p:1}}>Started day at  <b>{new Date(visit?.start_day_credientials.timestamp).toLocaleTimeString()}</b></Typography>
-          <Stack direction={'row'} gap={2} alignItems={'center'}>
-            {!Boolean(visit.end_day_credentials) && < Button size="small"
+          <Typography variant="subtitle1" textAlign={'center'} sx={{ p: 1 }}>Started day at  <b>{new Date(visit?.start_day_credientials.timestamp).toLocaleTimeString()}</b></Typography>
+          <Stack direction={'row'}  p={2} alignItems={'center'} justifyContent={'center'}>
+            {!Boolean(visit.end_day_credentials) && < Button 
               disabled={visit.visit_reports.filter((report) => {
                 if (!Boolean(report.visit_out_credentials))
                   return report
               }).length > 0}
-              variant="outlined" onClick={() => {
+              variant="contained" onClick={() => {
                 setChoice({ type: VisitChoiceActions.visit_in })
               }}>New Visit</Button>}
           </Stack >
@@ -93,27 +93,31 @@ function MyVisitPage() {
 
 
       {
-        !visit && < Button size="large" color="success" sx={{ position: 'relative', bottom: 0, my: 2 }} variant="outlined"
-          disabled={isLoading}
-          fullWidth onClick={
-            () => {
-              setChoice({ type: VisitChoiceActions.start_day })
-            }
-          }>Start My Day</Button >
+        !visit && <Stack p={2}>
+          < Button size="large" color="success" sx={{ position: 'relative', bottom: 0 }} variant="outlined"
+            disabled={isLoading}
+            fullWidth onClick={
+              () => {
+                setChoice({ type: VisitChoiceActions.start_day })
+              }
+            }>Start My Day</Button >
+        </Stack>
       }
       {!visit && <StartMydayDialog />}
 
       {
-        visit && < Button size="large" color="error" sx={{ position: 'relative', bottom: 0, my: 2 }} variant="outlined"
-          disabled={isLoading || Boolean(visit.end_day_credentials) || visit.visit_reports.filter((report) => {
-            if (!Boolean(report.visit_out_credentials))
-              return report
-          }).length > 0}
-          fullWidth onClick={
-            () => {
-              setChoice({ type: VisitChoiceActions.end_day })
-            }
-          }>{Boolean(visit.end_day_credentials) ? `Day ended at ${new Date(visit.end_day_credentials.timestamp).toLocaleTimeString()}` : "End My Day"}</Button >
+        visit && <Stack p={2}>
+          < Button size="small" color="error" sx={{ position: 'relative', bottom: 0, my: 2 }} variant="outlined"
+            disabled={isLoading || Boolean(visit.end_day_credentials) || visit.visit_reports.filter((report) => {
+              if (!Boolean(report.visit_out_credentials))
+                return report
+            }).length > 0}
+            fullWidth onClick={
+              () => {
+                setChoice({ type: VisitChoiceActions.end_day })
+              }
+            }>{Boolean(visit.end_day_credentials) ? `Day ended at ${new Date(visit.end_day_credentials.timestamp).toLocaleTimeString()}` : "End My Day"}</Button >
+        </Stack>
       }
       {visit && <EndMydayDialog visit={visit} />}
     </>

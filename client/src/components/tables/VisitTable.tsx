@@ -152,6 +152,17 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                     alignItems="left"
                                     spacing={2}
                                 >
+                                    Salesman
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
                                     Visit In Address
                                 </Stack>
                             </TableCell>
@@ -399,21 +410,24 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                                     } />
                                             </TableCell>}
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials.timestamp).toLocaleDateString()}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials&&visit.visit.start_day_credientials.timestamp).toLocaleDateString()}</Typography>
                                         </TableCell>
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_in_credientials&&visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
                                         </TableCell>
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_out_credentials&&visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
                                         </TableCell>
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.party_name}</Typography>
                                         </TableCell>
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.city}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.person.username}</Typography>
                                         </TableCell>
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.visit_in_credientials && visit.visit_in_credientials.address && visit.visit_in_credientials.address}</Typography>

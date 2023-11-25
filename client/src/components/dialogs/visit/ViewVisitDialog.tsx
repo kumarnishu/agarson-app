@@ -16,7 +16,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                 <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Visit Details</DialogTitle>
                 <DialogContent>
                     {/* start day */}
-                    <Typography variant="subtitle1" sx={{bgcolor:'rgba(0,0,0,0.7)',color:'white',p:1}} textAlign={'center'} fontWeight={'bold'}>Start Day</Typography>
+                    <Typography variant="subtitle1" sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white', p: 1 }} textAlign={'center'} fontWeight={'bold'}>Start Day</Typography>
                     <Stack
                         gap={1}
                         direction={'row'}
@@ -33,14 +33,14 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                             }}
                             src={visit.visit.start_day_photo?.public_url} style={{ borderRadius: '5px', height: '150px', width: '80px' }} />}
                         <Stack>
-                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials.timestamp).toLocaleTimeString()}</Typography>
-                            <Typography variant="subtitle1">{visit.visit.start_day_credientials.latitude},{visit.visit.start_day_credientials.longitude}</Typography>
-                            <Typography variant="subtitle1"><b>{visit.visit.start_day_credientials.address}</b></Typography>
+                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleTimeString()}</Typography>
+                            <Typography variant="subtitle1">{visit.visit.start_day_credientials && visit.visit.start_day_credientials.latitude},{visit.visit.start_day_credientials && visit.visit.start_day_credientials.longitude}</Typography>
+                            <Typography variant="subtitle1"><b>{visit.visit.start_day_credientials&&visit.visit.start_day_credientials.address}</b></Typography>
                         </Stack >
                     </Stack >
 
                     {/* visit in */}
-                    <Typography variant="subtitle1" sx={{bgcolor:'rgba(0,0,0,0.7)',color:'white',p:1}} textAlign={'center'} fontWeight={'bold'}>Visit In</Typography>
+                    <Typography variant="subtitle1" sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white', p: 1 }} textAlign={'center'} fontWeight={'bold'}>Visit In</Typography>
                     <Stack gap={1}
                         direction={'row'}
                         spacing={2}
@@ -55,14 +55,14 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                             }}
                             src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '150px', width: '80px' }} />}
                         <Stack>
-                            <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
-                            <Typography variant="subtitle1">{visit.visit_in_credientials.latitude},{visit.visit_in_credientials.longitude}</Typography>
-                            <Typography variant="subtitle1">{visit.visit_in_credientials.address}</Typography>
+                            <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
+                            <Typography variant="subtitle1">{visit.visit_in_credientials && visit.visit_in_credientials.latitude},{visit.visit_in_credientials && visit.visit_in_credientials.longitude}</Typography>
+                            <Typography variant="subtitle1">{visit.visit_in_credientials && visit.visit_in_credientials.address}</Typography>
                         </Stack >
                     </Stack >
 
                     {/* visit out */}
-                    <Typography variant="subtitle1" sx={{bgcolor:'rgba(0,0,0,0.7)',color:'white',p:1}} textAlign={'center'} fontWeight={'bold'}>Visit Out</Typography>
+                    <Typography variant="subtitle1" sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white', p: 1 }} textAlign={'center'} fontWeight={'bold'}>Visit Out</Typography>
                     <Stack
                         gap={1}
                         direction={'row'}
@@ -72,14 +72,14 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
 
                     >
                         <Stack>
-                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
-                            <Typography variant="subtitle1">{visit.visit_out_credentials.latitude},{visit.visit_out_credentials.longitude}</Typography>
-                            <Typography variant="subtitle1">{visit.visit_out_credentials.address}</Typography>
+                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
+                            <Typography variant="subtitle1">{visit.visit_out_credentials && visit.visit_out_credentials.latitude},{visit.visit_out_credentials && visit.visit_out_credentials.longitude}</Typography>
+                            <Typography variant="subtitle1">{visit.visit_out_credentials && visit.visit_out_credentials.address}</Typography>
                         </Stack >
                     </Stack>
 
                     {/* end day */}
-                    <Typography variant="subtitle1" sx={{bgcolor:'rgba(0,0,0,0.7)',color:'white',p:1}} textAlign={'center'} fontWeight={'bold'}>End Day</Typography>
+                    <Typography variant="subtitle1" sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white', p: 1 }} textAlign={'center'} fontWeight={'bold'}>End Day</Typography>
                     <Stack gap={1}
                         direction={'row'}
                         spacing={2}
@@ -94,9 +94,9 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                             }}
                             src={visit.visit.end_day_photo?.public_url} style={{ borderRadius: '5px', height: '150px', width: '80px' }} />}
                         <Stack>
-                            <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.visit.end_day_credentials.timestamp).toLocaleTimeString()}</Typography>
-                            <Typography variant="subtitle1"> {visit.visit.end_day_credentials.latitude},{visit.visit.end_day_credentials.longitude}</Typography>
-                            <Typography variant="subtitle1">{visit.visit.end_day_credentials.address}</Typography>
+                            <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.visit.end_day_credentials && visit.visit.end_day_credentials.timestamp).toLocaleTimeString()}</Typography>
+                            <Typography variant="subtitle1"> {visit.visit.end_day_credentials && visit.visit.end_day_credentials.latitude},{visit.visit.end_day_credentials && visit.visit.end_day_credentials.longitude}</Typography>
+                            <Typography variant="subtitle1">{visit.visit.end_day_credentials&&visit.visit.end_day_credentials.address}</Typography>
                         </Stack >
                     </Stack >
                 </DialogContent>
