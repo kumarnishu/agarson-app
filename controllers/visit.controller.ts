@@ -71,8 +71,8 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
     let visit = visits.find((visit) => visit.created_at.getDate() === new Date().getDate() && visit.created_at.getMonth() === new Date().getMonth() && visit.created_at.getFullYear() === new Date().getFullYear() && visit.created_by.username == req.user.username)
     if (visit)
         return res.status(403).json({ message: "day has already started" })
+    let address = await (await fetch(`https://geocode.maps.co/reverse?lat=${start_day_credientials.latitude}&lon=${start_day_credientials.longitude}`)).json()
 
-    let address = await (await fetch(`https://geocode.maps.co/reverse?lat=28.7124128&lon=76.9396394`)).json()
 
     visit = new Visit({
         start_day_credientials: {
@@ -82,7 +82,6 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
             address: String(address.display_name)
         },
     })
-
     if (!req.file) {
         return res.status(400).json({ message: "please upload your selfie" })
     }
@@ -125,7 +124,7 @@ export const EndMyDay = async (req: Request, res: Response, next: NextFunction) 
         return res.status(400).json({ message: "day not started yet" })
 
     if (visit) {
-        let address = await (await fetch(`https://geocode.maps.co/reverse?lat=28.7124128&lon=76.9396394`)).json()
+        let address = await (await fetch(`https://geocode.maps.co/reverse?lat=${end_day_credentials.latitude}&lon=${end_day_credentials.longitude}`)).json()
         visit.end_day_credentials = {
             latitude: end_day_credentials.latitude,
             longitude: end_day_credentials.longitude,
@@ -188,7 +187,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         created_by: req.user,
         updated_by: req.user
     })
-    let address = await (await fetch(`https://geocode.maps.co/reverse?lat=28.7124128&lon=76.9396394`)).json()
+    let address = await (await fetch(`https://geocode.maps.co/reverse?lat=${visit_in_credientials.latitude}&lon=${visit_in_credientials.longitude}`)).json()
     report.visit_in_credientials = {
         latitude: visit_in_credientials.latitude,
         longitude: visit_in_credientials.longitude,
@@ -338,7 +337,7 @@ export const MakeVisitOut = async (req: Request, res: Response, next: NextFuncti
     let report = await VisitReport.findById(id)
     if (!report)
         return res.status(400).json({ message: "visit not exists" })
-    let address = await (await fetch(`https://geocode.maps.co/reverse?lat=28.7124128&lon=76.9396394`)).json()
+    let address = await (await fetch(`https://geocode.maps.co/reverse?lat=${visit_out_credentials.latitude}&lon=${visit_out_credentials.longitude}`)).json()
     report.visit_out_credentials = {
         latitude: visit_out_credentials.latitude,
         longitude: visit_out_credentials.longitude,
