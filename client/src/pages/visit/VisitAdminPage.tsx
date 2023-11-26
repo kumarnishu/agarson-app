@@ -16,6 +16,7 @@ import moment from 'moment'
 import { UserContext } from '../../contexts/userContext'
 import VisitTable from '../../components/tables/VisitTable'
 import { IVisitReport } from '../../types/visit.types'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 export default function VisitAdminPage() {
@@ -378,6 +379,8 @@ export default function VisitAdminPage() {
             </Stack>
 
             {/* table */}
+            {isLoading && <TableSkeleton />}
+            {!isLoading && 
             <VisitTable
                 visit={visit}
                 setVisit={setVisit}
@@ -386,7 +389,7 @@ export default function VisitAdminPage() {
                 setSelectedVisits={setSelectedVisits}
                 setSelectAll={setSelectAll}
                 visits={MemoData}
-            />
+            />}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 

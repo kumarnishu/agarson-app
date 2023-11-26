@@ -18,6 +18,7 @@ import moment from 'moment'
 import { UserContext } from '../../contexts/userContext'
 import NewCheckListDialog from '../../components/dialogs/checklists/NewCheckListDialog'
 import CheckListTable from '../../components/tables/CheckListTable'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 export default function CheckListAdminPage() {
@@ -310,6 +311,8 @@ export default function CheckListAdminPage() {
       </Stack>
 
       {/* table */}
+      {isLoading && <TableSkeleton />}
+      {!isLoading && 
       < CheckListTable
         dates={dates}
         checklist={checklist}
@@ -319,7 +322,7 @@ export default function CheckListAdminPage() {
         setSelectedCheckLists={setSelectedCheckLists}
         setSelectAll={setSelectAll}
         checklists={MemoData}
-      />
+      />}
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
     </>
 

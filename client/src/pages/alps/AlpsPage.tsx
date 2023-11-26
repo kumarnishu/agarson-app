@@ -13,6 +13,7 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IAlps } from '../../types/alps.types'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 type SelectedData = {
   serial_number: number,
@@ -213,6 +214,8 @@ export default function AlpsPage() {
         </Stack >
       </Stack >
       {/* table */}
+      {isLoading && <TableSkeleton />}
+      {!isLoading && 
       < AlpsTable
         alp={alp}
         setAlp={setAlp}
@@ -222,7 +225,7 @@ export default function AlpsPage() {
         setSelectAll={setSelectAll}
         alps={filter ? currentItems : MemoData}
         selectableAlps={filter ? allfuzzyalps : alps}
-      />
+      />}
 
       {!filter ? <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} /> :
         <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={FuzzyMemoData}

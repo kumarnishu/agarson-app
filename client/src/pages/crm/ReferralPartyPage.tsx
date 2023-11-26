@@ -17,6 +17,7 @@ import { ILead, IReferredParty } from '../../types/crm.types'
 import DBPagination from '../../components/pagination/DBpagination'
 import BulkAssignRefersDialog from '../../components/dialogs/crm/BulkAssignRefersDialog'
 import { UserContext } from '../../contexts/userContext'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 type SelectedData = {
@@ -263,6 +264,8 @@ export default function ReferralPartyPage() {
                 </Stack>
             </Stack>
             {/*  table */}
+            {isLoading && <TableSkeleton />}
+            {!isLoading && 
             <RefersTable
                 refer={refer}
                 selectAll={selectAll}
@@ -271,7 +274,7 @@ export default function ReferralPartyPage() {
                 setSelectAll={setSelectAll}
                 refers={MemoData}
                 setRefer={setRefer}
-            />
+            />}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 

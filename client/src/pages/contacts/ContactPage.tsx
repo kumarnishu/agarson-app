@@ -17,6 +17,7 @@ import ContactsTable from '../../components/tables/ContactTable'
 import UploadContactsFromExcelButton from '../../components/buttons/UploadContactsFromExcelButton'
 import { UserContext } from '../../contexts/userContext'
 import { IContact } from '../../types/contact.types'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 type SelectedData = {
@@ -190,6 +191,8 @@ export default function ContactPage() {
         </Stack>
       </Stack>
       {/*  table */}
+      {isLoading && <TableSkeleton />}
+      {!isLoading && 
       <ContactsTable
         contact={contact}
         selectAll={selectAll}
@@ -198,7 +201,7 @@ export default function ContactPage() {
         setSelectAll={setSelectAll}
         contacts={MemoData}
         setContact={setContact}
-      />
+      />}
 
     </>
 

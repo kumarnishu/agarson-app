@@ -15,6 +15,7 @@ import NewUserDialog from '../../components/dialogs/users/NewUserDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IUser } from '../../types/user.types'
 import DBPagination from '../../components/pagination/DBpagination'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 type SelectedData = {
     username?: string,
@@ -235,6 +236,8 @@ export default function UsersPage() {
 
 
             {/*  table */}
+            {isLoading && <TableSkeleton />}
+            {!isLoading && 
             <UsersTable
                 user={user}
                 selectAll={selectAll}
@@ -243,7 +246,7 @@ export default function UsersPage() {
                 setSelectAll={setSelectAll}
                 users={MemoData}
                 setUser={setUser}
-            />
+            />}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 

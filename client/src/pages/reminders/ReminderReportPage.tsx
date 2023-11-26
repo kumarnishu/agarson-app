@@ -13,6 +13,7 @@ import { GetReminderPaginatedReports, GetReminderReportsByMobile } from '../../s
 import { BackendError } from '../..'
 import { IContactReport } from '../../types/contact.types'
 import { IReminder } from '../../types/reminder.types'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 export default function ReminderReportPage({ reminder }: { reminder: IReminder }) {
@@ -155,11 +156,13 @@ export default function ReminderReportPage({ reminder }: { reminder: IReminder }
       </Stack>
 
       {/*  table */}
+      {isLoading && <TableSkeleton />}
+      {!isLoading && 
       <RemindersReportsTable
         setReport={setReport}
         report={report}
         reports={MemoData}
-      />
+      />}
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
     </>
   )

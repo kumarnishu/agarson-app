@@ -13,6 +13,7 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, TemplateChoiceActions } from '../../contexts/dialogContext'
 import NewTemplateDialog from '../../components/dialogs/templates/NewTemplateDialog'
 import { IMessageTemplate } from '../../types/template.types'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 
@@ -131,11 +132,13 @@ export default function TemplatesPage() {
         </Stack>
       </Stack>
       {/*  table */}
+      {isLoading && <TableSkeleton />}
+      {!isLoading && 
       <TemplatesTable
         template={template}
         templates={MemoData}
         setTemplate={setTemplate}
-      />
+      />}
     </>
 
   )

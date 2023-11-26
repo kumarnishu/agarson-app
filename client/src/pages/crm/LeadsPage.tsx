@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, IconButton, LinearProgress, Menu, MenuItem,  TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -17,6 +17,7 @@ import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from '../../types/crm.types'
 import BulkAssignLeadsDialog from '../../components/dialogs/crm/BulkAssignLeadsDialog'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 let template: ILeadTemplate[] = [
   {
@@ -259,15 +260,15 @@ export default function LeadsPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    if (selectedLeads.length === 0)
-                      alert("please select some leads")
-                    else
-                      setChoice({ type: LeadChoiceActions.bulk_assign_leads })
-                    setAnchorEl(null)
-                  }}
-                > Assign Leads</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  if (selectedLeads.length === 0)
+                    alert("please select some leads")
+                  else
+                    setChoice({ type: LeadChoiceActions.bulk_assign_leads })
+                  setAnchorEl(null)
+                }}
+              > Assign Leads</MenuItem>
 
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
@@ -279,7 +280,8 @@ export default function LeadsPage() {
         </Stack >
       </Stack >
       {/* table */}
-      < LeadsTable
+      {isLoading && <TableSkeleton />}
+      {!isLoading && < LeadsTable
         lead={lead}
         setLead={setLead}
         selectAll={selectAll}
@@ -287,7 +289,7 @@ export default function LeadsPage() {
         setSelectedLeads={setSelectedLeads}
         setSelectAll={setSelectAll}
         leads={MemoData}
-      />
+      />}
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
     </>
 

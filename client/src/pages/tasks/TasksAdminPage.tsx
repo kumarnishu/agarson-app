@@ -18,6 +18,7 @@ import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
 import { UserContext } from '../../contexts/userContext'
 import NewTaskDialog from '../../components/dialogs/tasks/NewTaskDialog'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 
@@ -309,6 +310,8 @@ export default function TasksAdminPage() {
             </Stack>
 
             {/* table */}
+            {isLoading && <TableSkeleton />}
+            {!isLoading && 
             < TasksTable
                 dates={dates}
                 task={task}
@@ -318,7 +321,7 @@ export default function TasksAdminPage() {
                 setSelectedTasks={setSelectedTasks}
                 setSelectAll={setSelectAll}
                 tasks={MemoData}
-            />
+            />}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 

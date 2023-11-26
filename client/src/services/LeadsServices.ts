@@ -60,9 +60,6 @@ export const RemoveLeadReferrals = async (id: string) => {
   return await apiClient.patch(`refers/leads/${id}`)
 }
 
-export const GetLead = async (id: string) => {
-  return await apiClient.get(`leads/${id}`)
-}
 
 export const GetRemarks = async (id?: string, start_date?: string, end_date?: string) => {
   if (id && !start_date && !end_date)

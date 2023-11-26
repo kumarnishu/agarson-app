@@ -16,6 +16,7 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { GetReminders } from '../../services/ReminderServices'
 import { IReminder } from '../../types/reminder.types'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 type SelectedData = {
   name?: string,
@@ -186,6 +187,8 @@ export default function ReminderPage() {
         </Stack>
       </Stack>
       {/*  table */}
+      {isLoading && <TableSkeleton />}
+      {!isLoading && 
       <RemindersTable
         reminder={reminder}
         selectAll={selectAll}
@@ -194,7 +197,7 @@ export default function ReminderPage() {
         setSelectAll={setSelectAll}
         reminders={MemoData}
         setReminder={setReminder}
-      />
+      />}
     
     </>
 

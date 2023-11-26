@@ -16,6 +16,7 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { GetFlows } from '../../services/BotServices'
 import { IFlow } from '../../types/bot.types'
 import CreateFlowDialog from '../../components/dialogs/bot/CreateFlowDialog'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 type SelectedData = {
   flow_name: string,
@@ -186,6 +187,8 @@ export default function FlowsPage() {
       </Stack>
 
       {/*  table */}
+      {isLoading && <TableSkeleton />}
+      {!isLoading && 
       <FlowsTable
         flow={flow}
         selectAll={selectAll}
@@ -194,7 +197,7 @@ export default function FlowsPage() {
         setSelectAll={setSelectAll}
         flows={MemoData}
         setFlow={setFlow}
-      />
+      />}
       
     </>
 

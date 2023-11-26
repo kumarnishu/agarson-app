@@ -17,6 +17,7 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from '../../types/crm.types'
 import LeadsTable from '../../components/tables/LeadsTable'
 import BulkAssignLeadsDialog from '../../components/dialogs/crm/BulkAssignLeadsDialog'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 let template: ILeadTemplate[] = [
   {
@@ -281,6 +282,8 @@ export default function CustomersPage() {
         </Stack >
       </Stack >
       {/* table */}
+      {isLoading && <TableSkeleton />}
+      {!isLoading && 
       <LeadsTable
         lead={lead}
         setLead={setLead}
@@ -289,7 +292,7 @@ export default function CustomersPage() {
         setSelectedLeads={setSelectedLeads}
         setSelectAll={setSelectAll}
         leads={MemoData}
-      />
+      />}
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
     </>
 

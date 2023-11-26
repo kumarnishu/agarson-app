@@ -17,6 +17,7 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from '../../types/crm.types'
 import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
 import BulkAssignLeadsDialog from '../../components/dialogs/crm/BulkAssignLeadsDialog'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 let template: ILeadTemplate[] = [
   {
@@ -294,7 +295,8 @@ export default function UselessLeadsPage() {
         </Stack >
       </Stack >
       {/* table */}
-      < LeadsTable
+      {isLoading && <TableSkeleton />}
+      {!isLoading && < LeadsTable
         lead={lead}
         setLead={setLead}
         selectAll={selectAll}
@@ -302,7 +304,7 @@ export default function UselessLeadsPage() {
         setSelectedLeads={setSelectedLeads}
         setSelectAll={setSelectAll}
         leads={MemoData}
-      />
+      />}
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
       {selectedLeads && selectedLeads.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
 

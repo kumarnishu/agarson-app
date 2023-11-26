@@ -15,6 +15,7 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { IMenuTracker } from '../../types/bot.types'
 import { queryClient } from '../../main'
 import { UserContext } from '../../contexts/userContext'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 export default function TrackersPage() {
@@ -239,6 +240,8 @@ export default function TrackersPage() {
                 </Stack>
             </Stack>
             {/* table */}
+            {isLoading && <TableSkeleton />}
+            {!isLoading && 
             <TrackersTable
                 tracker={tracker}
                 setTracker={setTracker}
@@ -248,7 +251,7 @@ export default function TrackersPage() {
                 setSelectAll={setSelectAll}
                 trackers={filter ? currentItems : MemoData}
                 selectableTrackers={filter ? allfuzzytrackers : trackers}
-            />
+            />}
 
             {!filter ? <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} /> :
                 <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={FuzzyMemoData}

@@ -12,6 +12,7 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import FileSaver from 'file-saver'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IBroadcast, IBroadcastReport } from '../../types/broadcast.types'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 export default function BroadcastReportPage({ broadcast }: { broadcast: IBroadcast }) {
@@ -154,11 +155,13 @@ console.log(filterCount)
             </Stack>
 
             {/*  table */}
+            {isLoading && <TableSkeleton />}
+            {!isLoading && 
             <BroadcastsReportsTable
                 setReport={setReport}
                 report={report}
                 reports={MemoData}
-            />
+            />}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
     )

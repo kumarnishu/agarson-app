@@ -16,7 +16,6 @@ import FlowsPage from './pages/bot/FlowsPage'
 import BackupPage from './pages/backup/BackupPage'
 import BroadcastPage from './pages/broadcast/BroadcastPage'
 import UseLessLeadsPage from './pages/crm/UseLessLeadsPage'
-import LeadReportsPage from './pages/crm/LeadReportsPage'
 import TemplatesNavBar from './components/navbar/TemplatesNavBar'
 import TemplatesPage from './pages/templates/TemplatesPage'
 import ReminderNavBar from './components/navbar/ReminderNavBar'
@@ -95,7 +94,6 @@ export enum paths {
   updateble_fields_lead = "updateble_fields_lead",
   refers = "refers",
   useless_leads = "useless_leads",
-  lead_reports = "leads_reports",
 
   //bot
   bot = "/bot",
@@ -241,12 +239,7 @@ function AppRoutes() {
                   </Suspense>
                 }
               />
-              <Route
-                path={paths.lead_reports} element={
-                  <Suspense fallback={<LinearProgress />}><LeadReportsPage />
-                  </Suspense>
-                }
-              />
+             
               <Route
                 path={paths.crm_help} element={
                   <CrmHelpPage />

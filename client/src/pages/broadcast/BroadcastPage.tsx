@@ -16,6 +16,7 @@ import NewBroadcastMessageDialog from '../../components/dialogs/broadcasts/NewBr
 import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { IBroadcast } from '../../types/broadcast.types'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 type SelectedData = {
   name?: string,
@@ -195,6 +196,8 @@ export default function BroadcastPage() {
         </Stack>
       </Stack>
       {/*  table */}
+      {isLoading && <TableSkeleton />}
+      {!isLoading && 
       <BroadcastsTable
         broadcast={broadcast}
         selectAll={selectAll}
@@ -203,7 +206,7 @@ export default function BroadcastPage() {
         setSelectAll={setSelectAll}
         broadcasts={MemoData}
         setBroadcast={setBroadcast}
-      />
+      />}
 
     </>
 
