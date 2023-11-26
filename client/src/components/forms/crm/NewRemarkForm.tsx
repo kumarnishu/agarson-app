@@ -116,6 +116,7 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                     error={
                         formik.touched.remind_date && formik.errors.remind_date ? true : false
                     }
+                    focused
                     id="remind_date"
                     label="Remind Date"
                     fullWidth

@@ -46,9 +46,7 @@ import ReportsNavBar from './components/navbar/ReportsNavBar'
 import DailySalesReportPage from './pages/reports/DailySalesReportPage'
 import ReportsPage from './pages/reports/ReportsPage'
 import ReportsHelpPage from './pages/reports/ReportsHelpPage'
-import TourReportsPage from './pages/reports/TourReportsPage'
 import TopPartyCallsPage from './pages/reports/TopPartyCallsPage'
-import EnquiryReportsPage from './pages/reports/EnquiryReportsPage'
 import MyVisitPage from './pages/visit/MyVisitPage'
 import VisitHelpPage from './pages/visit/VisitHelpPage'
 import VisitNavBar from './components/navbar/MyVisitNavBar'
@@ -394,7 +392,7 @@ function AppRoutes() {
 
               <Route
                 path={paths.tour_reports} element={
-                  <TourReportsPage />
+                  <VisitAdminPage />
                 }
               />
               <Route
@@ -414,7 +412,7 @@ function AppRoutes() {
               />
               <Route
                 path={paths.enquiry_reports} element={
-                  <EnquiryReportsPage />
+                  <CrmActivitiesPage />
                 }
               />
 

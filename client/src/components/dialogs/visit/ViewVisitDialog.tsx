@@ -33,7 +33,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                             }}
                             src={visit.visit.start_day_photo?.public_url} style={{ borderRadius: '5px', height: '250px', width: '250px' }} />}
                         <Stack>
-                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleTimeString()}</Typography>
+                            <Typography sx={{ textTransform: "capitalize" }}>Timestamp : {new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleTimeString()}</Typography>
                             <Typography variant="subtitle1">{visit.visit.start_day_credientials && visit.visit.start_day_credientials.latitude},{visit.visit.start_day_credientials && visit.visit.start_day_credientials.longitude}</Typography>
                             <Typography variant="subtitle1"><b>{visit.visit.start_day_credientials&&visit.visit.start_day_credientials.address}</b></Typography>
                         </Stack >
@@ -55,7 +55,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                             }}
                             src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '250px', width: '250px' }} />}
                         <Stack>
-                            <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
+                            <Typography sx={{ textTransform: "capitalize" }}> Timestamp : {new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
                             <Typography variant="subtitle1">{visit.visit_in_credientials && visit.visit_in_credientials.latitude},{visit.visit_in_credientials && visit.visit_in_credientials.longitude}</Typography>
                             <Typography variant="subtitle1">{visit.visit_in_credientials && visit.visit_in_credientials.address}</Typography>
                         </Stack >
@@ -72,7 +72,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
 
                     >
                         <Stack>
-                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
+                            <Typography sx={{ textTransform: "capitalize" }}>Timestamp : {new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
                             <Typography variant="subtitle1">{visit.visit_out_credentials && visit.visit_out_credentials.latitude},{visit.visit_out_credentials && visit.visit_out_credentials.longitude}</Typography>
                             <Typography variant="subtitle1">{visit.visit_out_credentials && visit.visit_out_credentials.address}</Typography>
                         </Stack >
@@ -94,7 +94,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                             }}
                             src={visit.visit.end_day_photo?.public_url} style={{ borderRadius: '5px', height: '250px', width: '250px' }} />}
                         <Stack>
-                            <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.visit.end_day_credentials && visit.visit.end_day_credentials.timestamp).toLocaleTimeString()}</Typography>
+                            <Typography sx={{ textTransform: "capitalize" }}> Timestamp : {new Date(visit.visit.end_day_credentials && visit.visit.end_day_credentials.timestamp).toLocaleTimeString()}</Typography>
                             <Typography variant="subtitle1"> {visit.visit.end_day_credentials && visit.visit.end_day_credentials.latitude},{visit.visit.end_day_credentials && visit.visit.end_day_credentials.longitude}</Typography>
                             <Typography variant="subtitle1">{visit.visit.end_day_credentials&&visit.visit.end_day_credentials.address}</Typography>
                         </Stack >

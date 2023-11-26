@@ -403,6 +403,16 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                                                             <Comment />
                                                                         </IconButton>
                                                                     </Tooltip>
+                                                                    <Tooltip title="brijesh input">
+                                                                        <IconButton color="primary"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: VisitChoiceActions.add_brijesh_input })
+                                                                                setVisit(visit)
+                                                                            }}
+                                                                        >
+                                                                            <Comment />
+                                                                        </IconButton>
+                                                                    </Tooltip>
                                                                 </>
 
                                                             }
