@@ -400,32 +400,6 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                     Updated At
                                 </Stack>
                             </TableCell>
-
-                            {/* created by */}
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Created By
-                                </Stack>
-                            </TableCell>
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Updated By
-                                </Stack>
-                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody >
@@ -715,22 +689,7 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                             </TableCell>
 
                                         }
-                                        {/* created by */}
-                                        {
-                                            <TableCell>
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1">{remark.lead.created_by.username}</Typography>
-
-                                            </TableCell>
-
-                                        }
-                                        {/* updated by */}
-                                        {
-                                            <TableCell>
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1">{remark.lead.updated_by.username}</Typography>
-
-                                            </TableCell>
-
-                                        }
+                                       
                                     </TableRow>
                                 )
                             })

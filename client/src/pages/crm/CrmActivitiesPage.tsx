@@ -129,6 +129,9 @@ function CrmActivitiesPage() {
                                             Lead Address : <b>{remark.lead && remark.lead.address}</b>
                                         </Typography>
                                         <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                                            Lead Stage : <b>{remark.lead && remark.lead.stage}</b>
+                                        </Typography>
+                                        <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                                             Lead Owners : <b>{remark.lead.lead_owners && remark.lead.lead_owners.map((owner) => { return owner.username }).toString() || "NA"}</b>
                                         </Typography>
                                         <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
