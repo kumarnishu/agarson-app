@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, IconButton, LinearProgress, Menu, MenuItem,  TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -49,7 +49,7 @@ let template: ILeadTemplate[] = [
 
 
 export default function LeadsPage() {
-  const [paginationData, setPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+  const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<ILead>()
@@ -57,11 +57,11 @@ export default function LeadsPage() {
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => leads, [leads])
   const [preFilteredData, setPreFilteredData] = useState<ILead[]>([])
-  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 10, page: 1, total: 1 });
+  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
 
-  const { data, isLoading, isSuccess, refetch } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page }), { enabled: false })
+  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page }))
 
   const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
@@ -152,7 +152,7 @@ export default function LeadsPage() {
         total: data.data.total
       })
     }
-  }, [isSuccess])
+  }, [data])
 
   useEffect(() => {
     if (fuzzyleads && filter) {
@@ -169,11 +169,6 @@ export default function LeadsPage() {
       setFilterCount(count)
     }
   }, [fuzzyleads])
-
-  useEffect(() => {
-    refetch()
-  }, [])
-  
   return (
     <>
 
