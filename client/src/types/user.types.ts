@@ -31,6 +31,8 @@ export type IUser = {
     reports_access_fields: ReportsAccess,
     email_verified: Boolean,
     is_active: Boolean,
+    multi_login_token: string,
+    is_multi_login: boolean,
     last_login: Date,
     created_at: Date,
     updated_at: Date,

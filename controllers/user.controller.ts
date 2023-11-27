@@ -248,7 +248,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
 
 // login
 export const Login = async (req: Request, res: Response, next: NextFunction) => {
-    const { username, password } = req.body as TUserBody & { username: string };
+    const { username, password, multi_login_token } = req.body as TUserBody
     if (!username)
         return res.status(400).json({ message: "please enter username or email" })
     if (!password)
@@ -257,6 +257,8 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
     let user = await User.findOne({
         username: String(username).toLowerCase().trim(),
     }).select("+password").populate("created_by").populate("updated_by")
+
+
     if (!user) {
         user = await User.findOne({
             email: String(username).toLowerCase().trim(),
@@ -272,6 +274,12 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
     const isPasswordMatched = await user.comparePassword(password);
     if (!isPasswordMatched)
         return res.status(403).json({ message: "Invalid username or password" })
+
+    if (!user.is_multi_login && user.multi_login_token && user.multi_login_token !== multi_login_token)
+        return res.status(403).json({ message: "Sorry ! You are already logged in on an another device,contact administrator" })
+    if (!user.is_multi_login && !user.multi_login_token)
+        user.multi_login_token = multi_login_token
+
     sendUserToken(res, user.getAccessToken())
     user.last_login = new Date()
     await user.save()
@@ -668,6 +676,35 @@ export const MakeAdmin = async (req: Request, res: Response, next: NextFunction)
     await user.save();
     res.status(200).json({ message: "admin role provided successfully" });
 }
+
+//block multi login
+export const AllowMultiLogin = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
+    let user = await User.findById(id)
+    if (!user) {
+        return res.status(404).json({ message: "user not found" })
+    }
+    user.is_multi_login = true
+    user.multi_login_token = null
+    user.updated_by = req.user
+    await user.save();
+    res.status(200).json({ message: "multi login allowed " });
+}
+export const BlockMultiLogin = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const { multi_login_token } = req.body as { multi_login_token: string }
+    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
+    let user = await User.findById(id)
+    if (!user) {
+        return res.status(404).json({ message: "user not found" })
+    }
+    user.is_multi_login = false
+    user.multi_login_token = null
+    user.updated_by = req.user
+    await user.save();
+    res.status(200).json({ message: "multi login blocked " });
+}
 // block user
 export const BlockUser = async (req: Request, res: Response, next: NextFunction) => {
     //update role of user
@@ -691,6 +728,7 @@ export const BlockUser = async (req: Request, res: Response, next: NextFunction)
     await user.save();
     res.status(200).json({ message: "user blocked successfully" });
 }
+
 // unblock user
 export const UnBlockUser = async (req: Request, res: Response, next: NextFunction) => {
     //update role of user

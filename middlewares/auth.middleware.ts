@@ -46,14 +46,13 @@ export const isProfileAuthenticated = async (req: Request, res: Response, next: 
     );
 }
 
+
 //check admin
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
     if (req.user?.is_admin)
         return next();
     return res.status(403).json({ message: "!must be admin" });
 }
-
-
 
 // login
 export const sendUserToken = (res: Response, accessToken: string) => {
@@ -67,6 +66,7 @@ export const sendUserToken = (res: Response, accessToken: string) => {
         sameSite: 'lax'
     });
 }
+
 //logout
 export const deleteToken = async (res: Response, accessToken: string) => {
     UserTokens = UserTokens.filter((token) => token !== accessToken)

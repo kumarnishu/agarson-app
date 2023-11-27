@@ -28,6 +28,11 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     trim: true,
     required: true,
   },
+  multi_login_token: String,
+  is_multi_login: {
+    type: Boolean,
+    default: true,
+  },
   dp: {
     _id: { type: String },
     filename: { type: String },
