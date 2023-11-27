@@ -111,7 +111,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let leads = await Lead.find({ is_customer: false }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+        let leads = await Lead.find({ is_customer: false, stage: 'open' }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
             path: 'remarks',
             populate: [
                 {
@@ -124,6 +124,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 }
             ]
         }).sort('-updated_at')
+
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
@@ -133,9 +134,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     return lead
             })
         }
-        leads = leads.filter((lead) => {
-            return String(lead.stage).toLowerCase() !== "useless"
-        })
+
         let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
 
@@ -149,7 +148,6 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     else
         return res.status(400).json({ message: "bad request" })
 }
-
 
 
 export const GetCustomers = async (req: Request, res: Response, next: NextFunction) => {
@@ -178,9 +176,6 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                     return lead
             })
         }
-        leads = leads.filter((lead) => {
-            return String(lead.stage).toLowerCase() !== "useless"
-        })
         let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
 
@@ -305,7 +300,6 @@ export const UpdateLead = async (req: Request, res: Response, next: NextFunction
 
     return res.status(200).json({ message: "lead updated" })
 }
-
 
 
 //delete lead
@@ -580,6 +574,7 @@ export const ConvertCustomer = async (req: Request, res: Response, next: NextFun
     }
     await Lead.findByIdAndUpdate(id, {
         is_customer: true,
+        stage: "closed",
         updated_by: req.user,
         updated_at: new Date(Date.now()),
     })
@@ -608,7 +603,8 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
         })
     return res.status(200).json({ message: "successfully changed stage" })
 }
-export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFunction) => {
+export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFunction) => 
+{
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let key = String(req.query.key).split(",")
@@ -619,6 +615,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 1 || key.length > 4) {
             leads = await Lead.find({
                 is_customer: false,
+                stage: 'open',
                 $or: [
                     { name: { $regex: key[0], $options: 'i' } },
                     { city: { $regex: key[0], $options: 'i' } },
@@ -659,6 +656,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 2) {
             leads = await Lead.find({
                 is_customer: false,
+                stage: 'open',
                 $and: [
                     {
                         $or: [
@@ -727,6 +725,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 3) {
             leads = await Lead.find({
                 is_customer: false,
+                stage: 'open',
                 $and: [
                     {
                         $or: [
@@ -818,6 +817,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 4) {
             leads = await Lead.find({
                 is_customer: false,
+                stage: 'open',
                 $and: [
                     {
                         $or: [
@@ -929,9 +929,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                 ]
             }).sort('-updated_at')
         }
-        leads = leads.filter((lead) => {
-            return String(lead.stage).toLowerCase() !== "useless"
-        })
+        
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
@@ -1275,9 +1273,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                 ]
             }).sort('-updated_at')
         }
-        leads = leads.filter((lead) => {
-            return String(lead.stage).toLowerCase() !== "useless"
-        })
+      
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
@@ -1839,7 +1835,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let leads = await Lead.find().populate('lead_owners').populate('updated_by').populate('created_by').populate({
+        let leads = await Lead.find({ stage: "useless" }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
             path: 'remarks',
             populate: [
                 {
@@ -1861,9 +1857,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                     return lead
             })
         }
-        leads = leads.filter((lead) => {
-            return String(lead.stage).toLowerCase() === "useless"
-        })
+
         let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
         return res.status(200).json({
@@ -1889,7 +1883,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
 
         if (key.length == 1 || key.length > 4) {
             leads = await Lead.find({
-                is_customer: false,
+                stage: 'useless',
                 $or: [
                     { name: { $regex: key[0], $options: 'i' } },
                     { city: { $regex: key[0], $options: 'i' } },
@@ -1929,7 +1923,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
         }
         if (key.length == 2) {
             leads = await Lead.find({
-                is_customer: false,
+                stage: 'useless',
                 $and: [
                     {
                         $or: [
@@ -1997,7 +1991,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
         }
         if (key.length == 3) {
             leads = await Lead.find({
-                is_customer: false,
+                stage: 'useless',
                 $and: [
                     {
                         $or: [
@@ -2088,7 +2082,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
         }
         if (key.length == 4) {
             leads = await Lead.find({
-                is_customer: false,
+                stage: 'useless',
                 $and: [
                     {
                         $or: [
@@ -2200,9 +2194,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                 ]
             }).sort('-updated_at')
         }
-        leads = leads.filter((lead) => {
-            return String(lead.stage).toLowerCase() === "useless"
-        })
+       
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
