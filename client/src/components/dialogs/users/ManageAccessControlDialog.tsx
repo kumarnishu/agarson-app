@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { ChoiceContext, UserChoiceActions } from "../../../contexts/dialogContext"
-import { Avatar, Dialog,  DialogTitle, IconButton, Stack, Typography } from "@mui/material"
+import { Avatar, Dialog, DialogContent, DialogTitle, IconButton, Stack, Typography } from "@mui/material"
 import { IUser } from "../../../types/user.types"
 
 import AccessControlForm from "../../forms/user/AccessControlForm"
@@ -22,24 +22,26 @@ function ManageAccessControlDialog({ user }: { user: IUser }) {
         <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
           <Stack direction="row"
             spacing={2}
-            justifyContent="center"
-            alignItems="center"
           >
-            <Stack gap={1} alignItems="center" direction="row">
+            <Stack gap={1} alignItems="left" direction="row">
 
-              <Avatar
+              <Avatar sx={{ height: "30px", width: '30px' }}
                 alt="display picture" src={user.dp?.public_url} />
-              <Typography variant="button">
-                Access Control Page <u><b>{user.username}</b></u>
+              <Typography variant="subtitle2">
+                Access Control Page <Typography variant="button">
+                  [{user.username}]
+                </Typography>
               </Typography>
             </Stack >
 
           </Stack>
         </DialogTitle>
-        {
-          user &&
-          <AccessControlForm user={user} />
-        }
+        <DialogContent>
+          {
+            user &&
+            <AccessControlForm user={user} />
+          }
+        </DialogContent>
 
       </Dialog >
     </>

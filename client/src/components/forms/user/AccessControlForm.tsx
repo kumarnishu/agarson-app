@@ -51,14 +51,14 @@ function AccessControlForm({ user }: { user: IUser }) {
 
             <Box sx={{
                 overflow: "scroll",
-                height: '73.5vh'
+                height: '73.5vh',
             }}>
                 <Table
                     stickyHeader
                     sx={{ width: "100%" }}
-                    size="small">
-
-
+                    size="small"
+                    padding='checkbox'
+                    >
                     <TableHead
                     >
                         <TableRow>
