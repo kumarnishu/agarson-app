@@ -71,7 +71,7 @@ function DashBoardPage() {
               </Card>
             </Link>
           </Grid>}
-          {!user?.crm_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+          {!user?.reports_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
             <Link to={paths.reports} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
@@ -83,7 +83,7 @@ function DashBoardPage() {
               </Card>
             </Link>
           </Grid>}
-          {!user?.crm_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+          {!user?.visit_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
             <Link to={paths.visit} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>

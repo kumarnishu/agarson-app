@@ -171,7 +171,7 @@ function AppRoutes() {
               />
             </Route>}
           {/* visit help */}
-          {!user.user_access_fields.is_hidden &&
+          {!user.visit_access_fields.is_hidden &&
             < Route path={paths.visit} element={<VisitNavBar />}>
               <Route index
                 element={
@@ -369,7 +369,7 @@ function AppRoutes() {
             </Route>}
 
           {/* reports routes */}
-          {!user.checklists_access_fields.is_hidden &&
+          {!user.reports_access_fields.is_hidden &&
             < Route path={paths.reports} element={<ReportsNavBar />
             }>
               <Route

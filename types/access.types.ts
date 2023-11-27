@@ -55,4 +55,15 @@ export type CheckListsAccess = {
     is_hidden: boolean,
     is_deletion_allowed: boolean
 }
+export type ReportsAccess = {
+    is_editable: boolean,
+    is_hidden: boolean,
+    is_deletion_allowed: boolean
+}
+
+export type VisitAccess = {
+    is_editable: boolean,
+    is_hidden: boolean,
+    is_deletion_allowed: boolean
+}
 

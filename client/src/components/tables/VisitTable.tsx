@@ -13,6 +13,7 @@ import AddAnkitInputDialog from '../dialogs/visit/AddAnkitInputDialog'
 import AddBrijeshInputDialog from '../dialogs/visit/AddBrjeshInputDialog'
 import ViewVisitDialog from '../dialogs/visit/ViewVisitDialog'
 import ViewCommentsDialog from '../dialogs/visit/ViewCommentsDialog'
+import { DownloadFile } from '../../utils/DownloadFile'
 
 
 
@@ -42,7 +43,7 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
             }}>
                 <Table
                     stickyHeader
-                    sx={{ width: "3500px" }}
+                    sx={{ width: "6000px" }}
                     size="small">
                     <TableHead
                     >
@@ -75,7 +76,7 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                             </TableCell>
 
                             {/* actions popup */}
-                            {user?.user_access_fields.is_editable && <TableCell
+                            {user?.visit_access_fields.is_editable && <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
                                     direction="row"
@@ -95,6 +96,17 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                     spacing={2}
                                 >
                                     Date
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Visit in Photo
                                 </Stack>
                             </TableCell>
 
@@ -229,6 +241,17 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                     alignItems="left"
                                     spacing={2}
                                 >
+                                    Summary
+                                </Stack>
+                            </TableCell>
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
                                     Ankit Input
                                 </Stack>
                             </TableCell>
@@ -345,54 +368,54 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                             </TableCell>
                                             :
                                             null/* actions popup */}
-                                        {user?.user_access_fields.is_editable &&
-                                            <TableCell sx={{ bgcolor: visit.visit_validated ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,0,0.1)' }} >
-                                                <PopUp
-                                                    element={
-                                                        <Stack
-                                                            direction="row" spacing={1}>
-                                                            {
-                                                                <>
-                                                                    <Tooltip title="Visit Details ">
-                                                                        <IconButton color="success"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: VisitChoiceActions.view_visit })
-                                                                                setVisit(visit)
-                                                                            }}
-                                                                        >
-                                                                            <RemoveRedEye />
-                                                                        </IconButton>
-                                                                    </Tooltip>
-                                                                    <Tooltip title="View Comments ">
-                                                                        <IconButton color="success"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: VisitChoiceActions.view_comments })
-                                                                                setVisit(visit)
-                                                                            }}
-                                                                        >
-                                                                            <Chat />
-                                                                        </IconButton>
-                                                                    </Tooltip>
-                                                                    {!visit.visit_validated && <Tooltip title="validate">
-                                                                        <IconButton color="error"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: VisitChoiceActions.validate_visit })
-                                                                                setVisit(visit)
-                                                                            }}
-                                                                        >
-                                                                            <Check />
-                                                                        </IconButton>
-                                                                    </Tooltip>}
-                                                                    <Tooltip title="Edit Summary">
-                                                                        <IconButton color="success"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: VisitChoiceActions.edit_summary })
-                                                                                setVisit(visit)
-                                                                            }}
-                                                                        >
-                                                                            <Edit />
-                                                                        </IconButton>
-                                                                    </Tooltip>
+                                        <TableCell sx={{ bgcolor: visit.visit_validated ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,0,0.1)' }} >
+                                            <PopUp
+                                                element={
+                                                    <Stack
+                                                        direction="row" spacing={1}>
+                                                        {
+                                                            <>
+                                                                <Tooltip title="Visit Details ">
+                                                                    <IconButton color="success"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: VisitChoiceActions.view_visit })
+                                                                            setVisit(visit)
+                                                                        }}
+                                                                    >
+                                                                        <RemoveRedEye />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                                <Tooltip title="View Comments ">
+                                                                    <IconButton color="success"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: VisitChoiceActions.view_comments })
+                                                                            setVisit(visit)
+                                                                        }}
+                                                                    >
+                                                                        <Chat />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                                {!visit.visit_validated && user?.visit_access_fields.is_editable && <Tooltip title="validate">
+                                                                    <IconButton color="error"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: VisitChoiceActions.validate_visit })
+                                                                            setVisit(visit)
+                                                                        }}
+                                                                    >
+                                                                        <Check />
+                                                                    </IconButton>
+                                                                </Tooltip>}
+                                                                {user?.visit_access_fields.is_editable && <Tooltip title="Edit Summary">
+                                                                    <IconButton color="success"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: VisitChoiceActions.edit_summary })
+                                                                            setVisit(visit)
+                                                                        }}
+                                                                    >
+                                                                        <Edit />
+                                                                    </IconButton>
+                                                                </Tooltip>}
+                                                                {user?.visit_access_fields.is_editable &&
                                                                     <Tooltip title="ankit input">
                                                                         <IconButton color="primary"
                                                                             onClick={() => {
@@ -402,7 +425,8 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                                                         >
                                                                             <Comment />
                                                                         </IconButton>
-                                                                    </Tooltip>
+                                                                    </Tooltip>}
+                                                                {user?.reports_access_fields.is_editable &&
                                                                     <Tooltip title="brijesh input">
                                                                         <IconButton color="primary"
                                                                             onClick={() => {
@@ -412,23 +436,41 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                                                         >
                                                                             <Comment />
                                                                         </IconButton>
-                                                                    </Tooltip>
-                                                                </>
+                                                                    </Tooltip>}
+                                                            </>
 
-                                                            }
-                                                        </Stack>
-                                                    } />
-                                            </TableCell>}
+                                                        }
+                                                    </Stack>
+                                                } />
+                                        </TableCell>
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials&&visit.visit.start_day_credientials.timestamp).toLocaleDateString()}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleDateString()}</Typography>
                                         </TableCell>
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_in_credientials&&visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
+                                            <Stack gap={1}
+                                                direction={'row'}
+                                                justifyContent="left"
+                                            >
+                                                {visit.visit_in_photo && <img
+                                                    onDoubleClick={() => {
+                                                        if (visit.visit_in_photo && visit.visit_in_photo?.public_url) {
+                                                            DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)
+                                                        }
+                                                    }}
+                                                    src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '40px' }} />}
+
+                                            </Stack >
+                                        </TableCell>
+
+
+
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
                                         </TableCell>
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_out_credentials&&visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
                                         </TableCell>
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.party_name}</Typography>
@@ -457,13 +499,15 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.reviews_taken}</Typography>
                                         </TableCell>
-
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.ankit_input && visit.ankit_input.input}</Typography>
+                                            <Typography title={visit.summary && visit.summary} sx={{ textTransform: "capitalize" }} variant="body1">{visit.summary && visit.summary.slice(0, 50) + "..."}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography sx={{ textTransform: "capitalize" }} title={visit.ankit_input && visit.ankit_input.input} variant="body1">{visit.ankit_input && visit.ankit_input.input.slice(0, 50) + "..."}</Typography>
                                         </TableCell>
 
                                         <TableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.brijesh_input && visit.brijesh_input.input}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize" }} title={visit.brijesh_input && visit.brijesh_input.input} variant="body1">{visit.brijesh_input && visit.brijesh_input.input.slice(0, 50) + "..."}</Typography>
                                         </TableCell>
 
                                         <TableCell>

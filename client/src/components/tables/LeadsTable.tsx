@@ -765,11 +765,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                     {
                       <TableCell>
                         {lead.remarks ?
-                          <Typography sx={{ textTransform: "capitalize" }}> {lead.last_remark && lead.last_remark.slice(0, 50)}
+                          <Typography title={lead.last_remark && lead.last_remark} sx={{ textTransform: "capitalize" }}> {lead.last_remark && lead.last_remark.slice(0, 50)}
                           </Typography> : null
                         }
                       </TableCell>
-
                     }
 
                     <TableCell>

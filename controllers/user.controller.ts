@@ -62,6 +62,16 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
+    owner.visit_access_fields = {
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
+    owner.reports_access_fields = {
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
     owner.alps_access_fields = {
         is_hidden: false,
         is_editable: true,
@@ -172,6 +182,16 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
     user.created_at = new Date()
     user.updated_at = new Date()
     user.user_access_fields = {
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.visit_access_fields = {
+        is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.reports_access_fields = {
         is_hidden: false,
         is_editable: false,
         is_deletion_allowed: false
@@ -428,7 +448,10 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         reminders_access_fields,
         alps_access_fields,
         tasks_access_fields,
-        checklists_access_fields
+        checklists_access_fields,
+        visit_access_fields,
+        reports_access_fields,
+
     } = req.body as TUserBody
 
     const id = req.params.id;
@@ -448,7 +471,9 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         reminders_access_fields,
         alps_access_fields,
         tasks_access_fields,
-        checklists_access_fields
+        checklists_access_fields,
+        reports_access_fields,
+        visit_access_fields
     })
     res.status(200).json({ message: " updated" })
 }

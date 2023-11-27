@@ -12,7 +12,9 @@ export type AccessTypes = {
   reminders_access_fields: RemindersAccess,
   alps_access_fields: AlpsAccess,
   tasks_access_fields: TasksAccess,
-  checklists_access_fields: CheckListsAccess
+  checklists_access_fields: CheckListsAccess,
+  reports_access_fields: CheckListsAccess,
+  visit_access_fields: CheckListsAccess
 
 }
 // login

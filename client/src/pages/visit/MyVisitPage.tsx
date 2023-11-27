@@ -36,12 +36,12 @@ function MyVisitPage() {
     <>
       {isLoading && <LinearProgress />}
       {isLoading && <TableSkeleton />}
-     
+
       {visit && visit.start_day_credientials &&
         <>
           <Typography variant="subtitle1" textAlign={'center'} sx={{ p: 1 }}>Started day at  <b>{new Date(visit?.start_day_credientials.timestamp).toLocaleTimeString()}</b></Typography>
-          <Stack direction={'row'}  p={2} alignItems={'center'} justifyContent={'center'}>
-            {!Boolean(visit.end_day_credentials) && < Button 
+          <Stack direction={'row'} p={2} alignItems={'center'} justifyContent={'center'}>
+            {!Boolean(visit.end_day_credentials) && < Button
               disabled={visit.visit_reports.filter((report) => {
                 if (!Boolean(report.visit_out_credentials))
                   return report
@@ -55,22 +55,22 @@ function MyVisitPage() {
       <>
         {visits.map((visit, index) => {
           return (
-            <Stack key={index}
-              direction="column"
-              p={2}
-              gap={2}
-            >
-              <Paper elevation={8} sx={{ p: 2, mt: 1, boxShadow: 2, backgroundColor: 'white' }}>
-                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+            <Paper elevation={16} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white' }}>
+              <Stack key={index}
+                direction="column"
+                p={2}
+                gap={2}
+              >
+                <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
                   Party : <b>{visit.party_name}</b>
                 </Typography>
-                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                  Station:<b>{visit.city}</b>
+                <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
+                  Station : <b>{visit.city}</b>
                 </Typography>
-                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                <Typography variant="subtitle2" sx={{ textTransform: 'capitalize' }}>
                   Visit In : {new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}
                 </Typography>
-                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                <Typography variant="subtitle2" sx={{ textTransform: 'capitalize' }}>
                   Visit Out : {new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString()}
                 </Typography>
                 <Stack gap={2} direction={'row'}>
@@ -81,15 +81,17 @@ function MyVisitPage() {
 
                   {!visit.summary ? <Button sx={{ fontWeight: 'bold', p: 0, mt: 2 }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.add_summary }) }}>Add Summary</Button> : <Button sx={{ fontWeight: 'bold', p: 0, mt: 2 }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.edit_summary }) }}>Edit Summary</Button>}
                 </Stack>
-              </Paper>
-              {visitReport && !Boolean(visitReport.visit_out_credentials) && <MakeVisitOutDialog visit={visitReport} />}
-              {visitReport && !visitReport.summary && <AddSummaryInDialog visit={visitReport} />}
-              {visitReport && visitReport.summary && <EditSummaryInDialog visit={visitReport} />}
-            </Stack>
+
+              </Stack>
+            </Paper>
+
           )
         })}
       </>
 
+      {visitReport && !Boolean(visitReport.visit_out_credentials) && <MakeVisitOutDialog visit={visitReport} />}
+      {visitReport && !visitReport.summary && <AddSummaryInDialog visit={visitReport} />}
+      {visitReport && visitReport.summary && <EditSummaryInDialog visit={visitReport} />}
       {visit && <MakeVisitInDialog visit={visit} />}
 
 

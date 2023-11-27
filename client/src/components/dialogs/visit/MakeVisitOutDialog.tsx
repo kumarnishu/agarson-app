@@ -42,6 +42,9 @@ function MakeVisitOutDialog({ visit }: { visit: IVisitReport }) {
             formdata.append("body", JSON.stringify({ visit_out_credentials: location }))
             mutate({ id: visit._id, body: formdata })
         }
+        setChoice({
+            type: VisitChoiceActions.close_visit
+        })
     }
     return (
         <>
@@ -56,8 +59,9 @@ function MakeVisitOutDialog({ visit }: { visit: IVisitReport }) {
                 ) : null
             }
 
-            <Dialog  open={choice === VisitChoiceActions.visit_out ? true : false}
-            > <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: VisitChoiceActions.close_visit })}>
+            <Dialog open={choice === VisitChoiceActions.visit_out ? true : false}
+                onClose={() => { setChoice({ type: VisitChoiceActions.close_visit }) }}
+            > <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => { setChoice({ type: VisitChoiceActions.close_visit }) }}>
                     <Cancel fontSize='large' />
                 </IconButton>
                 <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Visit Out</DialogTitle>

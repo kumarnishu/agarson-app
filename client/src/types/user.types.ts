@@ -27,6 +27,8 @@ export type IUser = {
     alps_access_fields: AlpsAccess,
     tasks_access_fields: TasksAccess,
     checklists_access_fields:CheckListsAccess,
+    visit_access_fields: VisitAccess,
+    reports_access_fields: ReportsAccess,
     email_verified: Boolean,
     is_active: Boolean,
     last_login: Date,
