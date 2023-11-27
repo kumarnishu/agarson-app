@@ -48,7 +48,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
       }}>
         <Table
           stickyHeader
-          sx={{ width: "6400px" }}
+          sx={{ width: "6000px" }}
           size="small">
           <TableHead
           >
