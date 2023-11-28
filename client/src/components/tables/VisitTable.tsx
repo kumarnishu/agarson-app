@@ -76,7 +76,7 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                             </TableCell>
 
                             {/* actions popup */}
-                            {user?.visit_access_fields.is_editable && <TableCell
+                           <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
                                     direction="row"
@@ -86,7 +86,7 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>}
+                            </TableCell>
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -443,10 +443,15 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                                     </Stack>
                                                 } />
                                         </TableCell>
+
+
+
+                                      
+
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleDateString()}</Typography>
                                         </TableCell>
-
+                                        
                                         <TableCell>
                                             <Stack gap={1}
                                                 direction={'row'}
@@ -462,9 +467,6 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
 
                                             </Stack >
                                         </TableCell>
-
-
-
                                         <TableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
                                         </TableCell>

@@ -603,6 +603,7 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
         })
     return res.status(200).json({ message: "successfully changed stage" })
 }
+
 export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFunction) => 
 {
     let limit = Number(req.query.limit)
@@ -614,8 +615,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (key.length == 1 || key.length > 4) {
             leads = await Lead.find({
-                is_customer: false,
-                stage: 'open',
                 $or: [
                     { name: { $regex: key[0], $options: 'i' } },
                     { city: { $regex: key[0], $options: 'i' } },
@@ -655,8 +654,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         }
         if (key.length == 2) {
             leads = await Lead.find({
-                is_customer: false,
-                stage: 'open',
                 $and: [
                     {
                         $or: [
@@ -724,8 +721,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         }
         if (key.length == 3) {
             leads = await Lead.find({
-                is_customer: false,
-                stage: 'open',
                 $and: [
                     {
                         $or: [
@@ -816,8 +811,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         }
         if (key.length == 4) {
             leads = await Lead.find({
-                is_customer: false,
-                stage: 'open',
                 $and: [
                     {
                         $or: [
@@ -952,6 +945,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         return res.status(400).json({ message: "bad request" })
 
 }
+
 export const FuzzySearchCustomers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
