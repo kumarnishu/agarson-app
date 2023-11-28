@@ -21,7 +21,7 @@ function LoginForm() {
   const { mutate, data, isSuccess, isLoading, isError, error } = useMutation
     <AxiosResponse<IUser>,
       BackendError,
-      { username: string, password: string }
+      { username: string, password: string, multi_login_token?: string }
     >(Login)
 
   const { setChoice } = useContext(ChoiceContext)
@@ -30,7 +30,8 @@ function LoginForm() {
   const formik = useFormik({
     initialValues: {
       username: '',
-      password: ''
+      password: '',
+      multi_login_token: String(localStorage.getItem('multi_login_token'))
     },
     validationSchema: Yup.object({
       username: Yup.string()
@@ -40,7 +41,8 @@ function LoginForm() {
     }),
     onSubmit: (values: {
       username: string,
-      password: string
+      password: string,
+      multi_login_token?: string
     }) => {
       mutate(values)
     },

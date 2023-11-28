@@ -274,11 +274,12 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
     const isPasswordMatched = await user.comparePassword(password);
     if (!isPasswordMatched)
         return res.status(403).json({ message: "Invalid username or password" })
-
-    if (!user.is_multi_login && user.multi_login_token && user.multi_login_token !== multi_login_token)
-        return res.status(403).json({ message: "Sorry ! You are already logged in on an another device,contact administrator" })
-    if (!user.is_multi_login && !user.multi_login_token)
-        user.multi_login_token = multi_login_token
+    if (user.created_by._id !== user._id) {
+        if (!user.is_multi_login && user.multi_login_token && user.multi_login_token !== multi_login_token)
+            return res.status(403).json({ message: "Sorry ! You are already logged in on an another device,contact administrator" })
+        if (!user.is_multi_login && !user.multi_login_token)
+            user.multi_login_token = multi_login_token
+    }
 
     sendUserToken(res, user.getAccessToken())
     user.last_login = new Date()

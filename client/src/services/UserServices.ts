@@ -21,7 +21,8 @@ export type AccessTypes = {
 export const Login = async (
   body: {
     username: string,
-    password: string
+    password: string,
+    multi_login_token?: string
   }
 ) => {
   return await apiClient.post("login", body);
@@ -66,6 +67,12 @@ export const GetUser = async (id: string) => {
 // block user
 export const BlockUser = async (id: string) => {
   return await apiClient.patch(`block/user/${id}`)
+}
+export const ResetMultiLogin = async (id: string) => {
+  return await apiClient.patch(`allow/multi_login/${id}`)
+}
+export const BlockMultiLogin = async (id: string) => {
+  return await apiClient.patch(`block/multi_login/${id}`)
 }
 // unblock user
 export const UnBlockUser = async (id: string) => {

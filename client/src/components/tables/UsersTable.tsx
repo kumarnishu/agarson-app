@@ -1,4 +1,4 @@
-import { Accessibility, Block, Edit, GroupAdd, GroupRemove, Key, RemoveCircle } from '@mui/icons-material'
+import { Accessibility, Block, BlockOutlined, Edit, GroupAdd, GroupRemove, Key, RemoveCircle, Restore } from '@mui/icons-material'
 import { Avatar, Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { IUser } from '../../types/user.types'
@@ -16,6 +16,8 @@ import UpdatePasswordDialog from '../dialogs/users/UpdatePasswordDialog'
 import UpdateUsePasswordDialog from '../dialogs/users/UpdateUsePasswordDialog'
 import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
+import ResetMultiLoginDialog from '../dialogs/users/ResetMultiLogin'
+import BlockMultiLoginDialog from '../dialogs/users/BlockMultiLoginDialog'
 
 type Props = {
     user: IUser | undefined,
@@ -43,7 +45,7 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
             }}>
                 <Table
                     stickyHeader
-                    sx={{ minWidth: "1350px", maxHeight: '70vh' }}
+                    sx={{ minWidth: "1400px", maxHeight: '70vh' }}
                     size="small">
                     <TableHead
                     >
@@ -96,7 +98,17 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                     User Name
                                 </Stack>
                             </TableCell>
-
+                            <TableCell
+                                sx={{ bgcolor: headColor }}                         >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Multi Device Login
+                                </Stack>
+                            </TableCell>
                             <TableCell
                                 sx={{ bgcolor: headColor }}                         >
                                 <Stack
@@ -263,6 +275,38 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
 
                                                                 }
                                                                 {
+                                                                    user.created_by._id !== user._id && <>
+                                                                        {
+                                                                            user.is_multi_login ?
+                                                                                <Tooltip title="Block multi login"><IconButton
+                                                                                    size="medium"
+                                                                                    color="error"
+                                                                                    onClick={() => {
+                                                                                        setChoice({ type: UserChoiceActions.block_multi_login })
+                                                                                        setUser(user)
+
+                                                                                    }}
+                                                                                >
+                                                                                    <BlockOutlined />
+                                                                                </IconButton>
+                                                                                </Tooltip> :
+                                                                                <Tooltip title="Reset multi login">
+                                                                                    <IconButton
+                                                                                        size="medium"
+                                                                                        onClick={() => {
+                                                                                            setChoice({ type: UserChoiceActions.reset_multi_login })
+                                                                                            setUser(user)
+
+                                                                                        }}
+                                                                                    >
+                                                                                        <Restore />
+                                                                                    </IconButton>
+                                                                                </Tooltip>
+                                                                        }
+                                                                    </>
+                                                                }
+
+                                                                {
                                                                     user?.is_active ?
                                                                         <>
                                                                             {LoggedInUser?.created_by._id === user._id ?
@@ -389,7 +433,17 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                                 </Stack >
                                             </Stack>
                                         </TableCell>
-
+                                        <TableCell>
+                                            <Stack direction="row"
+                                                spacing={2}
+                                                justifyContent="left"
+                                                alignItems="center"
+                                            >
+                                                <Typography>
+                                                    {user.is_multi_login ? "allowed" : "not allowed"}
+                                                </Typography>
+                                            </Stack>
+                                        </TableCell>
                                         {/* email */}
                                         <TableCell>
                                             <Stack>
@@ -451,7 +505,9 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
             {
                 user ?
                     <>
-                        < UpdateUserDialog user={user} />
+                        <UpdateUserDialog user={user} />
+                        <ResetMultiLoginDialog id={user._id} />
+                        <BlockMultiLoginDialog id={user._id} />
                         <UpdatePasswordDialog />
                         <ManageAccessControlDialog user={user} />
                         <BlockUserDialog id={user._id} />

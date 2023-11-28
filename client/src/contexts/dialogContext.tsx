@@ -1,11 +1,11 @@
 import React, { useReducer } from "react"
 
 type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" |
-  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password"
+  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login"
 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
-type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" |"view_comments"
+type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments"
 
 type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" | "edit_task"
 
@@ -68,7 +68,7 @@ export enum VisitChoiceActions {
   edit_summary = "edit_summary",
   add_brijesh_input = "add_brijesh_input",
   add_ankit_input = "add_ankit_input",
-  view_comments ="view_comments"
+  view_comments = "view_comments"
 
 }
 export enum TaskChoiceActions {
@@ -204,11 +204,14 @@ export enum UserChoiceActions {
   delete_user = "delete_user",
   control_access = "control_access",
   refresh_whatsapp = "refresh_whatsapp",
-  update_user_password = "update_user_password"
+  update_user_password = "update_user_password",
+  block_multi_login = "block_multi_login",
+  reset_multi_login = "reset_multi_login"
 }
 
 type Action = {
-  type: UserChoiceActions | LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions
+  type: UserChoiceActions |
+  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions
 }
 
 // reducer
@@ -233,6 +236,8 @@ function reducer(state: ChoiceState | null, action: Action) {
     case UserChoiceActions.delete_user: return type
     case UserChoiceActions.close_user: return type
     case UserChoiceActions.update_user_password: return type
+    case UserChoiceActions.reset_multi_login: return type
+    case UserChoiceActions.block_multi_login: return type
 
     // lead dialog choices
     case LeadChoiceActions.create_lead: return type
@@ -280,7 +285,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TemplateChoiceActions.close_template: return type
     case TemplateChoiceActions.view_template: return type
 
-// visit
+    // visit
     case VisitChoiceActions.visit_in: return type
     case VisitChoiceActions.visit_out: return type
     case VisitChoiceActions.start_day: return type
