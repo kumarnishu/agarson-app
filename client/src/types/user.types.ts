@@ -33,6 +33,8 @@ export type IUser = {
     is_active: Boolean,
     multi_login_token: string,
     is_multi_login: boolean,
+    is_manager: boolean,
+    assigned_users: IUser[]
     last_login: Date,
     created_at: Date,
     updated_at: Date,

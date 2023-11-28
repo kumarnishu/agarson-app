@@ -30,8 +30,10 @@ export type IUser = {
     email_verified: Boolean,
     is_active: Boolean,
     last_login: Date,
-    multi_login_token: string|null,
+    multi_login_token: string | null,
     is_multi_login: boolean,
+    is_manager: boolean,
+    assigned_users: IUser[]
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

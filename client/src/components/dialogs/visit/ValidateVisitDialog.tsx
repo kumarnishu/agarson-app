@@ -1,5 +1,5 @@
 import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
 import { IVisitReport } from '../../../types/visit.types';
@@ -20,6 +20,13 @@ function ValidateVisitDialog({ visit }: { visit: IVisitReport }) {
                 queryClient.invalidateQueries('visits')
             }
         })
+    useEffect(() => {
+        if (isSuccess) {
+            setTimeout(() => {
+                setChoice({ type: VisitChoiceActions.close_visit })
+            }, 1000)
+        }
+    }, [isSuccess, setChoice])
     return (
         <>
             {

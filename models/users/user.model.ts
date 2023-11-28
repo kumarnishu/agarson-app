@@ -143,6 +143,17 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     default: true,
     required: true
   },
+  is_manager: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
+  assigned_users: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }
+  ],
   last_login: {
     type: Date,
     default: new Date(),

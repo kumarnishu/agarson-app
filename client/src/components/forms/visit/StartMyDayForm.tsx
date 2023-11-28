@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
-import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext,  VisitChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
@@ -81,7 +81,7 @@ function StartMydayForm() {
     useEffect(() => {
         if (isSuccess) {
             setTimeout(() => {
-                setChoice({ type: TemplateChoiceActions.close_template })
+                setChoice({ type: VisitChoiceActions.close_visit })
             }, 1000)
         }
     }, [isSuccess, setChoice])
@@ -92,7 +92,6 @@ function StartMydayForm() {
         })
     }, [])
 
-    console.log(location)
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>

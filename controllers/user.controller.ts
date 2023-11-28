@@ -678,6 +678,44 @@ export const MakeAdmin = async (req: Request, res: Response, next: NextFunction)
     res.status(200).json({ message: "admin role provided successfully" });
 }
 
+export const MakeManager = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
+    let user = await User.findById(id)
+    if (!user) {
+        return res.status(404).json({ message: "user not found" })
+    }
+    if (user.is_manager)
+        return res.status(404).json({ message: "already a manager" })
+    user.is_manager = true
+    if (req.user) {
+        user.updated_by = user
+    }
+    await user.save();
+    res.status(200).json({ message: "manager role provided successfully" });
+}
+
+export const AssignUserstoManager = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const { ids } = req.body as { ids: string[] }
+    if (!isMongoId(id)) return res.status(400).json({ message: "manager id not valid" })
+    let user = await User.findById(id)
+    if (!user) {
+        return res.status(404).json({ message: "manager not found" })
+    }
+    let users: IUser[] = []
+    ids.forEach(async (_id) => {
+        let _user = await User.findById(_id)
+        if (_user)
+            users.push(_user)
+    })
+    user.assigned_users = users
+    if (req.user) {
+        user.updated_by = user
+    }
+    await user.save();
+    res.status(200).json({ message: "assigned users successfully" });
+}
 //block multi login
 export const AllowMultiLogin = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
@@ -747,6 +785,21 @@ export const UnBlockUser = async (req: Request, res: Response, next: NextFunctio
     }
     await user.save();
     res.status(200).json({ message: "user unblocked successfully" });
+}
+export const RemoveManager = async (req: Request, res: Response, next: NextFunction) => {
+    //update role of user
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
+    let user = await User.findById(id)
+    if (!user) {
+        return res.status(404).json({ message: "user not found" })
+    }
+    user.is_manager = false
+    if (req.user) {
+        user.updated_by = user
+    }
+    await user.save();
+    res.status(200).json({ message: "removed manager role successfully" });
 }
 
 // remove admin

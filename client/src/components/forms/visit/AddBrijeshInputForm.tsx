@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
-import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext,  VisitChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
@@ -52,7 +52,7 @@ function AddBrijeshInputForm({ visit }: { visit: IVisitReport }) {
     useEffect(() => {
         if (isSuccess) {
             setTimeout(() => {
-                setChoice({ type: TemplateChoiceActions.close_template })
+                setChoice({ type: VisitChoiceActions.close_visit })
             }, 1000)
         }
     }, [isSuccess, setChoice])
