@@ -1,11 +1,11 @@
-import { Box, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, IconButton, TableBody, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { Block } from '@mui/icons-material'
 import StopSingleBroadcastDialog from '../dialogs/broadcasts/StopSingleBroadcastDialog'
 import { IBroadcastReport } from '../../types/broadcast.types'
 import { UserContext } from '../../contexts/userContext'
+import { STable, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 type Props = {
     report: IBroadcastReport | undefined,
@@ -27,16 +27,14 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                 overflow: "scroll",
                 maxHeight: '80vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ minWidth: "2050px" }}
-                    size="small">
-                    <TableHead
+                <STable
+                >
+                    <STableHead
                     >
-                        <TableRow>
-                            { user?.broadcast_access_fields.is_editable &&
-                                <TableCell
-                                    sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            {user?.broadcast_access_fields.is_editable &&
+                                <STableHeadCell
+                                >
                                     <Stack
                                         direction="row"
                                         justifyContent="left"
@@ -45,10 +43,10 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                     >
                                         Action
                                     </Stack>
-                                </TableCell>}
+                                </STableHeadCell>}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -57,12 +55,12 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Mobile
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
 
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -71,9 +69,9 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Whatsapp Type
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -82,9 +80,9 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Customer Name
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -93,10 +91,10 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Delivery Status
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -105,9 +103,9 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Created at
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -116,9 +114,9 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Updated at
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -127,9 +125,9 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -138,22 +136,18 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Updated By
                                 </Stack>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
+                            </STableHeadCell>
+                        </STableRow>
+                    </STableHead>
                     <TableBody >
                         {
                             data && data.map((report, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                       >
                                         {user?.broadcast_access_fields.is_editable &&
-                                            <TableCell>
+                                            <STableCell>
                                                 <Tooltip title="Stop">
                                                     <IconButton
                                                         disabled={report.status !== "pending"}
@@ -166,39 +160,39 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                                                     </IconButton>
                                                 </Tooltip>
 
-                                            </TableCell>}
-                                        <TableCell>
+                                            </STableCell>}
+                                        <STableCell>
                                             <Typography variant="body1">{report.mobile.replace("91", "").replace("@c.us", "")}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.is_buisness ? "business" : "normal"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.customer_name}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.status}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.created_at && new Date(report.created_at).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.updated_at && new Date(report.updated_at).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.created_by && report.created_by.username}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.updated_by && report.updated_by.username}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                    </TableRow>
+                                    </STableRow>
                                 )
                             })
                         }
                     </TableBody>
-                </Table>
+                </STable>
 
             </Box>
             <StopSingleBroadcastDialog report={report} setReport={setReport} />

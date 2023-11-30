@@ -17,35 +17,8 @@ import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
 import ToogleUselessLead from '../dialogs/crm/ToogleUselessLead'
 import { ILead } from '../../types/crm.types'
-import styled from 'styled-components'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
-const STable = styled.table`
-  border-collapse: collapse;
-`
-const STableRow = styled.tr`
-  &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer }
-`
-const STableCell = styled.td`
-  text-align: left;
-  background-color: 'white';
-  padding:5px;
-  display:inlineblock;
-  border: 1px solid #ddd;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
-const STableHead = styled.th`
-  position: sticky; 
-  top: -5; 
-  text-align: left;
-  padding:5px;
-  display:inlineblock;
-  border: 1px solid #ddd;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
 
 type Props = {
   lead: ILead | undefined
@@ -73,11 +46,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
         height: '73.5vh'
       }}>
         <STable>
-          <thead style={{
-            position: 'sticky', zIndex: 1, top: -5, backgroundColor: 'white'
+          <STableHead style={{
+            position: 'sticky', zIndex: 1, top: -3, backgroundColor: 'white'
           }}>
             <STableRow>
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -102,10 +75,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                     label=""
                   />
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* actions popup */}
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -115,10 +88,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Actions
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* visitin card */}
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -128,10 +101,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Visiting Card
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -141,10 +114,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Lead Name
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -154,11 +127,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   City
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* state */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -168,9 +141,9 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   State
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -180,9 +153,9 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Stage
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -192,11 +165,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Mobile
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* alternate mobile 1 */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -206,10 +179,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Mobile2
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* alternate mobile 2 */}
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -219,14 +192,14 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Mobile3
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
 
 
 
 
               {/* lead type */}
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -236,11 +209,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Lead Type
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* lead owners */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -250,11 +223,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Lead Owners
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* turn over */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -264,11 +237,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   TurnOver
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* work description */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -278,10 +251,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Work Description
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* customer name */}
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -291,10 +264,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Customer Name
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* designiaton */}
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -304,11 +277,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Customer Desigination
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* last remark */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -318,10 +291,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Last Remark
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -331,9 +304,9 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Refer Party
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -343,9 +316,9 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Refer Party Mobile
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -355,13 +328,13 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Refer Date
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
               {/* mobile */}
 
 
               {/* email */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -371,11 +344,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Email
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* alternate email */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -385,11 +358,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Email2
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* address */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -399,13 +372,13 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Address
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
 
 
               {/* source */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -415,11 +388,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Lead Source
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* country */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -429,11 +402,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Country
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* created at */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -443,11 +416,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Created At
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* updated at */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -457,11 +430,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Updated At
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
               {/* created by */}
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -471,9 +444,9 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Created By
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
 
-              <STableHead
+              <STableHeadCell
               >
                 <Stack
                   direction="row"
@@ -483,10 +456,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 >
                   Updated By
                 </Stack>
-              </STableHead>
+              </STableHeadCell>
             </STableRow>
-          </thead>
-          <tbody >
+          </STableHead>
+          <STableBody >
             {
 
               data && data.map((lead, index) => {
@@ -892,7 +865,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               })
 
             }
-          </tbody>
+          </STableBody>
         </STable>
       </Box >
       {

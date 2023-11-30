@@ -1,9 +1,9 @@
-import { Box, Checkbox, FormControlLabel,  Table, TableBody, TableCell, TableHead, TableRow,  Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
-import {  useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DownloadFile } from '../../utils/DownloadFile'
 import { IAlps } from '../../types/alps.types'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 
 type Props = {
@@ -30,17 +30,13 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                 overflow: "scroll",
                 height: '73.5vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ width: "1400px" }}
-                    size="small">
-
-
-                    <TableHead
+                <STable
+                >
+                    <STableHead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -64,10 +60,10 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -76,9 +72,9 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                 >
                                     Serial Number
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -87,10 +83,10 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                 >
                                     Mobile
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -99,9 +95,9 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                 >
                                     GST
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -110,9 +106,9 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                 >
                                     Customer  Name
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -121,9 +117,9 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                 >
                                     City
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -132,26 +128,22 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                 >
                                     Document
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
                             {/* visitin card */}
-                        </TableRow>
-                    </TableHead>
+                        </STableRow>
+                    </STableHead>
 
-                    <TableBody >
+                    <STableBody >
                         {
 
                             data && data.map((alp, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                    >
                                         {selectAll ?
 
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -163,13 +155,13 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
 
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -189,28 +181,28 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                                         }}
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
 
                                             :
                                             null
                                         }
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{alp.serial_number}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{alp.mobile}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{alp.gst}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{alp.name}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{alp.city}</Typography>
-                                        </TableCell>
-                                        <TableCell
+                                        </STableCell>
+                                        <STableCell
                                             title="double click to download"
                                             onDoubleClick={() => {
                                                 if (alp?.media && alp?.media?.public_url) {
@@ -218,14 +210,14 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                                 }
                                             }}>
                                             <img height="50" width="75" src={alp?.media && alp?.media.public_url} alt="Preview Not Available" />
-                                        </TableCell>
-                                    </TableRow>
+                                        </STableCell>
+                                    </STableRow>
                                 )
                             })
 
                         }
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
             </Box >
 
         </>

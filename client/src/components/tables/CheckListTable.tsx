@@ -1,6 +1,5 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
 import { IChecklist } from '../../types/checklist.types'
@@ -11,6 +10,7 @@ import DeleteCheckListDialog from '../dialogs/checklists/DeleteCheckListDialog'
 import AddCheckBoxesDialog from '../dialogs/checklists/AddCheckBoxesDialog'
 import ViewCheckListBoxesDialog from '../dialogs/checklists/ViewCheckListBoxesDialog'
 import { UserContext } from '../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 
 
@@ -42,15 +42,13 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                 overflow: "scroll",
                 minHeight: '53.5vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ width: "2000px" }}
-                    size="small">
-                    <TableHead
+                <STable
+                >
+                    <STableHead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -74,11 +72,11 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
                             {/* actions popup */}
-                            {user?.checklists_access_fields.is_editable && <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            {user?.checklists_access_fields.is_editable && <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -87,11 +85,11 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>}
+                            </STableHeadCell>}
 
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -100,11 +98,11 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                 >
                                     CheckList Title
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -113,9 +111,9 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                 >
                                     Person
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -124,10 +122,10 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                 >
                                     Status
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -136,10 +134,10 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                 >
                                     Last Date
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -148,12 +146,12 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                 >
                                     Created At
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
                             {/* updated at */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -162,12 +160,12 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                 >
                                     Updated At
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
                             {/* created by */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -176,10 +174,10 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -188,24 +186,20 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                 >
                                     Updated By
                                 </Stack>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                            </STableHeadCell>
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {
 
                             data && data.map((checklist, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                    >
                                         {selectAll ?
 
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -217,12 +211,12 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null}
                                         {!selectAll ?
 
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -242,11 +236,11 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                         }}
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null/* actions popup */}
                                         {user?.checklists_access_fields.is_editable &&
-                                            <TableCell>
+                                            <STableCell>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row" spacing={1}>
@@ -300,11 +294,11 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                             }
                                                         </Stack>
                                                     } />
-                                            </TableCell>}
+                                            </STableCell>}
 
 
-                                        <TableCell>
-                                            <Typography  sx={{ textTransform: "capitalize", cursor: 'pointer' }}
+                                        <STableCell>
+                                            <Typography sx={{ textTransform: "capitalize", cursor: 'pointer' }}
                                                 onClick={() => {
                                                     let win = window.open(checklist.sheet_url, 'blank');
                                                     win?.focus();
@@ -312,47 +306,47 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                             >
                                                 {checklist.title && checklist.title.slice(0, 50)}
                                             </Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{checklist.owner.username}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             Checked : {checklist.boxes.filter((box) => {
                                                 return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
                                             }).length}/{checklist.boxes.filter((box) => {
                                                 return box.desired_date && new Date(box.desired_date) <= new Date()
                                             }).length}
 
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{checklist.boxes.length > 0 && new Date(checklist.boxes[checklist.boxes.length - 1].desired_date).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(checklist.created_at).toLocaleString()}</Typography>
 
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(checklist.updated_at).toLocaleString()}</Typography>
 
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{checklist.created_by.username}</Typography>
 
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{checklist.updated_by.username}</Typography>
 
-                                        </TableCell>
+                                        </STableCell>
 
-                                    </TableRow>
+                                    </STableRow>
                                 )
                             })
 
                         }
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
             </Box >
             {
                 checklist ?

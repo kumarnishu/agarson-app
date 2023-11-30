@@ -1,7 +1,6 @@
 import { Block, Delete, Edit, Pause, RemoveRedEye, ResetTv, RestartAlt, Stop } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { BroadcastChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import UpdateBroadcastDialog from '../dialogs/broadcasts/UpdateBroadcastDialog'
@@ -16,6 +15,7 @@ import PopUp from '../popup/PopUp'
 import SetDailyCountBroadcastDialog from '../dialogs/broadcasts/SetDailyCountDialog'
 import { IBroadcast } from '../../types/broadcast.types'
 import { UserContext } from '../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 
 type Props = {
@@ -41,15 +41,12 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                 overflow: "scroll",
                 maxHeight: '67vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ minWidth: "2550px" }}
-                    size="small">
-                    <TableHead
+                <STable
+                >
+                    <STableHead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableHeadCell>
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -73,10 +70,10 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
                             {user?.broadcast_access_fields.is_editable &&
-                                <TableCell
-                                    sx={{ bgcolor: headColor }}                         >
+                                <STableHeadCell
+                                                            >
                                     <Stack
                                         direction="row"
                                         justifyContent="left"
@@ -85,9 +82,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                     >
                                         Actions
                                     </Stack>
-                                </TableCell>}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                                </STableHeadCell>}
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -96,9 +93,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Broadcast Name
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -107,9 +104,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Status
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -118,9 +115,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Time Gap
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -129,9 +126,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Start Time
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -140,9 +137,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Next Run Date
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -151,9 +148,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Using Leads
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -162,10 +159,10 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Type
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -174,9 +171,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Daily Limit
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -185,9 +182,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Daily Count
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -196,10 +193,10 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Auto Refresh
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -208,9 +205,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Random Templates
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -219,10 +216,10 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Connected Number
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -231,9 +228,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Status Updated
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -242,9 +239,9 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -253,22 +250,18 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                 >
                                     Updated By
                                 </Stack>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                            </STableHeadCell>
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {
                             broadcasts && broadcasts.map((broadcast, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                    >
                                         {selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -280,12 +273,12 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -305,13 +298,13 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                         }}
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {/* actions */}
                                         {user?.broadcast_access_fields.is_editable &&
-                                            <TableCell>
+                                            <STableCell>
                                                 <PopUp element={<Stack direction="row">{
                                                     !broadcast.is_active ?
                                                         <>
@@ -414,64 +407,64 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                         </IconButton>
                                                     </Tooltip>
                                                 </Stack>} />
-                                            </TableCell>}
-                                        <TableCell>
+                                            </STableCell>}
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.name}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             {broadcast.is_active ?
                                                 <Typography variant="body1">{broadcast.is_paused ? <Pause /> : <Stop />}</Typography> :
                                                 <Typography variant="body1">stopped</Typography>
                                             }
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.time_gap + " seconds"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.created_at && new Date(broadcast.start_date).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{new Date(broadcast.next_run_date).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.leads_selected ? "Yes" : "No"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.message ? "custom" : "template"}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.daily_limit ? broadcast.daily_limit : "No"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.daily_count && broadcast.daily_count}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.autoRefresh ? "Yes" : "Not Set"}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.is_random_template ? "Yes" : "No"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.connected_number && broadcast.connected_number.toString().replace("91", "").replace("@c.us", "")}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.updated_at && new Date(broadcast.updated_at).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.created_by.username}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{broadcast.updated_by.username}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                    </TableRow>
+                                    </STableRow>
                                 )
                             })}
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
                 {
                     broadcast ?
                         <>
@@ -486,7 +479,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                             <SetDailyCountBroadcastDialog broadcast={broadcast} />
                         </> : null
                 }
-            </Box>
+            </Box >
         </>
     )
 }
