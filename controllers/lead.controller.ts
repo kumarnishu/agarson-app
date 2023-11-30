@@ -123,7 +123,8 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     model: 'User'
                 }
             ]
-        }).sort('-updated_at')
+        }).sort('-updated_at').skip((page - 1) * limit).limit(limit * page)
+
 
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
@@ -135,9 +136,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
             })
         }
 
-        let count = leads.length
-        leads = leads.slice((page - 1) * limit, limit * page)
-
+        let count = await Lead.countDocuments()
         return res.status(200).json({
             leads,
             total: Math.ceil(count / limit),
@@ -332,7 +331,7 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
 
-    let lead = await Lead.findById(id);
+    let lead = await Lead.findById(id)
     if (!lead) {
         return res.status(404).json({ message: "lead not found" })
     }
@@ -478,7 +477,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
 
             }
             //update and create new nead
-
+            console.log(validated)
             if (lead._id && isMongoId(String(lead._id))) {
                 console.log(new_lead_owners)
                 create_operation = false
@@ -604,8 +603,7 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
     return res.status(200).json({ message: "successfully changed stage" })
 }
 
-export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFunction) => 
-{
+export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let key = String(req.query.key).split(",")
@@ -922,7 +920,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                 ]
             }).sort('-updated_at')
         }
-        
+
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
@@ -1267,7 +1265,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                 ]
             }).sort('-updated_at')
         }
-      
+
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
@@ -2188,7 +2186,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                 ]
             }).sort('-updated_at')
         }
-       
+
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
