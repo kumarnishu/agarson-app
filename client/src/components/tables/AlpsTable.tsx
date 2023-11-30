@@ -30,7 +30,7 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                 overflow: "scroll",
                 height: '73.5vh'
             }}>
-                <STable
+                <STable 
                 >
                     <STableHead
                     >

@@ -8,7 +8,6 @@ import { Cancel } from "@mui/icons-material"
 
 function ManageAccessControlDialog({ user }: { user: IUser }) {
   const { choice, setChoice } = useContext(ChoiceContext)
-
   return (
     <>
       <Dialog fullScreen open={choice === UserChoiceActions.control_access ? true : false}

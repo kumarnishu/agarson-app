@@ -2,6 +2,7 @@ import styled from "styled-components"
 
 export const STable = styled.table`
   border-collapse: collapse;
+   width:100%;
 `
 export const STableRow = styled.tr`
   &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer }
@@ -20,7 +21,7 @@ export const STableHeadCell = styled.th`
   position: sticky; 
   top: -3; 
   text-align: left;
-  padding:5px;
+  padding-inline:10px;
   display:inlineblock;
   border: 1px solid #ddd;
   background-color: rgba(0,0,0,0.05);
