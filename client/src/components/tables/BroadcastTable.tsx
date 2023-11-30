@@ -74,7 +74,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                     />
                                 </Stack>
                             </TableCell>
-                            { user?.broadcast_access_fields.is_editable &&
+                            {user?.broadcast_access_fields.is_editable &&
                                 <TableCell
                                     sx={{ bgcolor: headColor }}                         >
                                     <Stack
@@ -347,10 +347,11 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                 }
 
 
-                                                    {broadcast.daily_limit ? <Tooltip title="Reset Broadcasting">
+                                                    <Tooltip title="Reset Broadcasting">
                                                         <IconButton
                                                             color="error"
                                                             size="medium"
+                                                            disabled={Boolean(broadcast.is_active)}
                                                             onClick={() => {
 
                                                                 setChoice({ type: BroadcastChoiceActions.reset_broadcast })
@@ -358,8 +359,8 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                             }}>
                                                             <Block />
                                                         </IconButton>
-                                                    </Tooltip> : null}
-                                                    {broadcast.daily_limit? <Tooltip title="Set Daily Count">
+                                                    </Tooltip>
+                                                    {broadcast.daily_limit ? <Tooltip title="Set Daily Count">
                                                         <IconButton
                                                             color="warning"
                                                             size="medium"
