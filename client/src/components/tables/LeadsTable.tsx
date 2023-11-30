@@ -47,7 +47,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
       }}>
         <STable>
           <STableHead style={{
-            position: 'sticky', zIndex: 1, top: -3, backgroundColor: 'white'
+           
           }}>
             <STableRow>
               <STableHeadCell

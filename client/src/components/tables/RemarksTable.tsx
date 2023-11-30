@@ -11,36 +11,9 @@ import { IRemark } from '../../types/crm.types'
 import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
 import ConvertLeadToCustomerDialog from '../dialogs/crm/ConvertLeadToCustomerDialog'
 import ToogleUselessLead from '../dialogs/crm/ToogleUselessLead'
-import styled from 'styled-components'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 
-const STable = styled.table`
-  border-collapse: collapse;
-`
-const STableRow = styled.tr`
-  &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer }
-`
-const STableCell = styled.td`
-  text-align: left;
-  background-color: 'white';
-  padding:5px;
-  display:inlineblock;
-  border: 1px solid #ddd;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
-const STableHead = styled.th`
-  position: sticky; 
-  top: -5; 
-  text-align: left;
-  padding:5px;
-  display:inlineblock;
-  border: 1px solid #ddd;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
 
 type Props = {
     remark: IRemark | undefined
@@ -65,15 +38,12 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
             }}>
                 <STable
                 >
-                    <thead
-                        style={{
-                            position: 'sticky', zIndex: 1, top: -5, backgroundColor: 'white'
-                        }}
+                    <STableHead
                     >
                         <STableRow>
 
                             {/* actions popup */}
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -83,11 +53,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Actions
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
 
                             {/* visitin card */}
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -97,11 +67,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Visiting Card
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* last remark */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -111,8 +81,8 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Last Remark
                                 </Stack>
-                            </STableHead>
-                            <STableHead
+                            </STableHeadCell>
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -122,12 +92,12 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Lead Name
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
 
 
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -137,9 +107,9 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Stage
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -149,11 +119,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Mobile
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* alternate mobile 1 */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -163,10 +133,10 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Mobile2
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* alternate mobile 2 */}
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -176,12 +146,12 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Mobile3
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
 
                             {/* city */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -191,11 +161,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     City
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* state */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -205,10 +175,10 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     State
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* remark type */}
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -218,11 +188,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Remark Type
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* remark owners */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -232,11 +202,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Remark Owners
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* turn over */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -246,11 +216,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     TurnOver
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* work description */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -260,10 +230,10 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Work Description
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* customer name */}
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -273,10 +243,10 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Customer Name
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* designiaton */}
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -286,12 +256,12 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Customer Desigination
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
 
 
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -301,9 +271,9 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Refer Party
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -313,9 +283,9 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Refer Party Mobile
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -325,13 +295,13 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Refer Date
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
                             {/* mobile */}
 
 
                             {/* email */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -341,11 +311,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Email
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* alternate email */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -355,11 +325,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Email2
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* address */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -369,13 +339,13 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Address
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
 
 
                             {/* source */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -385,11 +355,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Remark Source
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* country */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -399,11 +369,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Country
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* created at */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -413,11 +383,11 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Created At
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
                             {/* updated at */}
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -427,10 +397,10 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Updated At
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
                         </STableRow>
-                    </thead>
-                    <tbody >
+                    </STableHead>
+                    <STableBody >
                         {
 
                             data && data.map((remark, index) => {
@@ -719,7 +689,7 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                             })
 
                         }
-                    </tbody>
+                    </STableBody>
                 </STable>
             </Box >
             {

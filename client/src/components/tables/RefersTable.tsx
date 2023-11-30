@@ -10,36 +10,8 @@ import { UserContext } from '../../contexts/userContext'
 import PopUp from '../popup/PopUp'
 import { ILead, IReferredParty } from '../../types/crm.types'
 import AssignReferDialog from '../dialogs/crm/AssignReferDialog'
-import styled from 'styled-components'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
-
-const STable = styled.table`
-  border-collapse: collapse;
-`
-const STableRow = styled.tr`
-  &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer }
-`
-const STableCell = styled.td`
-  text-align: left;
-  background-color: 'white';
-  padding:5px;
-  display:inlineblock;
-  border: 1px solid #ddd;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
-const STableHead = styled.th`
-  position: sticky; 
-  top: -5; 
-  text-align: left;
-  padding:5px;
-  display:inlineblock;
-  border: 1px solid #ddd;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
 
 type Props = {
     refer: IReferredParty | undefined,
@@ -82,13 +54,10 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
             }}>
                 <STable
                 >
-                    <thead
-                        style={{
-                            position: 'sticky', zIndex: 1, top: -5, backgroundColor: 'white'
-                        }}
+                    <STableHead
                     >
                         <STableRow>
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -113,9 +82,9 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                         label=""
                                     />
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
                             {user?.crm_access_fields.is_editable &&
-                                <STableHead
+                                <STableHeadCell
                                 >
                                     <Stack
                                         direction="row"
@@ -125,8 +94,8 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                     >
                                         Actions
                                     </Stack>
-                                </STableHead>}
-                            <STableHead
+                                </STableHeadCell>}
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -136,8 +105,8 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     Party Name
                                 </Stack>
-                            </STableHead>
-                            <STableHead
+                            </STableHeadCell>
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -147,8 +116,8 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     Customer Name
                                 </Stack>
-                            </STableHead>
-                            <STableHead
+                            </STableHeadCell>
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -158,9 +127,9 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     Party Assigned
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
 
-                            <STableHead
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -170,8 +139,8 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     Mobile
                                 </Stack>
-                            </STableHead>
-                            <STableHead
+                            </STableHeadCell>
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -181,8 +150,8 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     City
                                 </Stack>
-                            </STableHead>
-                            <STableHead
+                            </STableHeadCell>
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -192,8 +161,8 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     State
                                 </Stack>
-                            </STableHead>
-                            <STableHead
+                            </STableHeadCell>
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -203,8 +172,8 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     Lead Owners
                                 </Stack>
-                            </STableHead>
-                            <STableHead
+                            </STableHeadCell>
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -214,8 +183,8 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     Created At
                                 </Stack>
-                            </STableHead>
-                            <STableHead
+                            </STableHeadCell>
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -225,8 +194,8 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     Updated At
                                 </Stack>
-                            </STableHead>
-                            <STableHead
+                            </STableHeadCell>
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -236,8 +205,8 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     Created By
                                 </Stack>
-                            </STableHead>
-                            <STableHead
+                            </STableHeadCell>
+                            <STableHeadCell
                             >
                                 <Stack
                                     direction="row"
@@ -247,10 +216,10 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                 >
                                     Updated By
                                 </Stack>
-                            </STableHead>
+                            </STableHeadCell>
                         </STableRow>
-                    </thead>
-                    <tbody >
+                    </STableHead>
+                    <STableBody >
                         {
                             data && data.map((refer, index) => {
                                 return (
@@ -479,7 +448,7 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                     </STableRow>
                                 )
                             })}
-                    </tbody>
+                    </STableBody>
                 </STable >
             </Box >
             {
