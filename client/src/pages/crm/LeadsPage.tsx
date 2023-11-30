@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, LinearProgress, Menu, MenuItem,  TextField, Typography } from '@mui/material'
+import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -209,7 +209,6 @@ export default function LeadsPage() {
                 setFilter(e.currentTarget.value)
                 setFilterCount(0)
               }}
-              autoFocus
               placeholder={`${MemoData?.length} records...`}
               style={{
                 fontSize: '1.1rem',
@@ -235,7 +234,7 @@ export default function LeadsPage() {
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
 
-            <IconButton size="medium"
+            <IconButton size="small"
               onClick={(e) => setAnchorEl(e.currentTarget)
               }
               sx={{ border: 1, borderRadius: 2, marginLeft: 2 }}

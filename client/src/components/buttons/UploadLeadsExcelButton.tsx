@@ -67,12 +67,11 @@ function UploadLeadsExcelButton() {
       />
       {
         isLoading ?
-          <CircularProgress />
+          <CircularProgress color="success" size={"small"} />
           :
           <>
             <Button
-              variant="outlined"
-              component="label"
+              size="small"
             >
               <Upload />
               <FileInput

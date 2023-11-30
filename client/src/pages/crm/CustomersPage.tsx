@@ -236,7 +236,7 @@ export default function CustomersPage() {
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
 
-            <IconButton size="medium"
+            <IconButton size="small"
               onClick={(e) => setAnchorEl(e.currentTarget)
               }
               sx={{ border: 1, borderRadius: 2, marginLeft: 2 }}
