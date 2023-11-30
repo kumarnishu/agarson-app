@@ -113,7 +113,7 @@ function CrmActivitiesPage() {
                             </TextField>}
                     </Stack>
                     <>
-                        
+                        {isLoading && <TableSkeleton />}
                         {!isLoading &&
                             window.screen.width < 500 ?
                             <Box>
@@ -189,7 +189,7 @@ function CrmActivitiesPage() {
                             </Box > :
                             <RemarksTable remark={remark} remarks={remarks} setRemark={setRemark} />
                         }
-                        {isLoading && <TableSkeleton />}
+                        
                     </>
 
 
