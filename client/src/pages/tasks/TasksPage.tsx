@@ -67,8 +67,8 @@ export default function TasksPage() {
                 })
                 tmpTasks.push({
                     task: task,
-                    previous_date: small_dates[small_dates.length - 1].date,
-                    next_date: large_dates[0].date,
+                    previous_date: small_dates[small_dates.length - 1] && small_dates[small_dates.length - 1].date,
+                    next_date: large_dates[0] && large_dates[0].date,
                     box: small_dates[small_dates.length - 1]
                 })
             })
@@ -108,7 +108,7 @@ export default function TasksPage() {
                                         task.task.task_description.slice(0, 50)}</b>
                                 }
 
-                                <Tooltip title={new Date(task.box.date).toDateString()}>
+                                <Tooltip title={task.box.date && new Date(task.box.date).toDateString()}>
                                     <>
                                         <Checkbox color="success" sx={{ p: 0, m: 2 }}
                                             onChange={() => {
