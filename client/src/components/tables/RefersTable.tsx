@@ -1,6 +1,5 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import UpdateReferDialog from '../dialogs/crm/UpdateReferDialog'
 import DeleteReferDialog from '../dialogs/crm/DeleteReferDialog'
@@ -11,6 +10,33 @@ import { UserContext } from '../../contexts/userContext'
 import PopUp from '../popup/PopUp'
 import { ILead, IReferredParty } from '../../types/crm.types'
 import AssignReferDialog from '../dialogs/crm/AssignReferDialog'
+import styled from 'styled-components'
+
+
+const STable = styled.table`
+  border-collapse: collapse;
+`
+const STableRow = styled.tr`
+'&:hover': { background-color: 'rgba(0,0,0,0.8)', cursor: 'pointer' }
+`
+const STableCell = styled.td`
+  text-align: left;
+  padding:5px;
+  display:inlineblock;
+  border: 1px solid #ddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+const STableHead = styled.th`
+  text-align: left;
+  padding:8px;
+  display:inlineblock;
+  border: 1px solid #ddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
 
 type Props = {
     refer: IReferredParty | undefined,
@@ -30,7 +56,7 @@ type Props = {
         leads: ILead[]
     }[]>>,
 }
-function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selectedRefers, setSelectedRefers }: Props) {
+function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, selectedRefers, setSelectedRefers }: Props) {
     const [data, setData] = useState<{
         party: IReferredParty,
         leads: ILead[]
@@ -51,15 +77,13 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                 overflow: "scroll",
                 maxHeight: '70vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ minWidth: "2000px" }}
-                    size="small">
-                    <TableHead
+                <STable
+                >
+                    <thead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -83,10 +107,10 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
-                            { user?.crm_access_fields.is_editable &&
-                                <TableCell
-                                    sx={{ bgcolor: headColor }}                         >
+                            </STableHead>
+                            {user?.crm_access_fields.is_editable &&
+                                <STableHead
+                                >
                                     <Stack
                                         direction="row"
                                         justifyContent="left"
@@ -95,9 +119,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                     >
                                         Actions
                                     </Stack>
-                                </TableCell>}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                                </STableHead>}
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -106,9 +130,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     Party Name
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHead>
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -117,9 +141,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     Customer Name
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHead>
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -128,10 +152,10 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     Party Assigned
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -140,9 +164,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     Mobile
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHead>
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -151,9 +175,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     City
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHead>
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -162,9 +186,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     State
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHead>
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -173,9 +197,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     Lead Owners
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHead>
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -184,9 +208,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     Created At
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHead>
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -195,9 +219,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     Updated At
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHead>
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -206,9 +230,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHead>
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -217,22 +241,18 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                 >
                                     Updated By
                                 </Stack>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                            </STableHead>
+                        </STableRow>
+                    </thead>
+                    <tbody >
                         {
                             data && data.map((refer, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                    >
                                         {selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -244,12 +264,12 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -269,12 +289,12 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                         }}
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {/* actions */}
-                                        <TableCell>
+                                        <STableCell>
                                             <PopUp
                                                 element={
                                                     <Stack direction="row">
@@ -335,9 +355,9 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 }
                                             />
 
-                                        </TableCell>
+                                        </STableCell>
                                         {/* party name */}
-                                        < TableCell >
+                                        < STableCell >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -347,8 +367,8 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1">{refer.party.name}</Typography>
 
                                             </Stack>
-                                        </TableCell>
-                                        <TableCell                     >
+                                        </STableCell>
+                                        <STableCell                     >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -358,8 +378,8 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.customer_name}</Typography>
 
                                             </Stack>
-                                        </TableCell>
-                                        <TableCell                     >
+                                        </STableCell>
+                                        <STableCell                     >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -369,8 +389,8 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.leads && refer.leads.length}</Typography>
 
                                             </Stack>
-                                        </TableCell>
-                                        <TableCell                     >
+                                        </STableCell>
+                                        <STableCell                     >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -380,8 +400,8 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.mobile}</Typography>
 
                                             </Stack>
-                                        </TableCell>
-                                        <TableCell                     >
+                                        </STableCell>
+                                        <STableCell                     >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -391,8 +411,8 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.city}</Typography>
 
                                             </Stack>
-                                        </TableCell>
-                                        <TableCell                     >
+                                        </STableCell>
+                                        <STableCell                     >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -402,11 +422,11 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.state}</Typography>
 
                                             </Stack>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{refer.party.lead_owners ? refer.party.lead_owners.map((owner) => { return owner.username + ", " }) : [""]}</Typography>
-                                        </TableCell>
-                                        <TableCell                     >
+                                        </STableCell>
+                                        <STableCell                     >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -416,8 +436,8 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {new Date(refer.party.created_at).toLocaleString()}</Typography>
 
                                             </Stack>
-                                        </TableCell>
-                                        <TableCell                     >
+                                        </STableCell>
+                                        <STableCell                     >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -427,8 +447,8 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {new Date(refer.party.updated_at).toLocaleString()}</Typography>
 
                                             </Stack>
-                                        </TableCell>
-                                        <TableCell                     >
+                                        </STableCell>
+                                        <STableCell                     >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -438,8 +458,8 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1">{refer.party.created_by.username}</Typography>
 
                                             </Stack>
-                                        </TableCell>
-                                        <TableCell                     >
+                                        </STableCell>
+                                        <STableCell                     >
                                             <Stack
                                                 direction="row"
                                                 justifyContent="left"
@@ -449,12 +469,12 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.updated_by.username}</Typography>
 
                                             </Stack>
-                                        </TableCell>
-                                    </TableRow>
+                                        </STableCell>
+                                    </STableRow>
                                 )
                             })}
-                    </TableBody>
-                </Table >
+                    </tbody>
+                </STable >
             </Box >
             {
                 refer ?
@@ -471,4 +491,4 @@ function RefersTable({ refer, selectAll, refers, setSelectAll, setRefer, selecte
     )
 }
 
-export default RefersTable
+export default RefersSTable

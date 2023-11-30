@@ -1,7 +1,6 @@
 import { Comment, DeleteOutline, Visibility } from '@mui/icons-material'
-import { Box, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, IconButton, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
@@ -12,7 +11,33 @@ import { IRemark } from '../../types/crm.types'
 import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
 import ConvertLeadToCustomerDialog from '../dialogs/crm/ConvertLeadToCustomerDialog'
 import ToogleUselessLead from '../dialogs/crm/ToogleUselessLead'
+import styled from 'styled-components'
 
+
+const STable = styled.table`
+  border-collapse: collapse;
+`
+const STableRow = styled.tr`
+'&:hover': { background-color: 'rgba(0,0,0,0.8)', cursor: 'pointer' }
+`
+const STableCell = styled.td`
+  text-align: left;
+  padding:5px;
+  display:inlineblock;
+  border: 1px solid #ddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+const STableHead = styled.th`
+  text-align: left;
+  padding:10px;
+  display:inlineblock;
+  border: 1px solid #ddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
 
 
 type Props = {
@@ -21,7 +46,7 @@ type Props = {
     remarks: IRemark[]
 }
 
-function RemarksTable({ remark, remarks, setRemark }: Props) {
+function RemarksSTable({ remark, remarks, setRemark }: Props) {
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     const [data, setData] = useState<IRemark[]>(remarks)
@@ -36,17 +61,15 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                 overflow: "scroll",
                 height: '53.5vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ width: "5400px" }}
-                    size="small">
-                    <TableHead
+                <STable
+                >
+                    <thead
                     >
-                        <TableRow>
+                        <STableRow>
 
                             {/* actions popup */}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -55,12 +78,12 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
 
 
                             {/* visitin card */}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -69,189 +92,12 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Visiting Card
                                 </Stack>
-                            </TableCell>
-
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Lead Name
-                                </Stack>
-                            </TableCell>
-
-
-
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Stage
-                                </Stack>
-                            </TableCell>
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Mobile
-                                </Stack>
-                            </TableCell>
-
-                            {/* alternate mobile 1 */}
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Mobile2
-                                </Stack>
-                            </TableCell>
-
-                            {/* alternate mobile 2 */}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Mobile3
-                                </Stack>
-                            </TableCell>
-
-
-                            {/* city */}
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    City
-                                </Stack>
-                            </TableCell>
-
-                            {/* state */}
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    State
-                                </Stack>
-                            </TableCell>
-
-                            {/* remark type */}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Remark Type
-                                </Stack>
-                            </TableCell>
-
-                            {/* remark owners */}
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Remark Owners
-                                </Stack>
-                            </TableCell>
-
-                            {/* turn over */}
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    TurnOver
-                                </Stack>
-                            </TableCell>
-
-                            {/* work description */}
-
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Work Description
-                                </Stack>
-                            </TableCell>
-
-                            {/* customer name */}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Customer Name
-                                </Stack>
-                            </TableCell>
-
-                            {/* designiaton */}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Customer Desigination
-                                </Stack>
-                            </TableCell>
+                            </STableHead>
 
                             {/* last remark */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -260,11 +106,188 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Last Remark
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Lead Name
+                                </Stack>
+                            </STableHead>
 
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+
+
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Stage
+                                </Stack>
+                            </STableHead>
+
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Mobile
+                                </Stack>
+                            </STableHead>
+
+                            {/* alternate mobile 1 */}
+
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Mobile2
+                                </Stack>
+                            </STableHead>
+
+                            {/* alternate mobile 2 */}
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Mobile3
+                                </Stack>
+                            </STableHead>
+
+
+                            {/* city */}
+
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    City
+                                </Stack>
+                            </STableHead>
+
+                            {/* state */}
+
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    State
+                                </Stack>
+                            </STableHead>
+
+                            {/* remark type */}
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Remark Type
+                                </Stack>
+                            </STableHead>
+
+                            {/* remark owners */}
+
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Remark Owners
+                                </Stack>
+                            </STableHead>
+
+                            {/* turn over */}
+
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    TurnOver
+                                </Stack>
+                            </STableHead>
+
+                            {/* work description */}
+
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Work Description
+                                </Stack>
+                            </STableHead>
+
+                            {/* customer name */}
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Customer Name
+                                </Stack>
+                            </STableHead>
+
+                            {/* designiaton */}
+                            <STableHead
+                            >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    Customer Desigination
+                                </Stack>
+                            </STableHead>
+
+
+
+
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -273,10 +296,10 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Refer Party
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -285,10 +308,10 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Refer Party Mobile
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -297,14 +320,14 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Refer Date
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
                             {/* mobile */}
 
 
                             {/* email */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -313,12 +336,12 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Email
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
 
                             {/* alternate email */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -327,12 +350,12 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Email2
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
 
                             {/* address */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -341,14 +364,14 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Address
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
 
 
 
                             {/* source */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -357,12 +380,12 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Remark Source
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
 
                             {/* country */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -371,12 +394,12 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Country
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
 
                             {/* created at */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -385,12 +408,12 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Created At
                                 </Stack>
-                            </TableCell>
+                            </STableHead>
 
                             {/* updated at */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHead
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -399,25 +422,21 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                 >
                                     Updated At
                                 </Stack>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                            </STableHead>
+                        </STableRow>
+                    </thead>
+                    <tbody >
                         {
 
                             data && data.map((remark, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                    >
 
                                         {/* actions popup */}
 
-                                        <TableCell>
+                                        <STableCell>
                                             <PopUp
                                                 element={
                                                     <Stack direction="row" spacing={1}>
@@ -492,10 +511,10 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                                     </Stack>
                                                 }
                                             />
-                                        </TableCell>
+                                        </STableCell>
                                         {/* visitin card */}
                                         {
-                                            <TableCell
+                                            <STableCell
                                                 title="double click to download"
                                                 onDoubleClick={() => {
                                                     if (remark.lead.visiting_card && remark.lead.visiting_card?.public_url) {
@@ -503,200 +522,200 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
                                                     }
                                                 }}>
                                                 <img height="50" width="75" src={remark.lead.visiting_card && remark.lead.visiting_card.public_url} alt="visiting card" />
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
+                                        {/* last remark */}
+                                        {
+                                            <STableCell title={remark.lead.last_remark && remark.lead.last_remark}>
+                                                {remark.lead.remarks ?
+                                                    <Typography sx={{ textTransform: "capitalize" }}> {remark.lead.last_remark && remark.lead.last_remark.slice(0, 50)}
+                                                    </Typography> : null
+                                                }
+                                            </STableCell>
 
+                                        }
                                         {/* remark name */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.name}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* stage */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.stage}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack>
                                                     <Typography variant="body1"  >{remark.lead.mobile}</Typography>
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* alternate mobile 1 */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.alternate_mobile1}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* alternate mobile 2 */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.alternate_mobile2}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
 
                                         {/* city */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.city}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* state */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.state}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* remark type */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.lead_type}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* remark owners */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.lead_owners ? remark.lead.lead_owners.map((owner) => { return owner.username + ", " }) : [""]}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* turn over */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.turnover ? remark.lead.turnover : 'na'}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* work description */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.work_description ? remark.lead.work_description.slice(0, 50) : ""}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* customer name */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.customer_name}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* designiaton */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{remark.lead.customer_designation}</Typography>
-                                            </TableCell>
-
-                                        }
-                                        {/* last remark */}
-                                        {
-                                            <TableCell>
-                                                {remark.lead.remarks ?
-                                                    <Typography sx={{ textTransform: "capitalize" }}> {remark.lead.last_remark && remark.lead.last_remark.slice(0, 50)}
-                                                    </Typography> : null
-                                                }
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
 
-                                        <TableCell>
+
+                                        <STableCell>
                                             {remark.lead.referred_party_name ?
                                                 <Typography sx={{ textTransform: "capitalize" }}> {remark.lead.referred_party_name && remark.lead.referred_party_name}
                                                 </Typography> : null
                                             }
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             {remark.lead.referred_party_mobile ?
                                                 <Typography sx={{ textTransform: "capitalize" }}> {remark.lead.referred_party_mobile && remark.lead.referred_party_mobile}
                                                 </Typography> : null
                                             }
-                                        </TableCell>
+                                        </STableCell>
 
 
-                                        <TableCell>
+                                        <STableCell>
                                             {remark.lead.referred_date ?
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(remark.lead.referred_date).toLocaleString()}</Typography> : null
                                             }
-                                        </TableCell>
+                                        </STableCell>
 
 
                                         {/* email */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1">{remark.lead.email}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* alternate email */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1">{remark.lead.alternate_email}</Typography>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* address */}
                                         {
-                                            <TableCell>
+                                            <STableCell title={remark.lead.address}>
                                                 <Stack>
                                                     <Typography sx={{ textTransform: "capitalize" }} variant="body1">{remark.lead.address ? remark.lead.address.slice(0, 50) : "..."}</Typography>
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
 
 
                                         {/* source */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1">{remark.lead.lead_source}</Typography>
 
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* country */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1">{remark.lead.country}</Typography>
 
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* created at */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(remark.lead.created_at).toLocaleString()}</Typography>
 
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
                                         {/* updated at */}
                                         {
-                                            <TableCell>
+                                            <STableCell>
                                                 <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(remark.lead.updated_at).toLocaleString()}</Typography>
 
-                                            </TableCell>
+                                            </STableCell>
 
                                         }
-                                       
-                                    </TableRow>
+
+                                    </STableRow>
                                 )
                             })
 
                         }
-                    </TableBody>
-                </Table>
+                    </tbody>
+                </STable>
             </Box >
             {
                 remark ?
@@ -711,4 +730,4 @@ function RemarksTable({ remark, remarks, setRemark }: Props) {
     )
 }
 
-export default RemarksTable
+export default RemarksSTable

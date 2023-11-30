@@ -1,5 +1,5 @@
 import { Comment, Delete, DeleteOutline, Edit, Share, Visibility } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton, TableBody, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
@@ -70,417 +70,419 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
         height: '73.5vh'
       }}>
         <STable>
-          <STableRow>
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+          <thead>
+            <STableRow>
+              <STableHead
               >
-                <FormControlLabel sx={{ fontSize: 12 }} control={
-                  <Checkbox
-                    indeterminate={selectAll ? true : false}
-                    checked={Boolean(selectAll)}
-                    size="small" onChange={(e) => {
-                      if (e.currentTarget.checked) {
-                        setSelectedLeads(leads)
-                        setSelectAll(true)
-                      }
-                      if (!e.currentTarget.checked) {
-                        setSelectedLeads([])
-                        setSelectAll(false)
-                      }
-                    }} />}
-                  label=""
-                />
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  <FormControlLabel sx={{ fontSize: 12 }} control={
+                    <Checkbox
+                      indeterminate={selectAll ? true : false}
+                      checked={Boolean(selectAll)}
+                      size="small" onChange={(e) => {
+                        if (e.currentTarget.checked) {
+                          setSelectedLeads(leads)
+                          setSelectAll(true)
+                        }
+                        if (!e.currentTarget.checked) {
+                          setSelectedLeads([])
+                          setSelectAll(false)
+                        }
+                      }} />}
+                    label=""
+                  />
+                </Stack>
+              </STableHead>
 
-            {/* actions popup */}
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              {/* actions popup */}
+              <STableHead
               >
-                Actions
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Actions
+                </Stack>
+              </STableHead>
 
 
-            {/* visitin card */}
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              {/* visitin card */}
+              <STableHead
               >
-                Visiting Card
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Visiting Card
+                </Stack>
+              </STableHead>
 
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Lead Name
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Lead Name
+                </Stack>
+              </STableHead>
 
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                City
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  City
+                </Stack>
+              </STableHead>
 
-            {/* state */}
+              {/* state */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                State
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  State
+                </Stack>
+              </STableHead>
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Stage
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Stage
+                </Stack>
+              </STableHead>
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Mobile
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Mobile
+                </Stack>
+              </STableHead>
 
-            {/* alternate mobile 1 */}
+              {/* alternate mobile 1 */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Mobile2
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Mobile2
+                </Stack>
+              </STableHead>
 
-            {/* alternate mobile 2 */}
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              {/* alternate mobile 2 */}
+              <STableHead
               >
-                Mobile3
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Mobile3
+                </Stack>
+              </STableHead>
 
 
 
-           
 
-            {/* lead type */}
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+
+              {/* lead type */}
+              <STableHead
               >
-                Lead Type
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Lead Type
+                </Stack>
+              </STableHead>
 
-            {/* lead owners */}
+              {/* lead owners */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Lead Owners
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Lead Owners
+                </Stack>
+              </STableHead>
 
-            {/* turn over */}
+              {/* turn over */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                TurnOver
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  TurnOver
+                </Stack>
+              </STableHead>
 
-            {/* work description */}
+              {/* work description */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Work Description
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Work Description
+                </Stack>
+              </STableHead>
 
-            {/* customer name */}
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              {/* customer name */}
+              <STableHead
               >
-                Customer Name
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Customer Name
+                </Stack>
+              </STableHead>
 
-            {/* designiaton */}
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              {/* designiaton */}
+              <STableHead
               >
-                Customer Desigination
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Customer Desigination
+                </Stack>
+              </STableHead>
 
-            {/* last remark */}
+              {/* last remark */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Last Remark
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Last Remark
+                </Stack>
+              </STableHead>
 
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Refer Party
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Refer Party
+                </Stack>
+              </STableHead>
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Refer Party Mobile
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Refer Party Mobile
+                </Stack>
+              </STableHead>
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Refer Date
-              </Stack>
-            </STableHead>
-            {/* mobile */}
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Refer Date
+                </Stack>
+              </STableHead>
+              {/* mobile */}
 
 
-            {/* email */}
+              {/* email */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Email
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Email
+                </Stack>
+              </STableHead>
 
-            {/* alternate email */}
+              {/* alternate email */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Email2
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Email2
+                </Stack>
+              </STableHead>
 
-            {/* address */}
+              {/* address */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Address
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Address
+                </Stack>
+              </STableHead>
 
 
 
-            {/* source */}
+              {/* source */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Lead Source
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Lead Source
+                </Stack>
+              </STableHead>
 
-            {/* country */}
+              {/* country */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Country
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Country
+                </Stack>
+              </STableHead>
 
-            {/* created at */}
+              {/* created at */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Created At
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Created At
+                </Stack>
+              </STableHead>
 
-            {/* updated at */}
+              {/* updated at */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Updated At
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Updated At
+                </Stack>
+              </STableHead>
 
-            {/* created by */}
+              {/* created by */}
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Created By
-              </Stack>
-            </STableHead>
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Created By
+                </Stack>
+              </STableHead>
 
-            <STableHead
-            >
-              <Stack
-                direction="row"
-                justifyContent="left"
-                alignItems="left"
-                spacing={2}
+              <STableHead
               >
-                Updated By
-              </Stack>
-            </STableHead>
-          </STableRow>
-          <TableBody >
+                <Stack
+                  direction="row"
+                  justifyContent="left"
+                  alignItems="left"
+                  spacing={2}
+                >
+                  Updated By
+                </Stack>
+              </STableHead>
+            </STableRow>
+          </thead>
+          <tbody >
             {
 
               data && data.map((lead, index) => {
@@ -730,7 +732,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
                     }
 
-                   
+
                     {/* lead type */}
                     {
                       <STableCell>
@@ -886,7 +888,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               })
 
             }
-          </TableBody>
+          </tbody>
         </STable>
       </Box >
       {
