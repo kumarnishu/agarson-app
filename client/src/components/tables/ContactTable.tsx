@@ -1,6 +1,5 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, ContactChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../popup/PopUp'
@@ -9,6 +8,7 @@ import UpdateContactDialog from '../dialogs/contacts/UpdateContactDialog'
 import DeleteContactDialog from '../dialogs/contacts/DeleteContactDialog'
 import { IContact } from '../../types/contact.types'
 import { UserContext } from '../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 
 type Props = {
@@ -34,15 +34,13 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                 overflow: "scroll",
                 maxHeight: '67vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ minWidth: "1200px" }}
-                    size="small">
-                    <TableHead
+                <STable
+                   >
+                    <STableHead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableHeadCell
+                                                     >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -66,10 +64,10 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
                             { user?.contacts_access_fields.is_editable &&
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                     >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -78,9 +76,9 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>}
+                            <STableHeadCell
+                                                     >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -89,9 +87,9 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                 >
                                     Name
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                     >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -100,9 +98,9 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                 >
                                     Mobile
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                     >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -111,9 +109,9 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                 >
                                     Created At
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                     >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -122,9 +120,9 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                     >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -133,9 +131,9 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                 >
                                     Updated At
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                     >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -144,24 +142,20 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                 >
                                     Updated By
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
 
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {
                             contacts && contacts.map((contact, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                        >
                                         {selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -173,12 +167,12 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -198,13 +192,13 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                                         }}
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {/* actions */}
                                         {user?.contacts_access_fields.is_editable &&
-                                            <TableCell>
+                                            <STableCell>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row">
@@ -238,32 +232,32 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                                     }
                                                 />
 
-                                            </TableCell>}
-                                        <TableCell>
+                                            </STableCell>}
+                                        <STableCell>
                                             <Typography variant="body1">{contact.name}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{contact.mobile && contact.mobile.toString().replace("91", "").replace("@c.us", "")}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{contact.created_at && new Date(contact.created_at).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{contact.created_by.username}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{contact.updated_at && new Date(contact.updated_at).toLocaleString()}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{contact.updated_by.username}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                    </TableRow>
+                                    </STableRow>
                                 )
                             })}
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
                 {
                     contact ?
                         <>

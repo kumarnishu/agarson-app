@@ -1,6 +1,5 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton,  Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
 import { ITask } from '../../types/task.types'
@@ -11,6 +10,7 @@ import EditTaskDialog from '../dialogs/tasks/EditTaskDialog'
 import DeleteTaskDialog from '../dialogs/tasks/DeleteTaskDialog'
 import AddBoxesDialog from '../dialogs/tasks/AddBoxesDialog'
 import { UserContext } from '../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 
 
@@ -28,7 +28,7 @@ type Props = {
     } | undefined
 }
 
-function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selectedTasks, setSelectedTasks }: Props) {
+function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selectedTasks, setSelectedTasks }: Props) {
     const [data, setData] = useState<ITask[]>(tasks)
     const { user } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
@@ -42,15 +42,13 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                 overflow: "scroll",
                 minHeight: '43.5vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ width: "2000px" }}
-                    size="small">
-                    <TableHead
+                <STable
+                   >
+                    <STableHead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -74,11 +72,11 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
                             {/* actions popup */}
-                            {user?.tasks_access_fields.is_editable && <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            {user?.tasks_access_fields.is_editable && <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -87,11 +85,11 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>}
+                            </STableHeadCell>}
 
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -100,11 +98,11 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Task Description
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -113,9 +111,9 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Person
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -124,9 +122,9 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Frequency
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -135,9 +133,9 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Status
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -146,10 +144,10 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Last Date
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -158,12 +156,12 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Created At
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
                             {/* updated at */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -172,12 +170,12 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Updated At
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
                             {/* created by */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -186,10 +184,10 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -198,24 +196,20 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                 >
                                     Updated By
                                 </Stack>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                            </STableHeadCell>
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {
 
                             data && data.map((task, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                      >
                                         {selectAll ?
 
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -227,12 +221,12 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null}
                                         {!selectAll ?
 
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -252,11 +246,11 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                                         }}
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null/* actions popup */}
                                         {user?.tasks_access_fields.is_editable &&
-                                            <TableCell>
+                                            <STableCell>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row" spacing={1}>
@@ -309,21 +303,21 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                                             }
                                                         </Stack>
                                                     } />
-                                            </TableCell>}
+                                            </STableCell>}
 
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{task.task_description && task.task_description.slice(0, 50)}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{task.person.username}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{task.frequency_value ? `${task.frequency_value} days` : task.frequency_type}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             Checked : {task.boxes.filter((box) => {
                                                 return box.is_completed && new Date(box.date) <= new Date()
                                             }).length}
@@ -332,38 +326,38 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
                                                 return new Date(box.date).getDay() !== 0 && new Date(box.date) <= new Date()
                                             }).length}
 
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.boxes.length > 0 && new Date(task.boxes[task.boxes.length - 1].date).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.created_at).toLocaleString()}</Typography>
 
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.updated_at).toLocaleString()}</Typography>
 
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.created_by.username}</Typography>
 
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.updated_by.username}</Typography>
 
-                                        </TableCell>
+                                        </STableCell>
 
 
 
 
-                                    </TableRow>
+                                    </STableRow>
                                 )
                             })
 
                         }
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
             </Box >
             {
                 task ?
@@ -380,4 +374,4 @@ function TaskTable({ task, dates, tasks, setTask, selectAll, setSelectAll, selec
     )
 }
 
-export default TaskTable
+export default TaskSTable

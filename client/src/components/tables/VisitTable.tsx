@@ -1,6 +1,5 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
 import { Chat, Check, Comment, Edit, RemoveRedEye } from '@mui/icons-material'
@@ -14,6 +13,7 @@ import AddBrijeshInputDialog from '../dialogs/visit/AddBrjeshInputDialog'
 import ViewVisitDialog from '../dialogs/visit/ViewVisitDialog'
 import ViewCommentsDialog from '../dialogs/visit/ViewCommentsDialog'
 import { DownloadFile } from '../../utils/DownloadFile'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 
 
@@ -27,7 +27,7 @@ type Props = {
     setSelectedVisits: React.Dispatch<React.SetStateAction<IVisitReport[]>>,
 }
 
-function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selectedVisits, setSelectedVisits }: Props) {
+function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selectedVisits, setSelectedVisits }: Props) {
     const [data, setData] = useState<IVisitReport[]>(visits)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
@@ -41,15 +41,13 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                 overflow: "scroll",
                 minHeight: '53.5vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ width: "6000px" }}
-                    size="small">
-                    <TableHead
+                <STable
+                >
+                    <STableHead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -73,11 +71,11 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
                             {/* actions popup */}
-                           <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -86,9 +84,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Actions
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -97,9 +95,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Date
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -108,10 +106,10 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Visit in Photo
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -120,9 +118,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Visit In
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -131,10 +129,10 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Visit Out
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -143,10 +141,10 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Party
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -155,9 +153,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Station
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -166,9 +164,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Salesman
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -177,9 +175,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Visit In Address
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -188,9 +186,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Is Old ?
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -199,9 +197,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Turnover
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -210,9 +208,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Dealer Of
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -221,9 +219,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     References taken
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -232,9 +230,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Reviews Taken
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -243,9 +241,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Summary
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -254,9 +252,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Ankit Input
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -265,10 +263,10 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Brijesh Input
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -277,9 +275,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Created at
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -288,9 +286,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Updated at
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -299,9 +297,9 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -310,25 +308,21 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                 >
                                     Updated By
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {
 
                             data && data.map((visit, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                    >
                                         {selectAll ?
 
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -340,12 +334,12 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null}
                                         {!selectAll ?
 
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -365,10 +359,10 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                                         }}
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null/* actions popup */}
-                                        <TableCell sx={{ bgcolor: visit.visit_validated ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,0,0.1)' }} >
+                                        <STableCell style={{ backgroundColor: visit.visit_validated ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,0,0.1)' }} >
                                             <PopUp
                                                 element={
                                                     <Stack
@@ -442,17 +436,17 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                                         }
                                                     </Stack>
                                                 } />
-                                        </TableCell>
+                                        </STableCell>
 
 
 
-                                      
 
-                                        <TableCell>
+
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleDateString()}</Typography>
-                                        </TableCell>
-                                        
-                                        <TableCell>
+                                        </STableCell>
+
+                                        <STableCell>
                                             <Stack gap={1}
                                                 direction={'row'}
                                                 justifyContent="left"
@@ -466,72 +460,72 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
                                                     src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '40px' }} />}
 
                                             </Stack >
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.party_name}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.city}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.person.username}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.visit_in_credientials && visit.visit_in_credientials.address && visit.visit_in_credientials.address}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.is_old_party ? "Old " : "New "}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.turnover}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.dealer_of}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.refs_given}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{visit.reviews_taken}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography title={visit.summary && visit.summary} sx={{ textTransform: "capitalize" }} variant="body1">{visit.summary && visit.summary.slice(0, 50) + "..."}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} title={visit.ankit_input && visit.ankit_input.input} variant="body1">{visit.ankit_input && visit.ankit_input.input.slice(0, 50) + "..."}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} title={visit.brijesh_input && visit.brijesh_input.input} variant="body1">{visit.brijesh_input && visit.brijesh_input.input.slice(0, 50) + "..."}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.created_at).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.updated_at).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.created_by.username}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.updated_by.username}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                    </TableRow>
+                                    </STableRow>
                                 )
                             })
 
                         }
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
             </Box >
             {
                 visit ?
@@ -549,4 +543,4 @@ function VisitTable({ visit, visits, setVisit, selectAll, setSelectAll, selected
     )
 }
 
-export default VisitTable
+export default VisitSTable

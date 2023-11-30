@@ -73,13 +73,10 @@ export default function CheckListPage() {
               }}
             ><AdsClickOutlined color="primary" />
             </IconButton>
-            <Typography sx={{ maxWidth: 500, cursor: 'pointer', textTransform: 'capitalize' }} variant='body1'
-              onClick={() => {
-                let win = window.open(checklist.sheet_url, 'blank');
-                win?.focus();
-              }}
-            >
-              {checklist.title}</Typography>
+            <Typography sx={{ maxWidth: 500, cursor: 'pointer', textTransform: 'capitalize' }} variant='body1'>
+              <a href={checklist.sheet_url} target='blank'>
+                {checklist.title && checklist.title.slice(0, 50)}
+              </a></Typography>
             <Typography>
               <b style={{ color: 'orange' }}>
                 Score  {" "}
@@ -99,7 +96,7 @@ export default function CheckListPage() {
         )
       })}
       {localchecklist && <CheckMyCheckListDialog checklist={localchecklist} dates={dates} />}
-    </Box>
+    </Box >
   )
 }
 

@@ -1,7 +1,6 @@
 import { AccountCircle, Delete, RestartAlt, Stop } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import UpdateTrackerDialog from '../dialogs/bot/UpdateTrackerDialog'
@@ -10,8 +9,7 @@ import { IMenuTracker } from '../../types/bot.types'
 import PopUp from '../popup/PopUp'
 import { UserContext } from '../../contexts/userContext'
 import DeleteTrackerDialog from '../dialogs/bot/DeleteTrackerDialog'
-
-
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 
 type Props = {
@@ -25,7 +23,7 @@ type Props = {
     selectableTrackers: IMenuTracker[]
 }
 
-function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, selectAll, setSelectAll, selectedTrackers, setSelectedTrackers }: Props) {
+function TrackersSTable({ tracker, trackers, selectableTrackers, setTracker, selectAll, setSelectAll, selectedTrackers, setSelectedTrackers }: Props) {
     const { setChoice } = useContext(ChoiceContext)
     const [data, setData] = useState<IMenuTracker[]>(trackers)
     const { user } = useContext(UserContext)
@@ -39,16 +37,14 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                 overflow: "scroll",
                 maxHeight: '70vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ width: "1500px" }}
-                    size="small">
-                    <TableHead
+                <STable
                     >
-                        <TableRow>
+                    <STableHead
+                    >
+                        <STableRow>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -72,13 +68,13 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
                             {/* actions popup */}
 
                             {user?.bot_access_fields.is_editable &&
-                                <TableCell
-                                    sx={{ bgcolor: headColor }}                         >
+                                <STableHeadCell
+                                                             >
                                     <Stack
                                         direction="row"
                                         justifyContent="left"
@@ -87,13 +83,13 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                     >
                                         Actions
                                     </Stack>
-                                </TableCell>}
+                                </STableHeadCell>}
 
 
 
                             {/* tracker name */}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -102,10 +98,10 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                 >
                                     Status
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -114,12 +110,12 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                 >
                                     Customer Name
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
 
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -128,13 +124,13 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                 >
                                     Bot Number
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
 
                             {/* stage */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -143,13 +139,13 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                 >
                                     Customer Phone
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
 
                             {/* city */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -158,12 +154,12 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                 >
                                     Flow Name
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
                             {/* state */}
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                         >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -172,25 +168,21 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                 >
                                     Last Interaction
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {
 
                             data && data.map((tracker, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                        >
                                         {selectAll ?
 
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -202,13 +194,13 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
 
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -228,7 +220,7 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                                         }}
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
 
                                             :
                                             null
@@ -236,7 +228,7 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
 
                                         {/* actions */}
                                         {user?.bot_access_fields.is_editable &&
-                                            <TableCell>
+                                            <STableCell>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row" spacing={1}>
@@ -294,45 +286,45 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
                                                         </Stack>}
 
                                                 />
-                                            </TableCell>}
+                                            </STableCell>}
                                         {/* tracker name */}
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{tracker.is_active ? "Active" : "Disabled"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{tracker.customer_name || "NA"}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{tracker.bot_number.replace("91", "").replace("@c.us", "")}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
 
                                         {/* stage */}
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{tracker.phone_number.replace("91", "").replace("@c.us", "")}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{tracker.flow.flow_name}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
 
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{tracker.updated_at && new Date(tracker.updated_at).toLocaleString()}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
 
-                                    </TableRow>
+                                    </STableRow>
                                 )
                             })
 
                         }
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
             </Box>
             {
                 tracker ?
@@ -347,4 +339,4 @@ function TrackersTable({ tracker, trackers, selectableTrackers, setTracker, sele
     )
 }
 
-export default TrackersTable
+export default TrackersSTable

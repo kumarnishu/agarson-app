@@ -1,6 +1,5 @@
-import { Box, Button, Checkbox, FormControlLabel, IconButton, Popover, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Checkbox, FormControlLabel, IconButton, Popover,  Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
@@ -11,6 +10,7 @@ import UpdateConnectedUsersDialog from '../dialogs/bot/UpdateConnectedUsersDialo
 import ToogleFlowStatusDialog from '../dialogs/bot/ToogleFlowStatusDialog'
 import { AdsClickOutlined, Delete, Edit, RestartAlt } from '@mui/icons-material'
 import AdUnitsIcon from '@mui/icons-material/AdUnits';
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 type Props = {
     flow: IFlow | undefined,
@@ -37,15 +37,13 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                 overflow: "scroll",
                 maxHeight: '70vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ minWidth: "1350px", maxHeight: '70vh' }}
-                    size="small">
-                    <TableHead
+                <STable
+                  >
+                    <STableHead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableHeadCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -69,10 +67,10 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
                             { user?.bot_access_fields.is_editable &&
-                                <TableCell
-                                    sx={{ bgcolor: headColor }}                         >
+                                <STableHeadCell
+                                                           >
                                     <Stack
                                         direction="row"
                                         justifyContent="left"
@@ -81,9 +79,9 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                     >
                                         Actions
                                     </Stack>
-                                </TableCell>}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                                </STableHeadCell>}
+                            <STableHeadCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -92,10 +90,10 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                 >
                                     Status
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -104,10 +102,10 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                 >
                                     Triggers
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -116,10 +114,10 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                 >
                                     Flow Name
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -128,10 +126,10 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                 >
                                     Updated By
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -140,10 +138,10 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -152,23 +150,19 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                 >
                                     Last Updated
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {
                             data && data.map((flow, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                        >
                                         {selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -180,12 +174,12 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -207,14 +201,14 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                                         }
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
 
                                         {/* actions */}
                                         {user?.bot_access_fields.is_editable &&
-                                            <TableCell>
+                                            <STableCell>
                                                 <Button onClick={(e) => {
                                                     setPopup(e.currentTarget)
                                                     setFlow(flow)
@@ -284,45 +278,45 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                                     </Stack>
                                                 </Popover>
 
-                                            </TableCell >}
+                                            </STableCell >}
 
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{flow.is_active ? "active" : "disabled"}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{flow.trigger_keywords.slice(0, 50)}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{flow.flow_name}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{flow.updated_by?.username}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{flow.created_by?.username}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography sx={{ textTransform: "capitalize" }}>{flow.updated_at && new Date(flow.updated_at).toLocaleString()}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
 
 
 
-                                    </TableRow>
+                                    </STableRow>
                                 )
                             })}
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
                 {flow ? <UpdateFlowDialog selectedFlow={flow} /> : null
                 }
                 {flow ? <DeleteFlowDialog flow={flow} /> : null}

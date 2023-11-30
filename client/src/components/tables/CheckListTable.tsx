@@ -298,13 +298,11 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
 
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize", cursor: 'pointer' }}
-                                                onClick={() => {
-                                                    let win = window.open(checklist.sheet_url, 'blank');
-                                                    win?.focus();
-                                                }}
-                                            >
-                                                {checklist.title && checklist.title.slice(0, 50)}
+                                            <Typography sx={{ textTransform: "capitalize", cursor: 'pointer' }}>
+                                                
+                                                <a href={checklist.sheet_url} target='blank'>
+                                                    {checklist.title && checklist.title.slice(0, 50)}
+                                                </a>
                                             </Typography>
                                         </STableCell>
                                         <STableCell>

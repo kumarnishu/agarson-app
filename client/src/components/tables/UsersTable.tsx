@@ -1,8 +1,7 @@
 import { Accessibility, Block, BlockOutlined, Edit, GroupAdd, GroupRemove, Key, RemoveCircle, Restore } from '@mui/icons-material'
-import { Avatar, Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, Checkbox, FormControlLabel, IconButton,Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { IUser } from '../../types/user.types'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
@@ -18,6 +17,7 @@ import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
 import ResetMultiLoginDialog from '../dialogs/users/ResetMultiLogin'
 import BlockMultiLoginDialog from '../dialogs/users/BlockMultiLoginDialog'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 type Props = {
     user: IUser | undefined,
@@ -29,7 +29,7 @@ type Props = {
     setSelectedUsers: React.Dispatch<React.SetStateAction<IUser[]>>,
 }
 
-function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUsers, setSelectedUsers }: Props) {
+function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUsers, setSelectedUsers }: Props) {
     const [data, setData] = useState<IUser[]>(users)
     const { setChoice } = useContext(ChoiceContext)
     const { user: LoggedInUser } = useContext(UserContext)
@@ -43,15 +43,14 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                 overflow: "scroll",
                 maxHeight: '70vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ minWidth: "1400px", maxHeight: '70vh' }}
-                    size="small">
-                    <TableHead
+                <STable
+                    
+                   >
+                    <STableHead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -74,10 +73,10 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
                             {LoggedInUser?.user_access_fields.is_editable &&
-                                <TableCell
-                                    sx={{ bgcolor: headColor }}                         >
+                                <STableHeadCell
+                                                            >
                                     <Stack
                                         direction="row"
                                         justifyContent="left"
@@ -86,9 +85,9 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                     >
                                         Actions
                                     </Stack>
-                                </TableCell>}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                                </STableHeadCell>}
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -97,9 +96,9 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                 >
                                     User Name
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -108,9 +107,9 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                 >
                                     Multi Device Login
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -119,9 +118,9 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                 >
                                     Email
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -130,9 +129,9 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                 >
                                     Mobile
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -141,9 +140,9 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -152,9 +151,9 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                 >
                                     Last Updated By
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -163,23 +162,19 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                 >
                                     Last Login
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {
                             data && data.map((user, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                       >
                                         {selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -191,12 +186,12 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -216,13 +211,13 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                                         }}
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {/* actions */}
                                         {LoggedInUser?.user_access_fields.is_editable &&
-                                            <TableCell>
+                                            <STableCell>
                                                 <div>
                                                     <PopUp
                                                         element={
@@ -379,10 +374,10 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                                             </Stack>
                                                         } />
                                                 </div>
-                                            </TableCell>}
+                                            </STableCell>}
 
                                         {/* profiles picture */}
-                                        <TableCell>
+                                        <STableCell>
                                             <Stack direction="row"
                                                 spacing={2}
                                                 justifyContent="left"
@@ -432,8 +427,8 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                                     }
                                                 </Stack >
                                             </Stack>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Stack direction="row"
                                                 spacing={2}
                                                 justifyContent="left"
@@ -443,9 +438,9 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                                     {user.is_multi_login ? "allowed" : "not allowed"}
                                                 </Typography>
                                             </Stack>
-                                        </TableCell>
+                                        </STableCell>
                                         {/* email */}
-                                        <TableCell>
+                                        <STableCell>
                                             <Stack>
                                                 <Typography variant="body1" sx={{}}>{user.email}</Typography>
                                                 {
@@ -460,9 +455,9 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                                 }
 
                                             </Stack>
-                                        </TableCell>
+                                        </STableCell>
                                         {/* mobiles */}
-                                        <TableCell>
+                                        <STableCell>
                                             <Stack>
                                                 <Typography variant="body1" sx={{}}>{user.mobile}</Typography>                                                {
                                                     user.email_verified ? <Typography variant="caption">{"verified"}</Typography>
@@ -472,35 +467,35 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
                                                 }
 
                                             </Stack>
-                                        </TableCell>
+                                        </STableCell>
                                         {/* created by */}
-                                        <TableCell>
+                                        <STableCell>
                                             <Stack>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{user.created_by.username}</Typography>
                                                 <Typography variant="caption" component="span">
                                                     {new Date(user.created_at).toLocaleDateString()}
                                                 </Typography>
                                             </Stack >
-                                        </TableCell>
+                                        </STableCell>
                                         {/* updated by */}
-                                        <TableCell>
+                                        <STableCell>
                                             <Stack>
                                                 <Typography sx={{ textTransform: "capitalize" }}>{user.updated_by.username}</Typography>
                                                 <Typography variant="caption" component="span">
                                                     {new Date(user.updated_at).toLocaleDateString()}
                                                 </Typography>
                                             </Stack >
-                                        </TableCell>
+                                        </STableCell>
                                         {/* login date */}
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{new Date(user.last_login).toLocaleString()}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                    </TableRow>
+                                    </STableRow>
                                 )
                             })}
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
             </Box >
             {
                 user ?
@@ -522,4 +517,4 @@ function UsersTable({ user, selectAll, users, setSelectAll, setUser, selectedUse
     )
 }
 
-export default UsersTable
+export default UsersSTable

@@ -1,7 +1,6 @@
 import { Block,  Edit, Pause, RemoveRedEye, RestartAlt, Stop } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton,Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { ReminderChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import UpdateReminderDialog from '../dialogs/reminders/UpdateReminderDialog'
@@ -14,6 +13,7 @@ import StartReminderMessageDialog from '../dialogs/reminders/StartReminderMessag
 import PopUp from '../popup/PopUp'
 import { IReminder } from '../../types/reminder.types'
 import { UserContext } from '../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 
 type Props = {
@@ -25,7 +25,7 @@ type Props = {
     selectedReminders: IReminder[]
     setSelectedReminders: React.Dispatch<React.SetStateAction<IReminder[]>>,
 }
-function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setReminder, selectedReminders, setSelectedReminders }: Props) {
+function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setReminder, selectedReminders, setSelectedReminders }: Props) {
     const [data, setData] = useState<IReminder[]>(reminders)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
@@ -39,15 +39,13 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                 overflow: "scroll",
                 maxHeight: '67vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ minWidth: "2550px" }}
-                    size="small">
-                    <TableHead
+                <STable
+                  >
+                    <STableHead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -71,10 +69,10 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                         label=""
                                     />
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
                             { user?.reminders_access_fields.is_editable &&
-                                <TableCell
-                                    sx={{ bgcolor: headColor }}                         >
+                                <STableHeadCell
+                                                          >
                                     <Stack
                                         direction="row"
                                         justifyContent="left"
@@ -83,9 +81,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                     >
                                         Actions
                                     </Stack>
-                                </TableCell>}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                                </STableHeadCell>}
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -94,9 +92,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Reminder Name
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -105,9 +103,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Serial Number
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -116,9 +114,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Type
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -127,9 +125,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Run Once
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -138,9 +136,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Reminder Status
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -149,9 +147,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Start Time
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -160,10 +158,10 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Next Run Date
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -172,9 +170,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Message Type
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -183,9 +181,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Frequency Type
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -194,11 +192,11 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Frequency
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -207,9 +205,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Random Templates
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -218,10 +216,10 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Connected Number
                                 </Stack>
-                            </TableCell>
+                            </STableHeadCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -230,9 +228,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Status Updated
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -241,9 +239,9 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                      >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -252,22 +250,18 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                 >
                                     Updated By
                                 </Stack>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                            </STableHeadCell>
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {
                             reminders && reminders.map((reminder, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                      >
                                         {selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -279,12 +273,12 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                                     />
 
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
-                                            <TableCell>
+                                            <STableCell>
                                                 <Stack direction="row"
                                                     spacing={2}
                                                     justifyContent="left"
@@ -304,13 +298,13 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                                         }}
                                                     />
                                                 </Stack>
-                                            </TableCell>
+                                            </STableCell>
                                             :
                                             null
                                         }
                                         {/* actions */}
                                         {user?.reminders_access_fields.is_editable &&
-                                            <TableCell>
+                                            <STableCell>
                                                 <PopUp element={<Stack direction="row">{
                                                     !reminder.is_active ?
                                                         <>
@@ -389,65 +383,65 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
                                                         </IconButton>
                                                     </Tooltip>
                                                 </Stack>} />
-                                            </TableCell>}
-                                        <TableCell>
+                                            </STableCell>}
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.name}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.serial_number || "not available"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.is_todo ? "todo" : "reminder"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.run_once ? "true" : "false"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             {reminder.is_active ?
                                                 <Typography variant="body1">{reminder.is_paused ? <Pause /> : <Stop />}</Typography> :
                                                 <Typography variant="body1">Stopped</Typography>
                                             }
 
-                                        </TableCell>
-                                        < TableCell >
+                                        </STableCell>
+                                        < STableCell >
                                             <Typography variant="body1">{reminder.start_date && new Date(reminder.start_date).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{new Date(reminder.next_run_date).toLocaleString()}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.message ? "message" : "template"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.frequency_type}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.frequency_value}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.is_random_template ? "yes" : "No"}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.connected_number && reminder.connected_number.toString().replace("91", "").replace("@c.us", "")}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.updated_at && new Date(reminder.updated_at).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.created_by.username}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{reminder.updated_by.username}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                    </TableRow>
+                                    </STableRow>
                                 )
                             })}
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
                 {
                     reminder ?
                         <>
@@ -465,4 +459,4 @@ function RemindersTable({ reminder, selectAll, reminders, setSelectAll, setRemin
     )
 }
 
-export default RemindersTable
+export default RemindersSTable

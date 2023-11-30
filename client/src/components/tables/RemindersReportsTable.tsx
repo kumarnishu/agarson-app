@@ -1,11 +1,11 @@
-import { Box, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, IconButton,Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { color1, color2, headColor } from '../../utils/colors'
 import { useContext, useEffect, useState } from 'react'
 import { Block } from '@mui/icons-material'
 import StopSingleReminderDialog from '../dialogs/reminders/StopSingleReminderDialog'
 import { IContactReport } from '../../types/contact.types'
 import { UserContext } from '../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 type Props = {
     report: IContactReport | undefined,
@@ -27,16 +27,14 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                 overflow: "scroll",
                 maxHeight: '80vh'
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ minWidth: "2050px" }}
-                    size="small">
-                    <TableHead
+                <STable
+                   >
+                    <STableHead
                     >
-                        <TableRow>
+                        <STableRow>
                             { user?.reminders_access_fields.is_editable &&
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -45,9 +43,9 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Action
                                 </Stack>
-                            </TableCell>}
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>}
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -56,9 +54,9 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Mobile
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -67,9 +65,9 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Whatsapp Status
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -78,9 +76,9 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Reminder Status
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -89,9 +87,9 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Timestamp
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -100,9 +98,9 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Created at
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -111,9 +109,9 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Created By
                                 </Stack>
-                            </TableCell>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            </STableHeadCell>
+                            <STableHeadCell
+                                                        >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -122,22 +120,18 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                 >
                                     Updated By
                                 </Stack>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                            </STableHeadCell>
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {
                             data && data.map((report, index) => {
                                 return (
-                                    <TableRow
+                                    <STableRow
                                         key={index}
-                                        sx={{
-                                            '&:nth-of-type(odd)': { bgcolor: color1 },
-                                            '&:nth-of-type(even)': { bgcolor: color2 },
-                                            '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                                        }}>
+                                        >
                                         { user?.reminders_access_fields.is_editable &&
-                                            <TableCell>
+                                            <STableCell>
                                                 <Tooltip title="Stop">
                                                     <IconButton
                                                         disabled={report.whatsapp_status !== "pending"}
@@ -150,35 +144,35 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                                     </IconButton>
                                                 </Tooltip>
 
-                                            </TableCell>}
-                                        <TableCell>
+                                            </STableCell>}
+                                        <STableCell>
                                             <Typography variant="body1">{report.contact && report.contact.mobile.replace("91", "").replace("@c.us", "")}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.whatsapp_status}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.reminder_status}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.updated_at && new Date(report.updated_at).toLocaleString()}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.created_at && new Date(report.created_at).toLocaleString()}</Typography>
-                                        </TableCell>
+                                        </STableCell>
 
-                                        <TableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.created_by.username}</Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                        </STableCell>
+                                        <STableCell>
                                             <Typography variant="body1">{report.updated_by.username}</Typography>
-                                        </TableCell>
-                                    </TableRow>
+                                        </STableCell>
+                                    </STableRow>
                                 )
                             })
                         }
-                    </TableBody>
-                </Table>
+                    </STableBody>
+                </STable>
 
             </Box >
             <StopSingleReminderDialog report={report} setReport={setReport} />
