@@ -23,10 +23,11 @@ const STable = styled.table`
   border-collapse: collapse;
 `
 const STableRow = styled.tr`
-'&:hover': { background-color: 'rgba(0,0,0,0.8)', cursor: 'pointer' }
+  &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer }
 `
 const STableCell = styled.td`
   text-align: left;
+  background-color: 'white';
   padding:5px;
   display:inlineblock;
   border: 1px solid #ddd;
@@ -35,6 +36,8 @@ const STableCell = styled.td`
   text-overflow: ellipsis;
 `
 const STableHead = styled.th`
+  position: sticky; 
+  top: -5; 
   text-align: left;
   padding:5px;
   display:inlineblock;
@@ -70,7 +73,9 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
         height: '73.5vh'
       }}>
         <STable>
-          <thead>
+          <thead style={{
+            position: 'sticky', zIndex: 1, top: -5, backgroundColor: 'white'
+          }}>
             <STableRow>
               <STableHead
               >
@@ -111,7 +116,6 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                   Actions
                 </Stack>
               </STableHead>
-
 
               {/* visitin card */}
               <STableHead
@@ -535,7 +539,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                     }
                     {/* actions popup */}
 
-                    <STableCell>
+                    <STableCell style={{ zIndex: -1 }}>
                       <PopUp
                         element={
                           <Stack direction="row" spacing={1}>

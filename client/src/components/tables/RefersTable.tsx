@@ -17,10 +17,11 @@ const STable = styled.table`
   border-collapse: collapse;
 `
 const STableRow = styled.tr`
-'&:hover': { background-color: 'rgba(0,0,0,0.8)', cursor: 'pointer' }
+  &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer }
 `
 const STableCell = styled.td`
   text-align: left;
+  background-color: 'white';
   padding:5px;
   display:inlineblock;
   border: 1px solid #ddd;
@@ -29,8 +30,10 @@ const STableCell = styled.td`
   text-overflow: ellipsis;
 `
 const STableHead = styled.th`
+  position: sticky; 
+  top: -5; 
   text-align: left;
-  padding:8px;
+  padding:5px;
   display:inlineblock;
   border: 1px solid #ddd;
   white-space: nowrap;
@@ -80,6 +83,9 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                 <STable
                 >
                     <thead
+                        style={{
+                            position: 'sticky', zIndex: 1, top: -5, backgroundColor: 'white'
+                        }}
                     >
                         <STableRow>
                             <STableHead
