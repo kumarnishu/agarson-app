@@ -1,4 +1,4 @@
-import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, RemindersAccess, TasksAccess, TemplatesAccess, UserAccess } from "../types/access.types";
+import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, RemindersAccess, TasksAccess, TemplatesAccess, TodoAccess, UserAccess } from "../types/access.types";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 export type AccessTypes = {
@@ -14,7 +14,8 @@ export type AccessTypes = {
   tasks_access_fields: TasksAccess,
   checklists_access_fields: CheckListsAccess,
   reports_access_fields: CheckListsAccess,
-  visit_access_fields: CheckListsAccess
+  visit_access_fields: CheckListsAccess,
+  todos_access_fields: TodoAccess
 
 }
 // login

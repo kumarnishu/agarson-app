@@ -5,7 +5,7 @@ import { upload } from "./user.routes";
 
 const router = express.Router()
 
-router.route("/contacts").get(GetContacts)
+router.route("/contacts").get(isAuthenticatedUser,GetContacts)
 router.route("/contacts").post(isAuthenticatedUser, CreateContact)
 router.route("/contacts/:id").put(isAuthenticatedUser, UpdateContact)
 router.route("/contacts/:id").delete(isAuthenticatedUser, DeleteContact)

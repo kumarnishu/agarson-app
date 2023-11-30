@@ -18,6 +18,7 @@ import CheckListkRoutes from "./routes/checklist.routes";
 import TaskRoutes from "./routes/task.routes";
 import VisitRoutes from "./routes/visit.routes";
 import ReportRoutes from "./routes/report.routes";
+import TodoRoutes from "./routes/todo.routes";
 import CronJobManager from "cron-job-manager";
 
 
@@ -145,6 +146,7 @@ app.use("/api/v1", AlpsRoutes)
 app.use("/api/v1", TaskRoutes)
 app.use("/api/v1", CheckListkRoutes)
 app.use("/api/v1", VisitRoutes)
+app.use("/api/v1", TodoRoutes)
 app.use("/api/v1", ReportRoutes)
 
 

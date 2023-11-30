@@ -3,12 +3,12 @@ import { useContext, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { AccessTypes, UpdateUserAccess } from '../../../services/UserServices';
-import { Button, Checkbox, CircularProgress, Stack, Box, Table, TableHead, TableRow, TableCell, TableBody, Typography } from '@mui/material'
+import { Button, Checkbox, CircularProgress, Stack, Box,  Typography } from '@mui/material'
 import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
-import { color1, color2, headColor } from '../../../utils/colors';
 import { IUser } from '../../../types/user.types';
+import { STable, STableBody, STableCell, STableHead, STableRow } from '../../styled/STyledTable';
 
 
 function AccessControlForm({ user }: { user: IUser }) {
@@ -26,7 +26,8 @@ function AccessControlForm({ user }: { user: IUser }) {
         tasks_access_fields: user.tasks_access_fields,
         checklists_access_fields: user.checklists_access_fields,
         reports_access_fields: user.reports_access_fields,
-        visit_access_fields: user.visit_access_fields
+        visit_access_fields: user.visit_access_fields,
+        todos_access_fields: user.todos_access_fields
     })
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any>, BackendError, {
@@ -54,16 +55,13 @@ function AccessControlForm({ user }: { user: IUser }) {
                 overflow: "scroll",
                 height: '73.5vh',
             }}>
-                <Table
-                    stickyHeader
-                    sx={{ width: "100%" }}
-                    size="small"
+                <STable
                 >
-                    <TableHead
+                    <STableHead
                     >
-                        <TableRow>
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                        <STableRow>
+                            <STableCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -72,10 +70,10 @@ function AccessControlForm({ user }: { user: IUser }) {
                                 >
                                     Feature
                                 </Stack>
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -84,10 +82,10 @@ function AccessControlForm({ user }: { user: IUser }) {
                                 >
                                     Editor
                                 </Stack>
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -96,10 +94,10 @@ function AccessControlForm({ user }: { user: IUser }) {
                                 >
                                     Hidden
                                 </Stack>
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell
-                                sx={{ bgcolor: headColor }}                         >
+                            <STableCell
+                                                       >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -108,21 +106,17 @@ function AccessControlForm({ user }: { user: IUser }) {
                                 >
                                     Delete
                                 </Stack>
-                            </TableCell>
+                            </STableCell>
 
                             {/* visitin card */}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody >
+                        </STableRow>
+                    </STableHead>
+                    <STableBody >
                         {/* user access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -132,8 +126,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">Users
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.user_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -147,9 +141,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     disabled={user.created_by._id === user._id}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.user_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -163,8 +157,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     disabled={user.created_by._id === user._id}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.user_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -177,17 +171,13 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
                                     disabled={user.created_by._id === user._id}
                                 />
-                            </TableCell>
-                        </TableRow>
+                            </STableCell>
+                        </STableRow>
                         {/* crm access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -197,8 +187,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">crm
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.crm_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -212,9 +202,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.crm_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -228,8 +218,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.crm_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -243,23 +233,86 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
 
 
 
 
-                        </TableRow>
+                        </STableRow>
+                        {/* todo access fields */}
+                        <STableRow
+                            >
+
+                            <STableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    <Typography variant="button">Todos
+                                    </Typography>
+                                </Stack>
+                            </STableCell>
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.todos_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            todos_access_fields: {
+                                                is_editable: Boolean(!AccessFields.todos_access_fields.is_editable),
+
+                                                is_hidden: Boolean(AccessFields.todos_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.todos_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.todos_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            todos_access_fields: {
+                                                is_editable: Boolean(AccessFields.todos_access_fields.is_editable),
+
+                                                is_hidden: Boolean(!AccessFields.todos_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.todos_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.todos_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            todos_access_fields: {
+                                                is_editable: Boolean(AccessFields.todos_access_fields.is_editable),
+
+                                                is_hidden: Boolean(AccessFields.todos_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.todos_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+
+
+
+
+
+                        </STableRow>
                         {/* bot access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
                             {/* bot access row */}
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -269,8 +322,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">Wa bot
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.bot_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -283,9 +336,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.bot_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -299,8 +352,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.bot_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -314,23 +367,19 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
 
 
 
 
-                        </TableRow>
+                        </STableRow>
 
                         {/* checklist access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -340,8 +389,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">checklists
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.checklists_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -355,9 +404,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.checklists_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -371,8 +420,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.checklists_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -386,22 +435,18 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
 
 
 
 
-                        </TableRow>
+                        </STableRow>
                         {/* task access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -411,8 +456,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">tasks
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.tasks_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -426,9 +471,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.tasks_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -442,8 +487,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.tasks_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -457,22 +502,18 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
 
 
 
 
-                        </TableRow>
+                        </STableRow>
                         {/* visit access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -482,8 +523,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">My Visit
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.visit_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -496,9 +537,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.visit_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -511,8 +552,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.visit_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -524,17 +565,13 @@ function AccessControlForm({ user }: { user: IUser }) {
                                             }
                                         })}
                                 />
-                            </TableCell>
-                        </TableRow>
+                            </STableCell>
+                        </STableRow>
                         {/* reports access  */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -544,8 +581,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">Reports
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.reports_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -558,9 +595,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.reports_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -573,8 +610,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.reports_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -586,17 +623,13 @@ function AccessControlForm({ user }: { user: IUser }) {
                                             }
                                         })}
                                 />
-                            </TableCell>
-                        </TableRow>
+                            </STableCell>
+                        </STableRow>
                         {/* templates access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -606,8 +639,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">templates
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.templates_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -621,9 +654,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.templates_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -637,8 +670,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.templates_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -652,19 +685,15 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
 
-                        </TableRow>
+                        </STableRow>
                         {/* broadcast access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -674,8 +703,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">broadcasts
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.broadcast_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -689,9 +718,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.broadcast_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -705,8 +734,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.broadcast_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -720,22 +749,18 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
 
 
 
 
-                        </TableRow>
+                        </STableRow>
                         {/* contacts access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -745,8 +770,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">contacts
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.contacts_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -760,9 +785,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.contacts_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -776,8 +801,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.contacts_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -791,22 +816,18 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
 
 
 
 
-                        </TableRow>
+                        </STableRow>
                         {/* reminder access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -816,8 +837,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">reminders
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.reminders_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -831,9 +852,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.reminders_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -847,8 +868,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.reminders_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -862,22 +883,18 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
 
 
 
 
-                        </TableRow>
+                        </STableRow>
                         {/* backup access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -887,8 +904,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">backup
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.backup_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -902,9 +919,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.backup_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -918,8 +935,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.backup_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -933,17 +950,13 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                        </TableRow>
+                            </STableCell>
+                        </STableRow>
                         {/* alps access fields */}
-                        <TableRow
-                            sx={{
-                                '&:nth-of-type(odd)': { bgcolor: color1 },
-                                '&:nth-of-type(even)': { bgcolor: color2 },
-                                '&:hover': { bgcolor: 'rgba(0,0,0,0.1)', cursor: 'pointer' }
-                            }}>
+                        <STableRow
+                            >
 
-                            <TableCell                 >
+                            <STableCell                 >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -953,8 +966,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     <Typography variant="button">alps
                                     </Typography>
                                 </Stack>
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.alps_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
@@ -968,9 +981,9 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
+                            </STableCell>
 
-                            <TableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.alps_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
@@ -984,8 +997,8 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </STableCell>
+                            <STableCell>
                                 <Checkbox size="small" checked={Boolean(AccessFields.alps_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
@@ -999,10 +1012,10 @@ function AccessControlForm({ user }: { user: IUser }) {
                                         })}
 
                                 />
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
+                            </STableCell>
+                        </STableRow>
+                    </STableBody>
+                </STable>
             </Box >
             {/* user access fields */}
 

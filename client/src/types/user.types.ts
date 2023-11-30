@@ -29,6 +29,7 @@ export type IUser = {
     checklists_access_fields:CheckListsAccess,
     visit_access_fields: VisitAccess,
     reports_access_fields: ReportsAccess,
+    todos_access_fields: TodoAccess,
     email_verified: Boolean,
     is_active: Boolean,
     multi_login_token: string,
