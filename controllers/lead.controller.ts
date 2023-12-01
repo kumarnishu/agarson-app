@@ -114,7 +114,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         let leads: ILead[] = []
         let count = 0
         if (req.user?.is_admin) {
-            leads = await Lead.find({ is_customer: false, stage: 'open' }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+            leads = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
                     {
@@ -127,11 +127,11 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({ is_customer: false, stage: 'open' }).countDocuments()
+            count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] } }).countDocuments()
         }
 
         if (!req.user?.is_admin) {
-            leads = await Lead.find({ is_customer: false, stage: 'open', lead_owners: { $in: [req.user._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+            leads = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
                     {
@@ -144,10 +144,9 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({ is_customer: false, stage: 'open', lead_owners: { $in: [req.user._id] } }).countDocuments()
+            count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user._id] } }).countDocuments()
         }
 
-        // let count = await Lead.countDocuments()
         return res.status(200).json({
             leads,
             total: Math.ceil(count / limit),

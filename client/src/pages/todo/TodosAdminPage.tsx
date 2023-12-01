@@ -4,23 +4,21 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { FuzzySearchTasks, GetTasks } from '../../services/TaskServices'
 import DBPagination from '../../components/pagination/DBpagination';
-import TasksTable from '../../components/tables/TasksTable';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
-import { ChoiceContext, TaskChoiceActions } from '../../contexts/dialogContext'
+import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import { ITask } from '../../types/task.types'
+import { ITodo } from '../../types/todo.types'
 import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
 import { UserContext } from '../../contexts/userContext'
-import NewTaskDialog from '../../components/dialogs/tasks/NewTaskDialog'
+import NewTodoDialog from '../../components/dialogs/todos/NewTodoDialog'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-
-
+import TodoSTable from '../../components/tables/TodoTable'
+import { FuzzySearchTodos, GetTodos } from '../../services/TodoServices'
 
 
 export default function TodosAdminPage() {
@@ -28,28 +26,29 @@ export default function TodosAdminPage() {
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
-    const [task, setTask] = useState<ITask>()
-    const [tasks, setTasks] = useState<ITask[]>([])
+    const [todo, setTodo] = useState<ITodo>()
+    const [todos, setTodos] = useState<ITodo[]>([])
     const [selectAll, setSelectAll] = useState(false)
-    const MemoData = React.useMemo(() => tasks, [tasks])
-    const [preFilteredData, setPreFilteredData] = useState<ITask[]>([])
+    const MemoData = React.useMemo(() => todos, [todos])
+    const [preFilteredData, setPreFilteredData] = useState<ITodo[]>([])
     const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filterCount, setFilterCount] = useState(0)
-    const [selectedTasks, setSelectedTasks] = useState<ITask[]>([])
+    const [selectedTodos, setSelectedTodos] = useState<ITodo[]>([])
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-        start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
-        , end_date: moment(new Date().setDate(30)).format("YYYY-MM-DD")
+        start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
+        , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
     })
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
 
-    const { data, isLoading, refetch: ReftechTasks } = useQuery<AxiosResponse<{ tasks: ITask[], page: number, total: number, limit: number }>, BackendError>(["tasks", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetTasks({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+    const { data, isLoading, refetch: ReftechTodos } = useQuery<AxiosResponse<{ todos: ITodo[], page: number, total: number, limit: number }>, BackendError>(["todos", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetTodos({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
-    const { data: fuzzytasks, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ tasks: ITask[], page: number, total: number, limit: number }>, BackendError>(["fuzzytasks", filter], async () => FuzzySearchTasks({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
+    const { data: fuzzytodos, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ todos: ITodo[], page: number, total: number, limit: number }>, BackendError>(["fuzzytodos", filter], async () => FuzzySearchTodos({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
         enabled: false
     })
+
     const [selectedData, setSelectedData] = useState<{
-        task_description: string,
+        todo_description: string,
         person: string,
         created_at: string,
         updated_at: string,
@@ -63,11 +62,11 @@ export default function TodosAdminPage() {
     function handleExcel() {
         setAnchorEl(null)
         try {
-            selectedData && ExportToExcel(selectedData, "tasks_data")
+            selectedData && ExportToExcel(selectedData, "todos_data")
             setSent(true)
             setSelectAll(false)
             setSelectedData([])
-            setSelectedTasks([])
+            setSelectedTodos([])
         }
         catch (err) {
             console.log(err)
@@ -79,27 +78,27 @@ export default function TodosAdminPage() {
     // refine data
     useEffect(() => {
         let data: {
-            task_description: string,
+            todo_description: string,
             person: string,
             created_at: string,
             updated_at: string,
             updated_by: string,
             created_by: string,
         }[] = []
-        selectedTasks.map((task) => {
+        selectedTodos.map((todo) => {
             return data.push(
                 {
-                    task_description: task.task_description,
-                    person: task.person.username,
-                    created_at: task.created_at.toLocaleString(),
-                    created_by: task.created_by.username,
-                    updated_by: task.updated_by.username,
-                    updated_at: task.updated_at.toLocaleString(),
+                    todo_description: todo.work_description,
+                    person: todo.person.username,
+                    created_at: todo.created_at.toLocaleString(),
+                    created_by: todo.created_by.username,
+                    updated_by: todo.updated_by.username,
+                    updated_at: todo.updated_at.toLocaleString(),
                 })
         })
         if (data.length > 0)
             setSelectedData(data)
-    }, [selectedTasks])
+    }, [selectedTodos])
 
     useEffect(() => {
         if (isUsersSuccess)
@@ -108,7 +107,7 @@ export default function TodosAdminPage() {
 
     useEffect(() => {
         if (!filter) {
-            setTasks(preFilteredData)
+            setTodos(preFilteredData)
             setPaginationData(preFilteredPaginationData)
         }
     }, [filter])
@@ -121,8 +120,8 @@ export default function TodosAdminPage() {
 
     useEffect(() => {
         if (data && !filter) {
-            setTasks(data.data.tasks)
-            setPreFilteredData(data.data.tasks)
+            setTodos(data.data.todos)
+            setPreFilteredData(data.data.todos)
             setPreFilteredPaginationData({
                 ...paginationData,
                 page: data.data.page,
@@ -139,20 +138,20 @@ export default function TodosAdminPage() {
     }, [data])
 
     useEffect(() => {
-        if (fuzzytasks && filter) {
-            setTasks(fuzzytasks.data.tasks)
+        if (fuzzytodos && filter) {
+            setTodos(fuzzytodos.data.todos)
             let count = filterCount
             if (count === 0)
                 setPaginationData({
                     ...paginationData,
-                    page: fuzzytasks.data.page,
-                    limit: fuzzytasks.data.limit,
-                    total: fuzzytasks.data.total
+                    page: fuzzytodos.data.page,
+                    limit: fuzzytodos.data.limit,
+                    total: fuzzytodos.data.total
                 })
             count = filterCount + 1
             setFilterCount(count)
         }
-    }, [fuzzytasks])
+    }, [fuzzytodos])
 
     return (
         <>
@@ -178,7 +177,7 @@ export default function TodosAdminPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    Tasks Admin
+                    Todos Admin
                 </Typography>
 
                 <Stack
@@ -240,7 +239,7 @@ export default function TodosAdminPage() {
                         >
                             <MenuItem
                                 onClick={() => {
-                                    setChoice({ type: TaskChoiceActions.create_task })
+                                    setChoice({ type: TodoChoiceActions.create_todo })
                                     setAnchorEl(null)
                                 }}
                             > Add New</MenuItem>
@@ -248,7 +247,7 @@ export default function TodosAdminPage() {
                             >Export To Excel</MenuItem>
 
                         </Menu >
-                        <NewTaskDialog />
+                        <NewTodoDialog />
                     </>
                 </Stack >
             </Stack >
@@ -289,11 +288,11 @@ export default function TodosAdminPage() {
                         }}
                         onChange={(e) => {
                             setUserId(e.target.value)
-                            ReftechTasks()
+                            ReftechTodos()
                         }}
                         required
-                        id="task_owner"
-                        label="Filter Tasks Of Indivdual"
+                        id="todo_owner"
+                        label="Filter Todos Of Indivdual"
                         fullWidth
                     >
                         <option key={'00'} value={undefined}>
@@ -311,17 +310,16 @@ export default function TodosAdminPage() {
 
             {/* table */}
             {isLoading && <TableSkeleton />}
-            {!isLoading && 
-            < TasksTable
-                dates={dates}
-                task={task}
-                setTask={setTask}
-                selectAll={selectAll}
-                selectedTasks={selectedTasks}
-                setSelectedTasks={setSelectedTasks}
-                setSelectAll={setSelectAll}
-                tasks={MemoData}
-            />}
+            {!isLoading &&
+                < TodoSTable
+                    todo={todo}
+                    setTodo={setTodo}
+                    selectAll={selectAll}
+                    selectedTodos={selectedTodos}
+                    setSelectedTodos={setSelectedTodos}
+                    setSelectAll={setSelectAll}
+                    todos={MemoData}
+                />}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 

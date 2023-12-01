@@ -616,8 +616,7 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
 
           select
           SelectProps={{
-            native: true,
-            multiple: true
+            native: true
           }}
           focused
           required
@@ -655,7 +654,6 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
         </TextField>
 
         {/* remark */}
-
 
         < TextField
 

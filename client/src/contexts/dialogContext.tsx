@@ -19,8 +19,7 @@ type TemplateChoices = "create_template" | "update_template" | "delete_template"
 type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadcast" | "close_broadcast" | "view_broadcast" | 'start_broadcast' | "reset_broadcast" | "stop_broadcast" | "create_message_broadcast" | "update_message_broadcast"
   | "start_message_broadcast" | "set_daily_count"
 
-type TODOChoices = "create_todo" | "update_todo" | "delete_todo" | "close_todo" | "view_todo" | 'start_todo' | "reset_todo" | "stop_todo" | "create_message_todo" | "update_message_todo"
-  | "start_message_todo"
+type TodoChoices = "create_todo" | "update_todo" | "delete_todo" | "close_todo" | "update_todo_status" | 'bulk_hide_todo' | "hide_todo"
 
 type ReminderChoices = "create_reminder" | "update_reminder" | "delete_reminder" | "close_reminder" | "view_reminder" | 'start_reminder' | "reset_reminder" | "stop_reminder" | "create_message_reminder" | "update_message_reminder"
   | "start_message_reminder"
@@ -43,7 +42,7 @@ type BotChoices = "create_flow"
 
 
 type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | TaskChoices | VisitChoices
-  | BroadcastChoices | TaskSchedulerChoices | TODOChoices | ReminderChoices | ContactChoices | CheckListChoices
+  | BroadcastChoices | TaskSchedulerChoices | TodoChoices | ReminderChoices | ContactChoices | CheckListChoices
 
 const initialState: ChoiceState | null = null
 
@@ -125,18 +124,14 @@ export enum ReminderChoiceActions {
   update_message_reminder = "update_message_reminder",
   start_message_reminder = "start_message_reminder"
 }
-export enum TODOChoiceActions {
+export enum TodoChoiceActions {
   create_todo = "create_todo",
   update_todo = "update_todo",
   delete_todo = "delete_todo",
   close_todo = "close_todo",
-  view_todo = "view_todo",
-  start_todo = "start_todo",
-  reset_todo = "reset_todo",
-  stop_todo = "stop_todo",
-  create_message_todo = "create_message_todo",
-  update_message_todo = "update_message_todo",
-  start_message_todo = "start_message_todo"
+  update_todo_status = "update_todo_status",
+  bulk_hide_todo = "bulk_hide_todo",
+  hide_todo = "hide_todo"
 }
 export enum TaskSchedulerChoiceActions {
   create_task_scheduler = "create_task_scheduler",
@@ -211,7 +206,7 @@ export enum UserChoiceActions {
 
 type Action = {
   type: UserChoiceActions |
-  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TODOChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions
+  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TodoChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions
 }
 
 // reducer
@@ -339,17 +334,14 @@ function reducer(state: ChoiceState | null, action: Action) {
     case BroadcastChoiceActions.set_daily_count: return type
 
     // todo choice action
-    case TODOChoiceActions.create_todo: return type
-    case TODOChoiceActions.update_todo: return type
-    case TODOChoiceActions.delete_todo: return type
-    case TODOChoiceActions.close_todo: return type
-    case TODOChoiceActions.view_todo: return type
-    case TODOChoiceActions.start_todo: return type
-    case TODOChoiceActions.reset_todo: return type
-    case TODOChoiceActions.stop_todo: return type
-    case TODOChoiceActions.create_message_todo: return type
-    case TODOChoiceActions.update_message_todo: return type
-    case TODOChoiceActions.start_message_todo: return type
+    case TodoChoiceActions.create_todo: return type
+    case TodoChoiceActions.update_todo: return type
+    case TodoChoiceActions.delete_todo: return type
+    case TodoChoiceActions.close_todo: return type
+    case TodoChoiceActions.update_todo_status: return type
+    case TodoChoiceActions.bulk_hide_todo: return type
+    case TodoChoiceActions.hide_todo: return type
+  
 
     // broadcast choice action
     case ReminderChoiceActions.create_reminder: return type

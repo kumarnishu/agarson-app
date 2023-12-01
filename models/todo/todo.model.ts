@@ -17,6 +17,7 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
         ref: 'User',
     },
     category: { type: String },
+    status: { type: String, default: 'pending' },
     replies: [{
         reply: String,
         created_by: {
