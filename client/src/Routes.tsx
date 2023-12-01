@@ -233,7 +233,7 @@ function AppRoutes() {
             < Route path={paths.crm} element={<CrmNavBar />
             }>
               <Route index element={
-                <CrmReminderPage />
+                <LeadsPage />
               }
               />
               <Route path={paths.leads} index element={
