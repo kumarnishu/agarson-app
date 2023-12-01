@@ -49,20 +49,20 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                             <STableHeadCell
                             >
 
-                               
-                                    <Checkbox
-                                        indeterminate={selectAll ? true : false}
-                                        checked={Boolean(selectAll)}
-                                        size="small" onChange={(e) => {
-                                            if (e.currentTarget.checked) {
-                                                setSelectedVisits(visits)
-                                                setSelectAll(true)
-                                            }
-                                            if (!e.currentTarget.checked) {
-                                                setSelectedVisits([])
-                                                setSelectAll(false)
-                                            }
-                                        }} />
+
+                                <Checkbox
+                                    indeterminate={selectAll ? true : false}
+                                    checked={Boolean(selectAll)}
+                                    size="small" onChange={(e) => {
+                                        if (e.currentTarget.checked) {
+                                            setSelectedVisits(visits)
+                                            setSelectAll(true)
+                                        }
+                                        if (!e.currentTarget.checked) {
+                                            setSelectedVisits([])
+                                            setSelectAll(false)
+                                        }
+                                    }} />
 
                             </STableHeadCell>
 
@@ -337,7 +337,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                                         DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)
                                                     }
                                                 }}
-                                                src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '40px' }} />}
+                                                src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', width: '30px', height: '30px' }} />}
 
                                         </STableCell>
                                         <STableCell>
