@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
@@ -48,266 +48,155 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                         <STableRow>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    <FormControlLabel sx={{ fontSize: 12 }} control={
-                                        <Checkbox
-                                            indeterminate={selectAll ? true : false}
-                                            checked={Boolean(selectAll)}
-                                            size="small" onChange={(e) => {
-                                                if (e.currentTarget.checked) {
-                                                    setSelectedVisits(visits)
-                                                    setSelectAll(true)
-                                                }
-                                                if (!e.currentTarget.checked) {
-                                                    setSelectedVisits([])
-                                                    setSelectAll(false)
-                                                }
-                                            }} />}
-                                        label=""
-                                    />
-                                </Stack>
-                            </STableHeadCell>
 
-                            {/* actions popup */}
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Actions
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Date
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Visit in Photo
-                                </Stack>
+                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                                    <Checkbox
+                                        indeterminate={selectAll ? true : false}
+                                        checked={Boolean(selectAll)}
+                                        size="small" onChange={(e) => {
+                                            if (e.currentTarget.checked) {
+                                                setSelectedVisits(visits)
+                                                setSelectAll(true)
+                                            }
+                                            if (!e.currentTarget.checked) {
+                                                setSelectedVisits([])
+                                                setSelectAll(false)
+                                            }
+                                        }} />}
+                                    label=""
+                                />
+
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Visit In
-                                </Stack>
+
+                                Actions
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Visit Out
-                                </Stack>
+
+                                Date
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Visit in Photo
+
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Party
-                                </Stack>
+
+                                Visit In
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Visit Out
+
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Station
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Salesman
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Visit In Address
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Is Old ?
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Turnover
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Dealer Of
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    References taken
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Reviews Taken
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Summary
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Ankit Input
-                                </Stack>
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Brijesh Input
-                                </Stack>
+
+                                Party
+
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Created at
-                                </Stack>
+
+                                Station
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Updated at
-                                </Stack>
+
+                                Salesman
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Created By
-                                </Stack>
+
+                                Visit In Address
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Updated By
-                                </Stack>
+
+                                Is Old ?
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Turnover
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Dealer Of
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                References taken
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Reviews Taken
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Summary
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Ankit Input
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Brijesh Input
+
+                            </STableHeadCell>
+
+                            <STableHeadCell
+                            >
+
+                                Created at
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Updated at
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Created By
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Updated By
+
                             </STableHeadCell>
 
                         </STableRow>
@@ -323,46 +212,38 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         {selectAll ?
 
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
 
-                                                    <Checkbox size="small"
-                                                        checked={Boolean(selectAll)}
-                                                    />
 
-                                                </Stack>
+                                                <Checkbox size="small"
+                                                    checked={Boolean(selectAll)}
+                                                />
+
+
                                             </STableCell>
                                             :
                                             null}
                                         {!selectAll ?
 
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
-                                                    <Checkbox size="small"
-                                                        onChange={(e) => {
-                                                            setVisit(visit)
-                                                            if (e.target.checked) {
-                                                                setSelectedVisits([...selectedVisits, visit])
-                                                            }
-                                                            if (!e.target.checked) {
-                                                                setSelectedVisits((visits) => visits.filter((item) => {
-                                                                    return item._id !== visit._id
-                                                                }))
-                                                            }
-                                                        }}
-                                                    />
-                                                </Stack>
+
+                                                <Checkbox size="small"
+                                                    onChange={(e) => {
+                                                        setVisit(visit)
+                                                        if (e.target.checked) {
+                                                            setSelectedVisits([...selectedVisits, visit])
+                                                        }
+                                                        if (!e.target.checked) {
+                                                            setSelectedVisits((visits) => visits.filter((item) => {
+                                                                return item._id !== visit._id
+                                                            }))
+                                                        }
+                                                    }}
+                                                />
+
                                             </STableCell>
                                             :
-                                            null/* actions popup */}
-                                        <STableCell style={{ backgroundColor: visit.visit_validated ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,0,0.1)' }} >
+                                            null}
+                                        <STableCell>
                                             <PopUp
                                                 element={
                                                     <Stack
@@ -434,8 +315,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                                             </>
 
                                                         }
+
                                                     </Stack>
-                                                } />
+                                                }
+
+
+                                            />
                                         </STableCell>
 
 
@@ -443,80 +328,76 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleDateString()}</Typography>
+                                            {new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleDateString()}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Stack gap={1}
-                                                direction={'row'}
-                                                justifyContent="left"
-                                            >
-                                                {visit.visit_in_photo && <img
-                                                    onDoubleClick={() => {
-                                                        if (visit.visit_in_photo && visit.visit_in_photo?.public_url) {
-                                                            DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)
-                                                        }
-                                                    }}
-                                                    src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '40px' }} />}
 
-                                            </Stack >
+                                            {visit.visit_in_photo && <img
+                                                onDoubleClick={() => {
+                                                    if (visit.visit_in_photo && visit.visit_in_photo?.public_url) {
+                                                        DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)
+                                                    }
+                                                }}
+                                                src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '40px' }} />}
+
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
+                                            {new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString()}</Typography>
+                                            {visit.visit_out_credentials && visit.visit_out_credentials.timestamp && new Date(visit.visit_out_credentials.timestamp).toLocaleTimeString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.party_name}</Typography>
+                                            {visit.party_name}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.city}</Typography>
+                                            {visit.city}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.person.username}</Typography>
+                                            {visit.person.username}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.visit_in_credientials && visit.visit_in_credientials.address && visit.visit_in_credientials.address}</Typography>
+                                            {visit.visit_in_credientials && visit.visit_in_credientials.address && visit.visit_in_credientials.address}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.is_old_party ? "Old " : "New "}</Typography>
+                                            {visit.is_old_party ? "Old " : "New "}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.turnover}</Typography>
+                                            {visit.turnover}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.dealer_of}</Typography>
+                                            {visit.dealer_of}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.refs_given}</Typography>
+                                            {visit.refs_given}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{visit.reviews_taken}</Typography>
+                                            {visit.reviews_taken}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography title={visit.summary && visit.summary} sx={{ textTransform: "capitalize" }} variant="body1">{visit.summary && visit.summary.slice(0, 50) + "..."}</Typography>
+                                            {visit.summary && visit.summary.slice(0, 50) + "..."}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} title={visit.ankit_input && visit.ankit_input.input} variant="body1">{visit.ankit_input && visit.ankit_input.input.slice(0, 50) + "..."}</Typography>
-                                        </STableCell>
-
-                                        <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} title={visit.brijesh_input && visit.brijesh_input.input} variant="body1">{visit.brijesh_input && visit.brijesh_input.input.slice(0, 50) + "..."}</Typography>
+                                            {visit.ankit_input && visit.ankit_input.input.slice(0, 50) + "..."}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{new Date(visit.created_at).toLocaleString()}</Typography>
+                                            {visit.brijesh_input && visit.brijesh_input.input.slice(0, 50) + "..."}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {new Date(visit.created_at).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}> {new Date(visit.updated_at).toLocaleString()}</Typography>
+                                            {new Date(visit.updated_at).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.created_by.username}</Typography>
+                                            {visit.created_by.username}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{visit.updated_by.username}</Typography>
+                                            {visit.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>

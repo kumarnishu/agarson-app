@@ -17,9 +17,9 @@ export const STableCell = styled.td`
   text-align: left;
   background-color: white;
   padding:5px;
-  display:inlineblock;
   border: 1px solid #ddd;
   white-space: nowrap;
+  text-transform: capitalize;
   overflow: hidden;
   text-overflow: ellipsis;
 `
@@ -27,8 +27,8 @@ export const STableHeadCell = styled.th`
   position:sticky;
   top: -3px;
   text-align: left;
+  text-transform: capitalize;
   padding-inline:10px;
-  display:inlineblock;
   border: 1px solid #ddd;
   background-color: rgba(0,0,0,0.05);
   white-space: nowrap;

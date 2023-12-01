@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import UpdateReferDialog from '../dialogs/crm/UpdateReferDialog'
@@ -59,12 +59,7 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                         <STableRow>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
@@ -81,141 +76,81 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                             }} />}
                                         label=""
                                     />
-                                </Stack>
+                                
                             </STableHeadCell>
                             {user?.crm_access_fields.is_editable &&
                                 <STableHeadCell
                                 >
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="left"
-                                        alignItems="left"
-                                        spacing={2}
-                                    >
+                                  
                                         Actions
-                                    </Stack>
+                                    
                                 </STableHeadCell>}
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     Party Name
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     Customer Name
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     Party Assigned
-                                </Stack>
+                                
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     Mobile
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     City
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     State
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     Lead Owners
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     Created At
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     Updated At
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     Created By
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                           
                                     Updated By
-                                </Stack>
+                                
                             </STableHeadCell>
                         </STableRow>
                     </STableHead>
@@ -228,28 +163,20 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                     >
                                         {selectAll ?
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                               
 
                                                     <Checkbox size="small"
                                                         checked={Boolean(selectAll)}
                                                     />
 
-                                                </Stack>
+                                                
                                             </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                               
                                                     <Checkbox size="small"
                                                         onChange={(e) => {
                                                             setRefer(refer.party)
@@ -263,7 +190,7 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                                             }
                                                         }}
                                                     />
-                                                </Stack>
+                                                
                                             </STableCell>
                                             :
                                             null
@@ -326,124 +253,74 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                                                     </IconButton>
                                                                 </Tooltip>}
                                                         </>
-                                                    </Stack>
-                                                }
+                                                    
+                                                </Stack>}
                                             />
 
                                         </STableCell>
                                         {/* party name */}
                                         < STableCell >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="left"
-                                                alignItems="left"
-                                                spacing={2}
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1">{refer.party.name}</Typography>
+                                           
+                                               {refer.party.name}
 
-                                            </Stack>
+                                            
                                         </STableCell>
                                         <STableCell                     >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="left"
-                                                alignItems="left"
-                                                spacing={2}
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.customer_name}</Typography>
+                                           
+                                                {refer.party.customer_name}
 
-                                            </Stack>
+                                            
                                         </STableCell>
                                         <STableCell                     >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="left"
-                                                alignItems="left"
-                                                spacing={2}
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.leads && refer.leads.length}</Typography>
+                                           
+                                                {refer.leads && refer.leads.length}
 
-                                            </Stack>
+                                            
                                         </STableCell>
                                         <STableCell                     >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="left"
-                                                alignItems="left"
-                                                spacing={2}
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.mobile}</Typography>
+                                           
+                                                {refer.party.mobile}
 
-                                            </Stack>
+                                            
                                         </STableCell>
                                         <STableCell                     >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="left"
-                                                alignItems="left"
-                                                spacing={2}
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.city}</Typography>
+                                           
+                                                {refer.party.city}
 
-                                            </Stack>
+                                            
                                         </STableCell>
                                         <STableCell                     >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="left"
-                                                alignItems="left"
-                                                spacing={2}
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.state}</Typography>
+                                           
+                                                {refer.party.state}
 
-                                            </Stack>
+                                            
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{refer.party.lead_owners ? refer.party.lead_owners.map((owner) => { return owner.username + ", " }) : [""]}</Typography>
+                                          {refer.party.lead_owners ? refer.party.lead_owners.map((owner) => { return owner.username + ", " }) : [""]}
                                         </STableCell>
                                         <STableCell                     >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="left"
-                                                alignItems="left"
-                                                spacing={2}
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {new Date(refer.party.created_at).toLocaleString()}</Typography>
+                                           
+                                                {new Date(refer.party.created_at).toLocaleString()}
 
-                                            </Stack>
+                                            
                                         </STableCell>
                                         <STableCell                     >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="left"
-                                                alignItems="left"
-                                                spacing={2}
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {new Date(refer.party.updated_at).toLocaleString()}</Typography>
+                                           
+                                                {new Date(refer.party.updated_at).toLocaleString()}
 
-                                            </Stack>
+                                            
                                         </STableCell>
                                         <STableCell                     >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="left"
-                                                alignItems="left"
-                                                spacing={2}
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1">{refer.party.created_by.username}</Typography>
+                                           
+                                               {refer.party.created_by.username}
 
-                                            </Stack>
+                                            
                                         </STableCell>
                                         <STableCell                     >
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="left"
-                                                alignItems="left"
-                                                spacing={2}
-                                            >
-                                                <Typography sx={{ textTransform: "capitalize" }} variant="body1"> {refer.party.updated_by.username}</Typography>
+                                           
+                                                {refer.party.updated_by.username}
 
-                                            </Stack>
+                                            
                                         </STableCell>
                                     </STableRow>
                                 )

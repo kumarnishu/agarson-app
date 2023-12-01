@@ -1,5 +1,5 @@
-import { Block,  Edit, Pause, RemoveRedEye, RestartAlt, Stop } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton,Tooltip, Typography } from '@mui/material'
+import { Block, Edit, Pause, RemoveRedEye, RestartAlt, Stop } from '@mui/icons-material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ReminderChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
@@ -40,216 +40,131 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                 maxHeight: '67vh'
             }}>
                 <STable
-                  >
+                >
                     <STableHead
                     >
                         <STableRow>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    <FormControlLabel sx={{ fontSize: 12 }} control={
-                                        <Checkbox
-                                            indeterminate={selectAll ? true : false}
-                                            checked={Boolean(selectAll)}
-                                            size="small" onChange={(e) => {
-                                                if (e.currentTarget.checked) {
-                                                    setSelectedReminders(reminders)
-                                                    setSelectAll(true)
-                                                }
-                                                if (!e.currentTarget.checked) {
-                                                    setSelectedReminders([])
-                                                    setSelectAll(false)
-                                                }
-                                            }} />}
-                                        label=""
-                                    />
-                                </Stack>
+                            >
+
+                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                                    <Checkbox
+                                        indeterminate={selectAll ? true : false}
+                                        checked={Boolean(selectAll)}
+                                        size="small" onChange={(e) => {
+                                            if (e.currentTarget.checked) {
+                                                setSelectedReminders(reminders)
+                                                setSelectAll(true)
+                                            }
+                                            if (!e.currentTarget.checked) {
+                                                setSelectedReminders([])
+                                                setSelectAll(false)
+                                            }
+                                        }} />}
+                                    label=""
+                                />
+
                             </STableHeadCell>
-                            { user?.reminders_access_fields.is_editable &&
+                            {user?.reminders_access_fields.is_editable &&
                                 <STableHeadCell
-                                                          >
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="left"
-                                        alignItems="left"
-                                        spacing={2}
-                                    >
-                                        Actions
-                                    </Stack>
+                                >
+
+                                    Actions
+
                                 </STableHeadCell>}
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Reminder Name
-                                </Stack>
+                            >
+
+                                Reminder Name
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Serial Number
-                                </Stack>
+                            >
+
+                                Serial Number
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Type
-                                </Stack>
+                            >
+
+                                Type
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Run Once
-                                </Stack>
+                            >
+
+                                Run Once
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Reminder Status
-                                </Stack>
+                            >
+
+                                Reminder Status
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Start Time
-                                </Stack>
+                            >
+
+                                Start Time
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Next Run Date
-                                </Stack>
+                            >
+
+                                Next Run Date
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Message Type
-                                </Stack>
+                            >
+
+                                Message Type
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Frequency Type
-                                </Stack>
+                            >
+
+                                Frequency Type
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Frequency
-                                </Stack>
+                            >
+
+                                Frequency
+
                             </STableHeadCell>
 
 
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Random Templates
-                                </Stack>
+                            >
+
+                                Random Templates
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Connected Number
-                                </Stack>
+                            >
+
+                                Connected Number
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Status Updated
-                                </Stack>
+                            >
+
+                                Status Updated
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Created By
-                                </Stack>
+                            >
+
+                                Created By
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Updated By
-                                </Stack>
+                            >
+
+                                Updated By
+
                             </STableHeadCell>
                         </STableRow>
                     </STableHead>
@@ -259,45 +174,37 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                 return (
                                     <STableRow
                                         key={index}
-                                      >
+                                    >
                                         {selectAll ?
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
 
-                                                    <Checkbox size="small"
-                                                        checked={Boolean(selectAll)}
-                                                    />
 
-                                                </Stack>
+                                                <Checkbox size="small"
+                                                    checked={Boolean(selectAll)}
+                                                />
+
+
                                             </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
-                                                    <Checkbox size="small"
-                                                        onChange={(e) => {
-                                                            setReminder(reminder)
-                                                            if (e.target.checked) {
-                                                                setSelectedReminders([...selectedReminders, reminder])
-                                                            }
-                                                            if (!e.target.checked) {
-                                                                setSelectedReminders((reminders) => reminders.filter((item) => {
-                                                                    return item._id !== reminder._id
-                                                                }))
-                                                            }
-                                                        }}
-                                                    />
-                                                </Stack>
+
+                                                <Checkbox size="small"
+                                                    onChange={(e) => {
+                                                        setReminder(reminder)
+                                                        if (e.target.checked) {
+                                                            setSelectedReminders([...selectedReminders, reminder])
+                                                        }
+                                                        if (!e.target.checked) {
+                                                            setSelectedReminders((reminders) => reminders.filter((item) => {
+                                                                return item._id !== reminder._id
+                                                            }))
+                                                        }
+                                                    }}
+                                                />
+
                                             </STableCell>
                                             :
                                             null
@@ -369,7 +276,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                             <Edit />
                                                         </IconButton>
                                                     </Tooltip>
-                                                   
+
                                                     <Tooltip title="view reports">
                                                         <IconButton
                                                             color="success"
@@ -385,56 +292,58 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                 </Stack>} />
                                             </STableCell>}
                                         <STableCell>
-                                            <Typography variant="body1">{reminder.name}</Typography>
+                                            {reminder.name}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{reminder.serial_number || "not available"}</Typography>
+                                            {reminder.serial_number || "not available"}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{reminder.is_todo ? "todo" : "reminder"}</Typography>
+                                            {reminder.is_todo ? "todo" : "reminder"}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{reminder.run_once ? "true" : "false"}</Typography>
+                                            {reminder.run_once ? "true" : "false"}
                                         </STableCell>
                                         <STableCell>
                                             {reminder.is_active ?
-                                                <Typography variant="body1">{reminder.is_paused ? <Pause /> : <Stop />}</Typography> :
-                                                <Typography variant="body1">Stopped</Typography>
+                                                <>
+                                                    {reminder.is_paused ? <Pause /> : <Stop />}
+                                                </> :
+                                                'Stopped'
                                             }
 
                                         </STableCell>
                                         < STableCell >
-                                            <Typography variant="body1">{reminder.start_date && new Date(reminder.start_date).toLocaleString()}</Typography>
+                                            {reminder.start_date && new Date(reminder.start_date).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{new Date(reminder.next_run_date).toLocaleString()}</Typography>
-                                        </STableCell>
-
-                                        <STableCell>
-                                            <Typography variant="body1">{reminder.message ? "message" : "template"}</Typography>
-                                        </STableCell>
-                                        <STableCell>
-                                            <Typography variant="body1">{reminder.frequency_type}</Typography>
-                                        </STableCell>
-                                        <STableCell>
-                                            <Typography variant="body1">{reminder.frequency_value}</Typography>
+                                            {new Date(reminder.next_run_date).toLocaleString()}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography variant="body1">{reminder.is_random_template ? "yes" : "No"}</Typography>
+                                            {reminder.message ? "message" : "template"}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{reminder.connected_number && reminder.connected_number.toString().replace("91", "").replace("@c.us", "")}</Typography>
+                                            {reminder.frequency_type}
+                                        </STableCell>
+                                        <STableCell>
+                                            {reminder.frequency_value}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography variant="body1">{reminder.updated_at && new Date(reminder.updated_at).toLocaleString()}</Typography>
+                                            {reminder.is_random_template ? "yes" : "No"}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{reminder.created_by.username}</Typography>
+                                            {reminder.connected_number && reminder.connected_number.toString().replace("91", "").replace("@c.us", "")}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {reminder.updated_at && new Date(reminder.updated_at).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{reminder.updated_by.username}</Typography>
+                                            {reminder.created_by.username}
+                                        </STableCell>
+                                        <STableCell>
+                                            {reminder.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>

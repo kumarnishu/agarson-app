@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, ContactChoiceActions } from '../../contexts/dialogContext'
@@ -41,12 +41,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                         <STableRow>
                             <STableHeadCell
                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
@@ -63,85 +58,50 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                             }} />}
                                         label=""
                                     />
-                                </Stack>
+                               
                             </STableHeadCell>
                             { user?.contacts_access_fields.is_editable &&
                             <STableHeadCell
                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Actions
-                                </Stack>
+                               
                             </STableHeadCell>}
                             <STableHeadCell
                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Name
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Mobile
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Created At
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Created By
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Updated At
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                                                      >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Updated By
-                                </Stack>
+                               
                             </STableHeadCell>
 
 
@@ -156,28 +116,20 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                         >
                                         {selectAll ?
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                               
 
                                                     <Checkbox size="small"
                                                         checked={Boolean(selectAll)}
                                                     />
 
-                                                </Stack>
+                                               
                                             </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                               
                                                     <Checkbox size="small"
                                                         onChange={(e) => {
                                                             setContact(contact)
@@ -191,7 +143,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                                             }
                                                         }}
                                                     />
-                                                </Stack>
+                                               
                                             </STableCell>
                                             :
                                             null
@@ -228,29 +180,29 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                                                     </IconButton>
                                                                 </Tooltip>}
                                                             </>
-                                                        </Stack>
-                                                    }
+                                                       
+                                                   </Stack> }
                                                 />
 
                                             </STableCell>}
                                         <STableCell>
-                                            <Typography variant="body1">{contact.name}</Typography>
+                                           {contact.name}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{contact.mobile && contact.mobile.toString().replace("91", "").replace("@c.us", "")}</Typography>
+                                           {contact.mobile && contact.mobile.toString().replace("91", "").replace("@c.us", "")}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{contact.created_at && new Date(contact.created_at).toLocaleString()}</Typography>
+                                           {contact.created_at && new Date(contact.created_at).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{contact.created_by.username}</Typography>
+                                           {contact.created_by.username}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{contact.updated_at && new Date(contact.updated_at).toLocaleString()}</Typography>
+                                           {contact.updated_at && new Date(contact.updated_at).toLocaleString()}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography variant="body1">{contact.updated_by.username}</Typography>
+                                           {contact.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>

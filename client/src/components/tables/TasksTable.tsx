@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton,  Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton,  Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
@@ -49,12 +49,7 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                         <STableRow>
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
@@ -71,131 +66,81 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                             }} />}
                                         label=""
                                     />
-                                </Stack>
+                                
                             </STableHeadCell>
 
                             {/* actions popup */}
                             {user?.tasks_access_fields.is_editable && <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Actions
-                                </Stack>
+                                
                             </STableHeadCell>}
 
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Task Description
-                                </Stack>
+                                
                             </STableHeadCell>
 
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Person
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Frequency
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Status
-                                </Stack>
+                                
                             </STableHeadCell>
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Last Date
-                                </Stack>
+                                
                             </STableHeadCell>
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Created At
-                                </Stack>
+                                
                             </STableHeadCell>
 
                             {/* updated at */}
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Updated At
-                                </Stack>
+                                
                             </STableHeadCell>
 
                             {/* created by */}
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Created By
-                                </Stack>
+                                
                             </STableHeadCell>
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Updated By
-                                </Stack>
+                                
                             </STableHeadCell>
                         </STableRow>
                     </STableHead>
@@ -210,28 +155,20 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                         {selectAll ?
 
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                                
 
                                                     <Checkbox size="small"
                                                         checked={Boolean(selectAll)}
                                                     />
 
-                                                </Stack>
+                                                
                                             </STableCell>
                                             :
                                             null}
                                         {!selectAll ?
 
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                                
                                                     <Checkbox size="small"
                                                         onChange={(e) => {
                                                             setTask(task)
@@ -245,7 +182,7 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                                             }
                                                         }}
                                                     />
-                                                </Stack>
+                                                
                                             </STableCell>
                                             :
                                             null/* actions popup */}
@@ -301,21 +238,21 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                                                 </>
 
                                                             }
-                                                        </Stack>
-                                                    } />
+                                                        
+                                                    </Stack>} />
                                             </STableCell>}
 
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{task.task_description && task.task_description.slice(0, 50)}</Typography>
+                                         {task.task_description && task.task_description.slice(0, 50)}
                                         </STableCell>
 
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{task.person.username}</Typography>
+                                         {task.person.username}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{task.frequency_value ? `${task.frequency_value} days` : task.frequency_type}</Typography>
+                                         {task.frequency_value ? `${task.frequency_value} days` : task.frequency_type}
                                         </STableCell>
                                         <STableCell>
                                             Checked : {task.boxes.filter((box) => {
@@ -329,22 +266,22 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.boxes.length > 0 && new Date(task.boxes[task.boxes.length - 1].date).toLocaleString()}</Typography>
+                                           {task.boxes.length > 0 && new Date(task.boxes[task.boxes.length - 1].date).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.created_at).toLocaleString()}</Typography>
+                                           {new Date(task.created_at).toLocaleString()}
 
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(task.updated_at).toLocaleString()}</Typography>
+                                           {new Date(task.updated_at).toLocaleString()}
 
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.created_by.username}</Typography>
+                                           {task.created_by.username}
 
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{task.updated_by.username}</Typography>
+                                           {task.updated_by.username}
 
                                         </STableCell>
 

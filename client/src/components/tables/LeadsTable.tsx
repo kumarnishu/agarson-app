@@ -1,5 +1,5 @@
 import { Comment, Delete, DeleteOutline, Edit, Share, Visibility } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
@@ -47,415 +47,250 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
       }}>
         <STable>
           <STableHead style={{
-           
+
           }}>
             <STableRow>
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  <FormControlLabel sx={{ fontSize: 12 }} control={
-                    <Checkbox
-                      indeterminate={selectAll ? true : false}
-                      checked={Boolean(selectAll)}
-                      size="small" onChange={(e) => {
-                        if (e.currentTarget.checked) {
-                          setSelectedLeads(leads)
-                          setSelectAll(true)
-                        }
-                        if (!e.currentTarget.checked) {
-                          setSelectedLeads([])
-                          setSelectAll(false)
-                        }
-                      }} />}
-                    label=""
-                  />
-                </Stack>
+
+                <FormControlLabel sx={{ fontSize: 12 }} control={
+                  <Checkbox
+                    indeterminate={selectAll ? true : false}
+                    checked={Boolean(selectAll)}
+                    size="small" onChange={(e) => {
+                      if (e.currentTarget.checked) {
+                        setSelectedLeads(leads)
+                        setSelectAll(true)
+                      }
+                      if (!e.currentTarget.checked) {
+                        setSelectedLeads([])
+                        setSelectAll(false)
+                      }
+                    }} />}
+                  label=""
+                />
+
               </STableHeadCell>
 
-              {/* actions popup */}
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Actions
-                </Stack>
+
+                Actions
+
               </STableHeadCell>
 
-              {/* visitin card */}
+          
+
+
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Visiting Card
-                </Stack>
+
+                Lead Name
+
               </STableHeadCell>
 
 
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Lead Name
-                </Stack>
+
+                City
+
               </STableHeadCell>
 
 
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  City
-                </Stack>
-              </STableHeadCell>
 
-              {/* state */}
+                State
 
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  State
-                </Stack>
               </STableHeadCell>
 
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Stage
-                </Stack>
+
+                Stage
+
               </STableHeadCell>
 
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Mobile
-                </Stack>
+
+                Mobile
+
               </STableHeadCell>
 
-              {/* alternate mobile 1 */}
 
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Mobile2
-                </Stack>
+
+                Mobile2
+
               </STableHeadCell>
 
-              {/* alternate mobile 2 */}
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Mobile3
-                </Stack>
+
+                Mobile3
+
               </STableHeadCell>
 
 
 
 
 
-              {/* lead type */}
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Lead Type
-                </Stack>
-              </STableHeadCell>
 
-              {/* lead owners */}
+                Lead Type
 
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Lead Owners
-                </Stack>
-              </STableHeadCell>
-
-              {/* turn over */}
-
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  TurnOver
-                </Stack>
-              </STableHeadCell>
-
-              {/* work description */}
-
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Work Description
-                </Stack>
-              </STableHeadCell>
-
-              {/* customer name */}
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Customer Name
-                </Stack>
-              </STableHeadCell>
-
-              {/* designiaton */}
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Customer Desigination
-                </Stack>
-              </STableHeadCell>
-
-              {/* last remark */}
-
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Last Remark
-                </Stack>
               </STableHeadCell>
 
 
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Refer Party
-                </Stack>
+
+                Lead Owners
+
+              </STableHeadCell>
+
+
+              <STableHeadCell
+              >
+
+                TurnOver
+
+              </STableHeadCell>
+
+
+              <STableHeadCell
+              >
+
+                Work Description
+
               </STableHeadCell>
 
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Refer Party Mobile
-                </Stack>
+
+                Customer Name
+
               </STableHeadCell>
 
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Refer Date
-                </Stack>
-              </STableHeadCell>
-              {/* mobile */}
 
+                Customer Desigination
 
-              {/* email */}
-
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Email
-                </Stack>
-              </STableHeadCell>
-
-              {/* alternate email */}
-
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Email2
-                </Stack>
-              </STableHeadCell>
-
-              {/* address */}
-
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Address
-                </Stack>
               </STableHeadCell>
 
 
-
-              {/* source */}
-
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Lead Source
-                </Stack>
+
+                Last Remark
+
               </STableHeadCell>
 
-              {/* country */}
 
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Country
-                </Stack>
-              </STableHeadCell>
 
-              {/* created at */}
+                Refer Party
 
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Created At
-                </Stack>
-              </STableHeadCell>
-
-              {/* updated at */}
-
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Updated At
-                </Stack>
-              </STableHeadCell>
-
-              {/* created by */}
-
-              <STableHeadCell
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Created By
-                </Stack>
               </STableHeadCell>
 
               <STableHeadCell
               >
-                <Stack
-                  direction="row"
-                  justifyContent="left"
-                  alignItems="left"
-                  spacing={2}
-                >
-                  Updated By
-                </Stack>
+
+                Refer Party Mobile
+
+              </STableHeadCell>
+
+              <STableHeadCell
+              >
+
+                Refer Date
+
+              </STableHeadCell>
+
+
+
+              <STableHeadCell
+              >
+
+                Email
+
+              </STableHeadCell>
+
+
+              <STableHeadCell
+              >
+
+                Email2
+
+              </STableHeadCell>
+
+
+              <STableHeadCell
+              >
+
+                Address
+
+              </STableHeadCell>
+
+
+
+
+              <STableHeadCell
+              >
+
+                Lead Source
+
+              </STableHeadCell>
+
+
+              <STableHeadCell
+              >
+
+                Country
+
+              </STableHeadCell>
+
+
+              <STableHeadCell
+              >
+
+                Created At
+
+              </STableHeadCell>
+
+
+              <STableHeadCell
+              >
+
+                Updated At
+
+              </STableHeadCell>
+
+
+              <STableHeadCell
+              >
+
+                Created By
+
+              </STableHeadCell>
+
+              <STableHeadCell
+              >
+
+                Updated By
+
+              </STableHeadCell>
+              <STableHeadCell
+              >
+
+                Visiting Card
+
               </STableHeadCell>
             </STableRow>
           </STableHead>
@@ -469,17 +304,13 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                     {selectAll ?
 
                       <STableCell>
-                        <Stack direction="row"
-                          spacing={2}
-                          justifyContent="left"
-                          alignItems="center"
-                        >
 
-                          <Checkbox size="small"
-                            checked={Boolean(selectAll)}
-                          />
 
-                        </Stack>
+                        <Checkbox size="small"
+                          checked={Boolean(selectAll)}
+                        />
+
+
                       </STableCell>
                       :
                       null
@@ -487,30 +318,25 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                     {!selectAll ?
 
                       <STableCell>
-                        <Stack direction="row"
-                          spacing={2}
-                          justifyContent="left"
-                          alignItems="center"
-                        >
-                          <Checkbox size="small"
-                            onChange={(e) => {
-                              setLead(lead)
-                              if (e.target.checked) {
-                                setSelectedLeads([...selectedLeads, lead])
-                              }
-                              if (!e.target.checked) {
-                                setSelectedLeads((leads) => leads.filter((item) => {
-                                  return item._id !== lead._id
-                                }))
-                              }
-                            }}
-                          />
-                        </Stack>
+
+                        <Checkbox size="small"
+                          onChange={(e) => {
+                            setLead(lead)
+                            if (e.target.checked) {
+                              setSelectedLeads([...selectedLeads, lead])
+                            }
+                            if (!e.target.checked) {
+                              setSelectedLeads((leads) => leads.filter((item) => {
+                                return item._id !== lead._id
+                              }))
+                            }
+                          }}
+                        />
+
                       </STableCell>
                       :
                       null
                     }
-                    {/* actions popup */}
 
                     <STableCell style={{ zIndex: -1 }}>
                       <PopUp
@@ -640,226 +466,158 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                 <Comment />
                               </IconButton>
                             </Tooltip>
-                          </Stack>
-                        }
+
+                          </Stack>}
                       />
                     </STableCell>
-                    {/* visitin card */}
-                    {
-                      <STableCell
-                        title="double click to download"
-                        onDoubleClick={() => {
-                          if (lead.visiting_card && lead.visiting_card?.public_url) {
-                            DownloadFile(lead.visiting_card.public_url, lead.visiting_card.filename)
-                          }
-                        }}>
-                        <img height="50" width="75" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" />
-                      </STableCell>
 
-                    }
-
-                    {/* lead name */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.name}</Typography>
-                      </STableCell>
-
-                    }
-                    {/* city */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.city}</Typography>
-                      </STableCell>
-
-                    }
-                    {/* state */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.state}</Typography>
-                      </STableCell>
-
-                    }
-                    {/* stage */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.stage}</Typography>
-                      </STableCell>
-
-                    }
-                    {
-                      <STableCell>
-                        <Stack>
-                          <Typography variant="body1"  >{lead.mobile}</Typography>
-                        </Stack>
-                      </STableCell>
-
-                    }
-                    {/* alternate mobile 1 */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.alternate_mobile1}</Typography>
-                      </STableCell>
-
-                    }
-                    {/* alternate mobile 2 */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.alternate_mobile2}</Typography>
-                      </STableCell>
-
-                    }
+                    <STableCell>
+                      {lead.name}
+                    </STableCell>
 
 
-                    {/* lead type */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.lead_type}</Typography>
-                      </STableCell>
+                    <STableCell>
+                      {lead.city}
+                    </STableCell>
 
-                    }
-                    {/* lead owners */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.lead_owners ? lead.lead_owners.map((owner) => { return owner.username + " & " }) : [""]}</Typography>
-                      </STableCell>
 
-                    }
-                    {/* turn over */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.turnover ? lead.turnover : 'na'}</Typography>
-                      </STableCell>
+                    <STableCell>
+                      {lead.state}
+                    </STableCell>
 
-                    }
-                    {/* work description */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.work_description ? lead.work_description.slice(0, 50) : ""}</Typography>
-                      </STableCell>
+                    <STableCell>
+                      {lead.stage}
+                    </STableCell>
 
-                    }
-                    {/* customer name */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.customer_name}</Typography>
-                      </STableCell>
 
-                    }
-                    {/* designiaton */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }}>{lead.customer_designation}</Typography>
-                      </STableCell>
+                    <STableCell>
 
-                    }
-                    {/* last remark */}
-                    {
-                      <STableCell>
-                        {lead.remarks ?
-                          <Typography title={lead.last_remark && lead.last_remark} sx={{ textTransform: "capitalize" }}> {lead.last_remark && lead.last_remark.slice(0, 50)}
-                          </Typography> : null
+                      {lead.mobile}
+
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.alternate_mobile1}
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.alternate_mobile2}
+                    </STableCell>
+
+
+
+                    <STableCell>
+                      {lead.lead_type}
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.lead_owners ? lead.lead_owners.map((owner) => { return owner.username + " & " }) : [""]}
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.turnover ? lead.turnover : 'na'}
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.work_description ? lead.work_description.slice(0, 50) : ""}
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.customer_name}
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.customer_designation}
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.last_remark && lead.last_remark.slice(0, 50)}
+
+                    </STableCell>
+
+                    <STableCell>
+                      {lead.referred_party_name && lead.referred_party_name}
+
+                    </STableCell>
+                    <STableCell>
+
+                      {lead.referred_party_mobile && lead.referred_party_mobile}
+
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.referred_date &&
+                        new Date(lead.referred_date).toLocaleString()}
+
+                    </STableCell>
+
+
+
+                    <STableCell>
+                      {lead.email}
+                    </STableCell>
+
+                    <STableCell>
+                      {lead.alternate_email}
+                    </STableCell>
+
+
+
+                    <STableCell >
+                      {lead.address ? lead.address.slice(0, 50) : "..."}
+
+                    </STableCell>
+                    <STableCell>
+                      {lead.lead_source}
+
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.country}
+
+                    </STableCell>
+
+
+                    <STableCell>
+                      {new Date(lead.created_at).toLocaleString()}
+
+                    </STableCell>
+
+
+                    <STableCell>
+                      {new Date(lead.updated_at).toLocaleString()}
+
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.created_by.username}
+                    </STableCell>
+
+
+                    <STableCell>
+                      {lead.updated_by.username}
+
+                    </STableCell>
+                    <STableCell
+                      title="double click to download"
+                      onDoubleClick={() => {
+                        if (lead.visiting_card && lead.visiting_card?.public_url) {
+                          DownloadFile(lead.visiting_card.public_url, lead.visiting_card.filename)
                         }
-                      </STableCell>
-                    }
-
-                    <STableCell>
-                      {lead.referred_party_name ?
-                        <Typography sx={{ textTransform: "capitalize" }}> {lead.referred_party_name && lead.referred_party_name}
-                        </Typography> : null
-                      }
+                      }}>
+                      <img height="50" width="75" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" />
                     </STableCell>
-                    <STableCell>
-                      {lead.referred_party_mobile ?
-                        <Typography sx={{ textTransform: "capitalize" }}> {lead.referred_party_mobile && lead.referred_party_mobile}
-                        </Typography> : null
-                      }
-                    </STableCell>
-
-
-                    <STableCell>
-                      {lead.referred_date ?
-                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.referred_date).toLocaleString()}</Typography> : null
-                      }
-                    </STableCell>
-
-
-                    {/* email */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.email}</Typography>
-                      </STableCell>
-
-                    }
-                    {/* alternate email */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.alternate_email}</Typography>
-                      </STableCell>
-
-                    }
-                    {/* address */}
-                    {
-
-                      <STableCell >
-                        <Tooltip title={lead.address}>
-                          <Stack>
-                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.address ? lead.address.slice(0, 50) : "..."}</Typography>
-                          </Stack>
-                        </Tooltip>
-                      </STableCell>
-
-
-                    }
-
-
-                    {/* source */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.lead_source}</Typography>
-
-                      </STableCell>
-
-                    }
-                    {/* country */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.country}</Typography>
-
-                      </STableCell>
-
-                    }
-                    {/* created at */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.created_at).toLocaleString()}</Typography>
-
-                      </STableCell>
-
-                    }
-                    {/* updated at */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(lead.updated_at).toLocaleString()}</Typography>
-
-                      </STableCell>
-
-                    }
-                    {/* created by */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.created_by.username}</Typography>
-
-                      </STableCell>
-
-                    }
-                    {/* updated by */}
-                    {
-                      <STableCell>
-                        <Typography sx={{ textTransform: "capitalize" }} variant="body1">{lead.updated_by.username}</Typography>
-
-                      </STableCell>
-
-                    }
                   </STableRow>
                 )
               })
@@ -871,7 +629,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
       {
         lead ?
           <>
-            < UpdateLeadDialog lead={lead} />
+            <UpdateLeadDialog lead={lead} />
             <DeleteLeadDialog lead={lead} />
             <ConvertLeadToCustomerDialog lead={lead} />
             <ViewRemarksDialog lead={lead} />

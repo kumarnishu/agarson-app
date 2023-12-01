@@ -1,5 +1,5 @@
 import { AccountCircle, Delete, RestartAlt, Stop } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
@@ -45,12 +45,7 @@ function TrackersSTable({ tracker, trackers, selectableTrackers, setTracker, sel
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                                
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
@@ -67,107 +62,67 @@ function TrackersSTable({ tracker, trackers, selectableTrackers, setTracker, sel
                                             }} />}
                                         label=""
                                     />
-                                </Stack>
+                               
                             </STableHeadCell>
 
-                            {/* actions popup */}
 
                             {user?.bot_access_fields.is_editable &&
                                 <STableHeadCell
                                                              >
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="left"
-                                        alignItems="left"
-                                        spacing={2}
-                                    >
+                                    
                                         Actions
-                                    </Stack>
+                                   
                                 </STableHeadCell>}
 
 
 
-                            {/* tracker name */}
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                                
                                     Status
-                                </Stack>
+                               
                             </STableHeadCell>
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                                
                                     Customer Name
-                                </Stack>
+                               
                             </STableHeadCell>
 
 
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                                
                                     Bot Number
-                                </Stack>
+                               
                             </STableHeadCell>
 
 
-                            {/* stage */}
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                                
                                     Customer Phone
-                                </Stack>
+                               
                             </STableHeadCell>
 
 
-                            {/* city */}
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                                
                                     Flow Name
-                                </Stack>
+                               
                             </STableHeadCell>
 
-                            {/* state */}
 
                             <STableHeadCell
                                                          >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                                
                                     Last Interaction
-                                </Stack>
+                               
                             </STableHeadCell>
 
                         </STableRow>
@@ -183,17 +138,13 @@ function TrackersSTable({ tracker, trackers, selectableTrackers, setTracker, sel
                                         {selectAll ?
 
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                                
 
                                                     <Checkbox size="small"
                                                         checked={Boolean(selectAll)}
                                                     />
 
-                                                </Stack>
+                                               
                                             </STableCell>
                                             :
                                             null
@@ -201,11 +152,7 @@ function TrackersSTable({ tracker, trackers, selectableTrackers, setTracker, sel
                                         {!selectAll ?
 
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                                
                                                     <Checkbox size="small"
                                                         onChange={(e) => {
                                                             setTracker(tracker)
@@ -219,14 +166,13 @@ function TrackersSTable({ tracker, trackers, selectableTrackers, setTracker, sel
                                                             }
                                                         }}
                                                     />
-                                                </Stack>
+                                               
                                             </STableCell>
 
                                             :
                                             null
                                         }
 
-                                        {/* actions */}
                                         {user?.bot_access_fields.is_editable &&
                                             <STableCell>
                                                 <PopUp
@@ -283,38 +229,36 @@ function TrackersSTable({ tracker, trackers, selectableTrackers, setTracker, sel
                                                             }
 
 
-                                                        </Stack>}
+                                                     </Stack>  }
 
                                                 />
                                             </STableCell>}
-                                        {/* tracker name */}
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{tracker.is_active ? "Active" : "Disabled"}</Typography>
+                                           {tracker.is_active ? "Active" : "Disabled"}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{tracker.customer_name || "NA"}</Typography>
+                                           {tracker.customer_name || "NA"}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{tracker.bot_number.replace("91", "").replace("@c.us", "")}</Typography>
-                                        </STableCell>
-
-
-                                        {/* stage */}
-
-                                        <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{tracker.phone_number.replace("91", "").replace("@c.us", "")}</Typography>
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{tracker.flow.flow_name}</Typography>
+                                           {tracker.bot_number.replace("91", "").replace("@c.us", "")}
                                         </STableCell>
 
 
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{tracker.updated_at && new Date(tracker.updated_at).toLocaleString()}</Typography>
+                                           {tracker.phone_number.replace("91", "").replace("@c.us", "")}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                           {tracker.flow.flow_name}
+                                        </STableCell>
+
+
+
+                                        <STableCell>
+                                           {tracker.updated_at && new Date(tracker.updated_at).toLocaleString()}
                                         </STableCell>
 
 

@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, FormControlLabel, IconButton, Popover,  Tooltip, Typography } from '@mui/material'
+import { Box, Button, Checkbox, FormControlLabel, IconButton, Popover, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
@@ -38,118 +38,78 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                 maxHeight: '70vh'
             }}>
                 <STable
-                  >
+                >
                     <STableHead
                     >
                         <STableRow>
                             <STableHeadCell
-                                                       >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    <FormControlLabel sx={{ fontSize: 12 }} control={
-                                        <Checkbox
-                                            indeterminate={selectAll ? true : false}
-                                            checked={Boolean(selectAll)}
-                                            size="small" onChange={(e) => {
-                                                if (e.currentTarget.checked) {
-                                                    setSelectedFlows(flows)
-                                                    setSelectAll(true)
-                                                }
-                                                if (!e.currentTarget.checked) {
-                                                    setSelectedFlows([])
-                                                    setSelectAll(false)
-                                                }
-                                            }} />}
-                                        label=""
-                                    />
-                                </Stack>
+                            >
+
+                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                                    <Checkbox
+                                        indeterminate={selectAll ? true : false}
+                                        checked={Boolean(selectAll)}
+                                        size="small" onChange={(e) => {
+                                            if (e.currentTarget.checked) {
+                                                setSelectedFlows(flows)
+                                                setSelectAll(true)
+                                            }
+                                            if (!e.currentTarget.checked) {
+                                                setSelectedFlows([])
+                                                setSelectAll(false)
+                                            }
+                                        }} />}
+                                    label=""
+                                />
+
                             </STableHeadCell>
-                            { user?.bot_access_fields.is_editable &&
+                            {user?.bot_access_fields.is_editable &&
                                 <STableHeadCell
-                                                           >
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="left"
-                                        alignItems="left"
-                                        spacing={2}
-                                    >
-                                        Actions
-                                    </Stack>
+                                >
+
+                                    Actions
+
                                 </STableHeadCell>}
                             <STableHeadCell
-                                                       >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Status
-                                </Stack>
+                            >
+
+                                Status
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                       >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Triggers
-                                </Stack>
+                            >
+
+                                Triggers
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                       >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Flow Name
-                                </Stack>
+                            >
+
+                                Flow Name
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                       >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Updated By
-                                </Stack>
+                            >
+
+                                Updated By
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                       >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Created By
-                                </Stack>
+                            >
+
+                                Created By
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                       >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Last Updated
-                                </Stack>
+                            >
+
+                                Last Updated
+
                             </STableHeadCell>
 
                         </STableRow>
@@ -160,31 +120,23 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                 return (
                                     <STableRow
                                         key={index}
-                                        >
+                                    >
                                         {selectAll ?
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                               
 
                                                     <Checkbox size="small"
                                                         checked={Boolean(selectAll)}
                                                     />
 
-                                                </Stack>
+
                                             </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                               
                                                     <Checkbox size="small"
                                                         onChange={(e) => {
 
@@ -200,7 +152,7 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                                         }
                                                         }
                                                     />
-                                                </Stack>
+
                                             </STableCell>
                                             :
                                             null
@@ -282,31 +234,31 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
 
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{flow.is_active ? "active" : "disabled"}</Typography>
+                                            {flow.is_active ? "active" : "disabled"}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{flow.trigger_keywords.slice(0, 50)}</Typography>
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{flow.flow_name}</Typography>
+                                            {flow.trigger_keywords.slice(0, 50)}
                                         </STableCell>
 
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{flow.updated_by?.username}</Typography>
+                                            {flow.flow_name}
                                         </STableCell>
 
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{flow.created_by?.username}</Typography>
+                                            {flow.updated_by?.username}
                                         </STableCell>
 
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{flow.updated_at && new Date(flow.updated_at).toLocaleString()}</Typography>
+                                            {flow.created_by?.username}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {flow.updated_at && new Date(flow.updated_at).toLocaleString()}
                                         </STableCell>
 
 

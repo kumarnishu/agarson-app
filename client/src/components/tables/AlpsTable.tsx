@@ -1,5 +1,4 @@
-import { Box, Checkbox, FormControlLabel, Typography } from '@mui/material'
-import { Stack } from '@mui/system'
+import { Box, Checkbox, FormControlLabel } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { DownloadFile } from '../../utils/DownloadFile'
 import { IAlps } from '../../types/alps.types'
@@ -37,12 +36,7 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                         <STableRow>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
@@ -59,75 +53,45 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                             }} />}
                                         label=""
                                     />
-                                </Stack>
+                               
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Serial Number
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Mobile
-                                </Stack>
+                               
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     GST
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Customer  Name
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     City
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                               
                                     Document
-                                </Stack>
+                               
                             </STableHeadCell>
                             {/* visitin card */}
                         </STableRow>
@@ -144,17 +108,13 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                         {selectAll ?
 
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                             
 
                                                     <Checkbox size="small"
                                                         checked={Boolean(selectAll)}
                                                     />
 
-                                                </Stack>
+                                               
                                             </STableCell>
                                             :
                                             null
@@ -162,11 +122,7 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                         {!selectAll ?
 
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
+                                             
                                                     <Checkbox size="small"
                                                         onChange={(e) => {
                                                             setAlp(alp)
@@ -180,7 +136,7 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                                             }
                                                         }}
                                                     />
-                                                </Stack>
+                                               
                                             </STableCell>
 
                                             :
@@ -188,19 +144,19 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                         }
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{alp.serial_number}</Typography>
+                                           {alp.serial_number}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{alp.mobile}</Typography>
+                                           {alp.mobile}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{alp.gst}</Typography>
+                                           {alp.gst}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{alp.name}</Typography>
+                                           {alp.name}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{alp.city}</Typography>
+                                           {alp.city}
                                         </STableCell>
                                         <STableCell
                                             title="double click to download"

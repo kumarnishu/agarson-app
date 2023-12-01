@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
@@ -49,143 +49,93 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                         <STableRow>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    <FormControlLabel sx={{ fontSize: 12 }} control={
-                                        <Checkbox
-                                            indeterminate={selectAll ? true : false}
-                                            checked={Boolean(selectAll)}
-                                            size="small" onChange={(e) => {
-                                                if (e.currentTarget.checked) {
-                                                    setSelectedCheckLists(checklists)
-                                                    setSelectAll(true)
-                                                }
-                                                if (!e.currentTarget.checked) {
-                                                    setSelectedCheckLists([])
-                                                    setSelectAll(false)
-                                                }
-                                            }} />}
-                                        label=""
-                                    />
-                                </Stack>
+
+                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                                    <Checkbox
+                                        indeterminate={selectAll ? true : false}
+                                        checked={Boolean(selectAll)}
+                                        size="small" onChange={(e) => {
+                                            if (e.currentTarget.checked) {
+                                                setSelectedCheckLists(checklists)
+                                                setSelectAll(true)
+                                            }
+                                            if (!e.currentTarget.checked) {
+                                                setSelectedCheckLists([])
+                                                setSelectAll(false)
+                                            }
+                                        }} />}
+                                    label=""
+                                />
+
                             </STableHeadCell>
 
                             {/* actions popup */}
                             {user?.checklists_access_fields.is_editable && <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Actions
-                                </Stack>
+
+                                Actions
+
                             </STableHeadCell>}
 
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    CheckList Title
-                                </Stack>
+
+                                CheckList Title
+
                             </STableHeadCell>
 
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Person
-                                </Stack>
+
+                                Person
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Status
-                                </Stack>
+
+                                Status
+
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Last Date
-                                </Stack>
+
+                                Last Date
+
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Created At
-                                </Stack>
+
+                                Created At
+
                             </STableHeadCell>
 
                             {/* updated at */}
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Updated At
-                                </Stack>
+
+                                Updated At
+
                             </STableHeadCell>
 
                             {/* created by */}
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Created By
-                                </Stack>
+
+                                Created By
+
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Updated By
-                                </Stack>
+
+                                Updated By
+
                             </STableHeadCell>
                         </STableRow>
                     </STableHead>
@@ -200,42 +150,34 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                         {selectAll ?
 
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
 
-                                                    <Checkbox size="small"
-                                                        checked={Boolean(selectAll)}
-                                                    />
 
-                                                </Stack>
+                                                <Checkbox size="small"
+                                                    checked={Boolean(selectAll)}
+                                                />
+
+
                                             </STableCell>
                                             :
                                             null}
                                         {!selectAll ?
 
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
-                                                    <Checkbox size="small"
-                                                        onChange={(e) => {
-                                                            setCheckList(checklist)
-                                                            if (e.target.checked) {
-                                                                setSelectedCheckLists([...selectedCheckLists, checklist])
-                                                            }
-                                                            if (!e.target.checked) {
-                                                                setSelectedCheckLists((checklists) => checklists.filter((item) => {
-                                                                    return item._id !== checklist._id
-                                                                }))
-                                                            }
-                                                        }}
-                                                    />
-                                                </Stack>
+
+                                                <Checkbox size="small"
+                                                    onChange={(e) => {
+                                                        setCheckList(checklist)
+                                                        if (e.target.checked) {
+                                                            setSelectedCheckLists([...selectedCheckLists, checklist])
+                                                        }
+                                                        if (!e.target.checked) {
+                                                            setSelectedCheckLists((checklists) => checklists.filter((item) => {
+                                                                return item._id !== checklist._id
+                                                            }))
+                                                        }
+                                                    }}
+                                                />
+
                                             </STableCell>
                                             :
                                             null/* actions popup */}
@@ -292,21 +234,21 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                                 </>
 
                                                             }
-                                                        </Stack>
-                                                    } />
+
+                                                        </Stack>} />
                                             </STableCell>}
 
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize", cursor: 'pointer' }}>
-                                                
-                                                <a href={checklist.sheet_url} target='blank'>
-                                                    {checklist.title && checklist.title.slice(0, 50)}
-                                                </a>
-                                            </Typography>
+                                          
+
+                                            <a href={checklist.sheet_url} target='blank'>
+                                                {checklist.title && checklist.title.slice(0, 50)}
+                                            </a>
+
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }}>{checklist.owner.username}</Typography>
+                                        {checklist.owner.username}
                                         </STableCell>
 
                                         <STableCell>
@@ -319,22 +261,22 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{checklist.boxes.length > 0 && new Date(checklist.boxes[checklist.boxes.length - 1].desired_date).toLocaleString()}</Typography>
+                                           {checklist.boxes.length > 0 && new Date(checklist.boxes[checklist.boxes.length - 1].desired_date).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(checklist.created_at).toLocaleString()}</Typography>
+                                           {new Date(checklist.created_at).toLocaleString()}
 
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{new Date(checklist.updated_at).toLocaleString()}</Typography>
+                                           {new Date(checklist.updated_at).toLocaleString()}
 
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{checklist.created_by.username}</Typography>
+                                           {checklist.created_by.username}
 
                                         </STableCell>
                                         <STableCell>
-                                            <Typography sx={{ textTransform: "capitalize" }} variant="body1">{checklist.updated_by.username}</Typography>
+                                           {checklist.updated_by.username}
 
                                         </STableCell>
 

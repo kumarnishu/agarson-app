@@ -1,5 +1,4 @@
-import { Box, IconButton, TableBody, Tooltip, Typography } from '@mui/material'
-import { Stack } from '@mui/system'
+import { Box, IconButton, TableBody, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { Block } from '@mui/icons-material'
 import StopSingleBroadcastDialog from '../dialogs/broadcasts/StopSingleBroadcastDialog'
@@ -35,107 +34,62 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
                             {user?.broadcast_access_fields.is_editable &&
                                 <STableHeadCell
                                 >
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="left"
-                                        alignItems="left"
-                                        spacing={2}
-                                    >
+                                  
                                         Action
-                                    </Stack>
+                                   
                                 </STableHeadCell>}
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                             
                                     Mobile
-                                </Stack>
+                               
                             </STableHeadCell>
 
 
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                             
                                     Whatsapp Type
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                             
                                     Customer Name
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                             
                                     Delivery Status
-                                </Stack>
+                               
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                             
                                     Created at
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                             
                                     Updated at
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                             
                                     Created By
-                                </Stack>
+                               
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
+                             
                                     Updated By
-                                </Stack>
+                               
                             </STableHeadCell>
                         </STableRow>
                     </STableHead>
@@ -162,29 +116,29 @@ function BroadcastsReportsTable({ setReport, report, reports }: Props) {
 
                                             </STableCell>}
                                         <STableCell>
-                                            <Typography variant="body1">{report.mobile.replace("91", "").replace("@c.us", "")}</Typography>
+                                           {report.mobile.replace("91", "").replace("@c.us", "")}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{report.is_buisness ? "business" : "normal"}</Typography>
+                                           {report.is_buisness ? "business" : "normal"}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{report.customer_name}</Typography>
+                                           {report.customer_name}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography variant="body1">{report.status}</Typography>
+                                           {report.status}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{report.created_at && new Date(report.created_at).toLocaleString()}</Typography>
+                                           {report.created_at && new Date(report.created_at).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{report.updated_at && new Date(report.updated_at).toLocaleString()}</Typography>
+                                           {report.updated_at && new Date(report.updated_at).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{report.created_by && report.created_by.username}</Typography>
+                                           {report.created_by && report.created_by.username}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{report.updated_by && report.updated_by.username}</Typography>
+                                           {report.updated_by && report.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>

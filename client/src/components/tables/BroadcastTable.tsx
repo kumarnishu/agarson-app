@@ -1,5 +1,5 @@
 import { Block, Delete, Edit, Pause, RemoveRedEye, ResetTv, RestartAlt, Stop } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { BroadcastChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
@@ -47,209 +47,124 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                     >
                         <STableRow>
                             <STableHeadCell>
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    <FormControlLabel sx={{ fontSize: 12 }} control={
-                                        <Checkbox
-                                            indeterminate={selectAll ? true : false}
-                                            checked={Boolean(selectAll)}
-                                            size="small" onChange={(e) => {
-                                                if (e.currentTarget.checked) {
-                                                    setSelectedBroadcasts(broadcasts)
-                                                    setSelectAll(true)
-                                                }
-                                                if (!e.currentTarget.checked) {
-                                                    setSelectedBroadcasts([])
-                                                    setSelectAll(false)
-                                                }
-                                            }} />}
-                                        label=""
-                                    />
-                                </Stack>
+
+                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                                    <Checkbox
+                                        indeterminate={selectAll ? true : false}
+                                        checked={Boolean(selectAll)}
+                                        size="small" onChange={(e) => {
+                                            if (e.currentTarget.checked) {
+                                                setSelectedBroadcasts(broadcasts)
+                                                setSelectAll(true)
+                                            }
+                                            if (!e.currentTarget.checked) {
+                                                setSelectedBroadcasts([])
+                                                setSelectAll(false)
+                                            }
+                                        }} />}
+                                    label=""
+                                />
+
                             </STableHeadCell>
                             {user?.broadcast_access_fields.is_editable &&
                                 <STableHeadCell
-                                                            >
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="left"
-                                        alignItems="left"
-                                        spacing={2}
-                                    >
+                                >
+                                   
                                         Actions
-                                    </Stack>
+
                                 </STableHeadCell>}
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Broadcast Name
-                                </Stack>
+                            >
+
+                                Broadcast Name
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Status
-                                </Stack>
+                            >
+
+                                Status
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Time Gap
-                                </Stack>
+                            >
+
+                                Time Gap
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Start Time
-                                </Stack>
+                            >
+
+                                Start Time
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Next Run Date
-                                </Stack>
+                            >
+
+                                Next Run Date
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Using Leads
-                                </Stack>
+                            >
+
+                                Using Leads
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Type
-                                </Stack>
+                            >
+
+                                Type
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Daily Limit
-                                </Stack>
+                            >
+
+                                Daily Limit
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Daily Count
-                                </Stack>
+                            >
+
+                                Daily Count
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Auto Refresh
-                                </Stack>
+                            >
+
+                                Auto Refresh
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Random Templates
-                                </Stack>
+                            >
+
+                                Random Templates
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Connected Number
-                                </Stack>
+                            >
+
+                                Connected Number
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Status Updated
-                                </Stack>
+                            >
+
+                                Status Updated
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Created By
-                                </Stack>
+                            >
+
+                                Created By
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    Updated By
-                                </Stack>
+                            >
+
+                                Updated By
+
                             </STableHeadCell>
                         </STableRow>
                     </STableHead>
@@ -262,42 +177,34 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                     >
                                         {selectAll ?
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
 
-                                                    <Checkbox size="small"
-                                                        checked={Boolean(selectAll)}
-                                                    />
 
-                                                </Stack>
+                                                <Checkbox size="small"
+                                                    checked={Boolean(selectAll)}
+                                                />
+
+
                                             </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
                                             <STableCell>
-                                                <Stack direction="row"
-                                                    spacing={2}
-                                                    justifyContent="left"
-                                                    alignItems="center"
-                                                >
-                                                    <Checkbox size="small"
-                                                        onChange={(e) => {
-                                                            setBroadcast(broadcast)
-                                                            if (e.target.checked) {
-                                                                setSelectedBroadcasts([...selectedBroadcasts, broadcast])
-                                                            }
-                                                            if (!e.target.checked) {
-                                                                setSelectedBroadcasts((broadcasts) => broadcasts.filter((item) => {
-                                                                    return item._id !== broadcast._id
-                                                                }))
-                                                            }
-                                                        }}
-                                                    />
-                                                </Stack>
+
+                                                <Checkbox size="small"
+                                                    onChange={(e) => {
+                                                        setBroadcast(broadcast)
+                                                        if (e.target.checked) {
+                                                            setSelectedBroadcasts([...selectedBroadcasts, broadcast])
+                                                        }
+                                                        if (!e.target.checked) {
+                                                            setSelectedBroadcasts((broadcasts) => broadcasts.filter((item) => {
+                                                                return item._id !== broadcast._id
+                                                            }))
+                                                        }
+                                                    }}
+                                                />
+
                                             </STableCell>
                                             :
                                             null
@@ -409,55 +316,57 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                 </Stack>} />
                                             </STableCell>}
                                         <STableCell>
-                                            <Typography variant="body1">{broadcast.name}</Typography>
+                                            {broadcast.name}
                                         </STableCell>
                                         <STableCell>
                                             {broadcast.is_active ?
-                                                <Typography variant="body1">{broadcast.is_paused ? <Pause /> : <Stop />}</Typography> :
-                                                <Typography variant="body1">stopped</Typography>
+                                                <>
+                                                    {broadcast.is_paused ? <Pause />
+                                                        : <Stop />} </> :
+                                                "stopped"
                                             }
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{broadcast.time_gap + " seconds"}</Typography>
+                                            {broadcast.time_gap + " seconds"}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{broadcast.created_at && new Date(broadcast.start_date).toLocaleString()}</Typography>
+                                            {broadcast.created_at && new Date(broadcast.start_date).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{new Date(broadcast.next_run_date).toLocaleString()}</Typography>
+                                            {new Date(broadcast.next_run_date).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{broadcast.leads_selected ? "Yes" : "No"}</Typography>
+                                            {broadcast.leads_selected ? "Yes" : "No"}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{broadcast.message ? "custom" : "template"}</Typography>
-                                        </STableCell>
-
-                                        <STableCell>
-                                            <Typography variant="body1">{broadcast.daily_limit ? broadcast.daily_limit : "No"}</Typography>
-                                        </STableCell>
-                                        <STableCell>
-                                            <Typography variant="body1">{broadcast.daily_count && broadcast.daily_count}</Typography>
-                                        </STableCell>
-                                        <STableCell>
-                                            <Typography variant="body1">{broadcast.autoRefresh ? "Yes" : "Not Set"}</Typography>
+                                            {broadcast.message ? "custom" : "template"}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography variant="body1">{broadcast.is_random_template ? "Yes" : "No"}</Typography>
+                                            {broadcast.daily_limit ? broadcast.daily_limit : "No"}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{broadcast.connected_number && broadcast.connected_number.toString().replace("91", "").replace("@c.us", "")}</Typography>
+                                            {broadcast.daily_count && broadcast.daily_count}
+                                        </STableCell>
+                                        <STableCell>
+                                            {broadcast.autoRefresh ? "Yes" : "Not Set"}
                                         </STableCell>
 
                                         <STableCell>
-                                            <Typography variant="body1">{broadcast.updated_at && new Date(broadcast.updated_at).toLocaleString()}</Typography>
+                                            {broadcast.is_random_template ? "Yes" : "No"}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{broadcast.created_by.username}</Typography>
+                                            {broadcast.connected_number && broadcast.connected_number.toString().replace("91", "").replace("@c.us", "")}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {broadcast.updated_at && new Date(broadcast.updated_at).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography variant="body1">{broadcast.updated_by.username}</Typography>
+                                            {broadcast.created_by.username}
+                                        </STableCell>
+                                        <STableCell>
+                                            {broadcast.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>
