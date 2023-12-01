@@ -178,7 +178,7 @@ export default function TasksAdminPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    Tasks Admin
+                    {window.screen.width > 450 ? "Tasks Admin" : "Admin"}
                 </Typography>
 
                 <Stack
@@ -254,9 +254,9 @@ export default function TasksAdminPage() {
             </Stack >
 
             {/* filter dates and person */}
-            <Stack direction='row' gap={2} pb={2} alignItems={'center'} justifyContent={'center'}>
+            <Stack direction='row' gap={2} p={2} alignItems={'center'} justifyContent={'center'}>
                 < TextField
-                    variant="filled"
+                    size='small'
                     type="date"
                     id="start_date"
                     label="Start Date"
@@ -269,7 +269,7 @@ export default function TasksAdminPage() {
                     })}
                 />
                 < TextField
-                    variant="filled"
+                    size='small'
                     type="date"
                     id="end_date"
                     label="End Date"
@@ -283,7 +283,7 @@ export default function TasksAdminPage() {
                 />
                 {user?.is_admin &&
                     < TextField
-                        variant="filled"
+                        size='small'
                         select
                         SelectProps={{
                             native: true,

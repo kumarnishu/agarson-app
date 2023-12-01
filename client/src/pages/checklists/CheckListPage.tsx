@@ -35,7 +35,6 @@ export default function CheckListPage() {
       <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'} sx={{ mb: 1, p: 2 }}>
         < TextField
           size='small'
-          variant='filled'
           type="date"
           id="start_date"
           label="Start Date"
@@ -49,7 +48,6 @@ export default function CheckListPage() {
         />
         < TextField
           size='small'
-          variant='filled'
           type="date"
           id="end_date"
           label="End Date"
@@ -64,7 +62,7 @@ export default function CheckListPage() {
       </Stack>
       {checklists.map((checklist, index) => {
         return (
-          <Stack direction={'row'} key={index} sx={{ m: 1, backgroundColor: 'whitesmoke', borderRadius: 5 }} alignItems={'center'} gap={2}>
+          <Stack direction={'row'} key={index} sx={{ m: 1, backgroundColor: 'rgba(236, 214, 214, 0.1)', borderRadius: 5 }} alignItems={'center'} gap={2}>
             <IconButton
               sx={{ p: 2 }}
               onClick={() => {
@@ -78,7 +76,7 @@ export default function CheckListPage() {
                 {checklist.title && checklist.title.slice(0, 50)}
               </a></Typography>
             <Typography>
-              <b style={{ color: 'orange' }}>
+              <b style={{ color: 'blue' }}>
                 Score  {" "}
                 {checklist.boxes.filter((box) => {
                   return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()

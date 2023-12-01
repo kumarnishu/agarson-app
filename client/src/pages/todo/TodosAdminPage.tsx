@@ -177,7 +177,7 @@ export default function TodosAdminPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    Todos Admin
+                    {window.screen.width > 450 ? "Todo Admin" : "Admin"}
                 </Typography>
 
                 <Stack
@@ -251,9 +251,9 @@ export default function TodosAdminPage() {
             </Stack >
 
             {/* filter dates and person */}
-            <Stack direction='row' gap={2} pb={2} alignItems={'center'} justifyContent={'center'}>
+            <Stack direction='row' gap={2} p={2} alignItems={'center'} justifyContent={'center'}>
                 < TextField
-                    variant='filled'
+                    size='small'
                     type="date"
                     id="start_date"
                     label="Start Date"
@@ -266,7 +266,7 @@ export default function TodosAdminPage() {
                     })}
                 />
                 < TextField
-                    variant='filled'
+                    size='small'
                     type="date"
                     id="end_date"
                     label="End Date"
@@ -280,7 +280,7 @@ export default function TodosAdminPage() {
                 />
                 {user?.is_admin &&
                     < TextField
-                        variant='filled'
+                        size='small'
                         select
                         SelectProps={{
                             native: true,

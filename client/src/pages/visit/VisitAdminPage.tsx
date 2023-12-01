@@ -320,9 +320,9 @@ export default function VisitAdminPage() {
             </Stack >
 
             {/* filter dates and person */}
-            <Stack direction="row" pb={2} gap={2}>
+            <Stack direction="row" p={2} gap={2}>
                 < TextField
-                    variant='filled'
+                   
                     size="small"
                     type="date"
                     id="start_date"
@@ -336,7 +336,7 @@ export default function VisitAdminPage() {
                     })}
                 />
                 < TextField
-                    variant='filled'
+                   
                     size="small"
                     type="date"
                     id="end_date"
@@ -351,7 +351,7 @@ export default function VisitAdminPage() {
                 />
                 {user?.is_admin &&
                     < TextField
-                        variant='filled'
+                       
                         size="small"
                         select
                         SelectProps={{
