@@ -95,7 +95,7 @@ function UpdateTodoStatusForm({ todo }: { todo: ITodo }) {
                     label="Status"
                     fullWidth
                     helperText={
-                        formik.touched.status && formik.errors.status ? formik.errors.status : ""
+                        formik.touched.status && formik.errors.status ? formik.errors.status : "warning ! Done status will make this hidden"
                     }
                     {...formik.getFieldProps('status')}
                 >

@@ -120,9 +120,18 @@ export const GetCheckLists = async (req: Request, res: Response, next: NextFunct
     let id = req.query.id
     let start_date = req.query.start_date
     let end_date = req.query.end_date
-
+    let checklists: IChecklist[] = []
+    let count = 0
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
+
+        if (!id) {
+            checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await Checklist.find().countDocuments()
+        }
+        if (id) {
+            checklists = await Checklist.find({ id: id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await Checklist.find({ id: id }).countDocuments()
+        }
 
         if (start_date && end_date) {
             let dt1 = new Date(String(start_date))
@@ -137,19 +146,6 @@ export const GetCheckLists = async (req: Request, res: Response, next: NextFunct
                 return checklist
             })
         }
-
-
-        if (id) {
-            let user = await User.findById(id)
-            if (user) {
-                checklists = checklists.filter((checklist) => {
-                    return checklist.owner.username === user?.username
-                })
-            }
-        }
-
-        let count = checklists.length
-        checklists = checklists.slice((page - 1) * limit, limit * page)
 
         return res.status(200).json({
             checklists,
@@ -166,8 +162,8 @@ export const GetMyCheckLists = async (req: Request, res: Response, next: NextFun
     let start_date = req.query.start_date
     let end_date = req.query.end_date
 
-    let checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
-    
+    let checklists = await Checklist.find({ id: req.user._id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
+
     if (start_date && end_date) {
         let dt1 = new Date(String(start_date))
         let dt2 = new Date(String(end_date))
@@ -181,10 +177,6 @@ export const GetMyCheckLists = async (req: Request, res: Response, next: NextFun
             return checklist
         })
     }
-
-    checklists = checklists.filter((checklist) => {
-        return checklist.owner.username === req.user?.username
-    })
     return res.status(200).json(checklists)
 }
 
