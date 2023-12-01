@@ -129,7 +129,7 @@ export const GetCheckLists = async (req: Request, res: Response, next: NextFunct
             count = await Checklist.find().countDocuments()
         }
         if (id) {
-            checklists = await Checklist.find({ id: id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            checklists = await Checklist.find({ owner: id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await Checklist.find({ id: id }).countDocuments()
         }
 
@@ -162,7 +162,7 @@ export const GetMyCheckLists = async (req: Request, res: Response, next: NextFun
     let start_date = req.query.start_date
     let end_date = req.query.end_date
 
-    let checklists = await Checklist.find({ id: req.user._id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
+    let checklists = await Checklist.find({ owner: req.user._id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
 
     if (start_date && end_date) {
         let dt1 = new Date(String(start_date))

@@ -114,7 +114,7 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
         }
 
         if (id) {
-            todos = await Todo.find({ id: id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            todos = await Todo.find({ person: id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
         }
         if (start_date && end_date) {
             let dt1 = new Date(String(start_date))
@@ -137,7 +137,7 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
 }
 
 export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
-    let todos = await Todo.find({ id: req.user._id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at')
+    let todos = await Todo.find({ person: req.user._id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at')
     return res.status(200).json(todos)
 }
 
