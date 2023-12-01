@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, ContactChoiceActions } from '../../contexts/dialogContext'
@@ -42,7 +42,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                             <STableHeadCell
                                                      >
                                
-                                    <FormControlLabel sx={{ fontSize: 12 }} control={
+                                   
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
                                             checked={Boolean(selectAll)}
@@ -55,9 +55,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                                     setSelectedContacts([])
                                                     setSelectAll(false)
                                                 }
-                                            }} />}
-                                        label=""
-                                    />
+                                            }} />
                                
                             </STableHeadCell>
                             { user?.contacts_access_fields.is_editable &&

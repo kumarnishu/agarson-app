@@ -1,5 +1,5 @@
 import { Comment, Delete, DeleteOutline, Edit, Share, Visibility } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
+import { Box, Checkbox,  IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
@@ -53,7 +53,6 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               <STableHeadCell
               >
 
-                <FormControlLabel sx={{ fontSize: 12 }} control={
                   <Checkbox
                     indeterminate={selectAll ? true : false}
                     checked={Boolean(selectAll)}
@@ -66,9 +65,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                         setSelectedLeads([])
                         setSelectAll(false)
                       }
-                    }} />}
-                  label=""
-                />
+                    }} />
 
               </STableHeadCell>
 

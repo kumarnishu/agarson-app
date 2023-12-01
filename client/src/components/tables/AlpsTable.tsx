@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel } from '@mui/material'
+import { Box, Checkbox } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { DownloadFile } from '../../utils/DownloadFile'
 import { IAlps } from '../../types/alps.types'
@@ -37,7 +37,6 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                             <STableHeadCell
                             >
                                
-                                    <FormControlLabel sx={{ fontSize: 12 }} control={
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
                                             checked={Boolean(selectAll)}
@@ -50,9 +49,7 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
                                                     setSelectedAlps([])
                                                     setSelectAll(false)
                                                 }
-                                            }} />}
-                                        label=""
-                                    />
+                                            }} />
                                
                             </STableHeadCell>
 

@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
@@ -40,7 +40,7 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
         <>
             <Box sx={{
                 overflow: "scroll",
-                minHeight: '43.5vh'
+                minHeight: '58.5vh'
             }}>
                 <STable
                 >
@@ -50,7 +50,7 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                             <STableHeadCell
                             >
 
-                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                               
                                     <Checkbox
                                         indeterminate={selectAll ? true : false}
                                         checked={Boolean(selectAll)}
@@ -63,9 +63,7 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                                 setSelectedTasks([])
                                                 setSelectAll(false)
                                             }
-                                        }} />}
-                                    label=""
-                                />
+                                        }} />
 
                             </STableHeadCell>
 

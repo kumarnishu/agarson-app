@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
@@ -35,7 +35,7 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
         <>
             <Box sx={{
                 overflow: "scroll",
-                minHeight: '43.5vh'
+                minHeight: '58.5vh'
             }}>
                 <STable
                 >
@@ -45,7 +45,7 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             <STableHeadCell
                             >
 
-                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                               
                                     <Checkbox
                                         indeterminate={selectAll ? true : false}
                                         checked={Boolean(selectAll)}
@@ -58,9 +58,7 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                 setSelectedTodos([])
                                                 setSelectAll(false)
                                             }
-                                        }} />}
-                                    label=""
-                                />
+                                        }} />
 
                             </STableHeadCell>
 

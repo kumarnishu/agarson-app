@@ -1,5 +1,5 @@
 import { Block, Delete, Edit, Pause, RemoveRedEye, ResetTv, RestartAlt, Stop } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { BroadcastChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
@@ -48,7 +48,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                         <STableRow>
                             <STableHeadCell>
 
-                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                               
                                     <Checkbox
                                         indeterminate={selectAll ? true : false}
                                         checked={Boolean(selectAll)}
@@ -61,9 +61,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                 setSelectedBroadcasts([])
                                                 setSelectAll(false)
                                             }
-                                        }} />}
-                                    label=""
-                                />
+                                        }} />
 
                             </STableHeadCell>
                             {user?.broadcast_access_fields.is_editable &&

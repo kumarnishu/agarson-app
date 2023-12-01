@@ -1,5 +1,5 @@
 import { Accessibility, Block, BlockOutlined, Edit, GroupAdd, GroupRemove, Key, RemoveCircle, Restore } from '@mui/icons-material'
-import { Avatar, Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, Checkbox, IconButton, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { IUser } from '../../types/user.types'
 import { useContext, useEffect, useState } from 'react'
@@ -52,9 +52,8 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                             <STableHeadCell
                             >
 
-                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                               
                                     <Checkbox
-
                                         size="small" onChange={(e) => {
                                             if (e.currentTarget.checked) {
                                                 setSelectedUsers(users)
@@ -64,9 +63,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                                 setSelectedUsers([])
                                                 setSelectAll(false)
                                             }
-                                        }} />}
-                                    label=""
-                                />
+                                        }} />
 
                             </STableHeadCell>
                             {LoggedInUser?.user_access_fields.is_editable &&

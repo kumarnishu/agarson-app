@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import UpdateReferDialog from '../dialogs/crm/UpdateReferDialog'
@@ -60,7 +60,7 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                             <STableHeadCell
                             >
                            
-                                    <FormControlLabel sx={{ fontSize: 12 }} control={
+                                   
                                         <Checkbox
                                             indeterminate={selectAll ? true : false}
                                             checked={Boolean(selectAll)}
@@ -73,9 +73,7 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                                     setSelectedRefers([])
                                                     setSelectAll(false)
                                                 }
-                                            }} />}
-                                        label=""
-                                    />
+                                            }} />
                                 
                             </STableHeadCell>
                             {user?.crm_access_fields.is_editable &&

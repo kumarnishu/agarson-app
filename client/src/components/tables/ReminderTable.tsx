@@ -1,5 +1,5 @@
 import { Block, Edit, Pause, RemoveRedEye, RestartAlt, Stop } from '@mui/icons-material'
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ReminderChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
@@ -47,7 +47,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                             <STableHeadCell
                             >
 
-                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                                
                                     <Checkbox
                                         indeterminate={selectAll ? true : false}
                                         checked={Boolean(selectAll)}
@@ -60,9 +60,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                 setSelectedReminders([])
                                                 setSelectAll(false)
                                             }
-                                        }} />}
-                                    label=""
-                                />
+                                        }} />
 
                             </STableHeadCell>
                             {user?.reminders_access_fields.is_editable &&

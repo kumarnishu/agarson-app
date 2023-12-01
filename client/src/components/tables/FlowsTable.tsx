@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, FormControlLabel, IconButton, Popover, Tooltip } from '@mui/material'
+import { Box, Button, Checkbox, IconButton, Popover, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
@@ -45,7 +45,7 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                             <STableHeadCell
                             >
 
-                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                                
                                     <Checkbox
                                         indeterminate={selectAll ? true : false}
                                         checked={Boolean(selectAll)}
@@ -58,9 +58,7 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
                                                 setSelectedFlows([])
                                                 setSelectAll(false)
                                             }
-                                        }} />}
-                                    label=""
-                                />
+                                        }} />
 
                             </STableHeadCell>
                             {user?.bot_access_fields.is_editable &&

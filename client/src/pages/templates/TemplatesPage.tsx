@@ -145,7 +145,7 @@ export default function TemplatesPage() {
 
               templates && templates.map((template, index) => {
                 return (
-                  <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                  <Grid key={index} item xs={12} md={3} lg={3} sx={{ p: 1 }}>
                     <Stack sx={{ bgcolor: 'white', position: 'relative', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }} gap={1}>
                       <Typography variant="subtitle1">{template.name}</Typography>
                       {template.media && <img

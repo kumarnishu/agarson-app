@@ -1,4 +1,4 @@
-import {  Search } from '@mui/icons-material'
+import { Search } from '@mui/icons-material'
 import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
@@ -34,7 +34,7 @@ export default function VisitAdminPage() {
     const [selectedVisits, setSelectedVisits] = useState<IVisitReport[]>([])
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-        start_date: moment(new Date().setDate(new Date().getDate()-1)).format("YYYY-MM-DD")
+        start_date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
         , end_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
     })
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
@@ -139,7 +139,7 @@ export default function VisitAdminPage() {
                     date: new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleDateString(),
                     start_day: new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleTimeString(),
                     start_day_location: visit.visit.start_day_credientials && visit.visit.start_day_credientials.address,
-                    start_day_coordinates: visit.visit.start_day_credientials && visit.visit.start_day_credientials.latitude + "," +  visit.visit.start_day_credientials.longitude,
+                    start_day_coordinates: visit.visit.start_day_credientials && visit.visit.start_day_credientials.latitude + "," + visit.visit.start_day_credientials.longitude,
                     start_day_photo: visit.visit.start_day_photo && visit.visit.start_day_photo?.public_url || "",
                     end_day: new Date(visit.visit.end_day_credentials && visit.visit.end_day_credentials.timestamp).toLocaleTimeString(),
                     end_day_location: visit.visit.end_day_credentials && visit.visit.end_day_credentials.address,
@@ -147,7 +147,7 @@ export default function VisitAdminPage() {
                     end_day_photo: visit.visit.end_day_photo && visit.visit.end_day_photo?.public_url || "",
                     visit_in: new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString(),
                     visit_in_location: visit.visit_in_credientials && visit.visit_in_credientials.address,
-                    visit_in_coordinates: visit.visit_in_credientials && visit.visit_in_credientials.latitude + "," +  visit.visit_in_credientials.longitude,
+                    visit_in_coordinates: visit.visit_in_credientials && visit.visit_in_credientials.latitude + "," + visit.visit_in_credientials.longitude,
                     visit_in_photo: visit.visit_in_photo && visit.visit_in_photo?.public_url || "",
                     visit_out: new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString(),
                     visit_out_location: visit.visit_out_credentials && visit.visit_out_credentials.address,
@@ -320,37 +320,38 @@ export default function VisitAdminPage() {
             </Stack >
 
             {/* filter dates and person */}
-            <Stack padding={2} gap={2}>
-                <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'}>
-                    < TextField
-                        size="small"
-                        type="date"
-                        id="start_date"
-                        label="Start Date"
-                        fullWidth
-                        value={dates.start_date}
-                        focused
-                        onChange={(e) => setDates({
-                            ...dates,
-                            start_date: moment(e.target.value).format("YYYY-MM-DD")
-                        })}
-                    />
-                    < TextField
-                        size="small"
-                        type="date"
-                        id="end_date"
-                        label="End Date"
-                        focused
-                        value={dates.end_date}
-                        fullWidth
-                        onChange={(e) => setDates({
-                            ...dates,
-                            end_date: moment(e.target.value).format("YYYY-MM-DD")
-                        })}
-                    />
-                </Stack>
+            <Stack direction="row" pb={2} gap={2}>
+                < TextField
+                    variant='filled'
+                    size="small"
+                    type="date"
+                    id="start_date"
+                    label="Start Date"
+                    fullWidth
+                    value={dates.start_date}
+                    focused
+                    onChange={(e) => setDates({
+                        ...dates,
+                        start_date: moment(e.target.value).format("YYYY-MM-DD")
+                    })}
+                />
+                < TextField
+                    variant='filled'
+                    size="small"
+                    type="date"
+                    id="end_date"
+                    label="End Date"
+                    focused
+                    value={dates.end_date}
+                    fullWidth
+                    onChange={(e) => setDates({
+                        ...dates,
+                        end_date: moment(e.target.value).format("YYYY-MM-DD")
+                    })}
+                />
                 {user?.is_admin &&
                     < TextField
+                        variant='filled'
                         size="small"
                         select
                         SelectProps={{
@@ -380,16 +381,16 @@ export default function VisitAdminPage() {
 
             {/* table */}
             {isLoading && <TableSkeleton />}
-            {!isLoading && 
-            <VisitTable
-                visit={visit}
-                setVisit={setVisit}
-                selectAll={selectAll}
-                selectedVisits={selectedVisits}
-                setSelectedVisits={setSelectedVisits}
-                setSelectAll={setSelectAll}
-                visits={MemoData}
-            />}
+            {!isLoading &&
+                <VisitTable
+                    visit={visit}
+                    setVisit={setVisit}
+                    selectAll={selectAll}
+                    selectedVisits={selectedVisits}
+                    setSelectedVisits={setSelectedVisits}
+                    setSelectAll={setSelectAll}
+                    visits={MemoData}
+                />}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 

@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
@@ -39,7 +39,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
         <>
             <Box sx={{
                 overflow: "scroll",
-                minHeight: '53.5vh'
+                minHeight: '58.5vh'
             }}>
                 <STable
                 >
@@ -49,7 +49,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                             <STableHeadCell
                             >
 
-                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                               
                                     <Checkbox
                                         indeterminate={selectAll ? true : false}
                                         checked={Boolean(selectAll)}
@@ -62,9 +62,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                                 setSelectedVisits([])
                                                 setSelectAll(false)
                                             }
-                                        }} />}
-                                    label=""
-                                />
+                                        }} />
 
                             </STableHeadCell>
 

@@ -216,8 +216,6 @@ export default function TodosAdminPage() {
                     <>
 
                         {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-
-
                         <IconButton size="medium"
                             onClick={(e) => setAnchorEl(e.currentTarget)
                             }
@@ -253,35 +251,36 @@ export default function TodosAdminPage() {
             </Stack >
 
             {/* filter dates and person */}
-            <Stack padding={2} gap={2}>
-                <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'}>
-                    < TextField
-                        type="date"
-                        id="start_date"
-                        label="Start Date"
-                        fullWidth
-                        value={dates.start_date}
-                        focused
-                        onChange={(e) => setDates({
-                            ...dates,
-                            start_date: moment(e.target.value).format("YYYY-MM-DD")
-                        })}
-                    />
-                    < TextField
-                        type="date"
-                        id="end_date"
-                        label="End Date"
-                        value={dates.end_date}
-                        focused
-                        fullWidth
-                        onChange={(e) => setDates({
-                            ...dates,
-                            end_date: moment(e.target.value).format("YYYY-MM-DD")
-                        })}
-                    />
-                </Stack>
+            <Stack direction='row' gap={2} pb={2} alignItems={'center'} justifyContent={'center'}>
+                < TextField
+                    variant='filled'
+                    type="date"
+                    id="start_date"
+                    label="Start Date"
+                    fullWidth
+                    value={dates.start_date}
+                    focused
+                    onChange={(e) => setDates({
+                        ...dates,
+                        start_date: moment(e.target.value).format("YYYY-MM-DD")
+                    })}
+                />
+                < TextField
+                    variant='filled'
+                    type="date"
+                    id="end_date"
+                    label="End Date"
+                    value={dates.end_date}
+                    focused
+                    fullWidth
+                    onChange={(e) => setDates({
+                        ...dates,
+                        end_date: moment(e.target.value).format("YYYY-MM-DD")
+                    })}
+                />
                 {user?.is_admin &&
                     < TextField
+                        variant='filled'
                         select
                         SelectProps={{
                             native: true,

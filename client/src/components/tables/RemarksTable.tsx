@@ -34,7 +34,7 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
         <>
             <Box sx={{
                 overflow: "scroll",
-                height: '53.5vh'
+                height: '64.5vh'
             }}>
                 <STable
                 >
