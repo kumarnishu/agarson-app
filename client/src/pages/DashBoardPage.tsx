@@ -31,9 +31,9 @@ function DashBoardPage() {
           {!user?.todos_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
             <Link to={paths.todos} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
-                <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                <CardContent sx={{ color: 'red', display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                   <TaskAltOutlined sx={{ height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                  <Typography variant="button" sx={{ color: 'red', fontSize: 16 }} component="div">
                     Todos
                   </Typography>
                 </CardContent>
@@ -175,7 +175,7 @@ function DashBoardPage() {
                   <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     Contacts
                   </Typography>
-                 
+
                 </CardContent>
               </Card>
             </Link>
