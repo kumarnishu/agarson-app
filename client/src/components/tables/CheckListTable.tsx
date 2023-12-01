@@ -209,17 +209,17 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                                             <Add />
                                                                         </IconButton>
                                                                     </Tooltip>
-
-                                                                    <Tooltip title="Delete">
-                                                                        <IconButton color="error"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: CheckListChoiceActions.delete_checklist })
-                                                                                setCheckList(checklist)
-                                                                            }}
-                                                                        >
-                                                                            <Delete />
-                                                                        </IconButton>
-                                                                    </Tooltip>
+                                                                    {user?.checklists_access_fields.is_deletion_allowed &&
+                                                                        <Tooltip title="Delete">
+                                                                            <IconButton color="error"
+                                                                                onClick={() => {
+                                                                                    setChoice({ type: CheckListChoiceActions.delete_checklist })
+                                                                                    setCheckList(checklist)
+                                                                                }}
+                                                                            >
+                                                                                <Delete />
+                                                                            </IconButton>
+                                                                        </Tooltip>}
                                                                     <Tooltip title="View">
                                                                         <IconButton color="success"
                                                                             onClick={() => {
@@ -240,7 +240,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
 
 
                                         <STableCell>
-                                          
+
 
                                             <a href={checklist.sheet_url} target='blank'>
                                                 {checklist.title && checklist.title.slice(0, 50)}
@@ -248,7 +248,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
 
                                         </STableCell>
                                         <STableCell>
-                                        {checklist.owner.username}
+                                            {checklist.owner.username}
                                         </STableCell>
 
                                         <STableCell>
@@ -261,22 +261,22 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                         </STableCell>
 
                                         <STableCell>
-                                           {checklist.boxes.length > 0 && new Date(checklist.boxes[checklist.boxes.length - 1].desired_date).toLocaleString()}
+                                            {checklist.boxes.length > 0 && new Date(checklist.boxes[checklist.boxes.length - 1].desired_date).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                           {new Date(checklist.created_at).toLocaleString()}
+                                            {new Date(checklist.created_at).toLocaleString()}
 
                                         </STableCell>
                                         <STableCell>
-                                           {new Date(checklist.updated_at).toLocaleString()}
+                                            {new Date(checklist.updated_at).toLocaleString()}
 
                                         </STableCell>
                                         <STableCell>
-                                           {checklist.created_by.username}
+                                            {checklist.created_by.username}
 
                                         </STableCell>
                                         <STableCell>
-                                           {checklist.updated_by.username}
+                                            {checklist.updated_by.username}
 
                                         </STableCell>
 

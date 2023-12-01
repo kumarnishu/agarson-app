@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, IconButton,  Tooltip } from '@mui/material'
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
@@ -43,104 +43,104 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                 minHeight: '43.5vh'
             }}>
                 <STable
-                   >
+                >
                     <STableHead
                     >
                         <STableRow>
                             <STableHeadCell
-                                                         >
-                               
-                                    <FormControlLabel sx={{ fontSize: 12 }} control={
-                                        <Checkbox
-                                            indeterminate={selectAll ? true : false}
-                                            checked={Boolean(selectAll)}
-                                            size="small" onChange={(e) => {
-                                                if (e.currentTarget.checked) {
-                                                    setSelectedTasks(tasks)
-                                                    setSelectAll(true)
-                                                }
-                                                if (!e.currentTarget.checked) {
-                                                    setSelectedTasks([])
-                                                    setSelectAll(false)
-                                                }
-                                            }} />}
-                                        label=""
-                                    />
-                                
+                            >
+
+                                <FormControlLabel sx={{ fontSize: 12 }} control={
+                                    <Checkbox
+                                        indeterminate={selectAll ? true : false}
+                                        checked={Boolean(selectAll)}
+                                        size="small" onChange={(e) => {
+                                            if (e.currentTarget.checked) {
+                                                setSelectedTasks(tasks)
+                                                setSelectAll(true)
+                                            }
+                                            if (!e.currentTarget.checked) {
+                                                setSelectedTasks([])
+                                                setSelectAll(false)
+                                            }
+                                        }} />}
+                                    label=""
+                                />
+
                             </STableHeadCell>
 
                             {/* actions popup */}
                             {user?.tasks_access_fields.is_editable && <STableHeadCell
-                                                         >
-                               
-                                    Actions
-                                
+                            >
+
+                                Actions
+
                             </STableHeadCell>}
 
 
                             <STableHeadCell
-                                                         >
-                               
-                                    Task Description
-                                
+                            >
+
+                                Task Description
+
                             </STableHeadCell>
 
 
                             <STableHeadCell
-                                                         >
-                               
-                                    Person
-                                
+                            >
+
+                                Person
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                         >
-                               
-                                    Frequency
-                                
+                            >
+
+                                Frequency
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                         >
-                               
-                                    Status
-                                
+                            >
+
+                                Status
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                         >
-                               
-                                    Last Date
-                                
+                            >
+
+                                Last Date
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                         >
-                               
-                                    Created At
-                                
+                            >
+
+                                Created At
+
                             </STableHeadCell>
 
                             {/* updated at */}
 
                             <STableHeadCell
-                                                         >
-                               
-                                    Updated At
-                                
+                            >
+
+                                Updated At
+
                             </STableHeadCell>
 
                             {/* created by */}
 
                             <STableHeadCell
-                                                         >
-                               
-                                    Created By
-                                
+                            >
+
+                                Created By
+
                             </STableHeadCell>
 
                             <STableHeadCell
-                                                         >
-                               
-                                    Updated By
-                                
+                            >
+
+                                Updated By
+
                             </STableHeadCell>
                         </STableRow>
                     </STableHead>
@@ -151,38 +151,38 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                 return (
                                     <STableRow
                                         key={index}
-                                      >
+                                    >
                                         {selectAll ?
 
                                             <STableCell>
-                                                
 
-                                                    <Checkbox size="small"
-                                                        checked={Boolean(selectAll)}
-                                                    />
 
-                                                
+                                                <Checkbox size="small"
+                                                    checked={Boolean(selectAll)}
+                                                />
+
+
                                             </STableCell>
                                             :
                                             null}
                                         {!selectAll ?
 
                                             <STableCell>
-                                                
-                                                    <Checkbox size="small"
-                                                        onChange={(e) => {
-                                                            setTask(task)
-                                                            if (e.target.checked) {
-                                                                setSelectedTasks([...selectedTasks, task])
-                                                            }
-                                                            if (!e.target.checked) {
-                                                                setSelectedTasks((tasks) => tasks.filter((item) => {
-                                                                    return item._id !== task._id
-                                                                }))
-                                                            }
-                                                        }}
-                                                    />
-                                                
+
+                                                <Checkbox size="small"
+                                                    onChange={(e) => {
+                                                        setTask(task)
+                                                        if (e.target.checked) {
+                                                            setSelectedTasks([...selectedTasks, task])
+                                                        }
+                                                        if (!e.target.checked) {
+                                                            setSelectedTasks((tasks) => tasks.filter((item) => {
+                                                                return item._id !== task._id
+                                                            }))
+                                                        }
+                                                    }}
+                                                />
+
                                             </STableCell>
                                             :
                                             null/* actions popup */}
@@ -214,17 +214,17 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                                                             <Add />
                                                                         </IconButton>
                                                                     </Tooltip>
-
-                                                                    <Tooltip title="Delete">
-                                                                        <IconButton color="error"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: TaskChoiceActions.delete_task })
-                                                                                setTask(task)
-                                                                            }}
-                                                                        >
-                                                                            <Delete />
-                                                                        </IconButton>
-                                                                    </Tooltip>
+                                                                    {user?.tasks_access_fields.is_deletion_allowed &&
+                                                                        <Tooltip title="Delete">
+                                                                            <IconButton color="error"
+                                                                                onClick={() => {
+                                                                                    setChoice({ type: TaskChoiceActions.delete_task })
+                                                                                    setTask(task)
+                                                                                }}
+                                                                            >
+                                                                                <Delete />
+                                                                            </IconButton>
+                                                                        </Tooltip>}
                                                                     <Tooltip title="View">
                                                                         <IconButton color="success"
                                                                             onClick={() => {
@@ -238,21 +238,21 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                                                 </>
 
                                                             }
-                                                        
-                                                    </Stack>} />
+
+                                                        </Stack>} />
                                             </STableCell>}
 
 
                                         <STableCell>
-                                         {task.task_description && task.task_description.slice(0, 50)}
+                                            {task.task_description && task.task_description.slice(0, 50)}
                                         </STableCell>
 
 
                                         <STableCell>
-                                         {task.person.username}
+                                            {task.person.username}
                                         </STableCell>
                                         <STableCell>
-                                         {task.frequency_value ? `${task.frequency_value} days` : task.frequency_type}
+                                            {task.frequency_value ? `${task.frequency_value} days` : task.frequency_type}
                                         </STableCell>
                                         <STableCell>
                                             Checked : {task.boxes.filter((box) => {
@@ -266,22 +266,22 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                         </STableCell>
 
                                         <STableCell>
-                                           {task.boxes.length > 0 && new Date(task.boxes[task.boxes.length - 1].date).toLocaleString()}
+                                            {task.boxes.length > 0 && new Date(task.boxes[task.boxes.length - 1].date).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                           {new Date(task.created_at).toLocaleString()}
+                                            {new Date(task.created_at).toLocaleString()}
 
                                         </STableCell>
                                         <STableCell>
-                                           {new Date(task.updated_at).toLocaleString()}
+                                            {new Date(task.updated_at).toLocaleString()}
 
                                         </STableCell>
                                         <STableCell>
-                                           {task.created_by.username}
+                                            {task.created_by.username}
 
                                         </STableCell>
                                         <STableCell>
-                                           {task.updated_by.username}
+                                            {task.updated_by.username}
 
                                         </STableCell>
 

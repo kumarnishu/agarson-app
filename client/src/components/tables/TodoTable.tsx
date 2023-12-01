@@ -108,7 +108,7 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             <STableHeadCell
                             >
 
-                               Last Reply
+                                Last Reply
 
                             </STableHeadCell>
 
@@ -206,7 +206,7 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                                         </IconButton>
                                                                     </Tooltip>
 
-                                                                    <Tooltip title="Delete">
+                                                                    {user?.todos_access_fields.is_deletion_allowed && <Tooltip title="Delete">
                                                                         <IconButton color="error"
                                                                             onClick={() => {
                                                                                 setChoice({ type: TodoChoiceActions.delete_todo })
@@ -215,7 +215,7 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                                         >
                                                                             <Delete />
                                                                         </IconButton>
-                                                                    </Tooltip>
+                                                                    </Tooltip>}
                                                                     <Tooltip title="Hide">
                                                                         <IconButton color="warning"
                                                                             onClick={() => {

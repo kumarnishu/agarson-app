@@ -5,7 +5,6 @@ import PopUp from '../popup/PopUp'
 import { ITodo } from '../../types/todo.types'
 import { EditOutlined } from '@mui/icons-material'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
-import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import UpdateTodoStatusDialog from '../dialogs/todos/UpdateTodoStatusDialog'
 
@@ -23,7 +22,6 @@ type Props = {
 
 function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTodos, setSelectedTodos }: Props) {
     const [data, setData] = useState<ITodo[]>(todos)
-    const { user } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
     useEffect(() => {
         setData(todos)
@@ -62,13 +60,13 @@ function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTo
 
                             </STableHeadCell>
 
-                            {/* actions popup */}
-                            {user?.todos_access_fields.is_editable && <STableHeadCell
+                           
+                             <STableHeadCell
                             >
 
                                 Actions
 
-                            </STableHeadCell>}
+                            </STableHeadCell>
 
 
                             <STableHeadCell
@@ -154,7 +152,7 @@ function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTo
                                                 </STableCell>
                                                 :
                                                 null/* actions popup */}
-                                            {user?.todos_access_fields.is_editable &&
+                                            
                                                 <STableCell>
                                                     <PopUp
                                                         element={
@@ -177,7 +175,7 @@ function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTo
                                                                 }
 
                                                             </Stack>} />
-                                                </STableCell>}
+                                                </STableCell>
 
                                             <STableCell>
                                                 {todo.work_title}
