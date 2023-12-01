@@ -50,6 +50,10 @@ import MyVisitPage from './pages/visit/MyVisitPage'
 import VisitHelpPage from './pages/visit/VisitHelpPage'
 import VisitNavBar from './components/navbar/MyVisitNavBar'
 import VisitAdminPage from './pages/visit/VisitAdminPage'
+import TodosPage from './pages/todo/TodosPage'
+import TodoHelpPage from './pages/todo/TodoHelpPage'
+import TodosAdminPage from './pages/todo/TodosAdminPage'
+import TodoNavBar from './components/navbar/TodoNavBar'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -78,6 +82,11 @@ export enum paths {
   tasks = "/tasks",
   task_help_page = "task_help_page",
   task_admin_page = "task_admin_page",
+
+  //todo
+  todos = "/todos",
+  todo_help_page = "todo_help_page",
+  todo_admin_page = "todo_admin_page",
 
   //checklists
   checklists = "/checklists",
@@ -170,6 +179,30 @@ function AppRoutes() {
                 }
               />
             </Route>}
+          {/* users nav bar */}
+          {!user.todos_access_fields.is_hidden &&
+            < Route path={paths.todos} element={<TodoNavBar />}>
+              <Route index
+                element={
+                  <TodosPage />
+                }
+              />
+              <Route
+                path={paths.todos} element={
+                  <TodosPage />
+                }
+              />
+              <Route
+                path={paths.todo_admin_page} element={
+                  <TodosAdminPage />
+                }
+              />
+              <Route
+                path={paths.todo_help_page} element={
+                  <TodoHelpPage />
+                }
+              />
+            </Route>}
           {/* visit help */}
           {!user.visit_access_fields.is_hidden &&
             < Route path={paths.visit} element={<VisitNavBar />}>
@@ -239,7 +272,7 @@ function AppRoutes() {
                   </Suspense>
                 }
               />
-             
+
               <Route
                 path={paths.crm_help} element={
                   <CrmHelpPage />

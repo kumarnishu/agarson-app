@@ -1,12 +1,10 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
 import { paths } from "../Routes"
-import Person3Icon from '@mui/icons-material/Person3';
 import BackupIcon from '@mui/icons-material/Backup';
-import Diversity3Icon from '@mui/icons-material/Diversity3';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { Link } from "react-router-dom";
-import { Apartment, Article, Book, CheckBox, Phone, PunchClock, TaskAlt, Tour } from "@mui/icons-material";
+import { ApartmentOutlined, Article, Book, CheckBoxOutlined, Diversity3Outlined, Person3Outlined, Phone, PunchClock, TaskAltOutlined, TodayOutlined, TourOutlined } from "@mui/icons-material";
 import { useContext } from "react";
 import { UserContext } from "../contexts/userContext";
 
@@ -21,9 +19,22 @@ function DashBoardPage() {
             <Link to={paths.users} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Person3Icon sx={{ color: 'blue', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
+                  <Person3Outlined sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     Users
+                  </Typography>
+                </CardContent>
+
+              </Card>
+            </Link>
+          </Grid>}
+          {!user?.todos_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+            <Link to={paths.todos} style={{ textDecoration: 'none' }}>
+              <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                  <TaskAltOutlined sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                    Todos
                   </Typography>
                 </CardContent>
 
@@ -35,8 +46,8 @@ function DashBoardPage() {
               <Link to={paths.tasks} style={{ textDecoration: 'none' }}>
                 <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                   <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                    <TaskAlt sx={{ color: 'blue', height: 50, width: 50 }} />
-                    <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
+                    <TodayOutlined sx={{ height: 50, width: 50 }} />
+                    <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                       Tasks
                     </Typography>
                   </CardContent>
@@ -49,8 +60,8 @@ function DashBoardPage() {
               <Link to={paths.checklists} style={{ textDecoration: 'none' }}>
                 <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                   <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                    <CheckBox sx={{ color: 'blue', height: 50, width: 50 }} />
-                    <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
+                    <CheckBoxOutlined sx={{ height: 50, width: 50 }} />
+                    <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                       CheckLists
                     </Typography>
                   </CardContent>
@@ -62,8 +73,8 @@ function DashBoardPage() {
             <Link to={paths.crm} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Diversity3Icon sx={{ color: 'blue', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
+                  <Diversity3Outlined sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     CRM
                   </Typography>
                 </CardContent>
@@ -75,8 +86,8 @@ function DashBoardPage() {
             <Link to={paths.reports} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Book sx={{ color: 'blue', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
+                  <Book sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     Reports
                   </Typography>
                 </CardContent>
@@ -87,8 +98,8 @@ function DashBoardPage() {
             <Link to={paths.visit} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Tour sx={{ color: 'blue', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
+                  <TourOutlined sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     My Visit
                   </Typography>
                 </CardContent>
@@ -100,8 +111,8 @@ function DashBoardPage() {
             <Link to={paths.alps} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Apartment sx={{ color: 'blue', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'blue', fontSize: 16 }} component="div">
+                  <ApartmentOutlined sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     ALPS
                   </Typography>
                 </CardContent>
@@ -115,8 +126,8 @@ function DashBoardPage() {
             <Link to={paths.bot} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <WhatsAppIcon sx={{ color: 'green', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'green', fontSize: 16 }} component="div">
+                  <WhatsAppIcon sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     WA BOT
                   </Typography>
                 </CardContent>
@@ -130,8 +141,8 @@ function DashBoardPage() {
             <Link to={paths.templates} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Article sx={{ color: 'green', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'green', fontSize: 16 }} component="div">
+                  <Article sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     Templates
                   </Typography>
                 </CardContent>
@@ -144,8 +155,8 @@ function DashBoardPage() {
             <Link to={paths.broadcast} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <CampaignIcon sx={{ color: 'green', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'green', fontSize: 16 }} component="div">
+                  <CampaignIcon sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     Broadcast
                   </Typography>
                 </CardContent>
@@ -160,12 +171,12 @@ function DashBoardPage() {
             <Link to={paths.contacts} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <Phone sx={{ color: 'green', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'green', fontSize: 16 }} component="div">
+                  <Phone sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     Contacts
                   </Typography>
+                 
                 </CardContent>
-
               </Card>
             </Link>
           </Grid>}
@@ -176,8 +187,8 @@ function DashBoardPage() {
             <Link to={paths.reminders} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <PunchClock sx={{ color: 'green', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'green', fontSize: 16 }} component="div">
+                  <PunchClock sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     Reminders
                   </Typography>
                 </CardContent>
@@ -192,8 +203,8 @@ function DashBoardPage() {
             <Link to={paths.backup_page} style={{ textDecoration: 'none' }}>
               <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
-                  <BackupIcon sx={{ color: 'brown', height: 50, width: 50 }} />
-                  <Typography variant="button" sx={{ color: 'brown', fontSize: 16 }} component="div">
+                  <BackupIcon sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                     Backup Database
                   </Typography>
                 </CardContent>
