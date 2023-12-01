@@ -612,11 +612,10 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
 
 
         < TextField
-
-
           select
           SelectProps={{
-            native: true
+            native: true,
+            multiple: true
           }}
           focused
           required
