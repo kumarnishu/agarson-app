@@ -5,6 +5,10 @@ import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { destroyFile } from "../utils/destroyFile.util"
 import { IMessageTemplateBody } from "../types/template.types"
 
+export const GetMessagetemplates = async (req: Request, res: Response, next: NextFunction) => {
+    let templates = await MessageTemplate.find()
+    return res.status(200).json(templates)
+}
 
 export const CreateMessagetemplate = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
@@ -115,9 +119,6 @@ export const DeleteMessagetemplate = async (req: Request, res: Response, next: N
     return res.status(200).json("message template deleted")
 }
 
-export const GetMessagetemplates = async (req: Request, res: Response, next: NextFunction) => {
-    let templates = await MessageTemplate.find()
-    return res.status(200).json(templates)
-}
+
 
 

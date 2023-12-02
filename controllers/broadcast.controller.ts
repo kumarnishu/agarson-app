@@ -18,6 +18,70 @@ import { BroadcastManager } from "../app"
 import { IBroadcastBody } from "../types/broadcast.types"
 import { IMessage, IMessageTemplate } from "../types/template.types"
 
+
+//get
+export const GetBroadcasts = async (req: Request, res: Response, next: NextFunction) => {
+    let broadcasts = await Broadcast.find().populate('templates').populate('created_by').populate('updated_at').populate('updated_by')
+    return res.status(200).json(broadcasts)
+}
+
+export const GetBroadcastReports = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    if (!isMongoId(id)) {
+        return res.status(400).json({ message: "please provide correct broadcast id" })
+    }
+    let broadcast = await Broadcast.findById(id)
+    let reports = await BroadcastReport.find({ broadcast: broadcast }).populate('created_by').populate('updated_by')
+    return res.status(200).json(reports)
+}
+
+export const GetPaginatedBroadcastReports = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let id = String(req.query.id)
+    if (!isMongoId(id)) {
+        return res.status(400).json({ message: "please provide correct broadcast id" })
+    }
+    let broadcast = await Broadcast.findById(id)
+    if (!broadcast)
+        return res.status(404).json({ message: "broadcast not found" })
+
+    if (!Number.isNaN(limit) && !Number.isNaN(page) && id) {
+        let reports = await BroadcastReport.find({ broadcast: broadcast }).populate('created_by').populate('updated_by').sort('-updated_at')
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+
+        let count = await BroadcastReport.countDocuments()
+        return res.status(200).json({
+            reports,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(500).json({ message: "bad request" })
+
+}
+
+export const SearchBroadcastReportByMobile = async (req: Request, res: Response, next: NextFunction) => {
+    let mobile = String(`91${req.query.mobile}@c.us`)
+    let id = String(req.query.id)
+    if (!isMongoId(id)) {
+        return res.status(400).json({ message: "please provide correct broadcast id" })
+    }
+    let broadcast = await Broadcast.findById(id)
+    if (!broadcast)
+        return res.status(404).json({ message: "broadcast not found" })
+
+    if (!mobile)
+        return res.status(400).json({ message: "mobile not provided" })
+
+    let reports = await BroadcastReport.find({ broadcast: broadcast, mobile: mobile }).populate('created_by').populate('updated_by').sort('-updated_at')
+    return res.status(200).json(reports)
+}
+
+//post/put/delete/patch
 export const CreateBroadcastByTemplate = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
     let { name, templates, mobiles } = body as IBroadcastBody & { templates: string[], mobiles: string[] }
@@ -494,10 +558,6 @@ export const StartBroadcastWithTemplate = async (req: Request, res: Response, ne
 }
 
 
-export const GetBroadcasts = async (req: Request, res: Response, next: NextFunction) => {
-    let broadcasts = await Broadcast.find().populate('templates').populate('created_by').populate('updated_at').populate('updated_by')
-    return res.status(200).json(broadcasts)
-}
 
 export const DeleteBroadcast = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
@@ -616,61 +676,6 @@ export const StopSingleBroadcastReport = async (req: Request, res: Response, nex
     return res.status(200).json({ message: "broadcast stopped for this number" })
 }
 
-export const GetBroadcastReports = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct broadcast id" })
-    }
-    let broadcast = await Broadcast.findById(id)
-    let reports = await BroadcastReport.find({ broadcast: broadcast }).populate('created_by').populate('updated_by')
-    return res.status(200).json(reports)
-}
-
-export const GetPaginatedBroadcastReports = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let id = String(req.query.id)
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct broadcast id" })
-    }
-    let broadcast = await Broadcast.findById(id)
-    if (!broadcast)
-        return res.status(404).json({ message: "broadcast not found" })
-
-    if (!Number.isNaN(limit) && !Number.isNaN(page) && id) {
-        let reports = await BroadcastReport.find({ broadcast: broadcast }).populate('created_by').populate('updated_by').sort('-updated_at')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
-
-        let count = await BroadcastReport.countDocuments()
-        return res.status(200).json({
-            reports,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(500).json({ message: "bad request" })
-
-}
-
-export const SearchBroadcastReportByMobile = async (req: Request, res: Response, next: NextFunction) => {
-    let mobile = String(`91${req.query.mobile}@c.us`)
-    let id = String(req.query.id)
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct broadcast id" })
-    }
-    let broadcast = await Broadcast.findById(id)
-    if (!broadcast)
-        return res.status(404).json({ message: "broadcast not found" })
-
-    if (!mobile)
-        return res.status(400).json({ message: "mobile not provided" })
-
-    let reports = await BroadcastReport.find({ broadcast: broadcast, mobile: mobile }).populate('created_by').populate('updated_by').sort('-updated_at')
-    return res.status(200).json(reports)
-}
 
 
 export const DownloadBroadcastReports = async (req: Request, res: Response, next: NextFunction) => {

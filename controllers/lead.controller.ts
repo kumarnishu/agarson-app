@@ -16,97 +16,8 @@ import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
 
 
-// create lead any one can do in the organization
-export const CreateLead = async (req: Request, res: Response, next: NextFunction) => {
-    let body = JSON.parse(req.body.body)
-    let { mobile, remark, lead_owners, alternate_mobile1, alternate_mobile2 } = body as TLeadBody & { remark: string, lead_owners: string[] }
-    if (!lead_owners)
-        return res.status(400).json({ message: "assign at least one lead owner" });
-    if (lead_owners.length < 1)
-        return res.status(400).json({ message: "assign at least one lead owner" });
-    // validations
-    if (!mobile)
-        return res.status(400).json({ message: "provide primary mobile number" });
 
-    let uniqueNumbers: string[] = []
-    let oldLeads = await Lead.find()
-    let OldNumbers: string[] = []
-    oldLeads.forEach((lead) => {
-        if (lead.mobile)
-            OldNumbers.push(lead.mobile)
-        if (lead.alternate_mobile1)
-            OldNumbers.push(lead.alternate_mobile1)
-        if (lead.alternate_mobile2)
-            OldNumbers.push(lead.alternate_mobile2)
-    })
-
-    if (mobile && !OldNumbers.includes(mobile)) {
-        uniqueNumbers.push(mobile)
-        OldNumbers.push(mobile)
-    }
-    if (alternate_mobile1 && !OldNumbers.includes(alternate_mobile1)) {
-        uniqueNumbers.push(alternate_mobile1)
-        OldNumbers.push(alternate_mobile1)
-    }
-    if (alternate_mobile2 && !OldNumbers.includes(alternate_mobile2)) {
-        uniqueNumbers.push(alternate_mobile2)
-        OldNumbers.push(alternate_mobile2)
-    }
-    if (uniqueNumbers.length == 0) {
-        return res.status(400).json({ message: "one of the mobile numbers already exists" });
-    }
-    let new_lead_owners: IUser[] = []
-    let owners = String(lead_owners).split(",")
-    for (let i = 0; i < owners.length; i++) {
-        let owner = await User.findById(owners[i])
-        if (owner)
-            new_lead_owners.push(owner)
-    }
-    let visiting_card: Asset = undefined
-    if (req.file) {
-        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
-        const storageLocation = `crm/media`;
-        if (!allowedFiles.includes(req.file.mimetype))
-            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-        if (req.file.size > 10 * 1024 * 1024)
-            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
-        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-        if (doc)
-            visiting_card = doc
-        else {
-            return res.status(500).json({ message: "file uploading error" })
-        }
-    }
-    let lead = new Lead({
-        ...body,
-        visiting_card: visiting_card,
-        mobile: uniqueNumbers[0] || null,
-        alternate_mobile1: uniqueNumbers[1] || null,
-        alternate_mobile2: uniqueNumbers[2] || null,
-        lead_owners: new_lead_owners,
-        created_by: req.user,
-        updated_by: req.user,
-        created_at: new Date(Date.now()),
-        updated_at: new Date(Date.now()),
-    })
-    if (remark) {
-        let new_remark = new Remark({
-            remark,
-            lead: lead,
-            created_at: new Date(),
-            created_by: req.user,
-            updated_at: new Date(),
-            updated_by: req.user
-        })
-        await new_remark.save()
-        lead.last_remark = remark
-        lead.remarks = [new_remark]
-    }
-    await lead.save()
-    return res.status(200).json("lead created")
-}
-
-// get all leads  anyone can do in the organization
+// get request
 export const GetLeads = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
@@ -158,6 +69,57 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         return res.status(400).json({ message: "bad request" })
 }
 
+export const GetUselessLeads = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        let leads: ILead[] = []
+        let count = 0
+        if (req.user?.is_admin) {
+            leads = await Lead.find({ stage: 'useless' }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            count = await Lead.find({ stage: 'useless' }).countDocuments()
+        }
+
+        if (!req.user?.is_admin) {
+            leads = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            count = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user._id] } }).countDocuments()
+        }
+        leads = leads.slice((page - 1) * limit, limit * page)
+        return res.status(200).json({
+            leads,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+
+}
 export const GetCustomers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
@@ -208,419 +170,228 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
     else
         return res.status(400).json({ message: "bad request" })
 }
-
-// update lead only admin can do
-export const UpdateLead = async (req: Request, res: Response, next: NextFunction) => {
-    let body = JSON.parse(req.body.body)
-    const { mobile, remark, lead_owners, alternate_mobile1, alternate_mobile2 } = body as TLeadBody & { remark: string, lead_owners: string[] }
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
-    let lead = await Lead.findById(id);
-    if (!lead) {
-        return res.status(404).json({ message: "lead not found" })
-    }
-    if (!lead_owners)
-        return res.status(400).json({ message: "assign at least one lead owner" });
-    if (lead_owners.length < 1)
-        return res.status(400).json({ message: "assign at least one lead owner" });
-    // validations
-    if (!mobile)
-        return res.status(400).json({ message: "provide primary mobile number" });
-
-    let uniqueNumbers: string[] = []
-    let oldLeads = await Lead.find()
-    let OldNumbers: string[] = []
-    oldLeads.forEach((lead) => {
-        if (lead.mobile)
-            OldNumbers.push(lead.mobile)
-        if (lead.alternate_mobile1)
-            OldNumbers.push(lead.alternate_mobile1)
-        if (lead.alternate_mobile2)
-            OldNumbers.push(lead.alternate_mobile2)
-    })
-    if (mobile !== lead.mobile)
-        if (mobile && !OldNumbers.includes(mobile)) {
-            uniqueNumbers[0] = (mobile)
-            OldNumbers.push(mobile)
-        }
-    if (alternate_mobile1 !== lead.alternate_mobile1)
-        if (alternate_mobile1 && !OldNumbers.includes(alternate_mobile1)) {
-            uniqueNumbers[1] = (alternate_mobile1)
-            OldNumbers.push(alternate_mobile1)
-        }
-    if (alternate_mobile2 !== lead.alternate_mobile2)
-        if (alternate_mobile2 && !OldNumbers.includes(alternate_mobile2)) {
-            uniqueNumbers[2] = (alternate_mobile2)
-            OldNumbers.push(alternate_mobile2)
-        }
-    let new_lead_owners: IUser[] = []
-    let owners = String(lead_owners).split(",")
-    for (let i = 0; i < owners.length; i++) {
-        let owner = await User.findById(owners[i])
-        if (owner)
-            new_lead_owners.push(owner)
-    }
-
-    let visiting_card = lead?.visiting_card;
-    if (req.file) {
-        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
-        const storageLocation = `crm/media`;
-        if (!allowedFiles.includes(req.file.mimetype))
-            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-        if (req.file.size > 10 * 1024 * 1024)
-            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
-        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-        if (doc) {
-            if (lead.visiting_card?._id)
-                await destroyFile(lead.visiting_card._id)
-            visiting_card = doc
-        }
-        else {
-            return res.status(500).json({ message: "file uploading error" })
-        }
-    }
-    if (remark) {
-        if (!lead.last_remark) {
-            let new_remark = new Remark({
-                remark,
-                lead: lead,
-                created_at: new Date(),
-                created_by: req.user,
-                updated_at: new Date(),
-                updated_by: req.user
+export const GetRefers = async (req: Request, res: Response, next: NextFunction) => {
+    let parties: IReferredParty[] = []
+    let result: {
+        party: IReferredParty,
+        leads: ILead[]
+    }[] = []
+    if (req.user?.is_admin) {
+        parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
+        for (let i = 0; i < parties.length; i++) {
+            let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-referred_date')
+            result.push({
+                party: parties[i],
+                leads: leads
             })
-            await new_remark.save()
-            lead.last_remark = remark
-            lead.remarks = [new_remark]
         }
-        else {
-            let last_remark = lead.remarks[lead.remarks.length - 1]
-            await Remark.findByIdAndUpdate(last_remark._id, {
-                remark: remark,
-                lead: lead,
-                updated_at: new Date(),
-                updated_by: req.user,
-                updated_by_username: req.user?.username,
+    }
+    if (!req.user?.is_admin) {
+        parties = await ReferredParty.find({ lead_owners: { $in: [req.user._id] } }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
+        for (let i = 0; i < parties.length; i++) {
+            let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-referred_date')
+            result.push({
+                party: parties[i],
+                leads: leads
             })
-            lead.last_remark = last_remark.remark
         }
     }
-    await Lead.findByIdAndUpdate(lead._id, {
-        ...body,
-        mobile: uniqueNumbers[0] || lead.mobile || null,
-        alternate_mobile1: uniqueNumbers[1] || null,
-        alternate_mobile2: uniqueNumbers[2] || null,
-        lead_owners: new_lead_owners,
-        visiting_card: visiting_card,
-        updated_by: req.user,
-        updated_at: new Date(Date.now()),
-        remarks: lead.remarks
-    })
-
-    return res.status(200).json({ message: "lead updated" })
+    return res.status(200).json(result)
 }
-
-
-//delete lead
-export const DeleteLead = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
-    let lead = await Lead.findById(id);
-    if (!lead) {
-        return res.status(404).json({ message: "lead not found" })
-    }
-    let remarks = await Remark.find({ lead: lead._id })
-    remarks.map(async (remark) => {
-        await remark.remove()
-    })
-    await lead.remove()
-    if (lead.visiting_card && lead.visiting_card._id)
-        await destroyFile(lead.visiting_card?._id)
-    return res.status(200).json({ message: "lead and related remarks are deleted" })
-}
-
-// add new remarks on lead
-export const NewRemark = async (req: Request, res: Response, next: NextFunction) => {
-    const { remark, lead_owners, remind_date } = req.body as { remark: string, lead_owners: string[], remind_date: string }
-    if (!remark) return res.status(403).json({ message: "please fill required fields" })
-    if (lead_owners && lead_owners.length === 0)
-        return res.status(403).json({ message: "please select one lead owner" })
-    const user = await User.findById(req.user?._id)
-    if (!user)
-        return res.status(403).json({ message: "please login to access this resource" })
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
-
-    let lead = await Lead.findById(id)
-    if (!lead) {
-        return res.status(404).json({ message: "lead not found" })
-    }
-    let new_lead_owners: IUser[] = []
-    let owners = lead_owners
-    for (let i = 0; i < owners.length; i++) {
-        let owner = await User.findById(owners[i])
-        if (owner)
-            new_lead_owners.push(owner)
-    }
-    let new_remark = new Remark({
-        remark,
-        lead: lead,
-        created_at: new Date(Date.now()),
-        created_by: req.user,
-        updated_at: new Date(Date.now()),
-        updated_by: req.user
-    })
-    if (remind_date)
-        new_remark.remind_date = new Date(remind_date)
-    await new_remark.save()
-    let updatedRemarks = lead.remarks
-    updatedRemarks.push(new_remark)
-    lead.last_remark = remark
-    lead.remarks = updatedRemarks
-    if (req.user) {
-        lead.updated_by = req.user
-        lead.lead_owners = new_lead_owners
-        lead.updated_at = new Date(Date.now())
-    }
-    await lead.save()
-    return res.status(200).json({ message: "new remark added successfully" })
-}
-
-export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next: NextFunction) => {
-    let result: ILeadTemplate[] = []
-    let create_operation = true
-    if (!req.file)
-        return res.status(400).json({
-            message: "please provide an Excel file",
-        });
-    if (req.file) {
-        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
-        if (!allowedFiles.includes(req.file.mimetype))
-            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
-        if (req.file.size > 100 * 1024 * 1024)
-            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
-        const workbook = xlsx.read(req.file.buffer);
-        let workbook_sheet = workbook.SheetNames;
-        let workbook_response: ILeadTemplate[] = xlsx.utils.sheet_to_json(
-            workbook.Sheets[workbook_sheet[0]]
-        );
-        let statusText: string = ""
-        let oldLeads = await Lead.find()
-        let OldNumbers: number[] = []
-        oldLeads.forEach((lead) => {
-            if (lead.mobile)
-                OldNumbers.push(Number(lead.mobile))
-            if (lead.alternate_mobile1)
-                OldNumbers.push(Number(lead.alternate_mobile1))
-            if (lead.alternate_mobile2)
-                OldNumbers.push(Number(lead.alternate_mobile2))
-        })
-
-        let new_lead_owners: IUser[] = []
-        workbook_response.forEach(async (lead) => {
-            let mobile: number | null = Number(lead.mobile)
-            let alternate_mobile1: number | null = Number(lead.alternate_mobile1)
-            let alternate_mobile2: number | null = Number(lead.alternate_mobile2)
-
-            let validated = true
-
-            //important
-            if (mobile && Number.isNaN(mobile)) {
-                validated = false
-                statusText = "invalid mobile"
-            }
-            if (alternate_mobile1 && Number.isNaN(alternate_mobile1)) {
-                validated = false
-                statusText = "invalid alternate mobile 1"
-            }
-            if (alternate_mobile2 && Number.isNaN(alternate_mobile2)) {
-                validated = false
-                statusText = "invalid alternate mobile 2"
-            }
-            if (alternate_mobile1 && String(alternate_mobile1).length !== 10)
-                alternate_mobile1 = null
-            if (alternate_mobile2 && String(alternate_mobile2).length !== 10)
-                alternate_mobile2 = null
-
-            if (lead.is_customer && typeof (lead.is_customer) !== "boolean") {
-                validated = false
-                statusText = "invalid is icustomer"
-            }
-            if (mobile && String(mobile).length !== 10) {
-                validated = false
-                statusText = "invalid mobile"
-            }
-
-            if (lead.created_at && !isvalidDate(new Date(lead.created_at))) {
-                validated = false
-                statusText = "invalid date"
-            }
-            if (lead.updated_at && !isvalidDate(new Date(lead.updated_at))) {
-                validated = false
-                statusText = "invalid date"
-            }
-
-            // duplicate number checker
-            let uniqueNumbers: number[] = []
-            if (mobile && !OldNumbers.includes(mobile)) {
-                uniqueNumbers.push(mobile)
-                OldNumbers.push(mobile)
-
-            }
-            else
-                statusText = "duplicate"
-            if (alternate_mobile1 && !OldNumbers.includes(alternate_mobile1)) {
-                uniqueNumbers.push(alternate_mobile1)
-                OldNumbers.push(alternate_mobile1)
-            }
-            if (alternate_mobile2 && !OldNumbers.includes(alternate_mobile2)) {
-                uniqueNumbers.push(alternate_mobile2)
-                OldNumbers.push(alternate_mobile2)
-            }
-            if (uniqueNumbers.length === 0)
-                validated = false
-
-            if (!isMongoId(String(lead._id)) && !validated) {
-                result.push({
-                    ...lead,
-                    status: statusText
+export const GetPaginatedRefers = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        let parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
+        let result: {
+            party: IReferredParty,
+            leads: ILead[]
+        }[] = []
+        for (let i = 0; i < parties.length; i++) {
+            let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-referred_date')
+            result.push({
+                party: parties[i],
+                leads: leads
+            })
+        }
+        if (!req.user?.is_admin) {
+            result = result.filter((item) => {
+                let owners = item.party.lead_owners.filter((owner) => {
+                    return owner.username == req.user.username
                 })
-            }
+                if (owners.length > 0)
+                    return item
+            })
+        }
 
-            if (lead.lead_owners) {
-                let names = String((lead.lead_owners)).split(",")
-                for (let i = 0; i < names.length; i++) {
-                    let owner = await User.findOne({ username: names[i] })
-                    if (owner)
-                        new_lead_owners.push(owner)
-                }
+        let count = result.length
+        result = result.slice((page - 1) * limit, limit * page)
 
-            }
-            //update and create new nead
-            console.log(validated)
-            if (lead._id && isMongoId(String(lead._id))) {
-                console.log(new_lead_owners)
-                create_operation = false
-                let targetLead = await Lead.findById(lead._id)
-                if (targetLead) {
-                    if (lead.remarks) {
-                        if (!lead.remarks.length) {
-                            let new_remark = new Remark({
-                                remark: lead.remarks,
-                                lead: lead,
-                                created_at: new Date(),
-                                created_by: req.user,
-                                updated_at: new Date(),
-                                updated_by: req.user
-                            })
-                            await new_remark.save()
-                            targetLead.last_remark = lead.remarks
-                            targetLead.remarks = [new_remark]
-                        }
-                        else {
-                            let last_remark = targetLead.remarks[targetLead.remarks.length - 1]
-                            await Remark.findByIdAndUpdate(last_remark._id, {
-                                remark: lead.remarks,
-                                lead: lead,
-                                updated_at: new Date(),
-                                updated_by: req.user
-                            })
-                            targetLead.last_remark = last_remark.remark
-                        }
-
-                    }
-
-                    await Lead.findByIdAndUpdate(lead._id, {
-                        ...lead,
-                        remarks: targetLead.remarks,
-                        mobile: uniqueNumbers[0] || mobile,
-                        alternate_mobile1: uniqueNumbers[1] || alternate_mobile1 || null,
-                        alternate_mobile2: uniqueNumbers[2] || alternate_mobile2 || null,
-                        lead_owners: new_lead_owners,
-                        updated_by: req.user,
-                        updated_at: new Date(Date.now())
-                    })
-                }
-
-            }
-
-            if (validated) {
-                if (!lead._id || !isMongoId(String(lead._id))) {
-                    let newlead = new Lead({
-                        ...lead,
-                        _id: new Types.ObjectId(),
-                        mobile: uniqueNumbers[0] || null,
-                        alternate_mobile1: uniqueNumbers[1] || null,
-                        alternate_mobile2: uniqueNumbers[2] || null,
-                        lead_owners: new_lead_owners,
-                        created_by: req.user,
-                        updated_by: req.user,
-                        updated_at: new Date(Date.now()),
-                        created_at: new Date(Date.now()),
-                        remarks: undefined
-                    })
-                    if (lead.remarks) {
-                        let new_remark = new Remark({
-                            remark: lead.remarks,
-                            lead: newlead,
-                            created_at: new Date(),
-                            created_by: req.user,
-                            updated_at: new Date(),
-                            updated_by: req.user
-                        })
-                        await new_remark.save()
-                        newlead.last_remark = lead.remarks
-                        newlead.remarks = [new_remark]
-                    }
-                    await newlead.save()
-                }
-            }
+        return res.status(200).json({
+            result,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
         })
-
     }
-    if (!create_operation && String(req.user?._id) !== String(req.user?.created_by._id))
-        return res.status(403).json({ message: "not allowed this operation" })
-    return res.status(200).json(result);
+    else return res.status(400).json({ message: 'bad request' })
+
+
 
 }
+export const GetReminderRemarks = async (req: Request, res: Response, next: NextFunction) => {
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 7
+    previous_date.setDate(day)
 
-export const ConvertCustomer = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
-    let lead = await Lead.findById(id);
-    if (!lead) {
-        return res.status(404).json({ message: "lead not found" })
-    }
-    await Lead.findByIdAndUpdate(id, {
-        is_customer: true,
-        stage: "closed",
-        updated_by: req.user,
-        updated_at: new Date(Date.now()),
+    let reminders = await Remark.find({ remind_date: { $lte: new Date(), $gt: previous_date } }).populate('created_by').populate('updated_by').populate({
+        path: 'lead',
+        populate: [
+            {
+                path: 'lead_owners',
+                model: 'User'
+            },
+            {
+                path: 'referred_party',
+                model: 'ReferredParty'
+            },
+            {
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }
+        ]
+    }).sort('-remind_date')
+    reminders = reminders.filter((reminder) => {
+        return reminder.created_by.username === req.user.username
     })
-    return res.status(200).json({ message: "new customer created" })
+    return res.status(200).json(reminders)
 }
+export const GetRemarks = async (req: Request, res: Response, next: NextFunction) => {
+    let id = req.query.id
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 7
+    previous_date.setDate(day)
+    let remarks: IRemark[] = []
+    if (start_date && end_date) {
+        let dt1 = new Date(String(start_date))
+        let dt2 = new Date(String(end_date))
 
-export const ToogleUseless = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
-    let lead = await Lead.findById(id);
-    if (!lead) {
-        return res.status(404).json({ message: "lead not found" })
+        remarks = await Remark.find({ created_at: { $gte: dt1, $lte: dt2 } }).populate('created_by').populate('updated_by').populate({
+            path: 'lead',
+            populate: [
+                {
+                    path: 'lead_owners',
+                    model: 'User'
+                },
+                {
+                    path: 'referred_party',
+                    model: 'ReferredParty'
+                },
+                {
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
+                }
+            ]
+        }).sort('-created_at')
     }
-    if (lead.stage === "useless") {
-        await Lead.findByIdAndUpdate(id, {
-            stage: 'open',
-            updated_by: req.user,
-            updated_at: new Date(Date.now()),
+    if (!start_date && !end_date)
+        remarks = await Remark.find({ created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate({
+            path: 'lead',
+            populate: [
+                {
+                    path: 'lead_owners',
+                    model: 'User'
+                },
+                {
+                    path: 'referred_party',
+                    model: 'ReferredParty'
+                },
+                {
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
+                }
+            ]
+        }).sort('-created_at')
+
+
+    if (!id)
+        remarks = remarks.filter((remark) => {
+            return remark.created_by.username === req.user.username
         })
+    if (id) {
+        let user = await User.findById(id)
+        if (user) {
+            remarks = remarks.filter((remark) => {
+                return remark.created_by.username === user?.username
+            })
+        }
     }
-    else
-        await Lead.findByIdAndUpdate(id, {
-            stage: 'useless',
-            updated_by: req.user,
-            updated_at: new Date(Date.now()),
-        })
-    return res.status(200).json({ message: "successfully changed stage" })
+    return res.status(200).json(remarks)
 }
 
 export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFunction) => {
@@ -1307,248 +1078,6 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
     else
         return res.status(400).json({ message: "bad request" })
 }
-
-export const UpdateLeadFields = async (req: Request, res: Response, next: NextFunction) => {
-    const { stages, lead_types, lead_sources } = req.body as TLeadUpdatableFieldBody
-    let fields = await LeadUpdatableField.findOne();
-
-    if (!fields) {
-        let stages = ["open", "closed", "potential"]
-        let lead_sources = ["internet", "leads gorilla", "whatsapp", "visit"]
-        let lead_types = ["wholesale", "company", "retail"]
-        fields = await new LeadUpdatableField({
-            stages: stages,
-            lead_sources: lead_sources,
-            lead_types: lead_types,
-            created_at: new Date(),
-            updated_at: new Date(),
-            created_by: req.user,
-            updated_by: req.user
-        }).save()
-        return res.status(200).json(fields)
-    }
-
-    fields.stages = stages
-    fields.lead_types = lead_types
-    fields.lead_sources = lead_sources
-    fields.updated_at = new Date()
-    if (req.user)
-        fields.updated_by = req.user
-    await fields.save()
-    return res.status(200).json(fields)
-}
-
-export const GetUpdatableLeadFields = async (req: Request, res: Response, next: NextFunction) => {
-    const { stages, lead_types, lead_sources } = req.body as TLeadUpdatableFieldBody
-    let fields = await LeadUpdatableField.findOne();
-    if (!fields)
-        return res.status(200).json([])
-    return res.status(200).json(fields)
-}
-
-
-export const BackUpAllLeads = async (req: Request, res: Response, next: NextFunction) => {
-    const value = String(req.query.value)
-    console.log(value)
-    let fileName = "blank.xlsx"
-    ExportLeads([])
-    let leads = await Lead.find().populate('created_by').populate('updated_by').populate('lead_owners')
-    if (value === "leads" || value === "mobiles") {
-        if (leads.length > 0) {
-            if (value === "leads") {
-                ExportLeads(leads)
-                fileName = "leads_backup.xlsx"
-            }
-            if (value === "mobiles") {
-                ExportLeadMobiles(leads)
-                fileName = "lead_mobiles_backup.xlsx"
-            }
-            return res.download("./file", fileName)
-        }
-    }
-
-    res.status(200).json({ message: "no leads found" })
-}
-
-export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, customer_name, city, state, mobile, lead_owners } = req.body as TReferredPartyBody
-    if (!name || !city || !state || !mobile || !lead_owners) {
-        return res.status(400).json({ message: "please fill all required fields" })
-    }
-    if (!lead_owners)
-        return res.status(400).json({ message: "assign at least one lead owner" });
-    if (lead_owners.length < 1)
-        return res.status(400).json({ message: "assign at least one lead owner" });
-    let resultParty = await ReferredParty.findOne({ $or: [{ name: name }, { mobile: mobile }] })
-    if (resultParty) {
-        return res.status(400).json({ message: "this party already exists,check phone or name" })
-    }
-    let new_lead_owners: IUser[] = []
-    let owners = String(lead_owners).split(",")
-    for (let i = 0; i < owners.length; i++) {
-        let owner = await User.findById(owners[i])
-        if (owner)
-            new_lead_owners.push(owner)
-    }
-    let party = await new ReferredParty({
-        name, customer_name, city, state, mobile,
-        lead_owners: new_lead_owners,
-        created_at: new Date(),
-        updated_at: new Date(),
-        created_by: req.user,
-        updated_by: req.user
-    }).save()
-    return res.status(201).json(party)
-}
-
-export const UpdateReferParty = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id))
-        return res.status(400).json({ message: "bad mongo id" })
-
-    const { name, customer_name, city, state, mobile, lead_owners } = req.body as TReferredPartyBody
-    if (!name || !city || !state || !mobile) {
-        return res.status(400).json({ message: "please fill all required fields" })
-    }
-    if (!lead_owners)
-        return res.status(400).json({ message: "assign at least one lead owner" });
-    if (lead_owners.length < 1)
-        return res.status(400).json({ message: "assign at least one lead owner" });
-    let party = await ReferredParty.findById(id)
-    let new_lead_owners: IUser[] = []
-    let owners = String(lead_owners).split(",")
-    for (let i = 0; i < owners.length; i++) {
-        let owner = await User.findById(owners[i])
-        if (owner)
-            new_lead_owners.push(owner)
-    }
-    if (!party)
-        return res.status(404).json({ message: "party not found" })
-    if (name !== party.name || mobile !== party.mobile) {
-        let resultParty = await ReferredParty.findOne({ $or: [{ name: name }, { mobile: mobile }] })
-        if (resultParty) {
-            return res.status(400).json({ message: "this party already exists,check phone or name" })
-        }
-    }
-
-    party = await ReferredParty.findByIdAndUpdate(id, {
-        name, customer_name, city, state, mobile,
-        lead_owners: new_lead_owners,
-        created_at: new Date(),
-        updated_at: new Date(),
-        created_by: req.user,
-        updated_by: req.user
-    })
-    return res.status(200).json({ message: "party updated" })
-}
-
-export const GetPaginatedRefers = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
-        let result: {
-            party: IReferredParty,
-            leads: ILead[]
-        }[] = []
-        for (let i = 0; i < parties.length; i++) {
-            let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }).sort('-referred_date')
-            result.push({
-                party: parties[i],
-                leads: leads
-            })
-        }
-        if (!req.user?.is_admin) {
-            result = result.filter((item) => {
-                let owners = item.party.lead_owners.filter((owner) => {
-                    return owner.username == req.user.username
-                })
-                if (owners.length > 0)
-                    return item
-            })
-        }
-
-        let count = result.length
-        result = result.slice((page - 1) * limit, limit * page)
-
-        return res.status(200).json({
-            result,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else return res.status(400).json({ message: 'bad request' })
-
-
-
-}
-
-export const GetRefers = async (req: Request, res: Response, next: NextFunction) => {
-    let parties: IReferredParty[] = []
-    let result: {
-        party: IReferredParty,
-        leads: ILead[]
-    }[] = []
-    if (req.user?.is_admin) {
-        parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
-        for (let i = 0; i < parties.length; i++) {
-            let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }).sort('-referred_date')
-            result.push({
-                party: parties[i],
-                leads: leads
-            })
-        }
-    }
-    if (!req.user?.is_admin) {
-        parties = await ReferredParty.find({ lead_owners: { $in: [req.user._id] } }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
-        for (let i = 0; i < parties.length; i++) {
-            let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }).sort('-referred_date')
-            result.push({
-                party: parties[i],
-                leads: leads
-            })
-        }
-    }
-    return res.status(200).json(result)
-}
-
 export const FuzzySearchRefers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
@@ -1792,125 +1321,6 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         return res.status(400).json({ message: "bad request" })
 
 }
-
-export const DeleteReferParty = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id))
-        return res.status(400).json({ message: "bad mongo id" })
-    let party = await ReferredParty.findById(id)
-    if (!party)
-        return res.status(404).json({ message: "party not found" })
-    await ReferredParty.findByIdAndDelete(id)
-    return res.status(200).json({ message: "deleted" })
-}
-
-export const ReferLead = async (req: Request, res: Response, next: NextFunction) => {
-    const { party_id, remark } = req.body
-    if (!party_id)
-        return res.status(400).json({ message: "fill required field" })
-    const id = req.params.id
-    if (!isMongoId(id) || !isMongoId(party_id))
-        return res.status(400).json({ message: "bad mongo id" })
-    let lead = await Lead.findById(id)
-    if (!lead)
-        return res.status(404).json({ message: "lead not found" })
-    let party = await ReferredParty.findById(party_id)
-    if (!party)
-        return res.status(404).json({ message: "referred party not found" })
-
-    if (remark) {
-        let remarks = lead.remarks
-        let new_remark = new Remark({
-            remark,
-            lead: lead,
-            created_at: new Date(),
-            created_by: req.user,
-            updated_at: new Date(),
-            updated_by: req.user
-        })
-        await new_remark.save()
-        lead.last_remark = remark
-        remarks.push(new_remark)
-        lead.remarks = remarks
-    }
-
-    lead.referred_party = party
-    lead.stage = "refer"
-    lead.referred_party_mobile = party.mobile
-    lead.referred_party_name = party.name
-    lead.referred_date = new Date()
-    await lead.save()
-    return res.status(200).json({ message: "party referred successfully" })
-}
-
-export const RemoveLeadReferrals = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id))
-        return res.status(400).json({ message: "bad mongo id" })
-    let lead = await Lead.findById(id)
-    if (!lead)
-        return res.status(404).json({ message: "lead not found" })
-    lead.referred_party = undefined
-    lead.referred_party_mobile = undefined
-    lead.referred_party_name = undefined
-    lead.referred_date = undefined
-    lead.stage = "open"
-    await lead.save()
-    return res.status(200).json({ message: "referrals removed successfully" })
-}
-
-export const GetUselessLeads = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let leads: ILead[] = []
-        let count = 0
-        if (req.user?.is_admin) {
-            leads = await Lead.find({ stage: 'useless' }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({ stage: 'useless' }).countDocuments()
-        }
-
-        if (!req.user?.is_admin) {
-            leads = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user._id] } }).countDocuments()
-        }
-        leads = leads.slice((page - 1) * limit, limit * page)
-        return res.status(200).json({
-            leads,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
-
-}
-
 export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
@@ -2256,6 +1666,716 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
         return res.status(400).json({ message: "bad request" })
 }
 
+export const GetUpdatableLeadFields = async (req: Request, res: Response, next: NextFunction) => {
+    let fields = await LeadUpdatableField.findOne();
+    return res.status(200).json(fields)
+}
+
+
+export const BackUpAllLeads = async (req: Request, res: Response, next: NextFunction) => {
+    const value = String(req.query.value)
+    console.log(value)
+    let fileName = "blank.xlsx"
+    ExportLeads([])
+    let leads = await Lead.find().populate('created_by').populate('updated_by').populate('lead_owners')
+    if (value === "leads" || value === "mobiles") {
+        if (leads.length > 0) {
+            if (value === "leads") {
+                ExportLeads(leads)
+                fileName = "leads_backup.xlsx"
+            }
+            if (value === "mobiles") {
+                ExportLeadMobiles(leads)
+                fileName = "lead_mobiles_backup.xlsx"
+            }
+            return res.download("./file", fileName)
+        }
+    }
+
+    res.status(200).json({ message: "no leads found" })
+}
+
+
+
+
+
+
+
+
+
+// post/put/patch/delete
+
+export const CreateLead = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body)
+    let { mobile, remark, lead_owners, alternate_mobile1, alternate_mobile2 } = body as TLeadBody & { remark: string, lead_owners: string[] }
+    if (!lead_owners)
+        return res.status(400).json({ message: "assign at least one lead owner" });
+    if (lead_owners.length < 1)
+        return res.status(400).json({ message: "assign at least one lead owner" });
+    // validations
+    if (!mobile)
+        return res.status(400).json({ message: "provide primary mobile number" });
+
+    let uniqueNumbers: string[] = []
+    let oldLeads = await Lead.find()
+    let OldNumbers: string[] = []
+    oldLeads.forEach((lead) => {
+        if (lead.mobile)
+            OldNumbers.push(lead.mobile)
+        if (lead.alternate_mobile1)
+            OldNumbers.push(lead.alternate_mobile1)
+        if (lead.alternate_mobile2)
+            OldNumbers.push(lead.alternate_mobile2)
+    })
+
+    if (mobile && !OldNumbers.includes(mobile)) {
+        uniqueNumbers.push(mobile)
+        OldNumbers.push(mobile)
+    }
+    if (alternate_mobile1 && !OldNumbers.includes(alternate_mobile1)) {
+        uniqueNumbers.push(alternate_mobile1)
+        OldNumbers.push(alternate_mobile1)
+    }
+    if (alternate_mobile2 && !OldNumbers.includes(alternate_mobile2)) {
+        uniqueNumbers.push(alternate_mobile2)
+        OldNumbers.push(alternate_mobile2)
+    }
+    if (uniqueNumbers.length == 0) {
+        return res.status(400).json({ message: "one of the mobile numbers already exists" });
+    }
+    let new_lead_owners: IUser[] = []
+    let owners = String(lead_owners).split(",")
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
+    let visiting_card: Asset = undefined
+    if (req.file) {
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+        const storageLocation = `crm/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 10 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            visiting_card = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    let lead = new Lead({
+        ...body,
+        visiting_card: visiting_card,
+        mobile: uniqueNumbers[0] || null,
+        alternate_mobile1: uniqueNumbers[1] || null,
+        alternate_mobile2: uniqueNumbers[2] || null,
+        lead_owners: new_lead_owners,
+        created_by: req.user,
+        updated_by: req.user,
+        created_at: new Date(Date.now()),
+        updated_at: new Date(Date.now()),
+    })
+    if (remark) {
+        let new_remark = new Remark({
+            remark,
+            lead: lead,
+            created_at: new Date(),
+            created_by: req.user,
+            updated_at: new Date(),
+            updated_by: req.user
+        })
+        await new_remark.save()
+        lead.last_remark = remark
+        lead.remarks = [new_remark]
+    }
+    await lead.save()
+    return res.status(200).json("lead created")
+}
+
+export const UpdateLead = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body)
+    const { mobile, remark, lead_owners, alternate_mobile1, alternate_mobile2 } = body as TLeadBody & { remark: string, lead_owners: string[] }
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
+    let lead = await Lead.findById(id);
+    if (!lead) {
+        return res.status(404).json({ message: "lead not found" })
+    }
+    if (!lead_owners)
+        return res.status(400).json({ message: "assign at least one lead owner" });
+    if (lead_owners.length < 1)
+        return res.status(400).json({ message: "assign at least one lead owner" });
+    // validations
+    if (!mobile)
+        return res.status(400).json({ message: "provide primary mobile number" });
+
+    let uniqueNumbers: string[] = []
+    let oldLeads = await Lead.find()
+    let OldNumbers: string[] = []
+    oldLeads.forEach((lead) => {
+        if (lead.mobile)
+            OldNumbers.push(lead.mobile)
+        if (lead.alternate_mobile1)
+            OldNumbers.push(lead.alternate_mobile1)
+        if (lead.alternate_mobile2)
+            OldNumbers.push(lead.alternate_mobile2)
+    })
+    if (mobile !== lead.mobile)
+        if (mobile && !OldNumbers.includes(mobile)) {
+            uniqueNumbers[0] = (mobile)
+            OldNumbers.push(mobile)
+        }
+    if (alternate_mobile1 !== lead.alternate_mobile1)
+        if (alternate_mobile1 && !OldNumbers.includes(alternate_mobile1)) {
+            uniqueNumbers[1] = (alternate_mobile1)
+            OldNumbers.push(alternate_mobile1)
+        }
+    if (alternate_mobile2 !== lead.alternate_mobile2)
+        if (alternate_mobile2 && !OldNumbers.includes(alternate_mobile2)) {
+            uniqueNumbers[2] = (alternate_mobile2)
+            OldNumbers.push(alternate_mobile2)
+        }
+    let new_lead_owners: IUser[] = []
+    let owners = String(lead_owners).split(",")
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
+
+    let visiting_card = lead?.visiting_card;
+    if (req.file) {
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+        const storageLocation = `crm/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 10 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc) {
+            if (lead.visiting_card?._id)
+                await destroyFile(lead.visiting_card._id)
+            visiting_card = doc
+        }
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    if (remark) {
+        if (!lead.last_remark) {
+            let new_remark = new Remark({
+                remark,
+                lead: lead,
+                created_at: new Date(),
+                created_by: req.user,
+                updated_at: new Date(),
+                updated_by: req.user
+            })
+            await new_remark.save()
+            lead.last_remark = remark
+            lead.remarks = [new_remark]
+        }
+        else {
+            let last_remark = lead.remarks[lead.remarks.length - 1]
+            await Remark.findByIdAndUpdate(last_remark._id, {
+                remark: remark,
+                lead: lead,
+                updated_at: new Date(),
+                updated_by: req.user,
+                updated_by_username: req.user?.username,
+            })
+            lead.last_remark = last_remark.remark
+        }
+    }
+    await Lead.findByIdAndUpdate(lead._id, {
+        ...body,
+        mobile: uniqueNumbers[0] || lead.mobile || null,
+        alternate_mobile1: uniqueNumbers[1] || null,
+        alternate_mobile2: uniqueNumbers[2] || null,
+        lead_owners: new_lead_owners,
+        visiting_card: visiting_card,
+        updated_by: req.user,
+        updated_at: new Date(Date.now()),
+        remarks: lead.remarks
+    })
+
+    return res.status(200).json({ message: "lead updated" })
+}
+
+
+export const DeleteLead = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
+    let lead = await Lead.findById(id);
+    if (!lead) {
+        return res.status(404).json({ message: "lead not found" })
+    }
+    let remarks = await Remark.find({ lead: lead._id })
+    remarks.map(async (remark) => {
+        await remark.remove()
+    })
+    await lead.remove()
+    if (lead.visiting_card && lead.visiting_card._id)
+        await destroyFile(lead.visiting_card?._id)
+    return res.status(200).json({ message: "lead and related remarks are deleted" })
+}
+
+export const NewRemark = async (req: Request, res: Response, next: NextFunction) => {
+    const { remark, lead_owners, remind_date } = req.body as { remark: string, lead_owners: string[], remind_date: string }
+    if (!remark) return res.status(403).json({ message: "please fill required fields" })
+    if (lead_owners && lead_owners.length === 0)
+        return res.status(403).json({ message: "please select one lead owner" })
+    const user = await User.findById(req.user?._id)
+    if (!user)
+        return res.status(403).json({ message: "please login to access this resource" })
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
+
+    let lead = await Lead.findById(id)
+    if (!lead) {
+        return res.status(404).json({ message: "lead not found" })
+    }
+    let new_lead_owners: IUser[] = []
+    let owners = lead_owners
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
+    let new_remark = new Remark({
+        remark,
+        lead: lead,
+        created_at: new Date(Date.now()),
+        created_by: req.user,
+        updated_at: new Date(Date.now()),
+        updated_by: req.user
+    })
+    if (remind_date)
+        new_remark.remind_date = new Date(remind_date)
+    await new_remark.save()
+    let updatedRemarks = lead.remarks
+    updatedRemarks.push(new_remark)
+    lead.last_remark = remark
+    lead.remarks = updatedRemarks
+    if (req.user) {
+        lead.updated_by = req.user
+        lead.lead_owners = new_lead_owners
+        lead.updated_at = new Date(Date.now())
+    }
+    await lead.save()
+    return res.status(200).json({ message: "new remark added successfully" })
+}
+
+export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next: NextFunction) => {
+    let result: ILeadTemplate[] = []
+    let create_operation = true
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer);
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: ILeadTemplate[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        let statusText: string = ""
+        let oldLeads = await Lead.find()
+        let OldNumbers: number[] = []
+        oldLeads.forEach((lead) => {
+            if (lead.mobile)
+                OldNumbers.push(Number(lead.mobile))
+            if (lead.alternate_mobile1)
+                OldNumbers.push(Number(lead.alternate_mobile1))
+            if (lead.alternate_mobile2)
+                OldNumbers.push(Number(lead.alternate_mobile2))
+        })
+
+        let new_lead_owners: IUser[] = []
+        workbook_response.forEach(async (lead) => {
+            let mobile: number | null = Number(lead.mobile)
+            let alternate_mobile1: number | null = Number(lead.alternate_mobile1)
+            let alternate_mobile2: number | null = Number(lead.alternate_mobile2)
+
+            let validated = true
+
+            //important
+            if (mobile && Number.isNaN(mobile)) {
+                validated = false
+                statusText = "invalid mobile"
+            }
+            if (alternate_mobile1 && Number.isNaN(alternate_mobile1)) {
+                validated = false
+                statusText = "invalid alternate mobile 1"
+            }
+            if (alternate_mobile2 && Number.isNaN(alternate_mobile2)) {
+                validated = false
+                statusText = "invalid alternate mobile 2"
+            }
+            if (alternate_mobile1 && String(alternate_mobile1).length !== 10)
+                alternate_mobile1 = null
+            if (alternate_mobile2 && String(alternate_mobile2).length !== 10)
+                alternate_mobile2 = null
+
+            if (lead.is_customer && typeof (lead.is_customer) !== "boolean") {
+                validated = false
+                statusText = "invalid is icustomer"
+            }
+            if (mobile && String(mobile).length !== 10) {
+                validated = false
+                statusText = "invalid mobile"
+            }
+
+            if (lead.created_at && !isvalidDate(new Date(lead.created_at))) {
+                validated = false
+                statusText = "invalid date"
+            }
+            if (lead.updated_at && !isvalidDate(new Date(lead.updated_at))) {
+                validated = false
+                statusText = "invalid date"
+            }
+
+            // duplicate number checker
+            let uniqueNumbers: number[] = []
+            if (mobile && !OldNumbers.includes(mobile)) {
+                uniqueNumbers.push(mobile)
+                OldNumbers.push(mobile)
+
+            }
+            else
+                statusText = "duplicate"
+            if (alternate_mobile1 && !OldNumbers.includes(alternate_mobile1)) {
+                uniqueNumbers.push(alternate_mobile1)
+                OldNumbers.push(alternate_mobile1)
+            }
+            if (alternate_mobile2 && !OldNumbers.includes(alternate_mobile2)) {
+                uniqueNumbers.push(alternate_mobile2)
+                OldNumbers.push(alternate_mobile2)
+            }
+            if (uniqueNumbers.length === 0)
+                validated = false
+
+            if (!isMongoId(String(lead._id)) && !validated) {
+                result.push({
+                    ...lead,
+                    status: statusText
+                })
+            }
+
+            if (lead.lead_owners) {
+                let names = String((lead.lead_owners)).split(",")
+                for (let i = 0; i < names.length; i++) {
+                    let owner = await User.findOne({ username: names[i] })
+                    if (owner)
+                        new_lead_owners.push(owner)
+                }
+
+            }
+            //update and create new nead
+            console.log(validated)
+            if (lead._id && isMongoId(String(lead._id))) {
+                console.log(new_lead_owners)
+                create_operation = false
+                let targetLead = await Lead.findById(lead._id)
+                if (targetLead) {
+                    if (lead.remarks) {
+                        if (!lead.remarks.length) {
+                            let new_remark = new Remark({
+                                remark: lead.remarks,
+                                lead: lead,
+                                created_at: new Date(),
+                                created_by: req.user,
+                                updated_at: new Date(),
+                                updated_by: req.user
+                            })
+                            await new_remark.save()
+                            targetLead.last_remark = lead.remarks
+                            targetLead.remarks = [new_remark]
+                        }
+                        else {
+                            let last_remark = targetLead.remarks[targetLead.remarks.length - 1]
+                            await Remark.findByIdAndUpdate(last_remark._id, {
+                                remark: lead.remarks,
+                                lead: lead,
+                                updated_at: new Date(),
+                                updated_by: req.user
+                            })
+                            targetLead.last_remark = last_remark.remark
+                        }
+
+                    }
+
+                    await Lead.findByIdAndUpdate(lead._id, {
+                        ...lead,
+                        remarks: targetLead.remarks,
+                        mobile: uniqueNumbers[0] || mobile,
+                        alternate_mobile1: uniqueNumbers[1] || alternate_mobile1 || null,
+                        alternate_mobile2: uniqueNumbers[2] || alternate_mobile2 || null,
+                        lead_owners: new_lead_owners,
+                        updated_by: req.user,
+                        updated_at: new Date(Date.now())
+                    })
+                }
+
+            }
+
+            if (validated) {
+                if (!lead._id || !isMongoId(String(lead._id))) {
+                    let newlead = new Lead({
+                        ...lead,
+                        _id: new Types.ObjectId(),
+                        mobile: uniqueNumbers[0] || null,
+                        alternate_mobile1: uniqueNumbers[1] || null,
+                        alternate_mobile2: uniqueNumbers[2] || null,
+                        lead_owners: new_lead_owners,
+                        created_by: req.user,
+                        updated_by: req.user,
+                        updated_at: new Date(Date.now()),
+                        created_at: new Date(Date.now()),
+                        remarks: undefined
+                    })
+                    if (lead.remarks) {
+                        let new_remark = new Remark({
+                            remark: lead.remarks,
+                            lead: newlead,
+                            created_at: new Date(),
+                            created_by: req.user,
+                            updated_at: new Date(),
+                            updated_by: req.user
+                        })
+                        await new_remark.save()
+                        newlead.last_remark = lead.remarks
+                        newlead.remarks = [new_remark]
+                    }
+                    await newlead.save()
+                }
+            }
+        })
+
+    }
+    if (!create_operation && String(req.user?._id) !== String(req.user?.created_by._id))
+        return res.status(403).json({ message: "not allowed this operation" })
+    return res.status(200).json(result);
+
+}
+
+export const ConvertCustomer = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
+    let lead = await Lead.findById(id);
+    if (!lead) {
+        return res.status(404).json({ message: "lead not found" })
+    }
+    await Lead.findByIdAndUpdate(id, {
+        is_customer: true,
+        stage: "closed",
+        updated_by: req.user,
+        updated_at: new Date(Date.now()),
+    })
+    return res.status(200).json({ message: "new customer created" })
+}
+
+export const ToogleUseless = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
+    let lead = await Lead.findById(id);
+    if (!lead) {
+        return res.status(404).json({ message: "lead not found" })
+    }
+    if (lead.stage === "useless") {
+        await Lead.findByIdAndUpdate(id, {
+            stage: 'open',
+            updated_by: req.user,
+            updated_at: new Date(Date.now()),
+        })
+    }
+    else
+        await Lead.findByIdAndUpdate(id, {
+            stage: 'useless',
+            updated_by: req.user,
+            updated_at: new Date(Date.now()),
+        })
+    return res.status(200).json({ message: "successfully changed stage" })
+}
+
+export const UpdateLeadFields = async (req: Request, res: Response, next: NextFunction) => {
+    const { stages, lead_types, lead_sources } = req.body as TLeadUpdatableFieldBody
+    let fields = await LeadUpdatableField.findOne();
+
+    if (!fields) {
+        let stages = ["open", "closed", "potential"]
+        let lead_sources = ["internet", "leads gorilla", "whatsapp", "visit"]
+        let lead_types = ["wholesale", "company", "retail"]
+        fields = await new LeadUpdatableField({
+            stages: stages,
+            lead_sources: lead_sources,
+            lead_types: lead_types,
+            created_at: new Date(),
+            updated_at: new Date(),
+            created_by: req.user,
+            updated_by: req.user
+        }).save()
+        return res.status(200).json(fields)
+    }
+
+    fields.stages = stages
+    fields.lead_types = lead_types
+    fields.lead_sources = lead_sources
+    fields.updated_at = new Date()
+    if (req.user)
+        fields.updated_by = req.user
+    await fields.save()
+    return res.status(200).json(fields)
+}
+
+
+export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
+    const { name, customer_name, city, state, mobile, lead_owners } = req.body as TReferredPartyBody
+    if (!name || !city || !state || !mobile || !lead_owners) {
+        return res.status(400).json({ message: "please fill all required fields" })
+    }
+    if (!lead_owners)
+        return res.status(400).json({ message: "assign at least one lead owner" });
+    if (lead_owners.length < 1)
+        return res.status(400).json({ message: "assign at least one lead owner" });
+    let resultParty = await ReferredParty.findOne({ $or: [{ name: name }, { mobile: mobile }] })
+    if (resultParty) {
+        return res.status(400).json({ message: "this party already exists,check phone or name" })
+    }
+    let new_lead_owners: IUser[] = []
+    let owners = String(lead_owners).split(",")
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
+    let party = await new ReferredParty({
+        name, customer_name, city, state, mobile,
+        lead_owners: new_lead_owners,
+        created_at: new Date(),
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save()
+    return res.status(201).json(party)
+}
+
+export const UpdateReferParty = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    if (!isMongoId(id))
+        return res.status(400).json({ message: "bad mongo id" })
+
+    const { name, customer_name, city, state, mobile, lead_owners } = req.body as TReferredPartyBody
+    if (!name || !city || !state || !mobile) {
+        return res.status(400).json({ message: "please fill all required fields" })
+    }
+    if (!lead_owners)
+        return res.status(400).json({ message: "assign at least one lead owner" });
+    if (lead_owners.length < 1)
+        return res.status(400).json({ message: "assign at least one lead owner" });
+    let party = await ReferredParty.findById(id)
+    let new_lead_owners: IUser[] = []
+    let owners = String(lead_owners).split(",")
+    for (let i = 0; i < owners.length; i++) {
+        let owner = await User.findById(owners[i])
+        if (owner)
+            new_lead_owners.push(owner)
+    }
+    if (!party)
+        return res.status(404).json({ message: "party not found" })
+    if (name !== party.name || mobile !== party.mobile) {
+        let resultParty = await ReferredParty.findOne({ $or: [{ name: name }, { mobile: mobile }] })
+        if (resultParty) {
+            return res.status(400).json({ message: "this party already exists,check phone or name" })
+        }
+    }
+
+    party = await ReferredParty.findByIdAndUpdate(id, {
+        name, customer_name, city, state, mobile,
+        lead_owners: new_lead_owners,
+        created_at: new Date(),
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    })
+    return res.status(200).json({ message: "party updated" })
+}
+
+
+
+export const DeleteReferParty = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    if (!isMongoId(id))
+        return res.status(400).json({ message: "bad mongo id" })
+    let party = await ReferredParty.findById(id)
+    if (!party)
+        return res.status(404).json({ message: "party not found" })
+    await ReferredParty.findByIdAndDelete(id)
+    return res.status(200).json({ message: "deleted" })
+}
+
+export const ReferLead = async (req: Request, res: Response, next: NextFunction) => {
+    const { party_id, remark } = req.body
+    if (!party_id)
+        return res.status(400).json({ message: "fill required field" })
+    const id = req.params.id
+    if (!isMongoId(id) || !isMongoId(party_id))
+        return res.status(400).json({ message: "bad mongo id" })
+    let lead = await Lead.findById(id)
+    if (!lead)
+        return res.status(404).json({ message: "lead not found" })
+    let party = await ReferredParty.findById(party_id)
+    if (!party)
+        return res.status(404).json({ message: "referred party not found" })
+
+    if (remark) {
+        let remarks = lead.remarks
+        let new_remark = new Remark({
+            remark,
+            lead: lead,
+            created_at: new Date(),
+            created_by: req.user,
+            updated_at: new Date(),
+            updated_by: req.user
+        })
+        await new_remark.save()
+        lead.last_remark = remark
+        remarks.push(new_remark)
+        lead.remarks = remarks
+    }
+
+    lead.referred_party = party
+    lead.stage = "refer"
+    lead.referred_party_mobile = party.mobile
+    lead.referred_party_name = party.name
+    lead.referred_date = new Date()
+    await lead.save()
+    return res.status(200).json({ message: "party referred successfully" })
+}
+
+export const RemoveLeadReferrals = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    if (!isMongoId(id))
+        return res.status(400).json({ message: "bad mongo id" })
+    let lead = await Lead.findById(id)
+    if (!lead)
+        return res.status(404).json({ message: "lead not found" })
+    lead.referred_party = undefined
+    lead.referred_party_mobile = undefined
+    lead.referred_party_name = undefined
+    lead.referred_date = undefined
+    lead.stage = "open"
+    await lead.save()
+    return res.status(200).json({ message: "referrals removed successfully" })
+}
+
 export const BulkDeleteUselessLeads = async (req: Request, res: Response, next: NextFunction) => {
     const { leads_ids } = req.body as { leads_ids: string[] }
     for (let i = 0; i <= leads_ids.length; i++) {
@@ -2273,30 +2393,6 @@ export const BulkDeleteUselessLeads = async (req: Request, res: Response, next: 
     return res.status(200).json({ message: "lead and related remarks are deleted" })
 }
 
-export const GetLeadsReport = async (req: Request, res: Response, next: NextFunction) => {
-    let leads = await Lead.find({ is_customer: false })
-    let users = await User.find()
-    let response: {
-        username: string,
-        leads: number
-    }[] = []
-
-    users.forEach((user) => {
-        let tmpleads = leads.filter((lead) => {
-            let owners = lead.lead_owners.filter((owner) => {
-                return owner.username === user?.username
-            })
-            if (owners.length > 0)
-                return lead
-        })
-        if (tmpleads && tmpleads.length > 0)
-            response.push({
-                username: user.username,
-                leads: tmpleads.length
-            })
-    })
-    return res.status(200).json(response)
-}
 
 export const AssignRefer = async (req: Request, res: Response, next: NextFunction) => {
     const { lead_owners } = req.body as { lead_owners: string[] }
@@ -2385,42 +2481,6 @@ export const BulkAssignLeads = async (req: Request, res: Response, next: NextFun
     return res.status(200).json({ message: "assigned successfully" })
 }
 
-export const GetReminderRemarks = async (req: Request, res: Response, next: NextFunction) => {
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 7
-    previous_date.setDate(day)
-
-    let reminders = await Remark.find({ remind_date: { $lte: new Date(), $gt: previous_date } }).populate('created_by').populate('updated_by').populate({
-        path: 'lead',
-        populate: [
-            {
-                path: 'lead_owners',
-                model: 'User'
-            },
-            {
-                path: 'referred_party',
-                model: 'ReferredParty'
-            },
-            {
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }
-        ]
-    }).sort('-remind_date')
-    reminders = reminders.filter((reminder) => {
-        return reminder.created_by.username === req.user.username
-    })
-    return res.status(200).json(reminders)
-}
 
 export const UpdateRemark = async (req: Request, res: Response, next: NextFunction) => {
     const { remark, remind_date } = req.body as { remark: string, remind_date: string }
@@ -2479,85 +2539,3 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
 
 }
 
-export const GetRemarks = async (req: Request, res: Response, next: NextFunction) => {
-    let id = req.query.id
-    let start_date = req.query.start_date
-    let end_date = req.query.end_date
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 7
-    previous_date.setDate(day)
-    let remarks: IRemark[] = []
-    if (start_date && end_date) {
-        let dt1 = new Date(String(start_date))
-        let dt2 = new Date(String(end_date))
-
-        remarks = await Remark.find({ created_at: { $gte: dt1, $lte: dt2 } }).populate('created_by').populate('updated_by').populate({
-            path: 'lead',
-            populate: [
-                {
-                    path: 'lead_owners',
-                    model: 'User'
-                },
-                {
-                    path: 'referred_party',
-                    model: 'ReferredParty'
-                },
-                {
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }
-            ]
-        }).sort('-created_at')
-    }
-    if (!start_date && !end_date)
-        remarks = await Remark.find({ created_at: { $gte: previous_date } }).populate('created_by').populate('updated_by').populate({
-            path: 'lead',
-            populate: [
-                {
-                    path: 'lead_owners',
-                    model: 'User'
-                },
-                {
-                    path: 'referred_party',
-                    model: 'ReferredParty'
-                },
-                {
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }
-            ]
-        }).sort('-created_at')
-
-
-    if (!id)
-        remarks = remarks.filter((remark) => {
-            return remark.created_by.username === req.user.username
-        })
-    if (id) {
-        let user = await User.findById(id)
-        if (user) {
-            remarks = remarks.filter((remark) => {
-                return remark.created_by.username === user?.username
-            })
-        }
-    }
-    return res.status(200).json(remarks)
-}

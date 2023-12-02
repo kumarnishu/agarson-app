@@ -5,6 +5,15 @@ import { ContactReport } from "../models/contact/contact.report.model"
 import xlsx from "xlsx"
 import { IContactBody } from "../types/contact.types"
 
+
+//get
+export const GetContacts = async (req: Request, res: Response, next: NextFunction) => {
+    let contacts = await Contact.find().populate('updated_by').populate('created_by')
+    return res.status(200).json(contacts);
+}
+
+
+//post/put/patch/delete
 export const CreateContact = async (req: Request, res: Response, next: NextFunction) => {
     const { mobile, name } = req.body as IContactBody
     if (!mobile)
@@ -51,11 +60,6 @@ export const DeleteContact = async (req: Request, res: Response, next: NextFunct
         await report.remove()
     })
     return res.status(200).json({ message: `contact deleted` });
-}
-
-export const GetContacts = async (req: Request, res: Response, next: NextFunction) => {
-    let contacts = await Contact.find().populate('updated_by').populate('created_by')
-    return res.status(200).json(contacts);
 }
 
 

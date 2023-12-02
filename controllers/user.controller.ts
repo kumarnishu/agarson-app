@@ -9,8 +9,160 @@ import { sendEmail } from '../utils/sendEmail.util';
 import { IUser, TUserBody } from '../types/user.types';
 import { Asset } from '../types/asset.types';
 
+//get
+export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        let users = await User.find().populate("created_by").populate("updated_by")
+        users = users.slice((page - 1) * limit, limit * page)
+        let count = await User.countDocuments()
+        return res.status(200).json({
+            users,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
 
-// Create Owner account
+export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const users = await User.find().populate("created_by").populate("updated_by")
+    res.status(200).json(users)
+}
+
+export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let key = String(req.query.key).split(",")
+    if (!key)
+        return res.status(500).json({ message: "bad request" })
+    let users: IUser[] = []
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        if (key.length == 1 || key.length > 4) {
+            users = await User.find({
+                $or: [
+                    { username: { $regex: key[0], $options: 'i' } },
+                    { email: { $regex: key[0], $options: 'i' } },
+                    { mobile: { $regex: key[0], $options: 'i' } },
+                ]
+
+            }
+            ).populate('updated_by').populate('created_by').sort('-created_at')
+        }
+        if (key.length == 2) {
+            users = await User.find({
+                $and: [
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).populate('updated_by').populate('created_by').sort('-created_at')
+        }
+        if (key.length == 3) {
+            users = await User.find({
+                $and: [
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).populate('updated_by').populate('created_by').sort('-created_at')
+        }
+        if (key.length == 4) {
+            users = await User.find({
+                $and: [
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).populate('updated_by').populate('created_by').sort('-created_at')
+        }
+        let count = users.length
+        users = users.slice((page - 1) * limit, limit * page)
+        return res.status(200).json({
+            users,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
+
+export const GetProfile = async (req: Request, res: Response, next: NextFunction) => {
+    let id = req.user?._id
+    const user = await User.findById(id).populate("created_by").populate("updated_by")
+    res.status(200).json(user)
+}
+
+
+//post/put/patch/delete
 export const SignUp = async (req: Request, res: Response, next: NextFunction) => {
     let users = await User.find()
     if (users.length > 0)
@@ -256,7 +408,6 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
     res.status(201).json(user)
 }
 
-// login
 export const Login = async (req: Request, res: Response, next: NextFunction) => {
     const { username, password, multi_login_token } = req.body as TUserBody
     if (!username)
@@ -296,7 +447,6 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
     await user.save()
     res.status(200).json(user)
 }
-// logout
 export const Logout = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.cookies.accessToken)
         return res.status(200).json({ message: "already logged out" })
@@ -304,158 +454,6 @@ export const Logout = async (req: Request, res: Response, next: NextFunction) =>
     res.status(200).json({ message: "logged out" })
 }
 
-export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let users = await User.find().populate("created_by").populate("updated_by")
-        users = users.slice((page - 1) * limit, limit * page)
-        let count = await User.countDocuments()
-        return res.status(200).json({
-            users,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
-}
-
-export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const users = await User.find().populate("created_by").populate("updated_by")
-    res.status(200).json(users)
-}
-
-export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let key = String(req.query.key).split(",")
-    if (!key)
-        return res.status(500).json({ message: "bad request" })
-    let users: IUser[] = []
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        if (key.length == 1 || key.length > 4) {
-            users = await User.find({
-                $or: [
-                    { username: { $regex: key[0], $options: 'i' } },
-                    { email: { $regex: key[0], $options: 'i' } },
-                    { mobile: { $regex: key[0], $options: 'i' } },
-                ]
-
-            }
-            ).populate('updated_by').populate('created_by').sort('-created_at')
-        }
-        if (key.length == 2) {
-            users = await User.find({
-                $and: [
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    }
-                ]
-                ,
-
-            }
-            ).populate('updated_by').populate('created_by').sort('-created_at')
-        }
-        if (key.length == 3) {
-            users = await User.find({
-                $and: [
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    }
-                ]
-                ,
-
-            }
-            ).populate('updated_by').populate('created_by').sort('-created_at')
-        }
-        if (key.length == 4) {
-            users = await User.find({
-                $and: [
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    }
-                ]
-                ,
-
-            }
-            ).populate('updated_by').populate('created_by').sort('-created_at')
-        }
-        let count = users.length
-        users = users.slice((page - 1) * limit, limit * page)
-        return res.status(200).json({
-            users,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
-}
-
-export const GetProfile = async (req: Request, res: Response, next: NextFunction) => {
-    let id = req.user?._id
-    const user = await User.findById(id).populate("created_by").populate("updated_by")
-    res.status(200).json(user)
-}
-
-// update user lead fields and its roles
 export const UpdateAccessFields = async (req: Request, res: Response, next: NextFunction) => {
     const { user_access_fields,
         crm_access_fields,
@@ -499,7 +497,6 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
     res.status(200).json({ message: " updated" })
 }
 
-// update user only admin can do
 export const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
@@ -570,7 +567,6 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
     })
 }
 
-//update profile 
 export const UpdateProfile = async (req: Request, res: Response, next: NextFunction) => {
     let user = await User.findById(req.user?._id);
     if (!user) {
@@ -630,7 +626,6 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
         .then(() => res.status(200).json({ message: "profile updated" }))
 }
 
-//update password
 export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
     const { oldPassword, newPassword, confirmPassword } = req.body as TUserBody & { oldPassword: string, newPassword: string, confirmPassword: string };
     if (!oldPassword || !newPassword || !confirmPassword)
@@ -672,7 +667,6 @@ export const resetUserPassword = async (req: Request, res: Response, next: NextF
     res.status(200).json({ message: "password updated" });
 }
 
-// make admin
 export const MakeAdmin = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
@@ -728,7 +722,7 @@ export const AssignUserstoManager = async (req: Request, res: Response, next: Ne
     await user.save();
     res.status(200).json({ message: "assigned users successfully" });
 }
-//block multi login
+
 export const AllowMultiLogin = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
@@ -756,7 +750,6 @@ export const BlockMultiLogin = async (req: Request, res: Response, next: NextFun
     await user.save();
     res.status(200).json({ message: "multi login blocked " });
 }
-// block user
 export const BlockUser = async (req: Request, res: Response, next: NextFunction) => {
     //update role of user
     const id = req.params.id;
@@ -780,9 +773,7 @@ export const BlockUser = async (req: Request, res: Response, next: NextFunction)
     res.status(200).json({ message: "user blocked successfully" });
 }
 
-// unblock user
 export const UnBlockUser = async (req: Request, res: Response, next: NextFunction) => {
-    //update role of user
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
     let user = await User.findById(id)
@@ -799,7 +790,6 @@ export const UnBlockUser = async (req: Request, res: Response, next: NextFunctio
     res.status(200).json({ message: "user unblocked successfully" });
 }
 export const RemoveManager = async (req: Request, res: Response, next: NextFunction) => {
-    //update role of user
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
     let user = await User.findById(id)
@@ -814,9 +804,7 @@ export const RemoveManager = async (req: Request, res: Response, next: NextFunct
     res.status(200).json({ message: "removed manager role successfully" });
 }
 
-// remove admin
 export const RemoveAdmin = async (req: Request, res: Response, next: NextFunction) => {
-    //update role of user
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
     let user = await User.findById(id).populate('created_by')
@@ -838,7 +826,6 @@ export const RemoveAdmin = async (req: Request, res: Response, next: NextFunctio
     res.status(200).json({ message: "admin role removed successfully" });
 }
 
-// sending password reset mail controller
 export const SendPasswordResetMail = async (req: Request, res: Response, next: NextFunction) => {
     const email = req.body.email;
     if (!email) return res.status(400).json({ message: "please provide email id" })
@@ -877,7 +864,6 @@ export const SendPasswordResetMail = async (req: Request, res: Response, next: N
         return res.status(500).json({ message: "email could not be sent, something went wrong" })
     }
 }
-// reset password controller
 export const ResetPassword = async (req: Request, res: Response, next: NextFunction) => {
     let resetPasswordToken = req.params.token;
     const { newPassword, confirmPassword } = req.body;
@@ -898,7 +884,6 @@ export const ResetPassword = async (req: Request, res: Response, next: NextFunct
     await user.save();
     res.status(200).json({ message: "password updated" });
 }
-// send verification mail controller
 export const SendVerifyEmail = async (req: Request, res: Response, next: NextFunction) => {
     const email = req.body.email;
     if (!email)
@@ -934,7 +919,6 @@ export const SendVerifyEmail = async (req: Request, res: Response, next: NextFun
         return res.status(500).json({ message: "email could not be sent, something went wrong" })
     }
 }
-// verify mail controller
 export const VerifyEmail = async (req: Request, res: Response, next: NextFunction) => {
     const emailVerifyToken = req.params.token;
     let user = await User.findOne({

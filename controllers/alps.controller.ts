@@ -3,45 +3,8 @@ import { Alps } from "../models/alps/alps.model"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { IAlps, IAlpsBody } from "../types/alps.types"
 
-export const CreateAlpsRecord = async (req: Request, res: Response, next: NextFunction) => {
-    let body = JSON.parse(req.body.body)
-    let { name, mobile, city, gst } = body as IAlpsBody
-    if (!name || !mobile || !city || !gst) {
-        return res.status(400).json({ message: "please fill all required fields" })
-    }
-    let count = await Alps.countDocuments()
 
-    let bill = new Alps({
-        name: name,
-        mobile: mobile,
-        city: city,
-        gst: gst,
-        serial_number: String(count + 1)
-    })
-    if (!req.file) {
-        return res.status(400).json({ message: "please provide bill" })
-    }
-    if (req.file) {
-        console.log(req.file.mimetype)
-        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain"];
-        const storageLocation = `waalps/media`;
-        if (!allowedFiles.includes(req.file.mimetype))
-            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-        if (req.file.size > 10 * 1024 * 1024)
-            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
-        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-        if (doc)
-            bill.media = doc
-        else {
-            return res.status(500).json({ message: "file uploading error" })
-        }
-    }
-    bill.created_at = new Date()
-    await bill.save()
-    return res.status(201).json(bill)
-}
-
-
+//get
 export const FuzzySearchAlpss = async (req: Request, res: Response, next: NextFunction) => {
     let key = String(req.query.key).split(",")
     if (!key)
@@ -197,4 +160,41 @@ export const GetAlpss = async (req: Request, res: Response, next: NextFunction) 
 
 }
 
+//post/patch/delete/put
+export const CreateAlpsRecord = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body)
+    let { name, mobile, city, gst } = body as IAlpsBody
+    if (!name || !mobile || !city || !gst) {
+        return res.status(400).json({ message: "please fill all required fields" })
+    }
+    let count = await Alps.countDocuments()
 
+    let bill = new Alps({
+        name: name,
+        mobile: mobile,
+        city: city,
+        gst: gst,
+        serial_number: String(count + 1)
+    })
+    if (!req.file) {
+        return res.status(400).json({ message: "please provide bill" })
+    }
+    if (req.file) {
+        console.log(req.file.mimetype)
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain"];
+        const storageLocation = `waalps/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 10 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            bill.media = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    bill.created_at = new Date()
+    await bill.save()
+    return res.status(201).json(bill)
+}

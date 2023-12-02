@@ -19,6 +19,79 @@ import { Contact } from "../models/contact/contact.model"
 import { IReminderBody } from "../types/reminder.types"
 import { IMessage, IMessageTemplate } from "../types/template.types"
 
+
+
+//get
+export const GetReminders = async (req: Request, res: Response, next: NextFunction) => {
+    let reminders = await Reminder.find().populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("-created_at")
+    return res.status(200).json(reminders)
+}
+
+export const GetContactReports = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    if (!isMongoId(id)) {
+        return res.status(400).json({ message: "please provide correct reminder id" })
+    }
+    let reminder = await Reminder.findById(id)
+    let reports = await ContactReport.find({ reminder: reminder }).populate('contact').populate('created_by').populate('updated_by').sort("created_at")
+    return res.status(200).json(reports)
+}
+
+export const GetPaginatedContactReports = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let id = String(req.query.id)
+    if (!isMongoId(id)) {
+        return res.status(400).json({ message: "please provide correct reminder id" })
+    }
+    let reminder = await Reminder.findById(id)
+    if (!reminder)
+        return res.status(404).json({ message: "reminder not found" })
+
+    if (!Number.isNaN(limit) && !Number.isNaN(page) && id) {
+        let reports = await ContactReport.find({ reminder: reminder }).populate('contact').populate('created_by').populate('updated_by').sort('created_at')
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+
+        let count = await ContactReport.countDocuments()
+        return res.status(200).json({
+            reports,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(500).json({ message: "bad request" })
+
+}
+
+export const SearchContactReport = async (req: Request, res: Response, next: NextFunction) => {
+    let mobile = String(`91${req.query.mobile}@c.us`)
+    let name = req.query.name
+    let id = String(req.query.id)
+    if (!isMongoId(id)) {
+        return res.status(400).json({ message: "please provide correct reminder id" })
+    }
+    let reminder = await Reminder.findById(id)
+    if (!reminder)
+        return res.status(404).json({ message: "reminder not found" })
+
+    if (!mobile)
+        return res.status(400).json({ message: "mobile not provided" })
+
+    let reports = await ContactReport.find({
+        reminder: reminder,
+        $or: [
+            { mobile: { $regex: mobile, $options: 'i' } },
+            { name: { $regex: name, $options: 'i' } }
+        ]
+    }).populate('created_by').populate('updated_by').sort('created_at')
+    return res.status(200).json(reports)
+}
+
+
+//post/put/delete/patch
 export const CreateReminderByTemplate = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
     let { name, templates, mobiles } = body as IReminderBody & { templates: string[], mobiles: string[] }
@@ -443,10 +516,6 @@ export const StartReminderWithMessage = async (req: Request, res: Response, next
 }
 
 
-export const GetReminders = async (req: Request, res: Response, next: NextFunction) => {
-    let reminders = await Reminder.find().populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("-created_at")
-    return res.status(200).json(reminders)
-}
 
 // export const DeleteReminder = async (req: Request, res: Response, next: NextFunction) => {
 //     const id = req.params.id
@@ -549,69 +618,6 @@ export const StopSingleContactReport = async (req: Request, res: Response, next:
     report.reminder_status = "stopped"
     await report.save()
     return res.status(200).json({ message: "reminder stopped for this contact" })
-}
-
-export const GetContactReports = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct reminder id" })
-    }
-    let reminder = await Reminder.findById(id)
-    let reports = await ContactReport.find({ reminder: reminder }).populate('contact').populate('created_by').populate('updated_by').sort("created_at")
-    return res.status(200).json(reports)
-}
-
-export const GetPaginatedContactReports = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let id = String(req.query.id)
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct reminder id" })
-    }
-    let reminder = await Reminder.findById(id)
-    if (!reminder)
-        return res.status(404).json({ message: "reminder not found" })
-
-    if (!Number.isNaN(limit) && !Number.isNaN(page) && id) {
-        let reports = await ContactReport.find({ reminder: reminder }).populate('contact').populate('created_by').populate('updated_by').sort('created_at')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
-
-        let count = await ContactReport.countDocuments()
-        return res.status(200).json({
-            reports,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(500).json({ message: "bad request" })
-
-}
-
-export const SearchContactReport = async (req: Request, res: Response, next: NextFunction) => {
-    let mobile = String(`91${req.query.mobile}@c.us`)
-    let name = req.query.name
-    let id = String(req.query.id)
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct reminder id" })
-    }
-    let reminder = await Reminder.findById(id)
-    if (!reminder)
-        return res.status(404).json({ message: "reminder not found" })
-
-    if (!mobile)
-        return res.status(400).json({ message: "mobile not provided" })
-
-    let reports = await ContactReport.find({
-        reminder: reminder,
-        $or: [
-            { mobile: { $regex: mobile, $options: 'i' } },
-            { name: { $regex: name, $options: 'i' } }
-        ]
-    }).populate('created_by').populate('updated_by').sort('created_at')
-    return res.status(200).json(reports)
 }
 
 

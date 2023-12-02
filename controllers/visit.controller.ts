@@ -5,7 +5,7 @@ import { Visit } from "../models/visit/visit.model"
 import { VisitReport } from "../models/visit/visit.report.model"
 import { User } from "../models/users/user.model"
 
-
+//get 
 export const getVisits = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
@@ -57,6 +57,9 @@ export const getMyTodayVisit = async (req: Request, res: Response, next: NextFun
     return res.status(200).json(visit)
 }
 
+
+
+//post/put/delte/patch
 export const StartMyDay = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
     let { start_day_credientials } = body as IVisitBody

@@ -7,6 +7,77 @@ import isMongoId from "validator/lib/isMongoId";
 import { IUser } from "../types/user.types";
 import { IMenuTracker, TFlowBody, TrackerBody } from "../types/bot.types";
 
+
+//get
+export const GetFlows = async (req: Request, res: Response, next: NextFunction) => {
+    let flows = await Flow.find().sort('-created_at').populate('created_by').populate('updated_by').populate('connected_users')
+    return res.status(200).json(flows)
+}
+export const GetTrackers = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        let trackers = await MenuTracker.find().populate({
+            path: 'flow',
+            populate: [
+                {
+                    path: 'connected_users',
+                    model: 'User'
+                }
+            ]
+        })
+            .sort('-updated_at')
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+        let count = await MenuTracker.countDocuments()
+        return res.status(200).json({
+            trackers,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(500).json({ message: "bad request" })
+}
+
+
+export const FuzzySearchTrackers = async (req: Request, res: Response, next: NextFunction) => {
+    let key = String(req.query.key).toLowerCase()
+    console.log(key)
+    if (!key)
+        return res.status(500).json({ message: "bad request" })
+    let trackers: IMenuTracker[] = []
+
+    trackers = await MenuTracker.find({
+        $or: [
+            { phone_number: { $regex: key, $options: 'i' } },
+            { bot_number: { $regex: key, $options: 'i' } },
+            { customer_name: { $regex: key, $options: 'i' } },
+        ]
+    }
+    ).populate({
+        path: 'flow',
+        populate: [
+            {
+                path: 'connected_users',
+                model: 'User'
+            }
+        ]
+    })
+        .sort('-updated_at')
+    return res.status(200).json(trackers)
+}
+export const GetConnectedUsers = async (req: Request, res: Response, next: NextFunction) => {
+    let users = await User.find()
+    users = users.filter((user) => {
+        if (user.connected_number)
+            return user
+    })
+    return res.status(200).json(users)
+}
+
+//post/patch/put/delete
 export const CreateFlow = async (req: Request, res: Response, next: NextFunction) => {
     const { flow_name, nodes, edges, trigger_keywords } = req.body as TFlowBody
     if (!flow_name || !nodes || !edges || !trigger_keywords)
@@ -98,10 +169,6 @@ export const AssignFlow = async (req: Request, res: Response, next: NextFunction
     return res.status(200).json("assigned users successfully")
 }
 
-export const GetFlows = async (req: Request, res: Response, next: NextFunction) => {
-    let flows = await Flow.find().sort('-created_at').populate('created_by').populate('updated_by').populate('connected_users')
-    return res.status(200).json(flows)
-}
 
 export const DestroyFlow = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
@@ -120,61 +187,7 @@ export const DestroyFlow = async (req: Request, res: Response, next: NextFunctio
     return res.status(200).json({ message: "deleted flow" })
 }
 
-export const GetTrackers = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let trackers = await MenuTracker.find().populate({
-            path: 'flow',
-            populate: [
-                {
-                    path: 'connected_users',
-                    model: 'User'
-                }
-            ]
-        })
-            .sort('-updated_at')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
-        let count = await MenuTracker.countDocuments()
-        return res.status(200).json({
-            trackers,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(500).json({ message: "bad request" })
-}
 
-
-export const FuzzySearchTrackers = async (req: Request, res: Response, next: NextFunction) => {
-    let key = String(req.query.key).toLowerCase()
-    console.log(key)
-    if (!key)
-        return res.status(500).json({ message: "bad request" })
-    let trackers: IMenuTracker[] = []
-
-    trackers = await MenuTracker.find({
-        $or: [
-            { phone_number: { $regex: key, $options: 'i' } },
-            { bot_number: { $regex: key, $options: 'i' } },
-            { customer_name: { $regex: key, $options: 'i' } },
-        ]
-    }
-    ).populate({
-        path: 'flow',
-        populate: [
-            {
-                path: 'connected_users',
-                model: 'User'
-            }
-        ]
-    })
-        .sort('-updated_at')
-    return res.status(200).json(trackers)
-}
 
 export const UpdateTrackerName = async (req: Request, res: Response, next: NextFunction) => {
     const { customer_name } = req.body as TrackerBody
@@ -201,14 +214,6 @@ export const ToogleTrackerStatus = async (req: Request, res: Response, next: Nex
     return res.status(200).json("bot successfully changed for this number")
 }
 
-export const GetConnectedUsers = async (req: Request, res: Response, next: NextFunction) => {
-    let users = await User.find()
-    users = users.filter((user) => {
-        if (user.connected_number)
-            return user
-    })
-    return res.status(200).json(users)
-}
 
 
 export const ResetTrackers = async (req: Request, res: Response, next: NextFunction) => {

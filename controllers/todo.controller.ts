@@ -4,7 +4,53 @@ import isMongoId from "validator/lib/isMongoId";
 import { ITodo, ITodoBody } from "../types/todo.types";
 import { Todo } from "../models/todo/todo.model";
 
+//get
+export const GetTodos = async (req: Request, res: Response, next: NextFunction) => {
+    let id = req.query.id
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let todos: ITodo[] = []
+    let count = 0
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        if (!id) {
+            todos = await Todo.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await Todo.find().countDocuments()
+        }
 
+        if (id) {
+            todos = await Todo.find({ person: id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+        }
+        if (start_date && end_date) {
+            let dt1 = new Date(String(start_date))
+            let dt2 = new Date(String(end_date))
+            todos = todos.filter((todo) => {
+                if (todo.created_at >= dt1 && todo.created_at <= dt2)
+                    return todo
+            })
+        }
+
+        return res.status(200).json({
+            todos,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
+
+export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
+    let todos = await Todo.find({ person: req.user._id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at')
+    return res.status(200).json(todos)
+}
+
+
+
+
+//put/post/patch/delte
 export const CreateTodo = async (req: Request, res: Response, next: NextFunction) => {
     const { work_title, work_description, category } = req.body as ITodoBody
     let id = req.params.id
@@ -99,47 +145,7 @@ export const UpdateStatus = async (req: Request, res: Response, next: NextFuncti
     return res.status(200).json({ message: `todo staus updated` });
 }
 
-export const GetTodos = async (req: Request, res: Response, next: NextFunction) => {
-    let id = req.query.id
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let start_date = req.query.start_date
-    let end_date = req.query.end_date
-    let todos: ITodo[] = []
-    let count = 0
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        if (!id) {
-            todos = await Todo.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = await Todo.find().countDocuments()
-        }
 
-        if (id) {
-            todos = await Todo.find({ person: id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-        }
-        if (start_date && end_date) {
-            let dt1 = new Date(String(start_date))
-            let dt2 = new Date(String(end_date))
-            todos = todos.filter((todo) => {
-                if (todo.created_at >= dt1 && todo.created_at <= dt2)
-                    return todo
-            })
-        }
-
-        return res.status(200).json({
-            todos,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
-}
-
-export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
-    let todos = await Todo.find({ person: req.user._id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at')
-    return res.status(200).json(todos)
-}
 
 
 

@@ -5,9 +5,67 @@ import { User } from "../models/users/user.model";
 import isMongoId from "validator/lib/isMongoId";
 import { isvalidDate } from "../utils/isValidDate";
 
+//get
+export const GetTasks = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let id = req.query.id
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
 
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        let tasks = await Task.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
+
+        if (start_date && end_date) {
+            let dt1 = new Date(String(start_date))
+            let dt2 = new Date(String(end_date))
+            tasks = tasks.map((task) => {
+                let updated_task_boxes = task.boxes
+                updated_task_boxes = task.boxes.filter((box) => {
+                    if (box.date >= dt1 && box.date <= dt2)
+                        return box
+                })
+                task.boxes = updated_task_boxes
+                return task
+            })
+        }
+
+
+        if (id) {
+            let user = await User.findById(id)
+            if (user) {
+                tasks = tasks.filter((task) => {
+                    return task.person.username === user?.username
+                })
+            }
+        }
+
+        let count = tasks.length
+        tasks = tasks.slice((page - 1) * limit, limit * page)
+
+        return res.status(200).json({
+            tasks,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
+
+export const GetMyTasks = async (req: Request, res: Response, next: NextFunction) => {
+    let tasks = await Task.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
+    tasks = tasks.filter((task) => {
+        return task.person.username === req.user?.username
+    })
+    return res.status(200).json(tasks)
+}
+
+
+//post/put/delete/patch
 export const CreateTask = async (req: Request, res: Response, next: NextFunction) => {
-    const { task_description, frequency_type, upto_date, frequency_value, start_date } = req.body as ITaskBody & { upto_date: string, start_date:string }
+    const { task_description, frequency_type, upto_date, frequency_value, start_date } = req.body as ITaskBody & { upto_date: string, start_date: string }
 
     let id = req.params.id
     if (!task_description || !frequency_type || !id || !upto_date)
@@ -162,61 +220,6 @@ export const DeleteTask = async (req: Request, res: Response, next: NextFunction
     return res.status(200).json({ message: `Task deleted` });
 }
 
-export const GetTasks = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let id = req.query.id
-    let start_date = req.query.start_date
-    let end_date = req.query.end_date
-
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let tasks = await Task.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
-
-        if (start_date && end_date) {
-            let dt1 = new Date(String(start_date))
-            let dt2 = new Date(String(end_date))
-            tasks = tasks.map((task) => {
-                let updated_task_boxes = task.boxes
-                updated_task_boxes = task.boxes.filter((box) => {
-                    if (box.date >= dt1 && box.date <= dt2)
-                        return box
-                })
-                task.boxes = updated_task_boxes
-                return task
-            })
-        }
-
-
-        if (id) {
-            let user = await User.findById(id)
-            if (user) {
-                tasks = tasks.filter((task) => {
-                    return task.person.username === user?.username
-                })
-            }
-        }
-
-        let count = tasks.length
-        tasks = tasks.slice((page - 1) * limit, limit * page)
-
-        return res.status(200).json({
-            tasks,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
-}
-
-export const GetMyTasks = async (req: Request, res: Response, next: NextFunction) => {
-    let tasks = await Task.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
-    tasks = tasks.filter((task) => {
-        return task.person.username === req.user?.username
-    })
-    return res.status(200).json(tasks)
-}
 
 export const ToogleMyTask = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;

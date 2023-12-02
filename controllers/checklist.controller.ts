@@ -5,7 +5,75 @@ import isMongoId from "validator/lib/isMongoId";
 import { isvalidDate } from "../utils/isValidDate";
 import { Checklist } from "../models/checklist/checklist.model";
 
+//get
+export const GetCheckLists = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let id = req.query.id
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let checklists: IChecklist[] = []
+    let count = 0
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
 
+        if (!id) {
+            checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await Checklist.find().countDocuments()
+        }
+        if (id) {
+            checklists = await Checklist.find({ owner: id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await Checklist.find({ id: id }).countDocuments()
+        }
+
+        if (start_date && end_date) {
+            let dt1 = new Date(String(start_date))
+            let dt2 = new Date(String(end_date))
+            checklists = checklists.map((checklist) => {
+                let updated_checklist_boxes = checklist.boxes
+                updated_checklist_boxes = checklist.boxes.filter((box) => {
+                    if (box.desired_date >= dt1 && box.desired_date <= dt2)
+                        return box
+                })
+                checklist.boxes = updated_checklist_boxes
+                return checklist
+            })
+        }
+
+        return res.status(200).json({
+            checklists,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
+
+export const GetMyCheckLists = async (req: Request, res: Response, next: NextFunction) => {
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+
+    let checklists = await Checklist.find({ owner: req.user._id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
+
+    if (start_date && end_date) {
+        let dt1 = new Date(String(start_date))
+        let dt2 = new Date(String(end_date))
+        checklists = checklists.map((checklist) => {
+            let updated_checklist_boxes = checklist.boxes
+            updated_checklist_boxes = checklist.boxes.filter((box) => {
+                if (box.desired_date >= dt1 && box.desired_date <= dt2)
+                    return box
+            })
+            checklist.boxes = updated_checklist_boxes
+            return checklist
+        })
+    }
+    return res.status(200).json(checklists)
+}
+
+
+//post/put/delete/patch
 export const CreateChecklist = async (req: Request, res: Response, next: NextFunction) => {
     const { title, sheet_url, upto_date, start_date } = req.body as IChecklistBody & { upto_date: string, start_date: string }
 
@@ -114,71 +182,6 @@ export const DeleteChecklist = async (req: Request, res: Response, next: NextFun
     return res.status(200).json({ message: `Checklist deleted` });
 }
 
-export const GetCheckLists = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let id = req.query.id
-    let start_date = req.query.start_date
-    let end_date = req.query.end_date
-    let checklists: IChecklist[] = []
-    let count = 0
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-
-        if (!id) {
-            checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = await Checklist.find().countDocuments()
-        }
-        if (id) {
-            checklists = await Checklist.find({ owner: id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = await Checklist.find({ id: id }).countDocuments()
-        }
-
-        if (start_date && end_date) {
-            let dt1 = new Date(String(start_date))
-            let dt2 = new Date(String(end_date))
-            checklists = checklists.map((checklist) => {
-                let updated_checklist_boxes = checklist.boxes
-                updated_checklist_boxes = checklist.boxes.filter((box) => {
-                    if (box.desired_date >= dt1 && box.desired_date <= dt2)
-                        return box
-                })
-                checklist.boxes = updated_checklist_boxes
-                return checklist
-            })
-        }
-
-        return res.status(200).json({
-            checklists,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
-}
-
-export const GetMyCheckLists = async (req: Request, res: Response, next: NextFunction) => {
-    let start_date = req.query.start_date
-    let end_date = req.query.end_date
-
-    let checklists = await Checklist.find({ owner: req.user._id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
-
-    if (start_date && end_date) {
-        let dt1 = new Date(String(start_date))
-        let dt2 = new Date(String(end_date))
-        checklists = checklists.map((checklist) => {
-            let updated_checklist_boxes = checklist.boxes
-            updated_checklist_boxes = checklist.boxes.filter((box) => {
-                if (box.desired_date >= dt1 && box.desired_date <= dt2)
-                    return box
-            })
-            checklist.boxes = updated_checklist_boxes
-            return checklist
-        })
-    }
-    return res.status(200).json(checklists)
-}
 
 export const ToogleMyChecklist = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
