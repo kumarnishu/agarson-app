@@ -214,8 +214,8 @@ export default function TodosAdminPage() {
                             <Search />
                         </IconButton>
                     </Stack >
-                    <>
 
+                    <>
                         {sent && <AlertBar message="File Exported Successfuly" color="success" />}
                         <IconButton size="medium"
                             onClick={(e) => setAnchorEl(e.currentTarget)
@@ -236,18 +236,22 @@ export default function TodosAdminPage() {
                             }}
                             sx={{ borderRadius: 2 }}
                         >
-                            <MenuItem
-                                onClick={() => {
-                                    setChoice({ type: TodoChoiceActions.create_todo })
-                                    setAnchorEl(null)
-                                }}
-                            > Add New</MenuItem>
-                            <MenuItem
-                                onClick={() => {
-                                    setChoice({ type: TodoChoiceActions.bulk_hide_todo })
-                                    setAnchorEl(null)
-                                }}
-                            > Hide Todos</MenuItem>
+                            {
+                                user?.todos_access_fields.is_editable && <>
+                                    <MenuItem
+                                        onClick={() => {
+                                            setChoice({ type: TodoChoiceActions.create_todo })
+                                            setAnchorEl(null)
+                                        }}
+                                    > Add New</MenuItem>
+                                    <MenuItem
+                                        onClick={() => {
+                                            setChoice({ type: TodoChoiceActions.bulk_hide_todo })
+                                            setAnchorEl(null)
+                                        }}
+                                    > Hide Todos</MenuItem>
+                                </>
+                            }
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
 

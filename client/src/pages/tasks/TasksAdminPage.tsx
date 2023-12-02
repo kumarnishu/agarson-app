@@ -238,12 +238,14 @@ export default function TasksAdminPage() {
                             }}
                             sx={{ borderRadius: 2 }}
                         >
-                            <MenuItem
-                                onClick={() => {
-                                    setChoice({ type: TaskChoiceActions.create_task })
-                                    setAnchorEl(null)
-                                }}
-                            > Add New</MenuItem>
+                            {
+                                user?.tasks_access_fields.is_editable && <>
+                                    <MenuItem
+                                        onClick={() => {
+                                            setChoice({ type: TaskChoiceActions.create_task })
+                                            setAnchorEl(null)
+                                        }}
+                                    > Add New</MenuItem></>}
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
 
@@ -254,7 +256,7 @@ export default function TasksAdminPage() {
             </Stack >
 
             {/* filter dates and person */}
-            <Stack direction='row' gap={2} p={2} alignItems={'center'} justifyContent={'center'}>
+            < Stack direction='row' gap={2} p={2} alignItems={'center'} justifyContent={'center'} >
                 < TextField
                     size='small'
                     type="date"
@@ -281,7 +283,8 @@ export default function TasksAdminPage() {
                         end_date: moment(e.target.value).format("YYYY-MM-DD")
                     })}
                 />
-                {user?.is_admin &&
+                {
+                    user?.is_admin &&
                     < TextField
                         size='small'
                         select
@@ -307,7 +310,8 @@ export default function TasksAdminPage() {
                                 </option>)
                             })
                         }
-                    </TextField>}
+                    </TextField>
+                }
             </Stack >
 
             {/* table */}

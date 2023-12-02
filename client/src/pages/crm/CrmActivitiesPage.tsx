@@ -55,7 +55,6 @@ function CrmActivitiesPage() {
             <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
             <Stack direction='row' gap={1} pb={1} alignItems={'center'} justifyContent={'center'}>
                 < TextField
-                    variant="filled"
                     size="small"
                     type="date"
                     id="start_date"
@@ -69,7 +68,6 @@ function CrmActivitiesPage() {
                     })}
                 />
                 < TextField
-                    variant="filled"
                     type="date"
                     id="end_date"
                     size="small"
@@ -85,7 +83,7 @@ function CrmActivitiesPage() {
                 {user?.is_admin &&
                     < TextField
                         select
-                        variant="filled"
+
                         size="small"
                         SelectProps={{
                             native: true,

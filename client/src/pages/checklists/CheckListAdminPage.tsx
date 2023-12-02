@@ -1,4 +1,4 @@
-import {  Search } from '@mui/icons-material'
+import { Search } from '@mui/icons-material'
 import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
@@ -236,12 +236,15 @@ export default function CheckListAdminPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              <MenuItem
-                onClick={() => {
-                  setChoice({ type: CheckListChoiceActions.create_checklist })
-                  setAnchorEl(null)
-                }}
-              > Add New</MenuItem>
+              {
+                user?.checklists_access_fields.is_editable && <>
+                  <MenuItem
+                    onClick={() => {
+                      setChoice({ type: CheckListChoiceActions.create_checklist })
+                      setAnchorEl(null)
+                    }}
+                  > Add New</MenuItem>
+                </>}
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
@@ -312,17 +315,17 @@ export default function CheckListAdminPage() {
 
       {/* table */}
       {isLoading && <TableSkeleton />}
-      {!isLoading && 
-      < CheckListTable
-        dates={dates}
-        checklist={checklist}
-        setCheckList={setCheckList}
-        selectAll={selectAll}
-        selectedCheckLists={selectedCheckLists}
-        setSelectedCheckLists={setSelectedCheckLists}
-        setSelectAll={setSelectAll}
-        checklists={MemoData}
-      />}
+      {!isLoading &&
+        < CheckListTable
+          dates={dates}
+          checklist={checklist}
+          setCheckList={setCheckList}
+          selectAll={selectAll}
+          selectedCheckLists={selectedCheckLists}
+          setSelectedCheckLists={setSelectedCheckLists}
+          setSelectAll={setSelectAll}
+          checklists={MemoData}
+        />}
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
     </>
 

@@ -217,11 +217,13 @@ export default function UsersPage() {
                             }}
                             sx={{ borderRadius: 2 }}
                         >
-                            <MenuItem onClick={() => {
-                                setChoice({ type: UserChoiceActions.new_user })
-                                setAnchorEl(null)
-                            }}
-                            >New User</MenuItem>
+                            {
+                                user?.user_access_fields.is_editable &&
+                                <MenuItem onClick={() => {
+                                    setChoice({ type: UserChoiceActions.new_user })
+                                    setAnchorEl(null)
+                                }}
+                                >New User</MenuItem>}
 
                             <MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
@@ -237,16 +239,16 @@ export default function UsersPage() {
 
             {/*  table */}
             {isLoading && <TableSkeleton />}
-            {!isLoading && 
-            <UsersTable
-                user={user}
-                selectAll={selectAll}
-                selectedUsers={selectedUsers}
-                setSelectedUsers={setSelectedUsers}
-                setSelectAll={setSelectAll}
-                users={MemoData}
-                setUser={setUser}
-            />}
+            {!isLoading &&
+                <UsersTable
+                    user={user}
+                    selectAll={selectAll}
+                    selectedUsers={selectedUsers}
+                    setSelectedUsers={setSelectedUsers}
+                    setSelectAll={setSelectAll}
+                    users={MemoData}
+                    setUser={setUser}
+                />}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 
