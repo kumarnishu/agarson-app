@@ -15,7 +15,7 @@ function LoginPage() {
                 direction="column"
                 justifyContent="center"
                 alignItems="center"
-                sx={{ minHeight: "100vh", minWidth: '80vw', backgroundColor: 'rgba(0,0,150.8)' }}>
+                sx={{ minHeight: "100vh", minWidth: '80vw', backgroundColor: 'rgba(0,0,150,0.8)' }}>
                 <Paper
                     sx={{
                         spacing: 2,
@@ -25,7 +25,7 @@ function LoginPage() {
                     elevation={1}>
                     <Stack justifyContent={"center"} alignItems="center">
                         <a href="https://agarsonshoes.in/">
-                            <AgarsonPngLogo width={100} height={100} title='Agarson Shoes' />
+                            <AgarsonPngLogo width={150} height={150} title='Agarson Shoes' />
                         </a>
                     </Stack>
                     <LoginForm />
@@ -58,7 +58,7 @@ function LoginPage() {
                 </Paper>
                 <Stack sx={{ width: '100%', alignText: 'center', p: 2 }}
                 >
-                    <Typography component="h1" variant="h4" sx={{ textAlign: "center", color: 'whitesmoke', fontWeight: '400', fontSize: 18, pt: 4 }}>Copyright &copy; Agarson Shoes Pvt Ltd </Typography>
+                    <Typography component="h1" variant="h4" sx={{ textAlign: "center", color: 'whitesmoke', fontWeight: 'bold', fontSize: 18, pt: 4 }}>Copyright &copy; Agarson Shoes Pvt Ltd </Typography>
                 </Stack>
                 <Typography variant="caption" component="p"  ><a style={{ textAlign: "center", fontWeight: '400', color: 'whitesmoke' }} href="https://github.com/kumarnishu">Developer : Nishu kumar 91-7056943283</a></Typography>
 
