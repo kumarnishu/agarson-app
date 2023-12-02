@@ -15,7 +15,7 @@ import RemoveLeadReferralDialog from '../dialogs/crm/RemoveLeadReferralDialog'
 import BackHandIcon from '@mui/icons-material/BackHand';
 import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
-import ToogleUselessLead from '../dialogs/crm/ToogleUselessLead'
+import ToogleUselessLead from '../dialogs/crm/ToogleUselessLeadDialog'
 import { ILead } from '../../types/crm.types'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 

@@ -56,8 +56,8 @@ export const ReferLead = async ({ id, body }: {
 }) => {
   return await apiClient.post(`refers/leads/${id}`, body)
 }
-export const RemoveLeadReferrals = async (id: string) => {
-  return await apiClient.patch(`refers/leads/${id}`)
+export const RemoveLeadReferrals = async ({ id, body }: { id: string, body: { remark: string } }) => {
+  return await apiClient.patch(`refers/leads/${id}`, body)
 }
 
 
@@ -98,11 +98,11 @@ export const UpdateLead = async ({ id, body }: { id: string, body: FormData }) =
 export const DeleteLead = async ({ id }: { id: string }) => {
   return await apiClient.delete(`leads/${id}`)
 }
-export const ConvertCustomer = async ({ id }: { id: string }) => {
-  return await apiClient.patch(`leads/${id}`)
+export const ConvertCustomer = async ({ id, body }: { id: string, body: { remark: string } }) => {
+  return await apiClient.patch(`leads/${id}`, body)
 }
-export const ToogleUseless = async ({ id }: { id: string }) => {
-  return await apiClient.patch(`toogle/useless/${id}`)
+export const ToogleUseless = async ({ id, body }: { id: string, body: { remark: string } }) => {
+  return await apiClient.patch(`toogle/useless/${id}`, body)
 }
 export const BulkLeadUpdateFromExcel = async (body: FormData) => {
   return await apiClient.put(`update/leads/bulk`, body)

@@ -10,7 +10,7 @@ import PopUp from '../popup/PopUp'
 import { IRemark } from '../../types/crm.types'
 import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
 import ConvertLeadToCustomerDialog from '../dialogs/crm/ConvertLeadToCustomerDialog'
-import ToogleUselessLead from '../dialogs/crm/ToogleUselessLead'
+import ToogleUselessLead from '../dialogs/crm/ToogleUselessLeadDialog'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
 

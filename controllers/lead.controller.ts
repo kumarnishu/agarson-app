@@ -2167,41 +2167,86 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
 }
 
 export const ConvertCustomer = async (req: Request, res: Response, next: NextFunction) => {
+    const { remark } = req.body as { remark: string }
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
     let lead = await Lead.findById(id);
     if (!lead) {
         return res.status(404).json({ message: "lead not found" })
     }
-    await Lead.findByIdAndUpdate(id, {
-        is_customer: true,
-        stage: "closed",
-        updated_by: req.user,
-        updated_at: new Date(Date.now()),
-    })
+    if (remark) {
+        let remarks = lead.remarks
+        let new_remark = new Remark({
+            remark,
+            lead: lead,
+            created_at: new Date(),
+            created_by: req.user,
+            updated_at: new Date(),
+            updated_by: req.user
+        })
+        await new_remark.save()
+        lead.last_remark = remark
+        remarks.push(new_remark)
+        lead.remarks = remarks
+    }
+    lead.is_customer = true
+    lead.stage = "closed"
+    lead.updated_by = req.user
+    lead.updated_at = new Date(Date.now())
+    await lead.save()
     return res.status(200).json({ message: "new customer created" })
 }
 
 export const ToogleUseless = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
+    const { remark } = req.body as { remark: string }
     if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
     let lead = await Lead.findById(id);
     if (!lead) {
         return res.status(404).json({ message: "lead not found" })
     }
     if (lead.stage === "useless") {
-        await Lead.findByIdAndUpdate(id, {
-            stage: 'open',
-            updated_by: req.user,
-            updated_at: new Date(Date.now()),
-        })
+        if (remark) {
+            let remarks = lead.remarks
+            let new_remark = new Remark({
+                remark,
+                lead: lead,
+                created_at: new Date(),
+                created_by: req.user,
+                updated_at: new Date(),
+                updated_by: req.user
+            })
+            await new_remark.save()
+            lead.last_remark = remark
+            remarks.push(new_remark)
+            lead.remarks = remarks
+        }
+        lead.stage = "open"
+        lead.updated_by = req.user
+        lead.updated_at = new Date(Date.now())
+        await lead.save()
     }
-    else
-        await Lead.findByIdAndUpdate(id, {
-            stage: 'useless',
-            updated_by: req.user,
-            updated_at: new Date(Date.now()),
-        })
+    else {
+        if (remark) {
+            let remarks = lead.remarks
+            let new_remark = new Remark({
+                remark,
+                lead: lead,
+                created_at: new Date(),
+                created_by: req.user,
+                updated_at: new Date(),
+                updated_by: req.user
+            })
+            await new_remark.save()
+            lead.last_remark = remark
+            remarks.push(new_remark)
+            lead.remarks = remarks
+        }
+        lead.stage = "useless"
+        lead.updated_by = req.user
+        lead.updated_at = new Date(Date.now())
+        await lead.save()
+    }
     return res.status(200).json({ message: "successfully changed stage" })
 }
 
@@ -2362,11 +2407,27 @@ export const ReferLead = async (req: Request, res: Response, next: NextFunction)
 
 export const RemoveLeadReferrals = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
+    const { remark } = req.body as { remark: string }
     if (!isMongoId(id))
         return res.status(400).json({ message: "bad mongo id" })
     let lead = await Lead.findById(id)
     if (!lead)
         return res.status(404).json({ message: "lead not found" })
+    if (remark) {
+        let remarks = lead.remarks
+        let new_remark = new Remark({
+            remark,
+            lead: lead,
+            created_at: new Date(),
+            created_by: req.user,
+            updated_at: new Date(),
+            updated_by: req.user
+        })
+        await new_remark.save()
+        lead.last_remark = remark
+        remarks.push(new_remark)
+        lead.remarks = remarks
+    }
     lead.referred_party = undefined
     lead.referred_party_mobile = undefined
     lead.referred_party_name = undefined
