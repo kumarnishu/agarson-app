@@ -3,10 +3,11 @@ import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
 import { ITodo } from '../../types/todo.types'
-import { EditOutlined } from '@mui/icons-material'
+import { EditOutlined, RemoveRedEye } from '@mui/icons-material'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import UpdateTodoStatusDialog from '../dialogs/todos/UpdateTodoStatusDialog'
+import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
 
 
 
@@ -41,25 +42,25 @@ function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTo
                             <STableHeadCell
                             >
 
-                               
-                                    <Checkbox
-                                        indeterminate={selectAll ? true : false}
-                                        checked={Boolean(selectAll)}
-                                        size="small" onChange={(e) => {
-                                            if (e.currentTarget.checked) {
-                                                setSelectedTodos(todos)
-                                                setSelectAll(true)
-                                            }
-                                            if (!e.currentTarget.checked) {
-                                                setSelectedTodos([])
-                                                setSelectAll(false)
-                                            }
-                                        }} />
+
+                                <Checkbox
+                                    indeterminate={selectAll ? true : false}
+                                    checked={Boolean(selectAll)}
+                                    size="small" onChange={(e) => {
+                                        if (e.currentTarget.checked) {
+                                            setSelectedTodos(todos)
+                                            setSelectAll(true)
+                                        }
+                                        if (!e.currentTarget.checked) {
+                                            setSelectedTodos([])
+                                            setSelectAll(false)
+                                        }
+                                    }} />
 
                             </STableHeadCell>
 
-                           
-                             <STableHeadCell
+
+                            <STableHeadCell
                             >
 
                                 Actions
@@ -103,6 +104,12 @@ function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTo
                             >
 
                                 Last Reply
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Timestamp
 
                             </STableHeadCell>
                         </STableRow>
@@ -150,30 +157,41 @@ function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTo
                                                 </STableCell>
                                                 :
                                                 null/* actions popup */}
-                                            
-                                                <STableCell>
-                                                    <PopUp
-                                                        element={
-                                                            <Stack direction="row" spacing={1}>
-                                                                {
 
-                                                                    <>
-                                                                        <Tooltip title="Update Status">
-                                                                            <IconButton color="success"
-                                                                                onClick={() => {
-                                                                                    setChoice({ type: TodoChoiceActions.update_todo_status })
-                                                                                    setTodo(todo)
-                                                                                }}
-                                                                            >
-                                                                                <EditOutlined />
-                                                                            </IconButton>
-                                                                        </Tooltip>
-                                                                    </>
+                                            <STableCell>
+                                                <PopUp
+                                                    element={
+                                                        <Stack direction="row" spacing={1}>
+                                                            {
 
-                                                                }
+                                                                <>
+                                                                    <Tooltip title="View replies">
+                                                                        <IconButton color="success"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: TodoChoiceActions.view_replies })
+                                                                                setTodo(todo)
+                                                                            }}
+                                                                        >
+                                                                            <RemoveRedEye />
+                                                                        </IconButton>
+                                                                    </Tooltip>
 
-                                                            </Stack>} />
-                                                </STableCell>
+                                                                    <Tooltip title="Update Status">
+                                                                        <IconButton color="success"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: TodoChoiceActions.update_todo_status })
+                                                                                setTodo(todo)
+                                                                            }}
+                                                                        >
+                                                                            <EditOutlined />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                </>
+
+                                                            }
+
+                                                        </Stack>} />
+                                            </STableCell>
 
                                             <STableCell>
                                                 {todo.work_title}
@@ -198,6 +216,10 @@ function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTo
                                                 {todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply}
 
                                             </STableCell>
+                                            <STableCell>
+                                                {new Date(todo.created_at).toLocaleString()}
+
+                                            </STableCell>
                                         </STableRow>}
                                     </>
                                 )
@@ -211,6 +233,7 @@ function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTo
                 todo ?
                     <>
                         <UpdateTodoStatusDialog todo={todo} />
+                        <ViewTodoRepliesDialog todo={todo} />
                     </>
                     : null
             }

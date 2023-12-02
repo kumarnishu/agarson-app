@@ -15,12 +15,12 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
     let count = 0
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
-            todos = await Todo.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            todos = await Todo.find({ is_hidden: false }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').populate("replies.created_by").skip((page - 1) * limit).limit(limit)
             count = await Todo.find().countDocuments()
         }
 
         if (id) {
-            todos = await Todo.find({ person: id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            todos = await Todo.find({ person: id, is_hidden: false }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
         }
         if (start_date && end_date) {
             let dt1 = new Date(String(start_date))
@@ -43,11 +43,9 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
 }
 
 export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
-    let todos = await Todo.find({ person: req.user._id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at')
+    let todos = await Todo.find({ person: req.user._id, is_hidden: false }).populate('person').populate('updated_by').populate('created_by').sort('-created_at')
     return res.status(200).json(todos)
 }
-
-
 
 
 //put/post/patch/delte
@@ -117,7 +115,7 @@ export const BulkHideTodos = async (req: Request, res: Response, next: NextFunct
             is_hidden: true
         })
     })
-    return res.status(200).json({ message: `todos updated` });
+    return res.status(200).json({ message: `todos hidden` });
 }
 
 export const UpdateStatus = async (req: Request, res: Response, next: NextFunction) => {

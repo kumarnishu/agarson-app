@@ -3,13 +3,14 @@ import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
 import { ITodo } from '../../types/todo.types'
-import { Delete, Edit, HideImageRounded } from '@mui/icons-material'
+import { Delete, Edit, HideImageRounded, RemoveRedEye } from '@mui/icons-material'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import DeleteTodoDialog from '../dialogs/todos/DeleteTodoDialog'
 import HideTodoDialog from '../dialogs/todos/HideTodoDialog'
 import EditTodoDialog from '../dialogs/todos/EditTodoDialog'
+import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
 
 
 
@@ -45,20 +46,20 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             <STableHeadCell
                             >
 
-                               
-                                    <Checkbox
-                                        indeterminate={selectAll ? true : false}
-                                        checked={Boolean(selectAll)}
-                                        size="small" onChange={(e) => {
-                                            if (e.currentTarget.checked) {
-                                                setSelectedTodos(todos)
-                                                setSelectAll(true)
-                                            }
-                                            if (!e.currentTarget.checked) {
-                                                setSelectedTodos([])
-                                                setSelectAll(false)
-                                            }
-                                        }} />
+
+                                <Checkbox
+                                    indeterminate={selectAll ? true : false}
+                                    checked={Boolean(selectAll)}
+                                    size="small" onChange={(e) => {
+                                        if (e.currentTarget.checked) {
+                                            setSelectedTodos(todos)
+                                            setSelectAll(true)
+                                        }
+                                        if (!e.currentTarget.checked) {
+                                            setSelectedTodos([])
+                                            setSelectAll(false)
+                                        }
+                                    }} />
 
                             </STableHeadCell>
 
@@ -193,6 +194,16 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                             {
 
                                                                 <>
+                                                                    <Tooltip title="View replies">
+                                                                        <IconButton color="success"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: TodoChoiceActions.view_replies })
+                                                                                setTodo(todo)
+                                                                            }}
+                                                                        >
+                                                                            <RemoveRedEye />
+                                                                        </IconButton>
+                                                                    </Tooltip>
                                                                     <Tooltip title="Edit">
                                                                         <IconButton color="info"
                                                                             onClick={() => {
@@ -287,6 +298,7 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                         <DeleteTodoDialog todo={todo} />
                         <HideTodoDialog todo={todo} />
                         <EditTodoDialog todo={todo} />
+                        <ViewTodoRepliesDialog todo={todo} />
                     </>
                     : null
             }

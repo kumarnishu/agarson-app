@@ -6,7 +6,7 @@ import { BulkHideTodos, CreateTodo, DeleteTodo, EditTodo, GetMyTodos, GetTodos, 
 const router = express.Router()
 
 router.route("/todos").get(isAuthenticatedUser, GetTodos)
-router.route("/todos/hide").put(isAuthenticatedUser, BulkHideTodos)
+router.route("/todos/bulk/hide").patch(isAuthenticatedUser, BulkHideTodos)
 router.route("/todos/me").get(isAuthenticatedUser, GetMyTodos)
 router.route("/todos/:id").post(isAuthenticatedUser, CreateTodo)
 router.route("/todos/:id").put(isAuthenticatedUser, EditTodo)

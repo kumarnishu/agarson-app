@@ -19,6 +19,7 @@ import NewTodoDialog from '../../components/dialogs/todos/NewTodoDialog'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import TodoSTable from '../../components/tables/TodoTable'
 import { FuzzySearchTodos, GetTodos } from '../../services/TodoServices'
+import BulkHideTodoDialog from '../../components/dialogs/todos/BulkHideTodoDialog'
 
 
 export default function TodosAdminPage() {
@@ -241,11 +242,18 @@ export default function TodosAdminPage() {
                                     setAnchorEl(null)
                                 }}
                             > Add New</MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    setChoice({ type: TodoChoiceActions.bulk_hide_todo })
+                                    setAnchorEl(null)
+                                }}
+                            > Hide Todos</MenuItem>
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
 
                         </Menu >
                         <NewTodoDialog />
+                        <BulkHideTodoDialog todos={selectedTodos} />
                     </>
                 </Stack >
             </Stack >

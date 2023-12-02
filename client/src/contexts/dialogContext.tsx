@@ -19,7 +19,7 @@ type TemplateChoices = "create_template" | "update_template" | "delete_template"
 type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadcast" | "close_broadcast" | "view_broadcast" | 'start_broadcast' | "reset_broadcast" | "stop_broadcast" | "create_message_broadcast" | "update_message_broadcast"
   | "start_message_broadcast" | "set_daily_count"
 
-type TodoChoices = "create_todo" | "update_todo" | "delete_todo" | "close_todo" | "update_todo_status" | 'bulk_hide_todo' | "hide_todo"
+type TodoChoices = "create_todo" | "update_todo" |"view_replies" | "delete_todo" | "close_todo" | "update_todo_status" | 'bulk_hide_todo' | "hide_todo"
 
 type ReminderChoices = "create_reminder" | "update_reminder" | "delete_reminder" | "close_reminder" | "view_reminder" | 'start_reminder' | "reset_reminder" | "stop_reminder" | "create_message_reminder" | "update_message_reminder"
   | "start_message_reminder"
@@ -131,7 +131,8 @@ export enum TodoChoiceActions {
   close_todo = "close_todo",
   update_todo_status = "update_todo_status",
   bulk_hide_todo = "bulk_hide_todo",
-  hide_todo = "hide_todo"
+  hide_todo = "hide_todo",
+  view_replies ="view_replies"
 }
 export enum TaskSchedulerChoiceActions {
   create_task_scheduler = "create_task_scheduler",
@@ -341,6 +342,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TodoChoiceActions.update_todo_status: return type
     case TodoChoiceActions.bulk_hide_todo: return type
     case TodoChoiceActions.hide_todo: return type
+    case TodoChoiceActions.view_replies: return type
   
 
     // broadcast choice action

@@ -1,54 +1,86 @@
-import { Dialog, DialogTitle, DialogContent, IconButton, Button, Typography } from '@mui/material';
-import React, { useContext } from 'react';
-import { ChoiceContext, TaskChoiceActions } from '../../../contexts/dialogContext';
+import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Button, CircularProgress } from '@mui/material'
+import { useContext, useEffect, useState } from 'react';
+import { ChoiceContext, TodoChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
-import { ITask } from '../../../types/task.types';
+import { ITodo } from '../../../types/todo.types';
+import { AxiosResponse } from 'axios';
+import { useMutation } from 'react-query';
+import { BackendError } from '../../..';
+import AlertBar from '../../snacks/AlertBar';
+import { BulkHideTodos } from '../../../services/TodoServices';
+import { queryClient } from '../../../main';
 
-function ViewTaskBoxesDialog({ task, dates }: {
-    task: ITask, dates: {
-        start_date?: string | undefined;
-        end_date?: string | undefined;
-    } | undefined
-}) {
+
+function BulkHideTodoDialog({ todos }: { todos: ITodo[] }) {
     const { choice, setChoice } = useContext(ChoiceContext)
+    const [selected_ids, setSelected_ids] = useState<string[]>([])
+    const { mutate, isLoading, isSuccess, isError, error } = useMutation
+        <AxiosResponse<string>, BackendError, {
+            body: {
+                ids: string[]
+            }
+        }>
+        (BulkHideTodos, {
+            onSuccess: () => {
+                queryClient.invalidateQueries('todos')
+            }
+        })
+        
+    useEffect(() => {
+        let ids: string[] = []
+        todos.forEach((todo) => {
+            ids.push(todo._id)
+        })
+        setSelected_ids(ids)
+    }, [todos])
+
+    useEffect(() => {
+        if (isSuccess) {
+            setTimeout(() => {
+                setChoice({ type: TodoChoiceActions.close_todo })
+            }, 1000)
+        }
+    }, [isSuccess, setChoice])
+
     return (
-        <>
-            <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === TaskChoiceActions.view_boxes ? true : false}
-                onClose={() => setChoice({ type: TaskChoiceActions.close_task })}
-            >
-                <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: TaskChoiceActions.close_task })}>
-                    <Cancel fontSize='large' />
-                </IconButton>
-
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Checked : {task.boxes.filter((box) => {
-                    return box.is_completed && new Date(box.date) <= new Date()
-                }).length}
-
-                    /{task.boxes.filter((box) => {
-                        return new Date(box.date).getDay() !== 0 && new Date(box.date) < new Date()
-                    }).length}
-
-                </DialogTitle>
-                <Typography variant='caption' textAlign={"center"}>
-                    {dates?.start_date && new Date(dates?.start_date).toLocaleDateString()} to {dates?.end_date && new Date(dates?.end_date).toLocaleDateString()}
+        <Dialog open={choice === TodoChoiceActions.bulk_hide_todo ? true : false}
+            onClose={() => setChoice({ type: TodoChoiceActions.close_todo })}
+        >
+            <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: TodoChoiceActions.close_todo })}>
+                <Cancel fontSize='large' />
+            </IconButton>
+            <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
+                Hide Todos
+            </DialogTitle>
+            {
+                isError ? (
+                    <AlertBar message={error?.response.data.message} color="error" />
+                ) : null
+            }
+            {
+                isSuccess ? (
+                    <AlertBar message="hidden successfully" color="success" />
+                ) : null
+            }
+            <DialogContent>
+                <Typography variant="body1" color="error">
+                    {`Warning ! This will hide ${todos.length} todos.`}
                 </Typography>
-                <DialogContent>
-                    {task && task.boxes.map((box, index) => {
-                        return (
-                            <React.Fragment key={index}>
-                                {
-                                    new Date(box.date).getDay() !== 0 && Boolean(!box.is_completed && new Date(box.date) < new Date()) ?
-                                        <Button title={"Desired Date:" + new Date(box.date).toLocaleDateString()} variant="contained" size="small" sx={{ m: 1 }} color='error' disabled={new Date(box.date).getDay() === 0}>{new Date(box.date).getDate()}</Button>
-                                        :
-                                        <Button title={"Desired Date:" + new Date(box.date).toLocaleDateString()}  variant="contained" size="small" sx={{ m: 1 }} color={Boolean(box.is_completed) ? "success" : 'inherit'} disabled={new Date(box.date).getDay() === 0}>{new Date(box.date).getDate()}</Button>
-                                }
-                            </React.Fragment >
-                        )
-                    })}
-                </DialogContent>
-            </Dialog>
-        </>
+                <Button variant="contained" color="primary"
+                    onClick={() => {
+                        mutate({
+                            body: {
+                                ids: selected_ids
+                            }
+                        })
+                    }}
+                    disabled={Boolean(isLoading)}
+                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
+                </Button>
+            </DialogContent>
+
+        </Dialog >
     )
 }
 
-export default ViewTaskBoxesDialog
+export default BulkHideTodoDialog

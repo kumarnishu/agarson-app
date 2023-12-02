@@ -67,6 +67,8 @@ function UpdateTodoStatusForm({ todo }: { todo: ITodo }) {
                 pt={2}
             >
                 < TextField
+                    multiline
+                    rows={4}
                     focused
                     error={
                         formik.touched.reply && formik.errors.reply ? true : false

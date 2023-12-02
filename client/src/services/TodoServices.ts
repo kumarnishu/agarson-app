@@ -14,7 +14,9 @@ export const DeleteTodo = async (id: string) => {
 export const HideTodo = async (id: string) => {
     return await apiClient.patch(`todos/${id}`);
 };
-
+export const BulkHideTodos = async ({ body }: { body: { ids: string[] } }) => {
+    return await apiClient.patch(`todos/bulk/hide`, body);
+};
 
 export const UpdateTodoStatus = async ({ id, body }: { id: string, body: { status: string, reply: string } }) => {
     return await apiClient.patch(`todos/status/${id}`, body);
