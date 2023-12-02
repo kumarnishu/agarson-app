@@ -155,12 +155,12 @@ export default function TemplatesPage() {
                           }
                         }}
                         src={template.media?.public_url} style={{ borderRadius: '10px', minHeight: '260px' }} />}
-                      {!user?.templates_access_fields.is_hidden &&
+                     
                         <Stack direction="row" spacing={1} sx={{ position: 'relative', top: 10 }}>
                           {
 
                             <>
-                              <Tooltip title="Edit">
+                            {!user?.templates_access_fields.is_editable &&<Tooltip title="Edit">
                                 <IconButton color="info"
                                   onClick={() => {
                                     setChoice({ type: TemplateChoiceActions.update_template })
@@ -169,7 +169,7 @@ export default function TemplatesPage() {
                                 >
                                   <Edit />
                                 </IconButton>
-                              </Tooltip>
+                              </Tooltip>}
                               {user?.templates_access_fields.is_deletion_allowed &&
                                 <Tooltip title="Delete">
                                   <IconButton color="error"
@@ -195,7 +195,6 @@ export default function TemplatesPage() {
 
                           }
                         </Stack>
-                      }
                     </Stack>
                   </Grid>
                 )
