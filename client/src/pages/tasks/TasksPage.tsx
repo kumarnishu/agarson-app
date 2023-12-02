@@ -99,6 +99,8 @@ export default function TasksPage() {
                 return (
                     <Stack key={index}
                         direction="column"
+                        p={1}
+                        spacing={1}
                     >
                         <Paper elevation={8} sx={{ p: 2, mt: 1, boxShadow: 2, backgroundColor: 'whitesmoke' }}>
                             <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
