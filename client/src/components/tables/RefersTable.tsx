@@ -59,96 +59,94 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                         <STableRow>
                             <STableHeadCell
                             >
-                           
-                                   
-                                        <Checkbox
-                                            indeterminate={selectAll ? true : false}
-                                            checked={Boolean(selectAll)}
-                                            size="small" onChange={(e) => {
-                                                if (e.currentTarget.checked) {
-                                                    setSelectedRefers(refers)
-                                                    setSelectAll(true)
-                                                }
-                                                if (!e.currentTarget.checked) {
-                                                    setSelectedRefers([])
-                                                    setSelectAll(false)
-                                                }
-                                            }} />
-                                
-                            </STableHeadCell>
-                            {user?.crm_access_fields.is_editable &&
-                                <STableHeadCell
-                                >
-                                  
-                                        Actions
-                                    
-                                </STableHeadCell>}
-                            <STableHeadCell
-                            >
-                           
-                                    Party Name
-                                
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                           
-                                    Customer Name
-                                
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                           
-                                    Party Assigned
-                                
+
+
+                                <Checkbox
+                                    indeterminate={selectAll ? true : false}
+                                    checked={Boolean(selectAll)}
+                                    size="small" onChange={(e) => {
+                                        if (e.currentTarget.checked) {
+                                            setSelectedRefers(refers)
+                                            setSelectAll(true)
+                                        }
+                                        if (!e.currentTarget.checked) {
+                                            setSelectedRefers([])
+                                            setSelectAll(false)
+                                        }
+                                    }} />
+
                             </STableHeadCell>
 
                             <STableHeadCell
                             >
-                           
-                                    Mobile
-                                
+                                Actions
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                           
-                                    City
-                                
+
+                                Party Name
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                           
-                                    State
-                                
+
+                                Customer Name
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                           
-                                    Lead Owners
-                                
+
+                                Party Assigned
+
+                            </STableHeadCell>
+
+                            <STableHeadCell
+                            >
+
+                                Mobile
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                           
-                                    Created At
-                                
+
+                                City
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                           
-                                    Updated At
-                                
+
+                                State
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                           
-                                    Created By
-                                
+
+                                Lead Owners
+
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                           
-                                    Updated By
-                                
+
+                                Created At
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Updated At
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Created By
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Updated By
+
                             </STableHeadCell>
                         </STableRow>
                     </STableHead>
@@ -161,34 +159,34 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                     >
                                         {selectAll ?
                                             <STableCell>
-                                               
 
-                                                    <Checkbox size="small"
-                                                        checked={Boolean(selectAll)}
-                                                    />
 
-                                                
+                                                <Checkbox size="small"
+                                                    checked={Boolean(selectAll)}
+                                                />
+
+
                                             </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
                                             <STableCell>
-                                               
-                                                    <Checkbox size="small"
-                                                        onChange={(e) => {
-                                                            setRefer(refer.party)
-                                                            if (e.target.checked) {
-                                                                setSelectedRefers([...selectedRefers, refer])
-                                                            }
-                                                            if (!e.target.checked) {
-                                                                setSelectedRefers((refers) => refers.filter((item) => {
-                                                                    return item.party._id !== refer.party._id
-                                                                }))
-                                                            }
-                                                        }}
-                                                    />
-                                                
+
+                                                <Checkbox size="small"
+                                                    onChange={(e) => {
+                                                        setRefer(refer.party)
+                                                        if (e.target.checked) {
+                                                            setSelectedRefers([...selectedRefers, refer])
+                                                        }
+                                                        if (!e.target.checked) {
+                                                            setSelectedRefers((refers) => refers.filter((item) => {
+                                                                return item.party._id !== refer.party._id
+                                                            }))
+                                                        }
+                                                    }}
+                                                />
+
                                             </STableCell>
                                             :
                                             null
@@ -199,7 +197,7 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                                 element={
                                                     <Stack direction="row">
                                                         <>
-                                                            {user?.is_admin &&
+                                                            {user?.crm_access_fields.is_editable &&
                                                                 <>
                                                                     <Tooltip title="edit">
                                                                         <IconButton
@@ -251,74 +249,74 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                                                                     </IconButton>
                                                                 </Tooltip>}
                                                         </>
-                                                    
-                                                </Stack>}
+
+                                                    </Stack>}
                                             />
 
                                         </STableCell>
                                         {/* party name */}
                                         < STableCell >
-                                           
-                                               {refer.party.name}
 
-                                            
+                                            {refer.party.name}
+
+
                                         </STableCell>
                                         <STableCell                     >
-                                           
-                                                {refer.party.customer_name}
 
-                                            
+                                            {refer.party.customer_name}
+
+
                                         </STableCell>
                                         <STableCell                     >
-                                           
-                                                {refer.leads && refer.leads.length}
 
-                                            
+                                            {refer.leads && refer.leads.length}
+
+
                                         </STableCell>
                                         <STableCell                     >
-                                           
-                                                {refer.party.mobile}
 
-                                            
+                                            {refer.party.mobile}
+
+
                                         </STableCell>
                                         <STableCell                     >
-                                           
-                                                {refer.party.city}
 
-                                            
+                                            {refer.party.city}
+
+
                                         </STableCell>
                                         <STableCell                     >
-                                           
-                                                {refer.party.state}
 
-                                            
+                                            {refer.party.state}
+
+
                                         </STableCell>
                                         <STableCell>
-                                          {refer.party.lead_owners ? refer.party.lead_owners.map((owner) => { return owner.username + ", " }) : [""]}
+                                            {refer.party.lead_owners ? refer.party.lead_owners.map((owner) => { return owner.username + ", " }) : [""]}
                                         </STableCell>
                                         <STableCell                     >
-                                           
-                                                {new Date(refer.party.created_at).toLocaleString()}
 
-                                            
+                                            {new Date(refer.party.created_at).toLocaleString()}
+
+
                                         </STableCell>
                                         <STableCell                     >
-                                           
-                                                {new Date(refer.party.updated_at).toLocaleString()}
 
-                                            
+                                            {new Date(refer.party.updated_at).toLocaleString()}
+
+
                                         </STableCell>
                                         <STableCell                     >
-                                           
-                                               {refer.party.created_by.username}
 
-                                            
+                                            {refer.party.created_by.username}
+
+
                                         </STableCell>
                                         <STableCell                     >
-                                           
-                                                {refer.party.updated_by.username}
 
-                                            
+                                            {refer.party.updated_by.username}
+
+
                                         </STableCell>
                                     </STableRow>
                                 )
