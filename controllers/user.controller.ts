@@ -842,9 +842,7 @@ export const SendPasswordResetMail = async (req: Request, res: Response, next: N
         return res.status(404).json({ message: "you have no account with this email id" })
     const resetToken = await user.getResetPasswordToken();
     await user.save();
-    const resetPasswordUrl = `${req.protocol}://${req.get(
-        "host"
-    )}/password/reset/${resetToken}`;
+    const resetPasswordUrl = `${process.env.HOST}/password/reset/${resetToken}`;
     const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\n valid for 15 minutes only \n\n\n\nIf you have not requested this email then, please ignore it.`;
     const options = {
         to: user.email,
@@ -896,9 +894,9 @@ export const SendVerifyEmail = async (req: Request, res: Response, next: NextFun
         return res.status(404).json({ message: "you have no account with this email id" })
     const verifyToken = await user.getEmailVerifyToken();
     await user.save();
-    const emailVerficationUrl = `${req.protocol}://${req.get(
-        "host"
-    )}/email/verify/${verifyToken}`;
+    const emailVerficationUrl = `${process.env.HOST}/email/verify/${verifyToken}`
+
+
     const message = `Your email verification link is :- \n\n ${emailVerficationUrl} \n\n valid for 15 minutes only \n\nIf you have not requested this email then, please ignore it.`;
     const options = {
         to: user.email,
