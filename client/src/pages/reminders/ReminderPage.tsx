@@ -17,6 +17,7 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { GetReminders } from '../../services/ReminderServices'
 import { IReminder } from '../../types/reminder.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import { UserContext } from '../../contexts/userContext'
 
 type SelectedData = {
   name?: string,
@@ -41,6 +42,7 @@ export default function ReminderPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const { user } = useContext(UserContext)
 
   function handleExcel() {
     setAnchorEl(null)
@@ -116,7 +118,7 @@ export default function ReminderPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Reminder
+          Reminders
         </Typography>
 
         <Stack
@@ -166,7 +168,7 @@ export default function ReminderPage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >
+            >{user?.reminders_access_fields.is_editable&&<>
               <MenuItem onClick={() => {
                 setChoice({ type: ReminderChoiceActions.create_reminder })
                 setAnchorEl(null)
@@ -176,7 +178,7 @@ export default function ReminderPage() {
                 setChoice({ type: ReminderChoiceActions.create_message_reminder })
                 setAnchorEl(null)
               }}
-              >New Custom Reminder</MenuItem>
+                >New Custom Reminder</MenuItem></>}
               <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 

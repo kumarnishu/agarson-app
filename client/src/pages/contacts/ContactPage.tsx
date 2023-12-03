@@ -174,12 +174,12 @@ export default function ContactPage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >
+            >{LoggedInUser?.contacts_access_fields.is_editable&&
               <MenuItem onClick={() => {
                 setChoice({ type: ContactChoiceActions.create_contact })
                 setAnchorEl(null)
               }}
-              >New Contact</MenuItem>
+              >New Contact</MenuItem>}
               <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 

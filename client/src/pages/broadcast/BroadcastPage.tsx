@@ -17,6 +17,7 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { IBroadcast } from '../../types/broadcast.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import { UserContext } from '../../contexts/userContext'
 
 type SelectedData = {
   name?: string,
@@ -44,7 +45,7 @@ export default function BroadcastPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
- 
+  const { user } = useContext(UserContext)
 
   function handleExcel() {
     setAnchorEl(null)
@@ -176,6 +177,7 @@ export default function BroadcastPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
+              {user?.broadcast_access_fields.is_editable&&<>
               <MenuItem onClick={() => {
                 setChoice({ type: BroadcastChoiceActions.create_broadcast })
                 setAnchorEl(null)
@@ -185,7 +187,7 @@ export default function BroadcastPage() {
                 setChoice({ type: BroadcastChoiceActions.create_message_broadcast })
                 setAnchorEl(null)
               }}
-              >New Custom Broadcast</MenuItem>
+              >New Custom Broadcast</MenuItem></>}
               <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 

@@ -32,11 +32,13 @@ function LeadsBackup() {
             <Stack direction="row" gap={1} alignItems="center">
                 {user?.is_admin ?
                     <>
-                        <Button variant='outlined' onClick={() => {
+                        <Button variant='outlined' disabled={!user.backup_access_fields.is_deletion_allowed} onClick={() => {
                             setValue("leads")
+
                         }}>Export</Button>
-                        <Button variant='contained' onClick={() => {
+                        <Button variant='contained' disabled={!user.backup_access_fields.is_deletion_allowed} onClick={() => {
                             setValue("mobiles")
+
                         }}
                         >Extract Mobiles</Button>
                     </> :

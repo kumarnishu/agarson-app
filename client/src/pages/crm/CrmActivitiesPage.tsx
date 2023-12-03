@@ -16,7 +16,6 @@ import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
 import RemarksTable from '../../components/tables/RemarksTable'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 function CrmActivitiesPage() {
     const [users, setUsers] = useState<IUser[]>([])
@@ -48,10 +47,6 @@ function CrmActivitiesPage() {
     }, [remarks, isSuccess, data])
     return (
         <>
-
-            {
-                isLoading && <LinearProgress />
-            }
             <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
             <Stack direction='row' gap={1} pb={1} alignItems={'center'} justifyContent={'center'}>
                 < TextField
@@ -110,7 +105,7 @@ function CrmActivitiesPage() {
                     </TextField>}
             </Stack>
             <>
-                {isLoading && <TableSkeleton />}
+                {isLoading && <LinearProgress />}
                 {!isLoading &&
                     window.screen.width < 500 ?
                     <Box>

@@ -113,6 +113,7 @@ export default function TemplatesPage() {
             >
               <MenuIcon />
             </IconButton>
+            {user?.templates_access_fields.is_editable&&
 
             <Menu
               anchorEl={anchorEl}
@@ -123,14 +124,13 @@ export default function TemplatesPage() {
               MenuListProps={{
                 'aria-labelledby': 'basic-button',
               }}
-              sx={{ borderRadius: 2 }}
-            >
+              sx={{ borderRadius: 2 }}>
               <MenuItem onClick={() => {
                 setChoice({ type: TemplateChoiceActions.create_template })
                 setAnchorEl(null)
               }}
               >New Template</MenuItem>
-            </Menu>
+            </Menu>}
             <NewTemplateDialog />
           </>
 
@@ -160,7 +160,7 @@ export default function TemplatesPage() {
                           {
 
                             <>
-                            {!user?.templates_access_fields.is_editable &&<Tooltip title="Edit">
+                            {user?.templates_access_fields.is_editable &&<Tooltip title="Edit">
                                 <IconButton color="info"
                                   onClick={() => {
                                     setChoice({ type: TemplateChoiceActions.update_template })
