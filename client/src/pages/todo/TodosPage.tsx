@@ -12,9 +12,7 @@ import { GetMyTodos } from '../../services/TodoServices'
 export default function TodosPage() {
     const [todo, setTodo] = useState<ITodo>()
     const [todos, setTodos] = useState<ITodo[]>([])
-    const [selectAll, setSelectAll] = useState(false)
     const MemoData = React.useMemo(() => todos, [todos])
-    const [selectedTodos, setSelectedTodos] = useState<ITodo[]>([])
     const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>("self_todos", GetMyTodos)
 
 
@@ -36,10 +34,6 @@ export default function TodosPage() {
                 < MyTodoTable
                     todo={todo}
                     setTodo={setTodo}
-                    selectAll={selectAll}
-                    selectedTodos={selectedTodos}
-                    setSelectedTodos={setSelectedTodos}
-                    setSelectAll={setSelectAll}
                     todos={MemoData}
                 />}
         </>
