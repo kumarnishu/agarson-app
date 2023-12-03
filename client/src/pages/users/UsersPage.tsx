@@ -1,11 +1,10 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, IconButton,  LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchUsers, GetPaginatedUsers } from '../../services/UserServices'
-import { headColor } from '../../utils/colors'
 import UsersTable from '../../components/tables/UsersTable'
 import { BackendError } from '../..'
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
@@ -168,8 +167,7 @@ export default function UsersPage() {
                     direction="row"
                 >
                     {/* search bar */}
-                    < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
-                    }>
+                    < Stack direction="row" spacing={2}>
                         <TextField
                             fullWidth
                             size="small"
@@ -177,12 +175,7 @@ export default function UsersPage() {
                                 setFilter(e.currentTarget.value)
                                 setFilterCount(0)
                             }}
-                            autoFocus
-                            InputProps={{
-                                startAdornment: <InputAdornment position="start">
-                                    <Search />
-                                </InputAdornment>,
-                            }}
+                           
                             placeholder={`${MemoData?.length} records...`}
                             style={{
                                 fontSize: '1.1rem',
@@ -194,14 +187,22 @@ export default function UsersPage() {
                                 }
                             }}
                         />
+                        <IconButton
+                            sx={{ bgcolor: 'whitesmoke' }}
+                            onClick={() => {
+                                refetchFuzzy()
+                            }}
+                        >
+                            <Search />
+                        </IconButton>
                     </Stack >
                     {/* user menu */}
                     <>
                         {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-                        <IconButton size="medium"
+                        <IconButton size="small" color="primary"
                             onClick={(e) => setAnchorEl(e.currentTarget)
                             }
-                            sx={{ border: 1, borderRadius: 2, marginLeft: 2 }}
+                            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
                         >
                             <MenuIcon />
                         </IconButton>

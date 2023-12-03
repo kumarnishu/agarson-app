@@ -40,7 +40,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
         <>
             <Box sx={{
                 overflow: "scroll",
-                minHeight: '53.5vh'
+                maxHeight: '60vh'
             }}>
                 <STable
                 >
@@ -97,12 +97,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
 
                             </STableHeadCell>
 
-                            <STableHeadCell
-                            >
-
-                                Last Date
-
-                            </STableHeadCell>
+                           
 
                             <STableHeadCell
                             >
@@ -257,13 +252,8 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                             }).length}
 
                                         </STableCell>
-
-                                        <STableCell>
-                                            {checklist.boxes.length > 0 && new Date(checklist.boxes[checklist.boxes.length - 1].desired_date).toLocaleString()}
-                                        </STableCell>
                                         <STableCell>
                                             {new Date(checklist.created_at).toLocaleString()}
-
                                         </STableCell>
                                         <STableCell>
                                             {new Date(checklist.updated_at).toLocaleString()}

@@ -55,10 +55,7 @@ export const GetTasks = async (req: Request, res: Response, next: NextFunction) 
 }
 
 export const GetMyTasks = async (req: Request, res: Response, next: NextFunction) => {
-    let tasks = await Task.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at')
-    tasks = tasks.filter((task) => {
-        return task.person.username === req.user?.username
-    })
+    let tasks = await Task.find({ person: req.user._id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at')
     return res.status(200).json(tasks)
 }
 

@@ -217,10 +217,10 @@ export default function CheckListAdminPage() {
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
 
-            <IconButton size="medium"
+            <IconButton size="small" color="primary"
               onClick={(e) => setAnchorEl(e.currentTarget)
               }
-              sx={{ border: 1, borderRadius: 2, marginLeft: 2 }}
+              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
             >
               <MenuIcon />
             </IconButton>
@@ -255,62 +255,60 @@ export default function CheckListAdminPage() {
       </Stack >
 
       {/* filter dates and person */}
-      <Stack padding={2} gap={2}>
-        <Stack direction='row' gap={2} alignItems={'center'} justifyContent={'center'}>
-          < TextField
-            size="small"
-            type="date"
-            id="start_date"
-            label="Start Date"
-            fullWidth
-            value={dates.start_date}
-            focused
-            onChange={(e) => setDates({
-              ...dates,
-              start_date: moment(e.target.value).format("YYYY-MM-DD")
-            })}
-          />
-          < TextField
-            size="small"
-            type="date"
-            id="end_date"
-            label="End Date"
-            focused
-            value={dates.end_date}
-            fullWidth
-            onChange={(e) => setDates({
-              ...dates,
-              end_date: moment(e.target.value).format("YYYY-MM-DD")
-            })}
-          />
-        </Stack>
-        {user?.is_admin &&
-          < TextField
-            size="small"
-            select
-            SelectProps={{
-              native: true,
-            }}
-            onChange={(e) => {
-              setUserId(e.target.value)
-              ReftechCheckLists()
-            }}
-            required
-            id="checklist_owner"
-            label="Filter CheckLists Of Indivdual"
-            fullWidth
-          >
-            <option key={'00'} value={undefined}>
+      <Stack direction='row' gap={2} p={2} alignItems={'center'} justifyContent={'center'}>
+        < TextField
+          size="small"
+          type="date"
+          id="start_date"
+          label="Start Date"
+          fullWidth
+          value={dates.start_date}
+          focused
+          onChange={(e) => setDates({
+            ...dates,
+            start_date: moment(e.target.value).format("YYYY-MM-DD")
+          })}
+        />
+        < TextField
+          size="small"
+          type="date"
+          id="end_date"
+          label="End Date"
+          focused
+          value={dates.end_date}
+          fullWidth
+          onChange={(e) => setDates({
+            ...dates,
+            end_date: moment(e.target.value).format("YYYY-MM-DD")
+          })}
+        />
 
-            </option>
-            {
-              users.map((user, index) => {
-                return (<option key={index} value={user._id}>
-                  {user.username}
-                </option>)
-              })
-            }
-          </TextField>}
+        < TextField
+          size="small"
+          select
+          SelectProps={{
+            native: true,
+          }}
+          onChange={(e) => {
+            setUserId(e.target.value)
+            ReftechCheckLists()
+          }}
+          required
+          id="checklist_owner"
+          label="Filter CheckLists Of Indivdual"
+          fullWidth
+        >
+          <option key={'00'} value={undefined}>
+
+          </option>
+          {
+            users.map((user, index) => {
+              return (<option key={index} value={user._id}>
+                {user.username}
+              </option>)
+            })
+          }
+        </TextField>
       </Stack>
 
       {/* table */}

@@ -1,4 +1,4 @@
-import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
+import { Box,  IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
@@ -10,18 +10,13 @@ import UpdateTodoStatusDialog from '../dialogs/todos/UpdateTodoStatusDialog'
 import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
 
 
-
 type Props = {
     todo: ITodo | undefined
     setTodo: React.Dispatch<React.SetStateAction<ITodo | undefined>>,
-    todos: ITodo[],
-    selectAll: boolean,
-    setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    selectedTodos: ITodo[]
-    setSelectedTodos: React.Dispatch<React.SetStateAction<ITodo[]>>
+    todos: ITodo[]
 }
 
-function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTodos, setSelectedTodos }: Props) {
+function MyTodoTable({ todo, todos, setTodo}: Props) {
     const [data, setData] = useState<ITodo[]>(todos)
     const { setChoice } = useContext(ChoiceContext)
     useEffect(() => {
@@ -32,34 +27,13 @@ function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTo
         <>
             <Box sx={{
                 overflow: "scroll",
-                minHeight: '83.5vh'
+                maxHeight: '83.5vh'
             }}>
                 <STable
                 >
                     <STableHead
                     >
                         <STableRow>
-                            <STableHeadCell
-                            >
-
-
-                                <Checkbox
-                                    indeterminate={selectAll ? true : false}
-                                    checked={Boolean(selectAll)}
-                                    size="small" onChange={(e) => {
-                                        if (e.currentTarget.checked) {
-                                            setSelectedTodos(todos)
-                                            setSelectAll(true)
-                                        }
-                                        if (!e.currentTarget.checked) {
-                                            setSelectedTodos([])
-                                            setSelectAll(false)
-                                        }
-                                    }} />
-
-                            </STableHeadCell>
-
-
                             <STableHeadCell
                             >
 
@@ -123,40 +97,7 @@ function MyTodoTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTo
                                         {todo.status !== "done" && <STableRow
                                             key={index}
                                         >
-                                            {selectAll ?
-
-                                                <STableCell>
-
-
-                                                    <Checkbox size="small"
-                                                        checked={Boolean(selectAll)}
-                                                    />
-
-
-                                                </STableCell>
-                                                :
-                                                null}
-                                            {!selectAll ?
-
-                                                <STableCell>
-
-                                                    <Checkbox size="small"
-                                                        onChange={(e) => {
-                                                            setTodo(todo)
-                                                            if (e.target.checked) {
-                                                                setSelectedTodos([...selectedTodos, todo])
-                                                            }
-                                                            if (!e.target.checked) {
-                                                                setSelectedTodos((todos) => todos.filter((item) => {
-                                                                    return item._id !== todo._id
-                                                                }))
-                                                            }
-                                                        }}
-                                                    />
-
-                                                </STableCell>
-                                                :
-                                                null/* actions popup */}
+                                    
 
                                             <STableCell>
                                                 <PopUp

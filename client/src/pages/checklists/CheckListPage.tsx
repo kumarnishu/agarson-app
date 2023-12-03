@@ -1,15 +1,14 @@
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { GetMyCheckLists } from '../../services/CheckListServices'
 import { BackendError } from '../..'
 import { IChecklist } from '../../types/checklist.types'
-import { Box, IconButton, LinearProgress, TextField, Typography } from '@mui/material'
+import { Box, LinearProgress, TextField } from '@mui/material'
 import moment from 'moment'
-import { AdsClickOutlined } from '@mui/icons-material'
-import CheckMyCheckListDialog from '../../components/dialogs/checklists/CheckMyCheckListDialog'
-import { CheckListChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import MyChecklistTable from '../../components/tables/MyCheckListTable'
 
 
 export default function CheckListPage() {
@@ -19,7 +18,6 @@ export default function CheckListPage() {
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(30)).format("YYYY-MM-DD")
   })
-  const { setChoice } = useContext(ChoiceContext)
 
   const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IChecklist[]>, BackendError>(["self_checklists", dates?.start_date, dates?.end_date], async () => GetMyCheckLists({ start_date: dates?.start_date, end_date: dates?.end_date }))
 
@@ -60,41 +58,7 @@ export default function CheckListPage() {
           })}
         />
       </Stack>
-      {checklists.map((checklist, index) => {
-        return (
-          <Stack direction={'row'} key={index} sx={{ m: 1, backgroundColor: 'rgba(236, 214, 214, 0.1)', borderRadius: 5 }} alignItems={'center'} gap={2}>
-            <IconButton
-              sx={{ p: 2 }}
-              onClick={() => {
-                setCheckList(checklist)
-                setChoice({ type: CheckListChoiceActions.check_my_boxes })
-              }}
-            ><AdsClickOutlined color="primary" />
-            </IconButton>
-            <Typography sx={{ maxWidth: 500, cursor: 'pointer', textTransform: 'capitalize' }} variant='body1'>
-              <a href={checklist.sheet_url} target='blank'>
-                {checklist.title && checklist.title.slice(0, 50)}
-              </a></Typography>
-            <Typography>
-              <b style={{ color: 'blue' }}>
-                Score  {" "}
-                {checklist.boxes.filter((box) => {
-                  return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
-
-                }).length - checklist.boxes.filter((box) => {
-                  return box.desired_date && new Date(box.desired_date) <= new Date()
-                }).length +
-                  checklist.boxes.filter((box) => {
-                    return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date() && Boolean(new Date(box.desired_date).getDate() === new Date(box.actual_date).getDate() && new Date(box.desired_date).getMonth() === new Date(box.actual_date).getMonth() && new Date(box.desired_date).getFullYear() === new Date(box.actual_date).getFullYear())
-                  }).length
-                }
-              </b>
-            </Typography>
-          </Stack>
-        )
-      })}
-      {localchecklist && <CheckMyCheckListDialog checklist={localchecklist} dates={dates} />}
-    </Box >
-  )
+      {isLoading ? <TableSkeleton /> : <MyChecklistTable checklist={localchecklist} setChecklist={setCheckList} dates={dates} checklists={checklists} />}
+    </Box>)
 }
 

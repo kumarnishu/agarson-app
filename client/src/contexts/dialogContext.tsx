@@ -24,7 +24,7 @@ type TodoChoices = "create_todo" | "update_todo" |"view_replies" | "delete_todo"
 type ReminderChoices = "create_reminder" | "update_reminder" | "delete_reminder" | "close_reminder" | "view_reminder" | 'start_reminder' | "reset_reminder" | "stop_reminder" | "create_message_reminder" | "update_message_reminder"
   | "start_message_reminder"
 
-type TaskSchedulerChoices = "create_task_scheduler" | "update_task_scheduler" | "delete_task_scheduler" | "close_task_scheduler" | "view_task_scheduler" | 'start_task_scheduler' | "stop_task_scheduler"
+type TaskSchedulerChoices = "create_task_scheduler" | "update_task_scheduler" | "delete_task_scheduler" | "close_task_scheduler" | "view_task_scheduler" | 'start_task_scheduler' | "stop_task_scheduler" |"check_task"
 
 
 
@@ -76,7 +76,8 @@ export enum TaskChoiceActions {
   delete_task = "delete_task",
   close_task = "close_task",
   view_boxes = "view_boxes",
-  edit_task = "edit_task"
+  edit_task = "edit_task",
+  check_task ="check_task"
 }
 export enum CheckListChoiceActions {
   create_checklist = "create_checklist",
@@ -252,6 +253,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.refer_lead: return type
     case LeadChoiceActions.remove_referral: return type
     case LeadChoiceActions.bulk_delete_useless_leads: return type
+
     case LeadChoiceActions.assign_refer: return type
     case LeadChoiceActions.delete_remark: return type
     case LeadChoiceActions.update_remark: return type
@@ -303,6 +305,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TaskChoiceActions.delete_task: return type
     case TaskChoiceActions.close_task: return type
     case TaskChoiceActions.edit_task: return type
+    case TaskChoiceActions.check_task: return type
 
     // checklist actions
     case CheckListChoiceActions.create_checklist: return type

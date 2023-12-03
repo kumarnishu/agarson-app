@@ -127,10 +127,10 @@ export default function ReminderReportPage({ reminder }: { reminder: IReminder }
 
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
-            <IconButton size="medium"
+            <IconButton size="small" color="primary"
               onClick={(e) => setAnchorEl(e.currentTarget)
               }
-              sx={{ border: 1, borderRadius: 2, marginLeft: 2 }}
+              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
             >
               <MenuIcon />
             </IconButton>

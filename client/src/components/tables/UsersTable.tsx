@@ -52,18 +52,18 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                             <STableHeadCell
                             >
 
-                               
-                                    <Checkbox
-                                        size="small" onChange={(e) => {
-                                            if (e.currentTarget.checked) {
-                                                setSelectedUsers(users)
-                                                setSelectAll(true)
-                                            }
-                                            if (!e.currentTarget.checked) {
-                                                setSelectedUsers([])
-                                                setSelectAll(false)
-                                            }
-                                        }} />
+
+                                <Checkbox
+                                    size="small" onChange={(e) => {
+                                        if (e.currentTarget.checked) {
+                                            setSelectedUsers(users)
+                                            setSelectAll(true)
+                                        }
+                                        if (!e.currentTarget.checked) {
+                                            setSelectedUsers([])
+                                            setSelectAll(false)
+                                        }
+                                    }} />
 
                             </STableHeadCell>
                             {LoggedInUser?.user_access_fields.is_editable &&
@@ -91,7 +91,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                 Role
 
                             </STableHeadCell>
-                           
+
                             <STableHeadCell
                             >
 
@@ -101,7 +101,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                             <STableHeadCell
                             >
 
-                                Multi Device 
+                                Multi Device
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -146,7 +146,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                 Updated By
 
                             </STableHeadCell>
-                           
+
 
                         </STableRow>
                     </STableHead>
@@ -380,8 +380,10 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                             {
                                                 user.is_admin ?
                                                     <>
-                                                        {user.created_by._id === user?._id ?
-                                                            "owner" : "admin"}
+                                                        <Typography sx={{ fontWeight: 'bold' }}>
+                                                            {user.created_by._id === user?._id ?
+                                                                "owner" : "admin"}
+                                                        </Typography>
                                                     </>
                                                     :
                                                     <>
@@ -389,44 +391,45 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                                     </>
                                             }
                                         </STableCell>
-                                        
+
 
                                         <STableCell>
                                             {user.username}
                                         </STableCell>
                                         <STableCell>
-
-                                            {user.is_multi_login ? "allowed" : "not allowed"}
+                                            <Typography >
+                                                {user.is_multi_login ? "allowed" : "not allowed"}</Typography>
 
                                         </STableCell>
 
-                                       
-<STableCell>
-                                            {user.email}
-</STableCell>
-                                      
+
                                         <STableCell>
-                                           
+                                            {user.email}
+                                            {user.email_verified && <Typography color="green">[verified]</Typography>}
+                                        </STableCell>
+
+                                        <STableCell>
+
                                             {user.mobile}
 
                                         </STableCell>
-                                       
+
 
                                         <STableCell>
                                             <Typography variant="body1">{new Date(user.last_login).toLocaleString()}</Typography>
                                         </STableCell>
-                                       <STableCell>
+                                        <STableCell>
                                             {new Date(user.created_at).toLocaleDateString()}
-                                            </STableCell>
+                                        </STableCell>
                                         <STableCell>
                                             {new Date(user.updated_at).toLocaleDateString()}
                                         </STableCell>
                                         <STableCell>
-                                           {user.created_by.username}
+                                            {user.created_by.username}
                                         </STableCell>
                                         <STableCell>
-                                           {user.updated_by.username}
-                                        
+                                            {user.updated_by.username}
+
                                         </STableCell>
 
                                     </STableRow>

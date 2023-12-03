@@ -40,7 +40,7 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
         <>
             <Box sx={{
                 overflow: "scroll",
-                minHeight: '58.5vh'
+                maxHeight: '60vh'
             }}>
                 <STable
                 >
@@ -50,20 +50,20 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                             <STableHeadCell
                             >
 
-                               
-                                    <Checkbox
-                                        indeterminate={selectAll ? true : false}
-                                        checked={Boolean(selectAll)}
-                                        size="small" onChange={(e) => {
-                                            if (e.currentTarget.checked) {
-                                                setSelectedTasks(tasks)
-                                                setSelectAll(true)
-                                            }
-                                            if (!e.currentTarget.checked) {
-                                                setSelectedTasks([])
-                                                setSelectAll(false)
-                                            }
-                                        }} />
+
+                                <Checkbox
+                                    indeterminate={selectAll ? true : false}
+                                    checked={Boolean(selectAll)}
+                                    size="small" onChange={(e) => {
+                                        if (e.currentTarget.checked) {
+                                            setSelectedTasks(tasks)
+                                            setSelectAll(true)
+                                        }
+                                        if (!e.currentTarget.checked) {
+                                            setSelectedTasks([])
+                                            setSelectAll(false)
+                                        }
+                                    }} />
 
                             </STableHeadCell>
 
@@ -102,12 +102,7 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                 Status
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
 
-                                Last Date
-
-                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -263,9 +258,7 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
 
                                         </STableCell>
 
-                                        <STableCell>
-                                            {task.boxes.length > 0 && new Date(task.boxes[task.boxes.length - 1].date).toLocaleString()}
-                                        </STableCell>
+
                                         <STableCell>
                                             {new Date(task.created_at).toLocaleString()}
 

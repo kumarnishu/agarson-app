@@ -234,10 +234,10 @@ export default function LeadsPage() {
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
 
-            <IconButton size="small"
-              onClick={(e) => setAnchorEl(e.currentTarget)
-              }
-              sx={{ border: 1, borderRadius: 2, marginLeft: 2 }}
+            <IconButton size="small" color="primary"
+            onClick={(e) => setAnchorEl(e.currentTarget)
+            }
+            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
             >
               <MenuIcon />
             </IconButton>
