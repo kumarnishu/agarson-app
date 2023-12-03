@@ -140,7 +140,7 @@ function MyTaskTable({ task, tasks, setTask }: Props) {
                                                         setTask(task)
                                                         setChoice({ type: TaskChoiceActions.check_task })
                                                     }}>
-                                                    <CheckBox color="info" />
+                                                    <CheckBox />
                                                 </IconButton>
                                             </Tooltip>
                                         </STableCell>
