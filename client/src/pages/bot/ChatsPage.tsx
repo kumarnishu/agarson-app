@@ -42,7 +42,7 @@ function ChatsPage() {
         <>
             {error && error.response.data.message && <Typography color="red" p={2}></Typography>}
             {isLoading && <LinearProgress />}
-
+          
             < Stack direction="row" p={2} gap={2} alignItems={'center'} justifyContent={'space-between'}>
                 <Typography variant="button" fontWeight={'bold'}>WA Chats</Typography>
                 <TextField
