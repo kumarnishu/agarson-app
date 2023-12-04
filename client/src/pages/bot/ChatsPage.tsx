@@ -40,7 +40,7 @@ function ChatsPage() {
     }, [isSuccess])
     return (
         <>
-            <Typography color="red" p={2}>{error && error.response.data.message || "error ocurred"}</Typography>
+            {error && error.response.data.message && <Typography color="red" p={2}></Typography>}
             {isLoading && <LinearProgress />}
 
             < Stack direction="row" p={2} gap={2} alignItems={'center'} justifyContent={'space-between'}>
