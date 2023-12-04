@@ -54,20 +54,6 @@ export const GetWhatsappChats = async (req: Request, res: Response, next: NextFu
     }
     else
         return res.status(400).json({ message: "whatsapp not connected" })
-    // let limit = Number(req.query.limit)
-    // let page = Number(req.query.page)
-    // if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-    //     let chats = 
-
-    //     return res.status(200).json({
-    //         chats,
-    //         total: Math.ceil(12 / limit),
-    //         page: page,
-    //         limit: limit
-    //     })
-    // }
-    // else
-    //     return res.status(500).json({ message: "bad request" })
 }
 
 export const FuzzySearchTrackers = async (req: Request, res: Response, next: NextFunction) => {
