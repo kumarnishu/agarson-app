@@ -76,7 +76,6 @@ function ChatsTable({ chats }: Props) {
                                     <React.Fragment key={index}>
                                         {chat && chat.timestamp && new Date(Number(chat.timestamp) * 1000) < new Date(previous_date) && chat.lastMessage && chat.lastMessage.fromMe ? null
                                             : <STableRow
-
                                             >
                                                 <STableCell>
                                                     {chat && chat.timestamp && new Date(Number(chat.timestamp) * 1000).toLocaleString()}
