@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Grid, Stack, Typography } from "@mui/material"
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import BackupIcon from '@mui/icons-material/Backup';
 import CampaignIcon from '@mui/icons-material/Campaign';
@@ -7,15 +7,11 @@ import { Link } from "react-router-dom";
 import { ApartmentOutlined, Article, Book, CheckBoxOutlined, Diversity3Outlined, Person3Outlined, Phone, PunchClock, TaskAltOutlined, TodayOutlined, TourOutlined } from "@mui/icons-material";
 import { useContext } from "react";
 import { UserContext } from "../contexts/userContext";
-import TodosPage from "./todo/TodosPage";
 
 function DashBoardPage() {
   const { user } = useContext(UserContext)
   return (
-    <Stack >
-      <Box>
-        <TodosPage />
-      </Box>
+    <>
       <Box sx={{ bgcolor: "white", m: 0, pt: 2 }}>
         <Grid container >
           {/* users */}
@@ -220,7 +216,7 @@ function DashBoardPage() {
 
         </Grid>
       </Box >
-    </Stack>
+    </>
   )
 }
 
