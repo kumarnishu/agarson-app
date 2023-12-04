@@ -10,6 +10,7 @@ import { LinearProgress, Stack, TextField, Typography } from '@mui/material'
 import FuzzySearch from "fuzzy-search";
 import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 function ChatsPage() {
     const { user } = useContext(UserContext)
@@ -49,55 +50,59 @@ function ChatsPage() {
             setChats(data.data)
             setPreFilteredChats(data.data)
         }
-    }, [isSuccess])
+    }, [isSuccess, data])
     return (
         <>
             {error && error.response && error.response.data && error.response.data.message && <Typography color="red" p={2}>{error.response.data.message}</Typography>}
             {isLoading && <LinearProgress />}
             < Stack direction="row" p={2} gap={2} alignItems={'center'} justifyContent={'space-between'}>
-                <Typography variant="button" fontWeight={'bold'}>WA Chats</Typography>
+                <Typography variant="button" fontWeight={'bold'}>Chats</Typography>
                 {user?.bot_access_fields.is_editable &&
-                    < TextField
-                        size='small'
-                        select
-                        SelectProps={{
-                            native: true,
-                        }}
-                        onChange={(e) => {
-                            setClientId(e.target.value)
-                            refetch()
-                        }}
-                        required
-                        id="todo_owner"
-                        label="Filter Todos Of Indivdual"
-                        fullWidth
-                    >
-                        <option key={'00'} value={undefined}>
-
-                        </option>
-                        {
-                            users.map((user, index) => {
-                                if (user.connected_number)
-                                    return (<option key={index} value={user.client_id}>
-                                        {user.username}
-                                    </option>)
-                                else
-                                    return null
-                            })
-                        }
-                    </TextField>}
-                <TextField
-                    size="small"
-                    onChange={(e) => setFilter(e.currentTarget.value)}
-                    autoFocus
-                    placeholder={`${chats?.length} records...`}
-                    style={{
-                        fontSize: '1.1rem',
-                        border: '0',
-                    }}
-                />
+                    <Stack direction="row" gap={2}>
+                        < TextField
+                            size='small'
+                            select
+                            SelectProps={{
+                                native: true,
+                            }}
+                            onChange={(e) => {
+                                setClientId(e.target.value)
+                                refetch()
+                            }}
+                            focused
+                            fullWidth
+                            required
+                            id="chat"
+                            label="Filter Chats Of Indivdual"
+                        >
+                            <option key={'00'} value={user.client_id}>
+                                {user.username}
+                            </option>
+                            {
+                                users.map((user, index) => {
+                                    if (user.connected_number)
+                                        return (<option key={index} value={user.client_id}>
+                                            {user.username}
+                                        </option>)
+                                    else
+                                        return null
+                                })
+                            }
+                        </TextField>
+                        <TextField
+                            size="small"
+                            onChange={(e) => setFilter(e.currentTarget.value)}
+                            autoFocus
+                            fullWidth
+                            placeholder={`${chats?.length} records...`}
+                            style={{
+                                fontSize: '1.1rem',
+                                border: '0',
+                            }}
+                        />
+                    </Stack>}
             </Stack >
-            <ChatsTable chats={chats} />
+            {isLoading ? <TableSkeleton /> : <ChatsTable chats={chats} />}
         </>
     )
 }
