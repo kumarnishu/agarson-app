@@ -51,6 +51,7 @@ function ChatsPage() {
             setPreFilteredChats(data.data)
         }
     }, [isSuccess, data])
+    console.log(chats)
     return (
         <>
             {error && error.response && error.response.data && error.response.data.message && <Typography color="red" p={2}>{error.response.data.message}</Typography>}

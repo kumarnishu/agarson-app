@@ -50,6 +50,7 @@ export const GetWhatsappChats = async (req: Request, res: Response, next: NextFu
 
     if (client) {
         let chats = await client.client.getChats()
+        console.log(await chats[0].fetchMessages({ fromMe: false, limit: 10 }))
         return res.status(200).json(chats)
     }
     else

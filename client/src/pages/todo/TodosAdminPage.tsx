@@ -37,7 +37,7 @@ export default function TodosAdminPage() {
     const [selectedTodos, setSelectedTodos] = useState<ITodo[]>([])
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-        start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
+        start_date: moment(new Date("Mon Dec 01 2023 12:00:00 GMT+0530 (India Standard Time)")).format("YYYY-MM-DD")
         , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
     })
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)

@@ -40,7 +40,14 @@ function ChatsTable({ chats }: Props) {
                             <STableHeadCell
                             >
 
-                                Sender
+                                Id
+
+                            </STableHeadCell>
+
+                            <STableHeadCell
+                            >
+
+                                Name
 
                             </STableHeadCell>
 
@@ -50,12 +57,16 @@ function ChatsTable({ chats }: Props) {
                                 Sender Name
 
                             </STableHeadCell>
-
-
                             <STableHeadCell
                             >
 
-                                Message
+                                Sender Mobile
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Sender Message
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -84,7 +95,7 @@ function ChatsTable({ chats }: Props) {
                                                     {chat && chat.id && chat.id.user || ""}
                                                 </STableCell>
                                                 <STableCell>
-                                                    {chat && chat.name}
+                                                    {chat && chat.name && chat.name.slice(0, 50)}
                                                 </STableCell>
                                                 <STableCell>
                                                     <Typography style={{ whiteSpace: 'pre-wrap' }} title={chat && chat.lastMessage && chat.lastMessage.body}>
