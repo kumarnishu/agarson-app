@@ -55,7 +55,7 @@ connectDatabase();
 let origin = ""
 if (ENV === "development") {
     origin = "http://localhost:3000"
-    let origin2 = "http://localhost:3001"
+    let origin2 = "http://localhost:8081"
     app.use(cors({
         origin: [origin, origin2],
         credentials: true

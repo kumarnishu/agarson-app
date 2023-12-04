@@ -5,7 +5,6 @@ import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
 import ExportToExcel from '../../utils/ExportToExcel'
 import { ChoiceContext, ContactChoiceActions } from '../../contexts/dialogContext'
@@ -129,8 +128,7 @@ export default function ContactPage() {
           direction="row"
         >
           {/* search bar */}
-          < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
-          }>
+          < Stack direction="row" spacing={2} >
             {!LoggedInUser?.contacts_access_fields.is_hidden ?
               < UploadContactsFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
             <TextField

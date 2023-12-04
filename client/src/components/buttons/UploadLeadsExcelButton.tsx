@@ -72,12 +72,15 @@ function UploadLeadsExcelButton() {
           <>
             <Button
               size="small"
+              component="label"
             >
               <Upload />
               <FileInput
                 id="upload_input"
                 hidden
-                type="file" required name="file" onChange={
+                type="file"
+                name="file"
+                onChange={
                   (e: any) => {
                     if (e.currentTarget.files) {
                       setFile(e.currentTarget.files[0])

@@ -72,7 +72,6 @@ function UploadContactsFromExcelButton({ disabled }: { disabled: boolean }) {
                     :
                     <>
                         <Button
-                            variant="outlined"
                             component="label"
                             disabled={Boolean(disabled)}
                         >

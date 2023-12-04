@@ -9,7 +9,7 @@ export const upload = multer({ storage: multer.memoryStorage(), limits: { fileSi
 const router = express.Router()
 
 router.post("/signup", upload.single("dp"), SignUp)
-router.route("/users").get(isAuthenticatedUser, GetUsers)
+router.route("/users").get( GetUsers)
     .post(isAuthenticatedUser, upload.single("dp"), NewUser)
 router.route("/search/users").get(isAuthenticatedUser, FuzzySearchUsers)
 router.route("/users/paginated").get(isAuthenticatedUser, GetPaginatedUsers)
