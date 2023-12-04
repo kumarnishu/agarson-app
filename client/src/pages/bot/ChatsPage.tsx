@@ -16,11 +16,6 @@ function ChatsPage() {
     const [prefilterChats, setPreFilteredChats] = useState<IChat[]>([])
 
     const { data, isSuccess, isLoading, error } = useQuery<AxiosResponse<IChat[]>, BackendError>("chats", async () => GetChats({ client_id: user?.client_id }))
-
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 3
-    previous_date.setDate(day)
-
     useEffect(() => {
         if (filter) {
             if (chats) {
