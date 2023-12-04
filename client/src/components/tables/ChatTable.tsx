@@ -74,12 +74,12 @@ function ChatsTable({ chats }: Props) {
                             data && data.map((chat, index) => {
                                 return (
                                     <React.Fragment key={index}>
-                                        {chat && chat.lastMessage && chat.lastMessage.fromMe ? null
+                                        {chat && chat.timestamp && new Date(Number(chat.timestamp) * 1000) < new Date(previous_date) && chat.lastMessage && chat.lastMessage.fromMe ? null
                                             : <STableRow
 
                                             >
                                                 <STableCell>
-                                                    {chat && new Date(chat.timestamp).toLocaleString()}
+                                                    {chat && chat.timestamp && new Date(Number(chat.timestamp) * 1000).toLocaleString()}
                                                 </STableCell>
                                                 <STableCell style={{ backgroundColor: chat.isGroup ? "rgba(0,255,0,0.1)" : "whitesmoke" }}>
                                                     {chat && chat.id && chat.id.user || ""}
