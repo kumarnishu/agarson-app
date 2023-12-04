@@ -36,7 +36,7 @@ export default function TodosPage() {
                     setTodo={setTodo}
                     todos={MemoData}
                 />}
-            {todos.length == 0 && <Typography textAlign={'center'} color="error" fontWeight="bold" p={2} variant="subtitle1">No Todo Assigned yet !</Typography>}
+            {todos.length == 0 && <Typography textAlign={'center'} color="error" fontWeight="bold" p={2} variant="subtitle1">No Todos Available yet !</Typography>}
         </>
 
     )
