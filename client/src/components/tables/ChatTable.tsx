@@ -88,7 +88,7 @@ function ChatsTable({ chats }: Props) {
                                                     {chat && chat.name}
                                                 </STableCell>
                                                 <STableCell>
-                                                    <Typography title={chat && chat.lastMessage && chat.lastMessage.body}>
+                                                    <Typography style={{ whiteSpace: 'pre-wrap' }} title={chat && chat.lastMessage && chat.lastMessage.body}>
                                                         {chat && chat.lastMessage.body && chat.lastMessage.body.slice(0, 50)}
                                                     </Typography>
                                                 </STableCell>
