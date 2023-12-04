@@ -1,7 +1,7 @@
 import { Box, IconButton, Tooltip, Typography } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { ITask } from '../../types/task.types'
-import { CheckBox } from '@mui/icons-material'
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import moment from 'moment'
 import { ChoiceContext, TaskChoiceActions } from '../../contexts/dialogContext'
@@ -131,8 +131,7 @@ function MyTaskTable({ task, tasks, setTask }: Props) {
                                     <STableRow
                                         key={index}
                                     >
-
-                                        <STableCell>
+                                        <STableCell >
                                             <Tooltip title="check this task">
                                                 <IconButton
                                                     disabled={Boolean(task.box.is_completed)}
@@ -140,7 +139,7 @@ function MyTaskTable({ task, tasks, setTask }: Props) {
                                                         setTask(task)
                                                         setChoice({ type: TaskChoiceActions.check_task })
                                                     }}>
-                                                    <CheckBox />
+                                                    <CheckBoxOutlineBlankIcon />
                                                 </IconButton>
                                             </Tooltip>
                                         </STableCell>

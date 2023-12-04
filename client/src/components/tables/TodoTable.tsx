@@ -187,7 +187,7 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             :
                                             null/* actions popup */}
                                         {user?.todos_access_fields.is_editable &&
-                                            <STableCell>
+                                            <STableCell style={{ backgroundColor: todo.status !== "done" ? 'rgba(255,0,0,0.1)' : 'rgba(52, 200, 84, 0.6)' }}>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row" spacing={1}>

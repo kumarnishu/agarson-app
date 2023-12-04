@@ -1,4 +1,4 @@
-import { Box,  IconButton, Tooltip } from '@mui/material'
+import { Box, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
@@ -16,7 +16,7 @@ type Props = {
     todos: ITodo[]
 }
 
-function MyTodoTable({ todo, todos, setTodo}: Props) {
+function MyTodoTable({ todo, todos, setTodo }: Props) {
     const [data, setData] = useState<ITodo[]>(todos)
     const { setChoice } = useContext(ChoiceContext)
     useEffect(() => {
@@ -97,9 +97,9 @@ function MyTodoTable({ todo, todos, setTodo}: Props) {
                                         {todo.status !== "done" && <STableRow
                                             key={index}
                                         >
-                                    
 
-                                            <STableCell>
+
+                                            <STableCell style={{ backgroundColor: todo.status !== "done" ? 'rgba(255,0,0,0.1)' : 'rgba(52, 200, 84, 0.6)' }}>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row" spacing={1}>
