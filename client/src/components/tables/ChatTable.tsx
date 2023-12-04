@@ -74,7 +74,7 @@ function ChatsTable({ chats }: Props) {
                             data && data.map((chat, index) => {
                                 return (
                                     <React.Fragment key={index}>
-                                        {chat.lastMessage.fromMe ? null
+                                        {chat && chat.lastMessage && chat.lastMessage.fromMe ? null
                                             : <STableRow
 
                                             >
