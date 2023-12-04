@@ -79,21 +79,21 @@ function ChatsTable({ chats }: Props) {
 
                                             >
                                                 <STableCell>
-                                                    {new Date(chat.timestamp).toLocaleString()}
+                                                    {chat && new Date(chat.timestamp).toLocaleString()}
                                                 </STableCell>
                                                 <STableCell style={{ backgroundColor: chat.isGroup ? "rgba(0,255,0,0.1)" : "whitesmoke" }}>
-                                                    {chat.id.user || ""}
+                                                    {chat && chat.id && chat.id.user || ""}
                                                 </STableCell>
                                                 <STableCell>
-                                                    {chat.name}
+                                                    {chat && chat.name}
                                                 </STableCell>
                                                 <STableCell>
-                                                    <Typography title={chat.lastMessage.body && chat.lastMessage.body || ""}>
-                                                        {chat.lastMessage.body && chat.lastMessage.body.slice(0, 50) || ""}
+                                                    <Typography title={chat && chat.lastMessage && chat.lastMessage.body}>
+                                                        {chat && chat.lastMessage.body && chat.lastMessage.body.slice(0, 50)}
                                                     </Typography>
                                                 </STableCell>
                                                 <STableCell>
-                                                    {chat.lastMessage.hasMedia ? "Yes" : "no media"}
+                                                    {chat && chat.lastMessage && chat.lastMessage.hasMedia ? "Yes" : "no media"}
                                                 </STableCell>
                                             </STableRow>
                                         }
