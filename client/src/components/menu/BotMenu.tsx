@@ -29,6 +29,13 @@ function BotMenu() {
                 onClick={
                     () => setMenu({ type: BotMenuActions.close_bot_menu, anchorEl: null })
                 }>
+                <StyledLink to={paths.chats}>Chats</StyledLink>
+
+            </MenuItem>
+            <MenuItem
+                onClick={
+                    () => setMenu({ type: BotMenuActions.close_bot_menu, anchorEl: null })
+                }>
                 <StyledLink to={paths.trackers}>Trackers</StyledLink>
 
             </MenuItem>

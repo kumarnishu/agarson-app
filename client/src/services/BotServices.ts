@@ -13,6 +13,9 @@ export const UpdateFlow = async ({ id, body }: { id: string, body: IFlow }) => {
 export const GetFlows = async () => {
     return await apiClient.get(`flows`);
 };
+export const GetChats = async ({ client_id }: { client_id?: string }) => {
+    return await apiClient.get(`chats/${client_id}`);
+};
 export const GetConnectedUsers = async () => {
     return await apiClient.get(`connected/users`);
 };

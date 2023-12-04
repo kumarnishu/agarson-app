@@ -53,6 +53,7 @@ export default function BotNavBar() {
                                     }}
                                 >
                                     <StyledLink to={paths.flows}>Flows</StyledLink>
+                                    <StyledLink to={paths.chats}>Chats</StyledLink>
                                     <StyledLink to={paths.trackers}>Trackers</StyledLink>
                                     <StyledLink to={paths.bot_help}>Help</StyledLink>
                                 </Stack>

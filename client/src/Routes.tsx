@@ -54,6 +54,7 @@ import TodosPage from './pages/todo/TodosPage'
 import TodoHelpPage from './pages/todo/TodoHelpPage'
 import TodosAdminPage from './pages/todo/TodosAdminPage'
 import TodoNavBar from './components/navbar/TodoNavBar'
+import ChatsPage from './pages/bot/ChatsPage'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -106,6 +107,7 @@ export enum paths {
 
   //bot
   bot = "/bot",
+  chats = "chats",
   flows = "flows",
   trackers = "trackers",
 
@@ -290,6 +292,10 @@ function AppRoutes() {
               />
               <Route path={paths.flows} element={
                 < FlowsPage />
+              }
+              />
+              <Route path={paths.chats} element={
+                < ChatsPage />
               }
               />
               <Route path={paths.trackers} element={

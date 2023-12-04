@@ -6,6 +6,7 @@ import { User } from "../models/users/user.model";
 import isMongoId from "validator/lib/isMongoId";
 import { IUser } from "../types/user.types";
 import { IMenuTracker, TFlowBody, TrackerBody } from "../types/bot.types";
+import { clients } from "../utils/CreateWhatsappClient";
 
 
 //get
@@ -41,6 +42,33 @@ export const GetTrackers = async (req: Request, res: Response, next: NextFunctio
         return res.status(500).json({ message: "bad request" })
 }
 
+export const GetWhatsappChats = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let client = clients.find((client) => {
+        return client.client_id === id
+    })
+
+    if (client) {
+        let chats = await client.client.getChats()
+        return res.status(200).json(chats)
+    }
+    else
+        return res.status(400).json({ message: "whatsapp not connected" })
+    // let limit = Number(req.query.limit)
+    // let page = Number(req.query.page)
+    // if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+    //     let chats = 
+
+    //     return res.status(200).json({
+    //         chats,
+    //         total: Math.ceil(12 / limit),
+    //         page: page,
+    //         limit: limit
+    //     })
+    // }
+    // else
+    //     return res.status(500).json({ message: "bad request" })
+}
 
 export const FuzzySearchTrackers = async (req: Request, res: Response, next: NextFunction) => {
     let key = String(req.query.key).toLowerCase()
