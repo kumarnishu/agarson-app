@@ -74,8 +74,8 @@ function ChatsTable({ chats }: Props) {
                             data && data.map((chat, index) => {
                                 return (
                                     <React.Fragment key={index}>
-                                        {(new Date(chat.timestamp)) >= new Date(previous_date) && !chat.lastMessage.fromMe &&
-                                            <STableRow
+                                        {chat.lastMessage.fromMe ? null
+                                            : <STableRow
 
                                             >
                                                 <STableCell>
