@@ -10,6 +10,7 @@ import { FormControlLabel, LinearProgress, Stack, Switch, TextField, Typography 
 import FuzzySearch from "fuzzy-search";
 import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
+import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 function ChatsPage() {
     const { user } = useContext(UserContext)
@@ -71,7 +72,7 @@ function ChatsPage() {
                 <Stack direction="column" justifyContent={"left"}>
                     <Stack
                         spacing={2} direction={"row"}
-                        justifyContent="center"  alignItems={"center"}
+                        justifyContent="center" alignItems={"center"}
                     >
                         <label htmlFor="chats">WA Chats </label>
                         <select id="chats"
@@ -110,7 +111,7 @@ function ChatsPage() {
                             id="chat"
                             label="Filter Chats Of Indivdual"
                         >
-                            <option key={'00'} value={user.client_id}>
+                            <option key={'00'} value={user.connected_number}>
                                 {user.username}
                             </option>
                             {
@@ -142,7 +143,10 @@ function ChatsPage() {
                         />
                     </Stack>}
             </Stack >
-            <ChatsTable chats={chats} />
+
+            {isLoading && <TableSkeleton />}
+            {!isLoading &&
+                <ChatsTable chats={chats} />}
         </>
     )
 }
