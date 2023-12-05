@@ -1,4 +1,4 @@
-import { Box, Checkbox, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box,  IconButton, Tooltip, Typography } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { ITask } from '../../types/task.types'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -6,6 +6,7 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import moment from 'moment'
 import { ChoiceContext, TaskChoiceActions } from '../../contexts/dialogContext'
 import CheckTaskDialog from '../dialogs/tasks/CheckTaskDialog'
+import { Check } from '@mui/icons-material';
 
 
 type Props = {
@@ -140,7 +141,7 @@ function MyTaskTable({ task, tasks, setTask }: Props) {
                                                         setChoice({ type: TaskChoiceActions.check_task })
                                                     }}>
                                                     {Boolean(task.box.is_completed) ?
-                                                        <Checkbox /> :
+                                                        <Check /> :
                                                         <CheckBoxOutlineBlankIcon />}
                                                 </IconButton>
                                             </Tooltip>

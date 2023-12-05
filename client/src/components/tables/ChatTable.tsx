@@ -5,14 +5,11 @@ import { IChat } from '../../types/chat.types'
 
 
 type Props = {
-    chats: IChat[],
+    chats: IChat[]
 }
 
 function ChatsTable({ chats }: Props) {
     const [data, setData] = useState<IChat[]>(chats)
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 3
-    previous_date.setDate(day)
 
     useEffect(() => {
         setData(chats)
@@ -29,6 +26,7 @@ function ChatsTable({ chats }: Props) {
                     <STableHead
                     >
                         <STableRow>
+
 
 
                             <STableHeadCell
@@ -50,23 +48,16 @@ function ChatsTable({ chats }: Props) {
                                 Name
 
                             </STableHeadCell>
-
                             <STableHeadCell
                             >
 
-                                Sender Name
+                                Author
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Sender Mobile
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Sender Message
+                                Chat
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -85,28 +76,32 @@ function ChatsTable({ chats }: Props) {
                             data && data.map((chat, index) => {
                                 return (
                                     <React.Fragment key={index}>
-                                        {chat && chat.timestamp && new Date(Number(chat.timestamp) * 1000) < new Date(previous_date) && chat.lastMessage && chat.lastMessage.fromMe ? null
-                                            : <STableRow
-                                            >
-                                                <STableCell>
-                                                    {chat && chat.timestamp && new Date(Number(chat.timestamp) * 1000).toLocaleString()}
-                                                </STableCell>
-                                                <STableCell style={{ backgroundColor: chat.isGroup ? "rgba(0,255,0,0.1)" : "whitesmoke" }}>
-                                                    {chat && chat.id && chat.id.user || ""}
-                                                </STableCell>
-                                                <STableCell>
-                                                    {chat && chat.name && chat.name.slice(0, 50)}
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Typography style={{ whiteSpace: 'pre-wrap' }} title={chat && chat.lastMessage && chat.lastMessage.body}>
-                                                        {chat && chat.lastMessage && chat.lastMessage.body && chat.lastMessage.body.slice(0, 100)}
-                                                    </Typography>
-                                                </STableCell>
-                                                <STableCell>
-                                                    {chat && chat.lastMessage && chat.lastMessage.hasMedia ? "Yes" : "no media"}
-                                                </STableCell>
-                                            </STableRow>
-                                        }
+                                        <STableRow
+                                        >
+
+                                            <STableCell>
+                                                {chat && chat.timestamp && new Date(chat.timestamp).toLocaleString()}
+                                            </STableCell>
+                                            <STableCell style={{ backgroundColor: chat.isGroup ? "rgba(0,255,0,0.1)" : "whitesmoke" }}>
+                                                {chat && chat.from || ""}
+                                            </STableCell>
+                                            <STableCell>
+                                                {chat && chat.name && chat.name.slice(0, 30)}
+                                            </STableCell>
+                                            <STableCell>
+                                                {chat && chat.author || ""}
+                                            </STableCell>
+
+                                            <STableCell>
+                                                <Typography style={{ whiteSpace: 'pre-wrap' }} title={chat && chat.body}>
+                                                    {chat && chat.body && chat.body.slice(0, 100)}
+                                                </Typography>
+                                            </STableCell>
+                                            <STableCell>
+                                                {chat && chat.hasMedia ? "Yes" : ""}
+                                            </STableCell>
+                                        </STableRow>
+
                                     </React.Fragment>
 
                                 )

@@ -6,14 +6,14 @@ import { GetChats } from '../../services/BotServices'
 import { UserContext } from '../../contexts/userContext'
 import ChatsTable from '../../components/tables/ChatTable'
 import { IChat } from '../../types/chat.types'
-import { LinearProgress, Stack, TextField, Typography } from '@mui/material'
+import { FormControlLabel, LinearProgress, Stack, Switch, TextField, Typography } from '@mui/material'
 import FuzzySearch from "fuzzy-search";
 import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 function ChatsPage() {
     const { user } = useContext(UserContext)
+    const [reverse, setReverse] = useState(true)
     const [filter, setFilter] = useState<string | undefined>()
     const [chats, setChats] = useState<IChat[]>([])
     const [prefilterChats, setPreFilteredChats] = useState<IChat[]>([])
@@ -23,21 +23,32 @@ function ChatsPage() {
     const { data, isSuccess, isLoading, error, refetch } = useQuery<AxiosResponse<IChat[]>, BackendError>("chats", async () => GetChats({ client_id: clientId }))
 
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+
     useEffect(() => {
-        if (filter) {
+        if (filter && !reverse) {
             if (chats) {
-                const searcher = new FuzzySearch(chats, ["name", "id.user", "lastMessage.body", "timestamp"], {
+                const searcher = new FuzzySearch(chats, ["from", "name", "author.body", "timestamp"], {
                     caseSensitive: false,
                 });
-                const result = searcher.search(filter);
+                let result = searcher.search(filter);
                 setChats(result)
             }
+        }
+        if (filter && reverse) {
+            let result = chats;
+            if (reverse) {
+                result = result.filter((result) => {
+                    return String(result.from) !== String(filter)
+                })
+            }
+            setChats(result)
         }
 
         if (!filter) {
             setChats(prefilterChats)
         }
-    }, [filter])
+    }, [filter, reverse])
+
 
     useEffect(() => {
         if (isUsersSuccess)
@@ -51,7 +62,7 @@ function ChatsPage() {
             setPreFilteredChats(data.data)
         }
     }, [isSuccess, data])
-    console.log(chats)
+    console.log(filter)
     return (
         <>
             {error && error.response && error.response.data && error.response.data.message && <Typography color="red" p={2}>{error.response.data.message}</Typography>}
@@ -90,6 +101,10 @@ function ChatsPage() {
                                 })
                             }
                         </TextField>
+                        <FormControlLabel control={<Switch
+                            defaultChecked={Boolean(reverse)}
+                            onChange={() => setReverse(!reverse)}
+                        />} label="Reverse" />
                         <TextField
                             size="small"
                             onChange={(e) => setFilter(e.currentTarget.value)}
@@ -103,7 +118,8 @@ function ChatsPage() {
                         />
                     </Stack>}
             </Stack >
-            {isLoading ? <TableSkeleton /> : <ChatsTable chats={chats} />}
+            {isLoading && <LinearProgress />}
+            <ChatsTable chats={chats} />
         </>
     )
 }

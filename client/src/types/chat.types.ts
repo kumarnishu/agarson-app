@@ -1,13 +1,9 @@
 export type IChat = {
-    id: {
-        user:string
-    },
-    timestamp: Date,
+    from: string,
     name: string,
-    isGroup: string,
-    lastMessage: {
-        hasMedia: boolean,
-        body: string,
-        fromMe:boolean
-    }
+    isGroup: boolean,
+    author?: string,
+    body: string,
+    hasMedia: boolean,
+    timestamp: Date
 }
