@@ -57,6 +57,9 @@ function ChatsPage() {
             setUsers(usersData?.data)
     }, [users, isUsersSuccess, usersData])
 
+    useEffect(() => {
+        refetch()
+    }, [clientId, limit])
 
     useEffect(() => {
         if (isSuccess) {
@@ -80,7 +83,6 @@ function ChatsPage() {
                             value={limit}
                             onChange={(e) => {
                                 setLimit(Number(e.target.value))
-                                refetch()
                             }}
                         >
                             {
@@ -103,7 +105,6 @@ function ChatsPage() {
                             }}
                             onChange={(e) => {
                                 setClientId(e.target.value)
-                                refetch()
                             }}
                             focused
                             fullWidth
