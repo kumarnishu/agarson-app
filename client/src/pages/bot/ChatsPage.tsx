@@ -79,7 +79,6 @@ function ChatsPage() {
                         />
                     </Stack>}
             </Stack >
-            {isLoading && <LinearProgress />}
             <ChatsTable chats={chats} />
         </>
     )
