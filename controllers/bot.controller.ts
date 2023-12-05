@@ -44,7 +44,7 @@ export const GetTrackers = async (req: Request, res: Response, next: NextFunctio
 }
 
 export const GetWhatsappChats = async (req: Request, res: Response, next: NextFunction) => {
-    let chats = await Chat.find().sort('-timestamp').limit(100)
+    let chats = await Chat.find().sort('-timestamp')
     return res.status(200).json(chats)
 }
 
