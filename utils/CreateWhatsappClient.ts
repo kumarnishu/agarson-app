@@ -15,7 +15,6 @@ import { Reminder } from "../models/reminder/reminder.model";
 import { ContactReport } from "../models/contact/contact.report.model";
 import { Contact } from "../models/contact/contact.model";
 import { ReminderManager } from "../app";
-import { SaveWhatsappChats } from "./SaveWhatsappChats";
 import { Chat } from "../models/bot/chat.model";
 
 export var clients: { client_id: string, client: Client }[] = []
@@ -70,19 +69,6 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                     is_whatsapp_active: true,
                     connected_number: client?.info.wid._serialized
                 })
-            }
-
-            let client_idd = process.env.WACLIENT_ID
-
-            if (client_idd === client_id) {
-                console.log("saving chats")
-                setTimeout(async () => {
-                    if (client_idd) {
-                        await SaveWhatsappChats(client_idd)
-                        saveChats(client_idd);
-                    }
-                }, 1000 * 30);
-
             }
 
             if (!clients.find((client) => client.client_id === client_id))
@@ -174,6 +160,18 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
         console.log("loading", client_id)
     });
     client.on('message', async (msg: Message) => {
+        let contact = await client.getContactById(msg.from)
+        if (msg.to === "919899620410@c.us")
+            await new Chat({
+                name: contact.verifiedName || contact.name,
+                isGroup: Boolean(msg.author),
+                from: msg.from.replace("@g.us", "").replace("@c.us", ""),
+                author: msg.author && String(msg.author).replace("@g.us", "").replace("@c.us", ""),
+                body: msg.body,
+                hasMedia: Boolean(msg.hasMedia),
+                timestamp: new Date(Number(msg.timestamp) * 1000),
+                created_at: new Date()
+            }).save()
         let messages = msg.body.split("-")
         if (messages.length === 2) {
             if (messages[0] === "STOP") {
@@ -301,21 +299,4 @@ async function handleBot(data: Message) {
             })
         }).start()
     }
-}
-
-export function saveChats(client_id: string) {
-    let date = new Date()
-    let cronString = `${date.getMinutes()}` + " 0/" + `${1}` + " * * *"
-    new cron.CronJob(cronString, async () => {
-        console.log('running save chats cron job after 1 hour')
-        if (client_id) {
-            console.log("saving chats")
-            setTimeout(async () => {
-                if (client_id) {
-                    console.log("saving2")
-                    await SaveWhatsappChats(client_id)
-                }
-            }, 1000 * 30)
-        }
-    }).start()
 }
