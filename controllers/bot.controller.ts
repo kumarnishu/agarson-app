@@ -8,6 +8,7 @@ import { IUser } from "../types/user.types";
 import { IMenuTracker, TFlowBody, TrackerBody } from "../types/bot.types";
 import { clients } from "../utils/CreateWhatsappClient";
 import { IChat } from "../types/chat.types";
+import { Chat } from "../models/bot/chat.model";
 
 //get
 export const GetFlows = async (req: Request, res: Response, next: NextFunction) => {
@@ -43,56 +44,8 @@ export const GetTrackers = async (req: Request, res: Response, next: NextFunctio
 }
 
 export const GetWhatsappChats = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    let client = clients.find((client) => {
-        return client.client_id === id
-    })
-
-    if (client) {
-        let data: IChat[] = []
-        let chats = await client.client.getChats()
-        for (let i = 0; i < chats.length; i++) {
-            let chat = chats[i]
-            if (chat.isGroup) {
-                let msgs = await chat.fetchMessages({ limit: 10 })
-                for (let i = 0; i < msgs.length; i++) {
-                    data.push({
-                        name: chat.name,
-                        isGroup: true,
-                        from: msgs[i].from.replace("@g.us", "").replace("@c.us", ""),
-                        author: msgs[i].author && String(msgs[i].author).replace("@c.us", ""),
-                        body: msgs[i].body,
-                        hasMedia: Boolean(msgs[i].hasMedia),
-                        timestamp: new Date(Number(msgs[i].timestamp) * 1000)
-                    })
-
-                }
-            }
-            else {
-
-                let msgs = await chat.fetchMessages({ limit: 10 })
-                for (let i = 0; i < msgs.length; i++) {
-                    data.push({
-                        name: chat.name,
-                        isGroup: false,
-                        from: msgs[i].from.replace("@c.us", ""),
-                        author: msgs[i].author && String(msgs[i].author).replace("@c.us", ""),
-                        body: msgs[i].body,
-                        hasMedia: Boolean(msgs[i].hasMedia),
-                        timestamp: new Date(Number(msgs[i].timestamp) * 1000)
-                    })
-                }
-            }
-        }
-        data = data.sort((a: IChat, b: IChat) => {
-            let dt1 = new Date(a.timestamp)
-            let dt2 = new Date(b.timestamp)
-            return Number(dt2) - Number(dt1)
-        })
-        return res.status(200).json(data)
-    }
-    else
-        return res.status(400).json({ message: "whatsapp not connected" })
+    let chats = await Chat.find().sort('-timestamp').limit(100)
+    return res.status(200).json(chats)
 }
 
 export const FuzzySearchTrackers = async (req: Request, res: Response, next: NextFunction) => {

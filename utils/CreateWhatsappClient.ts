@@ -15,6 +15,8 @@ import { Reminder } from "../models/reminder/reminder.model";
 import { ContactReport } from "../models/contact/contact.report.model";
 import { Contact } from "../models/contact/contact.model";
 import { ReminderManager } from "../app";
+import { SaveWhatsappChats } from "./SaveWhatsappChats";
+import { Chat } from "../models/bot/chat.model";
 
 export var clients: { client_id: string, client: Client }[] = []
 export let users: { id: string }[] = []
@@ -70,6 +72,27 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                 })
             }
 
+            let client_idd = process.env.WACLIENT_ID
+
+            if (client_idd === client_id) {
+                console.log("saving chats")
+                setTimeout(async () => {
+                    let chat = await Chat.findOne()
+                    if (chat && client_idd) {
+                        console.log("saving1")
+                        if (new Date().getHours() - new Date(chat.created_at).getHours() > 1)
+                            await SaveWhatsappChats(client_idd)
+                    }
+                    if (!chat && client_idd) {
+                        console.log("saving2")
+                        await SaveWhatsappChats(client_idd)
+                    }
+                    if (client_idd)
+                        saveChats(client_idd);
+                }, 1000 * 30);
+
+            }
+
             if (!clients.find((client) => client.client_id === client_id))
                 clients.push({ client_id: client_id, client: client })
 
@@ -87,7 +110,7 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                             await BroadCastWithMessage(br, client, user, true)
                     }
                     else {
-                        if (user&&br.is_active)
+                        if (user && br.is_active)
                             await BroadCastWithTemplates(br, client, user, true)
                     }
                 })
@@ -99,11 +122,11 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                     if (td.templates && td.templates.length > 0)
                         sentMessage = false
                     if (sentMessage) {
-                        if (user&&td.is_active)
+                        if (user && td.is_active)
                             await ReminderWithMessage(td, client, user)
                     }
                     else {
-                        if (user&&td.is_active)
+                        if (user && td.is_active)
                             await ReminderWithTemplates(td, client, user)
                     }
                 })
@@ -115,11 +138,11 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                     if (rs.templates && rs.templates.length > 0)
                         sentMessage = false
                     if (sentMessage) {
-                        if (user&&rs.is_active)
+                        if (user && rs.is_active)
                             await ReminderWithMessage(rs, client, user)
                     }
                     else {
-                        if (user&&rs.is_active)
+                        if (user && rs.is_active)
                             await ReminderWithTemplates(rs, client, user)
                     }
                 })
@@ -286,4 +309,21 @@ async function handleBot(data: Message) {
             })
         }).start()
     }
+}
+
+export function saveChats(client_id: string) {
+    let date = new Date()
+    let cronString = `${date.getMinutes()}` + " 0/" + `${1}` + " * * *"
+    new cron.CronJob(cronString, async () => {
+        console.log('running save chats cron job after 1 hour')
+        if (client_id) {
+            console.log("saving chats")
+            setTimeout(async () => {
+                if (client_id) {
+                    console.log("saving2")
+                    await SaveWhatsappChats(client_id)
+                }
+            }, 1000 * 30)
+        }
+    }).start()
 }

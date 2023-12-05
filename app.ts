@@ -131,7 +131,6 @@ export const BroadcastManager = new CronJobManager()
 if (!BroadcastManager.exists('check_status')) {
     BroadcastManager.add("check_status", "15 * * * *", () => console.log("checked status of all jobs "))
     console.log("restarted all task cron jobs")
-    // RestartTaskJobs()
 }
 
 //server routes

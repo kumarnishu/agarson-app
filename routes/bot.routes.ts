@@ -5,7 +5,7 @@ import { AssignFlow, CreateFlow, DeleteTracker, DestroyFlow, FuzzySearchTrackers
 const router = express.Router()
 
 router.route("/flows").get(isAuthenticatedUser, GetFlows)
-router.route("/chats/:id").get(isAuthenticatedUser, GetWhatsappChats)
+router.route("/chats").get(isAuthenticatedUser, GetWhatsappChats)
 router.route("/flows").post(isAuthenticatedUser, CreateFlow)
 router.route("/flows/:id").delete(isAuthenticatedUser, DestroyFlow)
 router.route("/flows/:id").put(isAuthenticatedUser, UpdateFlow)

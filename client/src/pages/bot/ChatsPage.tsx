@@ -8,8 +8,6 @@ import ChatsTable from '../../components/tables/ChatTable'
 import { IChat } from '../../types/chat.types'
 import { FormControlLabel, LinearProgress, Stack, Switch, TextField, Typography } from '@mui/material'
 import FuzzySearch from "fuzzy-search";
-import { IUser } from '../../types/user.types'
-import { GetUsers } from '../../services/UserServices'
 
 function ChatsPage() {
     const { user } = useContext(UserContext)
@@ -17,17 +15,14 @@ function ChatsPage() {
     const [filter, setFilter] = useState<string | undefined>()
     const [chats, setChats] = useState<IChat[]>([])
     const [prefilterChats, setPreFilteredChats] = useState<IChat[]>([])
-    const [clientId, setClientId] = useState<string | undefined>(user?.client_id)
-    const [users, setUsers] = useState<IUser[]>([])
 
-    const { data, isSuccess, isLoading, error, refetch } = useQuery<AxiosResponse<IChat[]>, BackendError>("chats", async () => GetChats({ client_id: clientId }))
+    const { data, isSuccess, isLoading, error } = useQuery<AxiosResponse<IChat[]>, BackendError>("chats", GetChats)
 
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
-
+   
     useEffect(() => {
         if (filter && !reverse) {
             if (chats) {
-                const searcher = new FuzzySearch(chats, ["from", "name", "author.body", "timestamp"], {
+                const searcher = new FuzzySearch(chats, ["from", "name", "author","body", "timestamp"], {
                     caseSensitive: false,
                 });
                 let result = searcher.search(filter);
@@ -50,11 +45,7 @@ function ChatsPage() {
     }, [filter, reverse])
 
 
-    useEffect(() => {
-        if (isUsersSuccess)
-            setUsers(usersData?.data)
-    }, [users, isUsersSuccess, usersData])
-
+   
 
     useEffect(() => {
         if (isSuccess) {
@@ -70,36 +61,7 @@ function ChatsPage() {
                 <Typography variant="button" fontWeight={'bold'}>Chats</Typography>
                 {user?.bot_access_fields.is_editable &&
                     <Stack direction="row" gap={2}>
-                        < TextField
-                            size='small'
-                            select
-                            SelectProps={{
-                                native: true,
-                            }}
-                            onChange={(e) => {
-                                setClientId(e.target.value)
-                                refetch()
-                            }}
-                            focused
-                            fullWidth
-                            required
-                            id="chat"
-                            label="Filter Chats Of Indivdual"
-                        >
-                            <option key={'00'} value={user.client_id}>
-                                {user.username}
-                            </option>
-                            {
-                                users.map((user, index) => {
-                                    if (user.connected_number)
-                                        return (<option key={index} value={user.client_id}>
-                                            {user.username}
-                                        </option>)
-                                    else
-                                        return null
-                                })
-                            }
-                        </TextField>
+                     
                         <FormControlLabel control={<Switch
                             defaultChecked={Boolean(reverse)}
                             onChange={() => setReverse(!reverse)}

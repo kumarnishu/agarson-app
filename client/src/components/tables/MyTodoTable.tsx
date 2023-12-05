@@ -93,9 +93,9 @@ function MyTodoTable({ todo, todos, setTodo }: Props) {
 
                             data && data.map((todo, index) => {
                                 return (
-                                    <>
+                                    <React.Fragment key={index}>
                                         {todo.status !== "done" && <STableRow
-                                            key={index}
+
                                         >
 
 
@@ -162,7 +162,7 @@ function MyTodoTable({ todo, todos, setTodo }: Props) {
 
                                             </STableCell>
                                         </STableRow>}
-                                    </>
+                                    </React.Fragment>
                                 )
                             })
 
