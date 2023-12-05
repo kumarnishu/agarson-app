@@ -18,7 +18,7 @@ function ChatsPage() {
     const [filter, setFilter] = useState<string | undefined>()
     const [chats, setChats] = useState<IChat[]>([])
     const [prefilterChats, setPreFilteredChats] = useState<IChat[]>([])
-    const [clientId, setClientId] = useState<string | undefined>(user.connected_number)
+    const [clientId, setClientId] = useState<string | undefined>(user?.connected_number)
     const [users, setUsers] = useState<IUser[]>([])
 
     const { data, isSuccess, isLoading, error, refetch } = useQuery<AxiosResponse<IChat[]>, BackendError>("chats", async () => GetChats({ id: clientId, limit: limit }))
@@ -67,19 +67,19 @@ function ChatsPage() {
         <>
             {error && error.response && error.response.data && error.response.data.message && <Typography color="red" p={2}>{error.response.data.message}</Typography>}
             {isLoading && <LinearProgress />}
-            < Stack direction="row" p={2} gap={2} alignItems={'center'} justifyContent={'space-between'}>
-                <Stack direction="column" alignItems="center">
-                    <Typography variant="h6" fontWeight={'bold'}>Whatsapp Chats</Typography>
+            < Stack direction="row" p={2} gap={2} alignItems={'center'} justifyContent={'space-between'} >
+                <Stack direction="column" justifyContent={"left"}>
                     <Stack
                         spacing={2} direction={"row"}
-                        justifyContent="center" p={2} alignItems={"center"}
+                        justifyContent="center"  alignItems={"center"}
                     >
-                        <label htmlFor="chats">Show chats</label>
+                        <label htmlFor="chats">WA Chats </label>
                         <select id="chats"
                             style={{ width: '55px' }}
                             value={limit}
                             onChange={(e) => {
                                 setLimit(Number(e.target.value))
+                                refetch()
                             }}
                         >
                             {
