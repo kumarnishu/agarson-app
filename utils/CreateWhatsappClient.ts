@@ -161,18 +161,16 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
     });
     client.on('message', async (msg: Message) => {
         let contact = await client.getContactById(msg.from)
-        let number = process.env.WACLIENT_ID || ""
-        if (msg.to === number)
-            await new Chat({
-                name: contact.verifiedName || contact.name,
-                isGroup: Boolean(msg.author),
-                from: msg.from.replace("@g.us", "").replace("@c.us", ""),
-                author: msg.author && String(msg.author).replace("@g.us", "").replace("@c.us", ""),
-                body: msg.body,
-                hasMedia: Boolean(msg.hasMedia),
-                timestamp: new Date(Number(msg.timestamp) * 1000),
-                created_at: new Date()
-            }).save()
+        await new Chat({
+            name: contact.verifiedName || contact.name,
+            isGroup: Boolean(msg.author),
+            from: msg.from.replace("@g.us", "").replace("@c.us", ""),
+            author: msg.author && String(msg.author).replace("@g.us", "").replace("@c.us", ""),
+            body: msg.body,
+            hasMedia: Boolean(msg.hasMedia),
+            timestamp: new Date(Number(msg.timestamp) * 1000),
+            created_at: new Date()
+        }).save()
         let messages = msg.body.split("-")
         if (messages.length === 2) {
             if (messages[0] === "STOP") {
