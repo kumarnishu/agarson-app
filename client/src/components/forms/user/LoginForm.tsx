@@ -76,7 +76,7 @@ function LoginForm() {
         direction="column"
         p={2}
         gap={2}
-        sx={{ Width: '300px' }}
+        sx={{ minWidth: '300px' }}
       >
         <TextField
           variant="outlined"
