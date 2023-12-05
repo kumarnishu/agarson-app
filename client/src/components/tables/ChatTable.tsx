@@ -66,6 +66,12 @@ function ChatsTable({ chats }: Props) {
                                 Has Media
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Created At
+
+                            </STableHeadCell>
                             {/* visitin card */}
                         </STableRow>
                     </STableHead>
@@ -85,8 +91,10 @@ function ChatsTable({ chats }: Props) {
                                             <STableCell style={{ backgroundColor: chat.isGroup ? "rgba(0,255,0,0.1)" : "whitesmoke" }}>
                                                 {chat && chat.from || ""}
                                             </STableCell>
-                                            <STableCell>
-                                                {chat && chat.name && chat.name.slice(0, 30)}
+                                            <STableCell >
+                                                <Typography style={{ whiteSpace: 'pre-wrap' }} title={chat && chat.name}>
+                                                    {chat && chat.name && chat.name.slice(0, 30)}
+                                                </Typography>
                                             </STableCell>
                                             <STableCell>
                                                 {chat && chat.author || ""}
@@ -99,6 +107,9 @@ function ChatsTable({ chats }: Props) {
                                             </STableCell>
                                             <STableCell>
                                                 {chat && chat.hasMedia ? "Yes" : ""}
+                                            </STableCell>
+                                            <STableCell>
+                                                {new Date(chat.created_at).toLocaleString()}
                                             </STableCell>
                                         </STableRow>
 
