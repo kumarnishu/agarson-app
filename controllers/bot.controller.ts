@@ -59,7 +59,7 @@ export const GetWhatsappChats = async (req: Request, res: Response, next: NextFu
                     data.push({
                         name: chat.name,
                         isGroup: true,
-                        from: msgs[i].from.replace("@g.us", ""),
+                        from: msgs[i].from.replace("@g.us", "").replace("@c.us", ""),
                         author: msgs[i].author && String(msgs[i].author).replace("@c.us", ""),
                         body: msgs[i].body,
                         hasMedia: Boolean(msgs[i].hasMedia),
@@ -67,7 +67,6 @@ export const GetWhatsappChats = async (req: Request, res: Response, next: NextFu
                     })
 
                 }
-
             }
             else {
 

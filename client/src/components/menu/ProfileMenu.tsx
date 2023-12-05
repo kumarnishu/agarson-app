@@ -53,7 +53,14 @@ function ProfileMenu() {
                     }
 
                 >View Profile</MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        setChoice({ type: UserChoiceActions.update_profile })
+                        setMenu({ type: UserMenuActions.close_user_menu, anchorEl: null })
+                    }
+                    }
 
+                >Update Profile</MenuItem>
 
                 <MenuItem onClick={() => {
                     setChoice({ type: UserChoiceActions.update_password })

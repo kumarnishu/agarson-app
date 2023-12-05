@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton,  LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -15,6 +15,7 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { IUser } from '../../types/user.types'
 import DBPagination from '../../components/pagination/DBpagination'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import { UserContext } from '../../contexts/userContext'
 
 type SelectedData = {
     username?: string,
@@ -31,6 +32,7 @@ type SelectedData = {
 // react component
 export default function UsersPage() {
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+    const { user: loggedInUser } = useContext(UserContext)
     const [user, setUser] = useState<IUser>()
     const [users, setUsers] = useState<IUser[]>([])
     const [selectAll, setSelectAll] = useState(false)
@@ -175,7 +177,7 @@ export default function UsersPage() {
                                 setFilter(e.currentTarget.value)
                                 setFilterCount(0)
                             }}
-                           
+
                             placeholder={`${MemoData?.length} records...`}
                             style={{
                                 fontSize: '1.1rem',
@@ -219,7 +221,7 @@ export default function UsersPage() {
                             sx={{ borderRadius: 2 }}
                         >
                             {
-                                user?.user_access_fields.is_editable &&
+                                loggedInUser?.user_access_fields.is_editable &&
                                 <MenuItem onClick={() => {
                                     setChoice({ type: UserChoiceActions.new_user })
                                     setAnchorEl(null)
@@ -228,8 +230,6 @@ export default function UsersPage() {
 
                             <MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
-
-
                         </Menu>
                         <NewUserDialog />
                     </>
