@@ -161,7 +161,8 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
     });
     client.on('message', async (msg: Message) => {
         let contact = await client.getContactById(msg.from)
-        if (msg.to === "919899620410@c.us")
+        let number = process.env.WACLIENT_ID || ""
+        if (msg.to === number)
             await new Chat({
                 name: contact.verifiedName || contact.name,
                 isGroup: Boolean(msg.author),
