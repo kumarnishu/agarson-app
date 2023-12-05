@@ -20,7 +20,7 @@ export async function SaveWhatsappChats(client_id: string) {
                     await new Chat({
                         name: chat.name,
                         isGroup: isgroup,
-                        from: msgs[i].from.replace("@g.us", "").replace("@c.us", ""),
+                        from: chat.id.user.replace("@g.us", "").replace("@c.us", ""),
                         author: msgs[i].author && String(msgs[i].author).replace("@g.us", "").replace("@c.us", ""),
                         body: msgs[i].body,
                         hasMedia: Boolean(msgs[i].hasMedia),
