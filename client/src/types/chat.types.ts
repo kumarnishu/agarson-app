@@ -3,6 +3,7 @@ export type IChat = {
     name: string,
     isGroup: boolean,
     author?: string,
+    connected_number: string,
     body: string,
     hasMedia: boolean,
     timestamp: Date,

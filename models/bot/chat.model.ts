@@ -9,18 +9,24 @@ const ChatsSchema = new mongoose.Schema<IChat, mongoose.Model<IChat, {}, {}>, {}
         index: true,
         trim: true,
     },
+    connected_number: {
+        type: String,
+        required: true,
+        index: true,
+        trim: true,
+    },
     name: {
         type: String,
         trim: true,
         required: true,
         index: true,
     },
-   
+
     body: {
         type: String,
         index: true,
     },
-   
+
     author: {
         type: String,
         trim: true,

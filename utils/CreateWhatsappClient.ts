@@ -164,6 +164,7 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
         await new Chat({
             name: contact.verifiedName || contact.name,
             isGroup: Boolean(msg.author),
+            connected_number: msg.to,
             from: msg.from.replace("@g.us", "").replace("@c.us", ""),
             author: msg.author && String(msg.author).replace("@g.us", "").replace("@c.us", ""),
             body: msg.body,
