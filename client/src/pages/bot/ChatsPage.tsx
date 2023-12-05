@@ -19,7 +19,7 @@ function ChatsPage() {
     const [filter, setFilter] = useState<string | undefined>()
     const [chats, setChats] = useState<IChat[]>([])
     const [prefilterChats, setPreFilteredChats] = useState<IChat[]>([])
-    const [clientId, setClientId] = useState<string | undefined>(user?.connected_number)
+    const [clientId, setClientId] = useState<string | undefined>("919313940410@c.us")
     const [users, setUsers] = useState<IUser[]>([])
 
     const { data, isSuccess, isLoading, error, refetch } = useQuery<AxiosResponse<IChat[]>, BackendError>("chats", async () => GetChats({ id: clientId, limit: limit }))
@@ -106,7 +106,7 @@ function ChatsPage() {
                             onChange={(e) => {
                                 setClientId(e.target.value)
                             }}
-                            focused
+                            disabled
                             fullWidth
                             required
                             id="chat"
@@ -134,7 +134,6 @@ function ChatsPage() {
                         <TextField
                             size="small"
                             onChange={(e) => setFilter(e.currentTarget.value)}
-                            autoFocus
                             fullWidth
                             placeholder={`${chats?.length} records...`}
                             style={{

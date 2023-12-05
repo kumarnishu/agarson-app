@@ -7,6 +7,7 @@ import { Todo } from "../models/todo/todo.model";
 //get
 export const GetTodos = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.query.id
+    let hidden = String(req.query.hidden)
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let start_date = req.query.start_date
@@ -15,12 +16,28 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
     let count = 0
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
-            todos = await Todo.find({ is_hidden: false }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').populate("replies.created_by").skip((page - 1) * limit).limit(limit)
-            count = await Todo.find().countDocuments()
+            if (hidden === "true") {
+                console.log("first")
+                todos = await Todo.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at').populate("replies.created_by").skip((page - 1) * limit).limit(limit)
+                count = await Todo.find().countDocuments()
+            }
+            else {
+                console.log("second")
+                todos = await Todo.find({ is_hidden: false }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').populate("replies.created_by").skip((page - 1) * limit).limit(limit)
+                count = await Todo.find({ is_hidden: false }).countDocuments()
+            }
+
         }
 
         if (id) {
-            todos = await Todo.find({ person: id, is_hidden: false }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            if (hidden === "true") {
+                todos = await Todo.find({ person: id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').populate("replies.created_by").skip((page - 1) * limit).limit(limit)
+                count = await Todo.find({ person: id }).countDocuments()
+            }
+            else {
+                todos = await Todo.find({ person: id, is_hidden: false }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').populate("replies.created_by").skip((page - 1) * limit).limit(limit)
+                count = await Todo.find({ person: id, is_hidden: false }).countDocuments()
+            }
         }
         if (start_date && end_date) {
             let dt1 = new Date(String(start_date))
@@ -104,7 +121,7 @@ export const HideTodo = async (req: Request, res: Response, next: NextFunction) 
         return res.status(404).json({ message: "todo not found" })
     }
     todo.is_hidden = true
-    await todo.remove()
+    await todo.save()
     return res.status(200).json({ message: `todo hidden` });
 }
 

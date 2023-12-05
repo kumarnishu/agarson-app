@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, FormControlLabel, IconButton, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -23,6 +23,7 @@ import BulkHideTodoDialog from '../../components/dialogs/todos/BulkHideTodoDialo
 
 
 export default function TodosAdminPage() {
+    const [hidden, setHidden] = useState(false)
     const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
@@ -42,9 +43,9 @@ export default function TodosAdminPage() {
     })
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
 
-    const { data, isLoading, refetch: ReftechTodos } = useQuery<AxiosResponse<{ todos: ITodo[], page: number, total: number, limit: number }>, BackendError>(["todos", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetTodos({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+    const { data, isLoading, refetch: ReftechTodos } = useQuery<AxiosResponse<{ todos: ITodo[], page: number, total: number, limit: number }>, BackendError>(["todos", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetTodos({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date, hidden: hidden }))
 
-    const { data: fuzzytodos, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ todos: ITodo[], page: number, total: number, limit: number }>, BackendError>(["fuzzytodos", filter], async () => FuzzySearchTodos({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
+    const { data: fuzzytodos, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ todos: ITodo[], page: number, total: number, limit: number }>, BackendError>(["fuzzytodos", filter], async () => FuzzySearchTodos({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, hidden: hidden }), {
         enabled: false
     })
 
@@ -112,6 +113,10 @@ export default function TodosAdminPage() {
             setPaginationData(preFilteredPaginationData)
         }
     }, [filter])
+
+    useEffect(() => {
+        ReftechTodos()
+    }, [hidden])
 
     useEffect(() => {
         if (filter) {
@@ -186,6 +191,11 @@ export default function TodosAdminPage() {
                 >
                     {/* search bar */}
                     < Stack direction="row" spacing={2}>
+                        <FormControlLabel control={<Switch
+                            defaultChecked={Boolean(hidden)}
+                            onChange={() => setHidden(!hidden)}
+                        />} label="Show hidden" />
+
                         <TextField
                             fullWidth
                             size="small"
@@ -217,10 +227,10 @@ export default function TodosAdminPage() {
 
                     <>
                         {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-                        <IconButton size="small" color="primary" 
+                        <IconButton size="small" color="primary"
                             onClick={(e) => setAnchorEl(e.currentTarget)
                             }
-                            sx={{ border: 2,borderRadius:3, marginLeft: 1 }}
+                            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
                         >
                             <MenuIcon />
                         </IconButton>

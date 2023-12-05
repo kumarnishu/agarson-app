@@ -27,21 +27,21 @@ export const GetMyTodos = async () => {
 };
 
 
-export const GetTodos = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+export const GetTodos = async ({ limit, hidden, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string, hidden: boolean }) => {
 
     if (id && !start_date && !end_date)
-        return await apiClient.get(`todos/?id=${id}&limit=${limit}&page=${page}`)
+        return await apiClient.get(`todos/?id=${id}&limit=${limit}&page=${page}&hidden=${hidden}`)
     if (id && start_date && end_date)
-        return await apiClient.get(`todos/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+        return await apiClient.get(`todos/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&hidden=${hidden}`)
     if (!id && start_date && end_date)
-        return await apiClient.get(`todos/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+        return await apiClient.get(`todos/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&hidden=${hidden}`)
     if (!id && !start_date && !end_date)
-        return await apiClient.get(`todos?limit=${limit}&page=${page}`)
+        return await apiClient.get(`todos?limit=${limit}&page=${page}&hidden=${hidden}`)
     else
-        return await apiClient.get(`todos?limit=${limit}&page=${page}`)
+        return await apiClient.get(`todos?limit=${limit}&page=${page}&hidden=${hidden}`)
 }
 
-export const FuzzySearchTodos = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
-    return await apiClient.get(`search/todos/?key=${searchString}&limit=${limit}&page=${page}`)
+export const FuzzySearchTodos = async ({ searchString, hidden, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined, hidden: boolean }) => {
+    return await apiClient.get(`search/todos/?key=${searchString}&limit=${limit}&page=${page}&hidden=${hidden}`)
 }
 
