@@ -44,7 +44,7 @@ export const GetTrackers = async (req: Request, res: Response, next: NextFunctio
 export const GetWhatsappChats = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.query.id
     let limit = req.query.limit
-    let chats = await Chat.find({ from: id }).sort('-timestamp').limit(Number(limit))
+    let chats = await Chat.find({ connected_number: id }).sort('-timestamp').limit(Number(limit))
     return res.status(200).json(chats)
 }
 
