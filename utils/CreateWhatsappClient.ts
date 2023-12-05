@@ -77,18 +77,10 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
             if (client_idd === client_id) {
                 console.log("saving chats")
                 setTimeout(async () => {
-                    let chat = await Chat.findOne()
-                    if (chat && client_idd) {
-                        console.log("saving1")
-                        if (new Date().getHours() - new Date(chat.created_at).getHours() > 1)
-                            await SaveWhatsappChats(client_idd)
-                    }
-                    if (!chat && client_idd) {
-                        console.log("saving2")
+                    if (client_idd) {
                         await SaveWhatsappChats(client_idd)
-                    }
-                    if (client_idd)
                         saveChats(client_idd);
+                    }
                 }, 1000 * 30);
 
             }
