@@ -13,7 +13,10 @@ export const DeleteTemplate = async (id: string) => {
 };
 
 export const GetTemplates = async ({ category, limit }: { limit?: number, category?: string }) => {
-    return await apiClient.get(`watemplates/?category=${category}&limit=${limit}`)
+    if (category)
+        return await apiClient.get(`watemplates/?category=${category}&limit=${limit}`)
+    else
+        return await apiClient.get(`watemplates/?limit=${limit}`)
 }
 
 export const UpdateCategories = async ({ body }: { body: { categories?: string[] } }) => {
