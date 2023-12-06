@@ -87,31 +87,33 @@ export default function TemplatesPage() {
           direction="row"
         >
           {/* search bar */}
-          < TextField
-            size='small'
-            select
-            SelectProps={{
-              native: true,
-            }}
-            fullWidth
-            onChange={(e) => setCategory(e.currentTarget.value)}
-            focused
-            id="category"
-            label="category"
 
-          >
-            <option key={'00'} value={undefined}>
-              
-            </option>
-            {
-              categoryData && categoryData.data && categoryData.data.categories.map((category, index) => {
-                return (<option key={index} value={category}>
-                  {category}
-                </option>)
-              })
-            }
-          </TextField>
           < Stack direction="row" spacing={2} >
+            < TextField
+              size='small'
+              select
+              SelectProps={{
+                native: true,
+              }}
+              fullWidth
+              onChange={(e) => setCategory(e.currentTarget.value)}
+              focused
+              id="category"
+              label="category"
+
+            >
+              <option key={'00'} value={undefined}>
+
+              </option>
+              {
+                categoryData && categoryData.data && categoryData.data.categories.map((category, index) => {
+                  return (<option key={index} value={category}>
+                    {category}
+                  </option>)
+                })
+              }
+            </TextField>
+
             <Stack
               spacing={2} direction={"row"}
               alignItems={"center"}
