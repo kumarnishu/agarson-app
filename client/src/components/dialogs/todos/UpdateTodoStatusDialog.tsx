@@ -16,7 +16,7 @@ function UpdateTodoStatusDialog({ todo }: { todo: ITodo }) {
                     <Cancel fontSize='large' />
                 </IconButton>
 
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Add More Boxes
+                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Update Status
                 </DialogTitle>
                 <DialogContent>
                     <UpdateTodoStatusForm todo={todo} />
