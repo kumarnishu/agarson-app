@@ -13,8 +13,8 @@ export const UpdateFlow = async ({ id, body }: { id: string, body: IFlow }) => {
 export const GetFlows = async () => {
     return await apiClient.get(`flows`);
 };
-export const GetChats = async ({ id, limit }: { id?: string, limit?: number }) => {
-    return await apiClient.get(`chats?id=${id}&limit=${limit}`);
+export const GetChats = async ({ limit }: {  limit?: number }) => {
+    return await apiClient.get(`chats?limit=${limit}`);
 };
 export const GetConnectedUsers = async () => {
     return await apiClient.get(`connected/users`);

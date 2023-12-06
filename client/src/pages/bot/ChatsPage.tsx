@@ -8,8 +8,6 @@ import ChatsTable from '../../components/tables/ChatTable'
 import { IChat } from '../../types/chat.types'
 import { FormControlLabel, LinearProgress, Stack, Switch, TextField, Typography } from '@mui/material'
 import FuzzySearch from "fuzzy-search";
-import { IUser } from '../../types/user.types'
-import { GetUsers } from '../../services/UserServices'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 function ChatsPage() {
@@ -19,12 +17,9 @@ function ChatsPage() {
     const [filter, setFilter] = useState<string | undefined>()
     const [chats, setChats] = useState<IChat[]>([])
     const [prefilterChats, setPreFilteredChats] = useState<IChat[]>([])
-    const [clientId, setClientId] = useState<string | undefined>("919313940410@c.us")
-    const [users, setUsers] = useState<IUser[]>([])
 
-    const { data, isSuccess, isLoading, error, refetch } = useQuery<AxiosResponse<IChat[]>, BackendError>("chats", async () => GetChats({ id: clientId, limit: limit }))
+    const { data, isSuccess, isLoading, error, refetch } = useQuery<AxiosResponse<IChat[]>, BackendError>("chats", async () => GetChats({ limit: limit }))
 
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
 
     useEffect(() => {
         if (filter && !reverse) {
@@ -52,14 +47,11 @@ function ChatsPage() {
     }, [filter, reverse])
 
 
-    useEffect(() => {
-        if (isUsersSuccess)
-            setUsers(usersData?.data)
-    }, [users, isUsersSuccess, usersData])
+
 
     useEffect(() => {
         refetch()
-    }, [clientId, limit])
+    }, [limit])
 
     useEffect(() => {
         if (isSuccess) {
@@ -72,60 +64,31 @@ function ChatsPage() {
             {error && error.response && error.response.data && error.response.data.message && <Typography color="red" p={2}>{error.response.data.message}</Typography>}
             {isLoading && <LinearProgress />}
             < Stack direction="row" p={2} gap={2} alignItems={'center'} justifyContent={'space-between'} >
-                <Stack direction="column" justifyContent={"left"}>
-                    <Stack
-                        spacing={2} direction={"row"}
-                        justifyContent="center" alignItems={"center"}
-                    >
-                        <label htmlFor="chats">WA Chats </label>
-                        <select id="chats"
-                            style={{ width: '55px' }}
-                            value={limit}
-                            onChange={(e) => {
-                                setLimit(Number(e.target.value))
-                            }}
-                        >
-                            {
-                                [100, 500, 1000, 2000, 5000].map(item => {
-                                    return (<option key={item} value={item}>
-                                        {item}
-                                    </option>)
-                                })
-                            }
-                        </select>
-                    </Stack>
-                </Stack>
+                <Typography variant='h6'>WA Chats</Typography>
                 {user?.bot_access_fields.is_editable &&
                     <Stack direction="row" gap={2}>
-                        < TextField
-                            size='small'
-                            select
-                            SelectProps={{
-                                native: true,
-                            }}
-                            onChange={(e) => {
-                                setClientId(e.target.value)
-                            }}
-                            disabled
-                            fullWidth
-                            required
-                            id="chat"
-                            label="Filter Chats Of Indivdual"
+                        <Stack
+                            spacing={2} direction={"row"}
+                             alignItems={"center"}
                         >
-                            <option key={'00'} value={user.connected_number}>
-                                {user.username}
-                            </option>
-                            {
-                                users.map((user, index) => {
-                                    if (user.connected_number)
-                                        return (<option key={index} value={user.connected_number}>
-                                            {user.username}
+                            <label htmlFor="chats">Show </label>
+                            <select id="chats"
+                                style={{ width: '55px' }}
+                                value={limit}
+                                onChange={(e) => {
+                                    setLimit(Number(e.target.value))
+                                }}
+                            >
+                                {
+                                    [100, 500, 1000, 2000, 5000].map(item => {
+                                        return (<option key={item} value={item}>
+                                            {item}
                                         </option>)
-                                    else
-                                        return null
-                                })
-                            }
-                        </TextField>
+                                    })
+                                }
+                            </select>
+
+                        </Stack>
 
                         <FormControlLabel control={<Switch
                             defaultChecked={Boolean(reverse)}
