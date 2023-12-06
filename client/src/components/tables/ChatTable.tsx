@@ -29,12 +29,7 @@ function ChatsTable({ chats }: Props) {
 
 
 
-                            <STableHeadCell
-                            >
-
-                                Timestamp
-
-                            </STableHeadCell>
+                         
                             <STableHeadCell
                             >
 
@@ -58,6 +53,12 @@ function ChatsTable({ chats }: Props) {
                             >
 
                                 Author Name
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Timestamp
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -91,9 +92,7 @@ function ChatsTable({ chats }: Props) {
                                         <STableRow
                                         >
 
-                                            <STableCell>
-                                                {chat && chat.timestamp && new Date(chat.timestamp).toLocaleString()}
-                                            </STableCell>
+                                          
                                             <STableCell style={{ backgroundColor: chat.isGroup ? "rgba(0,255,0,0.1)" : "whitesmoke" }}>
                                                 {chat && chat.from || ""}
                                             </STableCell>
@@ -105,13 +104,17 @@ function ChatsTable({ chats }: Props) {
                                             <STableCell>
                                                 {chat && chat.author || ""}
                                             </STableCell>
-                                            <STableCell>
-                                                {chat && chat.authorName || ""}
+                                            <STableCell >
+                                                <Typography style={{ whiteSpace: 'pre-wrap' }} title={chat && chat.authorName}>
+                                                    {chat && chat.authorName && chat.authorName.slice(0, 30)}
+                                                </Typography>
                                             </STableCell>
-
+                                            <STableCell>
+                                                {chat && chat.timestamp && new Date(chat.timestamp).toLocaleString()}
+                                            </STableCell>
                                             <STableCell>
                                                 <Typography style={{ whiteSpace: 'pre-wrap' }} title={chat && chat.body}>
-                                                    {chat && chat.body && chat.body.slice(0, 100)}
+                                                    {chat && chat.body && chat.body.slice(0, 50)}
                                                 </Typography>
                                             </STableCell>
                                             <STableCell>
