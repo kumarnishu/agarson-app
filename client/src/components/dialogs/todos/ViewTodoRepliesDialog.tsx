@@ -15,7 +15,7 @@ function ViewTodoRepliesDialog({ todo }: { todo: ITodo }) {
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: TodoChoiceActions.close_todo })}>
                     <Cancel fontSize='large' />
                 </IconButton>
-                <DialogTitle sx={{ minWidth: '300px' }} textAlign="center">Todo Replies <b>[{todo.person.username}]</b></DialogTitle>
+                <DialogTitle sx={{ minWidth: '300px' }} textAlign="center">Replies <b>[{todo.work_title}]</b></DialogTitle>
                 <DialogContent>
                     {todo.replies.map((reply, index) => {
                         return (
