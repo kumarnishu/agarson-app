@@ -162,6 +162,12 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
     client.on('message', async (msg: Message) => {
         if (msg.to === process.env.WACLIENT_ID) {
             let contact = await client.getContactById(msg.from)
+            let authorName = ""
+            if (msg.author) {
+                let authorContact = await client.getContactById(msg.author)
+                authorName = authorContact.verifiedName || authorContact.name || ""
+
+            }
             await new Chat({
                 name: contact.verifiedName || contact.name,
                 isGroup: Boolean(msg.author),
@@ -169,6 +175,7 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                 from: msg.from.replace("@g.us", "").replace("@c.us", ""),
                 author: msg.author && String(msg.author).replace("@g.us", "").replace("@c.us", ""),
                 body: msg.body,
+                authorName: authorName,
                 hasMedia: Boolean(msg.hasMedia),
                 timestamp: new Date(Number(msg.timestamp) * 1000),
                 created_at: new Date()

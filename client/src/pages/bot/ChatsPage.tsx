@@ -25,7 +25,7 @@ function ChatsPage() {
     useEffect(() => {
         if (filter && !reverse) {
             if (chats) {
-                const searcher = new FuzzySearch(chats, ["from", "name", "body", "author", "timestamp"], {
+                const searcher = new FuzzySearch(chats, ["from", "name", "body", "author", "authorName","timestamp"], {
                     caseSensitive: false,
                 });
                 let result = searcher.search(filter);

@@ -5,6 +5,7 @@ export type IChat = {
     author?: string,
     connected_number: string,
     body: string,
+    authorName: string,
     hasMedia: boolean,
     timestamp: Date,
     created_at: Date,

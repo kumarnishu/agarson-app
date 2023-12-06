@@ -26,6 +26,11 @@ const ChatsSchema = new mongoose.Schema<IChat, mongoose.Model<IChat, {}, {}>, {}
         type: String,
         index: true,
     },
+    authorName: {
+        type: String,
+        index: true,
+        default: ""
+    },
 
     author: {
         type: String,

@@ -57,6 +57,12 @@ function ChatsTable({ chats }: Props) {
                             <STableHeadCell
                             >
 
+                                Author Name
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Chat
 
                             </STableHeadCell>
@@ -98,6 +104,9 @@ function ChatsTable({ chats }: Props) {
                                             </STableCell>
                                             <STableCell>
                                                 {chat && chat.author || ""}
+                                            </STableCell>
+                                            <STableCell>
+                                                {chat && chat.authorName || ""}
                                             </STableCell>
 
                                             <STableCell>
