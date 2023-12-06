@@ -58,7 +58,7 @@ function SetDailyCountBroadcastDialog({ broadcast }: { broadcast: IBroadcast }) 
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: BroadcastChoiceActions.close_broadcast })}>
                     <Cancel fontSize='large' />
                 </IconButton>
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Delete Broadcast</DialogTitle>
+                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Set Counter</DialogTitle>
                 <DialogContent sx={{ p: 2 }}>
                     <TextField
                         sx={{ mt: 2 }}
