@@ -6,9 +6,10 @@ import { GetChats } from '../../services/BotServices'
 import { UserContext } from '../../contexts/userContext'
 import ChatsTable from '../../components/tables/ChatTable'
 import { IChat } from '../../types/chat.types'
-import { FormControlLabel, LinearProgress, Stack, Switch, TextField, Typography } from '@mui/material'
+import { FormControlLabel, InputAdornment, LinearProgress, Stack, Switch, TextField, Typography } from '@mui/material'
 import FuzzySearch from "fuzzy-search";
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import { Search } from '@mui/icons-material'
 
 function ChatsPage() {
     const { user } = useContext(UserContext)
@@ -96,6 +97,11 @@ function ChatsPage() {
                         />} label="Reverse" />
                         <TextField
                             size="small"
+                            InputProps={{
+                                startAdornment: <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>,
+                            }}
                             onChange={(e) => setFilter(e.currentTarget.value)}
                             fullWidth
                             placeholder={`${chats?.length} records...`}

@@ -1,21 +1,22 @@
-import {  Button, CircularProgress, Stack, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, Stack, TextField, Typography } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
-import { UpdateTemplate } from '../../../services/TemplateServices';
+import { GetCategories, UpdateTemplate } from '../../../services/TemplateServices';
 import AlertBar from '../../snacks/AlertBar';
-import { IMessageTemplate } from '../../../types/template.types';
+import { IMessageTemplate, ITemplateCategoryField } from '../../../types/template.types';
 import { IUser } from '../../../types/user.types';
 
 
 type TformData = {
     name: string,
     message: string,
+    category: string,
     caption: string,
     media: string | Blob | File
 }
@@ -30,18 +31,23 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                 queryClient.invalidateQueries('templates')
             }
         })
-
+    const { data: catgeories } = useQuery<AxiosResponse<ITemplateCategoryField>, BackendError>("catgeories", GetCategories, {
+        staleTime: 10000
+    })
     const { setChoice } = useContext(ChoiceContext)
 
     const formik = useFormik<TformData>({
         initialValues: {
             name: template.name,
             message: template.message || "",
+            category: template.category || "",
             caption: template.caption || "",
             media: ''
         },
         validationSchema: Yup.object({
             name: Yup.string()
+                .required('Required field'),
+            category: Yup.string()
                 .required('Required field'),
             message: Yup.string(),
             caption: Yup.string(),
@@ -73,6 +79,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
             let Data = {
                 name: values.name,
                 message: values.message,
+                category: values.category,
                 caption: values.caption,
             }
             formdata.append("body", JSON.stringify(Data))
@@ -103,8 +110,6 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                     sx={{ pt: 2 }}
                 >
                     <TextField
-
-
                         fullWidth
                         required
                         error={
@@ -132,6 +137,38 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                         }
                         {...formik.getFieldProps('message')}
                     />
+                    < TextField
+                        size='small'
+                        select
+                        SelectProps={{
+                            native: true,
+                        }}
+                        fullWidth
+                        required
+                        error={
+                            formik.touched.category && formik.errors.category ? true : false
+                        }
+                        focused
+                        id="category"
+                        label="category"
+                        helperText={
+                            formik.touched.category && formik.errors.category ? formik.errors.category : ""
+                        }
+                        {...formik.getFieldProps('category')}
+                    >
+                        {
+                            <option key={"00"} value={template.category}>
+                                {template.category}
+                            </option>
+                        }
+                        {
+                            catgeories && catgeories.data && catgeories.data.categories.map((category, index) => {
+                                return (<option key={index} value={category}>
+                                    {category}
+                                </option>)
+                            })
+                        }
+                    </TextField>
                     <TextField
                         multiline
                         minRows={4}

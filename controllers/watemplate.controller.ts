@@ -4,15 +4,37 @@ import { MessageTemplate } from "../models/watemplates/watemplate.model"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { destroyFile } from "../utils/destroyFile.util"
 import { IMessageTemplateBody } from "../types/template.types"
+import { TemplateCategoryField } from "../models/watemplates/categories.model"
+
+export const GetMessagetemplatesCategories = async (req: Request, res: Response, next: NextFunction) => {
+    let categoryObj = await TemplateCategoryField.findOne()
+    return res.status(200).json(categoryObj)
+}
+
+export const UpdateMessagetemplatesCategories = async (req: Request, res: Response, next: NextFunction) => {
+    const { categories } = req.body as { categories: string[] }
+    console.log(categories)
+    await TemplateCategoryField.findOneAndRemove()
+    let cat = new TemplateCategoryField({ categories: categories })
+    cat.created_at = new Date()
+    cat.updated_at = new Date()
+    if (req.user) {
+        cat.created_by = req.user
+        cat.updated_by = req.user
+    }
+    await cat.save()
+    return res.status(200).json({ message: "updated categories" })
+}
 
 export const GetMessagetemplates = async (req: Request, res: Response, next: NextFunction) => {
-    let templates = await MessageTemplate.find()
+    let limit = Number(req.query.limit) || 10
+    let templates = await MessageTemplate.find().limit(limit)
     return res.status(200).json(templates)
 }
 
 export const CreateMessagetemplate = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { name, message, caption, categories } = body as IMessageTemplateBody
+    let { name, message, caption, category } = body as IMessageTemplateBody
     if (!name) {
         return res.status(400).json({ message: "template name required" })
     }
@@ -46,7 +68,7 @@ export const CreateMessagetemplate = async (req: Request, res: Response, next: N
         template.created_by = req.user
         template.updated_by = req.user
     }
-    template.categories = categories
+    template.category = category
     await template.save()
     return res.status(201).json(template)
 }
@@ -57,7 +79,7 @@ export const UpdateMessagetemplate = async (req: Request, res: Response, next: N
         return res.status(400).json({ message: "please provide correct template id" })
     }
     let body = JSON.parse(req.body.body)
-    let { name, message, categories, caption } = body as IMessageTemplateBody
+    let { name, message, category, caption } = body as IMessageTemplateBody
     if (!name) {
         return res.status(400).json({ message: "template name required" })
     }
@@ -88,9 +110,9 @@ export const UpdateMessagetemplate = async (req: Request, res: Response, next: N
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-    let newcategories = template.categories
-    if (categories)
-        newcategories = categories
+    let newcategory = template.category
+    if (category)
+        newcategory = category
     if (req.user)
         await MessageTemplate.findByIdAndUpdate(template?._id, {
             name: name,
@@ -99,7 +121,7 @@ export const UpdateMessagetemplate = async (req: Request, res: Response, next: N
             media: media,
             updated_at: new Date(),
             updated_by: req.user,
-            categories: newcategories
+            category: newcategory
         })
 
     return res.status(200).json({ message: "template updated" })

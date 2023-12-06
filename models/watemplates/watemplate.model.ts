@@ -20,7 +20,7 @@ const MessageTemplateSchema = new mongoose.Schema<IMessageTemplate, mongoose.Mod
         bucket: { type: String },
         created_at: Date
     },
-    categories: [{ type: String }],
+    category:{ type: String },
     caption: { type: String },
     created_at: {
         type: Date,

@@ -1,20 +1,22 @@
-import {  Button, CircularProgress, Stack, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, Stack, TextField, Typography } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
-import { CreateTemplate } from '../../../services/TemplateServices';
+import { CreateTemplate, GetCategories } from '../../../services/TemplateServices';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
+import { ITemplateCategoryField } from '../../../types/template.types';
 
 
 type TformData = {
     name: string,
     message: string,
+    category: string,
     caption: string,
     media: string | Blob | File
 }
@@ -28,6 +30,9 @@ function NewtemplateForm() {
                 queryClient.invalidateQueries('templates')
             }
         })
+    const { data: catgeories } = useQuery<AxiosResponse<ITemplateCategoryField>, BackendError>("catgeories", GetCategories, {
+        staleTime: 10000
+    })
 
     const { setChoice } = useContext(ChoiceContext)
 
@@ -35,6 +40,7 @@ function NewtemplateForm() {
         initialValues: {
             name: '',
             message: '',
+            category: catgeories?.data.categories[0] || "",
             caption: '',
             media: ''
         },
@@ -42,6 +48,7 @@ function NewtemplateForm() {
             name: Yup.string()
                 .required('Required field'),
             message: Yup.string(),
+            category: Yup.string().required("required"),
             caption: Yup.string(),
             media: Yup.mixed<File>()
                 .test("size", "size is allowed only less than 10mb",
@@ -71,6 +78,7 @@ function NewtemplateForm() {
             let Data = {
                 name: values.name,
                 message: values.message,
+                category: values.category,
                 caption: values.caption,
             }
             formdata.append("body", JSON.stringify(Data))
@@ -101,7 +109,7 @@ function NewtemplateForm() {
                     sx={{ pt: 2 }}
                 >
                     <TextField
-                        
+
                         fullWidth
                         required
                         error={
@@ -114,6 +122,34 @@ function NewtemplateForm() {
                         }
                         {...formik.getFieldProps('name')}
                     />
+                    < TextField
+                        size='small'
+                        select
+                        SelectProps={{
+                            native: true,
+                        }}
+                        focused
+                        fullWidth
+                        required
+                        error={
+                            formik.touched.category && formik.errors.category ? true : false
+                        }
+                        id="category"
+                        label="category"
+                        helperText={
+                            formik.touched.category && formik.errors.category ? formik.errors.category : ""
+                        }
+                        {...formik.getFieldProps('category')}
+                    >
+
+                        {
+                            catgeories && catgeories.data && catgeories.data.categories.map((category, index) => {
+                                return (<option key={index} value={category}>
+                                    {category}
+                                </option>)
+                            })
+                        }
+                    </TextField>
                     <TextField
                         multiline
                         minRows={4}

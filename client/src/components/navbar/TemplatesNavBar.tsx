@@ -50,6 +50,7 @@ export default function TemplatesNavBar() {
                                 >
 
                                     <StyledLink to={paths.templates}>Templates</StyledLink>
+                                    {user.is_admin && <StyledLink to={paths.update_categories}>Catgeories</StyledLink>}
                                     <StyledLink to={paths.templates_help}>Help</StyledLink>
                                 </Stack>
 

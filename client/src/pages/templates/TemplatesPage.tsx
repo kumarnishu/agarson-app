@@ -4,7 +4,6 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
 import { BackendError } from '../..'
 import { GetTemplates } from '../../services/TemplateServices'
@@ -20,10 +19,10 @@ import ViewTemplateDialog from '../../components/dialogs/templates/ViewTemplateD
 import DeleteTemplateDialog from '../../components/dialogs/templates/DeleteTemplateDialog'
 
 
-
-
 export default function TemplatesPage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>("templates", GetTemplates)
+  const [limit, setLimit] = useState(100)
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>(["templates", limit], async () => GetTemplates({ limit: limit }))
+
   const [template, setTemplate] = useState<IMessageTemplate>()
   const [templates, setTemplates] = useState<IMessageTemplate[]>([])
   const MemoData = React.useMemo(() => templates, [templates])
@@ -32,7 +31,6 @@ export default function TemplatesPage() {
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const { user } = useContext(UserContext)
-
   useEffect(() => {
     setTemplate(template)
   }, [template])
@@ -41,14 +39,14 @@ export default function TemplatesPage() {
     if (isSuccess) {
       setTemplates(data.data)
       setPreFilteredData(data.data)
-     
+
     }
   }, [isSuccess, templates, data])
 
   useEffect(() => {
     if (filter) {
       if (templates) {
-        const searcher = new FuzzySearch(templates, ["name", "message", "caption"], {
+        const searcher = new FuzzySearch(templates, ["name", "message", "caption", "category"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);
@@ -59,7 +57,6 @@ export default function TemplatesPage() {
       setTemplates(preFilteredData)
 
   }, [filter, templates])
- 
   return (
     <>
       {
@@ -85,8 +82,29 @@ export default function TemplatesPage() {
           direction="row"
         >
           {/* search bar */}
-          < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
-          }>
+          < Stack direction="row" spacing={2} >
+            <Stack
+              spacing={2} direction={"row"}
+              alignItems={"center"}
+            >
+              <label htmlFor="chats">Show </label>
+              <select id="chats"
+                style={{ width: '55px' }}
+                value={limit}
+                onChange={(e) => {
+                  setLimit(Number(e.target.value))
+                }}
+              >
+                {
+                  [20, 50, 100, 200, 500].map(item => {
+                    return (<option key={item} value={item}>
+                      {item}
+                    </option>)
+                  })
+                }
+              </select>
+
+            </Stack>
             <TextField
               fullWidth
               size="small"
@@ -113,24 +131,24 @@ export default function TemplatesPage() {
             >
               <MenuIcon />
             </IconButton>
-            {user?.templates_access_fields.is_editable&&
+            {user?.templates_access_fields.is_editable &&
 
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)
-              }
-              TransitionComponent={Fade}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-              sx={{ borderRadius: 2 }}>
-              <MenuItem onClick={() => {
-                setChoice({ type: TemplateChoiceActions.create_template })
-                setAnchorEl(null)
-              }}
-              >New Template</MenuItem>
-            </Menu>}
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)
+                }
+                TransitionComponent={Fade}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+                sx={{ borderRadius: 2 }}>
+                <MenuItem onClick={() => {
+                  setChoice({ type: TemplateChoiceActions.create_template })
+                  setAnchorEl(null)
+                }}
+                >New Template</MenuItem>
+              </Menu>}
             <NewTemplateDialog />
           </>
 
@@ -138,16 +156,15 @@ export default function TemplatesPage() {
       </Stack>
       {/*  table */}
       {isLoading && <TableSkeleton />}
-      {!isLoading && 
+      {!isLoading &&
         <Box sx={{ bgcolor: "white", m: 0, pt: 2 }}>
           <Grid container >
             {
-
               templates && templates.map((template, index) => {
                 return (
                   <Grid key={index} item xs={12} md={3} lg={3} sx={{ p: 1 }}>
                     <Stack sx={{ bgcolor: 'white', position: 'relative', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }} gap={1}>
-                      <Typography variant="subtitle1">{template.name}</Typography>
+                      <Typography variant="subtitle1">{template.name}<b>[{template.category}]</b></Typography>
                       {template.media && <img
                         onDoubleClick={() => {
                           if (template.media && template.media?.public_url) {
@@ -155,46 +172,46 @@ export default function TemplatesPage() {
                           }
                         }}
                         src={template.media?.public_url} style={{ borderRadius: '10px', minHeight: '260px' }} />}
-                     
-                        <Stack direction="row" spacing={1} sx={{ position: 'relative', top: 10 }}>
-                          {
 
-                            <>
-                            {user?.templates_access_fields.is_editable &&<Tooltip title="Edit">
-                                <IconButton color="info"
+                      <Stack direction="row" spacing={1} sx={{ position: 'relative', top: 10 }}>
+                        {
+
+                          <>
+                            {user?.templates_access_fields.is_editable && <Tooltip title="Edit">
+                              <IconButton color="info"
+                                onClick={() => {
+                                  setChoice({ type: TemplateChoiceActions.update_template })
+                                  setTemplate(template)
+                                }}
+                              >
+                                <Edit />
+                              </IconButton>
+                            </Tooltip>}
+                            {user?.templates_access_fields.is_deletion_allowed &&
+                              <Tooltip title="Delete">
+                                <IconButton color="error"
                                   onClick={() => {
-                                    setChoice({ type: TemplateChoiceActions.update_template })
+                                    setChoice({ type: TemplateChoiceActions.delete_template })
                                     setTemplate(template)
                                   }}
                                 >
-                                  <Edit />
+                                  <Delete />
                                 </IconButton>
                               </Tooltip>}
-                              {user?.templates_access_fields.is_deletion_allowed &&
-                                <Tooltip title="Delete">
-                                  <IconButton color="error"
-                                    onClick={() => {
-                                      setChoice({ type: TemplateChoiceActions.delete_template })
-                                      setTemplate(template)
-                                    }}
-                                  >
-                                    <Delete />
-                                  </IconButton>
-                                </Tooltip>}
-                              <Tooltip title="View">
-                                <IconButton color="success"
-                                  onClick={() => {
-                                    setChoice({ type: TemplateChoiceActions.view_template })
-                                    setTemplate(template)
-                                  }}
-                                >
-                                  <RemoveRedEye />
-                                </IconButton>
-                              </Tooltip>
-                            </>
+                            <Tooltip title="View">
+                              <IconButton color="success"
+                                onClick={() => {
+                                  setChoice({ type: TemplateChoiceActions.view_template })
+                                  setTemplate(template)
+                                }}
+                              >
+                                <RemoveRedEye />
+                              </IconButton>
+                            </Tooltip>
+                          </>
 
-                          }
-                        </Stack>
+                        }
+                      </Stack>
                     </Stack>
                   </Grid>
                 )
@@ -208,7 +225,8 @@ export default function TemplatesPage() {
               <DeleteTemplateDialog template={template} />
             </>
             : null}
-        </Box >}
+        </Box >
+      }
     </>
 
   )

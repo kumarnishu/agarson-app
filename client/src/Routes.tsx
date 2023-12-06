@@ -55,6 +55,7 @@ import TodoHelpPage from './pages/todo/TodoHelpPage'
 import TodosAdminPage from './pages/todo/TodosAdminPage'
 import TodoNavBar from './components/navbar/TodoNavBar'
 import ChatsPage from './pages/bot/ChatsPage'
+import UpdateTemplateCategoriesPage from './pages/templates/UpdateTemplateCategoriesPage.tsx'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -111,6 +112,7 @@ export enum paths {
   flows = "flows",
   trackers = "trackers",
 
+
   //reports
   reports = "/reports",
   daily_sales = "daily_sales",
@@ -130,6 +132,7 @@ export enum paths {
 
   // templates
   templates = "templates",
+  update_categories = "update_categories",
 
   //users
   users = "users",
@@ -298,6 +301,7 @@ function AppRoutes() {
                 < ChatsPage />
               }
               />
+            
               <Route path={paths.trackers} element={
                 <Suspense fallback={<LinearProgress />}>
                   < TrackersPage />
@@ -323,6 +327,10 @@ function AppRoutes() {
               />
               <Route path={paths.templates} element={
                 < TemplatesPage />
+              }
+              />
+              <Route path={paths.update_categories} element={
+                < UpdateTemplateCategoriesPage />
               }
               />
               <Route
