@@ -21,6 +21,7 @@ function UpdateTemplateCategoriesPage() {
         staleTime: 10000
     })
 
+   
     const [fields, setFields] = useState<string[]>([])
     const [field, setField] = useState<string>()
 

@@ -7,11 +7,11 @@ import * as Yup from "yup"
 import { BackendError } from '../../..';
 import { IBroadcast, IBroadcastReport } from '../../../types/broadcast.types';
 import { queryClient } from '../../../main';
-import { GetTemplates } from '../../../services/TemplateServices';
+import { GetCategories, GetTemplates } from '../../../services/TemplateServices';
 import { GetBroadcastReports, UpdateBroadCast } from '../../../services/BroadCastServices';
 import AlertBar from '../../snacks/AlertBar';
 import { BroadcastChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { IMessageTemplate } from '../../../types/template.types';
+import { IMessageTemplate, ITemplateCategoryField } from '../../../types/template.types';
 import { IUser } from '../../../types/user.types';
 
 
@@ -23,9 +23,15 @@ type TformData = {
 
 function EditBroadcastForm({ broadcast }: { broadcast: IBroadcast }) {
     const { data: reports, isLoading: isReportsLoading, refetch } = useQuery<AxiosResponse<IBroadcastReport[]>, BackendError>(["broadcasts_reports", broadcast._id], async () => GetBroadcastReports(broadcast._id), { refetchOnMount: true, enabled: false })
+    const [category, setCategory] = useState<string>()
     const [showLeads, setShowLeads] = useState(Boolean(broadcast.leads_selected))
     const [mobiles, setMobiles] = useState<string | undefined>()
-    const { data, isLoading: isLoadingtemplates } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>("templates", GetTemplates)
+    const { data, isLoading: isLoadingtemplates } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>(["templates", category], async () => GetTemplates({ category: category }))
+
+    const { data: categoryData } = useQuery<AxiosResponse<ITemplateCategoryField>, BackendError>("catgeories", GetCategories, {
+        staleTime: 10000
+    })
+
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IUser>, BackendError, { id: string, body: FormData }>
         (UpdateBroadCast, {
@@ -97,7 +103,7 @@ function EditBroadcastForm({ broadcast }: { broadcast: IBroadcast }) {
         if (broadcast && !broadcast.leads_selected)
             refetch()
     }, [broadcast])
-    
+
     useEffect(() => {
         if (isSuccess) {
             setTimeout(() => {
@@ -129,6 +135,27 @@ function EditBroadcastForm({ broadcast }: { broadcast: IBroadcast }) {
                         }
                         {...formik.getFieldProps('name')}
                     />
+                    < TextField
+                        size='small'
+                        select
+                        SelectProps={{
+                            native: true,
+                        }}
+                        fullWidth
+                        focused
+                        id="category"
+                        label="category"
+                        onChange={(e) => setCategory(e.currentTarget.value)}
+                    >
+                      
+                        {
+                            categoryData && categoryData.data && categoryData.data.categories.map((category, index) => {
+                                return (<option key={index} value={category}>
+                                    {category}
+                                </option>)
+                            })
+                        }
+                    </TextField>
                     < TextField
                         select
                         SelectProps={{

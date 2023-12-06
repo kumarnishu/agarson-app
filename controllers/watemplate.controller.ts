@@ -3,7 +3,7 @@ import isMongoId from "validator/lib/isMongoId"
 import { MessageTemplate } from "../models/watemplates/watemplate.model"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { destroyFile } from "../utils/destroyFile.util"
-import { IMessageTemplateBody } from "../types/template.types"
+import { IMessageTemplate, IMessageTemplateBody } from "../types/template.types"
 import { TemplateCategoryField } from "../models/watemplates/categories.model"
 
 export const GetMessagetemplatesCategories = async (req: Request, res: Response, next: NextFunction) => {
@@ -28,7 +28,13 @@ export const UpdateMessagetemplatesCategories = async (req: Request, res: Respon
 
 export const GetMessagetemplates = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit) || 10
-    let templates = await MessageTemplate.find().limit(limit)
+    let category = req.query.category
+    let templates: IMessageTemplate[] = []
+    if (category) {
+        templates = await MessageTemplate.find({ category: category }).limit(limit)
+    }
+    else
+        templates = await MessageTemplate.find().limit(limit)
     return res.status(200).json(templates)
 }
 

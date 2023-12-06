@@ -7,14 +7,14 @@ import * as Yup from "yup"
 import { ChoiceContext, ReminderChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
-import { GetTemplates } from '../../../services/TemplateServices';
+import { GetCategories, GetTemplates } from '../../../services/TemplateServices';
 import AlertBar from '../../snacks/AlertBar';
 import { UpdateReminder } from '../../../services/ReminderServices';
 import { GetContacts } from '../../../services/ContactServices';
 import FuzzySearch from "fuzzy-search";
 import SelectContactPage from '../../../pages/reminders/SelectContactPage';
 import { IReminder } from '../../../types/reminder.types';
-import { IMessageTemplate } from '../../../types/template.types';
+import { IMessageTemplate, ITemplateCategoryField } from '../../../types/template.types';
 import { IUser } from '../../../types/user.types';
 import { IContact } from '../../../types/contact.types';
 
@@ -26,7 +26,8 @@ type TformData = {
 }
 
 function EditReminderForm({ reminder }: { reminder: IReminder }) {
-    const { data, isLoading: isLoadingtemplates } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>("templates", GetTemplates)
+    const [category, setCategory] = useState<string>()
+    const { data, isLoading: isLoadingtemplates } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>(["templates", category], async () => GetTemplates({ category: category }))
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IUser>, BackendError, { id: string, body: FormData }>
         (UpdateReminder, {
@@ -43,7 +44,9 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
     const [preFilteredData, setPreFilteredData] = useState<IContact[]>([])
     const [selectedContacts, setSelectedContacts] = useState<IContact[]>([])
     const [filter, setFilter] = useState<string | undefined>()
-
+    const { data: categoryData } = useQuery<AxiosResponse<ITemplateCategoryField>, BackendError>("catgeories", GetCategories, {
+        staleTime: 10000
+    })
     const [extemplates, setExtemplates] = useState<IMessageTemplate[]>()
     const { setChoice } = useContext(ChoiceContext)
 
@@ -154,6 +157,28 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
                         }
                         {...formik.getFieldProps('name')}
                     />
+                    < TextField
+                        size='small'
+                        select
+                        SelectProps={{
+                            native: true,
+                        }}
+                        fullWidth
+                        onChange={(e) => setCategory(e.currentTarget.value)}
+                        focused
+                        id="category"
+                        label="category"
+
+                    >
+
+                        {
+                            categoryData && categoryData.data && categoryData.data.categories.map((category, index) => {
+                                return (<option key={index} value={category}>
+                                    {category}
+                                </option>)
+                            })
+                        }
+                    </TextField>
                     < TextField
                         select
                         SelectProps={{

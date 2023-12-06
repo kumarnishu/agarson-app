@@ -7,13 +7,13 @@ import * as Yup from "yup"
 import { ChoiceContext, ReminderChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
-import { GetTemplates } from '../../../services/TemplateServices';
+import { GetCategories, GetTemplates } from '../../../services/TemplateServices';
 import AlertBar from '../../snacks/AlertBar';
 import { CreateReminder } from '../../../services/ReminderServices';
 import { GetContacts } from '../../../services/ContactServices';
 import FuzzySearch from "fuzzy-search";
 import SelectContactPage from '../../../pages/reminders/SelectContactPage';
-import { IMessageTemplate } from '../../../types/template.types';
+import { IMessageTemplate, ITemplateCategoryField } from '../../../types/template.types';
 import { IContact } from '../../../types/contact.types';
 import { IUser } from '../../../types/user.types';
 
@@ -25,7 +25,8 @@ type TformData = {
 }
 
 function NewReminderForm() {
-    const { data, isLoading: isLoadingtemplates } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>("templates", GetTemplates)
+    const [category, setCategory] = useState<string>()
+    const { data, isLoading: isLoadingtemplates } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>(["templates", category], async () => GetTemplates({ category: category }))
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IUser>, BackendError, FormData>
         (CreateReminder, {
@@ -34,7 +35,9 @@ function NewReminderForm() {
             }
         })
     const { data: contactsData, isLoading: isLoadingContacts } = useQuery<AxiosResponse<IContact[]>, BackendError>("contacts", GetContacts)
-
+    const { data: categoryData } = useQuery<AxiosResponse<ITemplateCategoryField>, BackendError>("catgeories", GetCategories, {
+        staleTime: 10000
+    })
     const [contact, setContact] = useState<IContact>()
     const [contacts, setContacts] = useState<IContact[]>([])
     const [selectAll, setSelectAll] = useState(false)
@@ -153,6 +156,28 @@ function NewReminderForm() {
                         }
                         {...formik.getFieldProps('name')}
                     />
+                    < TextField
+                        size='small'
+                        select
+                        SelectProps={{
+                            native: true,
+                        }}
+                        fullWidth
+                        onChange={(e) => setCategory(e.currentTarget.value)}
+                        focused
+                        id="category"
+                        label="category"
+
+                    >
+
+                        {
+                            categoryData && categoryData.data && categoryData.data.categories.map((category, index) => {
+                                return (<option key={index} value={category}>
+                                    {category}
+                                </option>)
+                            })
+                        }
+                    </TextField>
                     < TextField
                         select
                         SelectProps={{

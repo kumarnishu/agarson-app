@@ -6,11 +6,11 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import FuzzySearch from "fuzzy-search";
 import { BackendError } from '../..'
-import { GetTemplates } from '../../services/TemplateServices'
+import { GetCategories, GetTemplates } from '../../services/TemplateServices'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, TemplateChoiceActions } from '../../contexts/dialogContext'
 import NewTemplateDialog from '../../components/dialogs/templates/NewTemplateDialog'
-import { IMessageTemplate } from '../../types/template.types'
+import { IMessageTemplate, ITemplateCategoryField } from '../../types/template.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { DownloadFile } from '../../utils/DownloadFile'
 import { UserContext } from '../../contexts/userContext'
@@ -21,8 +21,8 @@ import DeleteTemplateDialog from '../../components/dialogs/templates/DeleteTempl
 
 export default function TemplatesPage() {
   const [limit, setLimit] = useState(100)
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>(["templates", limit], async () => GetTemplates({ limit: limit }))
-
+  const [category, setCategory] = useState<string>()
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IMessageTemplate[]>, BackendError>(["templates", limit, category], async () => GetTemplates({ limit: limit, category: category }))
   const [template, setTemplate] = useState<IMessageTemplate>()
   const [templates, setTemplates] = useState<IMessageTemplate[]>([])
   const MemoData = React.useMemo(() => templates, [templates])
@@ -31,6 +31,11 @@ export default function TemplatesPage() {
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const { user } = useContext(UserContext)
+
+  const { data: categoryData } = useQuery<AxiosResponse<ITemplateCategoryField>, BackendError>("catgeories", GetCategories, {
+    staleTime: 10000
+  })
+
   useEffect(() => {
     setTemplate(template)
   }, [template])
@@ -82,6 +87,30 @@ export default function TemplatesPage() {
           direction="row"
         >
           {/* search bar */}
+          < TextField
+            size='small'
+            select
+            SelectProps={{
+              native: true,
+            }}
+            fullWidth
+            onChange={(e) => setCategory(e.currentTarget.value)}
+            focused
+            id="category"
+            label="category"
+
+          >
+            <option key={'00'} value={undefined}>
+              
+            </option>
+            {
+              categoryData && categoryData.data && categoryData.data.categories.map((category, index) => {
+                return (<option key={index} value={category}>
+                  {category}
+                </option>)
+              })
+            }
+          </TextField>
           < Stack direction="row" spacing={2} >
             <Stack
               spacing={2} direction={"row"}
