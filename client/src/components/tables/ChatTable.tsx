@@ -55,12 +55,7 @@ function ChatsTable({ chats }: Props) {
                                 Author Name
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Timestamp
-
-                            </STableHeadCell>
+                           
                             <STableHeadCell
                             >
 
@@ -76,7 +71,7 @@ function ChatsTable({ chats }: Props) {
                             <STableHeadCell
                             >
 
-                                Created At
+                                Timestamp
 
                             </STableHeadCell>
                             {/* visitin card */}
@@ -109,20 +104,20 @@ function ChatsTable({ chats }: Props) {
                                                     {chat && chat.authorName && chat.authorName.slice(0, 30)}
                                                 </Typography>
                                             </STableCell>
-                                            <STableCell>
-                                                {chat && chat.timestamp && new Date(chat.timestamp).toLocaleString()}
-                                            </STableCell>
+                                           
                                             <STableCell>
                                                 <Typography style={{ whiteSpace: 'pre-wrap' }} title={chat && chat.body}>
                                                     {chat && chat.body && chat.body.slice(0, 50)}
                                                 </Typography>
                                             </STableCell>
+                                         
                                             <STableCell>
                                                 {chat && chat.hasMedia ? "Yes" : ""}
                                             </STableCell>
                                             <STableCell>
-                                                {new Date(chat.created_at).toLocaleString()}
+                                                {chat && chat.timestamp && new Date(chat.timestamp).toLocaleString()}
                                             </STableCell>
+                                         
                                         </STableRow>
 
                                     </React.Fragment>
