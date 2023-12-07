@@ -23,7 +23,7 @@ type TformData = {
 }
 
 function EditGreetingForm({ greeting }: { greeting: IGreeting }) {
-    const {  setChoice } = useContext(ChoiceContext)
+    const { setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IUser>, BackendError, { id: string, body: TformData }>
         (UpdateGreeting, {
@@ -81,7 +81,7 @@ function EditGreetingForm({ greeting }: { greeting: IGreeting }) {
                             formik.touched.name && formik.errors.name ? true : false
                         }
                         id="name"
-                        label="Reminder Name"
+                        label="Name"
                         helperText={
                             formik.touched.name && formik.errors.name ? formik.errors.name : ""
                         }
@@ -116,6 +116,11 @@ function EditGreetingForm({ greeting }: { greeting: IGreeting }) {
                     <TextField
                         fullWidth
                         required
+                        select
+                        SelectProps={{
+                            native: true
+                        }}
+                        focused
                         error={
                             formik.touched.category && formik.errors.category ? true : false
                         }
@@ -125,7 +130,11 @@ function EditGreetingForm({ greeting }: { greeting: IGreeting }) {
                             formik.touched.category && formik.errors.category ? formik.errors.category : ""
                         }
                         {...formik.getFieldProps('category')}
-                    />
+                    >
+                        <option value="party">party</option>
+                        <option value="staff">staff</option>
+                        <option value="others">others</option>
+                    </TextField>
                     <TextField
                         fullWidth
                         type="date"
@@ -170,7 +179,7 @@ function EditGreetingForm({ greeting }: { greeting: IGreeting }) {
                     </Button>
                 </Stack>
             </Stack>
-        </form>
+        </form >
     )
 }
 

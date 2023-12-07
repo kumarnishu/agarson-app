@@ -33,6 +33,7 @@ const GreetingSchema = new mongoose.Schema<IGreeting, mongoose.Model<IGreeting, 
     },
     dob_key: { type: String },
     anniversary_key: { type: String },
+    connected_number: String,
     dob_cronstring: { type: String },
     anniversary_cronstring: { type: String },
     dob_time: Date,
@@ -46,6 +47,9 @@ const GreetingSchema = new mongoose.Schema<IGreeting, mongoose.Model<IGreeting, 
         default: new Date(),
         required: true,
 
+    },
+    start_date: {
+        type: Date
     },
     created_by: {
         type: mongoose.Schema.Types.ObjectId,

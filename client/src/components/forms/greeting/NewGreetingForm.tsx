@@ -36,7 +36,7 @@ function NewGreetingForm() {
         initialValues: {
             name: "",
             party: "",
-            category: "",
+            category: "party",
             mobile: "",
             dob_time: moment(new Date()).format("YYYY-MM-DD"),
             anniversary_time: moment(new Date()).format("YYYY-MM-DD")
@@ -80,7 +80,7 @@ function NewGreetingForm() {
                             formik.touched.name && formik.errors.name ? true : false
                         }
                         id="name"
-                        label="Reminder Name"
+                        label="Name"
                         helperText={
                             formik.touched.name && formik.errors.name ? formik.errors.name : ""
                         }
@@ -114,6 +114,11 @@ function NewGreetingForm() {
                     />
                     <TextField
                         fullWidth
+                        focused
+                        select
+                        SelectProps={{
+                            native: true
+                        }}
                         required
                         error={
                             formik.touched.category && formik.errors.category ? true : false
@@ -124,7 +129,11 @@ function NewGreetingForm() {
                             formik.touched.category && formik.errors.category ? formik.errors.category : ""
                         }
                         {...formik.getFieldProps('category')}
-                    />
+                    >
+                        <option value="party">party</option>
+                        <option value="staff">staff</option>
+                        <option value="others">others</option>
+                    </TextField>
                     <TextField
                         fullWidth
                         type="date"
@@ -169,7 +178,7 @@ function NewGreetingForm() {
                     </Button>
                 </Stack>
             </Stack>
-        </form>
+        </form >
     )
 }
 

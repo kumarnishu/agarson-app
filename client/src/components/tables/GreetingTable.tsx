@@ -1,4 +1,4 @@
-import {  Delete, Edit, Pause, RestartAlt, Stop } from '@mui/icons-material'
+import { Delete, Edit, Pause, RestartAlt, Stop } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -69,71 +69,78 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                             <STableHeadCell
                             >
 
-                                Greeting Name
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
                                 Status
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Time Gap
+                                Name
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Start Time
+                                Party
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Next Run Date
+                                Mobile
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Using Leads
+                                Catgeory
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Type
-
-                            </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-
-                                Daily Limit
+                                D.O.B
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Daily Count
+                                Anniversery
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Auto Refresh
+                                Start Date
 
                             </STableHeadCell>
-
                             <STableHeadCell
                             >
 
-                                Random Templates
+                                Next DOB run date
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Next Anniversery run date
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Anniversery Whatsapp Status
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                DOB Whatsapp Status
+
+                            </STableHeadCell>
+
+                          
+
                             <STableHeadCell
                             >
 
@@ -141,10 +148,17 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
 
                             </STableHeadCell>
 
+                           
                             <STableHeadCell
                             >
 
-                                Status Updated
+                                Updated At
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Created At
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -265,9 +279,7 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
 
                                                 </Stack>} />
                                             </STableCell>}
-                                        <STableCell>
-                                            {greeting.name}
-                                        </STableCell>
+                                       
                                         <STableCell>
                                             {greeting.is_active ?
                                                 <>
@@ -276,15 +288,53 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                                 "stopped"
                                             }
                                         </STableCell>
-
-
-
+                                        <STableCell>
+                                            {greeting.name}
+                                        </STableCell>
+                                        <STableCell>
+                                            {greeting.party}
+                                        </STableCell>
                                         <STableCell>
                                             {greeting.mobile && greeting.mobile.toString().replace("91", "").replace("@c.us", "")}
+                                        </STableCell>
+                                        <STableCell>
+                                            {greeting.category}
+                                        </STableCell>
+                                        
+                                        <STableCell>
+                                            {greeting.dob_time && new Date(greeting.dob_time).toLocaleString()}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {greeting.anniversary_time && new Date(greeting.anniversary_time).toLocaleString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {greeting.start_date && new Date(greeting.start_date).toLocaleString()}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {greeting.next_run_dob_time && new Date(greeting.next_run_dob_time).toLocaleString()}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {greeting.next_run_anniversary_time && new Date(greeting.next_run_anniversary_time).toLocaleString()}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {greeting.anniversary_whatsapp_status}
+                                        </STableCell>
+                                        <STableCell>
+                                            {greeting.dob_whatsapp_status}
+                                        </STableCell>
+                                        <STableCell>
+                                            {greeting.connected_number}
                                         </STableCell>
 
                                         <STableCell>
                                             {greeting.updated_at && new Date(greeting.updated_at).toLocaleString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {greeting.created_at && new Date(greeting.created_at).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
                                             {greeting.created_by.username}

@@ -170,7 +170,7 @@ export default function GreetingPage() {
                 setChoice({ type: GreetingChoiceActions.create_greeting })
                 setAnchorEl(null)
               }}
-              >New Template Greeting</MenuItem>
+              >New Greeting</MenuItem>
 
               <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
