@@ -79,7 +79,7 @@ export const DeleteGreeting = async (req: Request, res: Response, next: NextFunc
 
 export const StartGreeting = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
-    const client_id = req.query.client_id
+    const { client_id } = req.body as { client_id: string }
     let greeting = await Greeting.findById(id)
     if (!client_id) {
         return res.status(400).json({ message: `select whatsapp number` });

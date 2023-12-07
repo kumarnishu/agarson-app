@@ -112,7 +112,7 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                                         </STableCell>
 
                                         <STableCell>
-                                            <a href={checklist.sheet_url}>{checklist.title}</a>
+                                            <a href={checklist.sheet_url} target='blank'>{checklist.title}</a>
                                         </STableCell>
                                         <STableCell>
                                             {checklist.boxes.filter((box) => {
