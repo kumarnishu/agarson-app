@@ -14,7 +14,7 @@ import { Search } from '@mui/icons-material'
 function ChatsPage() {
     const { user } = useContext(UserContext)
     const [limit, setLimit] = useState<number>(100)
-    const [reverse, setReverse] = useState(true)
+    const [reverse, setReverse] = useState(false)
     const [filter, setFilter] = useState<string | undefined>()
     const [chats, setChats] = useState<IChat[]>([])
     const [prefilterChats, setPreFilteredChats] = useState<IChat[]>([])
@@ -81,7 +81,7 @@ function ChatsPage() {
                                 }}
                             >
                                 {
-                                    [100, 500, 1000, 2000, 5000].map(item => {
+                                    [100, 500, 1000, 2000, 5000,10000].map(item => {
                                         return (<option key={item} value={item}>
                                             {item}
                                         </option>)

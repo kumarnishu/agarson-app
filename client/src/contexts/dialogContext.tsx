@@ -5,6 +5,8 @@ type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" 
 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
+type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting" | "bulk_start_greeting" | "close_greeting" | "bulk_stop_greeting" | "stop_greeting" | "start_greeting"
+
 type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments"
 
 type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" | "edit_task"
@@ -19,12 +21,12 @@ type TemplateChoices = "create_template" | "update_template" | "delete_template"
 type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadcast" | "close_broadcast" | "view_broadcast" | 'start_broadcast' | "reset_broadcast" | "stop_broadcast" | "create_message_broadcast" | "update_message_broadcast"
   | "start_message_broadcast" | "set_daily_count"
 
-type TodoChoices = "create_todo" | "update_todo" |"view_replies" | "delete_todo" | "close_todo" | "update_todo_status" | 'bulk_hide_todo' | "hide_todo"
+type TodoChoices = "create_todo" | "update_todo" | "view_replies" | "delete_todo" | "close_todo" | "update_todo_status" | 'bulk_hide_todo' | "hide_todo"
 
 type ReminderChoices = "create_reminder" | "update_reminder" | "delete_reminder" | "close_reminder" | "view_reminder" | 'start_reminder' | "reset_reminder" | "stop_reminder" | "create_message_reminder" | "update_message_reminder"
   | "start_message_reminder"
 
-type TaskSchedulerChoices = "create_task_scheduler" | "update_task_scheduler" | "delete_task_scheduler" | "close_task_scheduler" | "view_task_scheduler" | 'start_task_scheduler' | "stop_task_scheduler" |"check_task"
+type TaskSchedulerChoices = "create_task_scheduler" | "update_task_scheduler" | "delete_task_scheduler" | "close_task_scheduler" | "view_task_scheduler" | 'start_task_scheduler' | "stop_task_scheduler" | "check_task"
 
 
 
@@ -42,7 +44,7 @@ type BotChoices = "create_flow"
 
 
 type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | TaskChoices | VisitChoices
-  | BroadcastChoices | TaskSchedulerChoices | TodoChoices | ReminderChoices | ContactChoices | CheckListChoices
+  | BroadcastChoices | TaskSchedulerChoices | TodoChoices | ReminderChoices | ContactChoices | CheckListChoices | GreetingChoices
 
 const initialState: ChoiceState | null = null
 
@@ -54,6 +56,17 @@ export enum ContactChoiceActions {
   delete_contact = "delete_contact",
   bulk_contact = "bulk_contact",
   close_contact = "close_contact"
+}
+
+export enum GreetingChoiceActions {
+  create_greeting = "create_greeting",
+  update_greeting = "update_greeting",
+  delete_greeting = "delete_greeting",
+  start_greeting = "start_greeting",
+  bulk_start_greeting = "bulk_start_greeting",
+  close_greeting = "close_greeting",
+  bulk_stop_greeting = "bulk_stop_greeting",
+  stop_greeting = "stop_greeting"
 }
 export enum VisitChoiceActions {
   start_day = "start_day",
@@ -77,7 +90,7 @@ export enum TaskChoiceActions {
   close_task = "close_task",
   view_boxes = "view_boxes",
   edit_task = "edit_task",
-  check_task ="check_task"
+  check_task = "check_task"
 }
 export enum CheckListChoiceActions {
   create_checklist = "create_checklist",
@@ -133,7 +146,7 @@ export enum TodoChoiceActions {
   update_todo_status = "update_todo_status",
   bulk_hide_todo = "bulk_hide_todo",
   hide_todo = "hide_todo",
-  view_replies ="view_replies"
+  view_replies = "view_replies"
 }
 export enum TaskSchedulerChoiceActions {
   create_task_scheduler = "create_task_scheduler",
@@ -208,7 +221,7 @@ export enum UserChoiceActions {
 
 type Action = {
   type: UserChoiceActions |
-  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TodoChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions
+  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TodoChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions
 }
 
 // reducer
@@ -283,6 +296,17 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TemplateChoiceActions.close_template: return type
     case TemplateChoiceActions.view_template: return type
 
+    //greeeting
+    case GreetingChoiceActions.create_greeting: return type
+    case GreetingChoiceActions.update_greeting: return type
+    case GreetingChoiceActions.delete_greeting: return type
+    case GreetingChoiceActions.close_greeting: return type
+    case GreetingChoiceActions.bulk_start_greeting: return type
+    case GreetingChoiceActions.bulk_stop_greeting: return type
+    case GreetingChoiceActions.start_greeting: return type
+    case GreetingChoiceActions.stop_greeting: return type
+
+
     // visit
     case VisitChoiceActions.visit_in: return type
     case VisitChoiceActions.visit_out: return type
@@ -346,7 +370,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TodoChoiceActions.bulk_hide_todo: return type
     case TodoChoiceActions.hide_todo: return type
     case TodoChoiceActions.view_replies: return type
-  
+
 
     // broadcast choice action
     case ReminderChoiceActions.create_reminder: return type

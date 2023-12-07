@@ -18,7 +18,9 @@ export const StartGreeting = async ({ id, body }: { id: string, body: { client_i
 export const DeleteGreeting = async (id: string) => {
     return await apiClient.delete(`greetings/${id}`);
 };
-
+export const StopGreeting = async (id: string) => {
+    return await apiClient.patch(`greetings/stop/${id}`);
+};
 
 export const GetGreetings = async () => {
     return await apiClient.get(`greetings`)

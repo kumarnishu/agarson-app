@@ -6,6 +6,7 @@ import { GetYearlyCronSTring } from "../utils/GetYearlyCronString"
 import { StartGreetingWithTemplates } from "../utils/StartGreeting"
 import { clients } from "../utils/CreateWhatsappClient"
 import cron from "cron"
+import { GreetingManager } from "../app"
 
 
 export const FetchGreetings = async (req: Request, res: Response, next: NextFunction) => {
@@ -74,6 +75,20 @@ export const DeleteGreeting = async (req: Request, res: Response, next: NextFunc
         return res.status(400).json({ message: `greeting not found` });
     else
         await greeting.remove()
+    return res.status(200).json({ "message": "greeting removed" })
+}
+export const StopGreeting = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let greeting = await Greeting.findById(id)
+    if (!greeting)
+        return res.status(400).json({ message: `greeting not found` });
+    else {
+        greeting.is_active = false
+        greeting.is_paused = false
+        await greeting.save()
+        GreetingManager.deleteJob(greeting.dob_key)
+        GreetingManager.deleteJob(greeting.anniversary_key)
+    }
     return res.status(200).json({ "message": "greeting removed" })
 }
 
