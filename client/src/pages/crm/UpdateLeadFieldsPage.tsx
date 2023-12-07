@@ -55,7 +55,7 @@ function UpdateLeadFieldsPage() {
                         mutate(fields)
                     }
                 }}
-                    disabled={isLoading}
+                    disabled={isLoading && !user?.crm_access_fields.is_deletion_allowed}
                 >
                     Save
                 </Button>}
@@ -77,19 +77,21 @@ function UpdateLeadFieldsPage() {
                                         })
                             }}>+</Button>
                         </Stack>
-                        {user?.crm_access_fields.is_deletion_allowed && fields && fields.stages && fields.stages?.map((item) => {
+                        {fields && fields.stages && fields.stages?.map((item) => {
                             return (
                                 <Stack key={item} spacing={2} direction="row" alignItems="center">
                                     <TextField disabled defaultValue={item}>
                                     </TextField>
-                                    <Button color="error" sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
-                                        if (fields?.stages) {
-                                            setFields({
-                                                ...fields,
-                                                stages: fields.stages.filter((value) => { return value !== item })
-                                            })
-                                        }
-                                    }}>
+                                    <Button color="error"
+                                        disabled={isLoading && !user?.crm_access_fields.is_deletion_allowed}
+                                        sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
+                                            if (fields?.stages) {
+                                                setFields({
+                                                    ...fields,
+                                                    stages: fields.stages.filter((value) => { return value !== item })
+                                                })
+                                            }
+                                        }}>
                                         <Delete />
                                     </Button>
                                 </Stack>
@@ -116,20 +118,22 @@ function UpdateLeadFieldsPage() {
                                 +
                             </Button>
                         </Stack>
-                        {user?.crm_access_fields.is_deletion_allowed && fields && fields?.lead_types && fields.lead_types.map((item) => {
+                        {fields && fields?.lead_types && fields.lead_types.map((item) => {
                             return (
                                 <Stack key={item} spacing={2} direction="row" alignItems="center">
                                     <TextField disabled defaultValue={item}>
                                     </TextField>
-                                    <Button color="error" sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
-                                        if (fields?.lead_types)
-                                            setFields({
-                                                ...fields,
-                                                lead_types: fields.lead_types.filter((value) => { return value !== item })
-                                            })
+                                    <Button color="error"
+                                        disabled={isLoading && !user?.crm_access_fields.is_deletion_allowed}
+                                        sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
+                                            if (fields?.lead_types)
+                                                setFields({
+                                                    ...fields,
+                                                    lead_types: fields.lead_types.filter((value) => { return value !== item })
+                                                })
 
 
-                                    }}>
+                                        }}>
                                         <Delete />
                                     </Button>
                                 </Stack>
@@ -154,18 +158,20 @@ function UpdateLeadFieldsPage() {
                                         })
                             }}>+</Button>
                         </Stack>
-                        {user?.crm_access_fields.is_deletion_allowed && fields && fields?.lead_sources && fields.lead_sources.map((item) => {
+                        {fields && fields?.lead_sources && fields.lead_sources.map((item) => {
                             return (
                                 <Stack key={item} spacing={2} direction="row" alignItems="center">
                                     <TextField disabled defaultValue={item}>
                                     </TextField>
-                                    <Button color="error" sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
-                                        if (fields?.lead_sources)
-                                            setFields({
-                                                ...fields,
-                                                lead_sources: fields.lead_sources.filter((value) => { return value !== item })
-                                            })
-                                    }}>
+                                    <Button color="error"
+                                        disabled={isLoading && !user?.crm_access_fields.is_deletion_allowed}
+                                        sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
+                                            if (fields?.lead_sources)
+                                                setFields({
+                                                    ...fields,
+                                                    lead_sources: fields.lead_sources.filter((value) => { return value !== item })
+                                                })
+                                        }}>
                                         <Delete />
                                     </Button>
                                 </Stack>

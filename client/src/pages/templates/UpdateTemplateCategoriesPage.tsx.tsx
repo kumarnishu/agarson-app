@@ -59,7 +59,7 @@ function UpdateTemplateCategoriesPage() {
                     mutate({ body: { categories: fields } })
                 }
             }}
-                disabled={isLoading}
+                disabled={isLoading && !user?.templates_access_fields.is_deletion_allowed}
             >
                 Save
             </Button>}
@@ -77,16 +77,18 @@ function UpdateTemplateCategoriesPage() {
                         +
                     </Button>
                 </Stack>
-                {user?.templates_access_fields.is_deletion_allowed && fields && fields.map((item) => {
+                {fields && fields.map((item) => {
                     return (
                         <Stack key={item} spacing={2} direction="row" alignItems="center">
                             <TextField disabled defaultValue={item}>
                             </TextField>
-                            <Button color="error" sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
-                                let tmps = fields.filter((field) => { return field !== item })
-                                setFields(tmps)
+                            <Button color="error"
+                                disabled={isLoading && !user?.templates_access_fields.is_deletion_allowed}
+                                sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
+                                    let tmps = fields.filter((field) => { return field !== item })
+                                    setFields(tmps)
 
-                            }}>
+                                }}>
                                 <Delete />
                             </Button>
                         </Stack>
