@@ -14,6 +14,8 @@ import { ExportLeadMobiles, ExportLeads } from "../utils/CrmUtils.js"
 import { ILead, ILeadTemplate, IReferredParty, IRemark, TLeadBody, TLeadUpdatableFieldBody, TReferredPartyBody } from "../types/crm.types.js"
 import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
+import { Broadcast } from "../models/broadcast/broadcast.model.js"
+import { BroadcastReport } from "../models/broadcast/broadcast.report.model.js"
 
 
 
@@ -1791,6 +1793,46 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
         lead.remarks = [new_remark]
     }
     await lead.save()
+    let broadcasts = await Broadcast.find({ leads_selected: true })
+    broadcasts.forEach(async (b) => {
+        if (uniqueNumbers[0])
+            await new BroadcastReport({
+                mobile: uniqueNumbers[0],
+                customer_name: "",
+                is_buisness: false,
+                status: "pending",
+                created_at: new Date(),
+                updated_at: new Date(),
+                created_by: req.user,
+                updated_by: req.user,
+                broadcast: b
+            }).save()
+
+        if (uniqueNumbers[1])
+            await new BroadcastReport({
+                mobile: uniqueNumbers[1],
+                customer_name: "",
+                is_buisness: false,
+                status: "pending",
+                created_at: new Date(),
+                updated_at: new Date(),
+                created_by: req.user,
+                updated_by: req.user,
+                broadcast: b
+            }).save()
+        if (uniqueNumbers[2])
+            await new BroadcastReport({
+                mobile: uniqueNumbers[2],
+                customer_name: "",
+                is_buisness: false,
+                status: "pending",
+                created_at: new Date(),
+                updated_at: new Date(),
+                created_by: req.user,
+                updated_by: req.user,
+                broadcast: b
+            }).save()
+    })
     return res.status(200).json("lead created")
 }
 
@@ -2155,6 +2197,46 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                         newlead.remarks = [new_remark]
                     }
                     await newlead.save()
+                    let broadcasts = await Broadcast.find({ leads_selected: true })
+                    broadcasts.forEach(async (b) => {
+                        if (uniqueNumbers[0])
+                            await new BroadcastReport({
+                                mobile: uniqueNumbers[0],
+                                customer_name: "",
+                                is_buisness: false,
+                                status: "pending",
+                                created_at: new Date(),
+                                updated_at: new Date(),
+                                created_by: req.user,
+                                updated_by: req.user,
+                                broadcast: b
+                            }).save()
+
+                        if (uniqueNumbers[1])
+                            await new BroadcastReport({
+                                mobile: uniqueNumbers[1],
+                                customer_name: "",
+                                is_buisness: false,
+                                status: "pending",
+                                created_at: new Date(),
+                                updated_at: new Date(),
+                                created_by: req.user,
+                                updated_by: req.user,
+                                broadcast: b
+                            }).save()
+                        if (uniqueNumbers[2])
+                            await new BroadcastReport({
+                                mobile: uniqueNumbers[2],
+                                customer_name: "",
+                                is_buisness: false,
+                                status: "pending",
+                                created_at: new Date(),
+                                updated_at: new Date(),
+                                created_by: req.user,
+                                updated_by: req.user,
+                                broadcast: b
+                            }).save()
+                    })
                 }
             }
         })
