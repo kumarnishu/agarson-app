@@ -46,7 +46,7 @@ function UpdateLeadFieldsPage() {
 
     return (
         <>
-            {isLoading && <LinearProgress />}
+            {isLoading || <LinearProgress />}
             {isSuccess && <AlertBar message='Fields Saved Successfuly' color="success" />}
 
             {user?.crm_access_fields.is_editable &&
@@ -55,7 +55,7 @@ function UpdateLeadFieldsPage() {
                         mutate(fields)
                     }
                 }}
-                    disabled={isLoading && !user?.crm_access_fields.is_deletion_allowed}
+                    disabled={isLoading || !user?.crm_access_fields.is_deletion_allowed}
                 >
                     Save
                 </Button>}
@@ -83,7 +83,7 @@ function UpdateLeadFieldsPage() {
                                     <TextField disabled defaultValue={item}>
                                     </TextField>
                                     <Button color="error"
-                                        disabled={isLoading && !user?.crm_access_fields.is_deletion_allowed}
+                                        disabled={isLoading || !user?.crm_access_fields.is_deletion_allowed}
                                         sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
                                             if (fields?.stages) {
                                                 setFields({
@@ -124,7 +124,7 @@ function UpdateLeadFieldsPage() {
                                     <TextField disabled defaultValue={item}>
                                     </TextField>
                                     <Button color="error"
-                                        disabled={isLoading && !user?.crm_access_fields.is_deletion_allowed}
+                                        disabled={isLoading || !user?.crm_access_fields.is_deletion_allowed}
                                         sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
                                             if (fields?.lead_types)
                                                 setFields({
@@ -164,7 +164,7 @@ function UpdateLeadFieldsPage() {
                                     <TextField disabled defaultValue={item}>
                                     </TextField>
                                     <Button color="error"
-                                        disabled={isLoading && !user?.crm_access_fields.is_deletion_allowed}
+                                        disabled={isLoading || !user?.crm_access_fields.is_deletion_allowed}
                                         sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
                                             if (fields?.lead_sources)
                                                 setFields({

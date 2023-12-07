@@ -59,7 +59,7 @@ function UpdateTemplateCategoriesPage() {
                     mutate({ body: { categories: fields } })
                 }
             }}
-                disabled={isLoading && !user?.templates_access_fields.is_deletion_allowed}
+                disabled={isLoading || !user?.templates_access_fields.is_deletion_allowed}
             >
                 Save
             </Button>}
@@ -83,7 +83,7 @@ function UpdateTemplateCategoriesPage() {
                             <TextField disabled defaultValue={item}>
                             </TextField>
                             <Button color="error"
-                                disabled={isLoading && !user?.templates_access_fields.is_deletion_allowed}
+                                disabled={isLoading || !user?.templates_access_fields.is_deletion_allowed}
                                 sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
                                     let tmps = fields.filter((field) => { return field !== item })
                                     setFields(tmps)
