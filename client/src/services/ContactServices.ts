@@ -1,10 +1,10 @@
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
-export const CreateContact = async (body: { name: string, party: string, mobile: string }) => {
+export const CreateContact = async (body: { name: string, designation: string, mobile: string }) => {
     return await apiClient.post(`contacts`, body);
 };
-export const UpdateContact = async ({ body, id }: { body: { name: string, party: string, mobile: string }, id: string }) => {
+export const UpdateContact = async ({ body, id }: { body: { name: string, designation: string, mobile: string }, id: string }) => {
     return await apiClient.put(`contacts/${id}`, body);
 };
 

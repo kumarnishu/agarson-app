@@ -141,7 +141,7 @@ export const CreateReminderByTemplate = async (req: Request, res: Response, next
                     await contact.save()
                 }
                 await new ContactReport({
-                    reminder_whatsapp_status: "pending",
+                    whatsapp_status: "pending",
                     reminder_status: "pending",
                     contact: contact,
                     created_at: new Date(),
@@ -219,7 +219,7 @@ export const CreateReminderByMessage = async (req: Request, res: Response, next:
                     await contact.save()
                 }
                 await new ContactReport({
-                    reminder_whatsapp_status: "pending",
+                    whatsapp_status: "pending",
                     reminder_status: "pending",
                     contact: contact,
                     created_at: new Date(),
@@ -301,7 +301,7 @@ export const UpdateReminderByMessage = async (req: Request, res: Response, next:
                     await contact.save()
                 }
                 await new ContactReport({
-                    reminder_whatsapp_status: "pending",
+                    whatsapp_status: "pending",
                     reminder_status: "pending",
                     contact: contact,
                     created_at: new Date(),
@@ -373,7 +373,7 @@ export const UpdateReminderByTemplate = async (req: Request, res: Response, next
                     await contact.save()
                 }
                 await new ContactReport({
-                    reminder_whatsapp_status: "pending",
+                    whatsapp_status: "pending",
                     reminder_status: "pending",
                     contact: contact,
                     created_at: new Date(),
@@ -421,7 +421,7 @@ export const StartReminderWithTemplate = async (req: Request, res: Response, nex
     reports.forEach(async (report) => {
         if (req.user)
             if (report) {
-                report.reminder_whatsapp_status = "pending"
+                report.whatsapp_status = "pending"
                 report.reminder_status = "pending"
                 report.updated_at = new Date()
                 report.updated_by = req.user
@@ -485,7 +485,7 @@ export const StartReminderWithMessage = async (req: Request, res: Response, next
     reports.forEach(async (report) => {
         if (req.user)
             if (report) {
-                report.reminder_whatsapp_status = "pending"
+                report.whatsapp_status = "pending"
                 report.reminder_status = "pending"
                 report.updated_at = new Date()
                 report.updated_by = req.user
@@ -557,7 +557,7 @@ export const ResetReminder = async (req: Request, res: Response, next: NextFunct
     reports.forEach(async (report) => {
         if (req.user)
             if (report) {
-                report.reminder_whatsapp_status = "pending"
+                report.whatsapp_status = "pending"
                 report.reminder_status = "pending"
                 report.updated_at = new Date()
                 report.updated_by = req.user
@@ -632,7 +632,7 @@ export const DownloadContactReports = async (req: Request, res: Response, next: 
         return {
             customer_name: report.contact.name,
             mobile: report.contact.mobile.replace("91", "").replace("@c.us", ""),
-            reminder_whatsapp_status: report.reminder_whatsapp_status,
+            whatsapp_status: report.whatsapp_status,
             reminder_status: report.reminder_status,
             created_at: new Date(report.created_at),
             updated_at: new Date(report.updated_at),

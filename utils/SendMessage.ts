@@ -1,5 +1,6 @@
 import { Client, MessageMedia } from "whatsapp-web.js"
 import { IMessage, IMessageTemplate } from "../types/template.types"
+import { IUser } from "../types/user.types"
 
 export async function sendTemplates(client: Client, mobile: string, time_gap: number, templates: IMessageTemplate[], is_random: boolean, msg_id?: string, is_todo?: boolean) {
     let response = "error"
@@ -142,6 +143,34 @@ export async function sendMessage(client: Client, mobile: string, time_gap: numb
             sent = true
         }
     }
+    if (!isWhatsapp)
+        response = "notwhatsapp"
+
+    if (sent)
+        response = "sent"
+    return response
+}
+
+export async function SendGreetingMessage(client: Client, mobile: string, user: IUser, message: string, caption: string, media_url: string) {
+    let isWhatsapp = await client.getContactById(mobile)
+    let response = "pending"
+    let sent = false
+    if (isWhatsapp) {
+        console.log("sending whatsapp")
+        if (message) {
+            await client.sendMessage(mobile, message)
+            sent = true
+        }
+        if (caption && media_url) {
+            client.sendMessage(mobile, await MessageMedia.fromUrl(media_url), { caption: caption })
+            sent = true
+        }
+        if (!caption && media_url) {
+            await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url), { caption })
+            sent = true
+        }
+    }
+
     if (!isWhatsapp)
         response = "notwhatsapp"
 

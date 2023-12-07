@@ -17,7 +17,7 @@ import { IContact } from '../../../types/contact.types';
 function UpdateContactForm({ contact }: { contact: IContact }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IContact>, BackendError, {
-            id: string, body: { name: string,party:string, mobile: string }
+            id: string, body: { name: string,designation:string, mobile: string }
         }>
         (UpdateContact, {
             onSuccess: () => {
@@ -30,13 +30,13 @@ function UpdateContactForm({ contact }: { contact: IContact }) {
     const formik = useFormik({
         initialValues: {
             name: contact.name,
-            party: contact.party,
+            designation: contact.designation,
             mobile: contact.mobile.replace("91", "").replace("@c.us", "")
         },
         validationSchema: Yup.object({
             name: Yup.string()
                 .required('Required field'),
-            party: Yup.string()
+            designation: Yup.string()
                 .required('Required field'),
             mobile: Yup.string()
                 .min(10, 'Must be 10 digits')
@@ -88,14 +88,14 @@ function UpdateContactForm({ contact }: { contact: IContact }) {
                     required
                     fullWidth
                     error={
-                        formik.touched.party && formik.errors.party ? true : false
+                        formik.touched.designation && formik.errors.designation ? true : false
                     }
-                    id="party"
+                    id="designation"
                     label="Party"
                     helperText={
-                        formik.touched.party && formik.errors.party ? formik.errors.party : ""
+                        formik.touched.designation && formik.errors.designation ? formik.errors.designation : ""
                     }
-                    {...formik.getFieldProps('party')}
+                    {...formik.getFieldProps('designation')}
                 />
                 <TextField
                     type="number"

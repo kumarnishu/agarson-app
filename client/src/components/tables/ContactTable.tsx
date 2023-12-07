@@ -74,7 +74,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                             <STableHeadCell
                             >
 
-                                Party
+                                Designation
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -193,7 +193,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                             {contact.name}
                                         </STableCell>
                                         <STableCell>
-                                            {contact.party}
+                                            {contact.designation}
                                         </STableCell>
                                         <STableCell>
                                             {contact.mobile && contact.mobile.toString().replace("91", "").replace("@c.us", "")}

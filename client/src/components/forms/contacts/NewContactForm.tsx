@@ -15,7 +15,7 @@ import { IContact } from '../../../types/contact.types';
 function NewContactForm() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IContact>, BackendError, {
-            name: string, party:string,mobile: string
+            name: string, designation:string,mobile: string
         }>
         (CreateContact, {
             onSuccess: () => {
@@ -29,12 +29,12 @@ function NewContactForm() {
         initialValues: {
             name: "",
             mobile: "",
-            party:""
+            designation:""
         },
         validationSchema: Yup.object({
             name: Yup.string()
                 .required('Required field'),
-            party: Yup.string()
+            designation: Yup.string()
                 .required('Required field'),
             mobile: Yup.string()
                 .min(10, 'Must be 10 digits')
@@ -84,14 +84,14 @@ function NewContactForm() {
                     required
                     fullWidth
                     error={
-                        formik.touched.party && formik.errors.party ? true : false
+                        formik.touched.designation && formik.errors.designation ? true : false
                     }
-                    id="party"
+                    id="designation"
                     label="Party"
                     helperText={
-                        formik.touched.party && formik.errors.party ? formik.errors.party : ""
+                        formik.touched.designation && formik.errors.designation ? formik.errors.designation : ""
                     }
-                    {...formik.getFieldProps('party')}
+                    {...formik.getFieldProps('designation')}
                 />
                 <TextField
                     type="number"

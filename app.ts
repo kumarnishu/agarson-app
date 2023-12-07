@@ -18,6 +18,7 @@ import CheckListkRoutes from "./routes/checklist.routes";
 import TaskRoutes from "./routes/task.routes";
 import VisitRoutes from "./routes/visit.routes";
 import ReportRoutes from "./routes/report.routes";
+import GreetingRoutes from "./routes/greeting.route";
 import TodoRoutes from "./routes/todo.routes";
 import CronJobManager from "cron-job-manager";
 
@@ -125,13 +126,8 @@ else {
 }
 
 export const ReminderManager = new CronJobManager()
-export const TODOManager = new CronJobManager()
+export const GreetingManager = new CronJobManager()
 export const BroadcastManager = new CronJobManager()
-
-if (!BroadcastManager.exists('check_status')) {
-    BroadcastManager.add("check_status", "15 * * * *", () => console.log("checked status of all jobs "))
-    console.log("restarted all task cron jobs")
-}
 
 //server routes
 app.use("/api/v1", UserRoutes)
@@ -146,6 +142,7 @@ app.use("/api/v1", TaskRoutes)
 app.use("/api/v1", CheckListkRoutes)
 app.use("/api/v1", VisitRoutes)
 app.use("/api/v1", TodoRoutes)
+app.use("/api/v1", GreetingRoutes)
 app.use("/api/v1", ReportRoutes)
 
 

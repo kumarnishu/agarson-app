@@ -12,22 +12,17 @@ const GreetingSchema = new mongoose.Schema<IGreeting, mongoose.Model<IGreeting, 
         lowercase: true,
         required: true
     },
+    category: {
+        type: String,
+        lowercase: true,
+        required: true
+    },
     mobile: {
         type: String,
         lowercase: true,
         required: true
     },
-    message: {
-        type: String,
-        lowercase: true
-    },
-    caption: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'MessageTemplate'
-        }
-    ],
-    
+
     is_active: {
         type: Boolean,
         default: false,
@@ -36,16 +31,16 @@ const GreetingSchema = new mongoose.Schema<IGreeting, mongoose.Model<IGreeting, 
         type: Boolean,
         default: false,
     },
-    running_key: { type: String },
-    greeting_type: { type: String },
-    cron_string: { type: String },
-    start_date: Date,
-    next_run_date: Date,
-    template: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'MessageTemplate'
-    },
-    
+    dob_key: { type: String },
+    anniversary_key: { type: String },
+    dob_cronstring: { type: String },
+    anniversary_cronstring: { type: String },
+    dob_time: Date,
+    anniversary_time: Date,
+    next_run_dob_time: Date,
+    next_run_anniversary_time: Date,
+    dob_whatsapp_status: String,
+    anniversary_whatsapp_status: String,
     created_at: {
         type: Date,
         default: new Date(),

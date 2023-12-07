@@ -2,10 +2,8 @@ import mongoose from "mongoose"
 import { IContactReport } from "../../types/contact.types"
 
 const ContactReportSchema = new mongoose.Schema<IContactReport, mongoose.Model<IContactReport, {}, {}>, {}>({
-    reminder_whatsapp_status: { type: String },
-    greeting_whatsapp_status: { type: String },
+    whatsapp_status: { type: String },
     reminder_status: { type: String },
-    greeting_status: { type: String },
     contact: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Contact',
@@ -14,11 +12,6 @@ const ContactReportSchema = new mongoose.Schema<IContactReport, mongoose.Model<I
     reminder: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Reminder',
-        required: true
-    },
-    greeting: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Greeting',
         required: true
     },
     created_at: {

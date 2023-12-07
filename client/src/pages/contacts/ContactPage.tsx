@@ -22,7 +22,7 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 type SelectedData = {
   name?: string,
   mobile?: string,
-  party?: string,
+  designation?: string,
   created_at?: string,
   updated_at?: string
 }
@@ -30,7 +30,7 @@ let template: SelectedData[] = [
   {
     name: "nishu",
     mobile: "6787876765",
-    party: "demo party"
+    designation: "demo designation"
   }
 ]
 
@@ -72,7 +72,7 @@ export default function ContactPage() {
       return data.push({
         name: contact.name,
         mobile: contact.mobile,
-        party: contact.party,
+        designation: contact.designation,
         created_at: new Date(contact.created_at).toLocaleDateString(),
         updated_at: new Date(contact.updated_at).toLocaleDateString()
       })
@@ -92,7 +92,7 @@ export default function ContactPage() {
   useEffect(() => {
     if (filter) {
       if (contacts) {
-        const searcher = new FuzzySearch(contacts, ["name", "mobile", "party", "created_by", "updated_by"], {
+        const searcher = new FuzzySearch(contacts, ["name", "mobile", "designation", "created_by", "updated_by"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);

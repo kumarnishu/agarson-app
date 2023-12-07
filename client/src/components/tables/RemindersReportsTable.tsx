@@ -93,7 +93,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                             <STableCell>
                                                 <Tooltip title="Stop">
                                                     <IconButton
-                                                        disabled={report.reminder_whatsapp_status !== "pending"}
+                                                        disabled={report.whatsapp_status !== "pending"}
                                                         color="error"
                                                         size="medium"
                                                         onClick={() => {
@@ -108,7 +108,7 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                           {report.contact && report.contact.mobile.replace("91", "").replace("@c.us", "")}
                                         </STableCell>
                                         <STableCell>
-                                          {report.reminder_whatsapp_status}
+                                          {report.whatsapp_status}
                                         </STableCell>
                                         <STableCell>
                                           {report.reminder_status}
