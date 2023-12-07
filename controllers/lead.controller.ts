@@ -1961,6 +1961,27 @@ export const DeleteLead = async (req: Request, res: Response, next: NextFunction
     await lead.remove()
     if (lead.visiting_card && lead.visiting_card._id)
         await destroyFile(lead.visiting_card?._id)
+    let broadcasts = await Broadcast.find({ leads_selected: true })
+    broadcasts.forEach(async (b) => {
+        if (lead?.mobile) {
+            let reports = await BroadcastReport.find({ broadcast: b, mobile: lead?.mobile })
+            reports.forEach(async (r) => {
+                await r.remove()
+            })
+        }
+        if (lead?.alternate_mobile1) {
+            let reports = await BroadcastReport.find({ broadcast: b, mobile: lead?.alternate_mobile1 })
+            reports.forEach(async (r) => {
+                await r.remove()
+            })
+        }
+        if (lead?.alternate_mobile2) {
+            let reports = await BroadcastReport.find({ broadcast: b, mobile: lead?.alternate_mobile2 })
+            reports.forEach(async (r) => {
+                await r.remove()
+            })
+        }
+    })
     return res.status(200).json({ message: "lead and related remarks are deleted" })
 }
 
@@ -2368,6 +2389,28 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
         lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
         await lead.save()
+        let broadcasts = await Broadcast.find({ leads_selected: true })
+        broadcasts.forEach(async (b) => {
+            if (lead?.mobile) {
+                let reports = await BroadcastReport.find({ broadcast: b, mobile: lead?.mobile })
+                reports.forEach(async (r) => {
+                    await r.remove()
+                })
+            }
+            if (lead?.alternate_mobile1) {
+                let reports = await BroadcastReport.find({ broadcast: b, mobile: lead?.alternate_mobile1 })
+                reports.forEach(async (r) => {
+                    await r.remove()
+                })
+            }
+            if (lead?.alternate_mobile2) {
+                let reports = await BroadcastReport.find({ broadcast: b, mobile: lead?.alternate_mobile2 })
+                reports.forEach(async (r) => {
+                    await r.remove()
+                })
+            }
+        })
+
     }
     return res.status(200).json({ message: "successfully changed stage" })
 }
