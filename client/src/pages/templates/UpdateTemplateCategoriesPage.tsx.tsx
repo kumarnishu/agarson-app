@@ -21,7 +21,7 @@ function UpdateTemplateCategoriesPage() {
         staleTime: 10000
     })
 
-   
+
     const [fields, setFields] = useState<string[]>([])
     const [field, setField] = useState<string>()
 
@@ -54,15 +54,15 @@ function UpdateTemplateCategoriesPage() {
 
             {isSuccess && <AlertBar message='Fields Saved Successfuly' color="success" />}
 
-            <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
+            {user?.templates_access_fields.is_editable && <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
                 if (fields) {
                     mutate({ body: { categories: fields } })
                 }
             }}
-                disabled={isLoading || !user?.is_admin}
+                disabled={isLoading}
             >
                 Save
-            </Button>
+            </Button>}
 
             {/* grid */}
 
@@ -77,7 +77,7 @@ function UpdateTemplateCategoriesPage() {
                         +
                     </Button>
                 </Stack>
-                {fields && fields.map((item) => {
+                {user?.templates_access_fields.is_deletion_allowed && fields && fields.map((item) => {
                     return (
                         <Stack key={item} spacing={2} direction="row" alignItems="center">
                             <TextField disabled defaultValue={item}>

@@ -12,12 +12,10 @@ import AlertBar from '../../snacks/AlertBar';
 import { CreateContact } from '../../../services/ContactServices';
 import { IContact } from '../../../types/contact.types';
 
-
-
 function NewContactForm() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IContact>, BackendError, {
-            name: string, mobile: string
+            name: string, party:string,mobile: string
         }>
         (CreateContact, {
             onSuccess: () => {
@@ -30,10 +28,13 @@ function NewContactForm() {
     const formik = useFormik({
         initialValues: {
             name: "",
-            mobile: ""
+            mobile: "",
+            party:""
         },
         validationSchema: Yup.object({
             name: Yup.string()
+                .required('Required field'),
+            party: Yup.string()
                 .required('Required field'),
             mobile: Yup.string()
                 .min(10, 'Must be 10 digits')
@@ -78,6 +79,19 @@ function NewContactForm() {
                         formik.touched.name && formik.errors.name ? formik.errors.name : ""
                     }
                     {...formik.getFieldProps('name')}
+                />
+                <TextField
+                    required
+                    fullWidth
+                    error={
+                        formik.touched.party && formik.errors.party ? true : false
+                    }
+                    id="party"
+                    label="Party"
+                    helperText={
+                        formik.touched.party && formik.errors.party ? formik.errors.party : ""
+                    }
+                    {...formik.getFieldProps('party')}
                 />
                 <TextField
                     type="number"

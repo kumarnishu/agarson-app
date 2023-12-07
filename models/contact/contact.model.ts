@@ -9,6 +9,13 @@ const ContactSchema = new mongoose.Schema<IContact, mongoose.Model<IContact, {},
         index: true,
         lowercase: true,
     },
+    party: {
+        type: String,
+        required: true,
+        trim: true,
+        index: true,
+        lowercase: true,
+    },
     mobile: {
         type: String,
         required: true,
@@ -19,6 +26,10 @@ const ContactSchema = new mongoose.Schema<IContact, mongoose.Model<IContact, {},
     reminders: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Reminder'
+    }],
+    greetings: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Greeting'
     }],
     created_at: {
         type: Date,

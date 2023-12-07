@@ -56,6 +56,9 @@ import TodosAdminPage from './pages/todo/TodosAdminPage'
 import TodoNavBar from './components/navbar/TodoNavBar'
 import ChatsPage from './pages/bot/ChatsPage'
 import UpdateTemplateCategoriesPage from './pages/templates/UpdateTemplateCategoriesPage.tsx'
+import GreetingsHelpPage from './pages/greetings/GreetingsHelpPage.tsx'
+import GreetingsPage from './pages/greetings/GreetingsPage.tsx'
+import GreetingsNavBar from './components/navbar/GreetingsNavBar.tsx'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -123,6 +126,10 @@ export enum paths {
 
   //broadcast 
   broadcast = "/broadcast",
+
+  // greeting
+  greetings = "/greetings",
+  greetings_help_page = "greetings_help_page",
 
   //reminders
   reminders = "reminders",
@@ -301,7 +308,7 @@ function AppRoutes() {
                 < ChatsPage />
               }
               />
-            
+
               <Route path={paths.trackers} element={
                 <Suspense fallback={<LinearProgress />}>
                   < TrackersPage />
@@ -494,6 +501,25 @@ function AppRoutes() {
               <Route
                 path={paths.reminder_help} element={
                   <ReminderHelpPage />
+                }
+              />
+            </Route>}
+          {/* greetings nav bar */}
+          {user.is_admin &&
+            < Route path={paths.greetings} element={<GreetingsNavBar />
+            }>
+              <Route
+                index element={
+                  <GreetingsPage />
+                }
+              />
+              <Route path={paths.greetings} element={
+                < GreetingsPage />
+              }
+              />
+              <Route
+                path={paths.greetings_help_page} element={
+                  <GreetingsHelpPage />
                 }
               />
             </Route>}

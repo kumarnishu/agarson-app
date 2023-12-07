@@ -2,7 +2,7 @@ import { GetLeadFieldsUpdatable, UpdateLeadFieldsUpdatable } from '../../service
 import { AxiosResponse } from 'axios'
 import { useMutation, useQuery } from 'react-query'
 import { useContext, useEffect, useState } from 'react'
-import { Button, Grid, Stack, TextField, Typography } from '@mui/material'
+import { Button, Grid, LinearProgress, Stack, TextField, Typography } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import { BackendError } from '../..'
 import AlertBar from '../../components/snacks/AlertBar'
@@ -46,18 +46,19 @@ function UpdateLeadFieldsPage() {
 
     return (
         <>
-
+            {isLoading && <LinearProgress />}
             {isSuccess && <AlertBar message='Fields Saved Successfuly' color="success" />}
 
-            <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
-                if (fields) {
-                    mutate(fields)
-                }
-            }}
-                disabled={isLoading || !user?.is_admin}
-            >
-                Save
-            </Button>
+            {user?.crm_access_fields.is_editable &&
+                <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
+                    if (fields) {
+                        mutate(fields)
+                    }
+                }}
+                    disabled={isLoading}
+                >
+                    Save
+                </Button>}
 
             {/* grid */}
             <Grid container spacing={2} padding={2}>
@@ -76,7 +77,7 @@ function UpdateLeadFieldsPage() {
                                         })
                             }}>+</Button>
                         </Stack>
-                        {fields && fields.stages && fields.stages?.map((item) => {
+                        {user?.crm_access_fields.is_deletion_allowed && fields && fields.stages && fields.stages?.map((item) => {
                             return (
                                 <Stack key={item} spacing={2} direction="row" alignItems="center">
                                     <TextField disabled defaultValue={item}>
@@ -115,7 +116,7 @@ function UpdateLeadFieldsPage() {
                                 +
                             </Button>
                         </Stack>
-                        {fields && fields?.lead_types && fields.lead_types.map((item) => {
+                        {user?.crm_access_fields.is_deletion_allowed && fields && fields?.lead_types && fields.lead_types.map((item) => {
                             return (
                                 <Stack key={item} spacing={2} direction="row" alignItems="center">
                                     <TextField disabled defaultValue={item}>
@@ -153,7 +154,7 @@ function UpdateLeadFieldsPage() {
                                         })
                             }}>+</Button>
                         </Stack>
-                        {fields && fields?.lead_sources && fields.lead_sources.map((item) => {
+                        {user?.crm_access_fields.is_deletion_allowed && fields && fields?.lead_sources && fields.lead_sources.map((item) => {
                             return (
                                 <Stack key={item} spacing={2} direction="row" alignItems="center">
                                     <TextField disabled defaultValue={item}>

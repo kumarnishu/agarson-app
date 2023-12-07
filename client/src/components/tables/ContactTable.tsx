@@ -35,71 +35,77 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                 maxHeight: '67vh'
             }}>
                 <STable
-                   >
+                >
                     <STableHead
                     >
                         <STableRow>
                             <STableHeadCell
-                                                     >
-                               
-                                   
-                                        <Checkbox
-                                            indeterminate={selectAll ? true : false}
-                                            checked={Boolean(selectAll)}
-                                            size="small" onChange={(e) => {
-                                                if (e.currentTarget.checked) {
-                                                    setSelectedContacts(contacts)
-                                                    setSelectAll(true)
-                                                }
-                                                if (!e.currentTarget.checked) {
-                                                    setSelectedContacts([])
-                                                    setSelectAll(false)
-                                                }
-                                            }} />
-                               
+                            >
+
+
+                                <Checkbox
+                                    indeterminate={selectAll ? true : false}
+                                    checked={Boolean(selectAll)}
+                                    size="small" onChange={(e) => {
+                                        if (e.currentTarget.checked) {
+                                            setSelectedContacts(contacts)
+                                            setSelectAll(true)
+                                        }
+                                        if (!e.currentTarget.checked) {
+                                            setSelectedContacts([])
+                                            setSelectAll(false)
+                                        }
+                                    }} />
+
                             </STableHeadCell>
-                            { user?.contacts_access_fields.is_editable &&
-                            <STableHeadCell
-                                                     >
-                               
+                            {user?.contacts_access_fields.is_editable &&
+                                <STableHeadCell
+                                >
+
                                     Actions
-                               
-                            </STableHeadCell>}
+
+                                </STableHeadCell>}
                             <STableHeadCell
-                                                     >
-                               
-                                    Name
-                               
+                            >
+
+                                Name
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                     >
-                               
-                                    Mobile
-                               
+                            >
+
+                                Party
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                     >
-                               
-                                    Created At
-                               
+                            >
+
+                                Mobile
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                     >
-                               
-                                    Created By
-                               
+                            >
+
+                                Created At
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                     >
-                               
-                                    Updated At
-                               
+                            >
+
+                                Created By
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                     >
-                               
-                                    Updated By
-                               
+                            >
+
+                                Updated At
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Updated By
+
                             </STableHeadCell>
 
 
@@ -111,37 +117,37 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                 return (
                                     <STableRow
                                         key={index}
-                                        >
+                                    >
                                         {selectAll ?
                                             <STableCell>
-                                               
 
-                                                    <Checkbox size="small"
-                                                        checked={Boolean(selectAll)}
-                                                    />
 
-                                               
+                                                <Checkbox size="small"
+                                                    checked={Boolean(selectAll)}
+                                                />
+
+
                                             </STableCell>
                                             :
                                             null
                                         }
                                         {!selectAll ?
                                             <STableCell>
-                                               
-                                                    <Checkbox size="small"
-                                                        onChange={(e) => {
-                                                            setContact(contact)
-                                                            if (e.target.checked) {
-                                                                setSelectedContacts([...selectedContacts, contact])
-                                                            }
-                                                            if (!e.target.checked) {
-                                                                setSelectedContacts((contacts) => contacts.filter((item) => {
-                                                                    return item._id !== contact._id
-                                                                }))
-                                                            }
-                                                        }}
-                                                    />
-                                               
+
+                                                <Checkbox size="small"
+                                                    onChange={(e) => {
+                                                        setContact(contact)
+                                                        if (e.target.checked) {
+                                                            setSelectedContacts([...selectedContacts, contact])
+                                                        }
+                                                        if (!e.target.checked) {
+                                                            setSelectedContacts((contacts) => contacts.filter((item) => {
+                                                                return item._id !== contact._id
+                                                            }))
+                                                        }
+                                                    }}
+                                                />
+
                                             </STableCell>
                                             :
                                             null
@@ -166,41 +172,44 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
                                                                     </IconButton>
                                                                 </Tooltip>
                                                                 {user?.contacts_access_fields.is_deletion_allowed &&
-                                                                <Tooltip title="Delete">
-                                                                    <IconButton color="primary"
-                                                                        onClick={() => {
-                                                                            setContact(contact)
-                                                                            setChoice({ type: ContactChoiceActions.delete_contact })
+                                                                    <Tooltip title="Delete">
+                                                                        <IconButton color="primary"
+                                                                            onClick={() => {
+                                                                                setContact(contact)
+                                                                                setChoice({ type: ContactChoiceActions.delete_contact })
 
-                                                                        }}
-                                                                    >
-                                                                        <Delete />
-                                                                    </IconButton>
-                                                                </Tooltip>}
+                                                                            }}
+                                                                        >
+                                                                            <Delete />
+                                                                        </IconButton>
+                                                                    </Tooltip>}
                                                             </>
-                                                       
-                                                   </Stack> }
+
+                                                        </Stack>}
                                                 />
 
                                             </STableCell>}
                                         <STableCell>
-                                           {contact.name}
+                                            {contact.name}
                                         </STableCell>
                                         <STableCell>
-                                           {contact.mobile && contact.mobile.toString().replace("91", "").replace("@c.us", "")}
+                                            {contact.party}
                                         </STableCell>
                                         <STableCell>
-                                           {contact.created_at && new Date(contact.created_at).toLocaleString()}
+                                            {contact.mobile && contact.mobile.toString().replace("91", "").replace("@c.us", "")}
                                         </STableCell>
                                         <STableCell>
-                                           {contact.created_by.username}
+                                            {contact.created_at && new Date(contact.created_at).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                           {contact.updated_at && new Date(contact.updated_at).toLocaleString()}
+                                            {contact.created_by.username}
+                                        </STableCell>
+                                        <STableCell>
+                                            {contact.updated_at && new Date(contact.updated_at).toLocaleString()}
                                         </STableCell>
 
                                         <STableCell>
-                                           {contact.updated_by.username}
+                                            {contact.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>

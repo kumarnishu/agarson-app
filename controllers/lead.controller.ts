@@ -1700,11 +1700,6 @@ export const BackUpAllLeads = async (req: Request, res: Response, next: NextFunc
 
 
 
-
-
-
-
-
 // post/put/patch/delete
 
 export const CreateLead = async (req: Request, res: Response, next: NextFunction) => {

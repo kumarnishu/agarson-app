@@ -20,10 +20,10 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
                     let templates = latest_reminder?.templates
                     let timegap = 10000
                     let timeinsec = 5000
-                    let reports = await ContactReport.find({ reminder: latest_reminder, whatsapp_status: "pending" }).populate('contact')
+                    let reports = await ContactReport.find({ reminder: latest_reminder, reminder_whatsapp_status: "pending" }).populate('contact')
                     for (let i = 0; i < reports.length; i++) {
                         let report = reports[i]
-                        if (report?.whatsapp_status === "pending" && report.reminder_status === "pending") {
+                        if (report?.reminder_whatsapp_status === "pending" && report.reminder_status === "pending") {
                             const timeout = setTimeout(async () => {
                                 let sent = false
                                 console.log("running for messages", report.contact.mobile, new Date().toLocaleTimeString())
@@ -32,20 +32,20 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
 
                                 let response = await sendTemplates(client, mobile, timegap, templates, is_random, reminder.serial_number, reminder.is_todo)
                                 if (response === "notwhatsapp") {
-                                    report.whatsapp_status = "notwhatsapp"
+                                    report.reminder_whatsapp_status = "notwhatsapp"
                                     report.updated_at = new Date()
                                     await report.save()
                                     sent = false
                                 }
                                 if (response === "sent") {
-                                    report.whatsapp_status = "sent"
+                                    report.reminder_whatsapp_status = "sent"
                                     report.contact.name = name
                                     report.updated_at = new Date()
                                     await report.save()
                                     sent = true
                                 }
                                 if (response === "error") {
-                                    report.whatsapp_status = "error"
+                                    report.reminder_whatsapp_status = "error"
                                     report.contact.name = name
                                     report.updated_at = new Date()
                                     await report.save()
@@ -72,7 +72,7 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
             reports.forEach(async (report) => {
                 if (user)
                     if (report) {
-                        report.whatsapp_status = "pending"
+                        report.reminder_whatsapp_status = "pending"
                         report.reminder_status = "pending"
                         report.updated_at = new Date()
                         report.updated_by = user
@@ -118,12 +118,12 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
                     let message = latest_reminder?.message
                     let timegap = 10000
                     let timeinsec = 5000
-                    let reports = await ContactReport.find({ reminder: latest_reminder, whatsapp_status: "pending" }).populate('contact')
+                    let reports = await ContactReport.find({ reminder: latest_reminder, reminder_whatsapp_status: "pending" }).populate('contact')
                     console.log("check ", reports)
 
                     for (let i = 0; i < reports.length; i++) {
                         let report = reports[i]
-                        if (report?.whatsapp_status === "pending" && report.reminder_status === "pending") {
+                        if (report?.reminder_whatsapp_status === "pending" && report.reminder_status === "pending") {
                             const timeout = setTimeout(async () => {
                                 console.log("running for messages", report.contact.mobile, new Date().toLocaleTimeString())
                                 let mobile = report.contact.mobile
@@ -131,20 +131,20 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
                                 let sent = false
                                 let response = await sendMessage(client, mobile, timegap, message, reminder.serial_number, reminder.is_todo)
                                 if (response === "notwhatsapp") {
-                                    report.whatsapp_status = "notwhatsapp"
+                                    report.reminder_whatsapp_status = "notwhatsapp"
                                     report.updated_at = new Date()
                                     await report.save()
                                     sent = false
                                 }
                                 if (response === "sent") {
-                                    report.whatsapp_status = "sent"
+                                    report.reminder_whatsapp_status = "sent"
                                     report.contact.name = name
                                     report.updated_at = new Date()
                                     await report.save()
                                     sent = true
                                 }
                                 if (response === "error") {
-                                    report.whatsapp_status = "error"
+                                    report.reminder_whatsapp_status = "error"
                                     report.contact.name = name
                                     report.updated_at = new Date()
                                     await report.save()
@@ -171,7 +171,7 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
             reports.forEach(async (report) => {
                 if (user)
                     if (report) {
-                        report.whatsapp_status = "pending"
+                        report.reminder_whatsapp_status = "pending"
                         report.reminder_status = "pending"
                         report.updated_at = new Date()
                         report.updated_by = user

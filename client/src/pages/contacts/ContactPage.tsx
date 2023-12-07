@@ -92,7 +92,7 @@ export default function ContactPage() {
   useEffect(() => {
     if (filter) {
       if (contacts) {
-        const searcher = new FuzzySearch(contacts, ["name", "mobile", "created_by", "updated_by"], {
+        const searcher = new FuzzySearch(contacts, ["name", "mobile","party", "created_by", "updated_by"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);

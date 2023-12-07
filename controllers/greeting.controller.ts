@@ -20,7 +20,6 @@ import { IReminderBody } from "../types/reminder.types"
 import { IMessage, IMessageTemplate } from "../types/template.types"
 
 
-
 //get
 export const GetReminders = async (req: Request, res: Response, next: NextFunction) => {
     let reminders = await Reminder.find().populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("-created_at")
@@ -90,7 +89,6 @@ export const SearchContactReport = async (req: Request, res: Response, next: Nex
     return res.status(200).json(reports)
 }
 
-
 //post/put/delete/patch
 export const CreateReminderByTemplate = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
@@ -141,7 +139,7 @@ export const CreateReminderByTemplate = async (req: Request, res: Response, next
                     await contact.save()
                 }
                 await new ContactReport({
-                    reminder_whatsapp_status: "pending",
+                    greeting_whatsapp_status: "pending",
                     reminder_status: "pending",
                     contact: contact,
                     created_at: new Date(),
@@ -219,7 +217,7 @@ export const CreateReminderByMessage = async (req: Request, res: Response, next:
                     await contact.save()
                 }
                 await new ContactReport({
-                    reminder_whatsapp_status: "pending",
+                    greeting_whatsapp_status: "pending",
                     reminder_status: "pending",
                     contact: contact,
                     created_at: new Date(),
@@ -301,7 +299,7 @@ export const UpdateReminderByMessage = async (req: Request, res: Response, next:
                     await contact.save()
                 }
                 await new ContactReport({
-                    reminder_whatsapp_status: "pending",
+                    greeting_whatsapp_status: "pending",
                     reminder_status: "pending",
                     contact: contact,
                     created_at: new Date(),
@@ -373,7 +371,7 @@ export const UpdateReminderByTemplate = async (req: Request, res: Response, next
                     await contact.save()
                 }
                 await new ContactReport({
-                    reminder_whatsapp_status: "pending",
+                    greeting_whatsapp_status: "pending",
                     reminder_status: "pending",
                     contact: contact,
                     created_at: new Date(),
@@ -421,7 +419,7 @@ export const StartReminderWithTemplate = async (req: Request, res: Response, nex
     reports.forEach(async (report) => {
         if (req.user)
             if (report) {
-                report.reminder_whatsapp_status = "pending"
+                report.greeting_whatsapp_status = "pending"
                 report.reminder_status = "pending"
                 report.updated_at = new Date()
                 report.updated_by = req.user
@@ -485,7 +483,7 @@ export const StartReminderWithMessage = async (req: Request, res: Response, next
     reports.forEach(async (report) => {
         if (req.user)
             if (report) {
-                report.reminder_whatsapp_status = "pending"
+                report.greeting_whatsapp_status = "pending"
                 report.reminder_status = "pending"
                 report.updated_at = new Date()
                 report.updated_by = req.user
@@ -557,7 +555,7 @@ export const ResetReminder = async (req: Request, res: Response, next: NextFunct
     reports.forEach(async (report) => {
         if (req.user)
             if (report) {
-                report.reminder_whatsapp_status = "pending"
+                report.greeting_whatsapp_status = "pending"
                 report.reminder_status = "pending"
                 report.updated_at = new Date()
                 report.updated_by = req.user
@@ -620,7 +618,6 @@ export const StopSingleContactReport = async (req: Request, res: Response, next:
     return res.status(200).json({ message: "reminder stopped for this contact" })
 }
 
-
 export const DownloadContactReports = async (req: Request, res: Response, next: NextFunction) => {
     const id = String(req.query.id)
     if (!isMongoId(id)) {
@@ -632,7 +629,7 @@ export const DownloadContactReports = async (req: Request, res: Response, next: 
         return {
             customer_name: report.contact.name,
             mobile: report.contact.mobile.replace("91", "").replace("@c.us", ""),
-            reminder_whatsapp_status: report.reminder_whatsapp_status,
+            greeting_whatsapp_status: report.greeting_whatsapp_status,
             reminder_status: report.reminder_status,
             created_at: new Date(report.created_at),
             updated_at: new Date(report.updated_at),
