@@ -2307,6 +2307,46 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
         lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
         await lead.save()
+        let broadcasts = await Broadcast.find({ leads_selected: true })
+        broadcasts.forEach(async (b) => {
+            if (lead?.mobile)
+                await new BroadcastReport({
+                    mobile: lead?.mobile,
+                    customer_name: "",
+                    is_buisness: false,
+                    status: "pending",
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                    created_by: req.user,
+                    updated_by: req.user,
+                    broadcast: b
+                }).save()
+
+            if (lead?.alternate_mobile1)
+                await new BroadcastReport({
+                    mobile: lead?.alternate_mobile1,
+                    customer_name: "",
+                    is_buisness: false,
+                    status: "pending",
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                    created_by: req.user,
+                    updated_by: req.user,
+                    broadcast: b
+                }).save()
+            if (lead?.alternate_mobile2)
+                await new BroadcastReport({
+                    mobile: lead?.alternate_mobile2,
+                    customer_name: "",
+                    is_buisness: false,
+                    status: "pending",
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                    created_by: req.user,
+                    updated_by: req.user,
+                    broadcast: b
+                }).save()
+        })
     }
     else {
         if (remark) {
