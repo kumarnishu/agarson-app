@@ -8,14 +8,14 @@ import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
 import { BackendError } from '../..'
 import GreetingsTable from '../../components/tables/GreetingTable'
-import {  ChoiceContext } from '../../contexts/dialogContext'
+import { ChoiceContext, GreetingChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { GetGreetings } from '../../services/GreetingServices'
 import { IGreeting } from '../../types/greeting.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { UserContext } from '../../contexts/userContext'
+import NewGreetingDialog from '../../components/dialogs/greetings/NewGreetingDialog'
 
 type SelectedData = {
   name?: string,
@@ -40,7 +40,6 @@ export default function GreetingPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { user } = useContext(UserContext)
 
   function handleExcel() {
     setAnchorEl(null)
@@ -87,7 +86,7 @@ export default function GreetingPage() {
   useEffect(() => {
     if (filter) {
       if (greetings) {
-        const searcher = new FuzzySearch(greetings, ["name", "type", "is_active", "created_by", "is_random__template", "auto_refresh", "connected_number", "daily_limit", ""], {
+        const searcher = new FuzzySearch(greetings, ["name", "party", "category", "mobile"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);
@@ -172,34 +171,29 @@ export default function GreetingPage() {
                 setAnchorEl(null)
               }}
               >New Template Greeting</MenuItem>
-              <MenuItem onClick={() => {
-                setChoice({ type: GreetingChoiceActions.create_message_greeting })
-                setAnchorEl(null)
-              }}
-              >New Custom Greeting</MenuItem>
-            <MenuItem onClick={handleExcel}
-            >Export To Excel</MenuItem>
 
-          </Menu>
-          <NewGreetingDialog />
-          <NewGreetingMessageDialog />
-        </>
-      </Stack>
-    </Stack >
-      {/*  table */ }
-  { isLoading && <TableSkeleton /> }
-  {
-    !isLoading &&
-    <GreetingsTable
-      greeting={greeting}
-      selectAll={selectAll}
-      selectedGreetings={selectedGreetings}
-      setSelectedGreetings={setSelectedGreetings}
-      setSelectAll={setSelectAll}
-      greetings={MemoData}
-      setGreeting={setGreeting}
-    />
-  }
+              <MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>
+
+            </Menu>
+            <NewGreetingDialog />
+          </>
+        </Stack>
+      </Stack >
+      {/*  table */}
+      {isLoading && <TableSkeleton />}
+      {
+        !isLoading &&
+        <GreetingsTable
+          greeting={greeting}
+          selectAll={selectAll}
+          selectedGreetings={selectedGreetings}
+          setSelectedGreetings={setSelectedGreetings}
+          setSelectAll={setSelectAll}
+          greetings={MemoData}
+          setGreeting={setGreeting}
+        />
+      }
 
     </>
 
