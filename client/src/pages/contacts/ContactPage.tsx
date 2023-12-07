@@ -21,17 +21,16 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 type SelectedData = {
   name?: string,
-  customer_name?: string,
   mobile?: string,
-  city?: string,
-  state?: string,
+  party?: string,
   created_at?: string,
   updated_at?: string
 }
 let template: SelectedData[] = [
   {
     name: "nishu",
-    mobile: "6787876765"
+    mobile: "6787876765",
+    party: "demo party"
   }
 ]
 
@@ -73,6 +72,7 @@ export default function ContactPage() {
       return data.push({
         name: contact.name,
         mobile: contact.mobile,
+        party: contact.party,
         created_at: new Date(contact.created_at).toLocaleDateString(),
         updated_at: new Date(contact.updated_at).toLocaleDateString()
       })
@@ -92,7 +92,7 @@ export default function ContactPage() {
   useEffect(() => {
     if (filter) {
       if (contacts) {
-        const searcher = new FuzzySearch(contacts, ["name", "mobile","party", "created_by", "updated_by"], {
+        const searcher = new FuzzySearch(contacts, ["name", "mobile", "party", "created_by", "updated_by"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);
@@ -172,7 +172,7 @@ export default function ContactPage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >{LoggedInUser?.contacts_access_fields.is_editable&&
+            >{LoggedInUser?.contacts_access_fields.is_editable &&
               <MenuItem onClick={() => {
                 setChoice({ type: ContactChoiceActions.create_contact })
                 setAnchorEl(null)
@@ -190,16 +190,16 @@ export default function ContactPage() {
       </Stack>
       {/*  table */}
       {isLoading && <TableSkeleton />}
-      {!isLoading && 
-      <ContactsTable
-        contact={contact}
-        selectAll={selectAll}
-        selectedContacts={selectedContacts}
-        setSelectedContacts={setSelectedContacts}
-        setSelectAll={setSelectAll}
-        contacts={MemoData}
-        setContact={setContact}
-      />}
+      {!isLoading &&
+        <ContactsTable
+          contact={contact}
+          selectAll={selectAll}
+          selectedContacts={selectedContacts}
+          setSelectedContacts={setSelectedContacts}
+          setSelectAll={setSelectAll}
+          contacts={MemoData}
+          setContact={setContact}
+        />}
 
     </>
 
