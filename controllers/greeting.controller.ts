@@ -20,12 +20,12 @@ export const CreateGreeting = async (req: Request, res: Response, next: NextFunc
     if (!isvalidDate(new Date(dob_time)) || !isvalidDate(new Date(anniversary_time)))
         return res.status(400).json({ message: "provide valid dates" })
 
-    mobile = "91" + mobile + "@c.us"
+    let newmobile = "91" + mobile + "@c.us"
     if (await Greeting.findOne({ mobile: mobile }))
         return res.status(400).json({ message: `${mobile} already exists` });
-    
+
     let greeting = new Greeting({
-        name, party, category, mobile,
+        name, party, category, mobile: newmobile,
         dob_time: new Date(dob_time),
         anniversary_time: new Date(anniversary_time),
         created_at: new Date(),
@@ -48,13 +48,13 @@ export const UpdateGreeting = async (req: Request, res: Response, next: NextFunc
     let greeting = await Greeting.findById(id)
     if (!greeting)
         return res.status(400).json({ message: `greeting not found` });
-    mobile = "91" + mobile + "@c.us"
+    let newmobile = "91" + mobile + "@c.us"
     if (greeting?.mobile !== mobile)
         if (await Greeting.findOne({ mobile: mobile }))
             return res.status(400).json({ message: `${mobile} already exists` });
 
     await Greeting.findByIdAndUpdate(greeting._id, {
-        name, party, category, mobile,
+        name, party, category, mobile: newmobile,
         dob_time: new Date(dob_time),
         anniversary_time: new Date(anniversary_time),
         created_at: new Date(),

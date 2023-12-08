@@ -287,7 +287,7 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
 
 
                                         <STableCell>
-                                            {greeting.connected_number}
+                                            {greeting.connected_number && greeting.connected_number.toString().replace("91", "").replace("@c.us", "")}
                                         </STableCell>
 
                                         <STableCell>
