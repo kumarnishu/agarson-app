@@ -27,30 +27,19 @@ const GreetingSchema = new mongoose.Schema<IGreeting, mongoose.Model<IGreeting, 
         type: Boolean,
         default: false,
     },
-    is_paused: {
-        type: Boolean,
-        default: false,
+    start_date: {
+        type: Date
     },
-    dob_key: { type: String },
-    anniversary_key: { type: String },
     connected_number: String,
-    dob_cronstring: { type: String },
-    anniversary_cronstring: { type: String },
     dob_time: Date,
     anniversary_time: Date,
-    next_run_dob_time: Date,
-    next_run_anniversary_time: Date,
-    dob_whatsapp_status: String,
-    anniversary_whatsapp_status: String,
     created_at: {
         type: Date,
         default: new Date(),
         required: true,
 
     },
-    start_date: {
-        type: Date
-    },
+   
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

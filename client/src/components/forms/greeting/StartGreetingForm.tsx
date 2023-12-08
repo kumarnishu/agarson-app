@@ -5,24 +5,22 @@ import { useMutation } from 'react-query';
 import * as Yup from "yup"
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
-import { StartGreeting } from '../../../services/GreetingServices';
+import { StartAllGreetings } from '../../../services/GreetingServices';
 import AlertBar from '../../snacks/AlertBar';
-import { IGreeting } from '../../../types/greeting.types';
 import { IUser } from '../../../types/user.types';
 import React, { useContext, useEffect } from 'react';
 import { ChoiceContext, GreetingChoiceActions } from '../../../contexts/dialogContext';
 
 
-function StartGreetingForm({ greeting, users }: { greeting: IGreeting, users: IUser[] }) {
+function StartGreetingForm({ users }: { users: IUser[] }) {
   const { setChoice } = useContext(ChoiceContext)
   const { mutate, isLoading, isSuccess, isError, error } = useMutation
     <AxiosResponse<IUser>, BackendError, {
-      id: string;
       body: {
         client_id: string;
-      };
+      }
     }>
-    (StartGreeting, {
+    (StartAllGreetings, {
       onSuccess: () => {
         queryClient.invalidateQueries('greetings')
       }
@@ -38,7 +36,7 @@ function StartGreetingForm({ greeting, users }: { greeting: IGreeting, users: IU
         .required('Required field'),
     }),
     onSubmit: (values) => {
-      mutate({ id: greeting._id, body: { client_id: values.client_id } })
+      mutate({ body: { client_id: values.client_id } })
     }
   });
   useEffect(() => {

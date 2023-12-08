@@ -16,6 +16,8 @@ import { GetGreetings } from '../../services/GreetingServices'
 import { IGreeting } from '../../types/greeting.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import NewGreetingDialog from '../../components/dialogs/greetings/NewGreetingDialog'
+import StartAllGreetingDialog from '../../components/dialogs/greetings/StartAllGreetingDialog'
+import StopAllGreetingsDialog from '../../components/dialogs/greetings/StopAllGreetingsDialog.tsx'
 
 type SelectedData = {
   name?: string,
@@ -172,11 +174,25 @@ export default function GreetingPage() {
               }}
               >New Greeting</MenuItem>
 
+              <MenuItem onClick={() => {
+                setChoice({ type: GreetingChoiceActions.bulk_start_greeting })
+                setAnchorEl(null)
+              }}
+              >Start All</MenuItem>
+
+              <MenuItem onClick={() => {
+                setChoice({ type: GreetingChoiceActions.bulk_stop_greeting })
+                setAnchorEl(null)
+              }}
+              >Stop All</MenuItem>
+
               <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
             </Menu>
             <NewGreetingDialog />
+            <StartAllGreetingDialog />
+            <StopAllGreetingsDialog />
           </>
         </Stack>
       </Stack >

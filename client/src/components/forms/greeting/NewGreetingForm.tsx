@@ -39,7 +39,7 @@ function NewGreetingForm() {
             category: "party",
             mobile: "",
             dob_time: moment(new Date()).format("YYYY-MM-DD"),
-            anniversary_time: moment(new Date()).format("YYYY-MM-DD HH:MM:SS")
+            anniversary_time: moment(new Date()).format("YYYY-MM-DD")
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -136,7 +136,7 @@ function NewGreetingForm() {
                     </TextField>
                     <TextField
                         fullWidth
-                        type="datetime-local"
+                        type="date"
                         required
                         error={
                             formik.touched.dob_time && formik.errors.dob_time ? true : false
@@ -150,7 +150,7 @@ function NewGreetingForm() {
                     />
                     <TextField
                         fullWidth
-                        type="datetime-local"
+                        type="date"
                         required
                         error={
                             formik.touched.anniversary_time && formik.errors.anniversary_time ? true : false

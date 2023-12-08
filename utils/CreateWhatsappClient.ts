@@ -17,7 +17,7 @@ import { Contact } from "../models/contact/contact.model";
 import { ReminderManager } from "../app";
 import { Chat } from "../models/bot/chat.model";
 import { Greeting } from "../models/greetings/greeting.model";
-import { StartGreetingWithTemplates } from "./StartGreeting";
+import { SendGreetingTemplates } from "./SendMessage";
 
 export var clients: { client_id: string, client: Client }[] = []
 export let users: { id: string }[] = []
@@ -78,11 +78,8 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
 
             // /retry functions
             if (client.info && client.info.wid) {
-                let greetings = await Greeting.find({ connected_number: client?.info.wid._serialized })
-                greetings.forEach(async (gr) => {
-                    if (user && gr.is_active)
-                        await StartGreetingWithTemplates(gr, client, user)
-                })
+                if (user)
+                    await SendGreetingTemplates(client, user)
 
                 let broadcasts = await Broadcast.find({ connected_number: client?.info.wid._serialized })
                 broadcasts.forEach(async (br) => {

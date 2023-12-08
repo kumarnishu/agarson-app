@@ -1,6 +1,8 @@
 import { Client, MessageMedia } from "whatsapp-web.js"
 import { IMessage, IMessageTemplate } from "../types/template.types"
 import { IUser } from "../types/user.types"
+import { GreetingManager } from "../app"
+import { Greeting } from "../models/greetings/greeting.model"
 
 export async function sendTemplates(client: Client, mobile: string, time_gap: number, templates: IMessageTemplate[], is_random: boolean, msg_id?: string, is_todo?: boolean) {
     let response = "error"
@@ -151,30 +153,54 @@ export async function sendMessage(client: Client, mobile: string, time_gap: numb
     return response
 }
 
-export async function SendGreetingMessage(client: Client, mobile: string, user: IUser, message: string, caption: string, media_url: string) {
-    let isWhatsapp = await client.getContactById(mobile)
-    let response = "pending"
-    let sent = false
-    if (isWhatsapp) {
-        console.log("sending whatsapp")
-        if (message) {
-            await client.sendMessage(mobile, message)
-            sent = true
-        }
-        if (caption && media_url) {
-            client.sendMessage(mobile, await MessageMedia.fromUrl(media_url), { caption: caption })
-            sent = true
-        }
-        if (!caption && media_url) {
-            await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url), { caption })
-            sent = true
-        }
+// export async function SendGreetingMessage(client: Client, mobile: string, user: IUser, message: string, caption: string, media_url: string) {
+//     let isWhatsapp = await client.getContactById(mobile)
+//     let response = "pending"
+//     let sent = false
+//     if (isWhatsapp) {
+//         console.log("sending whatsapp")
+//         if (message) {
+//             await client.sendMessage(mobile, message)
+//             sent = true
+//         }
+//         if (caption && media_url) {
+//             client.sendMessage(mobile, await MessageMedia.fromUrl(media_url), { caption: caption })
+//             sent = true
+//         }
+//         if (!caption && media_url) {
+//             await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url), { caption })
+//             sent = true
+//         }
+//     }
+
+//     if (!isWhatsapp)
+//         response = "notwhatsapp"
+
+//     if (sent)
+//         response = "sent"
+//     return response
+// }
+
+
+export async function SendGreetingTemplates(client: Client, user: IUser) {
+    if (client) {
+        let cronString = "1/5 * * * *"
+        // let cronString = "0 0 1/1 * *"
+        GreetingManager.add("greetings"
+            , cronString, async () => {
+                let greetings = await Greeting.find()
+                greetings.forEach(async (greeting) => {
+                    if (greeting.is_active) {
+                        let dob_date = new Date(greeting.dob_time)
+                        let anv_date = new Date(greeting.anniversary_time)
+                        let date = new Date()
+                        if (dob_date.getDate() === date.getDate() && dob_date.getMonth() === date.getMonth())
+                            client.sendMessage(greeting.mobile, "happy birthday")
+                        if (anv_date.getDate() === date.getDate() && anv_date.getMonth() === date.getMonth())
+                            client.sendMessage(greeting.mobile, "happy anniversary")
+                    }
+                })
+            })
+        GreetingManager.start("greetings")
     }
-
-    if (!isWhatsapp)
-        response = "notwhatsapp"
-
-    if (sent)
-        response = "sent"
-    return response
 }
