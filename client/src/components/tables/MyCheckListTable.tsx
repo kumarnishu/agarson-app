@@ -47,7 +47,12 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                                 Actions
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                                No.
+
+                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -110,7 +115,9 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                                                 </IconButton>
                                             </Tooltip>
                                         </STableCell>
-
+                                        <STableCell>
+                                            {checklist.serial_no || 0}
+                                        </STableCell>
                                         <STableCell>
                                             <a href={checklist.sheet_url} target='blank'>{checklist.title}</a>
                                         </STableCell>
@@ -127,6 +134,8 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                                             }
 
                                         </STableCell>
+                                     
+
                                         <STableCell>
                                             Checked : {checklist.boxes.filter((box) => {
                                                 return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()

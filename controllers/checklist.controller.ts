@@ -17,11 +17,11 @@ export const GetCheckLists = async (req: Request, res: Response, next: NextFunct
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
 
         if (!id) {
-            checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('serial_no').skip((page - 1) * limit).limit(limit)
             count = await Checklist.find().countDocuments()
         }
         if (id) {
-            checklists = await Checklist.find({ owner: id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            checklists = await Checklist.find({ owner: id }).populate('owner').populate('updated_by').populate('created_by').sort('serial_no').skip((page - 1) * limit).limit(limit)
             count = await Checklist.find({ id: id }).countDocuments()
         }
 
@@ -54,7 +54,7 @@ export const GetMyCheckLists = async (req: Request, res: Response, next: NextFun
     let start_date = req.query.start_date
     let end_date = req.query.end_date
 
-    let checklists = await Checklist.find({ owner: req.user._id }).populate('owner').populate('updated_by').populate('created_by').sort('-created_at')
+    let checklists = await Checklist.find({ owner: req.user._id }).populate('owner').populate('updated_by').populate('created_by').sort('serial_no')
 
     if (start_date && end_date) {
         let dt1 = new Date(String(start_date))
@@ -97,11 +97,13 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
             current_date.setDate(new Date(current_date).getDate() + 1)
         }
     }
+    let count = await Checklist.countDocuments()
     if (user) {
         let checklist = new Checklist({
             owner: user,
             title,
             sheet_url,
+            serial_no: count + 1,
             boxes,
             created_at: new Date(),
             updated_at: new Date(),
@@ -114,10 +116,10 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
 }
 
 export const EditChecklist = async (req: Request, res: Response, next: NextFunction) => {
-    const { title, sheet_url, user_id } = req.body as IChecklistBody & { user_id: string }
+    const { title, sheet_url, user_id, serial_no } = req.body as IChecklistBody & { user_id: string }
 
     let id = req.params.id
-    if (!title || !sheet_url)
+    if (!title || !sheet_url || !serial_no)
         return res.status(400).json({ message: "please provide all required fields" })
     let checklist = await Checklist.findById(id)
     if (!checklist)
@@ -131,6 +133,7 @@ export const EditChecklist = async (req: Request, res: Response, next: NextFunct
 
 
     checklist.title = title
+    checklist.serial_no = serial_no
     checklist.sheet_url = sheet_url
 
     await checklist.save()

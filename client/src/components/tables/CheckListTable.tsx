@@ -50,20 +50,20 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                             <STableHeadCell
                             >
 
-                               
-                                    <Checkbox
-                                        indeterminate={selectAll ? true : false}
-                                        checked={Boolean(selectAll)}
-                                        size="small" onChange={(e) => {
-                                            if (e.currentTarget.checked) {
-                                                setSelectedCheckLists(checklists)
-                                                setSelectAll(true)
-                                            }
-                                            if (!e.currentTarget.checked) {
-                                                setSelectedCheckLists([])
-                                                setSelectAll(false)
-                                            }
-                                        }} />
+
+                                <Checkbox
+                                    indeterminate={selectAll ? true : false}
+                                    checked={Boolean(selectAll)}
+                                    size="small" onChange={(e) => {
+                                        if (e.currentTarget.checked) {
+                                            setSelectedCheckLists(checklists)
+                                            setSelectAll(true)
+                                        }
+                                        if (!e.currentTarget.checked) {
+                                            setSelectedCheckLists([])
+                                            setSelectAll(false)
+                                        }
+                                    }} />
 
                             </STableHeadCell>
 
@@ -75,7 +75,12 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
 
                             </STableHeadCell>}
 
+                            <STableHeadCell
+                            >
 
+                                No.
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -97,7 +102,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
 
                             </STableHeadCell>
 
-                           
+
 
                             <STableHeadCell
                             >
@@ -231,7 +236,9 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                         </Stack>} />
                                             </STableCell>}
 
-
+                                        <STableCell>
+                                            {checklist.serial_no || 0}
+                                        </STableCell>
                                         <STableCell>
 
 

@@ -7,6 +7,7 @@ const ChecklistSchema = new mongoose.Schema<IChecklist, mongoose.Model<IChecklis
         lowercase: true,
         required: true
     },
+    serial_no:Number,
     sheet_url: {
         type: String,
         required: true

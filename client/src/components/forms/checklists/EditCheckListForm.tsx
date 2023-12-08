@@ -20,6 +20,7 @@ function EditCheckListForm({ checklist, users }: { checklist: IChecklist, users:
                 title: string;
                 sheet_url: string;
                 user_id: string;
+                serial_no: number;
             }
         }>
         (EditCheckList, {
@@ -33,20 +34,24 @@ function EditCheckListForm({ checklist, users }: { checklist: IChecklist, users:
     const formik = useFormik<{
         title: string;
         sheet_url: string;
+        serial_no: number,
     }>({
         initialValues: {
             title: checklist.title,
             sheet_url: checklist.sheet_url,
+            serial_no: checklist.serial_no || 0
         },
         validationSchema: Yup.object({
             title: Yup.string().required("required field")
                 .min(5, 'Must be 5 characters or more')
                 .max(200, 'Must be 200 characters or less'),
-            sheet_url: Yup.string().required("required field")
+            sheet_url: Yup.string().required("required field"),
+            serial_no: Yup.number().required("required")
         }),
         onSubmit: (values: {
             title: string;
             sheet_url: string,
+            serial_no: number
         }) => {
             if (checklist && personId)
                 mutate({
@@ -54,7 +59,8 @@ function EditCheckListForm({ checklist, users }: { checklist: IChecklist, users:
                     body: {
                         title: values.title,
                         sheet_url: values.sheet_url,
-                        user_id: personId
+                        user_id: personId,
+                        serial_no: values.serial_no
                     }
                 })
         }
@@ -75,6 +81,20 @@ function EditCheckListForm({ checklist, users }: { checklist: IChecklist, users:
             >
                 {/* titles */}
                 <TextField
+                    required
+                    error={
+                        formik.touched.serial_no && formik.errors.serial_no ? true : false
+                    }
+                    id="serial_no"
+                    label="Serial Number"
+                    fullWidth
+                    helperText={
+                        formik.touched.serial_no && formik.errors.serial_no ? formik.errors.serial_no : ""
+                    }
+                    {...formik.getFieldProps('serial_no')}
+                />
+
+                <TextField
                     multiline
                     minRows={4}
                     required
@@ -91,7 +111,7 @@ function EditCheckListForm({ checklist, users }: { checklist: IChecklist, users:
                 />
                 <TextField
                     multiline
-                    minRows={4}
+                    minRows={2}
                     required
                     error={
                         formik.touched.sheet_url && formik.errors.sheet_url ? true : false

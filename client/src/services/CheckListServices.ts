@@ -7,7 +7,7 @@ export const CreateCheckList = async ({ body, id }: { body: { title: string, she
 export const AddMoreCheckBoxes = async ({ body, id }: { body: { upto_date: string }, id: string }) => {
     return await apiClient.patch(`checklists/${id}`, body);
 };
-export const EditCheckList = async ({ body, id }: { body: { title: string, sheet_url: string, user_id: string }, id: string }) => {
+export const EditCheckList = async ({ body, id }: { body: { title: string, sheet_url: string, user_id: string, serial_no: number }, id: string }) => {
     return await apiClient.put(`checklists/${id}`, body);
 };
 
