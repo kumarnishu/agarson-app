@@ -200,14 +200,16 @@ export async function SendGreetingTemplates(client: Client, user: IUser) {
                             let dob_template = getRandomTemplate(await MessageTemplate.find({ category: 'happy birthday' }))
                             let url = dob_template?.template.media?.public_url || ""
                             let message = `Dear ${greeting.name}\n` + dob_template?.template.message || ""
-                            await SendGreetingMessage(client, greeting.mobile, user, message, "", url)
+                            let caption = `Dear ${greeting.name}\n` + dob_template?.template.caption || ""
+                            await SendGreetingMessage(client, greeting.mobile, user, message, caption, url)
+
                         }
                         if (anv_date.getDate() === date.getDate() && anv_date.getMonth() === date.getMonth()) {
                             let anniversary_template = getRandomTemplate(await MessageTemplate.find({ category: 'anniversary' }))
                             let url = anniversary_template?.template.media?.public_url || ""
                             let message = `Dear ${greeting.name}\n` + anniversary_template?.template.message || ""
-                            await SendGreetingMessage(client, greeting.mobile, user, message, "", url)
-
+                            let caption = `Dear ${greeting.name}\n` + anniversary_template?.template.caption || ""
+                            await SendGreetingMessage(client, greeting.mobile, user, message, caption, url)
                         }
                     }
                 })

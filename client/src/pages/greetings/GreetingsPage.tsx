@@ -21,13 +21,24 @@ import StopAllGreetingsDialog from '../../components/dialogs/greetings/StopAllGr
 
 type SelectedData = {
   name?: string,
-  type?: string,
-  status?: string,
-  start_time: Date,
-  updated_at: Date,
-  created_by: string
+  party?: string,
+  mobile?: string,
+  category?: string,
+  date_of_birth?: string,
+  anniversary?: string,
+  updated_at?: Date,
+  created_by?: string
 
 }
+const template: SelectedData[] = [{
+  name: "nishu",
+  party: "ram footwear",
+  mobile: "9898989898",
+  category: "party",
+  date_of_birth: new Date().toLocaleDateString(),
+  anniversary: new Date().toLocaleDateString(),
+}
+]
 
 export default function GreetingPage() {
   const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IGreeting[]>, BackendError>("greetings", GetGreetings)
@@ -38,7 +49,7 @@ export default function GreetingPage() {
   const [preFilteredData, setPreFilteredData] = useState<IGreeting[]>([])
   const [selectedGreetings, setSelectedGreetings] = useState<IGreeting[]>([])
   const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<SelectedData[]>([])
+  const [selectedData, setSelectedData] = useState<SelectedData[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -46,8 +57,6 @@ export default function GreetingPage() {
   function handleExcel() {
     setAnchorEl(null)
     try {
-      if (selectedData.length === 0)
-        return alert("please select some rows")
       ExportToExcel(selectedData, "greeting_data")
       setSent(true)
       setSelectAll(false)
@@ -63,13 +72,15 @@ export default function GreetingPage() {
 
   // refine data
   useEffect(() => {
-    let data: SelectedData[] = []
+    let data: SelectedData[] = template
     selectedGreetings.map((greeting) => {
       return data.push({
         name: greeting.name,
-        type: greeting.party ? "custom" : "template",
-        status: greeting.is_active ? "active" : "disabled",
-        start_time: new Date(greeting.created_at),
+        party: greeting.party,
+        mobile: greeting.mobile,
+        category: greeting.category,
+        date_of_birth: new Date(greeting.dob_time).toLocaleDateString(),
+        anniversary: new Date(greeting.anniversary_time).toLocaleDateString(),
         updated_at: new Date(greeting.updated_at),
         created_by: greeting.created_by && greeting.created_by.username
       })
@@ -99,6 +110,7 @@ export default function GreetingPage() {
       setGreetings(preFilteredData)
 
   }, [filter, greetings])
+
   return (
     <>
       {
