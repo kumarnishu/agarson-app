@@ -195,9 +195,9 @@ export async function SendGreetingTemplates(client: Client, user: IUser) {
                         let anv_date = new Date(greeting.anniversary_time)
                         let date = new Date()
                         if (dob_date.getDate() === date.getDate() && dob_date.getMonth() === date.getMonth())
-                            client.sendMessage(greeting.mobile, "happy birthday")
+                            await client.sendMessage(greeting.mobile, "happy birthday")
                         if (anv_date.getDate() === date.getDate() && anv_date.getMonth() === date.getMonth())
-                            client.sendMessage(greeting.mobile, "happy anniversary")
+                            await client.sendMessage(greeting.mobile, "happy anniversary")
                     }
                 })
             })

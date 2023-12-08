@@ -226,11 +226,10 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                 lead.stage = "useless"
                 await lead.save()
             }
-            let from = msg.from.replace("91", "").replace("@c.us", "")
             let broadcasts = await Broadcast.find({ leads_selected: true })
             broadcasts.forEach(async (b) => {
-                if (from) {
-                    let reports = await BroadcastReport.find({ broadcast: b, mobile: from })
+                if (msg.from) {
+                    let reports = await BroadcastReport.find({ broadcast: b, mobile: msg.from })
                     reports.forEach(async (r) => {
                         await r.remove()
                     })
