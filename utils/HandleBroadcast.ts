@@ -13,7 +13,7 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
     if (broadcast && client) {
         let daily_limit = broadcast.daily_limit
         if (start_by_server && daily_limit > 0) {
-            let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
+            let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').sort('-created_at')
             if (latest_broadcast && latest_broadcast.is_active) {
                 if (!latest_broadcast.is_paused) {
                     latest_broadcast.is_paused = false
@@ -81,7 +81,7 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
         if (!start_by_server && daily_limit > 0) {
             BroadcastManager.add(broadcast.cron_key
                 , broadcast.cron_string, async () => {
-                    let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
+                    let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').sort('-created_at')
                     if (latest_broadcast && latest_broadcast.is_active) {
                         latest_broadcast.is_paused = false
                         latest_broadcast.daily_count = 0
@@ -160,7 +160,7 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
             BroadcastManager.start(broadcast.cron_key)
         }
         if (!daily_limit || daily_limit <= 0) {
-            let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
+            let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').sort('-created_at')
             if (latest_broadcast && latest_broadcast.is_active) {
                 let is_random = latest_broadcast?.is_random_template
                 let templates = latest_broadcast?.templates
@@ -231,7 +231,7 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
     if (broadcast && client) {
         let daily_limit = Number(broadcast.daily_limit)
         if (start_by_server && daily_limit > 0) {
-            let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
+            let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').sort('-created_at')
             if (latest_broadcast && latest_broadcast.is_active) {
                 if (!latest_broadcast.is_paused) {
                     latest_broadcast.is_paused = false
@@ -299,7 +299,7 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
         if (!start_by_server && daily_limit > 0) {
             BroadcastManager.add(broadcast.cron_key
                 , broadcast.cron_string, async () => {
-                    let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
+                    let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').sort('-created_at')
                     if (latest_broadcast && latest_broadcast.is_active) {
                         latest_broadcast.is_paused = false
                         latest_broadcast.next_run_date = new Date(cron.sendAt(latest_broadcast.cron_string))
@@ -377,7 +377,7 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
         }
 
         if (!daily_limit || daily_limit <= 0) {
-            let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
+            let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').sort('-created_at')
             if (latest_broadcast && latest_broadcast.is_active) {
                 let message = latest_broadcast.message
                 let timegap = Number(latest_broadcast?.time_gap) * 1000 || 10000

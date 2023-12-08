@@ -109,7 +109,7 @@ export const CreateBroadcastByTemplate = async (req: Request, res: Response, nex
     }
     //for leads
     if (!mobiles) {
-        let oldLeads = await Lead.find().sort('-created_at')
+        let oldLeads = await Lead.find()
         oldLeads = oldLeads.filter((l) => { return l.stage !== "useless" })
         oldLeads.forEach((lead) => {
             if (lead.mobile)
@@ -196,7 +196,7 @@ export const CreateBroadcastByMessage = async (req: Request, res: Response, next
     }
     //for leads
     if (!mobiles) {
-        let oldLeads = await Lead.find().sort('-created_at')
+        let oldLeads = await Lead.find()
         oldLeads = oldLeads.filter((l) => { return l.stage !== "useless" })
         oldLeads.forEach((lead) => {
             if (lead.mobile)
@@ -293,7 +293,7 @@ export const UpdateBroadcastByMessage = async (req: Request, res: Response, next
     }
     //for leads
     if (!mobiles) {
-        let oldLeads = await Lead.find().sort('-created_at')
+        let oldLeads = await Lead.find()
         oldLeads = oldLeads.filter((l) => { return l.stage !== "useless" })
         oldLeads.forEach((lead) => {
             if (lead.mobile)
@@ -380,7 +380,7 @@ export const UpdateBroadcastByTemplate = async (req: Request, res: Response, nex
     }
     //for leads
     if (!mobiles) {
-        let oldLeads = await Lead.find().sort('-created_at')
+        let oldLeads = await Lead.find()
         oldLeads = oldLeads.filter((l) => { return l.stage !== "useless" })
         oldLeads.forEach((lead) => {
             if (lead.mobile)
@@ -597,7 +597,7 @@ export const ResetBroadcast = async (req: Request, res: Response, next: NextFunc
         return res.status(400).json({ message: "not found" })
 
     let newMobiles: string[] = []
-    let oldLeads = await Lead.find().sort('-created_at')
+    let oldLeads = await Lead.find()
     oldLeads = oldLeads.filter((l) => { return l.stage !== "useless" })
     oldLeads.forEach((lead) => {
         if (lead.mobile)
