@@ -12,18 +12,18 @@ export const UpdateGreeting = async ({ id, body }: { id: string, body: { name: s
 };
 
 export const StartAllGreetings = async ({  body }: {  body: { client_id: string } }) => {
-    return await apiClient.patch(`greetings/start/bulk`, body);
+    return await apiClient.patch(`greetings/bulk/start`, body);
 };
 
 export const StopAllGreetings = async () => {
-    return await apiClient.patch(`greetings/stop/bulk`);
+    return await apiClient.patch(`greetings/bulk/stop`);
 };
 
 export const DeleteGreeting = async (id: string) => {
     return await apiClient.delete(`greetings/${id}`);
 };
 export const StartGreeting = async (id: string) => {
-    return await apiClient.patch(`greetings/start${id}`);
+    return await apiClient.patch(`greetings/start/${id}`);
 };
 export const StopGreeting = async (id: string) => {
     return await apiClient.patch(`greetings/stop/${id}`);

@@ -10,6 +10,6 @@ router.route("/greetings").get(isAuthenticatedUser, FetchGreetings)
 router.route("/greetings/start/:id").patch(isAuthenticatedUser, ActivateGreeting)
 router.route("/greetings/:id").delete(isAuthenticatedUser, DeleteGreeting)
 router.route("/greetings/stop/:id").patch(isAuthenticatedUser, StopGreeting)
-router.route("/greetings/stop/bulk").patch(isAuthenticatedUser, StopAllGreetings)
-router.route("/greetings/start/bulk/").patch(isAuthenticatedUser, StartAllGreetings)
+router.route("/greetings/bulk/stop").patch(isAuthenticatedUser, StopAllGreetings)
+router.route("/greetings/bulk/start").patch(isAuthenticatedUser, StartAllGreetings)
 export default router
