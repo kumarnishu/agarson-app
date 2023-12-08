@@ -143,7 +143,7 @@ function EditGreetingForm({ greeting }: { greeting: IGreeting }) {
                             formik.touched.dob_time && formik.errors.dob_time ? true : false
                         }
                         id="dob_time"
-                        label="Name"
+                        label="D.O.B"
                         helperText={
                             formik.touched.dob_time && formik.errors.dob_time ? formik.errors.dob_time : ""
                         }
@@ -157,7 +157,7 @@ function EditGreetingForm({ greeting }: { greeting: IGreeting }) {
                             formik.touched.anniversary_time && formik.errors.anniversary_time ? true : false
                         }
                         id="anniversary_time"
-                        label="Name"
+                        label="Anniversary"
                         helperText={
                             formik.touched.anniversary_time && formik.errors.anniversary_time ? formik.errors.anniversary_time : ""
                         }
