@@ -186,7 +186,7 @@ export async function SendGreetingMessage(client: Client, mobile: string, user: 
 
 export async function SendGreetingTemplates(client: Client, user: IUser) {
     if (client) {
-        let cronString = "1/2 * * * *"
+        let cronString = "0-59/2 * * * *"
         // let cronString = "0 0 1/1 * *"
         GreetingManager.add("greetings"
             , cronString, async () => {
