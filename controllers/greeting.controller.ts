@@ -114,6 +114,8 @@ export const StartGreeting = async (req: Request, res: Response, next: NextFunct
     greeting.is_active = true
     if (user?.connected_number)
         greeting.connected_number = user.connected_number
+    greeting.dob_whatsapp_status = "pending"
+    greeting.anniversary_whatsapp_status = "pending"
     greeting.start_date = new Date()
     greeting.next_run_anniversary_time = new Date(cron.sendAt(greeting.anniversary_cronstring))
     greeting.next_run_dob_time = new Date(cron.sendAt(greeting.dob_cronstring))
