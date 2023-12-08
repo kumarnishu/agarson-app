@@ -32,3 +32,6 @@ export const StopGreeting = async (id: string) => {
 export const GetGreetings = async () => {
     return await apiClient.get(`greetings`)
 }
+export const BulkGreetingUpdateFromExcel = async (body: FormData) => {
+    return await apiClient.put(`bulk/new/greetings`, body)
+}

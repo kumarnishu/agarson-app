@@ -39,9 +39,9 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
     const formik = useFormik<TformData>({
         initialValues: {
             name: template.name,
-            message: template.message || "",
+            message: template.message?.replaceAll("\n", "\\n").replaceAll("\t", "\\t") || "",
             category: template.category || "",
-            caption: template.caption || "",
+            caption: template.caption?.replaceAll("\n", "\\n").replaceAll("\t", "\\t") || "",
             media: ''
         },
         validationSchema: Yup.object({

@@ -1,16 +1,14 @@
-import { Delete, Edit, RestartAlt, Stop } from '@mui/icons-material'
+import { Delete, Edit,  Stop } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { GreetingChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import UpdateGreetingDialog from '../dialogs/greetings/UpdateGreetingDialog'
 import DeleteGreetingDialog from '../dialogs/greetings/DeleteGreetingDialog'
-import StopGreetingDialog from '../dialogs/greetings/StopGreetingDialog'
 import PopUp from '../popup/PopUp'
 import { IGreeting } from '../../types/greeting.types'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import StartGreetingDialog from '../dialogs/greetings/StartGreeting'
 
 
 type Props = {
@@ -124,28 +122,12 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                             </STableHeadCell>
 
 
-                            <STableHeadCell
-                            >
 
-                                Updated At
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Created At
-
-                            </STableHeadCell>
                             <STableHeadCell
                             >
 
                                 Created By
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Updated By
 
                             </STableHeadCell>
                         </STableRow>
@@ -194,38 +176,7 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                         {/* actions */}
                                         {user?.crm_access_fields.is_editable &&
                                             <STableCell>
-                                                <PopUp element={<Stack direction="row">{
-                                                    !greeting.is_active ?
-                                                        <>
-                                                            <Tooltip title="Start Greeting">
-                                                                <IconButton
-                                                                    color="info"
-                                                                    size="medium"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: GreetingChoiceActions.start_greeting })
-
-                                                                        setGreeting(greeting)
-                                                                    }}>
-                                                                    <RestartAlt />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        </>
-                                                        :
-                                                        <Tooltip title="Stop">
-                                                            <IconButton
-                                                                color="error"
-                                                                size="medium"
-                                                                onClick={() => {
-
-                                                                    setChoice({ type: GreetingChoiceActions.stop_greeting })
-                                                                    setGreeting(greeting)
-                                                                }}>
-                                                                <Stop />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                }
-
-
+                                                <PopUp element={<Stack direction="row">
                                                     <Tooltip title="edit">
                                                         <IconButton
                                                             color="success"
@@ -275,11 +226,11 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                         </STableCell>
 
                                         <STableCell>
-                                            {greeting.dob_time && new Date(greeting.dob_time).toLocaleString()}
+                                            {greeting.dob_time && new Date(greeting.dob_time).toLocaleDateString()}
                                         </STableCell>
 
                                         <STableCell>
-                                            {greeting.anniversary_time && new Date(greeting.anniversary_time).toLocaleString()}
+                                            {greeting.anniversary_time && new Date(greeting.anniversary_time).toLocaleDateString()}
                                         </STableCell>
                                         <STableCell>
                                             {greeting.start_date && new Date(greeting.start_date).toLocaleString()}
@@ -290,18 +241,11 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                             {greeting.connected_number && greeting.connected_number.toString().replace("91", "").replace("@c.us", "")}
                                         </STableCell>
 
-                                        <STableCell>
-                                            {greeting.updated_at && new Date(greeting.updated_at).toLocaleString()}
-                                        </STableCell>
-                                        <STableCell>
-                                            {greeting.created_at && new Date(greeting.created_at).toLocaleString()}
-                                        </STableCell>
+                                      
                                         <STableCell>
                                             {greeting.created_by.username}
                                         </STableCell>
-                                        <STableCell>
-                                            {greeting.updated_by.username}
-                                        </STableCell>
+                                       
 
                                     </STableRow>
                                 )
@@ -313,8 +257,6 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                         <>
                             <UpdateGreetingDialog greeting={greeting} />
                             <DeleteGreetingDialog greeting={greeting} />
-                            <StopGreetingDialog greeting={greeting} />
-                            <StartGreetingDialog greeting={greeting} />
                         </> : null
                 }
             </Box >
