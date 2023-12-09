@@ -181,7 +181,6 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                                         <IconButton
                                                             color="success"
                                                             size="medium"
-                                                            disabled={Boolean(greeting.is_active)}
                                                             onClick={() => {
                                                                 setChoice({ type: GreetingChoiceActions.update_greeting })
                                                                 setGreeting(greeting)
@@ -195,7 +194,6 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                                                 color="error"
                                                                 size="medium"
                                                                 onClick={() => {
-
                                                                     setChoice({ type: GreetingChoiceActions.delete_greeting })
                                                                     setGreeting(greeting)
                                                                 }}>

@@ -197,7 +197,8 @@ export async function SendGreetingTemplates(client: Client, user: IUser) {
                         let anv_date = new Date(greeting.anniversary_time)
                         let date = new Date()
                         if (dob_date.getDate() === date.getDate() && dob_date.getMonth() === date.getMonth()) {
-                            let dob_template = getRandomTemplate(await MessageTemplate.find({ category: 'happy birthday' }))
+                            let templates = await MessageTemplate.find({ category: 'happy birthday' })
+                            let dob_template = await getRandomTemplate(templates)
                             let url = dob_template?.template.media?.public_url || ""
                             let message = `Dear ${greeting.name}\n` + dob_template?.template.message || ""
                             let caption = `Dear ${greeting.name}\n` + dob_template?.template.caption || ""
@@ -205,7 +206,8 @@ export async function SendGreetingTemplates(client: Client, user: IUser) {
 
                         }
                         if (anv_date.getDate() === date.getDate() && anv_date.getMonth() === date.getMonth()) {
-                            let anniversary_template = getRandomTemplate(await MessageTemplate.find({ category: 'anniversary' }))
+                            let templates = await MessageTemplate.find({ category: 'anniversary' })
+                            let anniversary_template = await getRandomTemplate(templates)
                             let url = anniversary_template?.template.media?.public_url || ""
                             let message = `Dear ${greeting.name}\n` + anniversary_template?.template.message || ""
                             let caption = `Dear ${greeting.name}\n` + anniversary_template?.template.caption || ""
