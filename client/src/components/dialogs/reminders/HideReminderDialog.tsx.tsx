@@ -26,7 +26,7 @@ function HideReminderDialog({ reminder }: { reminder: IReminder }) {
                 setChoice({ type: ReminderChoiceActions.close_reminder })
             }, 1000)
     }, [setChoice, isSuccess])
-    
+
     return (
         <>
             <Dialog open={choice === ReminderChoiceActions.hide_reminder ? true : false}
@@ -39,15 +39,15 @@ function HideReminderDialog({ reminder }: { reminder: IReminder }) {
                 }
                 {
                     isSuccess ? (
-                        <AlertBar message={"reset successfull"} color="success" />
+                        <AlertBar message={"successfull"} color="success" />
                     ) : null
                 }
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: ReminderChoiceActions.close_reminder })}>
                     <Cancel fontSize='large' />
                 </IconButton>
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Hide Reminder</DialogTitle>
+                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>{reminder.is_hidden ? "Unhide Reminder" : "Hide Reminder"}</DialogTitle>
                 <DialogContent>
-                    This Will hide reminder {reminder.name}
+                    This Will toogle hideden property of  reminder {reminder.name}
                 </DialogContent>
                 <DialogActions sx={{ p: 2 }}>
                     <Button fullWidth variant="outlined" color="error"
@@ -58,7 +58,7 @@ function HideReminderDialog({ reminder }: { reminder: IReminder }) {
                         disabled={isLoading}
                     >
                         {isLoading ? <CircularProgress /> :
-                            "Hide"}
+                            "Submit"}
                     </Button>
 
                 </DialogActions>

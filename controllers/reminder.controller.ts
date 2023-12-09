@@ -612,7 +612,7 @@ export const StopReminder = async (req: Request, res: Response, next: NextFuncti
     return res.status(200).json({ message: "reminder stopped" })
 }
 
-export const HideReminder = async (req: Request, res: Response, next: NextFunction) => {
+export const ToogleHideReminder = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     if (!isMongoId(id)) {
         return res.status(400).json({ message: "please provide correct reminder id" })
@@ -621,10 +621,11 @@ export const HideReminder = async (req: Request, res: Response, next: NextFuncti
     if (!reminder)
         return res.status(400).json({ message: "not found" })
     await Reminder.findByIdAndUpdate(reminder._id, {
-        is_hidden: true
+        is_hidden: !reminder.is_hidden
     })
     return res.status(200).json({ message: "reminder hidden" })
 }
+
 export const StopSingleContactReport = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     if (!isMongoId(id)) {

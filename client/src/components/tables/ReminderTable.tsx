@@ -257,7 +257,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                             <Block />
                                                         </IconButton>
                                                     </Tooltip>
-                                                    <Tooltip title="Hide Reminder">
+                                                    <Tooltip title="Toogle Hidden Reminder">
                                                         <IconButton
                                                             color="warning"
                                                             size="medium"
