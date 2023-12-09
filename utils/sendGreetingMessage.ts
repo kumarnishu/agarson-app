@@ -60,11 +60,11 @@ export async function SendGreetingMessage(client: Client, mobile: string, user: 
             sent = true
         }
         if (caption && media_url) {
-            client.sendMessage(mobile, await MessageMedia.fromUrl(media_url), { caption: caption })
+            client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true }), { caption: caption })
             sent = true
         }
         if (!caption && media_url) {
-            await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url), { caption })
+            await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true }), { caption: caption })
             sent = true
         }
     }

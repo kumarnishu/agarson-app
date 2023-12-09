@@ -31,20 +31,20 @@ export async function sendTemplates(client: Client, mobile: string, time_gap: nu
             }
             if (caption && media_url) {
                 if (msg_id && is_todo)
-                    client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: caption + `\n\nType STOP-${msg_id} to complete this task\n` })
+                    client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: caption + `\n\nType STOP-${msg_id} to complete this task\n` })
                 else if (msg_id && !is_todo)
-                    client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: caption })
+                    client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: caption })
                 else
-                    client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: caption + `\n\nType STOP to stop this message\n` })
+                    client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: caption + `\n\nType STOP to stop this message\n` })
                 sent = true
             }
             if (!caption && media_url) {
                 if (msg_id && is_todo)
-                    await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: `\n\nType STOP-${msg_id} to complete this task\n` })
+                    await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: `\n\nType STOP-${msg_id} to complete this task\n` })
                 else if (msg_id && !is_todo)
-                    client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }))
+                    client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }))
                 else
-                    await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: `\n\nType STOP to stop this message\n` })
+                    await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: `\n\nType STOP to stop this message\n` })
                 sent = true
             }
         }
@@ -76,20 +76,20 @@ export async function sendTemplates(client: Client, mobile: string, time_gap: nu
                 }
                 if (caption && media_url) {
                     if (msg_id && is_todo)
-                        client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: caption + `\n\nType STOP-${msg_id} to complete this task\n` })
+                        client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: caption + `\n\nType STOP-${msg_id} to complete this task\n` })
                     else if (msg_id && !is_todo)
-                        client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: caption })
+                        client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: caption })
                     else
-                        client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: caption + `\n\nType STOP to stop this message\n` })
+                        client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: caption + `\n\nType STOP to stop this message\n` })
                     sent = true
                 }
                 if (!caption && media_url) {
                     if (msg_id && is_todo)
-                        await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: `\n\nType STOP-${msg_id} to complete this task\n` })
+                        await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: `\n\nType STOP-${msg_id} to complete this task\n` })
                     else if (msg_id && !is_todo)
-                        client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }))
+                        client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }))
                     else
-                        await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: `\n\nType STOP to stop this message\n` })
+                        await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: `\n\nType STOP to stop this message\n` })
                     sent = true
                 }
             }
@@ -125,20 +125,20 @@ export async function sendMessage(client: Client, mobile: string, time_gap: numb
         }
         if (caption && media_url) {
             if (msg_id && is_todo)
-                client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: caption + `\n\nType STOP-${msg_id} to complete this task\n` })
+                client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: caption + `\n\nType STOP-${msg_id} to complete this task\n` })
             else if (msg_id && !is_todo)
-                client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: caption })
+                client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: caption })
             else
-                client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: caption + `\n\nType STOP to stop this message\n` })
+                client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: caption + `\n\nType STOP to stop this message\n` })
             sent = true
         }
         if (!caption && media_url) {
             if (msg_id && is_todo)
-                await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: `\n\nType STOP-${msg_id} to complete this task\n` })
+                await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: `\n\nType STOP-${msg_id} to complete this task\n` })
             else if (msg_id && !is_todo)
-                client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }))
+                client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }))
             else
-                await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { filename: filename }), { caption: `\n\nType STOP to stop this message\n` })
+                await client.sendMessage(mobile, await MessageMedia.fromUrl(media_url, { unsafeMime: true, filename: filename }), { caption: `\n\nType STOP to stop this message\n` })
             sent = true
         }
     }
