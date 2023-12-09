@@ -25,7 +25,7 @@ const GreetingSchema = new mongoose.Schema<IGreeting, mongoose.Model<IGreeting, 
 
     is_active: {
         type: Boolean,
-        default: false,
+        default: true,
     },
     last_run_date: {
         type: Date
