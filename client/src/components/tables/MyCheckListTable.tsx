@@ -1,4 +1,4 @@
-import { Box, IconButton, Tooltip } from '@mui/material'
+import { Box, Button, IconButton, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { IChecklist } from '../../types/checklist.types'
 import { RemoveRedEye } from '@mui/icons-material'
@@ -118,9 +118,13 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                                         <STableCell>
                                             {checklist.serial_no || 0}
                                         </STableCell>
-                                        <STableCell>
-                                            <a href={checklist.sheet_url} target='blank'>{checklist.title}</a>
-                                        </STableCell>
+                                        <Button
+                                            onClick={() => {
+                                                window.open(checklist.sheet_url, '_blank')
+                                            }}
+                                            href={checklist.sheet_url} target='blank'>
+                                            {checklist.title && checklist.title}
+                                        </Button>
                                         <STableCell>
                                             {checklist.boxes.filter((box) => {
                                                 return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()

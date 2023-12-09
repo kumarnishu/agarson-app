@@ -505,7 +505,7 @@ function AppRoutes() {
               />
             </Route>}
           {/* greetings nav bar */}
-          {user.is_admin &&
+          {!user.greetings_access_fields.is_hidden &&
             < Route path={paths.greetings} element={<GreetingsNavBar />
             }>
               <Route

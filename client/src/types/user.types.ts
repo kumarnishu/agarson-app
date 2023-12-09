@@ -1,4 +1,4 @@
-import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, RemindersAccess, ReportsAccess, TasksAccess, TemplatesAccess, TodoAccess, UserAccess, VisitAccess } from "./access.types"
+import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, GreetingAccess, RemindersAccess, ReportsAccess, TasksAccess, TemplatesAccess, TodoAccess, UserAccess, VisitAccess } from "./access.types"
 import { Asset } from "./asset.types"
 
 export type IUser = {
@@ -9,12 +9,10 @@ export type IUser = {
     email: string,
     mobile: string,
     dp: Asset,
-    //bot properties
     client_id: string,
     client_data_path: string,
     connected_number: string,
     is_whatsapp_active: Boolean,
-    //auth properties
     is_admin: Boolean,
     user_access_fields: UserAccess,
     crm_access_fields: CrmAccess,
@@ -26,25 +24,31 @@ export type IUser = {
     reminders_access_fields: RemindersAccess,
     alps_access_fields: AlpsAccess,
     tasks_access_fields: TasksAccess,
-    checklists_access_fields:CheckListsAccess,
+    checklists_access_fields: CheckListsAccess,
+    greetings_access_fields: GreetingAccess,
     visit_access_fields: VisitAccess,
     reports_access_fields: ReportsAccess,
     todos_access_fields: TodoAccess,
     email_verified: Boolean,
     is_active: Boolean,
-    multi_login_token: string,
+    last_login: Date,
+    multi_login_token: string | null,
     is_multi_login: boolean,
     is_manager: boolean,
     assigned_users: IUser[]
-    last_login: Date,
     created_at: Date,
     updated_at: Date,
-    //ref properties
     created_by: IUser,
     updated_by: IUser
-    //tokens
     resetPasswordToken: string | null,
     resetPasswordExpire: Date | null,
     emailVerifyToken: string | null,
     emailVerifyExpire: Date | null
 }
+export type IUserMethods = {
+    getAccessToken: () => string,
+    comparePassword: (password: string) => boolean,
+    getResetPasswordToken: () => string,
+    getEmailVerifyToken: () => string
+}
+export type TUserBody = Request['body'] & IUser;

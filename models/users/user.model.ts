@@ -88,6 +88,11 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     is_deletion_allowed: { type: Boolean, default: false },
     is_editable: { type: Boolean, default: false },
   },
+  greetings_access_fields: {
+    is_hidden: { type: Boolean, default: false },
+    is_deletion_allowed: { type: Boolean, default: false },
+    is_editable: { type: Boolean, default: false },
+  },
   templates_access_fields: {
     is_hidden: { type: Boolean, default: false },
     is_deletion_allowed: { type: Boolean, default: false },

@@ -18,6 +18,7 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import NewGreetingDialog from '../../components/dialogs/greetings/NewGreetingDialog'
 import StartAllGreetingDialog from '../../components/dialogs/greetings/StartAllGreetingDialog'
 import StopAllGreetingsDialog from '../../components/dialogs/greetings/StopAllGreetingsDialog.tsx'
+import { UserContext } from '../../contexts/userContext.tsx'
 
 type SelectedData = {
   name?: string,
@@ -53,7 +54,7 @@ export default function GreetingPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+  const { user } = useContext(UserContext)
   function handleExcel() {
     setAnchorEl(null)
     try {
@@ -180,23 +181,25 @@ export default function GreetingPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              <MenuItem onClick={() => {
-                setChoice({ type: GreetingChoiceActions.create_greeting })
-                setAnchorEl(null)
-              }}
-              >New Greeting</MenuItem>
+              {user?.greetings_access_fields.is_editable && <>
+                <MenuItem onClick={() => {
+                  setChoice({ type: GreetingChoiceActions.create_greeting })
+                  setAnchorEl(null)
+                }}
+                >New Greeting</MenuItem>
 
-              <MenuItem onClick={() => {
-                setChoice({ type: GreetingChoiceActions.bulk_start_greeting })
-                setAnchorEl(null)
-              }}
-              >Start All</MenuItem>
+                <MenuItem onClick={() => {
+                  setChoice({ type: GreetingChoiceActions.bulk_start_greeting })
+                  setAnchorEl(null)
+                }}
+                >Start All</MenuItem>
 
-              <MenuItem onClick={() => {
-                setChoice({ type: GreetingChoiceActions.bulk_stop_greeting })
-                setAnchorEl(null)
-              }}
-              >Stop All</MenuItem>
+                <MenuItem onClick={() => {
+                  setChoice({ type: GreetingChoiceActions.bulk_stop_greeting })
+                  setAnchorEl(null)
+                }}
+                >Stop All</MenuItem>
+              </>}
 
               <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>

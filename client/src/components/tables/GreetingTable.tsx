@@ -57,7 +57,7 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                     }} />
 
                             </STableHeadCell>
-                            {user?.crm_access_fields.is_editable &&
+                            {user?.greetings_access_fields.is_editable &&
                                 <STableHeadCell
                                 >
 
@@ -174,7 +174,7 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                             null
                                         }
                                         {/* actions */}
-                                        {user?.crm_access_fields.is_editable &&
+                                        {user?.greetings_access_fields.is_editable &&
                                             <STableCell>
                                                 <PopUp element={<Stack direction="row">
                                                     <Tooltip title="edit">
@@ -189,7 +189,7 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                                             <Edit />
                                                         </IconButton>
                                                     </Tooltip>
-                                                    {user?.crm_access_fields.is_deletion_allowed &&
+                                                    {user?.greetings_access_fields.is_deletion_allowed &&
                                                         <Tooltip title="delete">
                                                             <IconButton
                                                                 color="error"

@@ -1,4 +1,4 @@
-import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
+import { Box, Button, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
@@ -242,9 +242,13 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                         <STableCell>
 
 
-                                            <a href={checklist.sheet_url} target='blank'>
+                                            <Button
+                                                onClick={() => {
+                                                    window.open(checklist.sheet_url, '_blank')
+                                                }}
+                                                href={checklist.sheet_url} target='blank'>
                                                 {checklist.title && checklist.title.slice(0, 50)}
-                                            </a>
+                                            </Button>
 
                                         </STableCell>
                                         <STableCell>
@@ -286,7 +290,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
             {
                 checklist ?
                     <>
-                        <EditCheckListDialog checklist={checklist} />
+                        < EditCheckListDialog checklist={checklist} />
                         <DeleteCheckListDialog checklist={checklist} />
                         <AddCheckBoxesDialog checklist={checklist} />
                         <ViewCheckListBoxesDialog dates={dates} checklist={checklist} />

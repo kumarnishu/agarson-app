@@ -8,6 +8,11 @@ export type AlpsAccess = {
     is_hidden: boolean,
     is_deletion_allowed: boolean
 }
+export type GreetingAccess = {
+    is_editable: boolean,
+    is_hidden: boolean,
+    is_deletion_allowed: boolean
+}
 
 export type BroadcastAccess = {
     is_editable: boolean,
@@ -55,7 +60,6 @@ export type CheckListsAccess = {
     is_hidden: boolean,
     is_deletion_allowed: boolean
 }
-
 export type ReportsAccess = {
     is_editable: boolean,
     is_hidden: boolean,
@@ -72,3 +76,4 @@ export type TodoAccess = {
     is_hidden: boolean,
     is_deletion_allowed: boolean
 }
+

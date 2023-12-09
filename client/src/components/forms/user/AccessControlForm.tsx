@@ -27,7 +27,8 @@ function AccessControlForm({ user }: { user: IUser }) {
         checklists_access_fields: user.checklists_access_fields,
         reports_access_fields: user.reports_access_fields,
         visit_access_fields: user.visit_access_fields,
-        todos_access_fields: user.todos_access_fields
+        todos_access_fields: user.todos_access_fields,
+        greetings_access_fields: user.greetings_access_fields
     })
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any>, BackendError, {
@@ -1008,6 +1009,68 @@ function AccessControlForm({ user }: { user: IUser }) {
 
                                                 is_hidden: Boolean(AccessFields.alps_access_fields.is_hidden),
                                                 is_deletion_allowed: Boolean(!AccessFields.alps_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+                        </STableRow>
+                        {/* greetings access fields */}
+                        <STableRow
+                        >
+
+                            <STableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    <Typography variant="button">Greetings
+                                    </Typography>
+                                </Stack>
+                            </STableCell>
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.greetings_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            greetings_access_fields: {
+                                                is_editable: Boolean(!AccessFields.greetings_access_fields.is_editable),
+
+                                                is_hidden: Boolean(AccessFields.greetings_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.greetings_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.greetings_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            greetings_access_fields: {
+                                                is_editable: Boolean(AccessFields.greetings_access_fields.is_editable),
+
+                                                is_hidden: Boolean(!AccessFields.greetings_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.greetings_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.greetings_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            greetings_access_fields: {
+                                                is_editable: Boolean(AccessFields.greetings_access_fields.is_editable),
+
+                                                is_hidden: Boolean(AccessFields.greetings_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.greetings_access_fields.is_deletion_allowed),
                                             }
                                         })}
 
