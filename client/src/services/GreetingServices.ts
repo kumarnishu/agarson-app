@@ -22,16 +22,6 @@ export const StopAllGreetings = async () => {
 export const DeleteGreeting = async (id: string) => {
     return await apiClient.delete(`greetings/${id}`);
 };
-export const StartGreeting = async (id: string) => {
-    return await apiClient.patch(`greetings/start/${id}`);
-};
-export const StopGreeting = async (id: string) => {
-    return await apiClient.patch(`greetings/stop/${id}`);
-};
-
 export const GetGreetings = async () => {
     return await apiClient.get(`greetings`)
-}
-export const BulkGreetingUpdateFromExcel = async (body: FormData) => {
-    return await apiClient.put(`bulk/new/greetings`, body)
 }
