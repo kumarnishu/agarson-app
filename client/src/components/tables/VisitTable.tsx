@@ -241,7 +241,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                             </STableCell>
                                             :
                                             null}
-                                        <STableCell>
+                                        <STableCell style={{ backgroundColor: Boolean(!visit.visit_validated) ? 'rgba(255,0,0,0.1)' : 'rgba(52, 200, 84, 0.6)' }}>
                                             <PopUp
                                                 element={
                                                     <Stack
