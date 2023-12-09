@@ -5,8 +5,8 @@ import { Greeting } from "../models/greetings/greeting.model"
 import { clients } from "../utils/CreateWhatsappClient"
 import { GreetingManager } from "../app"
 import { User } from "../models/users/user.model"
-import { SendGreetingTemplates } from "../utils/SendMessage"
 import xlsx from "xlsx"
+import { SendGreetingTemplates } from "../utils/sendGreetingMessage"
 
 export const FetchGreetings = async (req: Request, res: Response, next: NextFunction) => {
     let greetings = await Greeting.find().populate('created_by').populate('updated_at').populate('updated_by').sort("-created_at")
@@ -48,7 +48,9 @@ export const UpdateGreeting = async (req: Request, res: Response, next: NextFunc
     let greeting = await Greeting.findById(id)
     if (!greeting)
         return res.status(400).json({ message: `greeting not found` });
-    let newmobile = "91" + mobile + "@c.us"
+    let newmobile = mobile
+    if (mobile !== "91" + mobile + "@c.us")
+        greeting.mobile = "91" + mobile + "@c.us"
     if (greeting?.mobile !== mobile)
         if (await Greeting.findOne({ mobile: mobile }))
             return res.status(400).json({ message: `${mobile} already exists` });
@@ -92,7 +94,6 @@ export const ActivateGreeting = async (req: Request, res: Response, next: NextFu
         return res.status(400).json({ message: `greeting not found` });
     else {
         greeting.is_active = true
-        greeting.start_date = new Date()
         await greeting.save()
     }
     return res.status(200).json({ message: "greeting started" })
@@ -117,7 +118,6 @@ export const StartAllGreetings = async (req: Request, res: Response, next: NextF
     let greetings = await Greeting.find()
     greetings.forEach(async (greeting) => {
         greeting.is_active = true
-        greeting.start_date = new Date()
         if (user)
             greeting.connected_number = user.connected_number
         await greeting.save()

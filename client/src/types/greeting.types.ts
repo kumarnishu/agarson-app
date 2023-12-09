@@ -10,7 +10,7 @@ export type IGreeting = {
     anniversary_time: Date,
     is_active: boolean,
     connected_number: string,
-    start_date: Date,
+    last_run_date: Date,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

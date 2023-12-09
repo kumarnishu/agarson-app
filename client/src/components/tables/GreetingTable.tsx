@@ -1,4 +1,4 @@
-import { Delete, Edit,  Stop } from '@mui/icons-material'
+import { Delete, Edit, Stop } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -109,7 +109,7 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                             <STableHeadCell
                             >
 
-                                Start Date
+                                Last Run date
 
                             </STableHeadCell>
 
@@ -231,7 +231,7 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                             {greeting.anniversary_time && new Date(greeting.anniversary_time).toLocaleDateString()}
                                         </STableCell>
                                         <STableCell>
-                                            {greeting.start_date && new Date(greeting.start_date).toLocaleString()}
+                                            {greeting.last_run_date ? new Date(greeting.last_run_date).toLocaleString() : ""}
                                         </STableCell>
 
 
@@ -239,11 +239,11 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                             {greeting.connected_number && greeting.connected_number.toString().replace("91", "").replace("@c.us", "")}
                                         </STableCell>
 
-                                      
+
                                         <STableCell>
                                             {greeting.created_by.username}
                                         </STableCell>
-                                       
+
 
                                     </STableRow>
                                 )

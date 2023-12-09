@@ -27,7 +27,7 @@ const GreetingSchema = new mongoose.Schema<IGreeting, mongoose.Model<IGreeting, 
         type: Boolean,
         default: false,
     },
-    start_date: {
+    last_run_date: {
         type: Date
     },
     connected_number: String,
