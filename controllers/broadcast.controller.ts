@@ -12,7 +12,7 @@ import { BroadcastReport } from "../models/broadcast/broadcast.report.model"
 import { clearTimeout } from "timers"
 import { ExportToExcel } from "../utils/ExportToExcel"
 import { isvalidDate } from "../utils/isValidDate"
-import { GetDailyCronString } from "../utils/GetCronString"
+import { GetDailyBroadcastCronString } from "../utils/GetDailyBroadcastCronString"
 import cron from "cron"
 import { BroadcastManager } from "../app"
 import { IBroadcastBody } from "../types/broadcast.types"
@@ -473,7 +473,7 @@ export const StartBroadcastWithMessage = async (req: Request, res: Response, nex
     }
 
     broadcast.autoRefresh = Boolean(autoRefresh)
-    let cron_string = GetDailyCronString(new Date(start_date))
+    let cron_string = GetDailyBroadcastCronString(new Date(start_date))
     broadcast.cron_string = cron_string
     broadcast.next_run_date = new Date(cron.sendAt(broadcast.cron_string))
     broadcast.start_date = new Date(start_date)
@@ -538,7 +538,7 @@ export const StartBroadcastWithTemplate = async (req: Request, res: Response, ne
         broadcast.is_random_template = false
 
     broadcast.autoRefresh = Boolean(autoRefresh)
-    let cron_string = GetDailyCronString(new Date(start_date))
+    let cron_string = GetDailyBroadcastCronString(new Date(start_date))
     broadcast.cron_string = cron_string
     broadcast.next_run_date = new Date(cron.sendAt(broadcast.cron_string))
     broadcast.start_date = new Date(start_date)

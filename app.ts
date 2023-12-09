@@ -118,12 +118,7 @@ export const bucket = storage.bucket(bucketName)
 
 
 // restart jobs when restart server
-if (ENV !== "development") {
-    ReConnectWhatsapp()
-}
-else {
-    ReConnectWhatsapp()
-}
+ReConnectWhatsapp()
 
 export const ReminderManager = new CronJobManager()
 export const GreetingManager = new CronJobManager()
