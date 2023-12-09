@@ -25,8 +25,9 @@ export async function SendGreetingTemplates(client: Client, user: IUser) {
                             let url = dob_template?.template.media?.public_url || ""
                             let message = `Dear ${greeting.name}\n` + dob_template?.template.message || ""
                             let caption = `Dear ${greeting.name}\n` + dob_template?.template.caption || ""
-                            await SendGreetingMessage(client, greeting.mobile, user, message, caption, url)
-                            greeting.last_run_date=new Date()
+                            let mobile = "91" + greeting.mobile + "@c.us"
+                            await SendGreetingMessage(client, mobile, user, message, caption, url)
+                            greeting.last_run_date = new Date()
                             await greeting.save()
                         }
                         if (anv_date.getDate() === date.getDate() && anv_date.getMonth() === date.getMonth()) {
@@ -35,7 +36,8 @@ export async function SendGreetingTemplates(client: Client, user: IUser) {
                             let url = anniversary_template?.template.media?.public_url || ""
                             let message = `Dear ${greeting.name}\n` + anniversary_template?.template.message || ""
                             let caption = `Dear ${greeting.name}\n` + anniversary_template?.template.caption || ""
-                            await SendGreetingMessage(client, greeting.mobile, user, message, caption, url)
+                            let mobile = "91" + greeting.mobile + "@c.us"
+                            await SendGreetingMessage(client, mobile, user, message, caption, url)
                             greeting.last_run_date = new Date()
                             await greeting.save()
                         }
