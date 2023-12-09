@@ -221,11 +221,11 @@ function NewtemplateForm() {
 
                 {formik.values.media || formik.values.message ?
                     <Stack sx={{ bgcolor: 'black', maxWidth: '350px', p: 2 }}>
-                        {formik.values.message && <Typography sx={{ p: 1, m: 1, bgcolor: 'lightgreen', whiteSpace: 'pre-line', border: 1, borderColor: 'darkgreen', borderRadius: 1 }}>{formik.values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
+                        {formik.values.message && <Typography sx={{ p: 1, m: 1, bgcolor: 'lightgreen', whiteSpace: 'pre-wrap', border: 1, borderColor: 'darkgreen', borderRadius: 1 }}>{formik.values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
                         {formik.values.media && <Stack sx={{ bgcolor: 'lightgreen', m: 1, p: 1, wordBreak: 'break-all', border: 5, borderColor: 'darkgreen', borderRadius: 2 }}>
                             {/* @ts-ignore */}
                             {formik.values.media && <img src={formik.values.media && URL.createObjectURL(formik.values.media)} alt="image" />}
-                            {formik.values.caption && <Typography sx={{ py: 1, whiteSpace: 'pre-line' }}>{formik.values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
+                            {formik.values.caption && <Typography sx={{ py: 1, whiteSpace: 'pre-wrap' }}>{formik.values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
                         </Stack>}
                     </Stack> : null}
             </Stack>

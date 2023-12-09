@@ -100,7 +100,6 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
             }, 1000)
         }
     }, [isSuccess, setChoice])
-
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>
@@ -224,16 +223,16 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                         fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Update"}
                     </Button>
                 </Stack>
-                {formik.values.media || formik.values.message ?
+                {formik.values.media || formik.values.message || fileUrl ?
                     <Stack sx={{ bgcolor: 'black', maxWidth: '350px', p: 2 }}>
                         {formik.values.message && <Typography sx={{
                             p: 1, m: 1, bgcolor: 'lightgreen', border: 1,
-                            whiteSpace: 'pre-line', borderColor: 'darkgreen', borderRadius: 1
+                            whiteSpace: 'pre-wrap', borderColor: 'darkgreen', borderRadius: 1
                         }}>{formik.values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
                         {fileUrl && <Stack sx={{ bgcolor: 'lightgreen', m: 1, p: 1, wordBreak: 'break-all', border: 5, borderColor: 'darkgreen', borderRadius: 2 }}>
                             {/* @ts-ignore */}
                             {fileUrl && <img src={fileUrl} alt="media" />}
-                            {fileUrl && <Typography sx={{ py: 1, whiteSpace: 'pre-line' }}>{formik.values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
+                            {fileUrl && <Typography sx={{ py: 1, whiteSpace: 'pre-wrap' }}>{formik.values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
                         </Stack>}
                     </Stack> : null}
             </Stack>

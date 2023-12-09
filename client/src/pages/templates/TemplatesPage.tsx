@@ -92,6 +92,7 @@ export default function TemplatesPage() {
             < TextField
               size='small'
               select
+              defaultValue={'marketing'}
               SelectProps={{
                 native: true,
               }}
