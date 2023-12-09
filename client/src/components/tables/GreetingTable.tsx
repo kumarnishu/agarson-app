@@ -114,16 +114,7 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                             </STableHeadCell>
 
 
-                            <STableHeadCell
-                            >
-
-                                Connected Number
-
-                            </STableHeadCell>
-
-
-
-
+                    
                             <STableHeadCell
                             >
 
@@ -233,13 +224,6 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
                                         <STableCell>
                                             {greeting.last_run_date ? new Date(greeting.last_run_date).toLocaleString() : ""}
                                         </STableCell>
-
-
-                                        <STableCell>
-                                            {greeting.connected_number && greeting.connected_number.toString().replace("91", "").replace("@c.us", "")}
-                                        </STableCell>
-
-
                                         <STableCell>
                                             {greeting.created_by.username}
                                         </STableCell>

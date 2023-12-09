@@ -30,7 +30,6 @@ const GreetingSchema = new mongoose.Schema<IGreeting, mongoose.Model<IGreeting, 
     last_run_date: {
         type: Date
     },
-    connected_number: String,
     dob_time: Date,
     anniversary_time: Date,
     created_at: {
