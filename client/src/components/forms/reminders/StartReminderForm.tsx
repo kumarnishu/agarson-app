@@ -183,6 +183,9 @@ function StartReminderForm({ reminder, users, client }: { reminder: IReminder, u
             <option value="monthdays">
               monthdays
             </option>
+            <option value="yeardays">
+              yeardays
+            </option>
           </TextField>
 
 
@@ -195,7 +198,7 @@ function StartReminderForm({ reminder, users, client }: { reminder: IReminder, u
             id="frequency_value"
             label="Frequency"
             helperText={
-              formik.touched.frequency_value && formik.errors.frequency_value ? formik.errors.frequency_value : "for weekday and monthdays use comma seperator"
+              formik.touched.frequency_value && formik.errors.frequency_value ? formik.errors.frequency_value : "for weekday, monthdays and yeardays use comma seperator"
             }
             {...formik.getFieldProps('frequency_value')}
           />

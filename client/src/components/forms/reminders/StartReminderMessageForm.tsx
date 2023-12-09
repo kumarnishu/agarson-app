@@ -171,7 +171,9 @@ function StartReminderMessageForm({ reminder, users, client }: { reminder: IRemi
             <option value="monthdays">
               monthdays
             </option>
-
+            <option value="yeardays">
+              yeardays
+            </option>
           </TextField>
 
           <TextField
@@ -183,7 +185,7 @@ function StartReminderMessageForm({ reminder, users, client }: { reminder: IRemi
             id="frequency_value"
             label="Frequency"
             helperText={
-              formik.touched.frequency_value && formik.errors.frequency_value ? formik.errors.frequency_value : "for weekday and monthdays use comma seperator"
+              formik.touched.frequency_value && formik.errors.frequency_value ? formik.errors.frequency_value : "for weekday, monthdays and yeardays use comma seperator"
             }
             {...formik.getFieldProps('frequency_value')}
           />

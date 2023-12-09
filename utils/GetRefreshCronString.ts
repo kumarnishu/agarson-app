@@ -26,6 +26,9 @@ export const GetRefreshCronString = (frequency_type: string, frequency_value: st
         cronString = `${date.getMinutes()} ` + `${date.getHours()} ` + freq
             + " * " + "*"
     }
-
+    if (ftype === "yeardays" && freq && freq.length > 0) {
+        cronString = "20 " + `${date.getMinutes()} ` + `${date.getHours()} ` + freq
+            + ` ${date.getMonth()} ` + "*"
+    }
     return cronString
 }

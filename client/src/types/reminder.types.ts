@@ -14,6 +14,7 @@ export type IReminder = {
     frequency_type: string,
     frequency_value: string,
     cron_string: string,
+    is_hidden: boolean,
     refresh_cron_string: string,
     next_run_date: Date,
     next_refresh_date: Date,

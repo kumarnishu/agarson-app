@@ -16,14 +16,19 @@ import { ReminderWithMessage, ReminderWithTemplates, reminder_timeouts } from ".
 import { GetRunningCronString } from "../utils/GetRunningCronString"
 import { GetRefreshCronString } from "../utils/GetRefreshCronString"
 import { Contact } from "../models/contact/contact.model"
-import { IReminderBody } from "../types/reminder.types"
+import { IReminder, IReminderBody } from "../types/reminder.types"
 import { IMessage, IMessageTemplate } from "../types/template.types"
 
 
 
 //get
 export const GetReminders = async (req: Request, res: Response, next: NextFunction) => {
-    let reminders = await Reminder.find().populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("-created_at")
+    let hidden = String(req.query.hidden)
+    let reminders: IReminder[] = []
+    if (hidden === "true")
+        reminders = await Reminder.find().populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("-created_at")
+    else
+        reminders = await Reminder.find({ is_hidden: false }).populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("-created_at")
     return res.status(200).json(reminders)
 }
 
@@ -607,6 +612,19 @@ export const StopReminder = async (req: Request, res: Response, next: NextFuncti
     return res.status(200).json({ message: "reminder stopped" })
 }
 
+export const HideReminder = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    if (!isMongoId(id)) {
+        return res.status(400).json({ message: "please provide correct reminder id" })
+    }
+    let reminder = await Reminder.findById(id)
+    if (!reminder)
+        return res.status(400).json({ message: "not found" })
+    await Reminder.findByIdAndUpdate(reminder._id, {
+        is_hidden: true
+    })
+    return res.status(200).json({ message: "reminder hidden" })
+}
 export const StopSingleContactReport = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     if (!isMongoId(id)) {

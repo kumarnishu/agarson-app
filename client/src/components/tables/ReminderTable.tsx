@@ -1,4 +1,4 @@
-import { Block, Edit, Pause, RemoveRedEye, RestartAlt, Stop } from '@mui/icons-material'
+import { Block, Edit, HideImageRounded, Pause, RemoveRedEye, RestartAlt, Stop } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -14,6 +14,7 @@ import PopUp from '../popup/PopUp'
 import { IReminder } from '../../types/reminder.types'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
+import HideReminderDialog from '../dialogs/reminders/HideReminderDialog.tsx'
 
 
 type Props = {
@@ -47,20 +48,20 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                             <STableHeadCell
                             >
 
-                                
-                                    <Checkbox
-                                        indeterminate={selectAll ? true : false}
-                                        checked={Boolean(selectAll)}
-                                        size="small" onChange={(e) => {
-                                            if (e.currentTarget.checked) {
-                                                setSelectedReminders(reminders)
-                                                setSelectAll(true)
-                                            }
-                                            if (!e.currentTarget.checked) {
-                                                setSelectedReminders([])
-                                                setSelectAll(false)
-                                            }
-                                        }} />
+
+                                <Checkbox
+                                    indeterminate={selectAll ? true : false}
+                                    checked={Boolean(selectAll)}
+                                    size="small" onChange={(e) => {
+                                        if (e.currentTarget.checked) {
+                                            setSelectedReminders(reminders)
+                                            setSelectAll(true)
+                                        }
+                                        if (!e.currentTarget.checked) {
+                                            setSelectedReminders([])
+                                            setSelectAll(false)
+                                        }
+                                    }} />
 
                             </STableHeadCell>
                             {user?.reminders_access_fields.is_editable &&
@@ -256,6 +257,17 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                             <Block />
                                                         </IconButton>
                                                     </Tooltip>
+                                                    <Tooltip title="Hide Reminder">
+                                                        <IconButton
+                                                            color="warning"
+                                                            size="medium"
+                                                            onClick={() => {
+                                                                setChoice({ type: ReminderChoiceActions.hide_reminder })
+                                                                setReminder(reminder)
+                                                            }}>
+                                                            <HideImageRounded />
+                                                        </IconButton>
+                                                    </Tooltip>
 
 
                                                     <Tooltip title="edit">
@@ -359,6 +371,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                             <StopReminderDialog reminder={reminder} />
                             <UpdateReminderMessageDialog reminder={reminder} />
                             <StartReminderMessageDialog reminder={reminder} />
+                            <HideReminderDialog reminder={reminder} />
                         </> : null
                 }
             </Box >

@@ -15,7 +15,7 @@ export const GetRunningCronString = (frequency_type: string, frequency_value: st
     }
 
     if (ftype === "months" && freq && Number(freq) > 0) {
-        cronString = "20 " +  `${date.getMinutes()} ` + `${date.getHours()} ` + `${date.getDate()} ` + `${Number(freq) === 12 ? date.getMonth() : `1/${Number(freq)}`}` + " *"
+        cronString = "20 " + `${date.getMinutes()} ` + `${date.getHours()} ` + `${date.getDate()} ` + `${Number(freq) === 12 ? date.getMonth() : `1/${Number(freq)}`}` + " *"
     }
 
     if (ftype === "weekdays" && freq && freq.length > 0) {
@@ -25,6 +25,10 @@ export const GetRunningCronString = (frequency_type: string, frequency_value: st
     if (ftype === "monthdays" && freq && freq.length > 0) {
         cronString = "20 " + `${date.getMinutes()} ` + `${date.getHours()} ` + freq
             + " * " + "*"
+    }
+    if (ftype === "yeardays" && freq && freq.length > 0) {
+        cronString = "20 " + `${date.getMinutes()} ` + `${date.getHours()} ` + freq
+            + ` ${date.getMonth()} ` + "*"
     }
 
     return cronString

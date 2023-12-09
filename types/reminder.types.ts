@@ -10,6 +10,7 @@ export type IReminder = {
     is_active: boolean,
     is_paused: boolean,
     running_key: string,
+    is_hidden:boolean,
     refresh_key: string,
     frequency_type: string,
     frequency_value: string,

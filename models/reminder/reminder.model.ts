@@ -52,7 +52,10 @@ const ReminderSchema = new mongoose.Schema<IReminder, mongoose.Model<IReminder, 
     next_refresh_date: Date,
     next_run_date: Date,
     start_date: Date,
-
+    is_hidden: {
+        type: Boolean,
+        default: false
+    },
     connected_number: {
         type: String,
         trim: true,

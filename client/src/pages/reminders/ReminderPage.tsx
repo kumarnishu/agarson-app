@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, FormControlLabel, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -30,7 +30,8 @@ type SelectedData = {
 }
 
 export default function ReminderPage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IReminder[]>, BackendError>("reminders", GetReminders)
+  const [hidden, setHidden] = useState(false)
+  const { data, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<IReminder[]>, BackendError>(["reminders", hidden], async () => GetReminders(String(hidden)))
   const [reminder, setReminder] = useState<IReminder>()
   const [reminders, setReminders] = useState<IReminder[]>([])
   const [selectAll, setSelectAll] = useState(false)
@@ -100,6 +101,12 @@ export default function ReminderPage() {
       setReminders(preFilteredData)
 
   }, [filter, reminders])
+
+
+  useEffect(() => {
+    refetch()
+  }, [hidden])
+
   return (
     <>
       {
@@ -124,6 +131,11 @@ export default function ReminderPage() {
         <Stack
           direction="row"
         >
+          <FormControlLabel control={<Switch
+            defaultChecked={Boolean(hidden)}
+            onChange={() => setHidden(!hidden)}
+          />} label="Show hidden" />
+
           {/* search bar */}
           < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
           }>
@@ -168,7 +180,7 @@ export default function ReminderPage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >{user?.reminders_access_fields.is_editable&&<>
+            >{user?.reminders_access_fields.is_editable && <>
               <MenuItem onClick={() => {
                 setChoice({ type: ReminderChoiceActions.create_reminder })
                 setAnchorEl(null)
@@ -178,7 +190,7 @@ export default function ReminderPage() {
                 setChoice({ type: ReminderChoiceActions.create_message_reminder })
                 setAnchorEl(null)
               }}
-                >New Custom Reminder</MenuItem></>}
+              >New Custom Reminder</MenuItem></>}
               <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
@@ -190,17 +202,17 @@ export default function ReminderPage() {
       </Stack>
       {/*  table */}
       {isLoading && <TableSkeleton />}
-      {!isLoading && 
-      <RemindersTable
-        reminder={reminder}
-        selectAll={selectAll}
-        selectedReminders={selectedReminders}
-        setSelectedReminders={setSelectedReminders}
-        setSelectAll={setSelectAll}
-        reminders={MemoData}
-        setReminder={setReminder}
-      />}
-    
+      {!isLoading &&
+        <RemindersTable
+          reminder={reminder}
+          selectAll={selectAll}
+          selectedReminders={selectedReminders}
+          setSelectedReminders={setSelectedReminders}
+          setSelectAll={setSelectAll}
+          reminders={MemoData}
+          setReminder={setReminder}
+        />}
+
     </>
 
   )

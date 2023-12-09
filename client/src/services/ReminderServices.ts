@@ -17,26 +17,29 @@ export const UpdateReminder = async ({ id, body }: { id: string, body: FormData 
 };
 
 export const StartMessageReminder = async ({ id, body }: { id: string, body: FormData }) => {
-    return await apiClient.post(`start/message/reminders/${id}`, body);
+    return await apiClient.patch(`start/message/reminders/${id}`, body);
 };
 
 
 export const StartReminder = async ({ id, body }: { id: string, body: FormData }) => {
-    return await apiClient.post(`start/reminders/${id}`, body);
+    return await apiClient.patch(`start/reminders/${id}`, body);
 };
 export const ResetReminder = async (id: string) => {
-    return await apiClient.post(`reset/reminders/${id}`);
+    return await apiClient.patch(`reset/reminders/${id}`);
+};
+export const HideReminder = async (id: string) => {
+    return await apiClient.patch(`hide/reminders/${id}`);
 };
 export const StopReminder = async (id: string) => {
-    return await apiClient.post(`stop/reminders/${id}`);
+    return await apiClient.patch(`stop/reminders/${id}`);
 };
 export const StopSingleReportReminder = async (id: string) => {
-    return await apiClient.post(`stop/single/reminders/${id}`);
+    return await apiClient.patch(`stop/single/reminders/${id}`);
 };
 
 
-export const GetReminders = async () => {
-    return await apiClient.get(`reminders`)
+export const GetReminders = async (hidden: string) => {
+    return await apiClient.get(`reminders/?hidden=${hidden}`)
 }
 export const GetReminderReports = async (id: string) => {
     return await apiClient.get(`reports/reminders/${id}`);

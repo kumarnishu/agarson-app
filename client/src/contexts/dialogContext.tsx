@@ -23,8 +23,7 @@ type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadc
 
 type TodoChoices = "create_todo" | "update_todo" | "view_replies" | "delete_todo" | "close_todo" | "update_todo_status" | 'bulk_hide_todo' | "hide_todo"
 
-type ReminderChoices = "create_reminder" | "update_reminder" | "delete_reminder" | "close_reminder" | "view_reminder" | 'start_reminder' | "reset_reminder" | "stop_reminder" | "create_message_reminder" | "update_message_reminder"
-  | "start_message_reminder"
+type ReminderChoices = "create_reminder" | "update_reminder" | "delete_reminder" | "close_reminder" | "view_reminder" | 'start_reminder' | "reset_reminder" | "stop_reminder" | "create_message_reminder" | "update_message_reminder"|"hide_reminder"| "start_message_reminder"
 
 type TaskSchedulerChoices = "create_task_scheduler" | "update_task_scheduler" | "delete_task_scheduler" | "close_task_scheduler" | "view_task_scheduler" | 'start_task_scheduler' | "stop_task_scheduler" | "check_task"
 
@@ -136,7 +135,8 @@ export enum ReminderChoiceActions {
   stop_reminder = "stop_reminder",
   create_message_reminder = "create_message_reminder",
   update_message_reminder = "update_message_reminder",
-  start_message_reminder = "start_message_reminder"
+  start_message_reminder = "start_message_reminder",
+  hide_reminder ="hide_reminder"
 }
 export enum TodoChoiceActions {
   create_todo = "create_todo",
@@ -384,6 +384,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case ReminderChoiceActions.create_message_reminder: return type
     case ReminderChoiceActions.update_message_reminder: return type
     case ReminderChoiceActions.start_message_reminder: return type
+    case ReminderChoiceActions.hide_reminder: return type
 
     default: return state
   }
