@@ -380,11 +380,6 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
             ]
         }).sort('-created_at')
 
-
-    if (!id)
-        remarks = remarks.filter((remark) => {
-            return remark.created_by.username === req.user.username
-        })
     if (id) {
         let user = await User.findById(id)
         if (user) {
