@@ -78,7 +78,7 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
 
             // /retry functions
             if (client.info && client.info.wid) {
-                if (user)
+                if (user && client?.info.wid._serialized === process.env.WAGREETING_PHONE)
                     await SendGreetingTemplates(client, user)
 
                 let broadcasts = await Broadcast.find({ connected_number: client?.info.wid._serialized })
@@ -130,8 +130,6 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                     }
                 })
             }
-
-
         }
         console.log("session revived for", client.info)
     })
@@ -165,13 +163,12 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
         console.log("loading", client_id)
     });
     client.on('message', async (msg: Message) => {
-        if (msg.to === process.env.WACLIENT_ID) {
+        if (msg.to === process.env.WAPHONE) {
             let contact = await client.getContactById(msg.from)
             let authorName = ""
             if (msg.author) {
                 let authorContact = await client.getContactById(msg.author)
                 authorName = authorContact.verifiedName || authorContact.name || ""
-
             }
             await new Chat({
                 name: contact.verifiedName || contact.name,
