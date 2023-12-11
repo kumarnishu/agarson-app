@@ -23,7 +23,7 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                     let templates = latest_broadcast?.templates
                     let timegap = Number(latest_broadcast?.time_gap) * 1000 || 10000
                     let timeinsec = 5000
-                    let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).limit(daily_limit)
+                    let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).sort('-created_at').limit(daily_limit)
                     if (reports.length > 0) {
                         for (let i = 0; i < latest_broadcast.daily_limit - latest_broadcast.daily_count + 1; i++) {
                             let report = reports[i]
@@ -91,9 +91,9 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                         let templates = latest_broadcast?.templates
                         let timegap = Number(latest_broadcast?.time_gap) * 1000 || 10000
                         let timeinsec = 5000
-                        let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).limit(daily_limit)
+                        let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).sort('-created_at').limit(daily_limit)
                         if (reports.length === 0 && latest_broadcast.autoRefresh) {
-                            let dbreports = await BroadcastReport.find({ broadcast: latest_broadcast })
+                            let dbreports = await BroadcastReport.find({ broadcast: latest_broadcast }).sort('-created_at')
                             for (let i = 0; i < dbreports.length; i++) {
                                 let report = dbreports[i]
                                 if (user)
@@ -107,7 +107,7 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                             latest_broadcast.daily_count = 0
                             latest_broadcast.next_run_date = new Date(cron.sendAt(latest_broadcast.cron_string))
                             await latest_broadcast.save()
-                            reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).limit(daily_limit)
+                            reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).sort('-created_at').limit(daily_limit)
                         }
                         for (let i = 0; i < reports.length; i++) {
                             let report = reports[i]
@@ -166,7 +166,7 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                 let templates = latest_broadcast?.templates
                 let timegap = Number(latest_broadcast?.time_gap) * 1000 || 10000
                 let timeinsec = 5000
-                let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" })
+                let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).sort('-created_at')
                 for (let i = 0; i < reports.length; i++) {
                     let report = reports[i]
                     if (report?.status === "pending") {
@@ -202,9 +202,9 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                     }
                 }
                 const timeout = setTimeout(async () => {
-                    let next_reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" })
+                    let next_reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).sort('-created_at')
                     if (next_reports.length === 0 && latest_broadcast?.autoRefresh) {
-                        let reports = await BroadcastReport.find({ broadcast: broadcast })
+                        let reports = await BroadcastReport.find({ broadcast: broadcast }).sort('-created_at')
                         reports.forEach(async (report) => {
                             if (user)
                                 if (report) {
@@ -218,7 +218,7 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                         await BroadCastWithTemplates(latest_broadcast, client, user)
                     }
                     if (next_reports.length === 0 && !latest_broadcast?.autoRefresh)
-                        await Broadcast.findByIdAndUpdate(latest_broadcast?._id, { is_active: false })
+                        await Broadcast.findByIdAndUpdate(latest_broadcast?._id, { is_active: false }).sort('-created_at')
                 }, timeinsec)
                 timeouts.push({ id: broadcast._id, timeout: timeout })
             }
@@ -240,7 +240,7 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
 
                     let timegap = Number(latest_broadcast?.time_gap) * 1000 || 10000
                     let timeinsec = 5000
-                    let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).limit(daily_limit)
+                    let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).sort('-created_at').limit(daily_limit)
                     if (reports.length > 0) {
                         for (let i = 0; i < latest_broadcast.daily_limit - latest_broadcast.daily_count + 1; i++) {
                             let report = reports[i]
@@ -306,7 +306,7 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                         await latest_broadcast.save()
                         let timegap = Number(latest_broadcast?.time_gap) * 1000 || 10000
                         let timeinsec = 5000
-                        let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).limit(daily_limit)
+                        let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).sort('-created_at').limit(daily_limit)
                         if (reports.length === 0 && latest_broadcast.autoRefresh) {
                             let dbreports = await BroadcastReport.find({ broadcast: latest_broadcast })
                             for (let i = 0; i < dbreports.length; i++) {
@@ -322,7 +322,7 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                             latest_broadcast.daily_count = 0
                             latest_broadcast.next_run_date = new Date(cron.sendAt(latest_broadcast.cron_string))
                             await latest_broadcast.save()
-                            reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).limit(daily_limit)
+                            reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).sort('-created_at').limit(daily_limit)
                         }
                         for (let i = 0; i < reports.length; i++) {
                             let report = reports[i]
@@ -382,7 +382,7 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                 let message = latest_broadcast.message
                 let timegap = Number(latest_broadcast?.time_gap) * 1000 || 10000
                 let timeinsec = 5000
-                let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" })
+                let reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).sort('-created_at')
                 for (let i = 0; i < reports.length; i++) {
                     let report = reports[i]
                     if (report?.status === "pending") {
@@ -418,9 +418,9 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                     }
                 }
                 const timeout = setTimeout(async () => {
-                    let next_reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" })
+                    let next_reports = await BroadcastReport.find({ broadcast: latest_broadcast, status: "pending" }).sort('-created_at')
                     if (next_reports.length === 0 && latest_broadcast?.autoRefresh) {
-                        let reports = await BroadcastReport.find({ broadcast: broadcast })
+                        let reports = await BroadcastReport.find({ broadcast: broadcast }).sort('-created_at')
                         reports.forEach(async (report) => {
                             if (user)
                                 if (report) {
