@@ -314,13 +314,8 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                             {reminder.run_once ? "true" : "false"}
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.is_active ?
-                                                <>
-                                                    {reminder.is_paused ? <Pause /> : <Stop />}
-                                                </> :
-                                                'Stopped'
-                                            }
-
+                                            {reminder.is_paused && <Pause />}
+                                            {reminder.is_active ? <Stop /> : "stopped"}
                                         </STableCell>
                                         < STableCell >
                                             {reminder.start_date && new Date(reminder.start_date).toLocaleString()}

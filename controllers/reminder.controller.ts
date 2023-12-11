@@ -521,7 +521,6 @@ export const StartReminderWithMessage = async (req: Request, res: Response, next
 }
 
 
-
 // export const DeleteReminder = async (req: Request, res: Response, next: NextFunction) => {
 //     const id = req.params.id
 //     if (!isMongoId(id)) {
