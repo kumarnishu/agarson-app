@@ -1,4 +1,4 @@
-import { Alert, Button, Checkbox, CircularProgress, FormControlLabel, FormGroup, Stack, TextField } from '@mui/material';
+import {  Button, Checkbox, CircularProgress, FormControlLabel, FormGroup, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
@@ -14,6 +14,7 @@ import { queryClient } from '../../../main';
 import { UserContext } from '../../../contexts/userContext';
 import { ILead, ILeadUpdatableField } from '../../../types/crm.types';
 import { IUser } from '../../../types/user.types';
+import AlertBar from '../../snacks/AlertBar';
 
 export type TformData = {
   name: string,
@@ -719,16 +720,12 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
       </Stack>
       {
         isError ? (
-          <Alert color="error">
-            {error?.response.data.message}
-          </Alert>
+          <AlertBar message={error?.response.data.message} color="error" />
         ) : null
       }
       {
         isSuccess ? (
-          <Alert color="success">
-            lead updated
-          </Alert>
+          <AlertBar message=" lead updated" color="success" />
         ) : null
       }
 
