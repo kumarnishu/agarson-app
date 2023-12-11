@@ -16,7 +16,6 @@ import { ContactReport } from "../models/contact/contact.report.model";
 import { Contact } from "../models/contact/contact.model";
 import { ReminderManager } from "../app";
 import { Chat } from "../models/bot/chat.model";
-import { Greeting } from "../models/greetings/greeting.model";
 import { SendGreetingTemplates } from "./sendGreetingMessage";
 
 export var clients: { client_id: string, client: Client }[] = []

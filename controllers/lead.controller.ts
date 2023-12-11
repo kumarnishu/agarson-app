@@ -1954,19 +1954,19 @@ export const DeleteLead = async (req: Request, res: Response, next: NextFunction
     let broadcasts = await Broadcast.find({ leads_selected: true })
     broadcasts.forEach(async (b) => {
         if (lead?.mobile) {
-            let reports = await BroadcastReport.find({ broadcast: b, mobile: String(lead?.mobile).replace("91", "").replace("@c.us", "") })
+            let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead.mobile) + "@c.us" })
             reports.forEach(async (r) => {
                 await r.remove()
             })
         }
         if (lead?.alternate_mobile1) {
-            let reports = await BroadcastReport.find({ broadcast: b, mobile: String(lead?.alternate_mobile1).replace("91", "").replace("@c.us", "") })
+            let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile1) + "@c.us" })
             reports.forEach(async (r) => {
                 await r.remove()
             })
         }
         if (lead?.alternate_mobile2) {
-            let reports = await BroadcastReport.find({ broadcast: b, mobile: String(lead?.alternate_mobile2).replace("91", "").replace("@c.us", "") })
+            let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile2) + "@c.us" })
             reports.forEach(async (r) => {
                 await r.remove()
             })
@@ -2382,19 +2382,19 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
         let broadcasts = await Broadcast.find({ leads_selected: true })
         broadcasts.forEach(async (b) => {
             if (lead?.mobile) {
-                let reports = await BroadcastReport.find({ broadcast: b, mobile: String(lead?.mobile).replace("91", "").replace("@c.us", "") })
+                let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead.mobile) + "@c.us" })
                 reports.forEach(async (r) => {
                     await r.remove()
                 })
             }
             if (lead?.alternate_mobile1) {
-                let reports = await BroadcastReport.find({ broadcast: b, mobile: String(lead?.alternate_mobile1).replace("91", "").replace("@c.us", "") })
+                let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile1) + "@c.us" })
                 reports.forEach(async (r) => {
                     await r.remove()
                 })
             }
             if (lead?.alternate_mobile2) {
-                let reports = await BroadcastReport.find({ broadcast: b, mobile: String(lead?.alternate_mobile2).replace("91", "").replace("@c.us", "") })
+                let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile2) + "@c.us" })
                 reports.forEach(async (r) => {
                     await r.remove()
                 })
@@ -2608,19 +2608,19 @@ export const BulkDeleteUselessLeads = async (req: Request, res: Response, next: 
             let broadcasts = await Broadcast.find({ leads_selected: true })
             broadcasts.forEach(async (b) => {
                 if (lead?.mobile) {
-                    let reports = await BroadcastReport.find({ broadcast: b, mobile: String(lead?.mobile).replace("91", "").replace("@c.us", "") })
+                    let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead.mobile) + "@c.us" })
                     reports.forEach(async (r) => {
                         await r.remove()
                     })
                 }
                 if (lead?.alternate_mobile1) {
-                    let reports = await BroadcastReport.find({ broadcast: b, mobile: String(lead?.alternate_mobile1).replace("91", "").replace("@c.us", "") })
+                    let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile1) + "@c.us" })
                     reports.forEach(async (r) => {
                         await r.remove()
                     })
                 }
                 if (lead?.alternate_mobile2) {
-                    let reports = await BroadcastReport.find({ broadcast: b, mobile: String(lead?.alternate_mobile2).replace("91", "").replace("@c.us", "") })
+                    let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile2) + "@c.us" })
                     reports.forEach(async (r) => {
                         await r.remove()
                     })
