@@ -3,7 +3,6 @@ import { Reminder } from "../models/reminder/reminder.model";
 import { ContactReport } from "../models/contact/contact.report.model";
 import { ReminderManager } from "../app";
 import { sendMessage, sendTemplates } from "./SendMessage";
-import { GetRunOnceCronString } from "./GetRunOnceCronString";
 import { IReminder } from "../types/reminder.types";
 import { IUser } from "../types/user.types";
 import cron from "cron"
@@ -15,7 +14,7 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
         ReminderManager.add(reminder.running_key
             , reminder.cron_string, async () => {
                 let latest_reminder = await Reminder.findById(reminder._id).populate('templates')
-                if (latest_reminder && latest_reminder.is_active && !latest_reminder.is_paused) {
+                if (latest_reminder && latest_reminder.is_active) {
                     let is_random = latest_reminder?.is_random_template
                     let templates = latest_reminder?.templates
                     let timegap = 10000
@@ -66,6 +65,17 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
                     next_run_date: new Date(cron.sendAt(reminder.cron_string)),
                     is_paused: true
                 })
+                if (latest_reminder?.run_once) {
+                    await Reminder.findByIdAndUpdate(reminder._id, {
+                        next_run_date: null,
+                        is_active: false
+                    })
+                    if (ReminderManager.exists(reminder.refresh_key))
+                        ReminderManager.deleteJob(reminder.refresh_key)
+                    if (ReminderManager.exists(reminder.running_key))
+                        ReminderManager.deleteJob(reminder.running_key)
+                }
+
             })
         ReminderManager.add(reminder.refresh_key, reminder.refresh_cron_string, async () => {
             await Reminder.findByIdAndUpdate(reminder._id, { is_active: true, is_paused: false })
@@ -89,26 +99,7 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
             ReminderManager.start(reminder.running_key)
         }
 
-        if (reminder.run_once) {
-            ReminderManager.start(reminder.running_key)
-            let run_once_string = GetRunOnceCronString(reminder.frequency_type, reminder.frequency_value, reminder.start_date)
-            let runOnce_key = reminder._id + "runonce"
-            if (runOnce_key && run_once_string) {
-                if (reminder.run_once) {
-                    ReminderManager.add(runOnce_key, run_once_string, async () => {
-                        await Reminder.findByIdAndUpdate(reminder._id, { is_active: false })
-                        if (ReminderManager.exists(reminder.refresh_key))
-                            ReminderManager.deleteJob(reminder.refresh_key)
-                        if (ReminderManager.exists(reminder.running_key))
-                            ReminderManager.deleteJob(reminder.running_key)
-                        if (ReminderManager.exists(runOnce_key))
-                            ReminderManager.deleteJob(runOnce_key)
-                    })
-                }
-            }
-            if (ReminderManager.exists(runOnce_key))
-                ReminderManager.start(runOnce_key)
-        }
+
     }
 }
 
@@ -168,8 +159,18 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
                 }
                 await Reminder.findByIdAndUpdate(reminder._id, {
                     next_run_date: new Date(cron.sendAt(reminder.cron_string)),
-                    is_paused:true
+                    is_paused: true
                 })
+                if (latest_reminder?.run_once) {
+                    await Reminder.findByIdAndUpdate(reminder._id, {
+                        next_run_date: null,
+                        is_active: false
+                    })
+                    if (ReminderManager.exists(reminder.refresh_key))
+                        ReminderManager.deleteJob(reminder.refresh_key)
+                    if (ReminderManager.exists(reminder.running_key))
+                        ReminderManager.deleteJob(reminder.running_key)
+                }
             })
 
         // refresh job
@@ -192,27 +193,6 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
         if (!reminder.run_once) {
             ReminderManager.start(reminder.refresh_key)
             ReminderManager.start(reminder.running_key)
-        }
-
-        if (reminder.run_once) {
-            ReminderManager.start(reminder.running_key)
-            let run_once_string = GetRunOnceCronString(reminder.frequency_type, reminder.frequency_value, reminder.start_date)
-            let runOnce_key = reminder._id + "runonce"
-            if (runOnce_key && run_once_string) {
-                if (reminder.run_once) {
-                    ReminderManager.add(runOnce_key, run_once_string, async () => {
-                        await Reminder.findByIdAndUpdate(reminder._id, { is_active: false })
-                        if (ReminderManager.exists(reminder.refresh_key))
-                            ReminderManager.deleteJob(reminder.refresh_key)
-                        if (ReminderManager.exists(reminder.running_key))
-                            ReminderManager.deleteJob(reminder.running_key)
-                        if (ReminderManager.exists(runOnce_key))
-                            ReminderManager.deleteJob(runOnce_key)
-                    })
-                }
-            }
-            if (ReminderManager.exists(runOnce_key))
-                ReminderManager.start(runOnce_key)
         }
     }
 }

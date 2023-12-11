@@ -91,7 +91,7 @@ function StartReminderForm({ reminder, users, client }: { reminder: IReminder, u
             id="whatsapp_users"
             label="Whatsapp Users"
             helperText={
-              formik.touched.client_id && formik.errors.client_id ? formik.errors.client_id : ""
+              formik.touched.client_id && formik.errors.client_id ? formik.errors.client_id : "Selct your whatsapp number from which you have to send message"
             }
             {...formik.getFieldProps('client_id')}
           >
@@ -121,24 +121,25 @@ function StartReminderForm({ reminder, users, client }: { reminder: IReminder, u
             fullWidth
             required
             helperText={
-              formik.touched.start_date && formik.errors.start_date ? formik.errors.start_date : ""
+              formik.touched.start_date && formik.errors.start_date ? formik.errors.start_date : "select date and time to send messasge after that"
             }
             {...formik.getFieldProps('start_date')}
           />
 
-          <FormGroup>
+          <FormGroup title={"select to send one random template from selected templates otherwise all selected templates will be sent"}>
             <FormControlLabel control={<Checkbox
+
               checked={Boolean(formik.values.is_random_template)}
               {...formik.getFieldProps('is_random_template')}
-            />} label="Random Template" />
+            />} label="Random template" />
           </FormGroup>
           <FormGroup>
-            <FormControlLabel control={<Checkbox
+            <FormControlLabel title={"select to make it a todo that will be stopped by (STOP-ID), until next refresh time"} control={<Checkbox
               checked={Boolean(formik.values.is_todo)}
               {...formik.getFieldProps('is_todo')}
             />} label="Is TODO" />
           </FormGroup>
-          <FormGroup>
+          <FormGroup title={"select to send only one message after that it will be stopped"}>
             <FormControlLabel control={<Checkbox
               checked={Boolean(formik.values.run_once)}
               {...formik.getFieldProps('run_once')}
@@ -158,7 +159,7 @@ function StartReminderForm({ reminder, users, client }: { reminder: IReminder, u
             id="frequency_type"
             label="Frequency Type"
             helperText={
-              formik.touched.frequency_type && formik.errors.frequency_type ? formik.errors.frequency_type : ""
+              formik.touched.frequency_type && formik.errors.frequency_type ? formik.errors.frequency_type : "month,hours and minutes will be choosen from start date and time"
             }
             {...formik.getFieldProps('frequency_type')}
           >

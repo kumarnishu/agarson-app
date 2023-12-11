@@ -74,14 +74,15 @@ export const DeleteGreeting = async (req: Request, res: Response, next: NextFunc
 
 
 export const StartAllGreetings = async (req: Request, res: Response, next: NextFunction) => {
-    const { client_id } = req.body as { client_id: string }
+    const CLIENT_ID = process.env.WACLIENT_ID
 
-    if (!client_id) {
-        return res.status(400).json({ message: `select whatsapp number` });
+    if (!CLIENT_ID) {
+        return res.status(400).json({ message: `inavlid whatsapp client id` });
     }
     let client = clients.find((c) => {
-        return c.client_id === client_id
+        return c.client_id === CLIENT_ID
     })
+
     if (!client)
         return res.status(500).json({ message: "whatsapp not connected" })
     SendGreetingTemplates(client.client, req.user)

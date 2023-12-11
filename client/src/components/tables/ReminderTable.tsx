@@ -77,6 +77,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                 Reminder Name
 
                             </STableHeadCell>
+
                             <STableHeadCell
                             >
 
@@ -86,7 +87,20 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                             <STableHeadCell
                             >
 
+                                Status
+
+                            </STableHeadCell>
+
+                            <STableHeadCell
+                            >
+
                                 Type
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Message Type
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -95,18 +109,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                 Run Once
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Reminder Status
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Start Time
-
-                            </STableHeadCell>
+                           
                             <STableHeadCell
                             >
 
@@ -114,12 +117,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
 
                             </STableHeadCell>
 
-                            <STableHeadCell
-                            >
 
-                                Message Type
-
-                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -287,7 +285,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                         </IconButton>
                                                     </Tooltip>
 
-                                                    <Tooltip title="view reports">
+                                                    <Tooltip title="view recipients">
                                                         <IconButton
                                                             color="success"
                                                             size="medium"
@@ -304,29 +302,34 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                         <STableCell>
                                             {reminder.name}
                                         </STableCell>
+
                                         <STableCell>
                                             {reminder.serial_number || "not available"}
+                                        </STableCell>
+                                        <STableCell>
+                                            {reminder.is_active ?
+                                                <>
+                                                    {reminder.is_paused ? <Pause /> : <Stop />}
+                                                </> :
+                                                'Stopped'
+                                            }
                                         </STableCell>
                                         <STableCell>
                                             {reminder.is_todo ? "todo" : "reminder"}
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.run_once ? "true" : "false"}
+                                            {reminder.message ? "message" : "template"}
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.is_paused && <Pause />}
-                                            {reminder.is_active ? <Stop /> : "stopped"}
+                                            {reminder.run_once ? "true" : "false"}
                                         </STableCell>
-                                        < STableCell >
-                                            {reminder.start_date && new Date(reminder.start_date).toLocaleString()}
-                                        </STableCell>
+                                      
+
                                         <STableCell>
                                             {new Date(reminder.next_run_date).toLocaleString()}
                                         </STableCell>
 
-                                        <STableCell>
-                                            {reminder.message ? "message" : "template"}
-                                        </STableCell>
+
                                         <STableCell>
                                             {reminder.frequency_type}
                                         </STableCell>
