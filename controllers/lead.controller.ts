@@ -39,7 +39,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] } }).countDocuments()
         }
 
@@ -56,7 +56,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user._id] } }).countDocuments()
         }
 
@@ -90,7 +90,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({ stage: 'useless' }).countDocuments()
         }
 
@@ -107,7 +107,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user._id] } }).countDocuments()
         }
         leads = leads.slice((page - 1) * limit, limit * page)
@@ -141,7 +141,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({ is_customer: true }).countDocuments()
         }
 
@@ -158,7 +158,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({ is_customer: true, lead_owners: { $in: [req.user._id] } }).countDocuments()
         }
 
@@ -179,7 +179,7 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
         leads: ILead[]
     }[] = []
     if (req.user?.is_admin) {
-        parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
+        parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
         for (let i = 0; i < parties.length; i++) {
             let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
@@ -201,7 +201,7 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
         }
     }
     if (!req.user?.is_admin) {
-        parties = await ReferredParty.find({ lead_owners: { $in: [req.user._id] } }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
+        parties = await ReferredParty.find({ lead_owners: { $in: [req.user._id] } }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
         for (let i = 0; i < parties.length; i++) {
             let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
@@ -228,7 +228,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
+        let parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
         let result: {
             party: IReferredParty,
             leads: ILead[]
@@ -436,7 +436,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
         if (key.length == 2) {
             leads = await Lead.find({
@@ -503,7 +503,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
         if (key.length == 3) {
             leads = await Lead.find({
@@ -593,7 +593,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
         if (key.length == 4) {
             leads = await Lead.find({
@@ -706,7 +706,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
 
         if (!req.user?.is_admin) {
@@ -778,7 +778,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
         if (key.length == 2) {
             leads = await Lead.find({
@@ -846,7 +846,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
         if (key.length == 3) {
             leads = await Lead.find({
@@ -937,7 +937,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
         if (key.length == 4) {
             leads = await Lead.find({
@@ -1051,7 +1051,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
 
         if (!req.user?.is_admin) {
@@ -1095,7 +1095,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     { mobile: { $regex: key[0], $options: 'i' } },
                     { state: { $regex: key[0], $options: 'i' } },
                 ]
-            }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
+            }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
 
 
             for (let i = 0; i < parties.length; i++) {
@@ -1111,7 +1111,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                             model: 'User'
                         }
                     ]
-                }).sort('-updated_at')
+                }).sort('-created_at')
                 result.push({
                     party: parties[i],
                     leads: leads
@@ -1145,7 +1145,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 ,
 
             }
-            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
+            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
 
 
             for (let i = 0; i < parties.length; i++) {
@@ -1161,7 +1161,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                             model: 'User'
                         }
                     ]
-                }).sort('-updated_at')
+                }).sort('-created_at')
                 result.push({
                     party: parties[i],
                     leads: leads
@@ -1203,7 +1203,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 ,
 
             }
-            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
+            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
 
 
             for (let i = 0; i < parties.length; i++) {
@@ -1219,7 +1219,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                             model: 'User'
                         }
                     ]
-                }).sort('-updated_at')
+                }).sort('-created_at')
                 result.push({
                     party: parties[i],
                     leads: leads
@@ -1270,7 +1270,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 ,
 
             }
-            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
+            ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
 
 
             for (let i = 0; i < parties.length; i++) {
@@ -1286,7 +1286,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                             model: 'User'
                         }
                     ]
-                }).sort('-updated_at')
+                }).sort('-created_at')
                 result.push({
                     party: parties[i],
                     leads: leads
@@ -1365,7 +1365,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
         if (key.length == 2) {
             leads = await Lead.find({
@@ -1433,7 +1433,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
         if (key.length == 3) {
             leads = await Lead.find({
@@ -1524,7 +1524,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
         if (key.length == 4) {
             leads = await Lead.find({
@@ -1638,7 +1638,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         model: 'User'
                     }
                 ]
-            }).sort('-updated_at')
+            }).sort('-created_at')
         }
 
         if (!req.user?.is_admin) {

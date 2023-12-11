@@ -23,8 +23,8 @@ function CrmActivitiesPage() {
     const [remark, setRemark] = useState<IRemark>()
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-        start_date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
-        , end_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
+        start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
+        , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
     })
     let previous_date = new Date()
     let day = previous_date.getDate() - 1
