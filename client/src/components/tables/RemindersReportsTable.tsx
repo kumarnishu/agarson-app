@@ -1,4 +1,4 @@
-import { Box, IconButton,Tooltip } from '@mui/material'
+import { Box, IconButton, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { Block } from '@mui/icons-material'
 import StopSingleReminderDialog from '../dialogs/reminders/StopSingleReminderDialog'
@@ -27,58 +27,70 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                 maxHeight: '80vh'
             }}>
                 <STable
-                   >
+                >
                     <STableHead
                     >
                         <STableRow>
-                            { user?.reminders_access_fields.is_editable &&
-                            <STableHeadCell
-                                                        >
-                              
+                            {user?.reminders_access_fields.is_editable &&
+                                <STableHeadCell
+                                >
+
                                     Action
-                                
-                            </STableHeadCell>}
+
+                                </STableHeadCell>}
                             <STableHeadCell
-                                                        >
-                              
-                                    Mobile
-                                
+                            >
+
+                                Name
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                              
-                                    Whatsapp Status
-                                
+                            >
+
+                                Desigination
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                              
-                                    Reminder Status
-                                
+                            >
+
+                                Mobile
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                              
-                                    Timestamp
-                                
+                            >
+
+                                Whatsapp Status
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                              
-                                    Created at
-                                
+                            >
+
+                                Reminder Status
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                              
-                                    Created By
-                                
+                            >
+
+                                Timestamp
+
                             </STableHeadCell>
                             <STableHeadCell
-                                                        >
-                              
-                                    Updated By
-                                
+                            >
+
+                                Created at
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Created By
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Updated By
+
                             </STableHeadCell>
                         </STableRow>
                     </STableHead>
@@ -88,8 +100,8 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
                                 return (
                                     <STableRow
                                         key={index}
-                                        >
-                                        { user?.reminders_access_fields.is_editable &&
+                                    >
+                                        {user?.reminders_access_fields.is_editable &&
                                             <STableCell>
                                                 <Tooltip title="Stop">
                                                     <IconButton
@@ -105,26 +117,32 @@ function RemindersReportsTable({ setReport, report, reports }: Props) {
 
                                             </STableCell>}
                                         <STableCell>
-                                          {report.contact && report.contact.mobile.replace("91", "").replace("@c.us", "")}
+                                            {report.contact && report.contact.name}
                                         </STableCell>
                                         <STableCell>
-                                          {report.whatsapp_status}
+                                            {report.contact && report.contact.designation}
                                         </STableCell>
                                         <STableCell>
-                                          {report.reminder_status}
+                                            {report.contact && report.contact.mobile.replace("91", "").replace("@c.us", "")}
                                         </STableCell>
                                         <STableCell>
-                                          {report.updated_at && new Date(report.updated_at).toLocaleString()}
+                                            {report.whatsapp_status}
                                         </STableCell>
                                         <STableCell>
-                                          {report.created_at && new Date(report.created_at).toLocaleString()}
+                                            {report.reminder_status}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.updated_at && new Date(report.updated_at).toLocaleString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.created_at && new Date(report.created_at).toLocaleString()}
                                         </STableCell>
 
                                         <STableCell>
-                                          {report.created_by.username}
+                                            {report.created_by.username}
                                         </STableCell>
                                         <STableCell>
-                                          {report.updated_by.username}
+                                            {report.updated_by.username}
                                         </STableCell>
                                     </STableRow>
                                 )

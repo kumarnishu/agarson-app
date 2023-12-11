@@ -50,10 +50,7 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
                                     await report.save()
                                     sent = false
                                 }
-                                if (sent && latest_reminder && !latest_reminder.is_todo) {
-                                    latest_reminder.is_active = false
-                                    await latest_reminder.save()
-                                }
+                               
                             }, Number(timeinsec));
                             reminder_timeouts.push({ id: reminder._id, timeout: timeout })
                             timeinsec = timeinsec + Math.ceil(Math.random() * 3) * 1000
@@ -196,10 +193,7 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
                                     await report.save()
                                     sent = false
                                 }
-                                if (sent && latest_reminder && !latest_reminder.is_todo) {
-                                    latest_reminder.is_active = false
-                                    await latest_reminder.save()
-                                }
+                               
                             }, Number(timeinsec));
                             reminder_timeouts.push({ id: reminder._id, timeout: timeout })
                             timeinsec = timeinsec + Math.ceil(Math.random() * 3) * 1000
