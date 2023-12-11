@@ -11,8 +11,8 @@ export const UpdateGreeting = async ({ id, body }: { id: string, body: { name: s
     return await apiClient.put(`greetings/${id}`, body);
 };
 
-export const StartAllGreetings = async ({  body }: {  body: { client_id: string } }) => {
-    return await apiClient.patch(`greetings/bulk/start`, body);
+export const StartAllGreetings = async () => {
+    return await apiClient.patch(`greetings/bulk/start`);
 };
 
 export const StopAllGreetings = async () => {

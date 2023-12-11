@@ -1,42 +1,68 @@
-import { Dialog, DialogTitle, IconButton } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
+import { Dialog, DialogContent, DialogTitle, Button, DialogActions, CircularProgress, IconButton } from '@mui/material';
+import { useContext, useEffect } from 'react';
 import { GreetingChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { GetUsers } from '../../../services/UserServices';
+import { queryClient } from '../../../main';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';
-import { useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import { Cancel } from '@mui/icons-material';
-import { IUser } from '../../../types/user.types';
-import StartGreetingForm from '../../forms/greeting/StartGreetingForm';
+import AlertBar from '../../snacks/AlertBar';
+import { StartAllGreetings } from '../../../services/GreetingServices';
 
-function StartAllGreetingDialog() {
+function StartAllGreetingsDialog() {
     const { choice, setChoice } = useContext(ChoiceContext)
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
-    const [users, setUsers] = useState<IUser[]>([])
+    const { mutate, isLoading, isSuccess, error, isError } = useMutation
+        <AxiosResponse<any>, BackendError>
+        (StartAllGreetings, {
+            onSuccess: () => {
+                queryClient.invalidateQueries('greetings')
+            }
+        })
 
     useEffect(() => {
-        if (data) {
-            setUsers(data.data)
-        }
-    }, [isSuccess])
-
-
+        if (isSuccess)
+            setTimeout(() => {
+                setChoice({ type: GreetingChoiceActions.close_greeting })
+            }, 1000)
+    }, [setChoice, isSuccess])
     return (
         <>
             <Dialog open={choice === GreetingChoiceActions.bulk_start_greeting ? true : false}
-
+                onClose={() => setChoice({ type: GreetingChoiceActions.close_greeting })}
             >
+                {
+                    isError ? (
+                        <AlertBar message={error?.response.data.message} color="error" />
+                    ) : null
+                }
+                {
+                    isSuccess ? (
+                        <AlertBar message="started greetings" color="success" />
+                    ) : null
+                }
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: GreetingChoiceActions.close_greeting })}>
                     <Cancel fontSize='large' />
                 </IconButton>
-                <DialogTitle textAlign={"center"} sx={{ minWidth: '350px' }}>Start All Greetings</DialogTitle>
-                {users &&
-                    <StartGreetingForm users={users} />
-                }
+                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Start All Greetings</DialogTitle>
+                <DialogContent>
+                    This Will start all greetings
+                </DialogContent>
+                <DialogActions sx={{ p: 2 }}>
+                    <Button fullWidth variant="outlined" color="error"
+                        onClick={() => {
+                            setChoice({ type: GreetingChoiceActions.bulk_start_greeting })
+                            mutate()
+                        }}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <CircularProgress /> :
+                            "Start All"}
+                    </Button>
 
+                </DialogActions>
             </Dialog>
         </>
     )
 }
 
-export default StartAllGreetingDialog
+export default StartAllGreetingsDialog
