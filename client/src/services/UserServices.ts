@@ -144,3 +144,6 @@ export const SendVerifyEmail = async ({ email }:
   }) => {
   return await apiClient.post(`email/verify`, { email: email })
 };
+export const AssignUsers = async ({ id, body }: { id: string, body: { ids: string[] } }) => {
+  return await apiClient.patch(`assign/users/${id}`, body)
+}

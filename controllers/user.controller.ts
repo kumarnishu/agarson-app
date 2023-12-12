@@ -14,9 +14,8 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let users = await User.find().populate("created_by").populate("updated_by")
-        users = users.slice((page - 1) * limit, limit * page)
-        let count = await User.countDocuments()
+        let users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').skip((page - 1) * limit).limit(limit)
+        let count = await User.find().countDocuments()
         return res.status(200).json({
             users,
             total: Math.ceil(count / limit),
@@ -29,7 +28,7 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
 }
 
 export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const users = await User.find().populate("created_by").populate("updated_by")
+    const users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users')
     res.status(200).json(users)
 }
 
@@ -40,9 +39,11 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
     if (!key)
         return res.status(500).json({ message: "bad request" })
     let users: IUser[] = []
+    let count = 0
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (key.length == 1 || key.length > 4) {
             users = await User.find({
+
                 $or: [
                     { username: { $regex: key[0], $options: 'i' } },
                     { email: { $regex: key[0], $options: 'i' } },
@@ -50,10 +51,21 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ]
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at')
+            ).populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await User.find({
+
+                $or: [
+                    { username: { $regex: key[0], $options: 'i' } },
+                    { email: { $regex: key[0], $options: 'i' } },
+                    { mobile: { $regex: key[0], $options: 'i' } },
+                ]
+
+            }
+            ).countDocuments()
         }
         if (key.length == 2) {
             users = await User.find({
+
                 $and: [
                     {
                         $or: [
@@ -73,10 +85,33 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at')
+            ).populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await User.find({
+
+                $and: [
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).countDocuments()
         }
         if (key.length == 3) {
             users = await User.find({
+
                 $and: [
                     {
                         $or: [
@@ -103,10 +138,40 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at')
+            ).populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await User.find({
+
+                $and: [
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).countDocuments()
         }
         if (key.length == 4) {
             users = await User.find({
+
                 $and: [
                     {
                         $or: [
@@ -140,10 +205,44 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at')
+            ).populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await User.find({
+
+                $and: [
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    },
+                    {
+                        $or: [
+                            { username: { $regex: key[0], $options: 'i' } },
+                            { email: { $regex: key[0], $options: 'i' } },
+                            { mobile: { $regex: key[0], $options: 'i' } },
+                        ]
+                    }
+                ]
+                ,
+
+            }
+            ).countDocuments()
         }
-        let count = users.length
-        users = users.slice((page - 1) * limit, limit * page)
         return res.status(200).json({
             users,
             total: Math.ceil(count / limit),
@@ -154,6 +253,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
     else
         return res.status(400).json({ message: "bad request" })
 }
+
 
 export const GetProfile = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.user?._id
@@ -464,6 +564,29 @@ export const Logout = async (req: Request, res: Response, next: NextFunction) =>
     res.status(200).json({ message: "logged out" })
 }
 
+export const AssignUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const { ids } = req.body as { ids: string[] }
+    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
+    let user = await User.findById(id)
+    if (!user) {
+        return res.status(404).json({ message: "user not found" })
+    }
+    let users: IUser[] = []
+    for (let i = 0; i < ids.length; i++) {
+        let user = await User.findById(ids[i])
+        if (user)
+            users.push(user)
+    }
+
+    console.log(users)
+    user.assigned_users = users
+    if (req.user) {
+        user.updated_by = user
+    }
+    await user.save();
+    res.status(200).json({ message: "assigned users successfully" });
+}
 export const UpdateAccessFields = async (req: Request, res: Response, next: NextFunction) => {
     const { user_access_fields,
         crm_access_fields,
@@ -696,22 +819,7 @@ export const MakeAdmin = async (req: Request, res: Response, next: NextFunction)
     res.status(200).json({ message: "admin role provided successfully" });
 }
 
-export const MakeManager = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id)
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    if (user.is_manager)
-        return res.status(404).json({ message: "already a manager" })
-    user.is_manager = true
-    if (req.user) {
-        user.updated_by = user
-    }
-    await user.save();
-    res.status(200).json({ message: "manager role provided successfully" });
-}
+
 
 export const AssignUserstoManager = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
@@ -801,20 +909,7 @@ export const UnBlockUser = async (req: Request, res: Response, next: NextFunctio
     await user.save();
     res.status(200).json({ message: "user unblocked successfully" });
 }
-export const RemoveManager = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id)
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    user.is_manager = false
-    if (req.user) {
-        user.updated_by = user
-    }
-    await user.save();
-    res.status(200).json({ message: "removed manager role successfully" });
-}
+
 
 export const RemoveAdmin = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;

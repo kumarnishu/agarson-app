@@ -1,7 +1,7 @@
 import React, { useReducer } from "react"
 
 type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" |
-  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login"
+  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" |"assign_users"
 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
@@ -197,6 +197,7 @@ export enum LeadChoiceActions {
 }
 
 export enum UserChoiceActions {
+  assign_users="assign_users",
   signup = "signup",
   reset_password_mail = "reset_password_mail",
   close_user = "close_user",
@@ -247,6 +248,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case UserChoiceActions.close_user: return type
     case UserChoiceActions.update_user_password: return type
     case UserChoiceActions.reset_multi_login: return type
+    case UserChoiceActions.assign_users: return type
     case UserChoiceActions.block_multi_login: return type
 
     // lead dialog choices

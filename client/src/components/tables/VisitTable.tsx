@@ -332,6 +332,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell>
 
                                             {visit.visit_in_photo && <img
+                                                title="double click to download"
                                                 onDoubleClick={() => {
                                                     if (visit.visit_in_photo && visit.visit_in_photo?.public_url) {
                                                         DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)

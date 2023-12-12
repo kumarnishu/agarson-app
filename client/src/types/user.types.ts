@@ -34,7 +34,6 @@ export type IUser = {
     last_login: Date,
     multi_login_token: string | null,
     is_multi_login: boolean,
-    is_manager: boolean,
     assigned_users: IUser[]
     created_at: Date,
     updated_at: Date,
