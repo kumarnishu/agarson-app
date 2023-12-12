@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { BotMenuActions, MenuContext } from '../../contexts/menuContext';
 import { paths } from '../../Routes';
+import { UserContext } from '../../contexts/userContext';
 
 
 export const StyledLink = styled(Link)`
@@ -12,6 +13,7 @@ export const StyledLink = styled(Link)`
 `
 
 function BotMenu() {
+    const { user } = useContext(UserContext)
     const { menu, setMenu } = useContext(MenuContext)
     return (
         <Menu
@@ -25,13 +27,14 @@ function BotMenu() {
                 }>
                 <StyledLink to={paths.flows}>Flows</StyledLink>
             </MenuItem>
-            <MenuItem
+
+            {user?.is_admin && <MenuItem
                 onClick={
                     () => setMenu({ type: BotMenuActions.close_bot_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.chats}>Chats</StyledLink>
 
-            </MenuItem>
+            </MenuItem>}
             <MenuItem
                 onClick={
                     () => setMenu({ type: BotMenuActions.close_bot_menu, anchorEl: null })

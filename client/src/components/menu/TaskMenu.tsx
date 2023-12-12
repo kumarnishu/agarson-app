@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { TaskMenuActions, MenuContext } from '../../contexts/menuContext';
 import { paths } from '../../Routes';
+import { UserContext } from '../../contexts/userContext';
 
 
 export const StyledLink = styled(Link)`
@@ -13,6 +14,7 @@ export const StyledLink = styled(Link)`
 
 function TaskMenu() {
     const { menu, setMenu } = useContext(MenuContext)
+    const { user } = useContext(UserContext)
     return (
         <Menu
             anchorEl={menu?.anchorEl}
@@ -25,13 +27,14 @@ function TaskMenu() {
                 }>
                 <StyledLink to={paths.tasks}>tasks</StyledLink>
             </MenuItem>
-            <MenuItem
+
+            {user?.is_admin && <MenuItem
                 onClick={
                     () => setMenu({ type: TaskMenuActions.close_task_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.task_admin_page}>Admin</StyledLink>
 
-            </MenuItem>
+            </MenuItem>}
             <MenuItem
                 onClick={
                     () => setMenu({ type: TaskMenuActions.close_task_menu, anchorEl: null })

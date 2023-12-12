@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { TodoMenuActions, MenuContext } from '../../contexts/menuContext';
 import { paths } from '../../Routes';
+import { UserContext } from '../../contexts/userContext';
 
 
 export const StyledLink = styled(Link)`
@@ -12,6 +13,7 @@ export const StyledLink = styled(Link)`
 `
 
 function TodoMenu() {
+    const { user } = useContext(UserContext)
     const { menu, setMenu } = useContext(MenuContext)
     return (
         <Menu
@@ -25,13 +27,13 @@ function TodoMenu() {
                 }>
                 <StyledLink to={paths.todos}>Todos</StyledLink>
             </MenuItem>
-            <MenuItem
+            {user?.is_admin && <MenuItem
                 onClick={
                     () => setMenu({ type: TodoMenuActions.close_todo_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.todo_admin_page}>Admin</StyledLink>
 
-            </MenuItem>
+            </MenuItem>}
             <MenuItem
                 onClick={
                     () => setMenu({ type: TodoMenuActions.close_todo_menu, anchorEl: null })
