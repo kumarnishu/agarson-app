@@ -86,6 +86,12 @@ function MyTodoTable({ todo, todos, setTodo }: Props) {
                                 Timestamp
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Assigned By
+
+                            </STableHeadCell>
                         </STableRow>
                     </STableHead>
                     <STableBody >
@@ -159,6 +165,10 @@ function MyTodoTable({ todo, todos, setTodo }: Props) {
                                             </STableCell>
                                             <STableCell>
                                                 {new Date(todo.created_at).toLocaleString()}
+
+                                            </STableCell>
+                                            <STableCell>
+                                                {todo.created_by && todo.created_by.username}
 
                                             </STableCell>
                                         </STableRow>}

@@ -590,7 +590,6 @@ export const AssignUsers = async (req: Request, res: Response, next: NextFunctio
             users.push(user)
     }
 
-    console.log(users)
     user.assigned_users = users
     if (req.user) {
         user.updated_by = user

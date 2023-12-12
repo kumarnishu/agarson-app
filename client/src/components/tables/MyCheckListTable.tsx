@@ -84,10 +84,15 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                             <STableHeadCell
                             >
 
-                                Created At
+                                Timestamp
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                               Assigned By
+
+                            </STableHeadCell>
 
 
                         </STableRow>
@@ -118,13 +123,15 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                                         <STableCell>
                                             {checklist.serial_no || 0}
                                         </STableCell>
-                                        <Button
-                                            onClick={() => {
-                                                window.open(checklist.sheet_url, '_blank')
-                                            }}
-                                            href={checklist.sheet_url} target='blank'>
-                                            {checklist.title && checklist.title}
-                                        </Button>
+                                        <STableCell>
+                                            <Button
+                                                onClick={() => {
+                                                    window.open(checklist.sheet_url, '_blank')
+                                                }}
+                                                href={checklist.sheet_url} target='blank'>
+                                                {checklist.title && checklist.title}
+                                            </Button>
+                                        </STableCell>
                                         <STableCell>
                                             {checklist.boxes.filter((box) => {
                                                 return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date()
@@ -138,7 +145,7 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                                             }
 
                                         </STableCell>
-                                     
+
 
                                         <STableCell>
                                             Checked : {checklist.boxes.filter((box) => {
@@ -156,6 +163,10 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
 
                                         <STableCell>
                                             {new Date(checklist.created_at).toLocaleString()}
+
+                                        </STableCell>
+                                        <STableCell>
+                                            {checklist.created_by && checklist.created_by.username}
 
                                         </STableCell>
                                     </STableRow>
