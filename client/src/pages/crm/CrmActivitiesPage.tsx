@@ -26,6 +26,7 @@ function CrmActivitiesPage() {
     const [remark, setRemark] = useState<IRemark>()
     const [remarks, setRemarks] = useState<IRemark[]>([])
     const [userId, setUserId] = useState<string>()
+    const [filterCount, setFilterCount] = useState(0)
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
         start_date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
         , end_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
@@ -54,6 +55,7 @@ function CrmActivitiesPage() {
             })
         }
     }, [data])
+    console.log(filterCount)
     return (
         <>
             <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
@@ -207,7 +209,7 @@ function CrmActivitiesPage() {
             }
             {remark && <DeleteRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
             {remark && <UpdateRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
     )
 }
