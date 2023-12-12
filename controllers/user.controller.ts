@@ -62,7 +62,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ]
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $or: [
@@ -96,7 +96,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -149,7 +149,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -216,7 +216,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -268,7 +268,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
 
 export const GetProfile = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.user?._id
-    const user = await User.findById(id).populate("created_by").populate("updated_by")
+    const user = await User.findById(id).populate("created_by").populate("updated_by").populate('assigned_users')
     res.status(200).json(user)
 }
 
@@ -538,13 +538,13 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
 
     let user = await User.findOne({
         username: String(username).toLowerCase().trim(),
-    }).select("+password").populate("created_by").populate("updated_by")
+    }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
 
 
     if (!user) {
         user = await User.findOne({
             email: String(username).toLowerCase().trim(),
-        }).select("+password").populate("created_by").populate("updated_by")
+        }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
         if (user)
             if (!user.email_verified)
                 return res.status(403).json({ message: "please verify email id before login" })

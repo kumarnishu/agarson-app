@@ -187,37 +187,42 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                             {
 
                                                                 <>
-                                                                    <Tooltip title="Edit">
-                                                                        <IconButton color="info"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: CheckListChoiceActions.edit_checklist })
-                                                                                setCheckList(checklist)
-                                                                            }}
-                                                                        >
-                                                                            <Edit />
-                                                                        </IconButton>
-                                                                    </Tooltip>
-                                                                    <Tooltip title="Add More">
-                                                                        <IconButton color="info"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: CheckListChoiceActions.add_more_check_boxes })
-                                                                                setCheckList(checklist)
-                                                                            }}
-                                                                        >
-                                                                            <Add />
-                                                                        </IconButton>
-                                                                    </Tooltip>
-                                                                    {user?.checklists_access_fields.is_deletion_allowed &&
-                                                                        <Tooltip title="Delete">
-                                                                            <IconButton color="error"
-                                                                                onClick={() => {
-                                                                                    setChoice({ type: CheckListChoiceActions.delete_checklist })
-                                                                                    setCheckList(checklist)
-                                                                                }}
-                                                                            >
-                                                                                <Delete />
-                                                                            </IconButton>
-                                                                        </Tooltip>}
+                                                                    {checklist.created_by._id === user._id &&
+                                                                        <>
+                                                                            <Tooltip title="Edit">
+                                                                                <IconButton color="info"
+                                                                                    onClick={() => {
+                                                                                        setChoice({ type: CheckListChoiceActions.edit_checklist })
+                                                                                        setCheckList(checklist)
+                                                                                    }}
+                                                                                >
+                                                                                    <Edit />
+                                                                                </IconButton>
+                                                                            </Tooltip>
+                                                                            <Tooltip title="Add More">
+                                                                                <IconButton color="info"
+                                                                                    onClick={() => {
+                                                                                        setChoice({ type: CheckListChoiceActions.add_more_check_boxes })
+                                                                                        setCheckList(checklist)
+                                                                                    }}
+                                                                                >
+                                                                                    <Add />
+                                                                                </IconButton>
+                                                                            </Tooltip>
+                                                                            {user?.checklists_access_fields.is_deletion_allowed &&
+                                                                                <Tooltip title="Delete">
+                                                                                    <IconButton color="error"
+                                                                                        onClick={() => {
+                                                                                            setChoice({ type: CheckListChoiceActions.delete_checklist })
+                                                                                            setCheckList(checklist)
+                                                                                        }}
+                                                                                    >
+                                                                                        <Delete />
+                                                                                    </IconButton>
+                                                                                </Tooltip>}
+
+                                                                        </>
+                                                                    }
                                                                     <Tooltip title="View">
                                                                         <IconButton color="success"
                                                                             onClick={() => {

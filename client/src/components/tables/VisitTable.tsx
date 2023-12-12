@@ -268,48 +268,55 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                                                         <Chat />
                                                                     </IconButton>
                                                                 </Tooltip>
-                                                                {!visit.visit_validated && user?.visit_access_fields.is_editable && <Tooltip title="validate">
-                                                                    <IconButton color="error"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: VisitChoiceActions.validate_visit })
-                                                                            setVisit(visit)
-                                                                        }}
-                                                                    >
-                                                                        <Check />
-                                                                    </IconButton>
-                                                                </Tooltip>}
-                                                                {user?.visit_access_fields.is_editable && <Tooltip title="Edit Summary">
-                                                                    <IconButton color="success"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: VisitChoiceActions.edit_summary })
-                                                                            setVisit(visit)
-                                                                        }}
-                                                                    >
-                                                                        <Edit />
-                                                                    </IconButton>
-                                                                </Tooltip>}
-                                                                {user?.visit_access_fields.is_editable &&
-                                                                    <Tooltip title="ankit input">
-                                                                        <IconButton color="primary"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: VisitChoiceActions.add_ankit_input })
-                                                                                setVisit(visit)
-                                                                            }}
-                                                                        >
-                                                                            <Comment />
-                                                                        </IconButton>
-                                                                    </Tooltip>}
-                                                                {user?.reports_access_fields.is_editable &&
-                                                                    <Tooltip title="brijesh input">
-                                                                        <IconButton color="primary"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: VisitChoiceActions.add_brijesh_input })
-                                                                                setVisit(visit)
-                                                                            }}
-                                                                        >
-                                                                            <Comment />
-                                                                        </IconButton>
-                                                                    </Tooltip>}
+
+                                                                {user?.assigned_users && user?.assigned_users.find((user) => user._id === visit.created_by._id) &&
+                                                                    <>
+
+                                                                        {!visit.visit_validated && user?.visit_access_fields.is_editable && <Tooltip title="validate">
+                                                                            <IconButton color="error"
+                                                                                onClick={() => {
+                                                                                    setChoice({ type: VisitChoiceActions.validate_visit })
+                                                                                    setVisit(visit)
+                                                                                }}
+                                                                            >
+                                                                                <Check />
+                                                                            </IconButton>
+                                                                        </Tooltip>}
+                                                                        {user?.visit_access_fields.is_editable && <Tooltip title="Edit Summary">
+                                                                            <IconButton color="success"
+                                                                                onClick={() => {
+                                                                                    setChoice({ type: VisitChoiceActions.edit_summary })
+                                                                                    setVisit(visit)
+                                                                                }}
+                                                                            >
+                                                                                <Edit />
+                                                                            </IconButton>
+                                                                        </Tooltip>}
+
+                                                                        {user?.visit_access_fields.is_editable &&
+                                                                            <Tooltip title="ankit input">
+                                                                                <IconButton color="primary"
+                                                                                    onClick={() => {
+                                                                                        setChoice({ type: VisitChoiceActions.add_ankit_input })
+                                                                                        setVisit(visit)
+                                                                                    }}
+                                                                                >
+                                                                                    <Comment />
+                                                                                </IconButton>
+                                                                            </Tooltip>}
+                                                                        {user?.reports_access_fields.is_editable &&
+                                                                            <Tooltip title="brijesh input">
+                                                                                <IconButton color="primary"
+                                                                                    onClick={() => {
+                                                                                        setChoice({ type: VisitChoiceActions.add_brijesh_input })
+                                                                                        setVisit(visit)
+                                                                                    }}
+                                                                                >
+                                                                                    <Comment />
+                                                                                </IconButton>
+                                                                            </Tooltip>}
+                                                                    </>
+                                                                }
                                                             </>
 
                                                         }

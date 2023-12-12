@@ -194,6 +194,7 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                             {
 
                                                                 <>
+
                                                                     <Tooltip title="View replies">
                                                                         <IconButton color="success"
                                                                             onClick={() => {
@@ -204,16 +205,18 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                                             <RemoveRedEye />
                                                                         </IconButton>
                                                                     </Tooltip>
-                                                                    <Tooltip title="Edit">
-                                                                        <IconButton color="info"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: TodoChoiceActions.update_todo })
-                                                                                setTodo(todo)
-                                                                            }}
-                                                                        >
-                                                                            <Edit />
-                                                                        </IconButton>
-                                                                    </Tooltip>
+                                                                    {todo.created_by._id === user._id &&
+
+                                                                        <Tooltip title="Edit">
+                                                                            <IconButton color="info"
+                                                                                onClick={() => {
+                                                                                    setChoice({ type: TodoChoiceActions.update_todo })
+                                                                                    setTodo(todo)
+                                                                                }}
+                                                                            >
+                                                                                <Edit />
+                                                                            </IconButton>
+                                                                        </Tooltip>}
 
                                                                     {user?.todos_access_fields.is_deletion_allowed && <Tooltip title="Delete">
                                                                         <IconButton color="error"
