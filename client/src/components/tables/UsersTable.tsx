@@ -18,7 +18,7 @@ import PopUp from '../popup/PopUp'
 import ResetMultiLoginDialog from '../dialogs/users/ResetMultiLogin'
 import BlockMultiLoginDialog from '../dialogs/users/BlockMultiLoginDialog'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import AssignUsersDialog from '../forms/user/AssignUsersDialog'
+import AssignUsersDialog from '../dialogs/users/AssignUsersDialog'
 
 type Props = {
     user: IUser | undefined,

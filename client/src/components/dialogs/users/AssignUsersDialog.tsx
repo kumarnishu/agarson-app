@@ -6,7 +6,7 @@ import { IUser } from '../../../types/user.types';
 import { AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
 import { BackendError } from '../../..';
-import { AssignUsers, GetUsers } from '../../../services/UserServices';
+import { AssignUsers, GetAllUsers } from '../../../services/UserServices';
 import { queryClient } from '../../../main';
 import SelectUsersInput from '../../select/SelectUsersInput';
 import AlertBar from '../../snacks/AlertBar';
@@ -16,7 +16,7 @@ function AssignUsersDialog({ user }: { user: IUser }) {
     const [users, setUsers] = useState<IUser[]>([])
     const [ids, setIds] = useState<string[]>(user.assigned_users.map((u) => { return u._id }))
 
-    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetAllUsers)
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
@@ -51,7 +51,9 @@ function AssignUsersDialog({ user }: { user: IUser }) {
     }, [isSuccess, setChoice])
 
     return (
-        <Dialog open={choice === UserChoiceActions.assign_users ? true : false}
+        <Dialog
+            fullWidth
+            open={choice === UserChoiceActions.assign_users ? true : false}
             onClose={() => {
                 setIds([])
                 setChoice({ type: UserChoiceActions.close_user })

@@ -27,8 +27,19 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
         return res.status(400).json({ message: "bad request" })
 }
 
+export const GetAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+    let users: IUser[] = []
+    users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users')
+    res.status(200).json(users)
+}
 export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users')
+    let users: IUser[] = []
+    let user_ids: string[] = []
+    user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
+    if (user_ids.length > 0)
+        users = await User.find({ _id: { $in: user_ids } }).populate("created_by").populate("updated_by").populate('assigned_users')
+    else
+        users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users')
     res.status(200).json(users)
 }
 

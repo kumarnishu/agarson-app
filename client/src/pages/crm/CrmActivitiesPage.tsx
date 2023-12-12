@@ -16,35 +16,44 @@ import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
 import RemarksTable from '../../components/tables/RemarksTable'
+import DBPagination from '../../components/pagination/DBpagination'
 
 function CrmActivitiesPage() {
+    const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
-    const [remarks, setRemarks] = useState<IRemark[]>([])
+    const [paginationData, setPaginationData] = useState({ limit: 50, page: 1, total: 1 });
+    const { setChoice } = useContext(ChoiceContext)
     const [remark, setRemark] = useState<IRemark>()
+    const [remarks, setRemarks] = useState<IRemark[]>([])
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-        start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
-        , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
+        start_date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
+        , end_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
     })
     let previous_date = new Date()
     let day = previous_date.getDate() - 1
     previous_date.setDate(day)
-    const { data, isSuccess, isLoading, refetch: ReftechRemarks } = useQuery<AxiosResponse<IRemark[]>, BackendError>(["remarks", userId, dates?.start_date, dates?.end_date], () => GetRemarks(userId, dates?.start_date, dates?.end_date))
-    const { user } = useContext(UserContext)
-    const { setChoice } = useContext(ChoiceContext)
-    const [display, setDisplay] = useState<boolean>(false)
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const [display, setDisplay] = useState<boolean>(false)
+    const { data, isLoading, refetch: ReftechRemarks } = useQuery<AxiosResponse<{ remarks: IRemark[], page: number, total: number, limit: number }>, BackendError>(["remarks", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetRemarks({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+
 
     useEffect(() => {
         if (isUsersSuccess)
             setUsers(usersData?.data)
     }, [users, isUsersSuccess, usersData])
 
-
     useEffect(() => {
-        if (isSuccess)
-            setRemarks(data?.data)
-    }, [remarks, isSuccess, data])
+        if (data) {
+            setRemarks(data.data.remarks)
+            setPaginationData({
+                ...paginationData,
+                page: data.data.page,
+                limit: data.data.limit,
+                total: data.data.total
+            })
+        }
+    }, [data])
     return (
         <>
             <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
@@ -56,24 +65,32 @@ function CrmActivitiesPage() {
                     label="Start Date"
                     fullWidth
                     focused
-                    defaultValue={dates.start_date}
-                    onChange={(e) => setDates({
-                        ...dates,
-                        start_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
-                    })}
+                    value={dates.start_date}
+                    onChange={(e) => {
+                        if (e.currentTarget.value) {
+                            setDates({
+                                ...dates,
+                                start_date: moment(e.target.value).format("YYYY-MM-DD")
+                            })
+                        }
+                    }}
                 />
                 < TextField
                     type="date"
                     id="end_date"
                     size="small"
                     label="End Date"
-                    defaultValue={dates.end_date}
+                    value={dates.end_date}
                     focused
                     fullWidth
-                    onChange={(e) => setDates({
-                        ...dates,
-                        end_date: moment(e.target.value).format("YYYY-MM-DDThh:mm")
-                    })}
+                    onChange={(e) => {
+                        if (e.currentTarget.value) {
+                            setDates({
+                                ...dates,
+                                end_date: moment(e.target.value).format("YYYY-MM-DD")
+                            })
+                        }
+                    }}
                 />
                 {user?.is_admin &&
                     < TextField
@@ -190,6 +207,7 @@ function CrmActivitiesPage() {
             }
             {remark && <DeleteRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
             {remark && <UpdateRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
+            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
         </>
     )
 }

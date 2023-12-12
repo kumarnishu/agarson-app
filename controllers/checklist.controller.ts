@@ -17,12 +17,12 @@ export const GetCheckLists = async (req: Request, res: Response, next: NextFunct
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
 
         if (!id) {
-            checklists = await Checklist.find().populate('owner').populate('updated_by').populate('created_by').sort('serial_no').skip((page - 1) * limit).limit(limit)
-            count = await Checklist.find().countDocuments()
+            checklists = await Checklist.find({ created_by: req.user._id }).populate('owner').populate('updated_by').populate('created_by').sort('serial_no').skip((page - 1) * limit).limit(limit)
+            count = await Checklist.find({ created_by: req.user._id }).countDocuments()
         }
         if (id) {
             checklists = await Checklist.find({ owner: id }).populate('owner').populate('updated_by').populate('created_by').sort('serial_no').skip((page - 1) * limit).limit(limit)
-            count = await Checklist.find({ id: id }).countDocuments()
+            count = await Checklist.find({ owner: id }).countDocuments()
         }
 
         if (start_date && end_date) {

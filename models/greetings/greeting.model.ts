@@ -4,7 +4,6 @@ import { IGreeting } from "../../types/greeting.types"
 const GreetingSchema = new mongoose.Schema<IGreeting, mongoose.Model<IGreeting, {}, {}>, {}>({
     name: {
         type: String,
-        lowercase: true,
         required: true
     },
     party: {

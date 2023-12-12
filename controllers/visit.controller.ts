@@ -3,7 +3,7 @@ import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { IVisitBody, IVisitReport, IVisitReportBody } from "../types/visit.types"
 import { Visit } from "../models/visit/visit.model"
 import { VisitReport } from "../models/visit/visit.report.model"
-import { User } from "../models/users/user.model"
+import { IUser } from "../types/user.types"
 
 //get 
 export const getVisits = async (req: Request, res: Response, next: NextFunction) => {
@@ -12,30 +12,31 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
     let id = req.query.id
     let start_date = req.query.start_date
     let end_date = req.query.end_date
+    let visits: IVisitReport[] = []
+    let count = 0
+    let dt1 = new Date(String(start_date))
+    let dt2 = new Date(String(end_date))
+    let user_ids: string[] = []
+    user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let visits = await VisitReport.find().populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at')
+        if (!id) {
+            if (user_ids.length > 0) {
+                visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: { $in: user_ids } }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: { $in: user_ids } }).countDocuments()
+            }
 
-        if (start_date && end_date) {
-            let dt1 = new Date(String(start_date))
-            let dt2 = new Date(String(end_date))
-            visits = visits.filter((visit) => {
-                if (visit.created_at >= dt1 && visit.created_at <= dt2)
-                    return visit
-            })
-        }
-
-        if (id) {
-            let user = await User.findById(id)
-            if (user) {
-                visits = visits.filter((visit) => {
-                    return visit.person.username === user?.username
-                })
+            else {
+                visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 } }).countDocuments()
             }
         }
 
-        let count = visits.length
-        visits = visits.slice((page - 1) * limit, limit * page)
+
+        if (id) {
+            visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: id }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: id }).populate('person').countDocuments()
+        }
 
         return res.status(200).json({
             visits,

@@ -17,16 +17,13 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (hidden === "true") {
-                console.log("first")
-                todos = await Todo.find().populate('person').populate('updated_by').populate('created_by').sort('-created_at').populate("replies.created_by").skip((page - 1) * limit).limit(limit)
-                count = await Todo.find().countDocuments()
+                todos = await Todo.find({ created_by: req.user._id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').populate("replies.created_by").skip((page - 1) * limit).limit(limit)
+                count = await Todo.find({ created_by: req.user._id }).countDocuments()
             }
             else {
-                console.log("second")
-                todos = await Todo.find({ is_hidden: false }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').populate("replies.created_by").skip((page - 1) * limit).limit(limit)
-                count = await Todo.find({ is_hidden: false }).countDocuments()
+                todos = await Todo.find({ is_hidden: false, created_by: req.user._id }).populate('person').populate('updated_by').populate('created_by').sort('-created_at').populate("replies.created_by").skip((page - 1) * limit).limit(limit)
+                count = await Todo.find({ is_hidden: false, created_by: req.user._id }).countDocuments()
             }
-
         }
 
         if (id) {

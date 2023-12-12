@@ -265,10 +265,14 @@ export default function TasksAdminPage() {
                     fullWidth
                     value={dates.start_date}
                     focused
-                    onChange={(e) => setDates({
-                        ...dates,
-                        start_date: moment(e.target.value).format("YYYY-MM-DD")
-                    })}
+                    onChange={(e) => {
+                        if (e.currentTarget.value) {
+                            setDates({
+                                ...dates,
+                                start_date: moment(e.target.value).format("YYYY-MM-DD")
+                            })
+                        }
+                    }}
                 />
                 < TextField
                     size='small'
@@ -278,10 +282,14 @@ export default function TasksAdminPage() {
                     value={dates.end_date}
                     focused
                     fullWidth
-                    onChange={(e) => setDates({
-                        ...dates,
-                        end_date: moment(e.target.value).format("YYYY-MM-DD")
-                    })}
+                    onChange={(e) => {
+                        if (e.currentTarget.value) {
+                            setDates({
+                                ...dates,
+                                end_date: moment(e.target.value).format("YYYY-MM-DD")
+                            })
+                        }
+                    }}
                 />
                 {
                     user?.is_admin &&

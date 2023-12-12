@@ -322,7 +322,7 @@ export default function VisitAdminPage() {
             {/* filter dates and person */}
             <Stack direction="row" p={2} gap={2}>
                 < TextField
-                   
+
                     size="small"
                     type="date"
                     id="start_date"
@@ -330,13 +330,17 @@ export default function VisitAdminPage() {
                     fullWidth
                     value={dates.start_date}
                     focused
-                    onChange={(e) => setDates({
-                        ...dates,
-                        start_date: moment(e.target.value).format("YYYY-MM-DD")
-                    })}
+                    onChange={(e) => {
+                        if (e.currentTarget.value) {
+                            setDates({
+                                ...dates,
+                                start_date: moment(e.target.value).format("YYYY-MM-DD")
+                            })
+                        }
+                    }}
                 />
                 < TextField
-                   
+
                     size="small"
                     type="date"
                     id="end_date"
@@ -344,14 +348,18 @@ export default function VisitAdminPage() {
                     focused
                     value={dates.end_date}
                     fullWidth
-                    onChange={(e) => setDates({
-                        ...dates,
-                        end_date: moment(e.target.value).format("YYYY-MM-DD")
-                    })}
+                    onChange={(e) => {
+                        if (e.currentTarget.value) {
+                            setDates({
+                                ...dates,
+                                end_date: moment(e.target.value).format("YYYY-MM-DD")
+                            })
+                        }
+                    }}
                 />
                 {user?.is_admin &&
                     < TextField
-                       
+
                         size="small"
                         select
                         SelectProps={{

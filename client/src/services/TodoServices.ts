@@ -28,17 +28,10 @@ export const GetMyTodos = async () => {
 
 
 export const GetTodos = async ({ limit, hidden, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string, hidden: boolean }) => {
-
-    if (id && !start_date && !end_date)
-        return await apiClient.get(`todos/?id=${id}&limit=${limit}&page=${page}&hidden=${hidden}`)
-    if (id && start_date && end_date)
+    if (id)
         return await apiClient.get(`todos/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&hidden=${hidden}`)
-    if (!id && start_date && end_date)
-        return await apiClient.get(`todos/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&hidden=${hidden}`)
-    if (!id && !start_date && !end_date)
-        return await apiClient.get(`todos?limit=${limit}&page=${page}&hidden=${hidden}`)
     else
-        return await apiClient.get(`todos?limit=${limit}&page=${page}&hidden=${hidden}`)
+        return await apiClient.get(`todos/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&hidden=${hidden}`)
 }
 
 export const FuzzySearchTodos = async ({ searchString, hidden, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined, hidden: boolean }) => {

@@ -61,17 +61,11 @@ export const RemoveLeadReferrals = async ({ id, body }: { id: string, body: { re
 }
 
 
-export const GetRemarks = async (id?: string, start_date?: string, end_date?: string) => {
-  if (id && !start_date && !end_date)
-    return await apiClient.get(`remarks/?id=${id}`)
-  if (id && start_date && end_date)
-    return await apiClient.get(`remarks/?id=${id}&start_date=${start_date}&end_date=${end_date}`)
-  if (!id && start_date && end_date)
-    return await apiClient.get(`remarks/?start_date=${start_date}&end_date=${end_date}`)
-  if (!id && !start_date && !end_date)
-    return await apiClient.get(`remarks`)
+export const GetRemarks = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+  if (id)
+    return await apiClient.get(`remarks/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
   else
-    return await apiClient.get(`remarks`)
+    return await apiClient.get(`remarks/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
 }
 
 export const FuzzySearchLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
