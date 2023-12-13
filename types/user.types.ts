@@ -30,6 +30,7 @@ export type IUser = {
     reports_access_fields: ReportsAccess,
     todos_access_fields: TodoAccess,
     email_verified: Boolean,
+    mobile_verified:Boolean,
     is_active: Boolean,
     last_login: Date,
     multi_login_token: string | null,

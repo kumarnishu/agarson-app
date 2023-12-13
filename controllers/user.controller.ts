@@ -540,7 +540,14 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
         username: String(username).toLowerCase().trim(),
     }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
 
-
+    if (!user) {
+        user = await User.findOne({
+            mobile: String(username).toLowerCase().trim(),
+        }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
+        if (user)
+            if (!user.mobile_verified)
+                return res.status(403).json({ message: "please verify mobile before login" })
+    }
     if (!user) {
         user = await User.findOne({
             email: String(username).toLowerCase().trim(),
@@ -692,24 +699,22 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-    if (email !== user.email) {
-        await User.findByIdAndUpdate(user.id, {
-            email, username,
-            dp,
-            email_verified: false
-        })
-        return res.status(200).json({ message: "user updated" })
-    }
+    let mobileverified = true
+    let emaileverified = true
+    if (email != user.email)
+        emaileverified = false
+    if (mobile != user.mobile)
+        mobileverified = false
     await User.findByIdAndUpdate(user.id, {
         email,
-        username,
         mobile,
+        email_verified: emaileverified,
+        mobile_verified: mobileverified,
         dp,
-        updated_by: req.user,
         updated_at: new Date(),
-    }).then(() => {
-        return res.status(200).json({ message: "user updated" })
+        updated_by: user
     })
+    return res.status(200).json({ message: "user updated" })
 }
 
 export const UpdateProfile = async (req: Request, res: Response, next: NextFunction) => {
@@ -752,23 +757,22 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-    if (email != user.email) {
-        await User.findByIdAndUpdate(user.id, {
-            email,
-            dp,
-            mobile,
-            email_verified: false,
-            updated_by: user
-        })
-            .then(() => { return res.status(200).json({ message: "profile updated" }) })
-    }
+    let mobileverified = true
+    let emaileverified = true
+    if (email != user.email)
+        emaileverified = false
+    if (mobile != user.mobile)
+        mobileverified = false
     await User.findByIdAndUpdate(user.id, {
         email,
         mobile,
+        email_verified: emaileverified,
+        mobile_verified: mobileverified,
         dp,
+        updated_at: new Date(),
         updated_by: user
     })
-        .then(() => res.status(200).json({ message: "profile updated" }))
+    return res.status(200).json({ message: "profile updated" })
 }
 
 export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {

@@ -57,7 +57,7 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
 }
 
 export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
-    let todos = await Todo.find({ person: req.user._id, is_hidden: false }).populate('person').populate('updated_by').populate('created_by').sort('-created_at')
+    let todos = await Todo.find({ person: req.user._id, is_hidden: false }).populate('person').populate('updated_by').populate('created_by').populate("replies.created_by").sort('-created_at')
     return res.status(200).json(todos)
 }
 

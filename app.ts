@@ -7,6 +7,7 @@ import cors from "cors";
 import { MulterError } from 'multer';
 import { connectDatabase } from './config/db';
 import UserRoutes from "./routes/user.routes";
+import StockRoutes from "./routes/stock.routes";
 import LeadRoutes from "./routes/lead.routes";
 import BotRoutes from "./routes/bot.routes";
 import BroadCastRoutes from "./routes/brodcast.route";
@@ -139,6 +140,7 @@ app.use("/api/v1", VisitRoutes)
 app.use("/api/v1", TodoRoutes)
 app.use("/api/v1", GreetingRoutes)
 app.use("/api/v1", ReportRoutes)
+app.use("/api/v1", StockRoutes)
 
 
 
