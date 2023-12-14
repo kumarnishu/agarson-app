@@ -21,7 +21,7 @@ import DBPagination from '../../components/pagination/DBpagination'
 function CrmActivitiesPage() {
     const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
-    const [paginationData, setPaginationData] = useState({ limit: 50, page: 1, total: 1 });
+    const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const { setChoice } = useContext(ChoiceContext)
     const [remark, setRemark] = useState<IRemark>()
     const [remarks, setRemarks] = useState<IRemark[]>([])
