@@ -546,8 +546,6 @@ export const StartBroadcastWithTemplate = async (req: Request, res: Response, ne
     broadcast.is_active = true
     broadcast.daily_count = 0
 
-
-
     await broadcast.save()
     if (req.user)
         await BroadCastWithTemplates(broadcast, client.client, req.user)

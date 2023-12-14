@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, FormControlLabel, Stack, Switch, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
@@ -16,6 +16,7 @@ import { IVisit } from '../../../types/visit.types';
 type TformData = {
     party_name: string,
     city: string,
+    is_old_party: Boolean,
     media: string | Blob | File
 }
 
@@ -39,11 +40,13 @@ function VisitInForm({ visit }: { visit: IVisit }) {
         initialValues: {
             party_name: "",
             city: "",
-            media: ''
+            media: '',
+            is_old_party: false
         },
         validationSchema: Yup.object({
             party_name: Yup.string().required("required"),
             city: Yup.string().required("required"),
+            is_old_party: Yup.boolean().required("required"),
             media: Yup.mixed<File>()
                 .test("size", "size is allowed only less than 10mb",
                     file => {
@@ -79,6 +82,7 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                     visit_in_credientials: location,
                     party_name: values.party_name,
                     city: values.city,
+                    is_old_party: values.is_old_party
                 }
                 formdata.append("body", JSON.stringify(Data))
                 formdata.append("media", values.media)
@@ -127,6 +131,7 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                         }
                         {...formik.getFieldProps('party_name')}
                     />
+
                     <TextField
                         variant="outlined"
                         fullWidth
@@ -141,6 +146,10 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                         }
                         {...formik.getFieldProps('city')}
                     />
+                    <FormControlLabel control={<Switch
+                        checked={Boolean(formik.values.is_old_party)}
+                        {...formik.getFieldProps('is_old_party')}
+                    />} label="Is Old ?" />
 
                     <TextField
                         fullWidth

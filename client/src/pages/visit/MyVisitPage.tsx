@@ -32,6 +32,7 @@ function MyVisitPage() {
     }
 
   }, [isSuccess, data])
+  
   return (
     <>
       {isLoading && <LinearProgress />}

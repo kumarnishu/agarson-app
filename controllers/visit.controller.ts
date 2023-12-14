@@ -59,7 +59,6 @@ export const getMyTodayVisit = async (req: Request, res: Response, next: NextFun
 }
 
 
-
 //post/put/delte/patch
 export const StartMyDay = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
@@ -167,12 +166,11 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
     let body = JSON.parse(req.body.body)
     let { visit_in_credientials,
         party_name,
-        city } = body as IVisitReportBody
+        city, is_old_party } = body as IVisitReportBody
 
     if (!visit_in_credientials || !party_name || !city) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
-
     let id = req.params.id
     let visit = await Visit.findById(id)
     if (!visit)
@@ -185,6 +183,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         person: req.user,
         party_name,
         city,
+        is_old_party: is_old_party,
         visit: visit,
         created_at: new Date(),
         updated_at: new Date(),
@@ -275,6 +274,7 @@ export const EditVisitSummary = async (req: Request, res: Response, next: NextFu
     await report.save()
     return res.status(200).json({ message: "updated Summary Successfully" })
 }
+
 export const ValidateVisit = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.params.id
     let report = await VisitReport.findById(id)

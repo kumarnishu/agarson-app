@@ -98,7 +98,6 @@ export const UnBlockUser = async (id: string) => {
 }
 // make leads controlled
 
-
 export const UpdateUserAccess = async ({ id, access_fields }: {
   id: string,
   access_fields: AccessTypes
