@@ -41,7 +41,7 @@ export default function TasksAdminPage() {
         start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
         , end_date: moment(new Date().setDate(30)).format("YYYY-MM-DD")
     })
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
     const { data, isLoading, refetch: ReftechTasks } = useQuery<AxiosResponse<{ tasks: ITask[], page: number, total: number, limit: number }>, BackendError>(["tasks", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetTasks({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 

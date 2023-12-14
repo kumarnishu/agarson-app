@@ -12,7 +12,7 @@ import AssignReferForm from '../../forms/crm/AssignReferForm'
 
 function AssignReferDialog({ refer }: { refer: IReferredParty }) {
     const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { choice, setChoice } = useContext(ChoiceContext)
     useEffect(() => {
         if (isSuccess)

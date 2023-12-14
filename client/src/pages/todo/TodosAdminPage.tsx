@@ -41,7 +41,7 @@ export default function TodosAdminPage() {
         start_date: moment(new Date("Mon Dec 01 2023 12:00:00 GMT+0530 (India Standard Time)")).format("YYYY-MM-DD")
         , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
     })
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
     const { data, isLoading, refetch: ReftechTodos } = useQuery<AxiosResponse<{ todos: ITodo[], page: number, total: number, limit: number }>, BackendError>(["todos", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetTodos({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date, hidden: hidden }))
 

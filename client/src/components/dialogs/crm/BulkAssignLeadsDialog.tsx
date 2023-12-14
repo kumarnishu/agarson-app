@@ -13,7 +13,7 @@ import { GetUsers } from '../../../services/UserServices';
 
 function BulkAssignLeadsDialog({ leads }: { leads: ILead[] }) {
     const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { choice, setChoice } = useContext(ChoiceContext)
 
     useEffect(() => {

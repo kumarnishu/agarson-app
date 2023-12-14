@@ -8,6 +8,7 @@ export type IUser = {
     password: string,
     email: string,
     mobile: string,
+    is_customer:Boolean,
     dp: Asset,
     client_id: string,
     client_data_path: string,

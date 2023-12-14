@@ -8,6 +8,7 @@ import { ApartmentOutlined, Article, Book, CheckBoxOutlined, Diversity3Outlined,
 import { useContext } from "react";
 import { UserContext } from "../contexts/userContext";
 import AppShortcutIcon from '@mui/icons-material/AppShortcut';
+import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
 
 function DashBoardPage() {
   const { user } = useContext(UserContext)
@@ -208,6 +209,21 @@ function DashBoardPage() {
                     Greetings
                   </Typography>
                 </CardContent>
+              </Card>
+            </Link>
+          </Grid>
+          }
+          {/* backup */}
+          {!user?.backup_access_fields.is_hidden && <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+            <Link to={paths.backup_page} style={{ textDecoration: 'none' }}>
+              <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                  <DevicesOtherIcon sx={{ height: 50, width: 50 }} />
+                  <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                   OMS
+                  </Typography>
+                </CardContent>
+
               </Card>
             </Link>
           </Grid>

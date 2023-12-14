@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, FormControlLabel, IconButton, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -46,7 +46,8 @@ export default function UsersPage() {
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [filterCount, setFilterCount] = useState(0)
-    const { data, isLoading } = useQuery<AxiosResponse<{ users: IUser[], page: number, total: number, limit: number }>, BackendError>(["users", paginationData], async () => GetPaginatedUsers({ limit: paginationData?.limit, page: paginationData?.page }))
+    const [is_customer, setIsCustomer] = useState(false)
+    const { data, isLoading } = useQuery<AxiosResponse<{ users: IUser[], page: number, total: number, limit: number }>, BackendError>(["users", paginationData, is_customer], async () => GetPaginatedUsers({ limit: paginationData?.limit, page: paginationData?.page, is_customer }))
 
     const { data: fuzzyusers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ users: IUser[], page: number, total: number, limit: number }>, BackendError>(["fuzzyusers", filter], async () => FuzzySearchUsers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
         enabled: false
@@ -69,6 +70,9 @@ export default function UsersPage() {
         }
 
     }
+    useEffect(() => {
+        setIsCustomer(is_customer)
+    }, [is_customer])
 
     useEffect(() => {
         let data: SelectedData[] = []
@@ -169,6 +173,10 @@ export default function UsersPage() {
                     direction="row"
                 >
                     {/* search bar */}
+                    <FormControlLabel control={<Switch
+                        defaultChecked={Boolean(is_customer)}
+                        onChange={() => setIsCustomer(!is_customer)}
+                    />} label="Only Customers" />
                     < Stack direction="row" spacing={2}>
                         <TextField
                             fullWidth

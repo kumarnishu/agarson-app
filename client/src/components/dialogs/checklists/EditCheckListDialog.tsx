@@ -13,7 +13,7 @@ import EditCheckListForm from '../../forms/checklists/EditCheckListForm';
 function EditCheckListDialog({ checklist }: { checklist: IChecklist }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
     useEffect(() => {
         if (isSuccess)

@@ -18,7 +18,7 @@ function BulkAssignRefersDialog({ refers }: {
     }[]
 }) {
     const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { choice, setChoice } = useContext(ChoiceContext)
 
     useEffect(() => {

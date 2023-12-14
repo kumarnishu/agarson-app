@@ -31,6 +31,7 @@ export type IUser = {
     todos_access_fields: TodoAccess,
     email_verified: Boolean,
     mobile_verified:Boolean,
+    is_customer: Boolean,
     is_active: Boolean,
     last_login: Date,
     multi_login_token: string | null,

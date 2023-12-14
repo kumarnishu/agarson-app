@@ -12,7 +12,7 @@ import { IUser } from '../../../types/user.types';
 
 function StartReminderMessageDialog({ reminder }: { reminder: IReminder }) {
     const { choice, setChoice } = useContext(ChoiceContext)
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const [users, setUsers] = useState<IUser[]>([])
     const [client, setClient] = useState<string>()
 

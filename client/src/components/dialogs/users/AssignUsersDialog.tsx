@@ -16,7 +16,7 @@ function AssignUsersDialog({ user }: { user: IUser }) {
     const [users, setUsers] = useState<IUser[]>([])
     const [ids, setIds] = useState<string[]>(user.assigned_users.map((u) => { return u._id }))
 
-    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetAllUsers)
+    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetAllUsers())
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {

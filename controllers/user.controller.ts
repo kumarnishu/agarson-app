@@ -13,9 +13,19 @@ import { Asset } from '../types/asset.types';
 export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
+    let is_customer = String(req.query.is_customer)
+    let users: IUser[] = []
+    let count = 0
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').skip((page - 1) * limit).limit(limit)
-        let count = await User.find().countDocuments()
+        if (is_customer && is_customer === "true") {
+            users = await User.find({ is_customer: true }).populate("created_by").populate("updated_by").populate('assigned_users').skip((page - 1) * limit).limit(limit)
+            count = await User.find({ is_customer: true }).countDocuments()
+        }
+        else {
+            users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').skip((page - 1) * limit).limit(limit)
+            count = await User.find().countDocuments()
+        }
+
         return res.status(200).json({
             users,
             total: Math.ceil(count / limit),
@@ -28,10 +38,18 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
 }
 
 export const GetAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+    let is_customer = String(req.query.is_customer)
     let users: IUser[] = []
-    users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users')
+    if (is_customer && is_customer === "true") {
+        users = await User.find({ is_customer: true }).populate("created_by").populate("updated_by").populate('assigned_users')
+    }
+    else {
+        users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users')
+    }
+
     res.status(200).json(users)
 }
+
 export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
     let users: IUser[] = []
     let user_ids: string[] = []
@@ -521,6 +539,130 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
     }
     user.checklists_access_fields = {
         is_hidden: false,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    await user.save()
+    user = await User.findById(user._id).populate("created_by").populate("updated_by") || user
+    res.status(201).json(user)
+}
+export const NewCustomer = async (req: Request, res: Response, next: NextFunction) => {
+    let { username, email, password, mobile } = req.body as TUserBody
+    // validations
+    if (!username || !email || !password || !mobile)
+        return res.status(400).json({ message: "fill all the required fields" });
+    if (!isEmail(email))
+        return res.status(400).json({ message: "please provide valid email" });
+    if (await User.findOne({ username: username.toLowerCase().trim() }))
+        return res.status(403).json({ message: `${username} already exists` });
+    if (await User.findOne({ email: email.toLowerCase().trim() }))
+        return res.status(403).json({ message: `${email} already exists` });
+    if (await User.findOne({ mobile: mobile }))
+        return res.status(403).json({ message: `${mobile} already exists` });
+
+    let dp: Asset = undefined
+    if (req.file) {
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
+        const storageLocation = `users/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 10 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            dp = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+
+
+    let user = new User({
+        username,
+        password,
+        email,
+        mobile,
+        is_admin: false,
+        is_customer: true,
+        dp,
+        client_id: username.split(" ")[0] + `${Number(new Date())}`,
+        client_data_path: username.split(" ")[0] + `${Number(new Date())}`
+
+    })
+    if (req.user) {
+        user.created_by = req.user
+        user.updated_by = req.user
+
+    }
+    user.created_at = new Date()
+    user.updated_at = new Date()
+    user.user_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.visit_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.greetings_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.todos_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.reports_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.crm_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.contacts_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.templates_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.bot_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.broadcast_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.backup_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.reminders_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.tasks_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.checklists_access_fields = {
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }

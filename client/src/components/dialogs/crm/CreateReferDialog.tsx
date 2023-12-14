@@ -13,7 +13,7 @@ import { useQuery } from 'react-query';
 function CreateReferDialog() {
     const [users, setUsers] = useState<IUser[]>([])
     const { choice, setChoice } = useContext(ChoiceContext)
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
     useEffect(() => {
         if (isSuccess)

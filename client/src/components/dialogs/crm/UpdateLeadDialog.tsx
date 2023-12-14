@@ -12,7 +12,7 @@ import { Cancel } from '@mui/icons-material'
 
 function UpdateLeadDialog({ lead }: { lead: ILead}) {
     const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { choice, setChoice } = useContext(ChoiceContext)
     useEffect(() => {
         if (isSuccess)

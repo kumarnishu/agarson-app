@@ -34,7 +34,7 @@ function CrmActivitiesPage() {
     let previous_date = new Date()
     let day = previous_date.getDate() - 1
     previous_date.setDate(day)
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const [display, setDisplay] = useState<boolean>(false)
     const { data, isLoading, refetch: ReftechRemarks } = useQuery<AxiosResponse<{ remarks: IRemark[], page: number, total: number, limit: number }>, BackendError>(["remarks", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetRemarks({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 

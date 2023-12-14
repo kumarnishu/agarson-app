@@ -13,7 +13,7 @@ import { GetUsers } from '../../../services/UserServices';
 function EditTaskDialog({ task }: { task: ITask }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", GetUsers)
+    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
     useEffect(() => {
         if (isSuccess)
