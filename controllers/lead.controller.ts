@@ -23,24 +23,44 @@ import { BroadcastReport } from "../models/broadcast/broadcast.report.model.js"
 export const GetLeads = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
+    const id = req.query.id
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
         let count = 0
         if (req.user?.is_admin) {
-            leads = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] } }).countDocuments()
+            if (id) {
+                leads = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: id }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
+                }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: id }).countDocuments()
+            }
+            else {
+                leads = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
+                }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] } }).countDocuments()
+            }
+
         }
 
         if (!req.user?.is_admin) {

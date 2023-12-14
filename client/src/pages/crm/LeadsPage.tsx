@@ -18,6 +18,8 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from '../../types/crm.types'
 import BulkAssignLeadsDialog from '../../components/dialogs/crm/BulkAssignLeadsDialog'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import { GetUsers } from '../../services/UserServices'
+import { IUser } from '../../types/user.types'
 
 let template: ILeadTemplate[] = [
   {
@@ -50,6 +52,7 @@ let template: ILeadTemplate[] = [
 
 export default function LeadsPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+  const [users, setUsers] = useState<IUser[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<ILead>()
@@ -60,8 +63,10 @@ export default function LeadsPage() {
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
+  const [userId, setUserId] = useState<string>()
+  const { data, isLoading, refetch: refetchLeads } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData, userId], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, userId }))
 
-  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page }))
+  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
   const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
@@ -121,6 +126,11 @@ export default function LeadsPage() {
     if (data.length > 0)
       setSelectedData(data)
   }, [selectedLeads])
+
+  useEffect(() => {
+    if (isUsersSuccess)
+      setUsers(usersData?.data)
+  }, [users, isUsersSuccess, usersData])
 
   useEffect(() => {
     if (!filter) {
@@ -202,6 +212,33 @@ export default function LeadsPage() {
           {/* search bar */}
           < Stack direction="row" spacing={2}>
             {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton />}
+            {LoggedInUser?.is_admin &&
+              < TextField
+                size='small'
+                select
+                SelectProps={{
+                  native: true,
+                }}
+                onChange={(e) => {
+                  setUserId(e.target.value)
+                  refetchLeads()
+                }}
+                required
+                id="todo_owner"
+                label="Filter Todos Of Indivdual"
+                fullWidth
+              >
+                <option key={'00'} value={undefined}>
+
+                </option>
+                {
+                  users.map((user, index) => {
+                    return (<option key={index} value={user._id}>
+                      {user.username}
+                    </option>)
+                  })
+                }
+              </TextField>}
             <TextField
               fullWidth
               size="small"
@@ -235,9 +272,9 @@ export default function LeadsPage() {
 
 
             <IconButton size="small" color="primary"
-            onClick={(e) => setAnchorEl(e.currentTarget)
-            }
-            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
+              onClick={(e) => setAnchorEl(e.currentTarget)
+              }
+              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
             >
               <MenuIcon />
             </IconButton>
