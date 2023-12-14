@@ -54,9 +54,9 @@ export const Logout = async () => {
 
 export const GetUsers = async (is_customer?: boolean) => {
   if (is_customer)
-    return await apiClient.get(`users/is_customer=${is_customer}`)
+    return await apiClient.get(`users/?is_customer=${is_customer}`)
   else
-    return await apiClient.get(`users/is_customer=${false}`)
+    return await apiClient.get(`users/?is_customer=${false}`)
 
 }
 export const GetAllUsers = async (is_customer?: boolean) => {
