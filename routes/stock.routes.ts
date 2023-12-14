@@ -9,7 +9,7 @@ const router = express.Router()
 
 router.route("/articles").get(isAuthenticatedUser, GetArticles)
 router.route("/articles").put(isAuthenticatedUser, upload.single('file'), CreateArticle)
-router.route("/articles/search").get(isAuthenticatedUser, FuzzySearchArticles)
+router.route("/search/articles").get(isAuthenticatedUser, FuzzySearchArticles)
 
 router.route("/articles/:id").put(isAuthenticatedUser, upload.single('file'), UpdateArticle)
 router.route("/articles/activate:id").patch(isAuthenticatedUser, ActivateArticle)

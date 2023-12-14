@@ -473,72 +473,72 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
     user.created_at = new Date()
     user.updated_at = new Date()
     user.user_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.visit_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.greetings_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.todos_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.reports_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.crm_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.contacts_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.templates_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.bot_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.broadcast_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.backup_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.reminders_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.tasks_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
     user.checklists_access_fields = {
-        is_hidden: false,
+        is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
     }
@@ -841,8 +841,8 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-    let mobileverified = true
-    let emaileverified = true
+    let mobileverified = user.mobile_verified
+    let emaileverified = user.email_verified
     if (email !== user.email)
         emaileverified = false
     if (mobile !== user.mobile)
@@ -899,8 +899,8 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-    let mobileverified = true
-    let emaileverified = true
+    let mobileverified = user.mobile_verified
+    let emaileverified = user.email_verified
     if (email !== user.email)
         emaileverified = false
     if (mobile !== user.mobile)
