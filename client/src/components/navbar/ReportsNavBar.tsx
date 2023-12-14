@@ -3,7 +3,7 @@ import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
 import { Avatar, Box, IconButton, Tooltip } from '@mui/material';
 import { useContext } from 'react';
-import {  MenuContext, ReportsMenuActions, UserMenuActions } from '../../contexts/menuContext';
+import { MenuContext, ReportsMenuActions, UserMenuActions } from '../../contexts/menuContext';
 import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
 import { Menu } from '@mui/icons-material';
@@ -47,10 +47,8 @@ export default function ReportsNavBar() {
                                 display: { xs: 'none', md: 'flex' }
                             }}
                         >
-                            <StyledLink to={paths.daily_sales}>Daily sales & Collections</StyledLink>
-                            <StyledLink to={paths.top_party_calls}>Top Calls</StyledLink>
-                            <StyledLink to={paths.enquiry_reports}>Enquiry Reports</StyledLink>
-                            <StyledLink to={paths.tour_reports}>Tour Reports</StyledLink>                          
+                            <StyledLink to={paths.enquiry_reports}>Leads</StyledLink>
+                            <StyledLink to={paths.tour_reports}>Tour</StyledLink>
                             <StyledLink to={paths.report_help_page}>Help</StyledLink>
                         </Stack>
 
