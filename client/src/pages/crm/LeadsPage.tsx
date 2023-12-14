@@ -225,7 +225,7 @@ export default function LeadsPage() {
                 }}
                 required
                 id="todo_owner"
-                label="Filter Todos Of Indivdual"
+                label="Filter Lead Owners"
                 fullWidth
               >
                 <option key={'00'} value={undefined}>

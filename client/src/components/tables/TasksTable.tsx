@@ -189,26 +189,28 @@ function TaskSTable({ task, dates, tasks, setTask, selectAll, setSelectAll, sele
                                                                 <>
                                                                     {task.created_by._id === user._id &&
                                                                         <>
-                                                                            <Tooltip title="Edit">
-                                                                                <IconButton color="info"
-                                                                                    onClick={() => {
-                                                                                        setChoice({ type: TaskChoiceActions.edit_task })
-                                                                                        setTask(task)
-                                                                                    }}
-                                                                                >
-                                                                                    <Edit />
-                                                                                </IconButton>
-                                                                            </Tooltip>
-                                                                            <Tooltip title="Add More">
-                                                                                <IconButton color="info"
-                                                                                    onClick={() => {
-                                                                                        setChoice({ type: TaskChoiceActions.add_more_boxes })
-                                                                                        setTask(task)
-                                                                                    }}
-                                                                                >
-                                                                                    <Add />
-                                                                                </IconButton>
-                                                                            </Tooltip>
+                                                                            {user.tasks_access_fields.is_editable && <>
+                                                                                <Tooltip title="Edit">
+                                                                                    <IconButton color="info"
+                                                                                        onClick={() => {
+                                                                                            setChoice({ type: TaskChoiceActions.edit_task })
+                                                                                            setTask(task)
+                                                                                        }}
+                                                                                    >
+                                                                                        <Edit />
+                                                                                    </IconButton>
+                                                                                </Tooltip>
+                                                                                <Tooltip title="Add More">
+                                                                                    <IconButton color="info"
+                                                                                        onClick={() => {
+                                                                                            setChoice({ type: TaskChoiceActions.add_more_boxes })
+                                                                                            setTask(task)
+                                                                                        }}
+                                                                                    >
+                                                                                        <Add />
+                                                                                    </IconButton>
+                                                                                </Tooltip>
+                                                                            </>}
                                                                             {user?.tasks_access_fields.is_deletion_allowed &&
                                                                                 <Tooltip title="Delete">
                                                                                     <IconButton color="error"

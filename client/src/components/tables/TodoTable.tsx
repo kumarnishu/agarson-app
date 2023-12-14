@@ -207,37 +207,46 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                                     </Tooltip>
                                                                     {todo.created_by._id === user._id &&
 
-                                                                        <Tooltip title="Edit">
-                                                                            <IconButton color="info"
-                                                                                onClick={() => {
-                                                                                    setChoice({ type: TodoChoiceActions.update_todo })
-                                                                                    setTodo(todo)
-                                                                                }}
-                                                                            >
-                                                                                <Edit />
-                                                                            </IconButton>
-                                                                        </Tooltip>}
+                                                                        <>
+                                                                            {user?.todos_access_fields.is_editable &&
+                                                                                <>
+                                                                                    <Tooltip title="Edit">
+                                                                                        <IconButton color="info"
+                                                                                            onClick={() => {
+                                                                                                setChoice({ type: TodoChoiceActions.update_todo })
+                                                                                                setTodo(todo)
+                                                                                            }}
+                                                                                        >
+                                                                                            <Edit />
+                                                                                        </IconButton>
+                                                                                    </Tooltip>
+                                                                                    <Tooltip title="Hide">
+                                                                                        <IconButton color="warning"
+                                                                                            onClick={() => {
+                                                                                                setChoice({ type: TodoChoiceActions.hide_todo })
+                                                                                                setTodo(todo)
+                                                                                            }}
+                                                                                        >
+                                                                                            <HideImageRounded />
+                                                                                        </IconButton>
+                                                                                    </Tooltip>
+                                                                                </>}
+                                                                            {user?.todos_access_fields.is_deletion_allowed && <Tooltip title="Delete">
+                                                                                <IconButton color="error"
+                                                                                    onClick={() => {
+                                                                                        setChoice({ type: TodoChoiceActions.delete_todo })
+                                                                                        setTodo(todo)
+                                                                                    }}
+                                                                                >
+                                                                                    <Delete />
+                                                                                </IconButton>
+                                                                            </Tooltip>}
+                                                                        </>
 
-                                                                    {user?.todos_access_fields.is_deletion_allowed && <Tooltip title="Delete">
-                                                                        <IconButton color="error"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: TodoChoiceActions.delete_todo })
-                                                                                setTodo(todo)
-                                                                            }}
-                                                                        >
-                                                                            <Delete />
-                                                                        </IconButton>
-                                                                    </Tooltip>}
-                                                                    <Tooltip title="Hide">
-                                                                        <IconButton color="warning"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: TodoChoiceActions.hide_todo })
-                                                                                setTodo(todo)
-                                                                            }}
-                                                                        >
-                                                                            <HideImageRounded />
-                                                                        </IconButton>
-                                                                    </Tooltip>
+                                                                    }
+
+
+
 
                                                                 </>
 
