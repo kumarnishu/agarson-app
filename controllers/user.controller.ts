@@ -843,9 +843,9 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
     }
     let mobileverified = true
     let emaileverified = true
-    if (email != user.email)
+    if (email !== user.email)
         emaileverified = false
-    if (mobile != user.mobile)
+    if (mobile !== user.mobile)
         mobileverified = false
     await User.findByIdAndUpdate(user.id, {
         email,
@@ -901,9 +901,9 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
     }
     let mobileverified = true
     let emaileverified = true
-    if (email != user.email)
+    if (email !== user.email)
         emaileverified = false
-    if (mobile != user.mobile)
+    if (mobile !== user.mobile)
         mobileverified = false
     await User.findByIdAndUpdate(user.id, {
         email,
