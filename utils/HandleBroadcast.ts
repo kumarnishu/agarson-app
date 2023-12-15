@@ -16,7 +16,6 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
             let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
             if (latest_broadcast && latest_broadcast.is_active && !latest_broadcast.is_paused) {
                 latest_broadcast.is_paused = false
-                latest_broadcast.next_run_date = new Date(cron.sendAt(latest_broadcast.cron_string))
                 await latest_broadcast.save()
                 let is_random = latest_broadcast?.is_random_template
                 let templates = latest_broadcast?.templates
@@ -73,8 +72,8 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                     }, timeinsec)
                     timeouts.push({ id: broadcast._id, timeout: timeout })
                 }
-                BroadCastWithTemplates(latest_broadcast, client, user)
             }
+            BroadCastWithTemplates(broadcast, client, user)
         }
         if (!start_by_server && daily_limit > 0) {
             BroadcastManager.add(broadcast.cron_key
@@ -232,7 +231,6 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
             let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
             if (latest_broadcast && latest_broadcast.is_active && !latest_broadcast.is_paused) {
                 latest_broadcast.is_paused = false
-                latest_broadcast.next_run_date = new Date(cron.sendAt(latest_broadcast.cron_string))
                 await latest_broadcast.save()
 
                 let timegap = Number(latest_broadcast?.time_gap) * 1000 || 10000
@@ -289,8 +287,8 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                     }, timeinsec)
                     timeouts.push({ id: broadcast._id, timeout: timeout })
                 }
-                BroadCastWithMessage(latest_broadcast, client, user)
             }
+            BroadCastWithMessage(broadcast, client, user)
         }
         if (!start_by_server && daily_limit > 0) {
             BroadcastManager.add(broadcast.cron_key
