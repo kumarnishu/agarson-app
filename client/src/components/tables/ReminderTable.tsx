@@ -109,7 +109,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                 Run Once
 
                             </STableHeadCell>
-                           
+
                             <STableHeadCell
                             >
 
@@ -208,7 +208,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                         }
                                         {/* actions */}
                                         {user?.reminders_access_fields.is_editable &&
-                                            <STableCell>
+                                            <STableCell style={{ backgroundColor: reminder.is_hidden ? 'rgba(255,0,0,0.1)' : 'rgba(188, 209, 192, 0.6)' }}>
                                                 <PopUp element={<Stack direction="row">{
                                                     !reminder.is_active ?
                                                         <>
@@ -323,7 +323,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                         <STableCell>
                                             {reminder.run_once ? "true" : "false"}
                                         </STableCell>
-                                      
+
 
                                         <STableCell>
                                             {new Date(reminder.next_run_date).toLocaleString()}
