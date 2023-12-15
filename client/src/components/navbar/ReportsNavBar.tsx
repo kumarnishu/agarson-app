@@ -47,9 +47,8 @@ export default function ReportsNavBar() {
                                 display: { xs: 'none', md: 'flex' }
                             }}
                         >
-                            <StyledLink to={paths.enquiry_reports}>Leads</StyledLink>
-                            <StyledLink to={paths.tour_reports}>Tour</StyledLink>
-                            <StyledLink to={paths.report_help_page}>Help</StyledLink>
+                            <StyledLink to={paths.tour_reports}>VISIT</StyledLink>
+                            <StyledLink to={paths.leads_report}>CRM</StyledLink>
                         </Stack>
 
                         {/* stack2 right icons*/}

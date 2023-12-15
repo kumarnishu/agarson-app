@@ -1,14 +1,12 @@
-import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, GreetingAccess, RemindersAccess, ReportsAccess, TasksAccess, TemplatesAccess, TodoAccess, UserAccess, VisitAccess } from "./access.types"
+import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, GreetingAccess, RemindersAccess,  TasksAccess, TemplatesAccess, TodoAccess, UserAccess, VisitAccess } from "./access.types"
 import { Asset } from "./asset.types"
 
 export type IUser = {
-    //user properties
     _id: string,
     username: string,
     password: string,
     email: string,
     mobile: string,
-    is_customer:Boolean,
     dp: Asset,
     client_id: string,
     client_data_path: string,
@@ -23,12 +21,12 @@ export type IUser = {
     broadcast_access_fields: BroadcastAccess,
     backup_access_fields: BackupAccess,
     reminders_access_fields: RemindersAccess,
+    reports_access_fields:RemindersAccess,
     alps_access_fields: AlpsAccess,
     tasks_access_fields: TasksAccess,
     checklists_access_fields: CheckListsAccess,
     greetings_access_fields: GreetingAccess,
     visit_access_fields: VisitAccess,
-    reports_access_fields: ReportsAccess,
     todos_access_fields: TodoAccess,
     email_verified: Boolean,
     mobile_verified:Boolean,

@@ -42,10 +42,6 @@ import CheckListAdminPage from './pages/checklists/CheckListAdminPage'
 import CheckListHelpPage from './pages/checklists/CheckListHelpPage'
 import CheckListNavBar from './components/navbar/CheckListNavBar'
 import ReportsNavBar from './components/navbar/ReportsNavBar'
-import DailySalesReportPage from './pages/reports/DailySalesReportPage'
-import ReportsPage from './pages/reports/ReportsPage'
-import ReportsHelpPage from './pages/reports/ReportsHelpPage'
-import TopPartyCallsPage from './pages/reports/TopPartyCallsPage'
 import MyVisitPage from './pages/visit/MyVisitPage'
 import VisitHelpPage from './pages/visit/VisitHelpPage'
 import VisitNavBar from './components/navbar/MyVisitNavBar'
@@ -118,11 +114,8 @@ export enum paths {
 
   //reports
   reports = "/reports",
-  daily_sales = "daily_sales",
-  top_party_calls = "top_party_calls",
-  enquiry_reports = "enquiry_reports",
+  leads_report = "leads_report",
   tour_reports = "tour_reports",
-  report_help_page = "report_help_page",
 
   //broadcast 
   broadcast = "/broadcast",
@@ -428,41 +421,17 @@ function AppRoutes() {
             }>
               <Route
                 index element={
-                  <ReportsPage />
-                }
-              />
-
-              <Route path={paths.reports} element={
-                < ReportsPage />
-              }
-              />
-
-              <Route
-                path={paths.tour_reports} element={
                   <VisitAdminPage />
                 }
               />
-              <Route
-                path={paths.daily_sales} element={
-                  <DailySalesReportPage />
-                }
+              <Route path={paths.tour_reports} element={
+                <VisitAdminPage />
+              }
               />
-              <Route
-                path={paths.top_party_calls} element={
-                  <TopPartyCallsPage />
-                }
+              <Route path={paths.leads_report} element={
+                < CrmActivitiesPage />
+              }
               />
-              <Route
-                path={paths.report_help_page} element={
-                  <ReportsHelpPage />
-                }
-              />
-              <Route
-                path={paths.enquiry_reports} element={
-                  <CrmActivitiesPage />
-                }
-              />
-
             </Route>}
 
           {/* todo nav bar */}

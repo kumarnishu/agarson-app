@@ -81,7 +81,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                             <STableHeadCell
                             >
 
-                                Visit in Photo
+                                Photo
 
                             </STableHeadCell>
 
@@ -345,7 +345,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                                         DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)
                                                     }
                                                 }}
-                                                src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', width: '30px', height: '30px' }} />}
+                                                src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', width: '24px', height: '24px' }} />}
 
                                         </STableCell>
                                         <STableCell>

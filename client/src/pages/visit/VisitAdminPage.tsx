@@ -22,14 +22,14 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 export default function VisitAdminPage() {
     const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
-    const [paginationData, setPaginationData] = useState({ limit: 50, page: 1, total: 1 });
+    const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
     const [visit, setVisit] = useState<IVisitReport>()
     const [visits, setVisits] = useState<IVisitReport[]>([])
     const [selectAll, setSelectAll] = useState(false)
     const MemoData = React.useMemo(() => visits, [visits])
     const [preFilteredData, setPreFilteredData] = useState<IVisitReport[]>([])
-    const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 50, page: 1, total: 1 });
+    const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filterCount, setFilterCount] = useState(0)
     const [selectedVisits, setSelectedVisits] = useState<IVisitReport[]>([])
     const [userId, setUserId] = useState<string>()
@@ -250,7 +250,7 @@ export default function VisitAdminPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    {window.screen.width > 450 ? "Visits Admin" : "Admin"}
+                    {window.screen.width > 4100 ? "Visits Admin" : "Admin"}
                 </Typography>
 
                 <Stack

@@ -1,7 +1,5 @@
 import { Box, IconButton, Tooltip } from '@mui/material'
-import { Stack } from '@mui/system'
 import React, { useContext, useEffect, useState } from 'react'
-import PopUp from '../popup/PopUp'
 import { ITodo } from '../../types/todo.types'
 import { EditOutlined, RemoveRedEye } from '@mui/icons-material'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
@@ -102,43 +100,29 @@ function MyTodoTable({ todo, todos, setTodo }: Props) {
                                     <React.Fragment key={index}>
                                         {todo.status !== "done" && <STableRow
 
-                                        >
+                                        >                                            <STableCell style={{ backgroundColor: todo.status !== "done" ? 'rgba(255,0,0,0.1)' : 'rgba(52, 200, 84, 0.6)' }}>
+                                                <Tooltip title="View replies">
+                                                    <IconButton color="error"
+                                                        onClick={() => {
+                                                            setChoice({ type: TodoChoiceActions.view_replies })
+                                                            setTodo(todo)
+                                                        }}
+                                                    >
+                                                        <RemoveRedEye />
+                                                    </IconButton>
+                                                </Tooltip>
 
-
-                                            <STableCell style={{ backgroundColor: todo.status !== "done" ? 'rgba(255,0,0,0.1)' : 'rgba(52, 200, 84, 0.6)' }}>
-                                                <PopUp
-                                                    element={
-                                                        <Stack direction="row" spacing={1}>
-                                                            {
-
-                                                                <>
-                                                                    <Tooltip title="View replies">
-                                                                        <IconButton color="success"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: TodoChoiceActions.view_replies })
-                                                                                setTodo(todo)
-                                                                            }}
-                                                                        >
-                                                                            <RemoveRedEye />
-                                                                        </IconButton>
-                                                                    </Tooltip>
-
-                                                                    <Tooltip title="Update Status">
-                                                                        <IconButton color="success"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: TodoChoiceActions.update_todo_status })
-                                                                                setTodo(todo)
-                                                                            }}
-                                                                        >
-                                                                            <EditOutlined />
-                                                                        </IconButton>
-                                                                    </Tooltip>
-                                                                </>
-
-                                                            }
-
-                                                        </Stack>} />
-                                            </STableCell>
+                                                <Tooltip title="Update Status">
+                                                    <IconButton color="info"
+                                                        onClick={() => {
+                                                            setChoice({ type: TodoChoiceActions.update_todo_status })
+                                                            setTodo(todo)
+                                                        }}
+                                                    >
+                                                        <EditOutlined />
+                                                    </IconButton>
+                                                </Tooltip>
+                                        </STableCell>
 
                                             <STableCell>
                                                 {todo.work_title}

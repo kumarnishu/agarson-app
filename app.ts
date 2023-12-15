@@ -7,7 +7,6 @@ import cors from "cors";
 import { MulterError } from 'multer';
 import { connectDatabase } from './config/db';
 import UserRoutes from "./routes/user.routes";
-import StockRoutes from "./routes/stock.routes";
 import LeadRoutes from "./routes/lead.routes";
 import BotRoutes from "./routes/bot.routes";
 import BroadCastRoutes from "./routes/brodcast.route";
@@ -18,7 +17,6 @@ import AlpsRoutes from "./routes/alps.route";
 import CheckListkRoutes from "./routes/checklist.routes";
 import TaskRoutes from "./routes/task.routes";
 import VisitRoutes from "./routes/visit.routes";
-import ReportRoutes from "./routes/report.routes";
 import GreetingRoutes from "./routes/greeting.route";
 import TodoRoutes from "./routes/todo.routes";
 import CronJobManager from "cron-job-manager";
@@ -139,8 +137,6 @@ app.use("/api/v1", CheckListkRoutes)
 app.use("/api/v1", VisitRoutes)
 app.use("/api/v1", TodoRoutes)
 app.use("/api/v1", GreetingRoutes)
-app.use("/api/v1", ReportRoutes)
-app.use("/api/v1", StockRoutes)
 
 
 

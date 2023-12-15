@@ -148,11 +148,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     default: false,
     required: true
   },
-  is_customer: {
-    type: Boolean,
-    default: false,
-    required: true
-  },
+  
   mobile_verified: {
     type: Boolean,
     default: false,

@@ -2,13 +2,11 @@ import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess,
 import { Asset } from "./asset.types"
 
 export type IUser = {
-    //user properties
     _id: string,
     username: string,
     password: string,
     email: string,
     mobile: string,
-    is_customer:Boolean,
     dp: Asset,
     client_id: string,
     client_data_path: string,
@@ -19,6 +17,7 @@ export type IUser = {
     crm_access_fields: CrmAccess,
     contacts_access_fields: ContactsAccess,
     templates_access_fields: TemplatesAccess,
+    reports_access_fields:ReportsAccess,
     bot_access_fields: BotAccess,
     broadcast_access_fields: BroadcastAccess,
     backup_access_fields: BackupAccess,
@@ -28,10 +27,9 @@ export type IUser = {
     checklists_access_fields: CheckListsAccess,
     greetings_access_fields: GreetingAccess,
     visit_access_fields: VisitAccess,
-    reports_access_fields: ReportsAccess,
     todos_access_fields: TodoAccess,
     email_verified: Boolean,
-    mobile_verified:Boolean,
+    mobile_verified: Boolean,
     is_active: Boolean,
     last_login: Date,
     multi_login_token: string | null,
@@ -46,10 +44,3 @@ export type IUser = {
     emailVerifyToken: string | null,
     emailVerifyExpire: Date | null
 }
-export type IUserMethods = {
-    getAccessToken: () => string,
-    comparePassword: (password: string) => boolean,
-    getResetPasswordToken: () => string,
-    getEmailVerifyToken: () => string
-}
-export type TUserBody = Request['body'] & IUser;

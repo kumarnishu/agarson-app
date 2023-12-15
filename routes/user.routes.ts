@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 
-import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateAccessFields, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword, FuzzySearchUsers, AssignUsers, GetPaginatedUsers, AllowMultiLogin, BlockMultiLogin, GetAllUsers, NewCustomer } from "../controllers/user.controller";
+import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateAccessFields, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword, FuzzySearchUsers, AssignUsers, GetPaginatedUsers, AllowMultiLogin, BlockMultiLogin } from "../controllers/user.controller";
 import { isAdmin, isAuthenticatedUser, isProfileAuthenticated, } from "../middlewares/auth.middleware";
 
 export const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1024 * 1024 * 50 } })
@@ -9,7 +9,6 @@ export const upload = multer({ storage: multer.memoryStorage(), limits: { fileSi
 const router = express.Router()
 
 router.post("/signup", upload.single("dp"), SignUp)
-router.post("/customers", upload.single("dp"), NewCustomer)
 router.route("/users").get(isAuthenticatedUser, GetUsers)
     .post(isAuthenticatedUser, upload.single("dp"), NewUser)
 router.route("/search/users").get(isAuthenticatedUser, FuzzySearchUsers)
@@ -31,7 +30,6 @@ router.route("/profile")
     .put(isAuthenticatedUser, upload.single("dp"), UpdateProfile)
 router.route("/password/update").patch(isAuthenticatedUser, updatePassword)
 router.route("/password/reset/:id").patch(isAuthenticatedUser, resetUserPassword)
-router.route("/users/all").get(isAuthenticatedUser, isAdmin, GetAllUsers)
 router.post("/email/verify", isAuthenticatedUser, SendVerifyEmail)
 router.patch("/email/verify/:token", VerifyEmail)
 router.post("/password/reset", SendPasswordResetMail)

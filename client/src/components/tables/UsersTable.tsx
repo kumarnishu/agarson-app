@@ -465,13 +465,12 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
 
                                         <STableCell>
                                             {user.email}
-                                            {user.email_verified && <b>[verified]</b>}
+                                            
                                         </STableCell>
 
                                         <STableCell>
 
                                             {user.mobile}
-                                            {user.mobile_verified && <b>[verified]</b>}
 
                                         </STableCell>
 

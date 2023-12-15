@@ -52,25 +52,12 @@ export const Logout = async () => {
 };
 // get users
 
-export const GetUsers = async (is_customer?: boolean) => {
-  if (is_customer)
-    return await apiClient.get(`users/?is_customer=${is_customer}`)
-  else
-    return await apiClient.get(`users/?is_customer=${false}`)
-
-}
-export const GetAllUsers = async (is_customer?: boolean) => {
-  if (is_customer)
-    return await apiClient.get(`users/all/?is_customer=${is_customer}`)
-  else
-    return await apiClient.get(`users/all/?is_customer=${false}`)
+export const GetUsers = async () => {
+  return await apiClient.get(`users`)
 }
 
-export const GetPaginatedUsers = async ({ limit, page, is_customer }: { limit?: number | undefined, page?: number | undefined, is_customer: boolean }) => {
-  if (is_customer)
-    return await apiClient.get(`users/paginated/?limit=${limit}&page=${page}&is_customer=${is_customer}`)
-  else
-    return await apiClient.get(`users/paginated/?limit=${limit}&page=${page}&is_customer=${false}`)
+export const GetPaginatedUsers = async ({ limit, page }: { limit?: number | undefined, page?: number | undefined }) => {
+  return await apiClient.get(`users/paginated/?limit=${limit}&page=${page}`)
 }
 
 export const FuzzySearchUsers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
