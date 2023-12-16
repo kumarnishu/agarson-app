@@ -79,8 +79,8 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
             let Data = {
                 name: values.name,
                 message: values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
-                category: values.category,
                 caption: values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
+                category: values.category,
             }
             formdata.append("body", JSON.stringify(Data))
             formdata.append("media", values.media)

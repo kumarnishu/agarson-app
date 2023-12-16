@@ -85,16 +85,16 @@ function NewBroadcastMessageForm() {
             if (values.mobiles && !showLeads) {
                 Data = {
                     name: values.name,
-                    message: values.message,
-                    caption: values.caption,
+                    message: values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
+                    caption: values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
                     mobiles: values.mobiles.toString().replaceAll("\n", ",").split(",")
                 }
             }
             else
                 Data = {
                     name: values.name,
-                    message: values.message,
-                    caption: values.caption,
+                    message: values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
+                    caption: values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
                 }
 
             formdata.append("body", JSON.stringify(Data))
@@ -148,7 +148,7 @@ function NewBroadcastMessageForm() {
                         id="message"
                         label="Message"
                         helperText={
-                            formik.touched.message && formik.errors.message ? formik.errors.message : ""
+                            formik.touched.message && formik.errors.message ? formik.errors.message : "type \\n for next line and \\t for tab"
                         }
                         {...formik.getFieldProps('message')}
                     />
@@ -162,7 +162,7 @@ function NewBroadcastMessageForm() {
                         label="File Caption"
                         fullWidth
                         helperText={
-                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : "type \\n for next line"
+                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : "type \\n for next line and \\t for tab"
                         }
                         {...formik.getFieldProps('caption')}
                     />
@@ -227,14 +227,15 @@ function NewBroadcastMessageForm() {
                     </Button>
                 </Stack>
 
-                <Stack sx={{ bgcolor: 'black', maxWidth: '350px', p: 2 }}>
-                    {formik.values.message && <Typography sx={{ p: 1, m: 1, bgcolor: 'lightgreen', border: 1, borderColor: 'darkgreen', borderRadius: 1 }}>{formik.values.message}</Typography>}
-                    {formik.values.media && <Stack sx={{ bgcolor: 'lightgreen', m: 1, p: 1, wordBreak: 'break-all', border: 5, borderColor: 'darkgreen', borderRadius: 2 }}>
-                        {/* @ts-ignore */}
-                        {formik.values.media && <img src={formik.values.media && URL.createObjectURL(formik.values.media)} alt="media" />}
-                        {formik.values.media && <Typography sx={{ py: 1, whiteSpace: 'pre-line' }}>{formik.values.caption.replaceAll("\\n", "\n")}</Typography>}
-                    </Stack>}
-                </Stack>
+                {formik.values.media || formik.values.message ?
+                    <Stack sx={{ bgcolor: 'black', maxWidth: '350px', p: 2 }}>
+                        {formik.values.message && <Typography sx={{ p: 1, m: 1, bgcolor: 'lightgreen', whiteSpace: 'pre-wrap', border: 1, borderColor: 'darkgreen', borderRadius: 1 }}>{formik.values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
+                        {formik.values.media && <Stack sx={{ bgcolor: 'lightgreen', m: 1, p: 1, wordBreak: 'break-all', border: 5, borderColor: 'darkgreen', borderRadius: 2 }}>
+                            {/* @ts-ignore */}
+                            {formik.values.media && <img src={formik.values.media && URL.createObjectURL(formik.values.media)} alt="image" />}
+                            {formik.values.caption && <Typography sx={{ py: 1, whiteSpace: 'pre-wrap' }}>{formik.values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
+                        </Stack>}
+                    </Stack> : null}
             </Stack>
 
         </form >

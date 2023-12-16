@@ -48,8 +48,8 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
     const formik = useFormik<TformData>({
         initialValues: {
             name: reminder.name,
-            message: reminder.message.message || "",
-            caption: reminder.message.caption || "",
+            message: reminder.message.message?.replaceAll("\n", "\\n").replaceAll("\t", "\\t") || "",
+            caption: reminder.message.caption?.replaceAll("\n", "\\n").replaceAll("\t", "\\t") || "",
             media: "",
             mobiles: []
         },
@@ -92,8 +92,8 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
             let formdata = new FormData()
             let Data = {
                 name: values.name,
-                message: values.message,
-                caption: values.caption,
+                message: values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
+                caption: values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
                 mobiles: values.mobiles.toString().replaceAll("\n", ",").split(",")
             }
 
@@ -199,7 +199,7 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
                         id="message"
                         label="Message"
                         helperText={
-                            formik.touched.message && formik.errors.message ? formik.errors.message : ""
+                            formik.touched.message && formik.errors.message ? formik.errors.message : "type \\n for next line and \\t for tab"
                         }
                         {...formik.getFieldProps('message')}
                     />
@@ -213,7 +213,7 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
                         label="File Caption"
                         fullWidth
                         helperText={
-                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : "type \\n for next line"
+                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : "type \\n for next line and \\t for tab"
                         }
                         {...formik.getFieldProps('caption')}
                     />
@@ -272,13 +272,16 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
                     }
 
                 </Stack>
-                {formik.values.message || formik.values.media ?
+                {formik.values.media || formik.values.message || fileUrl ?
                     <Stack sx={{ bgcolor: 'black', maxWidth: '350px', p: 2 }}>
-                        {formik.values.message && <Typography sx={{ p: 1, m: 1, bgcolor: 'lightgreen', border: 1, borderColor: 'darkgreen', borderRadius: 1 }}>{formik.values.message}</Typography>}
-                        {formik.values.media && <Stack sx={{ bgcolor: 'lightgreen', m: 1, p: 1, wordBreak: 'break-all', border: 5, borderColor: 'darkgreen', borderRadius: 2 }}>
+                        {formik.values.message && <Typography sx={{
+                            p: 1, m: 1, bgcolor: 'lightgreen', border: 1,
+                            whiteSpace: 'pre-wrap', borderColor: 'darkgreen', borderRadius: 1
+                        }}>{formik.values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
+                        {fileUrl && <Stack sx={{ bgcolor: 'lightgreen', m: 1, p: 1, wordBreak: 'break-all', border: 5, borderColor: 'darkgreen', borderRadius: 2 }}>
                             {/* @ts-ignore */}
-                            {fileUrl && <img src={fileUrl} alt="image" />}
-                            {fileUrl && <Typography sx={{ py: 1 }}>{formik.values.caption}</Typography>}
+                            {fileUrl && <img src={fileUrl} alt="media" />}
+                            {fileUrl && <Typography sx={{ py: 1, whiteSpace: 'pre-wrap' }}>{formik.values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Typography>}
                         </Stack>}
                     </Stack> : null}
             </Stack>
