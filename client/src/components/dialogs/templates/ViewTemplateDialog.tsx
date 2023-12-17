@@ -2,9 +2,15 @@ import { Dialog, DialogTitle, Stack, Typography, DialogContent, IconButton } fro
 import { useContext } from 'react';
 import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
-import { IMessageTemplate } from '../../../types/template.types';
+import { Asset } from '../../../types/asset.types';
 
-function ViewTemplateDialog({ template }: { template: IMessageTemplate }) {
+function ViewTemplateDialog({ template }: {
+    template: {
+        message?: string | undefined;
+        caption?: string | undefined;
+        media?: Asset;
+    }
+}) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
         <>
