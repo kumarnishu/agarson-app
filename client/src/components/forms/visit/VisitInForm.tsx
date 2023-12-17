@@ -87,6 +87,7 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                 formdata.append("body", JSON.stringify(Data))
                 formdata.append("media", values.media)
                 mutate({ id: visit._id, body: formdata })
+                setLocation(undefined)
             }
         }
     });

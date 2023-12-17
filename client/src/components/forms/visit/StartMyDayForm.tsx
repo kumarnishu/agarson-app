@@ -69,6 +69,7 @@ function StartMydayForm() {
                 formdata.append("body", JSON.stringify({ start_day_credientials: location }))
                 formdata.append("media", values.media)
                 mutate(formdata)
+                setLocation(undefined)
             }
         }
     });

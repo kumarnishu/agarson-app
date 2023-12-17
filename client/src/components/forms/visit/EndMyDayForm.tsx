@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
-import { ChoiceContext,  VisitChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
@@ -72,6 +72,7 @@ function EndMydayForm({ visit }: { visit: IVisit }) {
                 formdata.append("body", JSON.stringify({ end_day_credentials: location }))
                 formdata.append("media", values.media)
                 mutate({ id: visit._id, body: formdata })
+                setLocation(undefined)
             }
         }
     });
