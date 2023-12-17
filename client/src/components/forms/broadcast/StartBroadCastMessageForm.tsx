@@ -1,4 +1,4 @@
-import {  Button, Checkbox, CircularProgress, FormControlLabel, FormGroup, Stack, Switch, TextField } from '@mui/material';
+import { Button, Checkbox, CircularProgress, FormControlLabel, FormGroup, Stack, Switch, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import React, { useEffect, useContext, useState } from 'react';
@@ -110,7 +110,7 @@ function StartBroadCastMessageForm({ broadcast, users, client }: { broadcast: IB
           {
             showLimit && < TextField
               type="datetime-local"
-
+              focused
               error={
                 formik.touched.start_date && formik.errors.start_date ? true : false
               }

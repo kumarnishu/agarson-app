@@ -9,16 +9,16 @@ import { getRandomTemplate } from "./getRandomTemplate"
 
 export async function SendGreetingTemplates(client: Client, user: IUser) {
     if (client) {
-        let cronString = "0 0 1/1 * *"
+        let cronString = "5 0 1/1 * *"
         GreetingManager.add("greetings"
             , cronString, async () => {
                 let greetings = await Greeting.find()
                 greetings.forEach(async (greeting) => {
                     if (greeting.is_active) {
                         let dob_date = new Date(greeting.dob_time)
-                        let anv_date = new Date(greeting.anniversary_time)
+                        let anv_date = greeting.anniversary_time && new Date(greeting.anniversary_time)
                         let date = new Date()
-                        if (dob_date.getDate() === date.getDate() && dob_date.getMonth() === date.getMonth()) {
+                        if (dob_date && dob_date.getDate() === date.getDate() && dob_date.getMonth() === date.getMonth()) {
                             let templates = await MessageTemplate.find({ category: 'happy birthday' })
                             let dob_template = await getRandomTemplate(templates)
                             let url = dob_template?.template.media?.public_url || ""
@@ -29,7 +29,7 @@ export async function SendGreetingTemplates(client: Client, user: IUser) {
                             greeting.last_run_date = new Date()
                             await greeting.save()
                         }
-                        if (anv_date.getDate() === date.getDate() && anv_date.getMonth() === date.getMonth()) {
+                        if (anv_date && anv_date.getDate() === date.getDate() && anv_date.getMonth() === date.getMonth()) {
                             let templates = await MessageTemplate.find({ category: 'anniversary' })
                             let anniversary_template = await getRandomTemplate(templates)
                             let url = anniversary_template?.template.media?.public_url || ""

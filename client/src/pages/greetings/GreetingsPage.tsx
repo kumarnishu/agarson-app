@@ -19,6 +19,8 @@ import NewGreetingDialog from '../../components/dialogs/greetings/NewGreetingDia
 import StartAllGreetingDialog from '../../components/dialogs/greetings/StartAllGreetingDialog'
 import StopAllGreetingsDialog from '../../components/dialogs/greetings/StopAllGreetingsDialog.tsx'
 import { UserContext } from '../../contexts/userContext.tsx'
+import UploadGreetingsExcelButton from '../../components/buttons/UploadGreetingsExcelButton.tsx'
+import moment from 'moment'
 
 type SelectedData = {
   name?: string,
@@ -36,8 +38,8 @@ const template: SelectedData[] = [{
   party: "ram footwear",
   mobile: "9898989898",
   category: "party",
-  date_of_birth: new Date().toLocaleDateString(),
-  anniversary: new Date().toLocaleDateString(),
+  date_of_birth: moment(new Date()).format("MM/DD/YY"),
+  anniversary: moment(new Date()).format("MM/DD/YY"),
 }
 ]
 
@@ -80,8 +82,8 @@ export default function GreetingPage() {
         party: greeting.party,
         mobile: greeting.mobile,
         category: greeting.category,
-        date_of_birth: new Date(greeting.dob_time).toLocaleDateString(),
-        anniversary: new Date(greeting.anniversary_time).toLocaleDateString(),
+        date_of_birth: moment(new Date(greeting.dob_time)).format("MM/DD/YY"),
+        anniversary: moment(new Date(greeting.anniversary_time)).format("MM/DD/YY"),
         updated_at: new Date(greeting.updated_at),
         created_by: greeting.created_by && greeting.created_by.username
       })
@@ -137,6 +139,9 @@ export default function GreetingPage() {
           direction="row"
         >
           {/* search bar */}
+          {!user?.greetings_access_fields.is_hidden ?
+            < UploadGreetingsExcelButton disabled={Boolean(!user?.greetings_access_fields.is_editable)} /> : null}
+
           < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
           }>
             <TextField
@@ -181,25 +186,24 @@ export default function GreetingPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {user?.greetings_access_fields.is_editable && <>
+              {user?.greetings_access_fields.is_editable &&
                 <MenuItem onClick={() => {
                   setChoice({ type: GreetingChoiceActions.create_greeting })
                   setAnchorEl(null)
                 }}
-                >New Greeting</MenuItem>
+                >New Greeting</MenuItem>}
 
-                <MenuItem onClick={() => {
-                  setChoice({ type: GreetingChoiceActions.bulk_start_greeting })
-                  setAnchorEl(null)
-                }}
-                >Start All</MenuItem>
+              {user?.greetings_access_fields.is_editable && <MenuItem onClick={() => {
+                setChoice({ type: GreetingChoiceActions.bulk_start_greeting })
+                setAnchorEl(null)
+              }}
+              >Start All</MenuItem>}
 
-                <MenuItem onClick={() => {
-                  setChoice({ type: GreetingChoiceActions.bulk_stop_greeting })
-                  setAnchorEl(null)
-                }}
-                >Stop All</MenuItem>
-              </>}
+              {user?.greetings_access_fields.is_editable && <MenuItem onClick={() => {
+                setChoice({ type: GreetingChoiceActions.bulk_stop_greeting })
+                setAnchorEl(null)
+              }}
+              >Stop All</MenuItem>}
 
               <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>

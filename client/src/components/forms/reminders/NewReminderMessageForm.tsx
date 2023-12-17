@@ -198,7 +198,7 @@ function NewReminderForm() {
                         id="message"
                         label="Message"
                         helperText={
-                            formik.touched.message && formik.errors.message ? formik.errors.message : "type \\n for next line and \\t for tab"
+                            formik.touched.message && formik.errors.message ? formik.errors.message : ""
                         }
                         {...formik.getFieldProps('message')}
                     />
@@ -212,7 +212,7 @@ function NewReminderForm() {
                         label="File Caption"
                         fullWidth
                         helperText={
-                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : "type \\n for next line and \\t for tab"
+                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : ""
                         }
                         {...formik.getFieldProps('caption')}
                     />

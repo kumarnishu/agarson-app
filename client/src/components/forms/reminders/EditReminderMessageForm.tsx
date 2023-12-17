@@ -48,8 +48,8 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
     const formik = useFormik<TformData>({
         initialValues: {
             name: reminder.name,
-            message: reminder.message.message?.replaceAll("\n", "\\n").replaceAll("\t", "\\t") || "",
-            caption: reminder.message.caption?.replaceAll("\n", "\\n").replaceAll("\t", "\\t") || "",
+            message: reminder.message.message || "",
+            caption: reminder.message.caption || "",
             media: "",
             mobiles: []
         },
@@ -199,7 +199,7 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
                         id="message"
                         label="Message"
                         helperText={
-                            formik.touched.message && formik.errors.message ? formik.errors.message : "type \\n for next line and \\t for tab"
+                            formik.touched.message && formik.errors.message ? formik.errors.message :""
                         }
                         {...formik.getFieldProps('message')}
                     />
@@ -213,7 +213,7 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
                         label="File Caption"
                         fullWidth
                         helperText={
-                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : "type \\n for next line and \\t for tab"
+                            formik.touched.caption && formik.errors.caption ? formik.errors.caption :""
                         }
                         {...formik.getFieldProps('caption')}
                     />

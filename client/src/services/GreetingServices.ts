@@ -2,7 +2,7 @@ import { apiClient } from "./utils/AxiosInterceptor";
 
 
 export const CreateGreeting = async (body: {
-    name: string, party: string, category: string, mobile: string, dob_time: string, anniversary_time: string
+    name: string, party: string, category: string, mobile: string, dob_time: string, anniversary_time?: string
 }) => {
     return await apiClient.post(`greetings`, body);
 };
@@ -24,4 +24,7 @@ export const DeleteGreeting = async (id: string) => {
 };
 export const GetGreetings = async () => {
     return await apiClient.get(`greetings`)
+}
+export const BulkGreetingsUpdateFromExcel = async (body: FormData) => {
+    return await apiClient.put(`bulk/new/greetings`, body)
 }

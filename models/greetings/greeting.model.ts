@@ -8,13 +8,11 @@ const GreetingSchema = new mongoose.Schema<IGreeting, mongoose.Model<IGreeting, 
     },
     party: {
         type: String,
-        lowercase: true,
-        required: true
+        lowercase: true
     },
     category: {
         type: String,
-        lowercase: true,
-        required: true
+        lowercase: true
     },
     mobile: {
         type: String,

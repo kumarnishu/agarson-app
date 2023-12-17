@@ -39,9 +39,9 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
     const formik = useFormik<TformData>({
         initialValues: {
             name: template.name,
-            message: template.message?.replaceAll("\n", "\\n").replaceAll("\t", "\\t") || "",
+            message: template.message || "",
             category: template.category || "",
-            caption: template.caption?.replaceAll("\n", "\\n").replaceAll("\t", "\\t") || "",
+            caption: template.caption || "",
             media: ''
         },
         validationSchema: Yup.object({
@@ -132,7 +132,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                         id="message"
                         label="Message"
                         helperText={
-                            formik.touched.message && formik.errors.message ? formik.errors.message : "type \\n for next line and \\t for tab"
+                            formik.touched.message && formik.errors.message ? formik.errors.message : ""
                         }
                         {...formik.getFieldProps('message')}
                     />
@@ -179,7 +179,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                         label="File Caption"
                         fullWidth
                         helperText={
-                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : "type \\n for next line and \\t for tab"
+                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : ""
                         }
                         {...formik.getFieldProps('caption')}
                     />

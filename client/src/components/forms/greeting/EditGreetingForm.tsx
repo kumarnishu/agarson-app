@@ -49,11 +49,12 @@ function EditGreetingForm({ greeting }: { greeting: IGreeting }) {
             category: Yup.string()
                 .required('Required field'),
             mobile: Yup.string()
-                .required('Required field'),
+                .required('Required field')
+                .min(10, 'Must be 10 digits')
+                .max(10, 'Must be 10 digits'),
             dob_time: Yup.string()
                 .required('Required field'),
-            anniversary_time: Yup.string()
-                .required('Required field'),
+            anniversary_time: Yup.string(),
         }),
         onSubmit: (values: TformData) => {
             mutate({ id: greeting._id, body: values })
@@ -139,6 +140,7 @@ function EditGreetingForm({ greeting }: { greeting: IGreeting }) {
                         fullWidth
                         type="date"
                         required
+                        focused
                         error={
                             formik.touched.dob_time && formik.errors.dob_time ? true : false
                         }
@@ -152,7 +154,7 @@ function EditGreetingForm({ greeting }: { greeting: IGreeting }) {
                     <TextField
                         fullWidth
                         type="date"
-                        required
+                        focused
                         error={
                             formik.touched.anniversary_time && formik.errors.anniversary_time ? true : false
                         }

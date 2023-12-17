@@ -38,8 +38,8 @@ function EditBroadcastMessageForm({ broadcast }: { broadcast: IBroadcast }) {
     const formik = useFormik<TformData>({
         initialValues: {
             name: broadcast.name,
-            message: broadcast.message.message?.replaceAll("\n", "\\n").replaceAll("\t", "\\t") || "",
-            caption: broadcast.message.caption?.replaceAll("\n", "\\n").replaceAll("\t", "\\t") || "",
+            message: broadcast.message.message || "",
+            caption: broadcast.message.caption || "",
             media: "",
             mobiles: mobiles
 
@@ -170,7 +170,7 @@ function EditBroadcastMessageForm({ broadcast }: { broadcast: IBroadcast }) {
                         id="message"
                         label="Message"
                         helperText={
-                            formik.touched.message && formik.errors.message ? formik.errors.message : "type \\n for next line and \\t for tab"
+                            formik.touched.message && formik.errors.message ? formik.errors.message : ""
                         }
                         {...formik.getFieldProps('message')}
                     />
@@ -184,7 +184,7 @@ function EditBroadcastMessageForm({ broadcast }: { broadcast: IBroadcast }) {
                         label="File Caption"
                         fullWidth
                         helperText={
-                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : "type \\n for next line and \\t for tab"
+                            formik.touched.caption && formik.errors.caption ? formik.errors.caption : ""
                         }
                         {...formik.getFieldProps('caption')}
                     />

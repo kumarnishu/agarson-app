@@ -19,7 +19,7 @@ type TformData = {
     category: string;
     mobile: string;
     dob_time: string;
-    anniversary_time: string;
+    anniversary_time?: string;
 }
 
 function NewGreetingForm() {
@@ -38,8 +38,7 @@ function NewGreetingForm() {
             party: "",
             category: "party",
             mobile: "",
-            dob_time: moment(new Date()).format("YYYY-MM-DD"),
-            anniversary_time: moment(new Date()).format("YYYY-MM-DD")
+            dob_time: moment(new Date()).format("YYYY-MM-DD")
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -49,11 +48,13 @@ function NewGreetingForm() {
             category: Yup.string()
                 .required('Required field'),
             mobile: Yup.string()
-                .required('Required field'),
+                .required('Required field')
+                .min(10, 'Must be 10 digits')
+                .max(10, 'Must be 10 digits'), 
             dob_time: Yup.string()
                 .required('Required field'),
             anniversary_time: Yup.string()
-                .required('Required field'),
+                
         }),
         onSubmit: (values: TformData) => {
             mutate(values)
@@ -137,6 +138,7 @@ function NewGreetingForm() {
                     <TextField
                         fullWidth
                         type="date"
+                        focused
                         required
                         error={
                             formik.touched.dob_time && formik.errors.dob_time ? true : false
@@ -151,7 +153,7 @@ function NewGreetingForm() {
                     <TextField
                         fullWidth
                         type="date"
-                        required
+                        focused
                         error={
                             formik.touched.anniversary_time && formik.errors.anniversary_time ? true : false
                         }
