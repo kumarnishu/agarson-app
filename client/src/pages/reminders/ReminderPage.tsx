@@ -180,17 +180,17 @@ export default function ReminderPage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >{user?.reminders_access_fields.is_editable && <>
-              <MenuItem onClick={() => {
+            >
+              {user?.reminders_access_fields.is_editable && <MenuItem onClick={() => {
                 setChoice({ type: ReminderChoiceActions.create_reminder })
                 setAnchorEl(null)
               }}
-              >New Template Reminder</MenuItem>
-              <MenuItem onClick={() => {
+              >New Template Reminder</MenuItem>}
+              {user?.reminders_access_fields.is_editable && <MenuItem onClick={() => {
                 setChoice({ type: ReminderChoiceActions.create_message_reminder })
                 setAnchorEl(null)
               }}
-              >New Custom Reminder</MenuItem></>}
+              >New Custom Reminder</MenuItem>}
               <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 

@@ -1,4 +1,4 @@
-import { Block, Chat, Edit, HideImageRounded, Pause, RemoveRedEye, RestartAlt, Stop } from '@mui/icons-material'
+import { Block, Chat, Edit, HideImageRounded, Pause, Person3Outlined, RestartAlt, Stop } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -297,9 +297,19 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                         color="success"
                                                         size="medium"
                                                         onClick={() => {
-
+                                                            if (reminder.message)
+                                                                setTemplate({
+                                                                    message: reminder.message.message,
+                                                                    media: reminder.message.media,
+                                                                    caption: reminder.message.caption
+                                                                })
+                                                            if (reminder.templates[0])
+                                                                setTemplate({
+                                                                    message: reminder.templates[0].message,
+                                                                    media: reminder.templates[0].media,
+                                                                    caption: reminder.templates[0].caption
+                                                                })
                                                             setChoice({ type: TemplateChoiceActions.view_template })
-                                                            setReminder(reminder)
                                                         }}>
                                                         <Chat />
                                                     </IconButton>
@@ -309,11 +319,10 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                         color="secondary"
                                                         size="medium"
                                                         onClick={() => {
-
                                                             setChoice({ type: ReminderChoiceActions.view_reminder })
                                                             setReminder(reminder)
                                                         }}>
-                                                        <RemoveRedEye />
+                                                        <Person3Outlined />
                                                     </IconButton>
                                                 </Tooltip>
                                             </Stack>} />
