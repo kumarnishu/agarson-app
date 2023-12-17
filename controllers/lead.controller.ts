@@ -373,6 +373,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                     }
                 ]
             }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).countDocuments()
         }
 
 
@@ -403,6 +404,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                     }
                 ]
             }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
 
         return res.status(200).json({
