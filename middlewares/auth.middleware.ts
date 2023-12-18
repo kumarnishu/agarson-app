@@ -6,7 +6,6 @@ let UserTokens: string[] = []//for storing access tokens in memory
 
 //authenticate user
 export const isAuthenticatedUser = async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.cookies)
     console.log(req.headers)
     let token = undefined
     let headerToken = req.headers.authorization?.split(" ")[1]
@@ -38,6 +37,7 @@ export const isAuthenticatedUser = async (req: Request, res: Response, next: Nex
 
 //special case for profile
 export const isProfileAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.headers)
     let token = undefined
     let headerToken = req.headers.authorization?.split(" ")[1]
     if (headerToken)
