@@ -7,7 +7,7 @@ import { BackendError } from "..";
 import { IUser } from "../types/user.types";
 
 function useRemoteLoading() {
-    const { data, isLoading, isError } = useQuery<AxiosResponse<IUser>, BackendError>("profile", GetProfile, { retry: false, refetchOnWindowFocus: true })
+    const { data, isLoading, isError } = useQuery<AxiosResponse<{ user: IUser, token: string }>, BackendError>("profile", GetProfile, { retry: false, refetchOnWindowFocus: true })
     return { remoteUser: data?.data, remoteLoading: isLoading, isError: isError }
 }
 
@@ -31,7 +31,7 @@ export function LoadingProvider(props: { children: JSX.Element }) {
     useEffect(() => {
         if (remoteUser) {
             setLoading(false)
-            setUser(remoteUser)
+            setUser(remoteUser.user)
         }
         if (isError) {
             setLoading(false)

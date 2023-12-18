@@ -1,5 +1,5 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {  Button, CircularProgress, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
@@ -26,7 +26,7 @@ function OwnerSignUpForm() {
   const goto = useNavigate()
   const { setUser } = useContext(UserContext)
   const { mutate, data, isLoading, isSuccess, isError, error } = useMutation
-    <AxiosResponse<IUser>, BackendError, FormData>
+    <AxiosResponse<{ user: IUser, token: string }>, BackendError, FormData>
     (Signup)
   const { setChoice } = useContext(ChoiceContext)
 
@@ -107,7 +107,7 @@ function OwnerSignUpForm() {
   useEffect(() => {
     if (isSuccess) {
       setTimeout(() => {
-        setUser(undefined)
+        setUser(data.data.user)
         setChoice({ type: UserChoiceActions.close_user })
         goto(paths.dashboard)
       }, 1000)

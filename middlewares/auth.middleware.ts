@@ -6,12 +6,21 @@ let UserTokens: string[] = []//for storing access tokens in memory
 
 //authenticate user
 export const isAuthenticatedUser = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.cookies.accessToken)
+    let token = undefined
+    let headerToken = req.headers.authorization?.split(" ")[1]
+    if (headerToken)
+        token = headerToken
+    if (!headerToken)
+        token = req.cookies.accessToken
+
+    if (!token)
         return res.status(403).json({ message: "please login to access this resource" })
-    if (!UserTokens.includes(req.cookies.accessToken))
+    if (!UserTokens.includes(token))
         return res.status(403).json({ message: "login again ! session expired" })
+  
+  
     jwt.verify(
-        req.cookies.accessToken,
+        token,
         process.env.JWT_ACCESS_USER_SECRET || "some random secret",
         async (err: any, decodedData: any) => {
             if (err) {
@@ -27,12 +36,20 @@ export const isAuthenticatedUser = async (req: Request, res: Response, next: Nex
 
 //special case for profile
 export const isProfileAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.cookies.accessToken)
+    let token = undefined
+    let headerToken = req.headers.authorization?.split(" ")[1]
+    if (headerToken)
+        token = headerToken
+    if (!headerToken)
+        token = req.cookies.accessToken
+    if (!token)
         return res.status(403).json({ message: "please login " })
-    if (!UserTokens.includes(req.cookies.accessToken))
+    if (!UserTokens.includes(token))
         return res.status(403).json({ message: "login again " })
+
+    token = token
     jwt.verify(
-        req.cookies.accessToken,
+        token,
         process.env.JWT_ACCESS_USER_SECRET || "some random secret",
         async (err: any, decodedData: any) => {
             if (err) {

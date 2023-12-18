@@ -19,7 +19,7 @@ import AlertBar from '../../snacks/AlertBar';
 function LoginForm() {
   const goto = useNavigate()
   const { mutate, data, isSuccess, isLoading, isError, error } = useMutation
-    <AxiosResponse<IUser>,
+    <AxiosResponse<{user:IUser,token:string}>,
       BackendError,
       { username: string, password: string, multi_login_token?: string }
     >(Login)
@@ -62,7 +62,7 @@ function LoginForm() {
   useEffect(() => {
     if (isSuccess) {
       setTimeout(() => {
-        setUser(data.data)
+        setUser(data.data.user)
         setChoice({ type: UserChoiceActions.close_user })
         goto(paths.dashboard)
       }, 400)

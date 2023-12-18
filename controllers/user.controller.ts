@@ -267,7 +267,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
 export const GetProfile = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.user?._id
     const user = await User.findById(id).populate("created_by").populate("updated_by").populate('assigned_users')
-    res.status(200).json(user)
+    res.status(200).json({ user: user, token: req.cookies.accessToken })
 }
 
 
@@ -400,7 +400,8 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
     sendUserToken(res, owner.getAccessToken())
     await owner.save()
     owner = await User.findById(owner._id).populate("created_by").populate("updated_by") || owner
-    res.status(201).json(owner)
+    let token = owner.getAccessToken()
+    res.status(201).json({ user: owner, token: token })
 }
 
 export const NewUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -543,7 +544,7 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
         user = await User.findOne({
             mobile: String(username).toLowerCase().trim(),
         }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
-        
+
     }
     if (!user) {
         user = await User.findOne({
@@ -569,9 +570,11 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
 
     sendUserToken(res, user.getAccessToken())
     user.last_login = new Date()
+    let token = user.getAccessToken()
     await user.save()
-    res.status(200).json(user)
+    res.status(200).json({ user: user, token: token })
 }
+
 export const Logout = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.cookies.accessToken)
         return res.status(200).json({ message: "already logged out" })
