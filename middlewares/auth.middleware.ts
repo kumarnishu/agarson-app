@@ -6,6 +6,8 @@ let UserTokens: string[] = []//for storing access tokens in memory
 
 //authenticate user
 export const isAuthenticatedUser = async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.cookies)
+    console.log(req.headers)
     let token = undefined
     let headerToken = req.headers.authorization?.split(" ")[1]
     if (headerToken)
@@ -17,8 +19,8 @@ export const isAuthenticatedUser = async (req: Request, res: Response, next: Nex
         return res.status(403).json({ message: "please login to access this resource" })
     if (!UserTokens.includes(token))
         return res.status(403).json({ message: "login again ! session expired" })
-  
-  
+
+
     jwt.verify(
         token,
         process.env.JWT_ACCESS_USER_SECRET || "some random secret",
