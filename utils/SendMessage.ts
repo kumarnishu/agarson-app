@@ -16,6 +16,7 @@ export async function sendTemplates(client: Client, mobile: string, time_gap: nu
         let media_url = template?.template.media?.public_url
         let filename = template?.template.media?.filename
         let isWhatsapp = await client.getContactById(mobile)
+        console.log("is whatsapp", isWhatsapp)
         let sent = false
 
         if (isWhatsapp) {
