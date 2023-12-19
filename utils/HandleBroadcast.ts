@@ -60,7 +60,6 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                             }, Number(timeinsec));
                             timeouts.push({ id: broadcast._id, timeout: timeout })
                             timeinsec = timeinsec + Number(broadcast.time_gap) * 1000 + Math.ceil(Math.random() * 3) * 1000
-                            console.log(timeinsec)
                         }
                     }
                     const timeout = setTimeout(async () => {
@@ -142,7 +141,6 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                                 }, Number(timeinsec));
                                 timeouts.push({ id: broadcast._id, timeout: timeout })
                                 timeinsec = timeinsec + Number(broadcast.time_gap) * 1000 + Math.ceil(Math.random() * 3) * 1000
-                                console.log(timeinsec)
                             }
                         }
                         const timeout = setTimeout(async () => {
@@ -195,7 +193,6 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                         }, Number(timeinsec));
                         timeouts.push({ id: broadcast._id, timeout: timeout })
                         timeinsec = timeinsec + Number(broadcast.time_gap) * 1000 + Math.ceil(Math.random() * 3) * 1000
-                        console.log(timeinsec)
                     }
                 }
                 const timeout = setTimeout(async () => {
@@ -224,7 +221,6 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
 }
 
 export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client, user: IUser, start_by_server?: boolean) {
-    console.log("started broadcast with message")
     if (broadcast && client) {
         let daily_limit = Number(broadcast.daily_limit)
         if (start_by_server && daily_limit > 0) {
@@ -275,7 +271,6 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                             }, Number(timeinsec));
                             timeouts.push({ id: broadcast._id, timeout: timeout })
                             timeinsec = timeinsec + Number(broadcast.time_gap) * 1000 + Math.ceil(Math.random() * 3) * 1000
-                            console.log(timeinsec)
                         }
                     }
                     const timeout = setTimeout(async () => {
@@ -355,7 +350,6 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                                 }, Number(timeinsec));
                                 timeouts.push({ id: broadcast._id, timeout: timeout })
                                 timeinsec = timeinsec + Number(broadcast.time_gap) * 1000 + Math.ceil(Math.random() * 3) * 1000
-                                console.log(timeinsec)
                             }
                         }
                         const timeout = setTimeout(async () => {
@@ -408,7 +402,6 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                         }, Number(timeinsec));
                         timeouts.push({ id: broadcast._id, timeout: timeout })
                         timeinsec = timeinsec + Number(broadcast.time_gap) * 1000 + Math.ceil(Math.random() * 3) * 1000
-                        console.log(timeinsec)
                     }
                 }
                 const timeout = setTimeout(async () => {

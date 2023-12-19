@@ -9,7 +9,7 @@ import cron from "cron"
 export var reminder_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 export async function ReminderWithTemplates(reminder: IReminder, client: Client, user: IUser) {
-    console.log("started")
+    
     if (reminder && client) {
         ReminderManager.add(reminder.running_key
             , reminder.cron_string, async () => {
@@ -25,7 +25,6 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
                         if (report?.whatsapp_status === "pending" && report.reminder_status === "pending") {
                             const timeout = setTimeout(async () => {
                                 let sent = false
-                                console.log("running for messages", report.contact.mobile, new Date().toLocaleTimeString())
                                 let mobile = report.contact.mobile
                                 let name = report.contact.name
 
@@ -54,7 +53,7 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
                             }, Number(timeinsec));
                             reminder_timeouts.push({ id: reminder._id, timeout: timeout })
                             timeinsec = timeinsec + Math.ceil(Math.random() * 3) * 1000
-                            console.log(timeinsec)
+                           
                         }
                     }
                 }
@@ -100,7 +99,7 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
                     if (report?.whatsapp_status === "pending" && report.reminder_status === "pending") {
                         const timeout = setTimeout(async () => {
                             let sent = false
-                            console.log("running for messages", report.contact.mobile, new Date().toLocaleTimeString())
+                          
                             let mobile = report.contact.mobile
                             let name = report.contact.name
 
@@ -132,7 +131,7 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
                         }, Number(timeinsec));
                         reminder_timeouts.push({ id: reminder._id, timeout: timeout })
                         timeinsec = timeinsec + Math.ceil(Math.random() * 3) * 1000
-                        console.log(timeinsec)
+                       
                     }
                 }
             }
@@ -152,7 +151,6 @@ export async function ReminderWithTemplates(reminder: IReminder, client: Client,
 
 
 export async function ReminderWithMessage(reminder: IReminder, client: Client, user: IUser) {
-    console.log("started")
     if (reminder && client) {
         // run job
         ReminderManager.add(reminder.running_key
@@ -168,7 +166,7 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
                         let report = reports[i]
                         if (report?.whatsapp_status === "pending" && report.reminder_status === "pending") {
                             const timeout = setTimeout(async () => {
-                                console.log("running for messages", report.contact.mobile, new Date().toLocaleTimeString())
+                              
                                 let mobile = report.contact.mobile
                                 let name = report.contact.name
                                 let sent = false
@@ -197,7 +195,7 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
                             }, Number(timeinsec));
                             reminder_timeouts.push({ id: reminder._id, timeout: timeout })
                             timeinsec = timeinsec + Math.ceil(Math.random() * 3) * 1000
-                            console.log(timeinsec)
+                           
                         }
                     }
                 }
@@ -241,7 +239,6 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
                     let report = reports[i]
                     if (report?.whatsapp_status === "pending" && report.reminder_status === "pending") {
                         const timeout = setTimeout(async () => {
-                            console.log("running for messages", report.contact.mobile, new Date().toLocaleTimeString())
                             let mobile = report.contact.mobile
                             let name = report.contact.name
                             let sent = false
@@ -273,7 +270,7 @@ export async function ReminderWithMessage(reminder: IReminder, client: Client, u
                         }, Number(timeinsec));
                         reminder_timeouts.push({ id: reminder._id, timeout: timeout })
                         timeinsec = timeinsec + Math.ceil(Math.random() * 3) * 1000
-                        console.log(timeinsec)
+                       
                     }
                 }
             }

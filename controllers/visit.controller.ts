@@ -62,6 +62,8 @@ export const getMyTodayVisit = async (req: Request, res: Response, next: NextFun
 //post/put/delte/patch
 export const StartMyDay = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
+    console.log(body)
+    console.log(req.file)
     let { start_day_credientials } = body as IVisitBody
     if (!start_day_credientials) {
         return res.status(400).json({ message: "please fill all required fields" })

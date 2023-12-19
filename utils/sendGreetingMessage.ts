@@ -53,7 +53,6 @@ export async function SendGreetingMessage(client: Client, mobile: string, user: 
     let response = "pending"
     let sent = false
     if (isWhatsapp) {
-        console.log("sending whatsapp")
         if (message && !caption) {
             await client.sendMessage(mobile, message)
             sent = true

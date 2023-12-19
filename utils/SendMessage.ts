@@ -10,17 +10,14 @@ export async function sendTemplates(client: Client, mobile: string, time_gap: nu
         let template_length = new_templates.length
         let random_id = Math.floor(Math.random() * template_length) + 1
         let template = new_templates.find((t) => t.id === random_id)
-        console.log(template)
         let message = template?.template.message
         let caption = template?.template.caption
         let media_url = template?.template.media?.public_url
         let filename = template?.template.media?.filename
         let isWhatsapp = await client.getContactById(mobile)
-        console.log("is whatsapp", isWhatsapp)
         let sent = false
 
         if (isWhatsapp) {
-            console.log("sending whatsapp")
             if (message) {
                 if (msg_id && is_todo)
                     await client.sendMessage(mobile, message + `\n\nType STOP-${msg_id} to complete this task\n`)
@@ -65,7 +62,6 @@ export async function sendTemplates(client: Client, mobile: string, time_gap: nu
             let media_url = templates[i].media?.public_url
             let filename = templates[i].media?.filename
             if (isWhatsapp) {
-                console.log("sending whatsapp")
                 if (message) {
                     if (msg_id && is_todo)
                         await client.sendMessage(mobile, message + `\n\nType STOP-${msg_id} to complete this task\n`)
@@ -114,7 +110,6 @@ export async function sendMessage(client: Client, mobile: string, time_gap: numb
     let sent = false
     let new_message = message.message
     if (isWhatsapp) {
-        console.log("sending whatsapp")
         if (new_message) {
             if (msg_id && is_todo)
                 await client.sendMessage(mobile, new_message + `\n\nType STOP-${msg_id} to complete this task\n`)

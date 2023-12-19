@@ -6,13 +6,8 @@ let UserTokens: string[] = []//for storing access tokens in memory
 
 //authenticate user
 export const isAuthenticatedUser = async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.headers)
     let token = undefined
-    let headerToken = req.headers.authorization?.split(" ")[1]
-    if (headerToken)
-        token = headerToken
-    if (!headerToken)
-        token = req.cookies.accessToken
+    token = req.cookies.accessToken
 
     if (!token)
         return res.status(403).json({ message: "please login to access this resource" })
@@ -37,13 +32,8 @@ export const isAuthenticatedUser = async (req: Request, res: Response, next: Nex
 
 //special case for profile
 export const isProfileAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.headers)
     let token = undefined
-    let headerToken = req.headers.authorization?.split(" ")[1]
-    if (headerToken)
-        token = headerToken
-    if (!headerToken)
-        token = req.cookies.accessToken
+    token = req.cookies.accessToken
     if (!token)
         return res.status(403).json({ message: "please login " })
     if (!UserTokens.includes(token))

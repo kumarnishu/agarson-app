@@ -39,7 +39,6 @@ export function userLeave(id: string) {
 
 
 export async function createWhatsappClient(client_id: string, client_data_path: string, io: Server) {
-    console.log("getting session")
     let oldClient = clients.find((client) => client.client_id === client_id)
     if (oldClient) {
         oldClient.client.destroy()
@@ -130,7 +129,6 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
                 })
             }
         }
-        console.log("session revived for", client.info)
     })
     try {
         client.on('disconnected', async (reason) => {
@@ -145,7 +143,6 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
             }
             clients = clients.filter((client) => { return client.client_id === client_id })
             fs.rmSync(`.browsers/${client_id}`, { recursive: true, force: true })
-            console.log("disconnected", client.info)
         })
     }
     catch (err) {
@@ -154,12 +151,10 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
     client.on('qr', async (qr) => {
         io.to(client_id).emit("qr", qr);
         clients = clients.filter((client) => { return client.client_id === client_id })
-        console.log("logged out", qr, client_id)
     });
 
     client.on('loading_screen', async (qr) => {
         io.to(client_id).emit("loading");
-        console.log("loading", client_id)
     });
     client.on('message', async (msg: Message) => {
         if (msg.to === process.env.WAPHONE) {
@@ -305,7 +300,6 @@ async function handleBot(data: Message) {
         let time = new Date(new Date().getTime() + 5 * 60 * 60 * 1000)
         // let time = new Date(new Date().getTime() + 60 * 1000)
         new cron.CronJob(time, async () => {
-            console.log('running cron job')
             trackers.forEach(async (tracker) => {
                 await KeywordTracker.findByIdAndUpdate(tracker._id, { is_active: true })
             })
