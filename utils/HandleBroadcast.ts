@@ -28,6 +28,8 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                         if (report?.status === "pending") {
                             const timeout = setTimeout(async () => {
                                 let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
+                                if (latest_broadcast?.daily_count === latest_broadcast?.daily_limit)
+                                    return;
                                 if (latest_broadcast) {
                                     let mobile = report.mobile
                                     let customer_name = report.customer_name
@@ -111,6 +113,8 @@ export async function BroadCastWithTemplates(broadcast: IBroadcast, client: Clie
                             if (report?.status === "pending") {
                                 const timeout = setTimeout(async () => {
                                     let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
+                                    if (latest_broadcast?.daily_count === latest_broadcast?.daily_limit)
+                                        return;
                                     if (latest_broadcast) {
                                         let mobile = report.mobile
                                         let customer_name = report.customer_name
@@ -240,6 +244,8 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                         if (report?.status === "pending") {
                             const timeout = setTimeout(async () => {
                                 let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
+                                if (latest_broadcast?.daily_count === latest_broadcast?.daily_limit)
+                                    return;
                                 if (latest_broadcast) {
                                     let mobile = report.mobile
                                     let message = latest_broadcast.message
@@ -321,6 +327,8 @@ export async function BroadCastWithMessage(broadcast: IBroadcast, client: Client
                             if (report?.status === "pending") {
                                 const timeout = setTimeout(async () => {
                                     let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates')
+                                    if (latest_broadcast?.daily_count === latest_broadcast?.daily_limit)
+                                        return;
                                     if (latest_broadcast) {
                                         let mobile = report.mobile
                                         let customer_name = report.customer_name
