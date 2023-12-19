@@ -45,8 +45,7 @@ app.use(cookieParser());
 app.use(compression())
 
 //logger
-// app.use(morgan('tiny'))
-app.use(morgan(':date[format]'))
+app.use(morgan('tiny'))
 
 
 
