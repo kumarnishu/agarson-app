@@ -55,6 +55,10 @@ import UpdateTemplateCategoriesPage from './pages/templates/UpdateTemplateCatego
 import GreetingsHelpPage from './pages/greetings/GreetingsHelpPage.tsx'
 import GreetingsPage from './pages/greetings/GreetingsPage.tsx'
 import GreetingsNavBar from './components/navbar/GreetingsNavBar.tsx'
+import PasswordsPage from './pages/passwords/PasswordsPage.tsx'
+import PasswordHelpPage from './pages/passwords/PasswordsHelpPage.tsx'
+import PasswordsAdminPage from './pages/passwords/PasswordsAdminPage.tsx'
+import PasswordNavbar from './components/navbar/PasswordNavbar.tsx'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -88,6 +92,11 @@ export enum paths {
   todos = "/todos",
   todo_help_page = "todo_help_page",
   todo_admin_page = "todo_admin_page",
+
+  //passwords
+  passwords = "/passwords",
+  password_help_page = "password_help_page",
+  password_admin_page = "password_admin_page",
 
   //checklists
   checklists = "/checklists",
@@ -450,6 +459,30 @@ function AppRoutes() {
               <Route
                 path={paths.contact_help} element={
                   <ContactHelpPage />
+                }
+              />
+
+            </Route>}
+          {/* passwords nav bar */}
+          {!user.passwords_access_fields.is_hidden &&
+            < Route path={paths.passwords} element={<PasswordNavbar />
+            }>
+              <Route
+                index element={
+                  <PasswordsPage />
+                }
+              />
+              <Route path={paths.passwords} element={
+                < PasswordsPage />
+              }
+              />
+              <Route path={paths.password_admin_page} element={
+                < PasswordsAdminPage />
+              }
+              />
+              <Route
+                path={paths.password_help_page} element={
+                  <PasswordHelpPage />
                 }
               />
 

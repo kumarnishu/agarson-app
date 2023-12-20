@@ -323,6 +323,11 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
+    owner.passwords_access_fields = {
+        is_hidden: false,
+        is_editable: true,
+        is_deletion_allowed: true
+    }
     owner.greetings_access_fields = {
         is_hidden: false,
         is_editable: true,
@@ -459,6 +464,11 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_deletion_allowed: false
     }
     user.visit_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
+    user.passwords_access_fields = {
         is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
@@ -619,7 +629,8 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         visit_access_fields,
         reports_access_fields,
         todos_access_fields,
-        greetings_access_fields
+        greetings_access_fields,
+        passwords_access_fields
 
     } = req.body as TUserBody
 
@@ -644,7 +655,8 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         reports_access_fields,
         todos_access_fields,
         visit_access_fields,
-        greetings_access_fields
+        greetings_access_fields,
+        passwords_access_fields
     })
     res.status(200).json({ message: " updated" })
 }

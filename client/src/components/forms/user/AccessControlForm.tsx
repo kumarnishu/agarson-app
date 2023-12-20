@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { AccessTypes, UpdateUserAccess } from '../../../services/UserServices';
-import { Button, Checkbox, CircularProgress, Stack, Box,  Typography } from '@mui/material'
+import { Button, Checkbox, CircularProgress, Stack, Box, Typography } from '@mui/material'
 import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
@@ -28,7 +28,8 @@ function AccessControlForm({ user }: { user: IUser }) {
         reports_access_fields: user.reports_access_fields,
         visit_access_fields: user.visit_access_fields,
         todos_access_fields: user.todos_access_fields,
-        greetings_access_fields: user.greetings_access_fields
+        greetings_access_fields: user.greetings_access_fields,
+        passwords_access_fields: user.passwords_access_fields
     })
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any>, BackendError, {
@@ -62,7 +63,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                     >
                         <STableRow>
                             <STableCell
-                                                       >
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -74,7 +75,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                             </STableCell>
 
                             <STableCell
-                                                       >
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -86,7 +87,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                             </STableCell>
 
                             <STableCell
-                                                       >
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -98,7 +99,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                             </STableCell>
 
                             <STableCell
-                                                       >
+                            >
                                 <Stack
                                     direction="row"
                                     justifyContent="left"
@@ -115,7 +116,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                     <STableBody >
                         {/* user access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -176,7 +177,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* crm access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -243,7 +244,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* todo access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -310,7 +311,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* bot access fields */}
                         <STableRow
-                            >
+                        >
 
                             {/* bot access row */}
                             <STableCell                 >
@@ -378,7 +379,7 @@ function AccessControlForm({ user }: { user: IUser }) {
 
                         {/* checklist access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -445,7 +446,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* task access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -512,7 +513,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* visit access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -570,7 +571,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* reports access  */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -628,7 +629,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* templates access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -692,7 +693,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* broadcast access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -759,7 +760,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* contacts access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -826,7 +827,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* reminder access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -893,7 +894,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* backup access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -955,7 +956,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                         </STableRow>
                         {/* alps access fields */}
                         <STableRow
-                            >
+                        >
 
                             <STableCell                 >
                                 <Stack
@@ -1076,6 +1077,73 @@ function AccessControlForm({ user }: { user: IUser }) {
 
                                 />
                             </STableCell>
+                        </STableRow>
+                        {/* password access fields */}
+                        <STableRow
+                        >
+
+                            <STableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    <Typography variant="button">passwords
+                                    </Typography>
+                                </Stack>
+                            </STableCell>
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.passwords_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            passwords_access_fields: {
+                                                is_editable: Boolean(!AccessFields.passwords_access_fields.is_editable),
+
+                                                is_hidden: Boolean(AccessFields.passwords_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.passwords_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.passwords_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            passwords_access_fields: {
+                                                is_editable: Boolean(AccessFields.passwords_access_fields.is_editable),
+
+                                                is_hidden: Boolean(!AccessFields.passwords_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.passwords_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.passwords_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            passwords_access_fields: {
+                                                is_editable: Boolean(AccessFields.passwords_access_fields.is_editable),
+
+                                                is_hidden: Boolean(AccessFields.passwords_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.passwords_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+
+
+
+
+
                         </STableRow>
                     </STableBody>
                 </STable>

@@ -64,7 +64,6 @@ function NewtodoCreateTodoForm({ users }: { users: IUser[] }) {
             }, 1000)
         }
     }, [isSuccess, setChoice])
-    console.log(formik.values)
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack

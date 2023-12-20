@@ -1,4 +1,4 @@
-import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, GreetingAccess, RemindersAccess,  TasksAccess, TemplatesAccess, TodoAccess, UserAccess, VisitAccess } from "./access.types"
+import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, GreetingAccess, PasswordsAccess, RemindersAccess,  TasksAccess, TemplatesAccess, TodoAccess, UserAccess, VisitAccess } from "./access.types"
 import { Asset } from "./asset.types"
 
 export type IUser = {
@@ -17,6 +17,7 @@ export type IUser = {
     crm_access_fields: CrmAccess,
     contacts_access_fields: ContactsAccess,
     templates_access_fields: TemplatesAccess,
+    passwords_access_fields: PasswordsAccess,
     bot_access_fields: BotAccess,
     broadcast_access_fields: BroadcastAccess,
     backup_access_fields: BackupAccess,

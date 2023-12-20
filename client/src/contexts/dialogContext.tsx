@@ -1,7 +1,7 @@
 import React, { useReducer } from "react"
 
 type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" |
-  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" |"assign_users"
+  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users"
 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
@@ -10,6 +10,8 @@ type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting"
 type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments"
 
 type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" | "edit_task"
+
+type PasswordChoices = "create_password" | "delete_password" | "close_password" | "update_erp_password"
 
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
@@ -23,7 +25,7 @@ type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadc
 
 type TodoChoices = "create_todo" | "update_todo" | "view_replies" | "delete_todo" | "close_todo" | "update_todo_status" | 'bulk_hide_todo' | "hide_todo"
 
-type ReminderChoices = "create_reminder" | "update_reminder" | "delete_reminder" | "close_reminder" | "view_reminder" | 'start_reminder' | "reset_reminder" | "stop_reminder" | "create_message_reminder" | "update_message_reminder"|"hide_reminder"| "start_message_reminder"
+type ReminderChoices = "create_reminder" | "update_reminder" | "delete_reminder" | "close_reminder" | "view_reminder" | 'start_reminder' | "reset_reminder" | "stop_reminder" | "create_message_reminder" | "update_message_reminder" | "hide_reminder" | "start_message_reminder"
 
 type TaskSchedulerChoices = "create_task_scheduler" | "update_task_scheduler" | "delete_task_scheduler" | "close_task_scheduler" | "view_task_scheduler" | 'start_task_scheduler' | "stop_task_scheduler" | "check_task"
 
@@ -43,7 +45,7 @@ type BotChoices = "create_flow"
 
 
 type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | TaskChoices | VisitChoices
-  | BroadcastChoices | TaskSchedulerChoices | TodoChoices | ReminderChoices | ContactChoices | CheckListChoices | GreetingChoices
+  | BroadcastChoices | TaskSchedulerChoices | TodoChoices | ReminderChoices | ContactChoices | CheckListChoices | GreetingChoices | PasswordChoices
 
 const initialState: ChoiceState | null = null
 
@@ -66,6 +68,12 @@ export enum GreetingChoiceActions {
   close_greeting = "close_greeting",
   bulk_stop_greeting = "bulk_stop_greeting",
   stop_greeting = "stop_greeting"
+}
+export enum PasswordChoiceActions {
+  create_password = "create_password",
+  delete_password = "delete_password",
+  close_password = "close_password",
+  update_erp_password = "update_erp_password"
 }
 export enum VisitChoiceActions {
   start_day = "start_day",
@@ -136,7 +144,7 @@ export enum ReminderChoiceActions {
   create_message_reminder = "create_message_reminder",
   update_message_reminder = "update_message_reminder",
   start_message_reminder = "start_message_reminder",
-  hide_reminder ="hide_reminder"
+  hide_reminder = "hide_reminder"
 }
 export enum TodoChoiceActions {
   create_todo = "create_todo",
@@ -197,7 +205,7 @@ export enum LeadChoiceActions {
 }
 
 export enum UserChoiceActions {
-  assign_users="assign_users",
+  assign_users = "assign_users",
   signup = "signup",
   reset_password_mail = "reset_password_mail",
   close_user = "close_user",
@@ -222,7 +230,7 @@ export enum UserChoiceActions {
 
 type Action = {
   type: UserChoiceActions |
-  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TodoChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions
+  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TodoChoiceActions | PasswordChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions
 }
 
 // reducer
@@ -297,6 +305,11 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TemplateChoiceActions.delete_template: return type
     case TemplateChoiceActions.close_template: return type
     case TemplateChoiceActions.view_template: return type
+
+    case PasswordChoiceActions.create_password: return type
+    case PasswordChoiceActions.update_erp_password: return type
+    case PasswordChoiceActions.delete_password: return type
+    case PasswordChoiceActions.close_password: return type
 
     //greeeting
     case GreetingChoiceActions.create_greeting: return type
