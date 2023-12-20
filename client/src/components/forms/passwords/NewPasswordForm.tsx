@@ -10,7 +10,6 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import { CreatePassword } from '../../../services/PasswordServices';
-import { States } from '../../../utils/states';
 
 function CreatePasswordForm({ users }: { users: IUser[] }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
@@ -68,12 +67,7 @@ function CreatePasswordForm({ users }: { users: IUser[] }) {
                 {/* password_descriptions */}
 
                 < TextField
-                    select
-                    SelectProps={{
-                        native: true
-                    }}
                     focused
-
                     error={
                         formik.touched.state && formik.errors.state ? true : false
                     }
@@ -84,22 +78,10 @@ function CreatePasswordForm({ users }: { users: IUser[] }) {
                         formik.touched.state && formik.errors.state ? formik.errors.state : ""
                     }
                     {...formik.getFieldProps('state')}
-                >
-                    <option value="">
-
-                    </option>
-                    {
-                        States.map(state => {
-                            return (<option key={state.code} value={state.state.toLowerCase()}>
-                                {state.state}
-                            </option>)
-                        })
-                    }
-                </TextField>
+                />
+                   
 
                 <TextField
-                    multiline
-                    minRows={2}
                     required
                     error={
                         formik.touched.username && formik.errors.username ? true : false

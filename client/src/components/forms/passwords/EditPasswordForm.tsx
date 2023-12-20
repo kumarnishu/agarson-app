@@ -11,7 +11,6 @@ import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import { UpdatePassword } from '../../../services/PasswordServices';
 import { IPassword } from '../../../types/password.types';
-import { States } from '../../../utils/states';
 
 function UpdatePasswordForm({ password, users }: { users: IUser[], password: IPassword }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
@@ -70,10 +69,7 @@ function UpdatePasswordForm({ password, users }: { users: IUser[], password: IPa
             >
                 {/* password_descriptions */}
                 < TextField
-                    select
-                    SelectProps={{
-                        native: true
-                    }}
+                  
                     focused
 
                     error={
@@ -86,18 +82,8 @@ function UpdatePasswordForm({ password, users }: { users: IUser[], password: IPa
                         formik.touched.state && formik.errors.state ? formik.errors.state : ""
                     }
                     {...formik.getFieldProps('state')}
-                >
-                    <option value="">
-
-                    </option>
-                    {
-                        States.map(state => {
-                            return (<option key={state.code} value={state.state.toLowerCase()}>
-                                {state.state}
-                            </option>)
-                        })
-                    }
-                </TextField>
+                />
+                    
                 <TextField
                     multiline
                     minRows={2}

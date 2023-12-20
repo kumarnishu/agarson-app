@@ -5,14 +5,17 @@ const PasswordSchema = new mongoose.Schema<IPassword, mongoose.Model<IPassword, 
     state: {
         type: String,
         lowercase: true,
-        required: true
+        required: true,
+        trim: true
     },
     username: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     password: {
         type: String,
+        trim: true,
         required: true
     },
     persons: [{

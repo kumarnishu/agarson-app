@@ -14,12 +14,12 @@ export const GetPasswords = async (req: Request, res: Response, next: NextFuncti
     let count = 0
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
-            passwords = await Password.find().populate('persons').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            passwords = await Password.find().populate('persons').populate('updated_by').populate('created_by').sort('state').skip((page - 1) * limit).limit(limit)
             count = await Password.find().countDocuments()
         }
 
         if (id) {
-            passwords = await Password.find({ persons: id }).populate('persons').populate('updated_by').populate('created_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            passwords = await Password.find({ persons: id }).populate('persons').populate('updated_by').populate('created_by').sort('state').skip((page - 1) * limit).limit(limit)
             count = await Password.find({ person: id }).countDocuments()
         }
 
@@ -48,8 +48,8 @@ export const CreatePassword = async (req: Request, res: Response, next: NextFunc
 
     if (!state || !username || !password)
         return res.status(400).json({ message: "please provide all required fields" })
-    if (await Password.findOne({ state: state }))
-        return res.status(404).json({ message: 'password already exists for this state' })
+    if (await Password.findOne({ $or: [{ state: state }, { username: username }] }))
+        return res.status(404).json({ message: 'password already exists for this state and username' })
     let new_persons: IUser[] = []
     for (let i = 0; i < ids.length; i++) {
         let owner = await User.findById(ids[i])
@@ -80,9 +80,9 @@ export const EditPassword = async (req: Request, res: Response, next: NextFuncti
     if (!oldpassword)
         return res.status(400).json({ message: "this password not exists" })
 
-    if (oldpassword.state !== state)
-        if (await Password.findOne({ state: state }))
-            return res.status(404).json({ message: 'password already exists for this state' })
+    if (oldpassword.state !== state || oldpassword.username !== username)
+        if (await Password.findOne({ $or: [{ state: state }, { username: username }] }))
+            return res.status(404).json({ message: 'password already exists for this state and username' })
 
     if (!state || !username || !password)
         return res.status(400).json({ message: "please provide all required fields" })

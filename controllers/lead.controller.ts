@@ -199,7 +199,7 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
         leads: ILead[]
     }[] = []
     if (req.user?.is_admin) {
-        parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+        parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-name')
         for (let i = 0; i < parties.length; i++) {
             let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
@@ -221,7 +221,7 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
         }
     }
     if (!req.user?.is_admin) {
-        parties = await ReferredParty.find({ lead_owners: { $in: [req.user._id] } }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+        parties = await ReferredParty.find({ lead_owners: { $in: [req.user._id] } }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-name')
         for (let i = 0; i < parties.length; i++) {
             let leads = await Lead.find({ referred_party: parties[i] }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
@@ -248,7 +248,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        let parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+        let parties = await ReferredParty.find().populate('created_by').populate('updated_by').populate('lead_owners').sort('name')
         let result: {
             party: IReferredParty,
             leads: ILead[]
@@ -266,7 +266,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
                         model: 'User'
                     }
                 ]
-            }).sort('-referred_date')
+            }).sort('name')
             result.push({
                 party: parties[i],
                 leads: leads

@@ -16,7 +16,7 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
     let users: IUser[] = []
     let count = 0
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').skip((page - 1) * limit).limit(limit)
+        users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
         count = await User.find().countDocuments()
         return res.status(200).json({
             users,
@@ -35,9 +35,9 @@ export const GetUsers = async (req: Request, res: Response, next: NextFunction) 
     let user_ids: string[] = []
     user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
     if (user_ids.length > 0)
-        users = await User.find({ _id: { $in: user_ids } }).populate("created_by").populate("updated_by").populate('assigned_users')
+        users = await User.find({ _id: { $in: user_ids } }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     else
-        users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users')
+        users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     res.status(200).json(users)
 }
 
@@ -60,7 +60,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ]
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').skip((page - 1) * limit).limit(limit)
+            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $or: [
@@ -94,7 +94,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').skip((page - 1) * limit).limit(limit)
+            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -147,7 +147,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').skip((page - 1) * limit).limit(limit)
+            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -214,7 +214,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').skip((page - 1) * limit).limit(limit)
+            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
