@@ -29,9 +29,7 @@ export const StartBroadCast = async ({ id, body }: { id: string, body: FormData 
 export const ResetBroadcast = async (id: string) => {
     return await apiClient.post(`reset/broadcasts/${id}`);
 };
-export const SetBroadcastDailyCount = async ({ id, body }: { id: string, body: { count: number } }) => {
-    return await apiClient.post(`set/count/broadcasts/${id}`, body);
-};
+
 export const StopBroadCast = async (id: string) => {
     return await apiClient.post(`stop/broadcasts/${id}`);
 };

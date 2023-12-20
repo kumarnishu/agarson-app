@@ -291,32 +291,12 @@ export const UpdateBroadcastByMessage = async (req: Request, res: Response, next
                 newMobiles.push("91" + mobile + "@c.us")
         })
     }
-    //for leads
-    if (!mobiles) {
-        let oldLeads = await Lead.find()
-        oldLeads = oldLeads.filter((l) => { return l.stage !== "useless" })
-        oldLeads.forEach((lead) => {
-            if (lead.mobile)
-                newMobiles.push("91" + lead.mobile + "@c.us")
-            if (lead.alternate_mobile1)
-                newMobiles.push("91" + lead.alternate_mobile1 + "@c.us")
-            if (lead.alternate_mobile2)
-                newMobiles.push("91" + lead.alternate_mobile2 + "@c.us")
-        })
-    }
-
-
-
-    let leads_selected = false
-    if (!mobiles) {
-        leads_selected = true
-    }
+    
     await Broadcast.findByIdAndUpdate(broadcast._id, {
         name: name,
         message: new_message,
         updated_at: new Date(),
-        updated_by: req.user,
-        leads_selected: leads_selected
+        updated_by: req.user
     })
     if (newMobiles.length > 0) {
         let reports = await BroadcastReport.find({ broadcast: broadcast })
@@ -378,32 +358,12 @@ export const UpdateBroadcastByTemplate = async (req: Request, res: Response, nex
                 newMobiles.push("91" + mobile + "@c.us")
         })
     }
-    //for leads
-    if (!mobiles) {
-        let oldLeads = await Lead.find()
-        oldLeads = oldLeads.filter((l) => { return l.stage !== "useless" })
-        oldLeads.forEach((lead) => {
-            if (lead.mobile)
-                newMobiles.push("91" + lead.mobile + "@c.us")
-            if (lead.alternate_mobile1)
-                newMobiles.push("91" + lead.alternate_mobile1 + "@c.us")
-            if (lead.alternate_mobile2)
-                newMobiles.push("91" + lead.alternate_mobile2 + "@c.us")
-        })
-    }
-
-
-
-    let leads_selected = false
-    if (!mobiles) {
-        leads_selected = true
-    }
+   
     await Broadcast.findByIdAndUpdate(broadcast._id, {
         name: name,
         templates: new_templates,
         updated_at: new Date(),
         updated_by: req.user,
-        leads_selected: leads_selected
     })
     if (newMobiles.length > 0) {
         let reports = await BroadcastReport.find({ broadcast: broadcast })
@@ -703,21 +663,4 @@ export const DownloadBroadcastReports = async (req: Request, res: Response, next
     res.status(200).json({ message: "no reports found" })
 }
 
-export const SetDailyCount = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    const { count } = req.body
-    if (!count)
-        return res.status(400).json({ message: "please provide daily count" })
-    if (!isMongoId(id))
-        return res.status(400).json({ message: "please provide correct broadcast id" })
 
-
-    let broadcast = await Broadcast.findById(id)
-    if (broadcast) {
-        if (broadcast.daily_limit < count)
-            return res.status(400).json({ message: "should be smaller or equal to daily limit" })
-        broadcast.daily_count = count
-        await broadcast.save()
-    }
-    return res.status(200).json({ message: "daily count reset succcessful" })
-}

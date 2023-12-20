@@ -1,6 +1,6 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
-import { DeleteBroadcast, GetBroadcasts, CreateBroadcastByTemplate, StartBroadcastWithTemplate, ResetBroadcast, UpdateBroadcastByTemplate, CreateBroadcastByMessage, UpdateBroadcastByMessage, GetBroadcastReports, StartBroadcastWithMessage, StopBroadcast, GetPaginatedBroadcastReports, SearchBroadcastReportByMobile, DownloadBroadcastReports, StopSingleBroadcastReport, SetDailyCount } from "../controllers/broadcast.controller";
+import { DeleteBroadcast, GetBroadcasts, CreateBroadcastByTemplate, StartBroadcastWithTemplate, ResetBroadcast, UpdateBroadcastByTemplate, CreateBroadcastByMessage, UpdateBroadcastByMessage, GetBroadcastReports, StartBroadcastWithMessage, StopBroadcast, GetPaginatedBroadcastReports, SearchBroadcastReportByMobile, DownloadBroadcastReports, StopSingleBroadcastReport } from "../controllers/broadcast.controller";
 import { upload } from "./user.routes";
 
 const router = express.Router()
@@ -20,6 +20,5 @@ router.route("/stop/single/broadcasts/:id").post(isAuthenticatedUser, StopSingle
 router.route("/pagination/broadcasts").get(isAuthenticatedUser, GetPaginatedBroadcastReports)
 router.route("/filter/broadcasts").get(isAuthenticatedUser, SearchBroadcastReportByMobile)
 router.route("/download/reports/broadcasts").get(isAuthenticatedUser, DownloadBroadcastReports)
-router.route("/set/count/broadcasts/:id").post(isAuthenticatedUser, upload.none(), SetDailyCount)
 
 export default router

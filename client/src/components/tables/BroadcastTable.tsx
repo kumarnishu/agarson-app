@@ -1,4 +1,4 @@
-import { Block, Delete, Edit, Pause, RemoveRedEye, ResetTv, RestartAlt, Stop } from '@mui/icons-material'
+import { Block, Delete, Edit, Pause, RemoveRedEye,  RestartAlt, Stop } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -12,7 +12,6 @@ import StopBroadcastDialog from '../dialogs/broadcasts/StopBroadcastDialog'
 import UpdateBroadcastMessageDialog from '../dialogs/broadcasts/UpdateBroadcastMessageDialog'
 import StartBroadcastMessageDialog from '../dialogs/broadcasts/StartBroadcastMessageDialog'
 import PopUp from '../popup/PopUp'
-import SetDailyCountBroadcastDialog from '../dialogs/broadcasts/SetDailyCountDialog'
 import { IBroadcast } from '../../types/broadcast.types'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
@@ -123,7 +122,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                             <STableHeadCell
                             >
 
-                                Daily Count
+                                Daily Counter
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -258,18 +257,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                                                             <Block />
                                                         </IconButton>
                                                     </Tooltip>
-                                                    {broadcast.daily_limit ? <Tooltip title="Set Daily Count">
-                                                        <IconButton
-                                                            color="warning"
-                                                            size="medium"
-                                                            onClick={() => {
-
-                                                                setChoice({ type: BroadcastChoiceActions.set_daily_count })
-                                                                setBroadcast(broadcast)
-                                                            }}>
-                                                            <ResetTv />
-                                                        </IconButton>
-                                                    </Tooltip> : null}
+                                                  
                                                     <Tooltip title="edit">
                                                         <IconButton
                                                             color="success"
@@ -383,7 +371,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
                             <StopBroadcastDialog broadcast={broadcast} />
                             <UpdateBroadcastMessageDialog broadcast={broadcast} />
                             <StartBroadcastMessageDialog broadcast={broadcast} />
-                            <SetDailyCountBroadcastDialog broadcast={broadcast} />
+                           
                         </> : null
                 }
             </Box >
