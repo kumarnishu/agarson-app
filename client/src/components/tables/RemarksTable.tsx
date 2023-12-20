@@ -29,7 +29,7 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
     useEffect(() => {
         setData(remarks)
     }, [remarks])
-
+    console.log(remarks)
     return (
         <>
             <Box sx={{
@@ -49,7 +49,7 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                             </STableHeadCell>
 
 
-                        
+
 
 
                             <STableHeadCell
@@ -328,17 +328,13 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                                                 <Comment />
                                                             </IconButton>
                                                         </Tooltip>
-                                                        
+
 
                                                     </Stack>}
                                             />
                                         </STableCell>
-
-                                      
-
-
-                                        <STableCell title={remark.lead.last_remark && remark.lead.last_remark}>
-                                            {remark.lead.last_remark && remark.lead.last_remark.slice(0, 50)}
+                                        <STableCell title={remark.remark}>
+                                            {remark.remark.slice(0, 50)}
 
                                         </STableCell>
 
