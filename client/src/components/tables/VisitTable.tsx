@@ -16,6 +16,7 @@ import { DownloadFile } from '../../utils/DownloadFile'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import ViewVisitPhotoDialog from '../dialogs/visit/ViewVisitPhotoDialog'
 import moment from 'moment'
+import ViewTextDialog from '../dialogs/text/ViewTextDialog'
 
 
 
@@ -30,6 +31,7 @@ type Props = {
 }
 
 function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selectedVisits, setSelectedVisits }: Props) {
+    const [display, setDisplay] = useState(false)
     const [data, setData] = useState<IVisitReport[]>(visits)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
@@ -372,7 +374,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell>
                                             {visit.person.username}
                                         </STableCell>
-                                        <STableCell title={visit.summary}>
+                                        <STableCell title={visit.summary} onClick={() => {
+                                            if (visit.summary) {
+                                                setVisit(visit)
+                                                setDisplay(!display)
+                                            }
+                                        }}>
                                             {visit.summary && visit.summary.slice(0, 50) + "..."}
                                         </STableCell>
                                         <STableCell>
@@ -393,7 +400,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell>
                                             {visit.reviews_taken}
                                         </STableCell>
-                                      
+
                                         <STableCell>
                                             {visit.ankit_input && visit.ankit_input.input.slice(0, 50) + "..."}
                                         </STableCell>
@@ -433,6 +440,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                         <AddBrijeshInputDialog visit={visit} />
                         <AddAnkitInputDialog visit={visit} />
                         <ViewVisitPhotoDialog photo={visit.visit_in_photo} />
+                        <ViewTextDialog text={visit.summary} display={display} setDisplay={setDisplay} />
                     </>
                     : null
             }

@@ -9,13 +9,14 @@ function ViewVisitPhotoDialog({ photo }: { photo: Asset }) {
     return (
         <>
             <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === VisitChoiceActions.view_visit_photo ? true : false}
+                onClose={() => setChoice({ type: VisitChoiceActions.close_visit })}
             > <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: VisitChoiceActions.close_visit })}>
                     <Cancel fontSize='large' />
                 </IconButton>
                 <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Visit Details</DialogTitle>
                 <DialogContent>
                     <Stack justifyContent={'center'}>
-                        <img width={500} height={700} src={photo?.public_url} alt="visit photo" />
+                        <img width={350} src={photo?.public_url} alt="visit photo" />
                     </Stack>
                 </DialogContent>
             </Dialog>

@@ -1,3 +1,5 @@
+import { IUser } from "./user.types"
+
 export type UserAccess = {
     is_editable: boolean,
     is_hidden: boolean,
@@ -81,3 +83,12 @@ export type TodoAccess = {
     is_deletion_allowed: boolean
 }
 
+export type AccessReport = {
+    accessType: "users" | "crm" | "todo" | "tasks" | "visit" | "checklist" | "backup" | "bot" | "templates" | "broadcast" | "contacts" | "greetings" | "reminders" | "erp passwords" | "reports" | "alps",
+    reports: {
+        user: IUser,
+        is_hidden: boolean,
+        is_editable: boolean,
+        is_deleteion_allowed: boolean,
+    }
+}

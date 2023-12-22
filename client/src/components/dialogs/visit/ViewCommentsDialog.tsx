@@ -9,6 +9,7 @@ function ViewCommentsDialog({ visit }: { visit: IVisitReport }) {
     return (
         <>
             <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === VisitChoiceActions.view_comments ? true : false}
+                onClose={() => setChoice({ type: VisitChoiceActions.close_visit })}
             > <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: VisitChoiceActions.close_visit })}>
                     <Cancel fontSize='large' />
                 </IconButton>

@@ -8,8 +8,24 @@ import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
 import { IUser, TUserBody } from '../types/user.types';
 import { Asset } from '../types/asset.types';
+import { AccessReport } from '../types/access.types';
 
 //get
+
+
+// export const GetAccessReport = async (req: Request, res: Response, next: NextFunction) => {
+//     let result: AccessReport[] = []
+//     let users: IUser[] = await User.find()
+//     result = users.map((user) => {
+//         let report: AccessReport = u
+//         // let reports:AccessReport['reports']=[]
+
+//         return report
+//     })
+//     return res.status(400).json(result)
+// }
+
+
 export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
