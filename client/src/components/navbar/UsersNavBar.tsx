@@ -10,6 +10,8 @@ import ResetPasswordSendMailDialog from '../dialogs/users/ResetPasswordSendMailD
 import SignUpDialog from '../dialogs/users/SignUpDialog';
 import AgarsonLogo from '../logo/Agarson';
 import ProfileMenu from '../menu/ProfileMenu';
+import UserMenu from '../menu/UserMenu';
+import { Menu } from '@mui/icons-material';
 
 export const StyledLink = styled(Link)`
     text-decoration: none;
@@ -48,9 +50,8 @@ export default function UsersNavBar() {
                                         display: { xs: 'none', md: 'flex' }
                                     }}
                                 >
-
-
                                     <StyledLink to={paths.users}>Users</StyledLink>
+                                    <StyledLink to={paths.users_reports}>Access</StyledLink>
                                     <StyledLink to={paths.users_help}>Help</StyledLink>
                                 </Stack>
 
@@ -61,6 +62,20 @@ export default function UsersNavBar() {
                                     alignItems="center"
                                     gap={2}
                                 >
+                                    <Tooltip title="open menu">
+                                        <IconButton
+                                            onClick={(e) => setMenu({ type: UserMenuActions.user_menu, anchorEl: e.currentTarget })
+                                            }
+                                            sx={{
+                                                color: "white",
+                                                display: {
+                                                    xs: 'block', md: 'none'
+                                                }
+                                            }}>
+                                            <Menu />
+                                        </IconButton>
+                                    </Tooltip>
+
                                     <Tooltip title={user.username || "open settings"}>
                                         <IconButton
                                             onClick={(e) => setMenu({ type: UserMenuActions.profile_menu, anchorEl: e.currentTarget })
@@ -81,6 +96,7 @@ export default function UsersNavBar() {
             </Box >
             <Outlet />
             <ProfileMenu />
+            <UserMenu />
             <ResetPasswordSendMailDialog />
             <SignUpDialog />
         </>

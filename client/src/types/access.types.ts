@@ -84,11 +84,11 @@ export type TodoAccess = {
 }
 
 export type AccessReport = {
-    accessType: "users" | "crm" | "todo" | "tasks" | "visit" | "checklist" | "backup" | "bot" | "templates" | "broadcast" | "contacts" | "greetings" | "reminders" | "erp passwords" | "reports" | "alps",
+    accessType:string,
     reports: {
         user: IUser,
         is_hidden: boolean,
         is_editable: boolean,
-        is_deleteion_allowed: boolean,
-    }
+        is_deletion_allowed: boolean,
+    }[]
 }
