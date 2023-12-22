@@ -14,6 +14,8 @@ import ViewVisitDialog from '../dialogs/visit/ViewVisitDialog'
 import ViewCommentsDialog from '../dialogs/visit/ViewCommentsDialog'
 import { DownloadFile } from '../../utils/DownloadFile'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
+import ViewVisitPhotoDialog from '../dialogs/visit/ViewVisitPhotoDialog'
+import moment from 'moment'
 
 
 
@@ -39,7 +41,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '60vh'
+                maxHeight: '63vh'
             }}>
                 <STable
                 >
@@ -120,6 +122,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                             <STableHeadCell
                             >
 
+                                Summary
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Visit In Address
 
                             </STableHeadCell>
@@ -153,12 +161,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                 Reviews Taken
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
 
-                                Summary
-
-                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -340,6 +343,10 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                                             {visit.visit_in_photo && <img
                                                 title="double click to download"
+                                                onClick={() => {
+                                                    setVisit(visit)
+                                                    setChoice({ type: VisitChoiceActions.view_visit_photo })
+                                                }}
                                                 onDoubleClick={() => {
                                                     if (visit.visit_in_photo && visit.visit_in_photo?.public_url) {
                                                         DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)
@@ -349,11 +356,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                                         </STableCell>
                                         <STableCell>
-                                            {new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}
+                                            {moment(new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp)).format('LT')}
                                         </STableCell>
 
                                         <STableCell>
-                                            {visit.visit_out_credentials && visit.visit_out_credentials.timestamp && new Date(visit.visit_out_credentials.timestamp).toLocaleTimeString()}
+
+                                            {moment(visit.visit_out_credentials && visit.visit_out_credentials.timestamp && new Date(visit.visit_out_credentials.timestamp)).format('LT')}
                                         </STableCell>
                                         <STableCell>
                                             {visit.party_name}
@@ -363,6 +371,9 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         </STableCell>
                                         <STableCell>
                                             {visit.person.username}
+                                        </STableCell>
+                                        <STableCell title={visit.summary}>
+                                            {visit.summary && visit.summary.slice(0, 50) + "..."}
                                         </STableCell>
                                         <STableCell>
                                             {visit.visit_in_credientials && visit.visit_in_credientials.address && visit.visit_in_credientials.address}
@@ -382,9 +393,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell>
                                             {visit.reviews_taken}
                                         </STableCell>
-                                        <STableCell>
-                                            {visit.summary && visit.summary.slice(0, 50) + "..."}
-                                        </STableCell>
+                                      
                                         <STableCell>
                                             {visit.ankit_input && visit.ankit_input.input.slice(0, 50) + "..."}
                                         </STableCell>
@@ -423,6 +432,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                         <EditSummaryInDialog visit={visit} />
                         <AddBrijeshInputDialog visit={visit} />
                         <AddAnkitInputDialog visit={visit} />
+                        <ViewVisitPhotoDialog photo={visit.visit_in_photo} />
                     </>
                     : null
             }

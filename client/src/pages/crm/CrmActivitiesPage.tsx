@@ -59,7 +59,7 @@ function CrmActivitiesPage() {
     return (
         <>
             <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
-            <Stack direction='row' gap={1} pb={1} alignItems={'center'} justifyContent={'center'}>
+            <Stack sx={{ px: 2 }} direction='row' gap={1} pb={1} alignItems={'center'} justifyContent={'center'}>
                 < TextField
                     size="small"
                     type="date"
@@ -127,7 +127,7 @@ function CrmActivitiesPage() {
                 {isLoading && <LinearProgress />}
                 {!isLoading &&
                     window.screen.width < 500 ?
-                    <Box>
+                    <Box >
                         <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
                         </Typography>
                         {remarks && remarks.map((remark, index) => {
@@ -198,7 +198,7 @@ function CrmActivitiesPage() {
                             )
                         })}
                     </Box > :
-                    <RemarksTable remark={remark} remarks={remarks} setRemark={setRemark} />
+                    <Box sx={{ px: 2 }}> <RemarksTable remark={remark} remarks={remarks} setRemark={setRemark} /></Box>
                 }
             </>
             {remark && remark.lead ?

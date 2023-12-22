@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -64,8 +64,8 @@ export default function VisitAdminPage() {
         person: string,
         party: string,
         station: string,
-        is_validated: boolean,
-        is_old: boolean,
+        is_validated: string,
+        is_old: string,
         turnover: string,
         dealer_of: string,
         references_taken: string,
@@ -119,8 +119,8 @@ export default function VisitAdminPage() {
             person: string,
             party: string,
             station: string,
-            is_validated: boolean,
-            is_old: boolean,
+            is_validated: string,
+            is_old: string,
             turnover: string,
             dealer_of: string,
             references_taken: string,
@@ -155,8 +155,8 @@ export default function VisitAdminPage() {
                     person: visit.person.username,
                     party: visit.party_name,
                     station: visit.city,
-                    is_validated: Boolean(visit.visit_validated),
-                    is_old: Boolean(visit.is_old_party),
+                    is_validated: visit.visit_validated ? "yes" : "no",
+                    is_old: visit.is_old_party ? "old" : "new",
                     turnover: visit.turnover,
                     dealer_of: visit.dealer_of,
                     references_taken: visit.refs_given,
@@ -390,15 +390,17 @@ export default function VisitAdminPage() {
             {/* table */}
             {isLoading && <TableSkeleton />}
             {!isLoading &&
-                <VisitTable
-                    visit={visit}
-                    setVisit={setVisit}
-                    selectAll={selectAll}
-                    selectedVisits={selectedVisits}
-                    setSelectedVisits={setSelectedVisits}
-                    setSelectAll={setSelectAll}
-                    visits={MemoData}
-                />}
+                <Box sx={{ px: 2 }}>
+                    <VisitTable
+                        visit={visit}
+                        setVisit={setVisit}
+                        selectAll={selectAll}
+                        selectedVisits={selectedVisits}
+                        setSelectedVisits={setSelectedVisits}
+                        setSelectAll={setSelectAll}
+                        visits={MemoData}
+                    />
+                </Box>}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 
