@@ -1,5 +1,4 @@
-import { Dialog, DialogContent, IconButton } from '@mui/material'
-import { Cancel } from '@mui/icons-material';
+import { Dialog, DialogContent } from '@mui/material'
 
 
 
@@ -9,10 +8,7 @@ function ViewTextDialog({ text, display, setDisplay }: { text: string, display: 
             fullWidth
             onClose={() => setDisplay(false)}
         >
-            <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setDisplay(false)}>
-                <Cancel fontSize='large' />
-            </IconButton>
-
+        
             <DialogContent>
                 <pre style={{ fontSize: '16px' }} color="error">
                     {text}
