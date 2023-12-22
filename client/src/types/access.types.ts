@@ -1,3 +1,5 @@
+import { IUser } from "./user.types"
+
 export type UserAccess = {
     is_editable: boolean,
     is_hidden: boolean,
