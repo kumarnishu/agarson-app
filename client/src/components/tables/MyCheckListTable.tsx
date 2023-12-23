@@ -70,7 +70,7 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                             <STableHeadCell
                             >
 
-                                Check Status
+                               Checked
 
                             </STableHeadCell>
 
@@ -90,7 +90,7 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                             <STableHeadCell
                             >
 
-                               Assigned By
+                                Assigned By
 
                             </STableHeadCell>
 
@@ -110,7 +110,7 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
 
                                         <STableCell>
                                             <Tooltip title="View dates boxes">
-                                                <IconButton color="success"
+                                                <IconButton
                                                     onClick={() => {
                                                         setChoice({ type: CheckListChoiceActions.check_my_boxes })
                                                         setChecklist(checklist)
@@ -124,11 +124,11 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                                             {checklist.serial_no || 0}
                                         </STableCell>
                                         <STableCell>
-                                            <Button
+                                            <Button color="error"
                                                 onClick={() => {
                                                     window.open(checklist.sheet_url, '_blank')
                                                 }}
-                                                href={checklist.sheet_url} target='blank'>
+                                            >
                                                 {checklist.title && checklist.title}
                                             </Button>
                                         </STableCell>
@@ -141,7 +141,7 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
                                             }).length +
                                                 checklist.boxes.filter((box) => {
                                                     return box.desired_date && box.actual_date && new Date(box.desired_date) <= new Date() && Boolean(new Date(box.desired_date).getDate() === new Date(box.actual_date).getDate() && new Date(box.desired_date).getMonth() === new Date(box.actual_date).getMonth() && new Date(box.desired_date).getFullYear() === new Date(box.actual_date).getFullYear())
-                                                }).length + 1
+                                                }).length
                                             }
 
                                         </STableCell>

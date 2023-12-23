@@ -102,7 +102,7 @@ function MyTodoTable({ todo, todos, setTodo }: Props) {
 
                                         >                                            <STableCell style={{ backgroundColor: todo.status !== "done" ? 'rgba(255,0,0,0.1)' : 'rgba(52, 200, 84, 0.6)' }}>
                                                 <Tooltip title="View replies">
-                                                    <IconButton color="error"
+                                                    <IconButton
                                                         onClick={() => {
                                                             setChoice({ type: TodoChoiceActions.view_replies })
                                                             setTodo(todo)
@@ -113,7 +113,7 @@ function MyTodoTable({ todo, todos, setTodo }: Props) {
                                                 </Tooltip>
 
                                                 <Tooltip title="Update Status">
-                                                    <IconButton color="info"
+                                                    <IconButton 
                                                         onClick={() => {
                                                             setChoice({ type: TodoChoiceActions.update_todo_status })
                                                             setTodo(todo)

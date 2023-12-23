@@ -194,7 +194,7 @@ export default function TodosAdminPage() {
                         <FormControlLabel control={<Switch
                             defaultChecked={Boolean(hidden)}
                             onChange={() => setHidden(!hidden)}
-                        />} label="Show hidden" />
+                        />} label="Hidden" />
 
                         <TextField
                             fullWidth

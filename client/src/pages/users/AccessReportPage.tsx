@@ -80,7 +80,7 @@ export default function AccessReportPage() {
                                 component={'h1'}
                                 sx={{ pl: 1, display: 'block' }}
                             >
-                                Users Access Report
+                                Access
                             </Typography>
 
                             <Stack direction="row" spacing={2}>
