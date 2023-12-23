@@ -63,57 +63,63 @@ export default function AccessReportPage() {
 
     }, [filter])
     return (
-        <Box sx={{px:2}}>
-            {/*  table */}
-            {isLoading && <TableSkeleton />}
-            < Stack spacing={2}
-                py={2}
-                direction="row"
-                justifyContent="space-between"
-            >
-                <Typography
-                    variant={'h6'}
-                    component={'h1'}
-                    sx={{ pl: 1, display: 'block' }}
-                >
-                    Users Access Report
-                </Typography>
+        <>
+            {
+                isLoading ? <TableSkeleton /> :
 
-                <Stack direction="row" spacing={2}>
+                    <Box sx={{ px: 2 }}>
+                        {/*  table */}
 
-                    <TextField
-                        select
-                        SelectProps={{
-                            native: true,
-                        }}
-                        label="Select Feature"
-                        fullWidth
-                        size="small"
-                        onChange={(e) => {
-                            setFilter(e.currentTarget.value)
-                        }}
-                        placeholder={`${reports?.length} records...`}
-                        style={{
-                            fontSize: '1.1rem',
-                            border: '0',
-                        }}
+                        < Stack spacing={2}
+                            py={2}
+                            direction="row"
+                            justifyContent="space-between"
+                        >
+                            <Typography
+                                variant={'h6'}
+                                component={'h1'}
+                                sx={{ pl: 1, display: 'block' }}
+                            >
+                                Users Access Report
+                            </Typography>
 
-                    >
-                        <option key={'00'} value=""></option>
-                        {
-                            accessTypes.map((type, index) => {
-                                return (
-                                    <React.Fragment key={index}>
-                                        <option value={type}>{type}</option>
-                                    </React.Fragment>
-                                )
-                            })
-                        }
-                    </TextField>
-                </Stack>
-            </Stack >
-            <ReportsTable reports={reports} report={report} setReport={setReport} />
-        </Box>
+                            <Stack direction="row" spacing={2}>
+
+                                <TextField
+                                    select
+                                    SelectProps={{
+                                        native: true,
+                                    }}
+                                    label="Select Feature"
+                                    fullWidth
+                                    size="small"
+                                    onChange={(e) => {
+                                        setFilter(e.currentTarget.value)
+                                    }}
+                                    placeholder={`${reports?.length} records...`}
+                                    style={{
+                                        fontSize: '1.1rem',
+                                        border: '0',
+                                    }}
+
+                                >
+                                    <option key={'00'} value=""></option>
+                                    {
+                                        accessTypes.map((type, index) => {
+                                            return (
+                                                <React.Fragment key={index}>
+                                                    <option value={type}>{type}</option>
+                                                </React.Fragment>
+                                            )
+                                        })
+                                    }
+                                </TextField>
+                            </Stack>
+                        </Stack >
+                        <ReportsTable reports={reports} report={report} setReport={setReport} />
+                    </Box>
+            }
+        </>
     )
 
 }

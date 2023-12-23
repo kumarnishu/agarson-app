@@ -91,7 +91,7 @@ function ReportsTable({ reports }: Props) {
                                                 >
                                                     <STableCell>
                                                         <Button
-                                                            disabled={loggedinuser?.user_access_fields.is_editable}
+                                                            disabled={!loggedinuser?.user_access_fields.is_editable}
                                                             onClick={() => {
                                                                 setUser(report.user)
                                                                 setChoice({ type: UserChoiceActions.control_access })
