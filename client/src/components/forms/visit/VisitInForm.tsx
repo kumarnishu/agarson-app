@@ -71,12 +71,7 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                 )
         }),
         onSubmit: (values: TformData) => {
-            if (!location) {
-                navigator.geolocation.getCurrentPosition((data) => {
-                    setLocation({ latitude: String(data.coords.latitude), longitude: String(data.coords.longitude), timestamp: new Date(data.timestamp) })
-                })
-            }
-            else {
+            if (location) {
                 let formdata = new FormData()
                 let Data = {
                     visit_in_credientials: location,
@@ -88,6 +83,9 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                 formdata.append("media", values.media)
                 mutate({ id: visit._id, body: formdata })
                 setLocation(undefined)
+            }
+            else {
+                alert("location not enabled ")
             }
         }
     });
@@ -110,6 +108,7 @@ function VisitInForm({ visit }: { visit: IVisit }) {
             setLocation({ latitude: String(data.coords.latitude), longitude: String(data.coords.longitude), timestamp: new Date(data.timestamp) })
         })
     }, [])
+    
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>

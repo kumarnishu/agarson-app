@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
-import { ChoiceContext,  VisitChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
@@ -58,19 +58,15 @@ function StartMydayForm() {
                 )
         }),
         onSubmit: (values: TformData) => {
-            if (!location) {
-                alert("enable gps of current device")
-                navigator.geolocation.getCurrentPosition((data) => {
-                    setLocation({ latitude: String(data.coords.latitude), longitude: String(data.coords.longitude), timestamp: new Date(data.timestamp) })
-                })
-            }
-            else {
+            if (location) {
                 let formdata = new FormData()
                 formdata.append("body", JSON.stringify({ start_day_credientials: location }))
                 formdata.append("media", values.media)
                 mutate(formdata)
                 setLocation(undefined)
             }
+            else
+                alert("please Enable GPS of device")
         }
     });
 
@@ -92,7 +88,6 @@ function StartMydayForm() {
             setLocation({ latitude: String(data.coords.latitude), longitude: String(data.coords.longitude), timestamp: new Date(data.timestamp) })
         })
     }, [])
-
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>

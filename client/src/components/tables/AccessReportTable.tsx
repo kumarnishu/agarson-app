@@ -108,19 +108,19 @@ function ReportsTable({ reports }: Props) {
                                                     </STableCell>
 
                                                     <STableCell>
-                                                        <Typography style={{ color: report.is_editable ? "red" : "green" }}>
+                                                        <Typography style={{ color: report.is_editable ? "red" : "grey" }}>
 
                                                             {report.is_editable ? "True" : "False"}
                                                         </Typography>
                                                     </STableCell>
                                                     <STableCell>
-                                                        <Typography style={{ color: report.is_hidden ? "green" : "red" }}>
+                                                        <Typography style={{ color: report.is_hidden ? "grey" : "red" }}>
                                                             {report.is_hidden ? "True" : "False"}
 
                                                         </Typography>
                                                     </STableCell>
                                                     <STableCell>
-                                                        <Typography style={{ color: report.is_deletion_allowed ? "red" : "green" }}>
+                                                        <Typography style={{ color: report.is_deletion_allowed ? "red" : "grey" }}>
                                                             {report.is_deletion_allowed ? "True" : "False"}
                                                         </Typography>
                                                     </STableCell>

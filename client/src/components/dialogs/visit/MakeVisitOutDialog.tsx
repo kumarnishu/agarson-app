@@ -32,17 +32,14 @@ function MakeVisitOutDialog({ visit }: { visit: IVisitReport }) {
     }, [])
 
     function handleOut() {
-        if (!location) {
-            alert("enable gps of current device")
-            navigator.geolocation.getCurrentPosition((data) => {
-                setLocation({ latitude: String(data.coords.latitude), longitude: String(data.coords.longitude), timestamp: new Date(data.timestamp) })
-            })
-        }
-        else {
+        if (location) {
             let formdata = new FormData()
             formdata.append("body", JSON.stringify({ visit_out_credentials: location }))
             mutate({ id: visit._id, body: formdata })
             setLocation(undefined)
+        }
+        else {
+            alert("enable gps of current device")
         }
         setChoice({
             type: VisitChoiceActions.close_visit
