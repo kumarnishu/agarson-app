@@ -32,7 +32,7 @@ function ViewCommentsDialog({ visit }: { visit: IVisitReport }) {
                         </>}
                     {/* ankit */}
                     {
-                        visit.brijesh_input && visit.brijesh_input.input && <>
+                        visit.ankit_input && visit.ankit_input.input && <>
                             <Typography variant="subtitle1" sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white', p: 1 }} textAlign={'center'} fontWeight={'bold'}>Ankit Comment</Typography>
                             <Stack
                                 gap={1}

@@ -34,6 +34,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
     const [display, setDisplay] = useState(false)
     const [data, setData] = useState<IVisitReport[]>(visits)
     const { setChoice } = useContext(ChoiceContext)
+    const [text, setText] = useState<string>()
     const { user } = useContext(UserContext)
     useEffect(() => {
         setData(visits)
@@ -130,6 +131,19 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                             <STableHeadCell
                             >
 
+                                Ankit Input
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Brijesh Input
+
+                            </STableHeadCell>
+
+                            <STableHeadCell
+                            >
+
                                 Visit In Address
 
                             </STableHeadCell>
@@ -164,19 +178,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                             </STableHeadCell>
 
-                            <STableHeadCell
-                            >
-
-                                Ankit Input
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Brijesh Input
-
-                            </STableHeadCell>
-
+                           
                             <STableHeadCell
                             >
 
@@ -376,11 +378,29 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         </STableCell>
                                         <STableCell title={visit.summary} onClick={() => {
                                             if (visit.summary) {
-                                                setVisit(visit)
+                                                setText(visit.summary)
                                                 setDisplay(!display)
                                             }
                                         }}>
                                             {visit.summary && visit.summary.slice(0, 50) + "..."}
+                                        </STableCell>
+                                        <STableCell onClick={() => {
+                                            if (visit.ankit_input) {
+                                                setText(visit.ankit_input.input)
+                                                setDisplay(!display)
+                                            }
+                                        }}>
+                                            {visit.ankit_input && visit.ankit_input.input.slice(0, 50) + "..."}
+
+                                        </STableCell>
+
+                                        <STableCell onClick={() => {
+                                            if (visit.brijesh_input) {
+                                                setText(visit.brijesh_input.input)
+                                                setDisplay(!display)
+                                            }
+                                        }}>
+                                            {visit.brijesh_input && visit.brijesh_input.input.slice(0, 50) + "..."}
                                         </STableCell>
                                         <STableCell>
                                             {visit.visit_in_credientials && visit.visit_in_credientials.address && visit.visit_in_credientials.address}
@@ -401,13 +421,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                             {visit.reviews_taken}
                                         </STableCell>
 
-                                        <STableCell>
-                                            {visit.ankit_input && visit.ankit_input.input.slice(0, 50) + "..."}
-                                        </STableCell>
 
-                                        <STableCell>
-                                            {visit.brijesh_input && visit.brijesh_input.input.slice(0, 50) + "..."}
-                                        </STableCell>
 
                                         <STableCell>
                                             {new Date(visit.created_at).toLocaleString()}
@@ -440,7 +454,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                         <AddBrijeshInputDialog visit={visit} />
                         <AddAnkitInputDialog visit={visit} />
                         <ViewVisitPhotoDialog photo={visit.visit_in_photo} />
-                        <ViewTextDialog text={visit.summary} display={display} setDisplay={setDisplay} />
+                        {text && <ViewTextDialog text={text} display={display} setDisplay={setDisplay} />}
                     </>
                     : null
             }
