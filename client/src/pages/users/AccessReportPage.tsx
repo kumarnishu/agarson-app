@@ -1,18 +1,23 @@
 import { AxiosResponse } from 'axios'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
 import { IUser } from '../../types/user.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { GetUsers } from '../../services/UserServices'
 import { AccessReport } from '../../types/access.types'
-import { Box } from '@mui/material'
+import ReportsTable from '../../components/tables/AccessReportTable'
+import { Box, Stack, TextField, Typography } from '@mui/material'
 
 // react component
 
 const accessTypes = ["users", "crm", "todo", "tasks", "visit", "checklist", "backup", "bot", "templates", "broadcast", "contacts", "greetings", "reminders", "erp passwords", "reports", "alps"]
+
 export default function AccessReportPage() {
     const [reports, setReports] = useState<AccessReport[]>([])
+    const [filteredData, setFilteredData] = useState<AccessReport[]>([])
+    const [filter, setFilter] = useState<string | undefined>()
+    const [report, setReport] = useState<AccessReport>()
     const [users, setUsers] = useState<IUser[]>([])
     const { data, isLoading } = useQuery<AxiosResponse<IUser[]>, BackendError>(["users"], async () => GetUsers())
 
@@ -23,12 +28,11 @@ export default function AccessReportPage() {
     }, [data])
 
     useEffect(() => {
-        let result = users.map((user) => {
-            let reports: AccessReport['reports'] = []
-            let type = ""
-            accessTypes.forEach((type) => {
-                type = type
-                reports.push(
+        let result: AccessReport[] = []
+        let tmpReports: AccessReport['reports'] = []
+        for (let i = 0; i < accessTypes.length; i++) {
+            users.forEach((user) => {
+                tmpReports.push(
                     {
                         user: user,
                         is_hidden: user.user_access_fields.is_hidden,
@@ -37,40 +41,79 @@ export default function AccessReportPage() {
                     }
                 )
             })
-            return {
-                accessType: type,
-                reports: reports
-            }
-        })
+            result.push({
+                accessType: accessTypes[i],
+                reports: tmpReports
+            })
+            tmpReports = []
+        }
+        setFilteredData(result)
         setReports(result)
     }, [users])
 
-    console.log(reports)
+    useEffect(() => {
+        if (filter) {
+            let searchResult = filteredData.filter((res) => {
+                return res.accessType === filter
+            })
+            setReports(searchResult)
+        }
+        if (!filter)
+            setReports(filteredData)
+
+    }, [filter])
     return (
-        <>
+        <Box sx={{px:2}}>
             {/*  table */}
             {isLoading && <TableSkeleton />}
-            {reports && reports.map((report, index) => {
-                return (
-                    <Box key={index}>
-                        <h1>{report.accessType}</h1>
+            < Stack spacing={2}
+                py={2}
+                direction="row"
+                justifyContent="space-between"
+            >
+                <Typography
+                    variant={'h6'}
+                    component={'h1'}
+                    sx={{ pl: 1, display: 'block' }}
+                >
+                    Users Access Report
+                </Typography>
+
+                <Stack direction="row" spacing={2}>
+
+                    <TextField
+                        select
+                        SelectProps={{
+                            native: true,
+                        }}
+                        label="Select Feature"
+                        fullWidth
+                        size="small"
+                        onChange={(e) => {
+                            setFilter(e.currentTarget.value)
+                        }}
+                        placeholder={`${reports?.length} records...`}
+                        style={{
+                            fontSize: '1.1rem',
+                            border: '0',
+                        }}
+
+                    >
+                        <option key={'00'} value=""></option>
                         {
-                            report.reports.map((repo, index) => {
+                            accessTypes.map((type, index) => {
                                 return (
-                                    <Box key={index}>
-                                        <span>{repo.user.username}</span>
-                                        <span>{repo.is_editable}</span>
-                                        <span>{repo.is_hidden}</span>
-                                        <span>{repo.is_deletion_allowed}</span>
-                                    </Box>)
+                                    <React.Fragment key={index}>
+                                        <option value={type}>{type}</option>
+                                    </React.Fragment>
+                                )
                             })
                         }
-                    </Box>
-                )
-            })}
-
-        </>
-
+                    </TextField>
+                </Stack>
+            </Stack >
+            <ReportsTable reports={reports} report={report} setReport={setReport} />
+        </Box>
     )
 
 }
