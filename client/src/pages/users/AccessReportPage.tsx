@@ -16,7 +16,7 @@ const accessTypes = ["users", "crm", "todo", "tasks", "visit", "checklist", "bac
 export default function AccessReportPage() {
     const [reports, setReports] = useState<AccessReport[]>([])
     const [filteredData, setFilteredData] = useState<AccessReport[]>([])
-    const [filter, setFilter] = useState<string | undefined>('users')
+    const [filter, setFilter] = useState<string | undefined>()
     const [report, setReport] = useState<AccessReport>()
     const [users, setUsers] = useState<IUser[]>([])
     const { data, isLoading } = useQuery<AxiosResponse<IUser[]>, BackendError>(["users"], async () => GetUsers())
@@ -103,7 +103,7 @@ export default function AccessReportPage() {
                                     }}
                                     focused
                                 >
-                                    <option key={'00'} value={filter}>Default</option>
+                                    <option key={'00'} value={undefined}></option>
                                     {
                                         accessTypes.map((type, index) => {
                                             return (
