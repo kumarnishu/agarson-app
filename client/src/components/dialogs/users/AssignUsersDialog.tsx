@@ -13,7 +13,7 @@ import { useFormik } from 'formik';
 import * as Yup from "yup"
 
 
-function AssignUsersDialog({ user }: { user: IUser }) {
+function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser | undefined>> }) {
     const [users, setUsers] = useState<IUser[]>([])
     const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { choice, setChoice } = useContext(ChoiceContext)
@@ -53,8 +53,9 @@ function AssignUsersDialog({ user }: { user: IUser }) {
     });
 
     useEffect(() => {
-        if (isUserSuccess)
+        if (isUserSuccess) {
             setUsers(data?.data)
+        }
     }, [isUserSuccess, data])
 
 
@@ -62,6 +63,7 @@ function AssignUsersDialog({ user }: { user: IUser }) {
         if (isSuccess) {
             setTimeout(() => {
                 setChoice({ type: UserChoiceActions.close_user })
+                setUser(undefined)
             }, 1000)
         }
     }, [isSuccess, setChoice])
@@ -71,10 +73,11 @@ function AssignUsersDialog({ user }: { user: IUser }) {
             fullWidth
             open={choice === UserChoiceActions.assign_users ? true : false}
             onClose={() => {
+                setUser(undefined)
                 setChoice({ type: UserChoiceActions.close_user })
             }}
         >
-            <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => { setChoice({ type: UserChoiceActions.close_user }) }}>
+            <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => { setUser(undefined); setChoice({ type: UserChoiceActions.close_user }) }}>
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
@@ -118,7 +121,7 @@ function AssignUsersDialog({ user }: { user: IUser }) {
                                 })
                             }
                         </TextField>
-                        <Button style={{padding:10,marginTop:10}} variant="contained" color="primary" type="submit"
+                        <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color="primary" type="submit"
                             disabled={Boolean(isLoading)}
                             fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Assign"}
                         </Button>

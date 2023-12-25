@@ -52,7 +52,7 @@ export default function VisitNavBar() {
                                 >
 
                                     <StyledLink to={paths.visit}>My Visit</StyledLink>
-                                    {user.is_admin && <StyledLink to={paths.visit_admin}>Admin</StyledLink>}
+                                    <StyledLink to={paths.visit_admin}>Reports</StyledLink>
                                     <StyledLink to={paths.visit_help}>Help</StyledLink>
                                 </Stack>
 

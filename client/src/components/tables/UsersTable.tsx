@@ -465,7 +465,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
 
                                         <STableCell>
                                             {user.email}
-                                            
+
                                         </STableCell>
 
                                         <STableCell>
@@ -511,7 +511,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                         <MakeAdminDialog id={user._id} />
                         <RemoveAdminDialog id={user._id} />
                         <UpdateUsePasswordDialog user={user} />
-                        <AssignUsersDialog user={user} />
+                        <AssignUsersDialog user={user} setUser={setUser} />
                     </>
                     : null
             }
