@@ -2,7 +2,7 @@ import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
-import { Chat, Check, Comment, Edit, RemoveRedEye } from '@mui/icons-material'
+import { Chat, Check, Comment, Edit, Photo, RemoveRedEye } from '@mui/icons-material'
 import { ChoiceContext, VisitChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
 import { IVisitReport } from '../../types/visit.types'
@@ -12,7 +12,6 @@ import AddAnkitInputDialog from '../dialogs/visit/AddAnkitInputDialog'
 import AddBrijeshInputDialog from '../dialogs/visit/AddBrjeshInputDialog'
 import ViewVisitDialog from '../dialogs/visit/ViewVisitDialog'
 import ViewCommentsDialog from '../dialogs/visit/ViewCommentsDialog'
-import { DownloadFile } from '../../utils/DownloadFile'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import ViewVisitPhotoDialog from '../dialogs/visit/ViewVisitPhotoDialog'
 import moment from 'moment'
@@ -178,7 +177,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                             </STableHeadCell>
 
-                           
+
                             <STableHeadCell
                             >
 
@@ -345,18 +344,14 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                                         <STableCell>
 
-                                            {visit.visit_in_photo && <img
-                                                title="double click to download"
+                                            {visit.visit_in_photo && <IconButton
                                                 onClick={() => {
                                                     setVisit(visit)
                                                     setChoice({ type: VisitChoiceActions.view_visit_photo })
                                                 }}
-                                                onDoubleClick={() => {
-                                                    if (visit.visit_in_photo && visit.visit_in_photo?.public_url) {
-                                                        DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)
-                                                    }
-                                                }}
-                                                src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', width: '24px', height: '24px' }} />}
+
+                                            ><Photo />
+                                            </IconButton>}
 
                                         </STableCell>
                                         <STableCell>

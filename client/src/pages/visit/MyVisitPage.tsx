@@ -12,7 +12,6 @@ import MakeVisitInDialog from "../../components/dialogs/visit/MakeVisitInDialog"
 import MakeVisitOutDialog from "../../components/dialogs/visit/MakeVisitOutDialog"
 import AddSummaryInDialog from "../../components/dialogs/visit/AddSummaryDialog"
 import EditSummaryInDialog from "../../components/dialogs/visit/EditSummaryDialog"
-import TableSkeleton from "../../components/skeleton/TableSkeleton"
 import background from "../../assets/visit_background.jpg"
 import moment from "moment"
 
@@ -38,8 +37,6 @@ function MyVisitPage() {
   return (
     <>
       {isLoading && <LinearProgress />}
-      {isLoading && <TableSkeleton />}
-
       {visit && visit.start_day_credientials &&
         <>
           {/* start day */}
