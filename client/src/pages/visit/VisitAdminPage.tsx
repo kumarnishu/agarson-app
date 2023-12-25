@@ -357,34 +357,33 @@ export default function VisitAdminPage() {
                         }
                     }}
                 />
-                {user?.is_admin &&
-                    < TextField
+                < TextField
 
-                        size="small"
-                        select
-                        SelectProps={{
-                            native: true,
-                        }}
-                        onChange={(e) => {
-                            setUserId(e.target.value)
-                            ReftechVisits()
-                        }}
-                        required
-                        id="visit_owner"
-                        label="Filter Visits Of Indivdual"
-                        fullWidth
-                    >
-                        <option key={'00'} value={undefined}>
+                    size="small"
+                    select
+                    SelectProps={{
+                        native: true,
+                    }}
+                    onChange={(e) => {
+                        setUserId(e.target.value)
+                        ReftechVisits()
+                    }}
+                    required
+                    id="visit_owner"
+                    label="Filter Visits Of Indivdual"
+                    fullWidth
+                >
+                    <option key={'00'} value={undefined}>
 
-                        </option>
-                        {
-                            users.map((user, index) => {
-                                return (<option key={index} value={user._id}>
-                                    {user.username}
-                                </option>)
-                            })
-                        }
-                    </TextField>}
+                    </option>
+                    {
+                        users.map((user, index) => {
+                            return (<option key={index} value={user._id}>
+                                {user.username}
+                            </option>)
+                        })
+                    }
+                </TextField>
             </Stack>
 
             {/* table */}

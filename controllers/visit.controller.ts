@@ -27,7 +27,7 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
             }
 
             else {
-                visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
                 count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 } }).countDocuments()
             }
         }
@@ -373,7 +373,7 @@ export const GetAttendenceReport = async (req: Request, res: Response, next: Nex
     user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
 
 
-    
+
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (user_ids.length > 0) {

@@ -4,7 +4,6 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { VisitMenuActions, MenuContext } from '../../contexts/menuContext';
 import { paths } from '../../Routes';
-import { UserContext } from '../../contexts/userContext';
 
 
 export const StyledLink = styled(Link)`
@@ -13,7 +12,6 @@ export const StyledLink = styled(Link)`
 `
 
 function VisitMenu() {
-    const { user } = useContext(UserContext)
     const { menu, setMenu } = useContext(MenuContext)
     return (
         <Menu
@@ -27,12 +25,12 @@ function VisitMenu() {
                 }>
                 <StyledLink to={paths.visit}>My Visit</StyledLink>
             </MenuItem>
-            {user?.is_admin && <MenuItem
+            <MenuItem
                 onClick={
                     () => setMenu({ type: VisitMenuActions.close_visit_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.visit_admin}>Admin</StyledLink>
-            </MenuItem>}
+            </MenuItem>
 
             <MenuItem
                 onClick={
