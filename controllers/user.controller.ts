@@ -40,6 +40,11 @@ export const GetUsers = async (req: Request, res: Response, next: NextFunction) 
         users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     res.status(200).json(users)
 }
+export const GetAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+    let users: IUser[] = []
+    users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+    res.status(200).json(users)
+}
 
 export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)

@@ -53,9 +53,13 @@ export const Logout = async () => {
 };
 // get users
 
+export const GetAllUsers = async () => {
+  return await apiClient.get(`users/all`)
+}
 export const GetUsers = async () => {
   return await apiClient.get(`users`)
 }
+
 
 export const GetPaginatedUsers = async ({ limit, page }: { limit?: number | undefined, page?: number | undefined }) => {
   return await apiClient.get(`users/paginated/?limit=${limit}&page=${page}`)

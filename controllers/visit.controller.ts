@@ -27,7 +27,7 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
             }
 
             else {
-                visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: req.user._id }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
                 count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 } }).countDocuments()
             }
         }
@@ -50,7 +50,7 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
 }
 
 export const getMyTodayVisit = async (req: Request, res: Response, next: NextFunction) => {
-    let visits = await Visit.find().populate('visit_reports').populate('created_by').populate('updated_by')
+    let visits = await Visit.find({ person: req.user._id }).populate('visit_reports').populate('created_by').populate('updated_by')
     let visit = visits.find((visit) => {
         if (visit.created_at.getDate() === new Date().getDate() && visit.created_at.getMonth() === new Date().getMonth() && visit.created_at.getFullYear() === new Date().getFullYear() && visit.created_by.username === req.user.username)
             return visit

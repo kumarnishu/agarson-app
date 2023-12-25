@@ -22,7 +22,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                         gap={1}
                         direction={'row'}
                         spacing={2}
-                        p={2}
+                        py={1}
                         justifyContent="left"
                     >
 
@@ -45,7 +45,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                     <Stack gap={1}
                         direction={'row'}
                         spacing={2}
-                        p={2}
+                        py={1}
                         justifyContent="left"
                     >
                         {visit.visit_in_photo && <img
@@ -68,7 +68,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                         gap={1}
                         direction={'row'}
                         spacing={2}
-                        p={2}
+                        py={1}
                         justifyContent="left"
 
                     >
@@ -84,7 +84,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                     <Stack gap={1}
                         direction={'row'}
                         spacing={2}
-                        p={2}
+                        py={1}
                         justifyContent="left"
                     >
                         {visit.visit.end_day_photo && <img

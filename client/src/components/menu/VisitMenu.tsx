@@ -29,7 +29,7 @@ function VisitMenu() {
                 onClick={
                     () => setMenu({ type: VisitMenuActions.close_visit_menu, anchorEl: null })
                 }>
-                <StyledLink to={paths.visit_admin}>Admin</StyledLink>
+                <StyledLink to={paths.visit_admin}>Reports</StyledLink>
             </MenuItem>
 
             <MenuItem

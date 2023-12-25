@@ -2,7 +2,7 @@ import { Search } from '@mui/icons-material'
 import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchVisits, GetVisits } from '../../services/VisitServices'
 import DBPagination from '../../components/pagination/DBpagination';
@@ -13,14 +13,12 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
-import { UserContext } from '../../contexts/userContext'
 import VisitTable from '../../components/tables/VisitTable'
 import { IVisitReport } from '../../types/visit.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 export default function VisitAdminPage() {
-    const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
@@ -250,7 +248,7 @@ export default function VisitAdminPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    {window.screen.width > 4100 ? "Visits Admin" : "Admin"}
+                    {window.screen.width > 410 ? "Visits Admin" : "Reports"}
                 </Typography>
 
                 <Stack
@@ -358,7 +356,7 @@ export default function VisitAdminPage() {
                     }}
                 />
                 < TextField
-
+                    focused
                     size="small"
                     select
                     SelectProps={{
@@ -370,7 +368,7 @@ export default function VisitAdminPage() {
                     }}
                     required
                     id="visit_owner"
-                    label="Filter Visits Of Indivdual"
+                    label="Person"
                     fullWidth
                 >
                     <option key={'00'} value={undefined}>

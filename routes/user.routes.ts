@@ -1,14 +1,14 @@
 import express from "express";
 import multer from "multer";
 
-import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateAccessFields, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword, FuzzySearchUsers, AssignUsers, GetPaginatedUsers, AllowMultiLogin, BlockMultiLogin } from "../controllers/user.controller";
+import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateAccessFields, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword, FuzzySearchUsers, AssignUsers, GetPaginatedUsers, AllowMultiLogin, BlockMultiLogin, GetAllUsers } from "../controllers/user.controller";
 import { isAdmin, isAuthenticatedUser, isProfileAuthenticated, } from "../middlewares/auth.middleware";
 
 export const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1024 * 1024 * 50 } })
 
 const router = express.Router()
-
 router.post("/signup", upload.single("dp"), SignUp)
+router.route("/users/all").get(isAuthenticatedUser, GetAllUsers)
 router.route("/users").get(isAuthenticatedUser, GetUsers)
     .post(isAuthenticatedUser, upload.single("dp"), NewUser)
 router.route("/search/users").get(isAuthenticatedUser, FuzzySearchUsers)

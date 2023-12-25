@@ -22,7 +22,7 @@ function ViewCommentsDialog({ visit }: { visit: IVisitReport }) {
                             <Typography variant="subtitle1" sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white', p: 1 }} textAlign={'center'} fontWeight={'bold'}>SalesPerson</Typography>
                             <Stack
                                 gap={1}
-                                p={2}
+                                py={1}
                                 justifyContent="left"
                             >
                                 <Typography sx={{ textTransform: "capitalize",wordBreak:'break-all' }}> <pre>
@@ -36,7 +36,7 @@ function ViewCommentsDialog({ visit }: { visit: IVisitReport }) {
                             <Typography variant="subtitle1" sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white', p: 1 }} textAlign={'center'} fontWeight={'bold'}>Ankit Comment</Typography>
                             <Stack
                                 gap={1}
-                                p={2}
+                                py={1}
                                 justifyContent="left"
                             >
                                 <Typography sx={{ textTransform: "capitalize" }}> <pre>
@@ -51,7 +51,7 @@ function ViewCommentsDialog({ visit }: { visit: IVisitReport }) {
                             <Typography variant="subtitle1" sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white', p: 1 }} textAlign={'center'} fontWeight={'bold'}>Brijesh Comment</Typography>
                             <Stack
                                 gap={1}
-                                p={2}
+                                py={1}
                                 justifyContent="left"
                             >
                                 <Typography sx={{ textTransform: "capitalize" }}> <pre>

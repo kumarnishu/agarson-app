@@ -6,7 +6,7 @@ import { IUser } from '../../../types/user.types';
 import { AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
 import { BackendError } from '../../..';
-import { AssignUsers, GetUsers } from '../../../services/UserServices';
+import { AssignUsers, GetAllUsers } from '../../../services/UserServices';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { useFormik } from 'formik';
@@ -15,7 +15,7 @@ import * as Yup from "yup"
 
 function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser | undefined>> }) {
     const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetAllUsers())
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
@@ -67,7 +67,6 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
             }, 1000)
         }
     }, [isSuccess, setChoice])
-
     return (
         <Dialog
             fullWidth

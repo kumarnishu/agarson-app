@@ -131,7 +131,7 @@ function StartMydayForm() {
                             <AlertBar message="Your day Started SuccessFully" color="success" />
                         ) : null
                     }
-                    <Button variant="contained" color="primary" type="submit"
+                    <Button size="large" variant="contained" color="primary" type="submit"
                         disabled={Boolean(isLoading)}
                         fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
                     </Button>

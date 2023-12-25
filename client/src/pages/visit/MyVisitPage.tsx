@@ -13,6 +13,8 @@ import MakeVisitOutDialog from "../../components/dialogs/visit/MakeVisitOutDialo
 import AddSummaryInDialog from "../../components/dialogs/visit/AddSummaryDialog"
 import EditSummaryInDialog from "../../components/dialogs/visit/EditSummaryDialog"
 import TableSkeleton from "../../components/skeleton/TableSkeleton"
+import background from "../../assets/visit_background.jpg"
+import moment from "moment"
 
 function MyVisitPage() {
   const [visits, setVisits] = useState<IVisitReport[]>([])
@@ -32,7 +34,7 @@ function MyVisitPage() {
     }
 
   }, [isSuccess, data])
-  
+
   return (
     <>
       {isLoading && <LinearProgress />}
@@ -40,14 +42,20 @@ function MyVisitPage() {
 
       {visit && visit.start_day_credientials &&
         <>
-          <Typography variant="subtitle1" textAlign={'center'} sx={{ p: 1 }}>Started day at  <b>{new Date(visit?.start_day_credientials.timestamp).toLocaleTimeString()}</b></Typography>
-          <Stack direction={'row'} p={2} alignItems={'center'} justifyContent={'center'}>
+          {/* start day */}
+          <Typography variant="h6" textAlign={'center'} sx={{ p: 1 }}>You Started Day At   {moment(new Date(visit.start_day_credientials && visit.start_day_credientials.timestamp)).format('LT')}</Typography>
+
+          {/* new visit */}
+          <Stack direction={'row'} px={2} alignItems={'center'} justifyContent={'center'}>
             {!Boolean(visit.end_day_credentials) && < Button
+              fullWidth
               disabled={visit.visit_reports.filter((report) => {
                 if (!Boolean(report.visit_out_credentials))
                   return report
               }).length > 0}
-              variant="contained" onClick={() => {
+              variant="contained"
+              size="large"
+              onClick={() => {
                 setChoice({ type: VisitChoiceActions.visit_in })
               }}>New Visit</Button>}
           </Stack >
@@ -56,31 +64,30 @@ function MyVisitPage() {
       <>
         {visits.map((visit, index) => {
           return (
-            <Paper elevation={16} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white' }}>
+            <Paper elevation={8} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white', borderRadius: 2 }}>
               <Stack key={index}
                 direction="column"
-                p={2}
                 gap={2}
               >
-                <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
-                  Party : <b>{visit.party_name}</b>
+                <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
+                  Party : {visit.party_name}
                 </Typography>
-                <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
-                  Station : <b>{visit.city}</b>
+                <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
+                  Station : {visit.city}
                 </Typography>
-                <Typography variant="subtitle2" sx={{ textTransform: 'capitalize' }}>
-                  Visit In : {new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}
+                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                  Visit In : {moment(new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp)).format('LT')}
                 </Typography>
-                <Typography variant="subtitle2" sx={{ textTransform: 'capitalize' }}>
-                  Visit Out : {new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString()}
+                <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+                  Visit Out : {moment(new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp)).format('LT')}
                 </Typography>
-                <Stack gap={2} direction={'row'}>
-                  {visit && !Boolean(visit.visit_out_credentials) && <Button sx={{ fontWeight: 'bold', p: 0, mt: 2 }} color="error" onClick={() => {
+                <Stack gap={2} direction={'row'} >
+                  {visit && !Boolean(visit.visit_out_credentials) && <Button sx={{ fontWeight: 'bold' }} color="error" onClick={() => {
                     setVisitReport(visit)
                     setChoice({ type: VisitChoiceActions.visit_out })
                   }}>Visit Out</Button>}
 
-                  {!visit.summary ? <Button sx={{ fontWeight: 'bold', p: 0, mt: 2 }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.add_summary }) }}>Add Summary</Button> : <Button sx={{ fontWeight: 'bold', p: 0, mt: 2 }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.edit_summary }) }}>Edit Summary</Button>}
+                  {!visit.summary ? <Button sx={{ fontWeight: 'bold' }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.add_summary }) }}>Add Summary</Button> : <Button sx={{ fontWeight: 'bold' }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.edit_summary }) }}>Edit Summary</Button>}
                 </Stack>
 
               </Stack>
@@ -97,21 +104,23 @@ function MyVisitPage() {
 
 
       {
-        !visit && <Stack p={2}>
-          < Button size="large" color="success" sx={{ position: 'relative', bottom: 0 }} variant="outlined"
+        !visit && <Stack sx={{ height: '100vh', p: 1 }}>
+          <img src={background} alt="background" style={{ objectFit: 'cover' }} />
+          <Button size="large" sx={{ p: 3, fontSize: 20 }} variant="contained"
             disabled={isLoading}
-            fullWidth onClick={
+            fullWidth
+            onClick={
               () => {
                 setChoice({ type: VisitChoiceActions.start_day })
               }
             }>Start My Day</Button >
-        </Stack>
+        </Stack >
       }
       {!visit && <StartMydayDialog />}
 
       {
         visit && <Stack p={2}>
-          < Button size="small" color="error" sx={{ position: 'relative', bottom: 0, my: 2 }} variant="outlined"
+          < Button size="large" color="primary" sx={{ position: 'relative', bottom: 0, my: 2 }} variant="outlined"
             disabled={isLoading || Boolean(visit.end_day_credentials) || visit.visit_reports.filter((report) => {
               if (!Boolean(report.visit_out_credentials))
                 return report
