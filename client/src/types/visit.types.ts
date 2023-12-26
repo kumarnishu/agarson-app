@@ -39,6 +39,7 @@ export type IVisit = {
     _id: string,
     start_day_photo: Asset,
     end_day_photo: Asset,
+    is_present: boolean
     start_day_credientials: {
         latitude: string,
         longitude: string,

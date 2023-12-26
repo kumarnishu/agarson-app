@@ -15,6 +15,7 @@ const VisitSchema = new mongoose.Schema<IVisit, mongoose.Model<IVisit, {}, {}>, 
         timestamp: Date,
         address: String
     },
+    is_present: { type: Boolean, default: true },
     start_day_photo: {
         _id: { type: String },
         filename: { type: String },

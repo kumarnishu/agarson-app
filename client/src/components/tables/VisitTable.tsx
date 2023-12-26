@@ -111,6 +111,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                             <STableHeadCell
                             >
 
+                                Station
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Phone
 
                             </STableHeadCell>
@@ -121,10 +127,17 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                             </STableHeadCell>
 
+                          
                             <STableHeadCell
                             >
 
-                                Station
+                                Turnover
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Dealer Of
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -152,25 +165,9 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                             </STableHeadCell>
 
-                            <STableHeadCell
-                            >
+                           
 
-                                Visit In Address
-
-                            </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-
-                                Turnover
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Dealer Of
-
-                            </STableHeadCell>
+                           
                             <STableHeadCell
                             >
 
@@ -184,7 +181,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                             </STableHeadCell>
 
+                            <STableHeadCell
+                            >
 
+                                Visit In Address
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -369,8 +371,15 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                                             {visit.visit_out_credentials && moment(visit.visit_out_credentials && visit.visit_out_credentials.timestamp && new Date(visit.visit_out_credentials.timestamp)).format('LT')}
                                         </STableCell>
+                                        <STableCell
+                                            onClick={() => {
+                                                setText(visit.party_name)
+                                            }}
+                                        >
+                                            {visit.party_name && visit.party_name.slice(0, 30)}
+                                        </STableCell>
                                         <STableCell>
-                                            {visit.party_name}
+                                            {visit.city}
                                         </STableCell>
                                         <STableCell>
                                             {visit.mobile}
@@ -379,11 +388,15 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                             {visit.is_old_party ? "Old " : "New "}
                                         </STableCell>
                                         <STableCell>
-                                            {visit.city}
+                                            {visit.turnover ? visit.turnover : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {visit.dealer_of ? visit.dealer_of : ""}
                                         </STableCell>
                                         <STableCell>
                                             {visit.person.username}
                                         </STableCell>
+                                      
                                         <STableCell title={visit.summary} onClick={() => {
                                             if (visit.summary) {
                                                 setText(visit.summary)
@@ -394,7 +407,6 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell onClick={() => {
                                             if (visit.ankit_input) {
                                                 setText(visit.ankit_input.input)
-                                                setText(undefined)
                                             }
                                         }}>
                                             {visit.ankit_input && visit.ankit_input.input.slice(0, 50) + "..."}
@@ -404,30 +416,20 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell onClick={() => {
                                             if (visit.brijesh_input) {
                                                 setText(visit.brijesh_input.input)
-                                                setText(undefined)
                                             }
                                         }}>
                                             {visit.brijesh_input && visit.brijesh_input.input.slice(0, 50) + "..."}
                                         </STableCell>
+                                      
                                         <STableCell>
-                                            {visit.visit_in_credientials && visit.visit_in_credientials.address && visit.visit_in_credientials.address}
-                                        </STableCell>
-
-                                        <STableCell>
-                                            {visit.turnover}
-                                        </STableCell>
-                                        <STableCell>
-                                            {visit.dealer_of}
-                                        </STableCell>
-                                        <STableCell>
-                                            {visit.refs_given}
+                                            {visit.refs_given ? visit.refs_given : ""}
                                         </STableCell>
                                         <STableCell>
                                             {visit.reviews_taken}
                                         </STableCell>
-
-
-
+                                        <STableCell>
+                                            {visit.visit_in_credientials && visit.visit_in_credientials.address && visit.visit_in_credientials.address}
+                                        </STableCell>
                                         <STableCell>
                                             {new Date(visit.created_at).toLocaleString()}
                                         </STableCell>

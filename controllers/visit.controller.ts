@@ -1,11 +1,63 @@
 import { NextFunction, Request, Response } from "express"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
-import { IVisitBody, IVisitReport, IVisitReportBody } from "../types/visit.types"
+import { IVisit, IVisitBody, IVisitReport, IVisitReportBody } from "../types/visit.types"
 import { Visit } from "../models/visit/visit.model"
 import { VisitReport } from "../models/visit/visit.report.model"
 import { IUser } from "../types/user.types"
 
-//get 
+
+// get attendence reports
+export const GetVisitsAttendence = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let id = req.query.id
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let visits: IVisit[] = []
+    let count = 0
+    let dt1 = new Date(String(start_date))
+    let dt2 = new Date(String(end_date))
+    let user_ids: string[] = []
+    user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
+    let result: { _id: string, date: Date, visits: IVisit[] }[] = []
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        if (!id) {
+            if (user_ids.length > 0) {
+                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
+            }
+
+            else {
+                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).countDocuments()
+            }
+        }
+
+        if (id) {
+            visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
+        }
+        let startDate = new Date(dt1)
+        let endDate = new Date(dt2)
+        while (startDate < endDate) {
+            let data = visits.filter((visit) => {
+                if (visit.created_at.getDate() === new Date(startDate).getDate() && visit.created_at.getMonth() === new Date(startDate).getMonth() && visit.created_at.getFullYear() === new Date(startDate).getFullYear())
+                    return visit
+            })
+            result.push({ _id: "", date: new Date(startDate), visits: data })
+            startDate.setDate(new Date(startDate).getDate() + 1)
+        }
+        return res.status(200).json({
+            result,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
+
 export const getVisits = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
@@ -57,7 +109,6 @@ export const getMyTodayVisit = async (req: Request, res: Response, next: NextFun
     })
     return res.status(200).json(visit)
 }
-
 
 //post/put/delte/patch
 export const StartMyDay = async (req: Request, res: Response, next: NextFunction) => {

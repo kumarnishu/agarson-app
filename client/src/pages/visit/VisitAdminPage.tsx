@@ -2,9 +2,9 @@ import { Search } from '@mui/icons-material'
 import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, {  useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { FuzzySearchVisits, GetVisits } from '../../services/VisitServices'
+import { FuzzySearchVisits, GetVisitAttendences, GetVisits } from '../../services/VisitServices'
 import DBPagination from '../../components/pagination/DBpagination';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
@@ -14,11 +14,15 @@ import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
 import VisitTable from '../../components/tables/VisitTable'
-import { IVisitReport } from '../../types/visit.types'
+import { IVisit, IVisitReport } from '../../types/visit.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 
 export default function VisitAdminPage() {
+    const [display, setDisplay] = useState(true)
+    const [attendeces, setAttendences] = useState<{
+        date: Date, visits: IVisit[]
+    }[]>([])
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
@@ -30,6 +34,9 @@ export default function VisitAdminPage() {
     const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filterCount, setFilterCount] = useState(0)
     const [selectedVisits, setSelectedVisits] = useState<IVisitReport[]>([])
+    const [selectedAttendeces, setSelectedAttendeces] = useState<{
+        date: Date, visits: IVisit[]
+    }[]>([])
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
         start_date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
@@ -39,9 +46,17 @@ export default function VisitAdminPage() {
 
     const { data, isLoading, refetch: ReftechVisits } = useQuery<AxiosResponse<{ visits: IVisitReport[], page: number, total: number, limit: number }>, BackendError>(["visits", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisits({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
+    const { data: attendences, isLoading: isAttendenceLoading, refetch: ReftechVisitAttendence } = useQuery<AxiosResponse<{
+        result: {
+            date: Date, visits: IVisit[]
+        }[], page: number, total: number, limit: number
+    }>, BackendError>(["attendence", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisitAttendences({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }), { enabled: false })
+
+
     const { data: fuzzyvisits, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ visits: IVisitReport[], page: number, total: number, limit: number }>, BackendError>(["fuzzyvisits", filter], async () => FuzzySearchVisits({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
         enabled: false
     })
+
     const [selectedData, setSelectedData] = useState<{
         date: string,
         start_day: string,
@@ -61,6 +76,7 @@ export default function VisitAdminPage() {
         visit_out_coordinates: string,
         person: string,
         party: string,
+        mobile: string,
         station: string,
         is_validated: string,
         is_old: string,
@@ -117,6 +133,7 @@ export default function VisitAdminPage() {
             person: string,
             party: string,
             station: string,
+            mobile: string,
             is_validated: string,
             is_old: string,
             turnover: string,
@@ -152,6 +169,7 @@ export default function VisitAdminPage() {
                     visit_out_coordinates: visit.visit_out_credentials && visit.visit_out_credentials.latitude + "," + visit.visit_out_credentials.longitude,
                     person: visit.person.username,
                     party: visit.party_name,
+                    mobile: visit.mobile,
                     station: visit.city,
                     is_validated: visit.visit_validated ? "yes" : "no",
                     is_old: visit.is_old_party ? "old" : "new",
@@ -178,6 +196,11 @@ export default function VisitAdminPage() {
     }, [users, isUsersSuccess, usersData])
 
     useEffect(() => {
+        if (attendences && attendences.data)
+            setAttendences(attendences.data.result)
+    }, [attendences])
+
+    useEffect(() => {
         if (!filter) {
             setVisits(preFilteredData)
             setPaginationData(preFilteredPaginationData)
@@ -189,6 +212,12 @@ export default function VisitAdminPage() {
             refetchFuzzy()
         }
     }, [paginationData])
+
+    useEffect(() => {
+        if (display) {
+            ReftechVisitAttendence()
+        }
+    }, [display, dates, userId])
 
     useEffect(() => {
         if (data && !filter) {
@@ -231,6 +260,7 @@ export default function VisitAdminPage() {
             {
                 isLoading && <LinearProgress />
             }
+            {isAttendenceLoading && <LinearProgress />}
             {
                 isFuzzyLoading && <LinearProgress />
             }
@@ -386,7 +416,7 @@ export default function VisitAdminPage() {
 
             {/* table */}
             {isLoading && <TableSkeleton />}
-            {!isLoading &&
+            {!isLoading && !display &&
                 <Box sx={{ px: 2 }}>
                     <VisitTable
                         visit={visit}

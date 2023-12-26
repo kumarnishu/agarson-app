@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { IChat } from '../../types/chat.types'
+import ViewTextDialog from '../dialogs/text/ViewTextDialog'
 
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 
 function ChatsTable({ chats }: Props) {
     const [data, setData] = useState<IChat[]>(chats)
-
+    const [text, setText] = useState<string>()
     useEffect(() => {
         setData(chats)
     }, [chats])
@@ -105,7 +106,9 @@ function ChatsTable({ chats }: Props) {
                                                 </Typography>
                                             </STableCell>
                                            
-                                            <STableCell>
+                                            <STableCell onClick={() => {
+                                                setText(chat.body)
+                                            }}>
                                                 <Typography style={{ whiteSpace: 'pre-wrap' }} title={chat && chat.body}>
                                                     {chat && chat.body && chat.body.slice(0, 50)}
                                                 </Typography>
@@ -129,7 +132,7 @@ function ChatsTable({ chats }: Props) {
                     </STableBody>
                 </STable>
             </Box >
-
+            {text && <ViewTextDialog text={text} setText={setText} />}
         </>
 
     )

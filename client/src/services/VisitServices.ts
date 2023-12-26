@@ -7,6 +7,14 @@ export const GetVisits = async ({ limit, page, start_date, end_date, id }: { lim
         return await apiClient.get(`visits/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
 
 }
+export const GetVisitAttendences = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+    if (id)
+        return await apiClient.get(`attendence/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+    else
+        return await apiClient.get(`attendence/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+
+}
+
 
 export const getMyTodayVisit = async () => {
     return await apiClient.get("visit/today")
