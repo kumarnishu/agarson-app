@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Box, Button, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -16,26 +16,31 @@ import moment from 'moment'
 import VisitTable from '../../components/tables/VisitTable'
 import { IVisit, IVisitReport } from '../../types/visit.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import AttendenceTable from '../../components/tables/AttendenceTable'
 
 
 export default function VisitAdminPage() {
     const [display, setDisplay] = useState(true)
-    const [attendeces, setAttendences] = useState<{
-        date: Date, visits: IVisit[]
+    const [attendences, setAttendences] = useState<{
+        _id: string; date: Date; visits: IVisit[]
     }[]>([])
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
+    const [attendence, setAttendence] = useState<{
+        _id: string; date: Date; visits: IVisit[]
+    }>()
     const [visit, setVisit] = useState<IVisitReport>()
     const [visits, setVisits] = useState<IVisitReport[]>([])
     const [selectAll, setSelectAll] = useState(false)
+    const AttendenceMemoData = React.useMemo(() => attendences, [attendences])
     const MemoData = React.useMemo(() => visits, [visits])
     const [preFilteredData, setPreFilteredData] = useState<IVisitReport[]>([])
     const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filterCount, setFilterCount] = useState(0)
     const [selectedVisits, setSelectedVisits] = useState<IVisitReport[]>([])
     const [selectedAttendeces, setSelectedAttendeces] = useState<{
-        date: Date, visits: IVisit[]
+        _id: string; date: Date; visits: IVisit[]
     }[]>([])
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
@@ -46,9 +51,9 @@ export default function VisitAdminPage() {
 
     const { data, isLoading, refetch: ReftechVisits } = useQuery<AxiosResponse<{ visits: IVisitReport[], page: number, total: number, limit: number }>, BackendError>(["visits", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisits({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
-    const { data: attendences, isLoading: isAttendenceLoading, refetch: ReftechVisitAttendence } = useQuery<AxiosResponse<{
+    const { data: attendencesData, isLoading: isAttendenceLoading, refetch: ReftechVisitAttendence } = useQuery<AxiosResponse<{
         result: {
-            date: Date, visits: IVisit[]
+            _id: string; date: Date; visits: IVisit[]
         }[], page: number, total: number, limit: number
     }>, BackendError>(["attendence", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisitAttendences({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }), { enabled: false })
 
@@ -196,9 +201,9 @@ export default function VisitAdminPage() {
     }, [users, isUsersSuccess, usersData])
 
     useEffect(() => {
-        if (attendences && attendences.data)
-            setAttendences(attendences.data.result)
-    }, [attendences])
+        if (attendencesData && attendencesData.data)
+            setAttendences(attendencesData.data.result)
+    }, [attendencesData])
 
     useEffect(() => {
         if (!filter) {
@@ -278,9 +283,9 @@ export default function VisitAdminPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    {window.screen.width > 410 ? "Visits Admin" : "Reports"}
+                    {display ? "Attendence" : "Visit"}
                 </Typography>
-
+                <Button variant="outlined" onClick={() => setDisplay(!display)}>Switch</Button>
                 <Stack
                     direction="row"
                 >
@@ -426,6 +431,18 @@ export default function VisitAdminPage() {
                         setSelectedVisits={setSelectedVisits}
                         setSelectAll={setSelectAll}
                         visits={MemoData}
+                    />
+                </Box>}
+            {!isLoading && display &&
+                <Box sx={{ px: 2 }}>
+                    <AttendenceTable
+                        attendence={attendence}
+                        setAttendence={setAttendence}
+                        selectAll={selectAll}
+                        selectedAttendeces={selectedAttendeces}
+                        setSelectedAttendeces={setSelectedAttendeces}
+                        setSelectAll={setSelectAll}
+                        attendences={AttendenceMemoData}
                     />
                 </Box>}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />

@@ -4,7 +4,7 @@ import { IVisit, IVisitBody, IVisitReport, IVisitReportBody } from "../types/vis
 import { Visit } from "../models/visit/visit.model"
 import { VisitReport } from "../models/visit/visit.report.model"
 import { IUser } from "../types/user.types"
-
+import { v4 as uuidv4 } from 'uuid';
 
 // get attendence reports
 export const GetVisitsAttendence = async (req: Request, res: Response, next: NextFunction) => {
@@ -44,7 +44,7 @@ export const GetVisitsAttendence = async (req: Request, res: Response, next: Nex
                 if (visit.created_at.getDate() === new Date(startDate).getDate() && visit.created_at.getMonth() === new Date(startDate).getMonth() && visit.created_at.getFullYear() === new Date(startDate).getFullYear())
                     return visit
             })
-            result.push({ _id: "", date: new Date(startDate), visits: data })
+            result.push({ _id: uuidv4(), date: new Date(startDate), visits: data })
             startDate.setDate(new Date(startDate).getDate() + 1)
         }
         return res.status(200).json({
