@@ -168,9 +168,9 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
     let body = JSON.parse(req.body.body)
     let { visit_in_credientials,
         party_name,
-        city, is_old_party } = body as IVisitReportBody
+        city, is_old_party, mobile } = body as IVisitReportBody
 
-    if (!visit_in_credientials || !party_name || !city) {
+    if (!visit_in_credientials || !party_name || !city || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
     let id = req.params.id
@@ -186,6 +186,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         party_name,
         city,
         is_old_party: is_old_party,
+        mobile: mobile,
         visit: visit,
         created_at: new Date(),
         updated_at: new Date(),
@@ -228,11 +229,12 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
 
 export const AddVisitSummary = async (req: Request, res: Response, next: NextFunction) => {
     let { summary,
+        mobile,
         is_old_party,
         dealer_of,
         refs_given,
         reviews_taken, turnover } = req.body as IVisitReportBody
-    if (!summary) {
+    if (!summary || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
     let id = req.params.id
@@ -242,6 +244,7 @@ export const AddVisitSummary = async (req: Request, res: Response, next: NextFun
 
     report.is_old_party = is_old_party
     report.dealer_of = dealer_of
+    report.mobile = mobile
     report.turnover = turnover
     report.refs_given = refs_given
     report.reviews_taken = reviews_taken
@@ -256,8 +259,9 @@ export const EditVisitSummary = async (req: Request, res: Response, next: NextFu
         is_old_party,
         dealer_of,
         refs_given,
+        mobile,
         reviews_taken, turnover } = req.body as IVisitReportBody
-    if (!summary) {
+    if (!summary || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
     let id = req.params.id
@@ -267,6 +271,7 @@ export const EditVisitSummary = async (req: Request, res: Response, next: NextFu
 
     report.is_old_party = is_old_party
     report.dealer_of = dealer_of
+    report.mobile = mobile
     report.turnover = turnover
     report.refs_given = refs_given
     report.reviews_taken = reviews_taken

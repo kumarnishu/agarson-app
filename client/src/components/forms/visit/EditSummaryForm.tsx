@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
-import { ChoiceContext,  VisitChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
@@ -17,6 +17,7 @@ type TformData = {
     summary: string,
     is_old_party: boolean,
     dealer_of: string,
+    mobile: string,
     refs_given: string,
     reviews_taken: number,
     turnover: string
@@ -30,6 +31,7 @@ function EditSummaryForm({ visit }: { visit: IVisitReport }) {
                 summary: string;
                 is_old_party: boolean;
                 dealer_of: string;
+                mobile: string;
                 refs_given: string;
                 reviews_taken: number;
                 turnover: string
@@ -48,6 +50,7 @@ function EditSummaryForm({ visit }: { visit: IVisitReport }) {
         initialValues: {
             summary: visit.summary,
             is_old_party: Boolean(visit.is_old_party),
+            mobile: visit.mobile,
             dealer_of: visit.dealer_of,
             refs_given: visit.refs_given,
             reviews_taken: visit.reviews_taken,
@@ -55,6 +58,9 @@ function EditSummaryForm({ visit }: { visit: IVisitReport }) {
         },
         validationSchema: Yup.object({
             summary: Yup.string().required("required"),
+            mobile: Yup.string().required("required mobile string")
+                .min(10, 'Must be 10 digits')
+                .max(10, 'Must be 10 digits'),
             is_old_party: Yup.boolean().required("required"),
             dealer_of: Yup.string().required("required"),
             refs_given: Yup.string().required("required"),
@@ -67,6 +73,7 @@ function EditSummaryForm({ visit }: { visit: IVisitReport }) {
                 summary: values.summary,
                 is_old_party: Boolean(values.is_old_party),
                 dealer_of: values.dealer_of,
+                mobile: values.mobile,
                 refs_given: values.refs_given,
                 reviews_taken: values.reviews_taken,
                 turnover: values.turnover
@@ -91,7 +98,20 @@ function EditSummaryForm({ visit }: { visit: IVisitReport }) {
                     gap={2}
                     sx={{ pt: 2 }}
                 >
-
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        required
+                        error={
+                            formik.touched.mobile && formik.errors.mobile ? true : false
+                        }
+                        id="mobile"
+                        label="Party Mobile"
+                        helperText={
+                            formik.touched.mobile && formik.errors.mobile ? formik.errors.mobile : ""
+                        }
+                        {...formik.getFieldProps('mobile')}
+                    />
                     <TextField
                         variant="outlined"
                         fullWidth

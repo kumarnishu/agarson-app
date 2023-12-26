@@ -17,6 +17,7 @@ export type IVisitReport = {
     },
     person: IUser,
     party_name: string,
+    mobile: string,
     city: string,
     summary: string,
     is_old_party: boolean,

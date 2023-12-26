@@ -111,6 +111,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                             <STableHeadCell
                             >
 
+                                Phone
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Is Old ?
 
                             </STableHeadCell>
@@ -152,7 +158,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                 Visit In Address
 
                             </STableHeadCell>
-                          
+
                             <STableHeadCell
                             >
 
@@ -361,10 +367,13 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                                         <STableCell>
 
-                                            {moment(visit.visit_out_credentials && visit.visit_out_credentials.timestamp && new Date(visit.visit_out_credentials.timestamp)).format('LT')}
+                                            {visit.visit_out_credentials && moment(visit.visit_out_credentials && visit.visit_out_credentials.timestamp && new Date(visit.visit_out_credentials.timestamp)).format('LT')}
                                         </STableCell>
                                         <STableCell>
                                             {visit.party_name}
+                                        </STableCell>
+                                        <STableCell>
+                                            {visit.mobile}
                                         </STableCell>
                                         <STableCell>
                                             {visit.is_old_party ? "Old " : "New "}
@@ -449,7 +458,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                         <EditSummaryInDialog visit={visit} />
                         <AddBrijeshInputDialog visit={visit} />
                         <AddAnkitInputDialog visit={visit} />
-                        <ViewVisitPhotoDialog photo={visit.visit_in_photo} />
+                        <ViewVisitPhotoDialog visit={visit} />
 
                     </>
                     : null

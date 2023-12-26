@@ -17,6 +17,7 @@ type TformData = {
     party_name: string,
     city: string,
     is_old_party: Boolean,
+    mobile: string,
     media: string | Blob | File
 }
 
@@ -41,11 +42,15 @@ function VisitInForm({ visit }: { visit: IVisit }) {
             party_name: "",
             city: "",
             media: '',
+            mobile: '',
             is_old_party: false
         },
         validationSchema: Yup.object({
             party_name: Yup.string().required("required"),
             city: Yup.string().required("required"),
+            mobile: Yup.string().required("required mobile string")
+                .min(10, 'Must be 10 digits')
+                .max(10, 'Must be 10 digits'),
             is_old_party: Yup.boolean().required("required"),
             media: Yup.mixed<File>()
                 .test("size", "size is allowed only less than 10mb",
@@ -77,6 +82,7 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                     visit_in_credientials: location,
                     party_name: values.party_name,
                     city: values.city,
+                    mobile: values.mobile,
                     is_old_party: values.is_old_party
                 }
                 formdata.append("body", JSON.stringify(Data))
@@ -108,7 +114,7 @@ function VisitInForm({ visit }: { visit: IVisit }) {
             setLocation({ latitude: String(data.coords.latitude), longitude: String(data.coords.longitude), timestamp: new Date(data.timestamp) })
         })
     }, [])
-    
+
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>
@@ -145,6 +151,20 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                             formik.touched.city && formik.errors.city ? formik.errors.city : ""
                         }
                         {...formik.getFieldProps('city')}
+                    />
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        required
+                        error={
+                            formik.touched.mobile && formik.errors.mobile ? true : false
+                        }
+                        id="mobile"
+                        label="Party Mobile"
+                        helperText={
+                            formik.touched.mobile && formik.errors.mobile ? formik.errors.mobile : ""
+                        }
+                        {...formik.getFieldProps('mobile')}
                     />
                     <FormControlLabel control={<Switch
                         checked={Boolean(formik.values.is_old_party)}
