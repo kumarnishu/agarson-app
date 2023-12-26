@@ -101,9 +101,9 @@ function MyVisitPage() {
 
 
       {
-        !visit && <Stack sx={{ height: '100vh', p: 1 }}>
+        !visit && <Stack sx={{ height: '100vh' }}>
           <img src={background} alt="background" style={{ objectFit: 'cover' }} />
-          <Button size="large" sx={{ p: 3, fontSize: 20 }} variant="contained"
+          <Button size="large" sx={{ p: 3, fontSize: 20 }} color="error" variant="contained"
             disabled={isLoading}
             fullWidth
             onClick={

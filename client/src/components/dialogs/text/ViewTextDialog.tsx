@@ -4,7 +4,7 @@ import { Dialog, DialogContent } from '@mui/material'
 
 function ViewTextDialog({ text, display, setDisplay }: { text: string, display: boolean, setDisplay: React.Dispatch<React.SetStateAction<boolean>> }) {
     return (
-        <Dialog open={Boolean(display)}
+        <Dialog open={display}
             fullWidth
             onClose={() => setDisplay(false)}
         >

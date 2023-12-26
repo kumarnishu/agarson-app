@@ -35,6 +35,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
     const { setChoice } = useContext(ChoiceContext)
     const [text, setText] = useState<string>()
     const { user } = useContext(UserContext)
+    
     useEffect(() => {
         setData(visits)
     }, [visits])
