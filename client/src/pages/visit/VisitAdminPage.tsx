@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Box, Button, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Box, Fade, FormControlLabel, IconButton, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -283,14 +283,18 @@ export default function VisitAdminPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    {display ? "Attendence" : "Visit"}
+                    {display ? `Attendence : ${attendences.length} days` : "Visit"}
                 </Typography>
-                <Button variant="outlined" onClick={() => setDisplay(!display)}>Switch</Button>
+
                 <Stack
                     direction="row"
                 >
                     {/* search bar */}
                     < Stack direction="row" spacing={2}>
+                        <FormControlLabel control={<Switch
+                            defaultChecked={Boolean(display)}
+                            onChange={() => setDisplay(!display)}
+                        />} label="Switch" />
                         <TextField
                             fullWidth
                             size="small"

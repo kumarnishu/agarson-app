@@ -1,5 +1,5 @@
 import { Box, Checkbox } from '@mui/material'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from "../styled/STyledTable"
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
 import { IVisit } from '../../types/visit.types'
@@ -46,7 +46,7 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
     useEffect(() => {
         setData(attendences)
     }, [attendences])
-
+    console.log(data)
     return (
         <>
             <Box sx={{
@@ -90,6 +90,7 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
                                 Date
 
                             </STableHeadCell>
+
                             <STableHeadCell
                             >
 
@@ -97,7 +98,12 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
 
                             </STableHeadCell>
 
+                            <STableHeadCell
+                            >
 
+                                Attendence
+
+                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -113,50 +119,68 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
 
                             data && data.map((attendence, index) => {
                                 return (
-                                    <STableRow
-                                        key={index}
-                                    >
-                                        {selectAll ?
+                                    <React.Fragment key={index}>
+                                        {
+                                            attendence.visits.map((visit, index) => {
+                                                return (
+                                                    <STableRow
+                                                        key={index}
+                                                    >
+                                                        {selectAll ?
 
-                                            <STableCell>
-
-
-                                                <Checkbox size="small"
-                                                    checked={Boolean(selectAll)}
-                                                />
-
-
-                                            </STableCell>
-                                            :
-                                            null}
-                                        {!selectAll ?
-
-                                            <STableCell>
-
-                                                <Checkbox size="small"
-                                                    onChange={(e) => {
-                                                        setAttendence(attendence)
-                                                        if (e.target.checked) {
-                                                            setSelectedAttendeces([...selectedAttendeces, attendence])
-                                                        }
-                                                        if (!e.target.checked) {
-                                                            setSelectedAttendeces((attendences) => attendences.filter((item) => {
-                                                                return item._id !== attendence._id
-                                                            }))
-                                                        }
-                                                    }}
-                                                />
-
-                                            </STableCell>
-                                            :
-                                            null}
-                                        <STableCell>
-                                            {attendence.date && new Date(attendence.date).toLocaleDateString()}
-                                        </STableCell>
-                                       
+                                                            <STableCell>
 
 
-                                    </STableRow>
+                                                                <Checkbox size="small"
+                                                                    checked={Boolean(selectAll)}
+                                                                />
+
+
+                                                            </STableCell>
+                                                            :
+                                                            null}
+                                                        {!selectAll ?
+
+                                                            <STableCell>
+
+                                                                <Checkbox size="small"
+                                                                    onChange={(e) => {
+                                                                        setAttendence(attendence)
+                                                                        if (e.target.checked) {
+                                                                            setSelectedAttendeces([...selectedAttendeces, attendence])
+                                                                        }
+                                                                        if (!e.target.checked) {
+                                                                            setSelectedAttendeces((attendences) => attendences.filter((item) => {
+                                                                                return item._id !== attendence._id
+                                                                            }))
+                                                                        }
+                                                                    }}
+                                                                />
+
+                                                            </STableCell>
+                                                            :
+                                                            null}
+                                                        <STableCell>
+                                                            click
+                                                        </STableCell>
+                                                        <STableCell>
+                                                            {visit.created_at && new Date(visit.created_at).toLocaleDateString()}
+                                                        </STableCell>
+                                                        <STableCell>
+                                                            {visit.created_by.username}
+                                                        </STableCell>
+                                                        <STableCell>
+                                                            {visit.is_present ? "Present" : ""}
+                                                        </STableCell>
+
+                                                        <STableCell>
+                                                            {visit.start_day_credientials.address}
+                                                        </STableCell>
+                                                    </STableRow>
+                                                )
+                                            })
+                                        }
+                                    </React.Fragment>
                                 )
                             })
 
