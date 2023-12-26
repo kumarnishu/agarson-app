@@ -108,6 +108,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                 Party
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Is Old ?
+
+                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -146,12 +152,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                 Visit In Address
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Is Old ?
-
-                            </STableHeadCell>
+                          
                             <STableHeadCell
                             >
 
@@ -366,6 +367,9 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                             {visit.party_name}
                                         </STableCell>
                                         <STableCell>
+                                            {visit.is_old_party ? "Old " : "New "}
+                                        </STableCell>
+                                        <STableCell>
                                             {visit.city}
                                         </STableCell>
                                         <STableCell>
@@ -399,9 +403,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell>
                                             {visit.visit_in_credientials && visit.visit_in_credientials.address && visit.visit_in_credientials.address}
                                         </STableCell>
-                                        <STableCell>
-                                            {visit.is_old_party ? "Old " : "New "}
-                                        </STableCell>
+
                                         <STableCell>
                                             {visit.turnover}
                                         </STableCell>
@@ -448,7 +450,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                         <AddBrijeshInputDialog visit={visit} />
                         <AddAnkitInputDialog visit={visit} />
                         <ViewVisitPhotoDialog photo={visit.visit_in_photo} />
-                       
+
                     </>
                     : null
             }
