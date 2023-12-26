@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, IconButton, Stack } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, IconButton, Stack, Typography } from '@mui/material';
 import { useContext } from 'react';
 import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
@@ -14,7 +14,8 @@ function ViewVisitPhotoDialog({ visit }: { visit: IVisitReport }) {
             > <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: VisitChoiceActions.close_visit })}>
                     <Cancel fontSize='large' />
                 </IconButton>
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>{visit.party_name}[{visit.mobile}]</DialogTitle>
+                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>{visit.party_name}</DialogTitle>
+                <Typography sx={{ minWidth: '350px' }} textAlign={"center"}>{visit.mobile}</Typography>
                 <DialogContent>
                     <Stack justifyContent={'center'}
                         onDoubleClick={() => {

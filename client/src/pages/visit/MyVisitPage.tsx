@@ -40,12 +40,11 @@ function MyVisitPage() {
       {visit && visit.start_day_credientials &&
         <>
           {/* start day */}
-          <Typography variant="h6" textAlign={'center'} sx={{ p: 1 }}>You Started Day At   {moment(new Date(visit.start_day_credientials && visit.start_day_credientials.timestamp)).format('LT')}</Typography>
+          <Typography variant="subtitle1" textAlign={'center'} sx={{ p: 1, textTransform: 'uppercase', color: 'red', fontWeight: 'bold' }}>Started Day At   {moment(new Date(visit.start_day_credientials && visit.start_day_credientials.timestamp)).format('LT')}</Typography>
 
           {/* new visit */}
           <Stack direction={'row'} px={2} alignItems={'center'} justifyContent={'center'}>
             {!Boolean(visit.end_day_credentials) && < Button
-              fullWidth
               disabled={visit.visit_reports.filter((report) => {
                 if (!Boolean(report.visit_out_credentials))
                   return report

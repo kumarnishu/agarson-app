@@ -58,9 +58,9 @@ function LoginPage() {
                 </Paper>
                 <Stack sx={{ width: '100%', alignText: 'center', p: 2 }}
                 >
-                    <Typography component="h1" variant="h6" sx={{ textAlign: "center", color: 'whitesmoke', fontWeight: '400', fontSize: 18, pt: 4 }}>Copyright &copy; Agarson Shoes Pvt Ltd </Typography>
+                    <Typography component="h1" variant="body1" sx={{ textAlign: "center", color: 'whitesmoke', fontWeight: '400', pt: 4 }}>Copyright &copy; Agarson Shoes Pvt Ltd </Typography>
                 </Stack>
-                <Typography variant="caption" component="p"  ><a style={{ textAlign: "center", color: 'whitesmoke' }} href="https://github.com/kumarnishu">Developer : Nishu kumar 91-7056943283</a></Typography>
+                <Typography variant="caption" component="p"><a style={{ textAlign: "center", color: 'lightgrey' }} href="https://github.com/kumarnishu">Developer : Nishu kumar 91-7056943283</a></Typography>
 
             </Stack>
             <SignUpDialog />
