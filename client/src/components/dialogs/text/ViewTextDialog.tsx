@@ -2,13 +2,13 @@ import { Dialog, DialogContent } from '@mui/material'
 
 
 
-function ViewTextDialog({ text, display, setDisplay }: { text: string, display: boolean, setDisplay: React.Dispatch<React.SetStateAction<boolean>> }) {
+function ViewTextDialog({ text, setText }: { text: string, setText: React.Dispatch<React.SetStateAction<string | undefined>> }) {
     return (
-        <Dialog open={display}
+        <Dialog open={Boolean(text)}
             fullWidth
-            onClose={() => setDisplay(false)}
+            onClose={() => setText(undefined)}
         >
-        
+
             <DialogContent>
                 <pre style={{ fontSize: '16px' }} color="error">
                     {text}

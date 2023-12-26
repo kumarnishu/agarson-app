@@ -30,12 +30,11 @@ type Props = {
 }
 
 function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selectedVisits, setSelectedVisits }: Props) {
-    const [display, setDisplay] = useState(false)
     const [data, setData] = useState<IVisitReport[]>(visits)
     const { setChoice } = useContext(ChoiceContext)
     const [text, setText] = useState<string>()
     const { user } = useContext(UserContext)
-    
+
     useEffect(() => {
         setData(visits)
     }, [visits])
@@ -375,7 +374,6 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell title={visit.summary} onClick={() => {
                                             if (visit.summary) {
                                                 setText(visit.summary)
-                                                setDisplay(!display)
                                             }
                                         }}>
                                             {visit.summary && visit.summary.slice(0, 50) + "..."}
@@ -383,7 +381,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell onClick={() => {
                                             if (visit.ankit_input) {
                                                 setText(visit.ankit_input.input)
-                                                setDisplay(!display)
+                                                setText(undefined)
                                             }
                                         }}>
                                             {visit.ankit_input && visit.ankit_input.input.slice(0, 50) + "..."}
@@ -393,7 +391,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell onClick={() => {
                                             if (visit.brijesh_input) {
                                                 setText(visit.brijesh_input.input)
-                                                setDisplay(!display)
+                                                setText(undefined)
                                             }
                                         }}>
                                             {visit.brijesh_input && visit.brijesh_input.input.slice(0, 50) + "..."}
@@ -450,10 +448,11 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                         <AddBrijeshInputDialog visit={visit} />
                         <AddAnkitInputDialog visit={visit} />
                         <ViewVisitPhotoDialog photo={visit.visit_in_photo} />
-                        {text && <ViewTextDialog text={text} display={display} setDisplay={setDisplay} />}
+                       
                     </>
                     : null
             }
+            {text && <ViewTextDialog text={text} setText={setText} />}
         </>
     )
 }
