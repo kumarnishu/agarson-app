@@ -97,6 +97,13 @@ export default function VisitAdminPage() {
         updated_by: string,
         created_by: string,
     }[]>()
+    const [selectedData2, setSelectedData2] = useState<{
+        date: string,
+        person: string,
+        attendence: string,
+        address: string,
+
+    }[]>()
     const [sent, setSent] = useState(false)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -114,7 +121,20 @@ export default function VisitAdminPage() {
             setSent(false)
         }
     }
-
+    function handleExcel2() {
+        setAnchorEl(null)
+        try {
+            selectedData2 && ExportToExcel(selectedData2, "attendence_data")
+            setSent(true)
+            setSelectAll(false)
+            setSelectedData2([])
+            setSelectedAttendeces([])
+        }
+        catch (err) {
+            console.log(err)
+            setSent(false)
+        }
+    }
 
     // refine data
     useEffect(() => {
@@ -194,6 +214,23 @@ export default function VisitAdminPage() {
         if (data.length > 0)
             setSelectedData(data)
     }, [selectedVisits])
+
+    //refine data2
+    useEffect(() => {
+        let data: {
+            date: string,
+            person: string,
+            attendence: string,
+            address: string,
+        }[] = []
+        selectedAttendeces.forEach((attend) => {
+            attend.visits.map((visit1: IVisit) => {
+                data.push({ date: new Date(attend.date).toLocaleDateString(), person: visit1.created_by.username, attendence: visit1.is_present ? "Present" : "", address: visit1.start_day_credientials.address })
+            })
+        })
+        if (data.length > 0)
+            setSelectedData2(data)
+    }, [selectedAttendeces])
 
     useEffect(() => {
         if (isUsersSuccess)
@@ -292,36 +329,41 @@ export default function VisitAdminPage() {
                     {/* search bar */}
                     < Stack direction="row" spacing={2}>
                         <FormControlLabel control={<Switch
-                            defaultChecked={Boolean(display)}
+                            checked={Boolean(display)}
                             onChange={() => setDisplay(!display)}
                         />} label="Switch" />
-                        <TextField
-                            fullWidth
-                            size="small"
-                            onChange={(e) => {
-                                setFilter(e.currentTarget.value)
-                                setFilterCount(0)
-                            }}
-                            autoFocus
-                            placeholder={`${MemoData?.length} records...`}
-                            style={{
-                                fontSize: '1.1rem',
-                                border: '0',
-                            }}
-                            onKeyUp={(e) => {
-                                if (e.key === "Enter") {
-                                    refetchFuzzy()
-                                }
-                            }}
-                        />
-                        <IconButton
-                            sx={{ bgcolor: 'whitesmoke' }}
-                            onClick={() => {
-                                refetchFuzzy()
-                            }}
-                        >
-                            <Search />
-                        </IconButton>
+                        {!display &&
+                            <>
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    onChange={(e) => {
+                                        setFilter(e.currentTarget.value)
+                                        setFilterCount(0)
+                                    }}
+                                    autoFocus
+                                    placeholder={`${MemoData?.length} records...`}
+                                    style={{
+                                        fontSize: '1.1rem',
+                                        border: '0',
+                                    }}
+                                    onKeyUp={(e) => {
+                                        if (e.key === "Enter") {
+                                            refetchFuzzy()
+                                        }
+                                    }}
+                                />
+                                <IconButton
+                                    sx={{ bgcolor: 'whitesmoke' }}
+                                    onClick={() => {
+                                        refetchFuzzy()
+                                    }}
+                                >
+                                    <Search />
+                                </IconButton>
+                            </>
+                        }
+
                     </Stack >
                     <>
 
@@ -348,7 +390,13 @@ export default function VisitAdminPage() {
                             sx={{ borderRadius: 2 }}
                         >
 
-                            < MenuItem onClick={handleExcel}
+                            < MenuItem onClick={() => {
+                                if (display) {
+                                    handleExcel2()
+                                }
+                                else
+                                    handleExcel()
+                            }}
                             >Export To Excel</MenuItem>
 
                         </Menu >

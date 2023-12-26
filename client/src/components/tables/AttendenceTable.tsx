@@ -46,7 +46,6 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
     useEffect(() => {
         setData(attendences)
     }, [attendences])
-    console.log(data)
     return (
         <>
             <Box sx={{
