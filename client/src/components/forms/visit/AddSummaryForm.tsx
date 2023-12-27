@@ -50,7 +50,7 @@ function AddSummaryForm({ visit }: { visit: IVisitReport }) {
         initialValues: {
             summary: "NA",
             is_old_party: false,
-            mobile: "",
+            mobile: visit.mobile || "",
             dealer_of: "NA",
             refs_given: "NA",
             turnover: "NA",

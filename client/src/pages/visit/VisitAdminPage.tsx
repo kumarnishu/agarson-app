@@ -356,7 +356,7 @@ export default function VisitAdminPage() {
                         <FormControlLabel control={<Switch
                             checked={Boolean(display)}
                             onChange={() => setDisplay(!display)}
-                        />} label="Switch" />
+                        />} label="Attendence" />
                         {!display &&
                             <>
                                 <TextField
