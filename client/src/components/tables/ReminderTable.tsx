@@ -81,7 +81,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                             <STableHeadCell
                             >
 
-                                Index
+                                Serial no
 
                             </STableHeadCell>
                             <STableHeadCell
