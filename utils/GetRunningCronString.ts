@@ -14,10 +14,11 @@ export const GetRunningCronString = (frequency_type: string, frequency_value: st
         cronString = "20 " + `${date.getMinutes()} ` + `${date.getHours()} ` + "1/" + `${freq}` + " *" + " *"
     }
 
-    if (ftype === "months" && freq && Number(freq) > 0) {
+    if (ftype === "months" && freq && freq.length > 0) {
         let frequency = freq.split("-")[0]
         let monthdays = freq.split("-")[1]
         cronString = "20 " + `${date.getMinutes()} ` + `${date.getHours()} ` + `${monthdays} ` + `${date.getMonth()}/${Number(frequency)}` + " *"
+        console.log(cronString)
     }
 
     if (ftype === "weekdays" && freq && freq.length > 0) {

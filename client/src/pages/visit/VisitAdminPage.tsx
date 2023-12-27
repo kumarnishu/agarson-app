@@ -32,7 +32,7 @@ export default function VisitAdminPage() {
     }>()
     const [visit, setVisit] = useState<IVisitReport>()
     const [visits, setVisits] = useState<IVisitReport[]>([])
-    const [selectAll, setSelectAll] = useState(true)
+    const [selectAll, setSelectAll] = useState(false)
     const AttendenceMemoData = React.useMemo(() => attendences, [attendences])
     const MemoData = React.useMemo(() => visits, [visits])
     const [preFilteredData, setPreFilteredData] = useState<IVisitReport[]>([])
