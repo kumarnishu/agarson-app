@@ -45,7 +45,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '67vh'
+                maxHeight: '73vh'
             }}>
                 <STable
                 >
@@ -81,14 +81,20 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                             <STableHeadCell
                             >
 
-                                Reminder Name
+                                Index
 
                             </STableHeadCell>
-
                             <STableHeadCell
                             >
 
-                                Serial Number
+                                Reminder Name
+
+                            </STableHeadCell>
+                           
+                            <STableHeadCell
+                            >
+
+                                Id
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -327,6 +333,10 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                 </Tooltip>
                                             </Stack>} />
                                         </STableCell>
+                                        <STableCell>
+                                            {reminder.index_num}
+                                        </STableCell>
+
                                         <STableCell>
                                             {reminder.name}
                                         </STableCell>

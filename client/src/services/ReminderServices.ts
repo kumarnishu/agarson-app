@@ -19,6 +19,9 @@ export const UpdateReminder = async ({ id, body }: { id: string, body: FormData 
 export const StartMessageReminder = async ({ id, body }: { id: string, body: FormData }) => {
     return await apiClient.patch(`start/message/reminders/${id}`, body);
 };
+export const GetReminderContacts = async (id: string) => {
+    return await apiClient.get(`contacts/reminders/${id}`);
+};
 
 
 export const StartReminder = async ({ id, body }: { id: string, body: FormData }) => {

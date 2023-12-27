@@ -8,7 +8,7 @@ import { ChoiceContext, ReminderChoiceActions } from '../../../contexts/dialogCo
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import {  CreateReminderWithMessage } from '../../../services/ReminderServices';
+import { CreateReminderWithMessage } from '../../../services/ReminderServices';
 import { GetContacts } from '../../../services/ContactServices';
 import FuzzySearch from "fuzzy-search";
 import SelectContactPage from '../../../pages/reminders/SelectContactPage';
@@ -18,6 +18,7 @@ import { IUser } from '../../../types/user.types';
 
 type TformData = {
     name: string,
+    index_num: number,
     message: string,
     caption: string,
     media: string | Blob | File
@@ -47,6 +48,7 @@ function NewReminderForm() {
     const formik = useFormik<TformData>({
         initialValues: {
             name: "",
+            index_num: 0,
             message: "",
             caption: "",
             media: "",
@@ -91,6 +93,7 @@ function NewReminderForm() {
             let formdata = new FormData()
             let Data = {
                 name: values.name,
+                index_num: values.index_num,
                 message: values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
                 caption: values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
                 mobiles: values.mobiles.toString().replaceAll("\n", ",").split(",")
@@ -162,7 +165,7 @@ function NewReminderForm() {
         selectedContacts.forEach((contact) => {
             mobiles.push(contact.mobile.replace("91", "").replace("@c.us", ""))
         });
-        formik.setValues({ name: formik.values.name, caption: formik.values.caption, media: formik.values.media, message: formik.values.message, mobiles: mobiles })
+        formik.setValues({ name: formik.values.name, caption: formik.values.caption, media: formik.values.media, message: formik.values.message, mobiles: mobiles, index_num: formik.values.index_num })
     }, [selectedContacts])
 
     return (
@@ -173,6 +176,21 @@ function NewReminderForm() {
                     gap={2}
                     sx={{ p: 1 }}
                 >
+                    <TextField
+                        type='number'
+                        variant='outlined'
+                        fullWidth
+                        required
+                        error={
+                            formik.touched.index_num && formik.errors.index_num ? true : false
+                        }
+                        id="index_num"
+                        label="Index"
+                        helperText={
+                            formik.touched.index_num && formik.errors.index_num ? formik.errors.index_num : ""
+                        }
+                        {...formik.getFieldProps('index_num')}
+                    />
                     <TextField
 
                         variant='outlined'

@@ -20,6 +20,7 @@ import { IUser } from '../../../types/user.types';
 
 type TformData = {
     name: string,
+    index_num: number,
     templates: string[],
     mobiles: string[]
 }
@@ -52,6 +53,7 @@ function NewReminderForm() {
     const formik = useFormik<TformData>({
         initialValues: {
             name: "",
+            index_num: 0,
             templates: [],
             mobiles: []
         },
@@ -71,6 +73,7 @@ function NewReminderForm() {
             let formdata = new FormData()
             let Data: TformData | undefined = {
                 name: values.name,
+                index_num: values.index_num,
                 templates: values.templates,
                 mobiles: values.mobiles
             }
@@ -130,7 +133,7 @@ function NewReminderForm() {
         selectedContacts.forEach((contact) => {
             mobiles.push(contact.mobile.replace("91", "").replace("@c.us", ""))
         });
-        formik.setValues({ name: formik.values.name, templates: formik.values.templates, mobiles: mobiles })
+        formik.setValues({ name: formik.values.name, templates: formik.values.templates, mobiles: mobiles, index_num: formik.values.index_num })
     }, [selectedContacts])
 
     return (
@@ -141,6 +144,21 @@ function NewReminderForm() {
                     gap={2}
                     sx={{ p: 1 }}
                 >
+                    <TextField
+                        type='number'
+                        variant='outlined'
+                        fullWidth
+                        required
+                        error={
+                            formik.touched.index_num && formik.errors.index_num ? true : false
+                        }
+                        id="index_num"
+                        label="Index"
+                        helperText={
+                            formik.touched.index_num && formik.errors.index_num ? formik.errors.index_num : ""
+                        }
+                        {...formik.getFieldProps('index_num')}
+                    />
                     <TextField
 
                         variant='outlined'

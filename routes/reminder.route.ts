@@ -1,6 +1,6 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
-import { GetReminders, CreateReminderByTemplate, StartReminderWithTemplate, ResetReminder, UpdateReminderByTemplate, CreateReminderByMessage, UpdateReminderByMessage, StartReminderWithMessage, StopReminder, GetContactReports, StopSingleContactReport, GetPaginatedContactReports, SearchContactReport, DownloadContactReports, ToogleHideReminder } from "../controllers/reminder.controller";
+import { GetReminders, CreateReminderByTemplate, StartReminderWithTemplate, ResetReminder, UpdateReminderByTemplate, CreateReminderByMessage, UpdateReminderByMessage, StartReminderWithMessage, StopReminder, GetContactReports, StopSingleContactReport, GetPaginatedContactReports, SearchContactReport, DownloadContactReports, ToogleHideReminder, GetReminderContacts } from "../controllers/reminder.controller";
 import { upload } from "./user.routes";
 
 const router = express.Router()
@@ -13,6 +13,7 @@ router.route("/reminders/:id").put(isAuthenticatedUser, upload.none(), UpdateRem
 // router.route("/reminders/:id").delete(isAuthenticatedUser, DeleteReminder)
 router.route("/reports/reminders/:id").get(isAuthenticatedUser, GetContactReports)
 router.route("/reset/reminders/:id").patch(isAuthenticatedUser, ResetReminder)
+router.route("/contacts/reminders/:id").get(isAuthenticatedUser, GetReminderContacts)
 router.route("/start/reminders/:id").patch(isAuthenticatedUser, upload.none(), StartReminderWithTemplate)
 router.route("/start/message/reminders/:id").patch(isAuthenticatedUser, upload.none(), StartReminderWithMessage)
 router.route("/hide/reminders/:id").patch(isAuthenticatedUser, ToogleHideReminder)

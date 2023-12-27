@@ -20,7 +20,7 @@ import AttendenceTable from '../../components/tables/AttendenceTable'
 
 
 export default function VisitAdminPage() {
-    const [display, setDisplay] = useState(true)
+    const [display, setDisplay] = useState(false)
     const [attendences, setAttendences] = useState<{
         _id: string; date: Date; visits: IVisit[]
     }[]>([])
@@ -32,10 +32,13 @@ export default function VisitAdminPage() {
     }>()
     const [visit, setVisit] = useState<IVisitReport>()
     const [visits, setVisits] = useState<IVisitReport[]>([])
-    const [selectAll, setSelectAll] = useState(false)
+    const [selectAll, setSelectAll] = useState(true)
     const AttendenceMemoData = React.useMemo(() => attendences, [attendences])
     const MemoData = React.useMemo(() => visits, [visits])
     const [preFilteredData, setPreFilteredData] = useState<IVisitReport[]>([])
+    const [preFilteredAttendenceData, setPreFiltereAttendencedData] = useState<{
+        _id: string; date: Date; visits: IVisit[]
+    }[]>([])
     const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filterCount, setFilterCount] = useState(0)
     const [selectedVisits, setSelectedVisits] = useState<IVisitReport[]>([])
@@ -55,7 +58,7 @@ export default function VisitAdminPage() {
         result: {
             _id: string; date: Date; visits: IVisit[]
         }[], page: number, total: number, limit: number
-    }>, BackendError>(["attendence", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisitAttendences({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }), { enabled: false })
+    }>, BackendError>(["attendence", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisitAttendences({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
 
     const { data: fuzzyvisits, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ visits: IVisitReport[], page: number, total: number, limit: number }>, BackendError>(["fuzzyvisits", filter], async () => FuzzySearchVisits({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
@@ -100,6 +103,7 @@ export default function VisitAdminPage() {
     const [selectedData2, setSelectedData2] = useState<{
         date: string,
         person: string,
+        start_time: string,
         attendence: string,
         address: string,
 
@@ -220,12 +224,17 @@ export default function VisitAdminPage() {
         let data: {
             date: string,
             person: string,
+            start_time: string,
             attendence: string,
             address: string,
         }[] = []
         selectedAttendeces.forEach((attend) => {
             attend.visits.map((visit1: IVisit) => {
-                data.push({ date: new Date(attend.date).toLocaleDateString(), person: visit1.created_by.username, attendence: visit1.is_present ? "Present" : "", address: visit1.start_day_credientials.address })
+                data.push({
+                    date: new Date(attend.date).toLocaleDateString(), person: visit1.created_by.username, attendence: visit1.is_present ? "Present" : "",
+                    start_time: moment(new Date(visit1.start_day_credientials.timestamp)).format('LT'),
+                    address: visit1.start_day_credientials.address
+                })
             })
         })
         if (data.length > 0)
@@ -237,17 +246,33 @@ export default function VisitAdminPage() {
             setUsers(usersData?.data)
     }, [users, isUsersSuccess, usersData])
 
-    useEffect(() => {
-        if (attendencesData && attendencesData.data)
-            setAttendences(attendencesData.data.result)
-    }, [attendencesData])
 
     useEffect(() => {
         if (!filter) {
             setVisits(preFilteredData)
+            setAttendences(preFilteredAttendenceData)
             setPaginationData(preFilteredPaginationData)
         }
     }, [filter])
+
+    useEffect(() => {
+        if (attendencesData && !filter && display) {
+            setAttendences(attendencesData.data.result)
+            setPreFiltereAttendencedData(attendencesData.data.result)
+            setPreFilteredPaginationData({
+                ...paginationData,
+                page: attendencesData.data.page,
+                limit: attendencesData.data.limit,
+                total: attendencesData.data.total
+            })
+            setPaginationData({
+                ...paginationData,
+                page: attendencesData.data.page,
+                limit: attendencesData.data.limit,
+                total: attendencesData.data.total
+            })
+        }
+    }, [attendencesData])
 
     useEffect(() => {
         if (filter) {
@@ -262,7 +287,7 @@ export default function VisitAdminPage() {
     }, [display, dates, userId])
 
     useEffect(() => {
-        if (data && !filter) {
+        if (data && !filter && !display) {
             setVisits(data.data.visits)
             setPreFilteredData(data.data.visits)
             setPreFilteredPaginationData({
@@ -278,7 +303,7 @@ export default function VisitAdminPage() {
                 total: data.data.total
             })
         }
-    }, [data])
+    }, [data, display])
 
     useEffect(() => {
         if (fuzzyvisits && filter) {

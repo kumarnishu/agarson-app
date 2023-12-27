@@ -1,8 +1,13 @@
-import { Box, Checkbox } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
+import React, { useContext, useEffect, useState } from 'react'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from "../styled/STyledTable"
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
 import { IVisit } from '../../types/visit.types'
+import moment from 'moment'
+import ToogleAttendenceDialog from '../dialogs/visit/ToogleAttendenceDialog'
+import { Edit } from '@mui/icons-material'
+import { ChoiceContext, VisitChoiceActions } from '../../contexts/dialogContext'
+import { UserContext } from '../../contexts/userContext'
 
 
 type Props = {
@@ -36,6 +41,9 @@ type Props = {
 }
 
 function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendeces, setAttendence, selectAll, setSelectAll }: Props) {
+    const { user } = useContext(UserContext)
+    const { setChoice } = useContext(ChoiceContext)
+    const [visit, setVisit] = useState<IVisit>()
     const [data, setData] = useState<{
         _id: string,
         date: Date,
@@ -77,19 +85,24 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
 
                             </STableHeadCell>
 
-                            <STableHeadCell
+                            {user?.visit_access_fields.is_editable && <STableHeadCell
                             >
 
                                 Actions
 
-                            </STableHeadCell>
+                            </STableHeadCell>}
                             <STableHeadCell
                             >
 
                                 Date
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                                Start Time
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -159,11 +172,23 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
                                                             </STableCell>
                                                             :
                                                             null}
-                                                        <STableCell>
-                                                            click
-                                                        </STableCell>
+                                                        {user?.visit_access_fields.is_editable && <STableCell>
+                                                            <Tooltip title="Edit Summary">
+                                                                <IconButton color="success"
+                                                                    onClick={() => {
+                                                                        setChoice({ type: VisitChoiceActions.mark_attendence })
+                                                                        setVisit(visit)
+                                                                    }}
+                                                                >
+                                                                    <Edit />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </STableCell>}
                                                         <STableCell>
                                                             {visit.created_at && new Date(visit.created_at).toLocaleDateString()}
+                                                        </STableCell>
+                                                        <STableCell>
+                                                            {visit.start_day_credientials.timestamp && moment(new Date(visit.start_day_credientials.timestamp)).format('LT')}
                                                         </STableCell>
                                                         <STableCell>
                                                             {visit.created_by.username}
@@ -187,7 +212,7 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
                     </STableBody>
                 </STable>
             </Box >
-
+            {visit && <ToogleAttendenceDialog visit={visit} />}
             {text && <ViewTextDialog text={text} setText={setText} />}
         </>
     )

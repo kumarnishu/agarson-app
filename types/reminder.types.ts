@@ -7,6 +7,7 @@ export type IReminder = {
     is_todo: boolean,
     run_once: boolean,
     serial_number: string,
+    index_num: number,
     is_active: boolean,
     is_paused: boolean,
     running_key: string,

@@ -214,6 +214,16 @@ export const EndMyDay = async (req: Request, res: Response, next: NextFunction) 
     await visit.save()
     return res.status(200).json({ message: "end day successful" })
 }
+export const ToogleAttendence = async (req: Request, res: Response, next: NextFunction) => {
+    let id = req.params.id
+    let visit = await Visit.findById(id)
+    if (!visit)
+        return res.status(400).json({ message: "visit not found" })
+    visit.is_present = !visit.is_present
+    visit.updated_by = req.user
+    await visit.save()
+    return res.status(200).json({ message: "successfull" })
+}
 
 export const MakeVisitIn = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
@@ -412,7 +422,6 @@ export const MakeVisitOut = async (req: Request, res: Response, next: NextFuncti
     await report.save()
     return res.status(200).json({ message: "visit out successful" })
 }
-
 
 
 export const GetAttendenceReport = async (req: Request, res: Response, next: NextFunction) => {

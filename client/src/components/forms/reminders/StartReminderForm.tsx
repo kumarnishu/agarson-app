@@ -198,7 +198,7 @@ function StartReminderForm({ reminder, users, client }: { reminder: IReminder, u
             }
             id="frequency_value"
             label="Frequency"
-            helperText={
+            helperText={formik.values.frequency_type === "months" ? "type frequency in format 2-1,3,4 here 2 is month frequency and 1,3,4 dates" :
               formik.touched.frequency_value && formik.errors.frequency_value ? formik.errors.frequency_value : "for weekday, monthdays and yeardays use comma seperator"
             }
             {...formik.getFieldProps('frequency_value')}

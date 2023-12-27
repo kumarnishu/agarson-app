@@ -20,6 +20,7 @@ import { IUser } from '../../../types/user.types';
 type TformData = {
     name: string,
     message: string,
+    index_num:number,
     caption: string,
     media: string | Blob | File
     mobiles: string[]
@@ -48,6 +49,7 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
     const formik = useFormik<TformData>({
         initialValues: {
             name: reminder.name,
+            index_num:reminder.index_num,
             message: reminder.message.message || "",
             caption: reminder.message.caption || "",
             media: "",
@@ -92,6 +94,7 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
             let formdata = new FormData()
             let Data = {
                 name: values.name,
+                index_num: values.index_num,
                 message: values.message.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
                 caption: values.caption.replaceAll("\\n", "\n").replaceAll("\\t", "\t"),
                 mobiles: values.mobiles.toString().replaceAll("\n", ",").split(",")
@@ -163,7 +166,7 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
         selectedContacts.forEach((contact) => {
             mobiles.push(contact.mobile.replace("91", "").replace("@c.us", ""))
         });
-        formik.setValues({ name: formik.values.name, caption: formik.values.caption, media: formik.values.media, message: formik.values.message, mobiles: mobiles })
+        formik.setValues({ name: formik.values.name, caption: formik.values.caption, media: formik.values.media, message: formik.values.message, mobiles: mobiles, index_num: formik.values.index_num })
     }, [selectedContacts])
 
     return (
@@ -174,6 +177,21 @@ function EditReminderForm({ reminder }: { reminder: IReminder }) {
                     gap={2}
                     sx={{ p: 1 }}
                 >
+                    <TextField
+                        type='number'
+                        variant='outlined'
+                        fullWidth
+                        required
+                        error={
+                            formik.touched.index_num && formik.errors.index_num ? true : false
+                        }
+                        id="index_num"
+                        label="Index"
+                        helperText={
+                            formik.touched.index_num && formik.errors.index_num ? formik.errors.index_num : ""
+                        }
+                        {...formik.getFieldProps('index_num')}
+                    />
                     <TextField
 
                         variant='outlined'

@@ -18,7 +18,7 @@ export const CreateContact = async (req: Request, res: Response, next: NextFunct
     const { mobile, name, designation } = req.body as IContactBody
     if (!mobile || !name || !designation)
         return res.status(400).json({ message: "please provide all required fields" })
-    if (await Contact.findOne({ mobile: mobile }))
+    if (await Contact.findOne({ mobile: "91" + mobile + "@c.us" }))
         return res.status(400).json({ message: `${mobile} already exists` });
     if (req.user) {
         await new Contact({ name: name, designation: designation, mobile: "91" + mobile + "@c.us", created_by: req.user, updated_by: req.user }).save()
@@ -27,19 +27,19 @@ export const CreateContact = async (req: Request, res: Response, next: NextFunct
 }
 
 export const UpdateContact = async (req: Request, res: Response, next: NextFunction) => {
-
     const { mobile, name, designation } = req.body as IContactBody
     if (!mobile || !name || !designation)
         return res.status(400).json({ message: "please provide all required fields" })
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: " id not valid" })
-
-    if (await Contact.findOne({ mobile: mobile }))
-        return res.status(400).json({ message: `${mobile} already exists` });
     let contact = await Contact.findById(id)
     if (!contact) {
         return res.status(404).json({ message: "contact not found" })
     }
+    if (String("91" + mobile + "@c.us") !== contact?.mobile)
+        if (await Contact.findOne({ mobile: String("91" + mobile + "@c.us") }))
+            return res.status(400).json({ message: `${mobile} already exists` });
+
     if (req.user) {
         await Contact.findByIdAndUpdate(contact._id, { name: name, designation: designation, mobile: "91" + mobile + "@c.us", updated_at: new Date(), updated_by: req.user })
     }

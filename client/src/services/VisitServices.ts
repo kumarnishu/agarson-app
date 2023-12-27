@@ -28,6 +28,7 @@ export const EndMyDay = async ({ id, body }: { id: string, body: FormData }) => 
     return await apiClient.patch(`day/end/${id}`, body)
 }
 
+
 export const MakeVisitIn = async ({ id, body }: { id: string, body: FormData }) => {
     return await apiClient.post(`visit/in/${id}`, body)
 }
@@ -68,7 +69,9 @@ export const AddBrijeshInput = async ({ id, body }: { id: string, body: { input:
 export const ValidateVisit = async (id: string) => {
     return await apiClient.patch(`visit/validate/${id}`)
 }
-
+export const ToogleAttendence = async (id: string) => {
+    return await apiClient.patch(`visit/toogle/${id}`)
+}
 
 export const MakeVisitOut = async ({ id, body }: { id: string, body: FormData }) => {
     return await apiClient.patch(`visit/out/${id}`, body)

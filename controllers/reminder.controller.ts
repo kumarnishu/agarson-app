@@ -26,10 +26,16 @@ export const GetReminders = async (req: Request, res: Response, next: NextFuncti
     let hidden = String(req.query.hidden)
     let reminders: IReminder[] = []
     if (hidden === "true")
-        reminders = await Reminder.find().populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("-created_at")
+        reminders = await Reminder.find().populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("index_num")
     else
-        reminders = await Reminder.find({ is_hidden: false }).populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("-created_at")
+        reminders = await Reminder.find({ is_hidden: false }).populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("index_num")
     return res.status(200).json(reminders)
+}
+
+export const GetReminderContacts = async (req: Request, res: Response, next: NextFunction) => {
+    let id = req.params.id
+    let contacts = await Contact.find({ reminders: id })
+    return res.status(200).json(contacts)
 }
 
 export const GetContactReports = async (req: Request, res: Response, next: NextFunction) => {
@@ -99,7 +105,7 @@ export const SearchContactReport = async (req: Request, res: Response, next: Nex
 //post/put/delete/patch
 export const CreateReminderByTemplate = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { name, templates, mobiles } = body as IReminderBody & { templates: string[], mobiles: string[] }
+    let { name, templates, mobiles, index_num } = body as IReminderBody & { templates: string[], mobiles: string[] }
     if (!name || !templates || !mobiles)
         return res.status(400).json({ message: "fill all required fields" })
 
@@ -123,6 +129,7 @@ export const CreateReminderByTemplate = async (req: Request, res: Response, next
     let count = await Reminder.countDocuments()
     let reminder = new Reminder({
         name,
+        index_num: index_num,
         serial_number: String(count + 1),
         is_active: false,
         connected_number: undefined,
@@ -162,7 +169,7 @@ export const CreateReminderByTemplate = async (req: Request, res: Response, next
 
 export const CreateReminderByMessage = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { name, message, caption, mobiles } = body as IReminderBody & { message: string, mobiles: string[], caption: string, leads_selected: boolean }
+    let { name, message, caption, mobiles, index_num } = body as IReminderBody & { message: string, mobiles: string[], caption: string, leads_selected: boolean }
     if (!name || !mobiles)
         return res.status(400).json({ message: "fill all required fields" })
 
@@ -203,6 +210,7 @@ export const CreateReminderByMessage = async (req: Request, res: Response, next:
 
     let reminder = new Reminder({
         name,
+        index_num: index_num,
         serial_number: String(count + 1),
         is_active: false,
         connected_number: undefined,
@@ -241,7 +249,7 @@ export const CreateReminderByMessage = async (req: Request, res: Response, next:
 
 export const UpdateReminderByMessage = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { name, message, caption, mobiles } = body as IReminderBody & { name: string, message: string, mobiles: string[], caption: string }
+    let { name, message, caption, mobiles, index_num } = body as IReminderBody & { name: string, message: string, mobiles: string[], caption: string }
     if (!name || !mobiles)
         return res.status(400).json({ message: "fill all required fields" })
 
@@ -289,6 +297,7 @@ export const UpdateReminderByMessage = async (req: Request, res: Response, next:
 
     await Reminder.findByIdAndUpdate(reminder._id, {
         name: name,
+        index_num: index_num,
         message: new_message,
         updated_at: new Date(),
         updated_by: req.user
@@ -324,7 +333,7 @@ export const UpdateReminderByMessage = async (req: Request, res: Response, next:
 
 export const UpdateReminderByTemplate = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { name, templates, mobiles } = body as IReminderBody & { templates: string[], mobiles: string[] }
+    let { name, templates, mobiles, index_num } = body as IReminderBody & { templates: string[], mobiles: string[] }
     if (!name || !templates || !mobiles)
         return res.status(400).json({ message: "fill all required fields" })
 
@@ -360,6 +369,7 @@ export const UpdateReminderByTemplate = async (req: Request, res: Response, next
 
     await Reminder.findByIdAndUpdate(reminder._id, {
         name: name,
+        index_num: index_num,
         templates: new_templates,
         updated_at: new Date(),
         updated_by: req.user
