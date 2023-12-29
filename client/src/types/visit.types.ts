@@ -19,11 +19,12 @@ export type IVisitReport = {
     party_name: string,
     mobile: string,
     city: string,
+    real_city: string,
     summary: string,
     is_old_party: boolean,
     dealer_of: string,
     refs_given: string,
-    turnover:string,
+    turnover: string,
     reviews_taken: number,
     visit_in_photo: Asset,
     ankit_input: { input: string, created_by: IUser, timestamp: Date },
@@ -39,6 +40,7 @@ export type IVisit = {
     _id: string,
     start_day_photo: Asset,
     end_day_photo: Asset,
+    real_city: string,
     is_present: boolean
     start_day_credientials: {
         latitude: string,

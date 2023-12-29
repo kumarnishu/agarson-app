@@ -30,6 +30,7 @@ const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisi
     },
     party_name: String,
     city: String,
+    real_city: String,
     mobile: String,
     summary: String,
     is_old_party: Boolean,

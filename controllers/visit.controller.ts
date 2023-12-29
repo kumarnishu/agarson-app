@@ -23,18 +23,18 @@ export const GetVisitsAttendence = async (req: Request, res: Response, next: Nex
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (user_ids.length > 0) {
-                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
                 count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
             }
 
             else {
-                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
                 count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).countDocuments()
             }
         }
 
         if (id) {
-            visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
         let startDate = new Date(dt1)
@@ -138,6 +138,7 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
             address: String(address.display_name)
         },
     })
+    visit.real_city = address.address.state_district || address.address.city || ""
     if (!req.file) {
         return res.status(400).json({ message: "please upload your selfie" })
     }
@@ -261,8 +262,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         timestamp: visit_in_credientials.timestamp,
         address: String(address.display_name)
     }
-
-
+    report.real_city = address.address.state_district || address.address.city || ""
     if (req.file) {
         console.log(req.file.mimetype)
         const allowedFiles = ["image/png", "image/jpeg", "image/gif"];

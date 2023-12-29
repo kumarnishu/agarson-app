@@ -23,6 +23,7 @@ export type IVisitReport = {
     is_old_party: boolean,
     dealer_of: string,
     refs_given: string,
+    real_city: string
     reviews_taken: number,
     turnover: string,
     visit_in_photo: Asset,
@@ -40,6 +41,7 @@ export type IVisit = {
     start_day_photo: Asset,
     end_day_photo: Asset,
     is_present:boolean
+    real_city:string,
     start_day_credientials: {
         latitude: string,
         longitude: string,

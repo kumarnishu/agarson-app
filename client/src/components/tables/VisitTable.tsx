@@ -117,6 +117,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                             <STableHeadCell
                             >
 
+                                Geo Station
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Phone
 
                             </STableHeadCell>
@@ -127,7 +133,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                             </STableHeadCell>
 
-                          
+
                             <STableHeadCell
                             >
 
@@ -165,9 +171,9 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
 
                             </STableHeadCell>
 
-                           
 
-                           
+
+
                             <STableHeadCell
                             >
 
@@ -378,8 +384,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         >
                                             {visit.party_name && visit.party_name.slice(0, 30)}
                                         </STableCell>
+
                                         <STableCell>
                                             {visit.city}
+                                        </STableCell>
+                                        <STableCell>
+                                            {visit.real_city && visit.real_city || ""}
                                         </STableCell>
                                         <STableCell>
                                             {visit.mobile}
@@ -396,7 +406,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell>
                                             {visit.person.username}
                                         </STableCell>
-                                      
+
                                         <STableCell title={visit.summary} onClick={() => {
                                             if (visit.summary) {
                                                 setText(visit.summary)
@@ -420,7 +430,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         }}>
                                             {visit.brijesh_input && visit.brijesh_input.input.slice(0, 50) + "..."}
                                         </STableCell>
-                                      
+
                                         <STableCell>
                                             {visit.refs_given ? visit.refs_given : ""}
                                         </STableCell>

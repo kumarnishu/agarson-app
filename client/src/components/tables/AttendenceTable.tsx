@@ -100,7 +100,19 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
                             <STableHeadCell
                             >
 
-                                Start Time
+                                First Visit
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                City
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Geo City
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -185,10 +197,17 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
                                                             </Tooltip>
                                                         </STableCell>}
                                                         <STableCell>
-                                                            {visit.created_at && new Date(visit.created_at).toLocaleDateString()}
+                                                            {visit.visit_reports[0] && new Date(visit.visit_reports[0].created_at).toLocaleDateString()}
+                                                        </STableCell>
+
+                                                        <STableCell>
+                                                            {visit.visit_reports[0] && visit.visit_reports[0].visit_in_credientials && visit.visit_reports[0].visit_in_credientials.timestamp && moment(new Date(visit.visit_reports[0].visit_in_credientials.timestamp)).format('LT')}
                                                         </STableCell>
                                                         <STableCell>
-                                                            {visit.start_day_credientials.timestamp && moment(new Date(visit.start_day_credientials.timestamp)).format('LT')}
+                                                            {visit.visit_reports[0] && visit.visit_reports[0].city}
+                                                        </STableCell>
+                                                        <STableCell>
+                                                            {visit.real_city || ""}
                                                         </STableCell>
                                                         <STableCell>
                                                             {visit.created_by.username}
