@@ -45,7 +45,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '73vh'
+                maxHeight: '75vh'
             }}>
                 <STable
                 >

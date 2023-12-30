@@ -43,7 +43,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '63vh'
+                maxHeight: '64vh'
             }}>
                 <STable
                 >
@@ -129,6 +129,18 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                             <STableHeadCell
                             >
 
+                                Salesman
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Summary
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Is Old ?
 
                             </STableHeadCell>
@@ -146,18 +158,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                 Dealer Of
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
 
-                                Salesman
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Summary
-
-                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -388,20 +389,13 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         <STableCell>
                                             {visit.city}
                                         </STableCell>
-                                        <STableCell>
+                                        <STableCell title="click to view complete address" onClick={() => {
+                                            setText(visit.visit_in_credientials.address)
+                                        }}>
                                             {visit.real_city && visit.real_city || ""}
                                         </STableCell>
                                         <STableCell>
                                             {visit.mobile}
-                                        </STableCell>
-                                        <STableCell>
-                                            {visit.is_old_party ? "Old " : "New "}
-                                        </STableCell>
-                                        <STableCell>
-                                            {visit.turnover ? visit.turnover : ""}
-                                        </STableCell>
-                                        <STableCell>
-                                            {visit.dealer_of ? visit.dealer_of : ""}
                                         </STableCell>
                                         <STableCell>
                                             {visit.person.username}
@@ -414,6 +408,16 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         }}>
                                             {visit.summary && visit.summary.slice(0, 50) + "..."}
                                         </STableCell>
+                                        <STableCell>
+                                            {visit.is_old_party ? "Old " : "New "}
+                                        </STableCell>
+                                        <STableCell>
+                                            {visit.turnover ? visit.turnover : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {visit.dealer_of ? visit.dealer_of : ""}
+                                        </STableCell>
+
                                         <STableCell onClick={() => {
                                             if (visit.ankit_input) {
                                                 setText(visit.ankit_input.input)

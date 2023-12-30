@@ -34,7 +34,7 @@ function PasswordSTable({ password, passwords, setPassword, selectAll, setSelect
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '60vh'
+                maxHeight: '75vh'
             }}>
                 <STable
                 >

@@ -13,6 +13,7 @@ export type IUser = {
     connected_number: string,
     is_whatsapp_active: Boolean,
     is_admin: Boolean,
+    departments: IUserDepartment[]
     user_access_fields: UserAccess,
     crm_access_fields: CrmAccess,
     contacts_access_fields: ContactsAccess,
@@ -52,3 +53,13 @@ export type IUserMethods = {
     getEmailVerifyToken: () => string
 }
 export type TUserBody = Request['body'] & IUser;
+
+export type IUserDepartment = {
+    _id: string,
+    department: string,
+    updated_at: Date,
+    created_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
+export type IUserDepartmentBody = Request['body'] & IUserDepartment;

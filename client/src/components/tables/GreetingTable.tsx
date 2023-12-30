@@ -32,7 +32,7 @@ function GreetingsTable({ greeting, selectAll, greetings, setSelectAll, setGreet
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '67vh'
+                maxHeight: '75vh'
             }}>
                 <STable
                 >

@@ -32,7 +32,7 @@ function ContactsTable({ contact, selectAll, contacts, setSelectAll, setContact,
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '67vh'
+                maxHeight: '80vh'
             }}>
                 <STable
                 >

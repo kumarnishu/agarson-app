@@ -40,7 +40,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '60vh'
+                maxHeight: '64vh'
             }}>
                 <STable
                 >

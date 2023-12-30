@@ -20,7 +20,7 @@ function ChatsTable({ chats }: Props) {
         <>
             <Box sx={{
                 overflow: "scroll",
-                height: '73.5vh'
+                height: '80vh'
             }}>
                 <STable
                 >

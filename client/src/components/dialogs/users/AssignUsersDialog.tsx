@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress, TextField } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress } from '@mui/material'
 import { useContext, useEffect, useState } from 'react';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
@@ -85,31 +85,17 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
             <DialogContent>
                 <Stack
                     gap={2}
-                    pt={2}
                 >
                     <Typography variant="body1" color="error">
                         {`Warning ! This will assign ${formik.values.ids.length} users to the selected user.`}
 
                     </Typography>
                     <form onSubmit={formik.handleSubmit}>
-                        < TextField
-                            select
-                            SelectProps={{
-                                native: true,
-                                multiple: true
-                            }}
-                            focused
-
-                            error={
-                                formik.touched.ids && formik.errors.ids ? true : false
-                            }
+                        < select
                             id="ids"
-                            label="Assign Users"
-                            fullWidth
+                            multiple
                             required
-                            helperText={
-                                formik.touched.ids && formik.errors.ids ? formik.errors.ids : ""
-                            }
+                            style={{ width: '100%', height: '300px', padding: 2 }}
                             {...formik.getFieldProps('ids')}
                         >
                             {
@@ -119,7 +105,7 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                                     </option>)
                                 })
                             }
-                        </TextField>
+                        </select>
                         <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color="primary" type="submit"
                             disabled={Boolean(isLoading)}
                             fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Assign"}

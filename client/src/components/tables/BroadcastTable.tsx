@@ -38,7 +38,7 @@ function BroadcastsTable({ broadcast, selectAll, broadcasts, setSelectAll, setBr
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '67vh'
+                maxHeight: '80vh'
             }}>
                 <STable
                 >

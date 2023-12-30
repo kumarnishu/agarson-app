@@ -1,13 +1,13 @@
 import React, { useReducer } from "react"
 
-type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" |
+type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" | "create_department" | "update_department" |
   "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users"
 
 type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "bulk_contact" | "close_contact"
 
 type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting" | "bulk_start_greeting" | "close_greeting" | "bulk_stop_greeting" | "stop_greeting" | "start_greeting"
 
-type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments" | "view_visit_photo" |"mark_attendence"
+type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments" | "view_visit_photo" | "mark_attendence"
 
 type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" | "edit_task"
 
@@ -76,8 +76,8 @@ export enum PasswordChoiceActions {
   update_erp_password = "update_erp_password"
 }
 export enum VisitChoiceActions {
-  view_visit_photo ="view_visit_photo",
-  mark_attendence ="mark_attendence",
+  view_visit_photo = "view_visit_photo",
+  mark_attendence = "mark_attendence",
   start_day = "start_day",
   end_day = "end_day",
   visit_in = "visit_in",
@@ -207,6 +207,8 @@ export enum LeadChoiceActions {
 }
 
 export enum UserChoiceActions {
+  create_department = "create_department",
+  update_department = "update_department",
   assign_users = "assign_users",
   signup = "signup",
   reset_password_mail = "reset_password_mail",
@@ -241,6 +243,8 @@ function reducer(state: ChoiceState | null, action: Action) {
   switch (type) {
     // user dialogs choices
     case UserChoiceActions.signup: return type
+    case UserChoiceActions.create_department: return type
+    case UserChoiceActions.update_department: return type
     case UserChoiceActions.reset_password_mail: return type
     case UserChoiceActions.new_user: return type
     case UserChoiceActions.update_user: return type

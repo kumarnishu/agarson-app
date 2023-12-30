@@ -27,7 +27,7 @@ function AlpsTable({ alps, selectableAlps, setAlp, selectAll, setSelectAll, sele
         <>
             <Box sx={{
                 overflow: "scroll",
-                height: '73.5vh'
+                height: '75vh'
             }}>
                 <STable 
                 >

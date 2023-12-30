@@ -219,7 +219,7 @@ function DashBoardPage() {
                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                   <Key sx={{ height: 50, width: 50 }} />
                   <Typography variant="button" sx={{ fontSize: 16 }} component="div">
-                    Erp Passwords
+                    Erp Login
                   </Typography>
                 </CardContent>
               </Card>

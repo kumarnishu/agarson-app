@@ -6,8 +6,9 @@ import { User } from '../models/users/user.model';
 import isMongoId from "validator/lib/isMongoId";
 import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
-import { IUser, TUserBody } from '../types/user.types';
+import { IUser, IUserDepartment, IUserDepartmentBody, TUserBody } from '../types/user.types';
 import { Asset } from '../types/asset.types';
+import { UserDepartment } from '../models/users/user.department.model';
 
 
 export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +17,7 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
     let users: IUser[] = []
     let count = 0
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
+        users = await User.find().populate("departments").populate("created_by").populate("updated_by").populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
         count = await User.find().countDocuments()
         return res.status(200).json({
             users,
@@ -29,20 +30,47 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
         return res.status(400).json({ message: "bad request" })
 }
 
+export const GetDepartments = async (req: Request, res: Response, next: NextFunction) => {
+    let departments: IUserDepartment[] = []
+    departments = await UserDepartment.find().populate("created_by").populate("updated_by").sort('department')
+    res.status(200).json(departments)
+}
+export const CreateDepartment = async (req: Request, res: Response, next: NextFunction) => {
+    const { department } = req.body as IUserDepartmentBody
+    if (await UserDepartment.findOne({ department: department }))
+        return res.status(400).json({ message: "department already exists" })
+    await new UserDepartment({ department: department }).save()
+    res.status(200).json({ message: "department created" })
+}
+
+
+export const UpdateDepartment = async (req: Request, res: Response, next: NextFunction) => {
+    const { department } = req.body as IUserDepartmentBody
+    const id = req.params.id
+    let departmentObj = await UserDepartment.findById(id)
+    if (!departmentObj)
+        return res.status(404).json({ message: "department not found" })
+    if (departmentObj?.department !== department)
+        if (await UserDepartment.findOne({ department: department }))
+            return res.status(400).json({ message: "department already exists" })
+    await UserDepartment.findByIdAndUpdate(id, { department: department })
+    res.status(200).json({ message: "department created" })
+}
 
 export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
     let users: IUser[] = []
     let user_ids: string[] = []
     user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
     if (user_ids.length > 0)
-        users = await User.find({ _id: { $in: user_ids } }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+        users = await User.find({ _id: { $in: user_ids } }).populate("departments").populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     else
         users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     res.status(200).json(users)
 }
+
 export const GetAllUsers = async (req: Request, res: Response, next: NextFunction) => {
     let users: IUser[] = []
-    users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+    users = await User.find().populate("departments").populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     res.status(200).json(users)
 }
 
@@ -65,7 +93,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ]
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
+            ).populate("departments").populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $or: [
@@ -99,7 +127,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
+            ).populate("departments").populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -152,7 +180,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
+            ).populate("departments").populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -219,7 +247,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
+            ).populate("departments").populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -271,7 +299,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
 
 export const GetProfile = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.user?._id
-    const user = await User.findById(id).populate("created_by").populate("updated_by").populate('assigned_users')
+    const user = await User.findById(id).populate("departments").populate("created_by").populate("updated_by").populate('assigned_users')
     res.status(200).json({ user: user, token: req.cookies.accessToken })
 }
 

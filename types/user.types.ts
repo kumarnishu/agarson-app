@@ -1,4 +1,4 @@
-import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, GreetingAccess, PasswordsAccess, RemindersAccess,  TasksAccess, TemplatesAccess, TodoAccess, UserAccess, VisitAccess } from "./access.types"
+import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, GreetingAccess, PasswordsAccess, RemindersAccess, TasksAccess, TemplatesAccess, TodoAccess, UserAccess, VisitAccess } from "./access.types"
 import { Asset } from "./asset.types"
 
 export type IUser = {
@@ -13,6 +13,7 @@ export type IUser = {
     connected_number: string,
     is_whatsapp_active: Boolean,
     is_admin: Boolean,
+    departments: IUserDepartment[]
     user_access_fields: UserAccess,
     crm_access_fields: CrmAccess,
     contacts_access_fields: ContactsAccess,
@@ -22,7 +23,7 @@ export type IUser = {
     broadcast_access_fields: BroadcastAccess,
     backup_access_fields: BackupAccess,
     reminders_access_fields: RemindersAccess,
-    reports_access_fields:RemindersAccess,
+    reports_access_fields: RemindersAccess,
     alps_access_fields: AlpsAccess,
     tasks_access_fields: TasksAccess,
     checklists_access_fields: CheckListsAccess,
@@ -30,7 +31,7 @@ export type IUser = {
     visit_access_fields: VisitAccess,
     todos_access_fields: TodoAccess,
     email_verified: Boolean,
-    mobile_verified:Boolean,
+    mobile_verified: Boolean,
     is_active: Boolean,
     last_login: Date,
     multi_login_token: string | null,
@@ -52,3 +53,13 @@ export type IUserMethods = {
     getEmailVerifyToken: () => string
 }
 export type TUserBody = Request['body'] & IUser;
+
+export type IUserDepartment = {
+    _id: string,
+    department: string,
+    updated_at: Date,
+    created_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
+export type IUserDepartmentBody = Request['body'] & IUserDepartment;

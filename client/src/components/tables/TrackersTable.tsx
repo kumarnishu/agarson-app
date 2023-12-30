@@ -35,7 +35,7 @@ function TrackersSTable({ tracker, trackers, selectableTrackers, setTracker, sel
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '70vh'
+                maxHeight: '75vh'
             }}>
                 <STable
                     >

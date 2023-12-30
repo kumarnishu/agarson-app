@@ -20,7 +20,7 @@ export default function DashBoardNavBar() {
     const { user } = useContext(UserContext)
     return (
         <>
-            <Box sx={{ bgcolor: '#0039a6', width: '100%', pt: 2, pb: 2, pr: 1 }}>
+            <Box sx={{ bgcolor: '#0039a6', width: '100%', p: 1 }}>
                 {/* parent stack */}
                 <Stack direction="row" sx={{
                     justifyContent: "space-between", alignItems: "center"

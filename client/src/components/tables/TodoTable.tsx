@@ -36,7 +36,7 @@ function TodoSTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '60vh'
+                maxHeight: '64vh'
             }}>
                 <STable
                 >

@@ -26,8 +26,9 @@ export const STableCell = styled.td`
 export const STableHeadCell = styled.th`
   position:sticky;
   top: -3px;
+  font-size: 10px;
   text-align: left;
-  text-transform: capitalize;
+  text-transform: uppercase;
   padding-inline:5px;
   border: 1px solid #ddd;
   background-color: rgba(0,0,0,0.05);

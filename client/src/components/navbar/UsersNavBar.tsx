@@ -51,6 +51,7 @@ export default function UsersNavBar() {
                                     }}
                                 >
                                     <StyledLink to={paths.users}>Users</StyledLink>
+                                    {user?.is_admin && <StyledLink to={paths.departments}>Departments</StyledLink>}
                                     {user.is_admin && <StyledLink to={paths.users_reports}>Access</StyledLink>}
                                     <StyledLink to={paths.users_help}>Help</StyledLink>
                                 </Stack>

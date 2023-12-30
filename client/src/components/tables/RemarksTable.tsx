@@ -34,7 +34,7 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
         <>
             <Box sx={{
                 overflow: "scroll",
-                height: '64.5vh'
+                height: '67vh'
             }}>
                 <STable
                 >
@@ -117,7 +117,7 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                             <STableHeadCell
                             >
 
-                                Remark Type
+                                Lead Type
 
                             </STableHeadCell>
 
@@ -125,7 +125,7 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                             <STableHeadCell
                             >
 
-                                Remark Owners
+                                Lead Owners
 
                             </STableHeadCell>
 

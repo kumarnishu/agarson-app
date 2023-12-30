@@ -62,7 +62,12 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     default: false,
     required: true,
   },
-
+  departments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'UserDepartment',
+    }
+  ],
   is_admin: {
     type: Boolean,
     default: false,
@@ -153,7 +158,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     default: false,
     required: true
   },
-  
+
   mobile_verified: {
     type: Boolean,
     default: false,
