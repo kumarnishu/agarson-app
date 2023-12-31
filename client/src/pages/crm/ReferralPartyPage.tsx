@@ -18,6 +18,8 @@ import DBPagination from '../../components/pagination/DBpagination'
 import BulkAssignRefersDialog from '../../components/dialogs/crm/BulkAssignRefersDialog'
 import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import { IUser } from '../../types/user.types'
+import { GetUsers } from '../../services/UserServices'
 
 
 type SelectedData = {
@@ -56,20 +58,23 @@ export default function ReferralPartyPage() {
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [users, setUsers] = useState<IUser[]>([])
+    const [userId, setUserId] = useState<string>()
 
-    const { data, isLoading } = useQuery<AxiosResponse<{
+    const { data, isLoading, refetch: refetchRefers } = useQuery<AxiosResponse<{
         result: {
             party: IReferredParty,
             leads: ILead[]
         }[], page: number, total: number, limit: number
-    }>, BackendError>(["paginatedrefers", paginationData], async () => GetPaginatedRefers({ limit: paginationData?.limit, page: paginationData?.page }))
+    }>, BackendError>(["paginatedrefers", paginationData], async () => GetPaginatedRefers({ limit: paginationData?.limit, page: paginationData?.page,userId }))
 
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { data: fuzzyrefers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{
         result: {
             party: IReferredParty,
             leads: ILead[]
         }[], page: number, total: number, limit: number
-    }>, BackendError>(["fuzzyrefers", filter], async () => FuzzySearchRefers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
+    }>, BackendError>(["fuzzyrefers", filter], async () => FuzzySearchRefers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page,userId }), {
         enabled: false
     })
 
@@ -92,6 +97,10 @@ export default function ReferralPartyPage() {
         }
 
     }
+    useEffect(() => {
+        if (isUsersSuccess)
+            setUsers(usersData?.data)
+    }, [users, isUsersSuccess, usersData])
 
     // refine data
     useEffect(() => {
@@ -188,6 +197,36 @@ export default function ReferralPartyPage() {
                     {/* search bar */}
                     < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
                     }>
+                        {LoggedInUser?.is_admin &&
+                            < TextField
+                                size='small'
+                                select
+                                SelectProps={{
+                                    native: true,
+                                }}
+                                onChange={(e) => {
+                                    setUserId(e.target.value)
+                                    refetchRefers()
+                                }}
+                                required
+                                id="todo_owner"
+                                label="Filter Refer Owners"
+                                fullWidth
+                            >
+                                <option key={'00'} value={undefined}>
+
+                                </option>
+                                {
+                                    users.map((user, index) => {
+                                        if (!user.crm_access_fields.is_hidden)
+                                            return (<option key={index} value={user._id}>
+                                                {user.username}
+                                            </option>)
+                                        else
+                                            return null
+                                    })
+                                }
+                            </TextField>}
                         <TextField
                             fullWidth
                             size="small"
@@ -265,16 +304,16 @@ export default function ReferralPartyPage() {
             </Stack>
             {/*  table */}
             {isLoading && <TableSkeleton />}
-            {!isLoading && 
-            <RefersTable
-                refer={refer}
-                selectAll={selectAll}
-                selectedRefers={selectedRefers}
-                setSelectedRefers={setSelectedRefers}
-                setSelectAll={setSelectAll}
-                refers={MemoData}
-                setRefer={setRefer}
-            />}
+            {!isLoading &&
+                <RefersTable
+                    refer={refer}
+                    selectAll={selectAll}
+                    selectedRefers={selectedRefers}
+                    setSelectedRefers={setSelectedRefers}
+                    setSelectAll={setSelectAll}
+                    refers={MemoData}
+                    setRefer={setRefer}
+                />}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
         </>
 

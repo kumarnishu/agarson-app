@@ -21,13 +21,13 @@ function ManageAccessControlDialog({ user }: { user: IUser }) {
         <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
           <Stack direction="row"
             spacing={2}
+            alignItems={'center'}
           >
             <Stack gap={1} alignItems="left" direction="row">
-
               <Avatar sx={{ height: "30px", width: '30px' }}
                 alt="display picture" src={user.dp?.public_url} />
-              <Typography variant="subtitle2">
-                Access Control Page <Typography variant="button">
+              <Typography variant="h6">
+                Access Control Page <Typography variant="button" fontWeight={'bold'} color="blue">
                   [{user.username}]
                 </Typography>
               </Typography>

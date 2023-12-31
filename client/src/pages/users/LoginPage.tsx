@@ -11,11 +11,11 @@ function LoginPage() {
     const { setChoice } = useContext(ChoiceContext)
     return (
         <>
-            <Stack sx={{ justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
+            <Stack sx={{ justifyContent: 'center', alignItems: 'center', height: '90vh', width: '100vw' }}>
                 <Paper sx={{ maxWidth: '350px', pb: 2, px: 2, borderRadius: 10 }}>
                     <Stack justifyContent={"center"} alignItems="center">
                         <a href="https://agarsonshoes.in/">
-                            <AgarsonPngLogo width={150} height={150} title='Agarson Shoes' />
+                            <AgarsonPngLogo width={200} height={200} title='Agarson Shoes' />
                         </a>
                         <LoginForm />
                         <Stack

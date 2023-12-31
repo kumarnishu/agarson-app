@@ -488,9 +488,12 @@ export default function VisitAdminPage() {
                     </option>
                     {
                         users.map((user, index) => {
-                            return (<option key={index} value={user._id}>
-                                {user.username}
-                            </option>)
+                            if (!user.visit_access_fields.is_hidden)
+                                return (<option key={index} value={user._id}>
+                                    {user.username}
+                                </option>)
+                            else
+                                return null
                         })
                     }
                 </TextField>

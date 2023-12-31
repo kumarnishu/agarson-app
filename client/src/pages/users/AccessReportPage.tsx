@@ -1,126 +1,219 @@
-import { AxiosResponse } from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useQuery } from 'react-query'
-import { BackendError } from '../..'
-import { IUser } from '../../types/user.types'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { GetUsers } from '../../services/UserServices'
-import { AccessReport } from '../../types/access.types'
-import ReportsTable from '../../components/tables/AccessReportTable'
-import { Box, Stack, TextField, Typography } from '@mui/material'
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
+import BackupIcon from '@mui/icons-material/Backup';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { ApartmentOutlined, Article, Book, CheckBoxOutlined, Diversity3Outlined, Key, Person3Outlined, Phone, PunchClock, TaskAltOutlined, TodayOutlined, TourOutlined } from "@mui/icons-material";
+import AppShortcutIcon from '@mui/icons-material/AppShortcut';
 
-// react component
-
-const accessTypes = ["users", "crm", "todo", "tasks", "visit", "checklist", "backup", "bot", "templates", "broadcast", "contacts", "greetings", "reminders", "erp passwords", "reports", "alps"]
-
-export default function AccessReportPage() {
-    const [reports, setReports] = useState<AccessReport[]>([])
-    const [filteredData, setFilteredData] = useState<AccessReport[]>([])
-    const [filter, setFilter] = useState<string | undefined>()
-    const [report, setReport] = useState<AccessReport>()
-    const [users, setUsers] = useState<IUser[]>([])
-    const { data, isLoading } = useQuery<AxiosResponse<IUser[]>, BackendError>(["users"], async () => GetUsers())
-
-    useEffect(() => {
-        if (data) {
-            setUsers(data.data)
-        }
-    }, [data])
-
-    useEffect(() => {
-        let result: AccessReport[] = []
-        let tmpReports: AccessReport['reports'] = []
-        for (let i = 0; i < accessTypes.length; i++) {
-            users.forEach((user) => {
-                tmpReports.push(
-                    {
-                        user: user,
-                        is_hidden: user.user_access_fields.is_hidden,
-                        is_editable: user.user_access_fields.is_editable,
-                        is_deletion_allowed: user.user_access_fields.is_deletion_allowed
-                    }
-                )
-            })
-            result.push({
-                accessType: accessTypes[i],
-                reports: tmpReports
-            })
-            tmpReports = []
-        }
-        setFilteredData(result)
-        setReports(result)
-    }, [users])
-
-    useEffect(() => {
-        if (filter) {
-            let searchResult = filteredData.filter((res) => {
-                return res.accessType === filter
-            })
-            setReports(searchResult)
-        }
-        if (!filter)
-            setReports(filteredData)
-
-    }, [filter])
+function AccessReportPage() {
     return (
         <>
-            {
-                isLoading ? <TableSkeleton /> :
+            <Typography variant="h6" sx={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', p: 1 }}>Manage Features Access</Typography>
+            <Box sx={{ bgcolor: "white", m: 0, pt: 2 }}>
+                <Grid container >
+                    {/* users */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <Person3Outlined sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    Users
+                                </Typography>
+                            </CardContent>
 
-                    <Box sx={{ px: 2 }}>
-                        {/*  table */}
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ color: 'red', display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <TaskAltOutlined sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ color: 'red', fontSize: 16 }} component="div">
+                                    Todos
+                                </Typography>
+                            </CardContent>
 
-                        < Stack spacing={2}
-                            py={2}
-                            direction="row"
-                            justifyContent="space-between"
-                        >
-                            <Typography
-                                variant={'h6'}
-                                component={'h1'}
-                                sx={{ pl: 1, display: 'block' }}
-                            >
-                                Access
-                            </Typography>
+                        </Card>
+                    </Grid>
 
-                            <Stack direction="row" spacing={2}>
+                    < Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
 
-                                <TextField
-                                    select
-                                    SelectProps={{
-                                        native: true,
-                                    }}
-                                    label="Select Feature"
-                                    fullWidth
-                                    size="small"
-                                    onChange={(e) => {
-                                        setFilter(e.currentTarget.value)
-                                    }}
-                                    placeholder={`${reports?.length} records...`}
-                                    style={{
-                                        fontSize: '1.1rem',
-                                        border: '0',
-                                    }}
-                                    focused
-                                >
-                                    <option key={'00'} value={undefined}></option>
-                                    {
-                                        accessTypes.map((type, index) => {
-                                            return (
-                                                <React.Fragment key={index}>
-                                                    <option value={type}>{type}</option>
-                                                </React.Fragment>
-                                            )
-                                        })
-                                    }
-                                </TextField>
-                            </Stack>
-                        </Stack >
-                        <ReportsTable reports={reports} report={report} setReport={setReport} />
-                    </Box>
-            }
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <TodayOutlined sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    Tasks
+                                </Typography>
+                            </CardContent>
+
+                        </Card>
+                    </Grid>
+
+                    < Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <CheckBoxOutlined sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    CheckLists
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    {/* crm */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <Diversity3Outlined sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    CRM
+                                </Typography>
+                            </CardContent>
+
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <Book sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    Reports
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <TourOutlined sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    My Visit
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    {/* alps */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <ApartmentOutlined sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    ALPS
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+
+                    {/* bot */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <WhatsAppIcon sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    WA BOT
+                                </Typography>
+                            </CardContent>
+
+                        </Card>
+                    </Grid>
+
+                    {/* templates */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <Article sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    Templates
+                                </Typography>
+                            </CardContent>
+
+                        </Card>
+                    </Grid>
+                    {/* broadcast */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <CampaignIcon sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    Broadcast
+                                </Typography>
+                            </CardContent>
+
+                        </Card>
+                    </Grid>
+
+
+                    {/* contacts */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <Phone sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    Contacts
+                                </Typography>
+
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+
+                    {/* reminders */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <PunchClock sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    Reminders
+                                </Typography>
+                            </CardContent>
+
+                        </Card>
+                    </Grid>
+
+                    {/* greetings */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <AppShortcutIcon sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    Greetings
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    {/* passwords */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <Key sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    Erp Login
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+
+
+                    {/* backup */}
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Card sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                <BackupIcon sx={{ height: 50, width: 50 }} />
+                                <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                    Backup Database
+                                </Typography>
+                            </CardContent>
+
+                        </Card>
+                    </Grid>
+
+                </Grid >
+            </Box >
         </>
     )
-
 }
 
+
+export default AccessReportPage

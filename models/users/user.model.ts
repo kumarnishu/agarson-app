@@ -62,12 +62,6 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     default: false,
     required: true,
   },
-  departments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'UserDepartment',
-    }
-  ],
   is_admin: {
     type: Boolean,
     default: false,

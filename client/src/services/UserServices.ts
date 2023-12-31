@@ -154,13 +154,3 @@ export const SendVerifyEmail = async ({ email }:
 export const AssignUsers = async ({ id, body }: { id: string, body: { ids: string[] } }) => {
   return await apiClient.patch(`assign/users/${id}`, body)
 }
-
-export const GetDepartments = async () => {
-  return await apiClient.get("departments");
-};
-export const CreateDepartment = async (department: { department: string }) => {
-  return await apiClient.post("departments", department);
-};
-export const UpdateDepartment = async ({ id, department }: { id: string, department: { department: string } }) => {
-  return await apiClient.post(`departments/${id}`, department);
-};

@@ -121,7 +121,7 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                             <STableHeadCell
                             >
 
-                                Lead Owners
+                                Refer Owners
 
                             </STableHeadCell>
                             <STableHeadCell

@@ -25,16 +25,10 @@ function ReferLeadForm({ lead }: { lead: ILead }) {
                 queryClient.invalidateQueries('uselessleads')
             }
         })
-    const { data, isSuccess: isReferSuccess } = useQuery<AxiosResponse<{
-        party: IReferredParty,
-        leads: ILead[]
-    }[]>, BackendError>("refers", GetRefers)
+    const { data, isSuccess: isReferSuccess } = useQuery<AxiosResponse<IReferredParty[]>, BackendError>("refers", GetRefers)
 
     const { setChoice } = useContext(ChoiceContext)
-    const [refers, setRefers] = useState<{
-        party: IReferredParty,
-        leads: ILead[]
-    }[]>()
+    const [refers, setRefers] = useState<IReferredParty[]>()
     const formik = useFormik({
         initialValues: {
             remark: "",
@@ -117,8 +111,8 @@ function ReferLeadForm({ lead }: { lead: ILead }) {
                     </option>
                     {
                         refers && refers.map(refer => {
-                            return (<option key={refer.party._id} value={refer.party._id}>
-                                {refer.party.name}
+                            return (<option key={refer._id} value={refer._id}>
+                                {refer.name}
                             </option>)
                         })
                     }

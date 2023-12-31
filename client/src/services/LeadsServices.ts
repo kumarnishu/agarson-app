@@ -18,18 +18,27 @@ export const GetRefers = async () => {
   return await apiClient.get("refers")
 }
 
-export const GetUselessLeads = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
-
-  return await apiClient.get(`useless/leads/?limit=${limit}&page=${page}`)
+export const GetUselessLeads = async ({ limit, page, userId }: { limit: number | undefined, page: number | undefined, userId?: string }) => {
+  if (userId)
+    return await apiClient.get(`useless/leads/?limit=${limit}&page=${page}&id=${userId}`)
+  else
+    return await apiClient.get(`useless/leads/?limit=${limit}&page=${page}`)
 
 }
-export const FuzzySearchUselessLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
-  return await apiClient.get(`search/leads/useless?key=${searchString}&limit=${limit}&page=${page}`)
+export const FuzzySearchUselessLeads = async ({ searchString, limit, page, userId }: { searchString?: string, limit: number | undefined, page: number | undefined, userId?: string }) => {
+  if (userId)
+    return await apiClient.get(`search/leads/useless?key=${searchString}&limit=${limit}&page=${page}&id=${userId}`)
+  else
+    return await apiClient.get(`search/leads/useless?key=${searchString}&limit=${limit}&page=${page}`)
 }
 
 
-export const GetPaginatedRefers = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
-  return await apiClient.get(`refers/paginated?limit=${limit}&page=${page}`)
+export const GetPaginatedRefers = async ({ limit, page, userId }: { limit: number | undefined, page: number | undefined, userId?: string }) => {
+  if (userId)
+    return await apiClient.get(`refers/paginated?limit=${limit}&page=${page}&id=${userId}`)
+  else
+    return await apiClient.get(`refers/paginated?limit=${limit}&page=${page}`)
+
 }
 
 export const NewReferParty = async (body: {
@@ -71,18 +80,32 @@ export const GetRemarks = async ({ limit, page, start_date, end_date, id }: { li
     return await apiClient.get(`remarks/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
 }
 
-export const FuzzySearchLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
-  return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}`)
+export const FuzzySearchLeads = async ({ searchString, limit, page, userId }: { searchString?: string, limit: number | undefined, page: number | undefined, userId?: string }) => {
+  if (userId)
+    return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&id=${userId}`)
+  else
+    return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}`)
 }
-export const FuzzySearchRefers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
-  return await apiClient.get(`search/refers?key=${searchString}&limit=${limit}&page=${page}`)
+export const FuzzySearchRefers = async ({ searchString, limit, page, userId }: { searchString?: string, limit: number | undefined, page: number | undefined, userId?: string }) => {
+  if (userId)
+    return await apiClient.get(`search/refers?key=${searchString}&limit=${limit}&page=${page}&id=${userId}`)
+  else
+    return await apiClient.get(`search/refers?key=${searchString}&limit=${limit}&page=${page}`)
+
 }
 
-export const FuzzySearchCustomers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
-  return await apiClient.get(`search/customers?key=${searchString}&limit=${limit}&page=${page}`)
+export const FuzzySearchCustomers = async ({ searchString, limit, page, userId }: { searchString?: string, limit: number | undefined, page: number | undefined, userId?: string }) => {
+  if (userId)
+    return await apiClient.get(`search/customers?key=${searchString}&limit=${limit}&page=${page}&id=${userId}`)
+  else
+    return await apiClient.get(`search/customers?key=${searchString}&limit=${limit}&page=${page}`)
+
 }
 
-export const GetCustomers = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
+export const GetCustomers = async ({ limit, page, userId }: { limit: number | undefined, page: number | undefined, userId?: string }) => {
+  if(userId)
+    return await apiClient.get(`customers?limit=${limit}&page=${page}&id=${userId}`)
+  else
   return await apiClient.get(`customers?limit=${limit}&page=${page}`)
 }
 

@@ -60,7 +60,6 @@ import PasswordHelpPage from './pages/passwords/PasswordsHelpPage.tsx'
 import PasswordsAdminPage from './pages/passwords/PasswordsAdminPage.tsx'
 import PasswordNavbar from './components/navbar/PasswordNavbar.tsx'
 import AccessReportPage from './pages/users/AccessReportPage.tsx'
-import DepartmentsPage from './pages/users/DepartmentsPage.tsx'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -147,7 +146,6 @@ export enum paths {
 
   //users
   users = "users",
-  departments = "departments",
   users_reports = "users_reports",
   login = "/",
   dashboard = "/",
@@ -191,11 +189,7 @@ function AppRoutes() {
                   <UsersPage />
                 }
               />
-              <Route
-                path={paths.departments} element={
-                  <DepartmentsPage />
-                }
-              />
+         
               <Route
                 path={paths.users_reports} element={
                   <AccessReportPage />

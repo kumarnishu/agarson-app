@@ -18,6 +18,8 @@ import { ILead, ILeadTemplate } from '../../types/crm.types'
 import LeadsTable from '../../components/tables/LeadsTable'
 import BulkAssignLeadsDialog from '../../components/dialogs/crm/BulkAssignLeadsDialog'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import { GetUsers } from '../../services/UserServices'
+import { IUser } from '../../types/user.types'
 
 let template: ILeadTemplate[] = [
   {
@@ -50,6 +52,7 @@ let template: ILeadTemplate[] = [
 
 export default function CustomersPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+  const [users, setUsers] = useState<IUser[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<ILead>()
@@ -60,12 +63,15 @@ export default function CustomersPage() {
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
+  const [userId, setUserId] = useState<string>()
 
-  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["customers", paginationData], async () => GetCustomers({ limit: paginationData?.limit, page: paginationData?.page }))
+  const { data, isLoading, refetch: refetchLeads } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["customers", paginationData], async () => GetCustomers({ limit: paginationData?.limit, page: paginationData?.page ,userId}))
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzycustomers", filter], async () => FuzzySearchCustomers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzycustomers", filter], async () => FuzzySearchCustomers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page,userId }), {
     enabled: false
   })
+  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
@@ -170,6 +176,10 @@ export default function CustomersPage() {
     }
   }, [fuzzyleads])
 
+  useEffect(() => {
+    if (isUsersSuccess)
+      setUsers(usersData?.data)
+  }, [users, isUsersSuccess, usersData])
   return (
     <>
 
@@ -202,6 +212,37 @@ export default function CustomersPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
+            {LoggedInUser?.is_admin &&
+              < TextField
+                size='small'
+                select
+                SelectProps={{
+                  native: true,
+                }}
+                onChange={(e) => {
+                  setUserId(e.target.value)
+                  refetchLeads()
+                }}
+                required
+                id="todo_owner"
+                label="Filter Lead Owners"
+                fullWidth
+              >
+                <option key={'00'} value={undefined}>
+
+                </option>
+                {
+                  users.map((user, index) => {
+                    if (!user.crm_access_fields.is_hidden)
+                      return (<option key={index} value={user._id}>
+                        {user.username}
+                      </option>)
+                    else
+                      return null
+                  })
+                }
+              </TextField>}
+
             {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton />}
             <TextField
               fullWidth
@@ -283,16 +324,16 @@ export default function CustomersPage() {
       </Stack >
       {/* table */}
       {isLoading && <TableSkeleton />}
-      {!isLoading && 
-      <LeadsTable
-        lead={lead}
-        setLead={setLead}
-        selectAll={selectAll}
-        selectedLeads={selectedLeads}
-        setSelectedLeads={setSelectedLeads}
-        setSelectAll={setSelectAll}
-        leads={MemoData}
-      />}
+      {!isLoading &&
+        <LeadsTable
+          lead={lead}
+          setLead={setLead}
+          selectAll={selectAll}
+          selectedLeads={selectedLeads}
+          setSelectedLeads={setSelectedLeads}
+          setSelectAll={setSelectAll}
+          leads={MemoData}
+        />}
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
     </>
 
