@@ -27,6 +27,7 @@ export type IVisitReport = {
     reviews_taken: number,
     turnover: string,
     visit_in_photo: Asset,
+    visit_samples_photo:Asset
     ankit_input: { input: string, created_by: IUser, timestamp: Date },
     brijesh_input: { input: string, created_by: IUser, timestamp: Date },
     visit_validated: boolean,

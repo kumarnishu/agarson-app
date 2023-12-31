@@ -355,6 +355,35 @@ export const ValidateVisit = async (req: Request, res: Response, next: NextFunct
     await report.save()
     return res.status(200).json({ message: "visit validated" })
 }
+export const UploadVisitSamplesPhoto = async (req: Request, res: Response, next: NextFunction) => {
+    let id = req.params.id
+    let report = await VisitReport.findById(id)
+    if (!report)
+        return res.status(400).json({ message: "visit not exists" })
+    if (!req.file) {
+        return res.status(400).json({ message: "please upload your samples photo" })
+    }
+
+    if (req.file) {
+        console.log(req.file.mimetype)
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
+        const storageLocation = `visits/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 10 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            report.visit_samples_photo = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    report.updated_at = new Date()
+    report.updated_by = req.user
+    await report.save()
+    return res.status(200).json({ message: "samples uploaded successfull" })
+}
 
 export const AddAnkitInput = async (req: Request, res: Response, next: NextFunction) => {
     let { input } = req.body as IVisitReportBody & { input: string }

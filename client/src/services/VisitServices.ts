@@ -77,6 +77,10 @@ export const MakeVisitOut = async ({ id, body }: { id: string, body: FormData })
     return await apiClient.patch(`visit/out/${id}`, body)
 }
 
+export const UploadVisitSamplesPhoto = async ({ id, body }: { id: string, body: FormData }) => {
+    return await apiClient.patch(`visit/samples/upload/${id}`, body)
+}
+
 
 export const FuzzySearchVisits = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
     return await apiClient.get(`search/visits?key=${searchString}&limit=${limit}&page=${page}`)

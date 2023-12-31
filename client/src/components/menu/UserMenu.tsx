@@ -32,7 +32,7 @@ function UserMenu() {
                 onClick={
                     () => setMenu({ type: UserMenuActions.close_user_menu, anchorEl: null })
                 }>
-                <StyledLink to={paths.users_reports}>Access</StyledLink>
+                <StyledLink to={paths.users_reports}>Features</StyledLink>
 
             </MenuItem>}
            

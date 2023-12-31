@@ -14,6 +14,7 @@ import AddSummaryInDialog from "../../components/dialogs/visit/AddSummaryDialog"
 import EditSummaryInDialog from "../../components/dialogs/visit/EditSummaryDialog"
 import background from "../../assets/visit_background.jpg"
 import moment from "moment"
+import UploadVisitSamplesDialog from "../../components/dialogs/visit/UploadVisitSamplesDialog"
 
 function MyVisitPage() {
   const [visits, setVisits] = useState<IVisitReport[]>([])
@@ -78,21 +79,22 @@ function MyVisitPage() {
                   Visit Out : {moment(new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp)).format('LT')}
                 </Typography>
                 <Stack gap={2} direction={'row'} >
-                  {visit && !Boolean(visit.visit_out_credentials) && <Button sx={{ fontWeight: 'bold' }} color="error" onClick={() => {
+                  {visit && !Boolean(visit.visit_out_credentials) && visit.visit_samples_photo && <Button sx={{ fontWeight: 'bold' }} color="error" onClick={() => {
                     setVisitReport(visit)
                     setChoice({ type: VisitChoiceActions.visit_out })
                   }}>Visit Out</Button>}
-
+                  {visit && !Boolean(visit.visit_out_credentials) && !visit.visit_samples_photo && <Button sx={{ fontWeight: 'bold' }} color="secondary" onClick={() => {
+                    setVisitReport(visit)
+                    setChoice({ type: VisitChoiceActions.upload_samples })
+                  }}>Upload Samples</Button>}
                   {!visit.summary ? <Button sx={{ fontWeight: 'bold' }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.add_summary }) }}>Add Summary</Button> : <Button sx={{ fontWeight: 'bold' }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.edit_summary }) }}>Edit Summary</Button>}
                 </Stack>
-
               </Stack>
             </Paper>
-
           )
         })}
       </>
-
+      {visitReport && <UploadVisitSamplesDialog visit={visitReport} />}
       {visitReport && !Boolean(visitReport.visit_out_credentials) && <MakeVisitOutDialog visit={visitReport} />}
       {visitReport && !visitReport.summary && <AddSummaryInDialog visit={visitReport} />}
       {visitReport && visitReport.summary && <EditSummaryInDialog visit={visitReport} />}

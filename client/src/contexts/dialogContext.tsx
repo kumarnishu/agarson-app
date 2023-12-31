@@ -7,7 +7,7 @@ type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "
 
 type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting" | "bulk_start_greeting" | "close_greeting" | "bulk_stop_greeting" | "stop_greeting" | "start_greeting"
 
-type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments" | "view_visit_photo" | "mark_attendence"
+type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments" | "view_visit_photo" | "mark_attendence" |"upload_samples"
 
 type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" | "edit_task"
 
@@ -76,6 +76,7 @@ export enum PasswordChoiceActions {
   update_erp_password = "update_erp_password"
 }
 export enum VisitChoiceActions {
+  upload_samples ="upload_samples",
   view_visit_photo = "view_visit_photo",
   mark_attendence = "mark_attendence",
   start_day = "start_day",
@@ -329,6 +330,7 @@ function reducer(state: ChoiceState | null, action: Action) {
 
 
     // visit
+    case VisitChoiceActions.upload_samples: return type
     case VisitChoiceActions.visit_in: return type
     case VisitChoiceActions.visit_out: return type
     case VisitChoiceActions.start_day: return type

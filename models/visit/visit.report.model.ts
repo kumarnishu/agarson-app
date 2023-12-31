@@ -7,13 +7,22 @@ const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisi
         latitude: String,
         longitude: String,
         timestamp: Date,
-        address:String
+        address: String
     },
     visit_out_credentials: {
         latitude: String,
         longitude: String,
         timestamp: Date,
-        address:String
+        address: String
+    },
+    visit_samples_photo: {
+        _id: { type: String },
+        filename: { type: String },
+        public_url: { type: String },
+        content_type: { type: String },
+        size: { type: String },
+        bucket: { type: String },
+        created_at: Date,
     },
     visit_in_photo: {
         _id: { type: String },
@@ -38,7 +47,7 @@ const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisi
     refs_given: String,
     reviews_taken: Number,
     turnover: String,
-    visit_validated:Boolean,
+    visit_validated: Boolean,
     ankit_input: {
         input: String,
         created_by: {

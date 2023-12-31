@@ -20,6 +20,7 @@ export type IVisitReport = {
     mobile: string,
     city: string,
     real_city: string,
+    visit_samples_photo: Asset
     summary: string,
     is_old_party: boolean,
     dealer_of: string,
