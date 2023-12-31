@@ -187,7 +187,7 @@ export default function PasswordsAdminPage() {
                 >
                     {/* search bar */}
                     < Stack direction="row" spacing={2}>
-                        {user?.is_admin &&
+                        {user?.assigned_users && user?.assigned_users.length > 0 && 
                             < TextField
                                 size='small'
                                 select

@@ -65,9 +65,9 @@ export default function CustomersPage() {
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
   const [userId, setUserId] = useState<string>()
 
-  const { data, isLoading, refetch: refetchLeads } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["customers", paginationData], async () => GetCustomers({ limit: paginationData?.limit, page: paginationData?.page ,userId}))
+  const { data, isLoading, refetch: refetchLeads } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["customers", paginationData], async () => GetCustomers({ limit: paginationData?.limit, page: paginationData?.page, userId }))
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzycustomers", filter], async () => FuzzySearchCustomers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page,userId }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzycustomers", filter], async () => FuzzySearchCustomers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, userId }), {
     enabled: false
   })
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
@@ -212,7 +212,9 @@ export default function CustomersPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.is_admin &&
+            {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton />}
+            {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 &&
+
               < TextField
                 size='small'
                 select
@@ -243,7 +245,7 @@ export default function CustomersPage() {
                 }
               </TextField>}
 
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton />}
+
             <TextField
               fullWidth
               size="small"

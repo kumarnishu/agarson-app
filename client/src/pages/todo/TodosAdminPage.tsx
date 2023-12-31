@@ -308,7 +308,7 @@ export default function TodosAdminPage() {
                         }
                     }}
                 />
-                {user?.is_admin &&
+                {user?.assigned_users && user?.assigned_users.length > 0 &&
                     < TextField
                         size='small'
                         select

@@ -225,7 +225,7 @@ export default function UselessLeadsPage() {
                 <Delete />
               </IconButton>
             </Tooltip>
-            {LoggedInUser?.is_admin &&
+            {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 && 
               < TextField
                 size='small'
                 select

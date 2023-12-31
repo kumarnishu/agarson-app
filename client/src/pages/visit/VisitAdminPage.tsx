@@ -2,7 +2,7 @@ import { Search } from '@mui/icons-material'
 import { Box, Fade, FormControlLabel, IconButton, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchVisits, GetVisitAttendences, GetVisits } from '../../services/VisitServices'
 import DBPagination from '../../components/pagination/DBpagination';
@@ -17,6 +17,7 @@ import VisitTable from '../../components/tables/VisitTable'
 import { IVisit, IVisitReport } from '../../types/visit.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import AttendenceTable from '../../components/tables/AttendenceTable'
+import { UserContext } from '../../contexts/userContext'
 
 
 export default function VisitAdminPage() {
@@ -24,6 +25,7 @@ export default function VisitAdminPage() {
     const [attendences, setAttendences] = useState<{
         _id: string; date: Date; visits: IVisit[]
     }[]>([])
+    const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
@@ -467,7 +469,7 @@ export default function VisitAdminPage() {
                         }
                     }}
                 />
-                < TextField
+                {user?.assigned_users && user?.assigned_users.length > 0 && < TextField
                     focused
                     size="small"
                     select
@@ -496,7 +498,7 @@ export default function VisitAdminPage() {
                                 return null
                         })
                     }
-                </TextField>
+                </TextField>}
             </Stack>
 
             {/* table */}

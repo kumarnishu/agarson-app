@@ -291,7 +291,7 @@ export default function CheckListAdminPage() {
           }}
         />
 
-        < TextField
+        {user?.assigned_users && user?.assigned_users.length > 0 &&< TextField
           size="small"
           select
           SelectProps={{
@@ -319,7 +319,7 @@ export default function CheckListAdminPage() {
                 return null
             })
           }
-        </TextField>
+        </TextField>}
       </Stack>
 
       {/* table */}

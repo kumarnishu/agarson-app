@@ -5,7 +5,6 @@ import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import { headColor } from '../../utils/colors'
 import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServices'
 import RefersTable from '../../components/tables/RefersTable'
 import ExportToExcel from '../../utils/ExportToExcel'
@@ -195,9 +194,8 @@ export default function ReferralPartyPage() {
                     direction="row"
                 >
                     {/* search bar */}
-                    < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
-                    }>
-                        {LoggedInUser?.is_admin &&
+                    < Stack direction="row" spacing={2} >
+                        {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 && 
                             < TextField
                                 size='small'
                                 select

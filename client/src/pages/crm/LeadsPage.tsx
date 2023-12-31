@@ -212,7 +212,7 @@ export default function LeadsPage() {
           {/* search bar */}
           < Stack direction="row" spacing={2}>
             {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton />}
-            {LoggedInUser?.is_admin &&
+            {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 && 
               < TextField
                 size='small'
                 select
