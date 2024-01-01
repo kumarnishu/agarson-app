@@ -12,10 +12,11 @@ type BotMenu = "close_bot_menu" | "bot_menu"
 type TaskMenu = "close_task_menu" | "task_menu"
 type PasswordMenu = "close_password_menu" | "password_menu"
 type TodoMenu = "close_todo_menu" | "todo_menu"
+type ProductionMenu = "close_production_menu" | "production_menu"
 
 
 type MenuState = {
-    type: UserMenu | CrmMenu | BotMenu | CheckListMenu | PasswordMenu | TaskMenu | null | VisitMenu | ReportMenu | TodoMenu,
+    type: UserMenu | CrmMenu | BotMenu | CheckListMenu | PasswordMenu | TaskMenu | null | VisitMenu | ReportMenu | TodoMenu | ProductionMenu
     anchorEl: HTMLElement | null
 }
 
@@ -24,6 +25,10 @@ const initialState: MenuState = {
     anchorEl: null
 }
 
+export enum ProductionMenuActions {
+    close_production_menu = "close_production_menu",
+    production_menu = "production_menu"
+}
 export enum CheckListMenuActions {
     close_checklist_menu = "close_checklist_menu",
     checklist_menu = "checklist_menu"
@@ -66,7 +71,7 @@ export enum UserMenuActions {
 }
 
 type Action = {
-    type: UserMenuActions | CrmMenuActions | BotMenuActions | CheckListMenuActions | TaskMenuActions | ReportsMenuActions | VisitMenuActions | PasswordMenuActions | TodoMenuActions
+    type: UserMenuActions | CrmMenuActions | BotMenuActions | CheckListMenuActions | TaskMenuActions | ReportsMenuActions | VisitMenuActions | PasswordMenuActions | TodoMenuActions | ProductionMenuActions
     anchorEl: HTMLElement | null
 }
 
@@ -84,6 +89,9 @@ function reducer(state: MenuState | null, action: Action) {
 
         case CrmMenuActions.close_crm_menu: return action
         case CrmMenuActions.crm_menu: return action
+
+        case ProductionMenuActions.close_production_menu: return action
+        case ProductionMenuActions.production_menu: return action
 
         case TodoMenuActions.close_todo_menu: return action
         case TodoMenuActions.todo_menu: return action

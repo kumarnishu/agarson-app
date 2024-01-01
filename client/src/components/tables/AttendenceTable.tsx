@@ -197,7 +197,7 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
                                                             </Tooltip>
                                                         </STableCell>}
                                                         <STableCell>
-                                                            {visit.visit_reports[0] && new Date(visit.visit_reports[0].created_at).toLocaleDateString()}
+                                                            {visit.created_at && new Date(visit.created_at).toLocaleDateString()}
                                                         </STableCell>
 
                                                         <STableCell>

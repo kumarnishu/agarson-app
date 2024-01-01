@@ -60,6 +60,16 @@ import PasswordHelpPage from './pages/passwords/PasswordsHelpPage.tsx'
 import PasswordsAdminPage from './pages/passwords/PasswordsAdminPage.tsx'
 import PasswordNavbar from './components/navbar/PasswordNavbar.tsx'
 import AccessReportPage from './pages/users/FeatureAccessReportPage.tsx'
+import ProductionNavBar from './components/navbar/ProductionNavBar.tsx'
+import ProductionPage from './pages/production/ProductionPage.tsx'
+import ProductionAdminPage from './pages/production/ProductionAdminPage.tsx'
+import RunningMouldPage from './pages/production/RunningMouldPage.tsx'
+import DyeRepairPage from './pages/production/DyeRepairPage.tsx'
+import MachinesPage from './pages/production/MachinesPage.tsx'
+import DyesPage from './pages/production/DyesPage.tsx'
+import ArticlesPage from './pages/production/ArticlesPage.tsx'
+import ProductionHelpPage from './pages/production/ProductionHelpPage.tsx'
+import ShoeWeightPage from './pages/production/ShoeWeightPage.tsx'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -114,6 +124,17 @@ export enum paths {
   updateble_fields_lead = "updateble_fields_lead",
   refers = "refers",
   useless_leads = "useless_leads",
+
+  //production
+  production = "/production",
+  production_admin_page = "production_admin_page",
+  shoe_weight = "shoe_weight",
+  dye_repair = "dye_repair",
+  machines = "machines",
+  dyes = "dyes",
+  articles = "articles",
+  running_mould = "running_mould",
+  production_help_page = "production_help_page",
 
   //bot
   bot = "/bot",
@@ -176,7 +197,6 @@ function AppRoutes() {
               }
             />
           </Route>
-          {/* users nav bar */}
           {!user.user_access_fields.is_hidden &&
             < Route path={paths.users} element={<UsersNavBar />}>
               <Route index
@@ -189,7 +209,7 @@ function AppRoutes() {
                   <UsersPage />
                 }
               />
-         
+
               <Route
                 path={paths.users_reports} element={
                   <AccessReportPage />
@@ -201,7 +221,6 @@ function AppRoutes() {
                 }
               />
             </Route>}
-          {/* users nav bar */}
           {!user.todos_access_fields.is_hidden &&
             < Route path={paths.todos} element={<TodoNavBar />}>
               <Route index
@@ -225,7 +244,54 @@ function AppRoutes() {
                 }
               />
             </Route>}
-          {/* visit help */}
+          {!user.productions_access_fields.is_hidden &&
+            < Route path={paths.production} element={<ProductionNavBar />}>
+              <Route index
+                element={
+                  <ProductionPage />
+                }
+              />
+              <Route
+                path={paths.production_admin_page} element={
+                  <ProductionAdminPage />
+                }
+              />
+              <Route
+                path={paths.running_mould} element={
+                  <RunningMouldPage />
+                }
+              />
+              <Route
+                path={paths.dye_repair} element={
+                  <DyeRepairPage />
+                }
+              />
+              <Route
+                path={paths.shoe_weight} element={
+                  <ShoeWeightPage />
+                }
+              />
+              <Route
+                path={paths.machines} element={
+                  <MachinesPage />
+                }
+              />
+              <Route
+                path={paths.dyes} element={
+                  <DyesPage />
+                }
+              />
+              <Route
+                path={paths.articles} element={
+                  <ArticlesPage />
+                }
+              />
+              <Route
+                path={paths.production_help_page} element={
+                  <ProductionHelpPage />
+                }
+              />
+            </Route>}
           {!user.visit_access_fields.is_hidden &&
             < Route path={paths.visit} element={<VisitNavBar />}>
               <Route index
@@ -249,7 +315,6 @@ function AppRoutes() {
                 }
               />
             </Route>}
-          {/* crm nav bar */}
 
           {!user.crm_access_fields.is_hidden &&
             < Route path={paths.crm} element={<CrmNavBar />
@@ -301,7 +366,6 @@ function AppRoutes() {
                 }
               />
             </Route>}
-          {/* bot nav bar */}
           {!user.bot_access_fields.is_hidden &&
             < Route path={paths.bot} element={<BotNavBar />
             }>
@@ -332,7 +396,6 @@ function AppRoutes() {
               />
             </Route>}
 
-          {/* templates nav bar */}
           {!user.templates_access_fields.is_hidden &&
             < Route path={paths.templates} element={<TemplatesNavBar />
             }>
@@ -357,7 +420,6 @@ function AppRoutes() {
               />
             </Route>}
 
-          {/* broadcast nav bar */}
           {!user.broadcast_access_fields.is_hidden &&
             < Route path={paths.broadcast} element={<BroadcastNavBar />
             }>
@@ -377,7 +439,6 @@ function AppRoutes() {
               />
 
             </Route>}
-          {/* task nav bar */}
           {!user.tasks_access_fields.is_hidden &&
             < Route path={paths.tasks} element={<TaskNavBar />
             }>
@@ -404,7 +465,6 @@ function AppRoutes() {
 
             </Route>}
 
-          {/* checklist routes */}
           {!user.checklists_access_fields.is_hidden &&
             < Route path={paths.checklists} element={<CheckListNavBar />
             }>
@@ -432,7 +492,6 @@ function AppRoutes() {
 
             </Route>}
 
-          {/* reports routes */}
           {!user.reports_access_fields.is_hidden &&
             < Route path={paths.reports} element={<ReportsNavBar />
             }>
@@ -451,7 +510,6 @@ function AppRoutes() {
               />
             </Route>}
 
-          {/* todo nav bar */}
           {!user.contacts_access_fields.is_hidden &&
             < Route path={paths.contacts} element={<ContactNavBar />
             }>
@@ -471,7 +529,6 @@ function AppRoutes() {
               />
 
             </Route>}
-          {/* passwords nav bar */}
           {!user.passwords_access_fields.is_hidden &&
             < Route path={paths.passwords} element={<PasswordNavbar />
             }>
@@ -495,7 +552,6 @@ function AppRoutes() {
               />
 
             </Route>}
-          {/* reminder nav bar */}
           {!user.reminders_access_fields.is_hidden &&
             < Route path={paths.reminders} element={<ReminderNavBar />
             }>
@@ -514,7 +570,6 @@ function AppRoutes() {
                 }
               />
             </Route>}
-          {/* greetings nav bar */}
           {!user.greetings_access_fields.is_hidden &&
             < Route path={paths.greetings} element={<GreetingsNavBar />
             }>
@@ -534,7 +589,6 @@ function AppRoutes() {
               />
             </Route>}
 
-          {/* crm nav bar */}
           {!user.alps_access_fields.is_hidden &&
             < Route path={paths.alps} element={<AlpsNavBar />
             }>
@@ -548,7 +602,6 @@ function AppRoutes() {
               }
               />
             </Route>}
-          {/* backup */}
           {!user.backup_access_fields.is_hidden &&
             <Route path={paths.backup_page} element={<DashBoardNavBar />}>
               <Route index

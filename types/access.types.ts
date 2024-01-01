@@ -10,6 +10,11 @@ export type AlpsAccess = {
     is_hidden: boolean,
     is_deletion_allowed: boolean
 }
+export type ProductionsAccess = {
+    is_editable: boolean,
+    is_hidden: boolean,
+    is_deletion_allowed: boolean
+}
 export type GreetingAccess = {
     is_editable: boolean,
     is_hidden: boolean,

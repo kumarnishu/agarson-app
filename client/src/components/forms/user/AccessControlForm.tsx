@@ -29,7 +29,8 @@ function AccessControlForm({ user }: { user: IUser }) {
         visit_access_fields: user.visit_access_fields,
         todos_access_fields: user.todos_access_fields,
         greetings_access_fields: user.greetings_access_fields,
-        passwords_access_fields: user.passwords_access_fields
+        passwords_access_fields: user.passwords_access_fields,
+        productions_access_fields: user.productions_access_fields
     })
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any>, BackendError, {
@@ -309,6 +310,73 @@ function AccessControlForm({ user }: { user: IUser }) {
 
 
                         </STableRow>
+                        {/* production access fields */}
+                        <STableRow
+                        >
+
+                            <STableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    <Typography variant="button">Production
+                                    </Typography>
+                                </Stack>
+                            </STableCell>
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.productions_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            productions_access_fields: {
+                                                is_editable: Boolean(!AccessFields.productions_access_fields.is_editable),
+
+                                                is_hidden: Boolean(AccessFields.productions_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.productions_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.productions_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            productions_access_fields: {
+                                                is_editable: Boolean(AccessFields.productions_access_fields.is_editable),
+
+                                                is_hidden: Boolean(!AccessFields.productions_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.productions_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.productions_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            productions_access_fields: {
+                                                is_editable: Boolean(AccessFields.productions_access_fields.is_editable),
+
+                                                is_hidden: Boolean(AccessFields.productions_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.productions_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+
+
+
+
+
+                        </STableRow>
                         {/* bot access fields */}
                         <STableRow
                         >
@@ -512,9 +580,7 @@ function AccessControlForm({ user }: { user: IUser }) {
 
                         </STableRow>
                         {/* visit access fields */}
-                        <STableRow
-                        >
-
+                        <STableRow>
                             <STableCell                 >
                                 <Stack
                                     direction="row"

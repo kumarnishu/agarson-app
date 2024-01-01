@@ -350,10 +350,6 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                             />
                                         </STableCell>
 
-
-
-
-
                                         <STableCell>
                                             {new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleDateString()}
                                         </STableCell>

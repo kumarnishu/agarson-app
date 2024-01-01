@@ -10,6 +10,11 @@ export type AlpsAccess = {
     is_hidden: boolean,
     is_deletion_allowed: boolean
 }
+export type ProductionsAccess = {
+    is_editable: boolean,
+    is_hidden: boolean,
+    is_deletion_allowed: boolean
+}
 export type GreetingAccess = {
     is_editable: boolean,
     is_hidden: boolean,
@@ -84,11 +89,11 @@ export type TodoAccess = {
 }
 
 export type AccessReport = {
-    accessType:string,
+    accessType: "users" | "crm" | "todo" | "tasks" | "visit" | "checklist" | "backup" | "bot" | "templates" | "broadcast" | "contacts" | "greetings" | "reminders" | "erp passwords" | "reports" | "alps",
     reports: {
         user: IUser,
         is_hidden: boolean,
         is_editable: boolean,
-        is_deletion_allowed: boolean,
-    }[]
+        is_deleteion_allowed: boolean,
+    }
 }
