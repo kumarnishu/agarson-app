@@ -115,7 +115,7 @@ function EditTaskForm({ task, users }: { task: ITask, users: IUser[] }) {
                     }
                     {
                         users.map(user => {
-                            if (user._id !== personId)
+                            if (!user.tasks_access_fields.is_hidden && user._id !== personId)
                                 return (<option key={user._id} value={user._id}>
                                     {user.username}
                                 </option>)

@@ -90,11 +90,11 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                         {`Warning ! This will assign ${formik.values.ids.length} users to the selected user.`}
 
                     </Typography>
+                    <Button onClick={() => formik.setValues({ ids: [] })}>Remove All</Button>
                     <form onSubmit={formik.handleSubmit}>
                         < select
                             id="ids"
                             multiple
-                            required
                             style={{ width: '100%', height: '300px', padding: 2 }}
                             {...formik.getFieldProps('ids')}
                         >

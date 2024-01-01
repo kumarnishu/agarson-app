@@ -90,18 +90,8 @@ function AssignReferForm({ refer, users }: { refer: IReferredParty, users: IUser
                     {...formik.getFieldProps('lead_owners')}
                 >
                     {
-                        refer.lead_owners.map(owner => {
-                            return (<option key={owner._id} value={owner._id}>
-                                {owner.username}
-                            </option>)
-                        })
-                    }
-                    {
                         users.map((user, index) => {
-                            let referowners = refer.lead_owners.map(owner => {
-                                return owner.username
-                            })
-                            if (!referowners.includes(user.username)) {
+                            if (!user.crm_access_fields.is_hidden) {
                                 return (<option key={index} value={user._id}>
                                     {user.username}
                                 </option>)

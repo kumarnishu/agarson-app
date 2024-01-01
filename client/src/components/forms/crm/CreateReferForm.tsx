@@ -216,7 +216,7 @@ function CreateReferForm({ users }: { users: IUser[] }) {
                         formik.touched.lead_owners && formik.errors.lead_owners ? true : false
                     }
                     id="lead_owners"
-                    label="Lead Owners"
+                    label="Refer Owners"
                     fullWidth
                     required
                     helperText={
@@ -224,11 +224,15 @@ function CreateReferForm({ users }: { users: IUser[] }) {
                     }
                     {...formik.getFieldProps('lead_owners')}
                 >
+
                     {
-                        users.map(user => {
-                            return (<option key={user._id} value={user._id}>
-                                {user.username}
-                            </option>)
+                        users.map((user, index) => {
+                            if (!user.crm_access_fields.is_hidden) {
+                                return (<option key={index} value={user._id}>
+                                    {user.username}
+                                </option>)
+                            }
+                            else return null
                         })
                     }
                 </TextField>

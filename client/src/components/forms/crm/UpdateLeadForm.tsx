@@ -1,4 +1,4 @@
-import {  Button, Checkbox, CircularProgress, FormControlLabel, FormGroup, Stack, TextField } from '@mui/material';
+import { Button, Checkbox, CircularProgress, FormControlLabel, FormGroup, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
@@ -631,19 +631,10 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
           }
           {...formik.getFieldProps('lead_owners')}
         >
-          {
-            lead.lead_owners.map(owner => {
-              return (<option key={owner._id} value={owner._id}>
-                {owner.username}
-              </option>)
-            })
-          }
+
           {
             users.map((user, index) => {
-              let leadowners = lead.lead_owners.map(owner => {
-                return owner.username
-              })
-              if (!leadowners.includes(user.username)) {
+              if (!user.crm_access_fields.is_hidden) {
                 return (<option key={index} value={user._id}>
                   {user.username}
                 </option>)

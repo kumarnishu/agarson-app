@@ -79,7 +79,7 @@ function CreatePasswordForm({ users }: { users: IUser[] }) {
                     }
                     {...formik.getFieldProps('state')}
                 />
-                   
+
 
                 <TextField
                     required
@@ -129,10 +129,13 @@ function CreatePasswordForm({ users }: { users: IUser[] }) {
                     {...formik.getFieldProps('ids')}
                 >
                     {
-                        users.map(user => {
-                            return (<option key={user._id} value={user._id}>
-                                {user.username}
-                            </option>)
+                        users.map((user, index) => {
+                            if (!user.passwords_access_fields.is_hidden)
+                                return (<option key={index} value={user._id}>
+                                    {user.username}
+                                </option>)
+                            else
+                                return null
                         })
                     }
                 </TextField>

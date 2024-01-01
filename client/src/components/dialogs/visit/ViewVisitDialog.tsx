@@ -14,7 +14,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
             > <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: VisitChoiceActions.close_visit })}>
                     <Cancel fontSize='large' />
                 </IconButton>
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Visit Details</DialogTitle>
+                <DialogTitle sx={{ minWidth: '500px' }} textAlign={"center"}>Visit Details</DialogTitle>
                 <DialogContent>
                     {/* start day */}
                     <Typography variant="subtitle1" sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white', p: 1 }} textAlign={'center'} fontWeight={'bold'}>Start Day</Typography>
@@ -32,7 +32,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                                     DownloadFile(visit.visit.start_day_photo?.public_url, visit.visit.start_day_photo?.filename)
                                 }
                             }}
-                            src={visit.visit.start_day_photo?.public_url} style={{ borderRadius: '5px', height: '350px', width: '100%' }} />}
+                            src={visit.visit.start_day_photo?.public_url} style={{ borderRadius: '5px', height: '500px', width: 'auto' }} />}
                         <Stack>
                             <Typography sx={{ textTransform: "capitalize" }}>Timestamp : {new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleTimeString()}</Typography>
                             <Typography variant="subtitle1">{visit.visit.start_day_credientials && visit.visit.start_day_credientials.latitude},{visit.visit.start_day_credientials && visit.visit.start_day_credientials.longitude}</Typography>
@@ -54,7 +54,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                                     DownloadFile(visit.visit_in_photo?.public_url, visit.visit_in_photo?.filename)
                                 }
                             }}
-                            src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '350px', width: '100%' }} />}
+                            src={visit.visit_in_photo?.public_url} style={{ borderRadius: '5px', height: '500px', width: 'auto' }} />}
                         <Stack>
                             <Typography sx={{ textTransform: "capitalize" }}> Timestamp : {new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString()}</Typography>
                             <Typography variant="subtitle1">{visit.visit_in_credientials && visit.visit_in_credientials.latitude},{visit.visit_in_credientials && visit.visit_in_credientials.longitude}</Typography>
@@ -75,7 +75,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                                     DownloadFile(visit.visit_samples_photo?.public_url, visit.visit_samples_photo?.filename)
                                 }
                             }}
-                            src={visit.visit_samples_photo?.public_url} style={{ borderRadius: '5px', height: '350px', width: '100%' }} />}
+                            src={visit.visit_samples_photo?.public_url} style={{ borderRadius: '5px', height: '500px', width: 'auto' }} />}
                     </Stack>
                     {/* visit out */}
                     <Typography variant="subtitle1" sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white', p: 1 }} textAlign={'center'} fontWeight={'bold'}>Visit Out</Typography>
@@ -108,7 +108,7 @@ function ViewVisitDialog({ visit }: { visit: IVisitReport }) {
                                     DownloadFile(visit.visit.end_day_photo?.public_url, visit.visit.end_day_photo?.filename)
                                 }
                             }}
-                            src={visit.visit.end_day_photo?.public_url} style={{ borderRadius: '5px', height: '350px', width: '100%' }} />}
+                            src={visit.visit.end_day_photo?.public_url} style={{ borderRadius: '5px', height: '500px', width: 'auto' }} />}
                         <Stack>
                             <Typography sx={{ textTransform: "capitalize" }}> Timestamp : {new Date(visit.visit.end_day_credentials && visit.visit.end_day_credentials.timestamp).toLocaleTimeString()}</Typography>
                             <Typography variant="subtitle1"> {visit.visit.end_day_credentials && visit.visit.end_day_credentials.latitude},{visit.visit.end_day_credentials && visit.visit.end_day_credentials.longitude}</Typography>

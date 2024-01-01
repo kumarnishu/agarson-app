@@ -69,7 +69,7 @@ function UpdatePasswordForm({ password, users }: { users: IUser[], password: IPa
             >
                 {/* password_descriptions */}
                 < TextField
-                  
+
                     focused
 
                     error={
@@ -83,7 +83,7 @@ function UpdatePasswordForm({ password, users }: { users: IUser[], password: IPa
                     }
                     {...formik.getFieldProps('state')}
                 />
-                    
+
                 <TextField
                     multiline
                     minRows={2}
@@ -133,19 +133,10 @@ function UpdatePasswordForm({ password, users }: { users: IUser[], password: IPa
                     }
                     {...formik.getFieldProps('ids')}
                 >
-                    {
-                        password.persons.map(user => {
-                            return (<option key={user._id} value={user._id}>
-                                {user.username}
-                            </option>)
-                        })
-                    }
+                   
                     {
                         users.map((user, index) => {
-                            let leadowners = password.persons.map(person => {
-                                return person.username
-                            })
-                            if (!leadowners.includes(user.username)) {
+                            if (!user.passwords_access_fields.is_hidden) {
                                 return (<option key={index} value={user._id}>
                                     {user.username}
                                 </option>)

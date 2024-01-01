@@ -97,13 +97,16 @@ function BulkAssignReferForm({ refers, users }: {
                     }
                     {...formik.getFieldProps('lead_owners')}
                 >
-                    {users.map((user, index) => {
-                        return (
-                            <option key={index} value={user._id}>
-                                {user.username}
-                            </option>
-                        )
-                    })}
+                    {
+                        users.map((user, index) => {
+                            if (!user.crm_access_fields.is_hidden)
+                                return (<option key={index} value={user._id}>
+                                    {user.username}
+                                </option>)
+                            else
+                                return null
+                        })
+                    }
                 </TextField>
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}

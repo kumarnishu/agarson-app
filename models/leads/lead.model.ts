@@ -109,8 +109,7 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
     }],
     lead_owners: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: 'User'
     }],
     visiting_card: {
         _id: { type: String },

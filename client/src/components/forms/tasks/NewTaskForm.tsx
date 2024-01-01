@@ -184,13 +184,17 @@ function NewTaskForm({ users }: { users: IUser[] }) {
                         !personId ? "person is required" : "Choose a person"
                     }
                 >
-                    <option key={'00'} >
+                    <option key={'00'} value={undefined}>
+
                     </option>
                     {
-                        users.map(user => {
-                            return (<option key={user._id} value={user._id}>
-                                {user.username}
-                            </option>)
+                        users.map((user, index) => {
+                            if (!user.tasks_access_fields.is_hidden)
+                                return (<option key={index} value={user._id}>
+                                    {user.username}
+                                </option>)
+                            else
+                                return null
                         })
                     }
                 </TextField>

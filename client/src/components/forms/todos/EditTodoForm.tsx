@@ -174,7 +174,7 @@ function EditTodoForm({ todo, users }: { todo: ITodo, users: IUser[] }) {
                     }
                     {
                         users.map(user => {
-                            if (user._id !== personId)
+                            if (!user.todos_access_fields.is_hidden && user._id !== personId)
                                 return (<option key={user._id} value={user._id}>
                                     {user.username}
                                 </option>)
