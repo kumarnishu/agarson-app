@@ -55,7 +55,10 @@ function NewArticleForm() {
         }
     }, [isSuccess, setChoice])
 
-    console.log(sizes)
+    useEffect(() => {
+        setSizes(sizes)
+    }, [sizes])
+
     return (
         <form onSubmit={formik.handleSubmit}>
 
