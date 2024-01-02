@@ -14,7 +14,6 @@ import CreateSizeInput from './CreateSizeInput';
 
 function NewArticleForm() {
     const [sizes, setSizes] = useState<{ size: string, standard_weight: number, upper_weight: number }[]>([])
-
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IArticle>, BackendError, {
             name: string, display_name: string, sizes: { size: string, standard_weight: number, upper_weight: number }[]
@@ -49,10 +48,6 @@ function NewArticleForm() {
     });
 
     useEffect(() => {
-        setSizes(sizes)
-    }, [sizes])
-
-    useEffect(() => {
         if (isSuccess) {
             setTimeout(() => {
                 setChoice({ type: UserChoiceActions.close_user })
@@ -60,6 +55,7 @@ function NewArticleForm() {
         }
     }, [isSuccess, setChoice])
 
+    console.log(sizes)
     return (
         <form onSubmit={formik.handleSubmit}>
 
