@@ -1,5 +1,5 @@
 import { Button, Stack, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 function CreateSizeInput({ sizes, setSizes }: {
     sizes: {
@@ -13,19 +13,11 @@ function CreateSizeInput({ sizes, setSizes }: {
         upper_weight: number;
     }[]>>
 }) {
-    const [data, setData] = useState<{
-        size: string;
-        standard_weight: number;
-        upper_weight: number;
-    }[]>(sizes)
+
     const [size, setSize] = useState<string>()
     const [standard_weight, setStandardWeight] = useState<number>()
     const [upper_weight, setStandardUpperWeight] = useState<number>()
-
-    useEffect(() => {
-        setData(data)
-    }, [data,setSizes])
-
+    console.log(sizes)
     return (
         <>
             <Typography variant="button" fontSize={16} fontWeight={'bold'}>Add Article Sizes</Typography>
@@ -48,12 +40,12 @@ function CreateSizeInput({ sizes, setSizes }: {
                     onChange={(e) => setStandardUpperWeight(Number(e.currentTarget.value))}
                 />
                 <Button variant="contained" onClick={() => {
+                    let tmps: {
+                        size: string;
+                        standard_weight: number;
+                        upper_weight: number;
+                    }[] = sizes
                     if (size && upper_weight && standard_weight) {
-                        let tmps: {
-                            size: string;
-                            standard_weight: number;
-                            upper_weight: number;
-                        }[] = data
                         tmps.push({ size: size, standard_weight: standard_weight, upper_weight: upper_weight })
                         setSizes(tmps)
 
@@ -61,13 +53,13 @@ function CreateSizeInput({ sizes, setSizes }: {
                 }}>Add</Button>
             </Stack>
             <Stack flexDirection={'column-reverse'} gap={1}>
-                {data && data.map((dt, index) => {
+                {sizes && sizes.map((size, index) => {
                     return (
                         <React.Fragment key={index}>
                             <h3>{index + 1}</h3>
-                            <h4>size : {dt.size}</h4>
-                            <p>shoe standard weight : {dt.standard_weight}</p>
-                            <p>upper standard weight  : {dt.upper_weight}</p>
+                            <h4>size : {size.size}</h4>
+                            <p>shoe standard weight : {size.standard_weight}</p>
+                            <p>upper standard weight  : {size.upper_weight}</p>
                         </React.Fragment>
                     )
                 })}

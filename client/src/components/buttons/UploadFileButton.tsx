@@ -29,6 +29,8 @@ function UploadFileButton({ disabled, file, name, required, camera, label, isLoa
                     <>
                         <Button
                             fullWidth
+                            color="warning"
+                            variant="outlined"
                             component="label"
                             disabled={Boolean(disabled)}
                         >

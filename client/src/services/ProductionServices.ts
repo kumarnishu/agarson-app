@@ -14,7 +14,7 @@ export const ToogleMachine = async (id: string) => {
 };
 
 export const GetMachines = async () => {
-    return await apiClient.get(`dyes`);
+    return await apiClient.get(`machines`);
 };
 
 export const CreateDye = async (body: { dye_number: number, size: string }) => {
@@ -56,7 +56,7 @@ export const CreateShoeWeight = async ({ body }: { body: FormData }) => {
 export const UpdateShoeWeight = async ({ id, body }: { id: string, body: FormData }) => {
     return await apiClient.put(`weights/${id}`, body);
 }
-export const ValidateShoeWeight = async ({ id }: { id: string }) => {
+export const ValidateShoeWeight = async ( id: string) => {
     return await apiClient.patch(`weights/validate/${id}`);
 }
 export const GetShoeWeights = async () => {

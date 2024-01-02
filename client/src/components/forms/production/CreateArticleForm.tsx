@@ -48,7 +48,9 @@ function NewArticleForm() {
         }
     });
 
-
+    useEffect(() => {
+        setSizes(sizes)
+    }, [sizes])
 
     useEffect(() => {
         if (isSuccess) {
@@ -57,7 +59,6 @@ function NewArticleForm() {
             }, 1000)
         }
     }, [isSuccess, setChoice])
-    console.log(formik.values.sizes)
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -68,8 +69,6 @@ function NewArticleForm() {
                 pt={2}
             >
                 <TextField
-
-
                     required
                     fullWidth
                     error={

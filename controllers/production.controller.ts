@@ -20,7 +20,7 @@ export const GetDyes = async (req: Request, res: Response, next: NextFunction) =
     return res.status(200).json(dyes)
 }
 export const GetShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
-    let weights = await ShoeWeight.find().populate('created_by').populate('updated_by').sort('dye_number')
+    let weights = await ShoeWeight.find().populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('dye_number')
     return res.status(200).json(weights)
 }
 
@@ -35,8 +35,12 @@ export const CreateMachine = async (req: Request, res: Response, next: NextFunct
     }
     if (await Machine.findOne({ name: name }))
         return res.status(400).json({ message: "already exists this machine" })
-    let machine = new Machine({
-        name: name, display_name: display_name
+    let machine = await new Machine({
+        name: name, display_name: display_name,
+        created_at:new Date(),
+        updated_by: req.user,
+        updated_at:new Date(),
+        created_by: req.user,
     }).save()
 
     return res.status(201).json(machine)
@@ -59,6 +63,8 @@ export const UpdateMachine = async (req: Request, res: Response, next: NextFunct
             return res.status(400).json({ message: "already exists this machine" })
     machine.name = name
     machine.display_name = display_name
+    machine.updated_at = new Date()
+    machine.updated_by = req.user
     await machine.save()
     return res.status(200).json(machine)
 }
@@ -79,8 +85,11 @@ export const CreateArticle = async (req: Request, res: Response, next: NextFunct
     }
     if (await Article.findOne({ name: name }))
         return res.status(400).json({ message: "already exists this article" })
-    let machine = new Machine({
-        name: name, display_name: display_name
+    let machine =await new Article({
+        name: name, display_name: display_name, created_at: new Date(),
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
     }).save()
 
     return res.status(201).json(machine)
@@ -111,6 +120,8 @@ export const UpdateArticle = async (req: Request, res: Response, next: NextFunct
     article.name = name
     article.display_name = display_name
     article.sizes = sizes
+    article.updated_at = new Date()
+    article.updated_by = req.user
     await article.save()
     return res.status(200).json(article)
 
@@ -125,7 +136,11 @@ export const CreateDye = async (req: Request, res: Response, next: NextFunction)
     }
     if (await Dye.findOne({ dye_number: dye_number }))
         return res.status(400).json({ message: "already exists this dye" })
-    let dye = new Dye({ dye_number: dye_number, size: size }).save()
+    let dye = await new Dye({
+        dye_number: dye_number, size: size, created_at: new Date(),
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user }).save()
     return res.status(201).json(dye)
 }
 export const UpdateDye = async (req: Request, res: Response, next: NextFunction) => {
@@ -146,6 +161,8 @@ export const UpdateDye = async (req: Request, res: Response, next: NextFunction)
             return res.status(400).json({ message: "already exists this dye" })
     dye.dye_number = dye_number
     dye.size = size
+    dye.updated_at = new Date()
+    dye.updated_by = req.user
     await dye.save()
     return res.status(200).json(dye)
 }

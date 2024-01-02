@@ -1,33 +1,35 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../popup/PopUp'
-import { Edit, TextRotationAngledown } from '@mui/icons-material'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { IArticle } from '../../types/production.types'
-import UpdateArticleDialog from '../dialogs/production/UpdateArticleDialog'
-import ToogleArticleDialog from '../dialogs/production/ToogleArticleDialog'
+import { IShoeWeight } from '../../types/production.types'
+import ViewShoeWeightPhotoDialog from '../dialogs/production/ViewShoeWeightPhotoDialog'
+import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
+import { Check, Edit, Photo } from '@mui/icons-material'
+import ValidateShoeWeightDialog from '../dialogs/production/ValidateShoeWeightDialog'
+
 
 
 type Props = {
-    article: IArticle | undefined,
-    setArticle: React.Dispatch<React.SetStateAction<IArticle | undefined>>,
+    shoe_weight: IShoeWeight | undefined,
+    setShoeWeight: React.Dispatch<React.SetStateAction<IShoeWeight | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    articles: IArticle[],
-    selectedArticles: IArticle[]
-    setSelectedArticles: React.Dispatch<React.SetStateAction<IArticle[]>>,
+    shoe_weights: IShoeWeight[],
+    selectedShoeWeights: IShoeWeight[]
+    setSelectedShoeWeights: React.Dispatch<React.SetStateAction<IShoeWeight[]>>,
 }
-function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle, selectedArticles, setSelectedArticles }: Props) {
-    const [data, setData] = useState<IArticle[]>(articles)
-    const { setChoice } = useContext(ChoiceContext)
+function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, setShoeWeight, selectedShoeWeights, setSelectedShoeWeights }: Props) {
+    const [data, setData] = useState<IShoeWeight[]>(shoe_weights)
     const { user } = useContext(UserContext)
+    const { setChoice } = useContext(ChoiceContext)
+
     useEffect(() => {
         if (data)
-            setData(articles)
-    }, [articles, data])
+            setData(shoe_weights)
+    }, [shoe_weights, data])
     return (
         <>
             <Box sx={{
@@ -48,11 +50,11 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
                                         if (e.currentTarget.checked) {
-                                            setSelectedArticles(articles)
+                                            setSelectedShoeWeights(shoe_weights)
                                             setSelectAll(true)
                                         }
                                         if (!e.currentTarget.checked) {
-                                            setSelectedArticles([])
+                                            setSelectedShoeWeights([])
                                             setSelectAll(false)
                                         }
                                     }} />
@@ -68,22 +70,38 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                             <STableHeadCell
                             >
 
-                                Name
+                                Shoe Photo
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Display name
+                                Machine
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Sizes
+                                Dye Number
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Article
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                                Size
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Shoe Weight
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -114,7 +132,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                     </STableHead>
                     <STableBody >
                         {
-                            articles && articles.map((article, index) => {
+                            shoe_weights && shoe_weights.map((shoe_weight, index) => {
                                 return (
                                     <STableRow
                                         key={index}
@@ -127,7 +145,6 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                                     checked={Boolean(selectAll)}
                                                 />
 
-
                                             </STableCell>
                                             :
                                             null
@@ -137,13 +154,13 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
 
                                                 <Checkbox size="small"
                                                     onChange={(e) => {
-                                                        setArticle(article)
+                                                        setShoeWeight(shoe_weight)
                                                         if (e.target.checked) {
-                                                            setSelectedArticles([...selectedArticles, article])
+                                                            setSelectedShoeWeights([...selectedShoeWeights, shoe_weight])
                                                         }
                                                         if (!e.target.checked) {
-                                                            setSelectedArticles((articles) => articles.filter((item) => {
-                                                                return item._id !== article._id
+                                                            setSelectedShoeWeights((shoe_weights) => shoe_weights.filter((item) => {
+                                                                return item._id !== shoe_weight._id
                                                             }))
                                                         }
                                                     }}
@@ -155,34 +172,32 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                         }
                                         {/* actions */}
                                         {user?.productions_access_fields.is_editable &&
-                                            <STableCell>
+                                            <STableCell style={{ backgroundColor: Boolean(!shoe_weight.is_validated) ? 'rgba(255,0,0,0.1)' : 'rgba(52, 200, 84, 0.6)' }}>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row">
                                                             <>
-                                                                <Tooltip title="edit">
-                                                                    <IconButton
+                                                                {user?.visit_access_fields.is_editable && <Tooltip title="edit">
+                                                                    <IconButton color="info"
                                                                         onClick={() => {
-                                                                            setArticle(article)
-                                                                            setChoice({ type: ProductionChoiceActions.update_article })
+                                                                            setChoice({ type: ProductionChoiceActions.validate_weight })
+                                                                            setShoeWeight(shoe_weight)
                                                                         }}
-
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>
-                                                                {user?.productions_access_fields.is_deletion_allowed &&
-                                                                    <Tooltip title="Delete">
-                                                                        <IconButton color="primary"
-                                                                            onClick={() => {
-                                                                                setArticle(article)
-                                                                                setChoice({ type: ProductionChoiceActions.toogle_article })
+                                                                </Tooltip>}
 
-                                                                            }}
-                                                                        >
-                                                                            <TextRotationAngledown />
-                                                                        </IconButton>
-                                                                    </Tooltip>}
+                                                                {!shoe_weight.is_validated && user?.visit_access_fields.is_editable && <Tooltip title="validate">
+                                                                    <IconButton color="error"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: ProductionChoiceActions.validate_weight })
+                                                                            setShoeWeight(shoe_weight)
+                                                                        }}
+                                                                    >
+                                                                        <Check />
+                                                                    </IconButton>
+                                                                </Tooltip>}
                                                             </>
 
                                                         </Stack>}
@@ -190,26 +205,44 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
 
                                             </STableCell>}
                                         <STableCell>
-                                            {article.name}
+
+                                            {shoe_weight.shoe_photo && <IconButton
+                                                onClick={() => {
+                                                    setShoeWeight(shoe_weight)
+                                                    setChoice({ type: ProductionChoiceActions.view_shoe_photo })
+                                                }}
+
+                                            ><Photo />
+                                            </IconButton>}
+
                                         </STableCell>
                                         <STableCell>
-                                            {article.display_name}
+                                            {shoe_weight.machine.name}
                                         </STableCell>
                                         <STableCell>
-                                            {article.sizes.map((size) => { return size.size }).toString()}
+                                            {shoe_weight.dye.dye_number}
                                         </STableCell>
                                         <STableCell>
-                                            {article.created_at && new Date(article.created_at).toLocaleString()}
+                                            {shoe_weight.article.name}
                                         </STableCell>
                                         <STableCell>
-                                            {article.created_by.username}
+                                            {shoe_weight.dye.size}
                                         </STableCell>
                                         <STableCell>
-                                            {article.updated_at && new Date(article.updated_at).toLocaleString()}
+                                            {shoe_weight.shoe_weight}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.created_at && new Date(shoe_weight.created_at).toLocaleString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.created_by.username}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.updated_at && new Date(shoe_weight.updated_at).toLocaleString()}
                                         </STableCell>
 
                                         <STableCell>
-                                            {article.updated_by.username}
+                                            {shoe_weight.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>
@@ -217,16 +250,15 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                             })}
                     </STableBody>
                 </STable>
-                {
-                    article ?
-                        <>
-                            <UpdateArticleDialog article={article} />
-                            <ToogleArticleDialog article={article} />
-                        </> : null
-                }
+
             </Box>
+            {shoe_weight && <>
+                <ViewShoeWeightPhotoDialog weight={shoe_weight} />
+                <ValidateShoeWeightDialog weight={shoe_weight} />
+            </>
+            }
         </>
     )
 }
 
-export default ArticlesTable
+export default ShoeWeightsTable

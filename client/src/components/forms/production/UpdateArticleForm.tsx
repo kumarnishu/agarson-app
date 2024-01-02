@@ -47,7 +47,9 @@ function UpdateArticleForm({ article }: { article: IArticle }) {
         }
     });
 
-
+    useEffect(() => {
+        setSizes(sizes)
+    }, [sizes])
 
     useEffect(() => {
         if (isSuccess) {
