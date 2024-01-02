@@ -1,20 +1,14 @@
-import { Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, Stack } from '@mui/material';
 import { AxiosResponse } from 'axios';
-import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
 import { useMutation } from 'react-query';
-import * as Yup from "yup"
 import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext';
-import { BackendError, Target } from '../../..';
+import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import { StartMyDay } from '../../../services/VisitServices';
-
-
-type TformData = {
-    media: string | Blob | File
-}
+import UploadFileButton from '../../buttons/UploadFileButton';
 
 function StartMydayForm() {
     const [location, setLocation] = useState<{ latitude: string, longitude: string, timestamp: Date }>()
@@ -29,46 +23,17 @@ function StartMydayForm() {
 
     const { setChoice } = useContext(ChoiceContext)
 
-    const formik = useFormik<TformData>({
-        initialValues: {
-            media: ''
-        },
-        validationSchema: Yup.object({
-            media: Yup.mixed<File>()
-                .test("size", "size is allowed only less than 10mb",
-                    file => {
-                        if (file)
-                            if (!file.size) //file not provided
-                                return true
-                            else
-                                return Boolean(file.size <= 10 * 1024 * 1024)
-                        return true
-                    }
-                )
-                .test("type", " allowed only .jpg, .jpeg, .png, .gif ",
-                    file => {
-                        const Allowed = ["image/png", "image/jpeg", "image/gif"]
-                        if (file)
-                            if (!file.size) //file not provided
-                                return true
-                            else
-                                return Boolean(Allowed.includes(file.type))
-                        return true
-                    }
-                )
-        }),
-        onSubmit: (values: TformData) => {
-            if (location) {
-                let formdata = new FormData()
-                formdata.append("body", JSON.stringify({ start_day_credientials: location }))
-                formdata.append("media", values.media)
-                mutate(formdata)
-                setLocation(undefined)
-            }
-            else
-                alert("please Enable GPS of device")
+    function handleSubmit() {
+        if (location && file) {
+            let formdata = new FormData()
+            formdata.append("body", JSON.stringify({ start_day_credientials: location }))
+            formdata.append("media", file)
+            mutate(formdata)
+            setLocation(undefined)
         }
-    });
+        else
+            alert("please Enable GPS of device")
+    }
 
     useEffect(() => {
         if (file)
@@ -89,7 +54,7 @@ function StartMydayForm() {
         })
     }, [])
     return (
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>
                 <Stack
                     direction="column"
@@ -97,30 +62,7 @@ function StartMydayForm() {
                     sx={{ pt: 2 }}
                 >
 
-                    <TextField
-                        fullWidth
-                        error={
-                            formik.touched.media && formik.errors.media ? true : false
-                        }
-                        helperText={
-                            formik.touched.media && formik.errors.media ? String(formik.errors.media) : ""
-                        }
-                        label="Upload Selfie"
-                        focused
-                        type="file"
-                        name="media"
-                        onBlur={formik.handleBlur}
-                        onChange={(e) => {
-                            e.preventDefault()
-                            const target: Target = e.currentTarget
-                            let files = target.files
-                            if (files) {
-                                let file = files[0]
-                                formik.setFieldValue("media", file)
-                                setFile(file)
-                            }
-                        }}
-                    />
+                    <UploadFileButton name="media" required={true} camera={true} isLoading={isLoading} label="Upload Selfie" file={file} setFile={setFile} disabled={isLoading} />
                     {
                         isError ? (
                             <AlertBar message={error?.response.data.message} color="error" />
@@ -136,11 +78,6 @@ function StartMydayForm() {
                         fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
                     </Button>
                 </Stack>
-
-                {formik.values.media && <Stack sx={{ bgcolor: 'lightblue', m: 1, p: 1, border: 5, borderColor: 'darkgreen', borderRadius: 2 }}>
-                    {/* @ts-ignore */}
-                    {formik.values.media && <img src={formik.values.media && URL.createObjectURL(formik.values.media)} alt="image" />}
-                </Stack>}
             </Stack>
 
         </form >

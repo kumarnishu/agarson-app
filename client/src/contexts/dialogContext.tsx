@@ -7,7 +7,7 @@ type ContactChoices = "create_contact" | "update_contact" | "delete_contact" | "
 
 type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting" | "bulk_start_greeting" | "close_greeting" | "bulk_stop_greeting" | "stop_greeting" | "start_greeting"
 
-type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments" | "view_visit_photo" | "mark_attendence" |"upload_samples"
+type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments" | "view_visit_photo" | "mark_attendence" | "upload_samples"
 
 type TaskChoices = "create_task" | "add_more_boxes" | "delete_task" | "close_task" | "view_boxes" | "edit_task"
 
@@ -18,6 +18,8 @@ type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_ch
 
 type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
   | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark"
+
+type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye"
 
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
 type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadcast" | "close_broadcast" | "view_broadcast" | 'start_broadcast' | "reset_broadcast" | "stop_broadcast" | "create_message_broadcast" | "update_message_broadcast"
@@ -45,10 +47,9 @@ type BotChoices = "create_flow"
 
 
 type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | TaskChoices | VisitChoices
-  | BroadcastChoices | TaskSchedulerChoices | TodoChoices | ReminderChoices | ContactChoices | CheckListChoices | GreetingChoices | PasswordChoices
+  | BroadcastChoices | TaskSchedulerChoices | TodoChoices | ReminderChoices | ContactChoices | CheckListChoices | GreetingChoices | PasswordChoices | ProductionChoices
 
 const initialState: ChoiceState | null = null
-
 
 
 export enum ContactChoiceActions {
@@ -57,6 +58,18 @@ export enum ContactChoiceActions {
   delete_contact = "delete_contact",
   bulk_contact = "bulk_contact",
   close_contact = "close_contact"
+}
+export enum ProductionChoiceActions {
+  create_machine = "create_machine",
+  update_machine = "update_machine",
+  create_article = "create_article",
+  update_article = "update_article",
+  create_dye = "create_dye",
+  update_dye = "update_dye",
+  toogle_machine = "toogle_machine",
+  toogle_article = "toogle_article",
+  toogle_dye = "toogle_dye",
+  close_production ="close_production"
 }
 
 export enum GreetingChoiceActions {
@@ -76,7 +89,7 @@ export enum PasswordChoiceActions {
   update_erp_password = "update_erp_password"
 }
 export enum VisitChoiceActions {
-  upload_samples ="upload_samples",
+  upload_samples = "upload_samples",
   view_visit_photo = "view_visit_photo",
   mark_attendence = "mark_attendence",
   start_day = "start_day",
@@ -235,7 +248,7 @@ export enum UserChoiceActions {
 
 type Action = {
   type: UserChoiceActions |
-  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TodoChoiceActions | PasswordChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions
+  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | BroadcastChoiceActions | TodoChoiceActions | PasswordChoiceActions | ReminderChoiceActions | ContactChoiceActions | TaskChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions | ProductionChoiceActions
 }
 
 // reducer
@@ -283,7 +296,6 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.refer_lead: return type
     case LeadChoiceActions.remove_referral: return type
     case LeadChoiceActions.bulk_delete_useless_leads: return type
-
     case LeadChoiceActions.assign_refer: return type
     case LeadChoiceActions.delete_remark: return type
     case LeadChoiceActions.update_remark: return type
@@ -305,6 +317,17 @@ function reducer(state: ChoiceState | null, action: Action) {
     case BotChoiceActions.toogle_flow_status: return type
     case BotChoiceActions.update_connected_users: return type
 
+    //production choice actios
+    case ProductionChoiceActions.create_machine: return type
+    case ProductionChoiceActions.update_machine: return type
+    case ProductionChoiceActions.create_article: return type
+    case ProductionChoiceActions.update_article: return type
+    case ProductionChoiceActions.create_dye: return type
+    case ProductionChoiceActions.update_dye: return type
+    case ProductionChoiceActions.toogle_article: return type
+    case ProductionChoiceActions.toogle_dye: return type
+    case ProductionChoiceActions.toogle_machine: return type
+    case ProductionChoiceActions.close_production: return type
 
     // template choice action
     case TemplateChoiceActions.create_template: return type

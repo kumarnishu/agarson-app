@@ -5,12 +5,13 @@ import { useEffect, useContext, useState } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
 import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext';
-import { BackendError, Target } from '../../..';
+import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import { MakeVisitIn } from '../../../services/VisitServices';
 import { IVisit } from '../../../types/visit.types';
+import UploadFileButton from '../../buttons/UploadFileButton';
 
 
 type TformData = {
@@ -18,7 +19,6 @@ type TformData = {
     city: string,
     is_old_party: Boolean,
     mobile: string,
-    media: string | Blob | File
 }
 
 function VisitInForm({ visit }: { visit: IVisit }) {
@@ -41,7 +41,6 @@ function VisitInForm({ visit }: { visit: IVisit }) {
         initialValues: {
             party_name: "",
             city: "",
-            media: '',
             mobile: '',
             is_old_party: false
         },
@@ -51,32 +50,10 @@ function VisitInForm({ visit }: { visit: IVisit }) {
             mobile: Yup.string().required("required mobile string")
                 .min(10, 'Must be 10 digits')
                 .max(10, 'Must be 10 digits'),
-            is_old_party: Yup.boolean().required("required"),
-            media: Yup.mixed<File>()
-                .test("size", "size is allowed only less than 10mb",
-                    file => {
-                        if (file)
-                            if (!file.size) //file not provided
-                                return true
-                            else
-                                return Boolean(file.size <= 10 * 1024 * 1024)
-                        return true
-                    }
-                )
-                .test("type", " allowed only .jpg, .jpeg, .png, .gif ",
-                    file => {
-                        const Allowed = ["image/png", "image/jpeg", "image/gif"]
-                        if (file)
-                            if (!file.size) //file not provided
-                                return true
-                            else
-                                return Boolean(Allowed.includes(file.type))
-                        return true
-                    }
-                )
+            is_old_party: Yup.boolean().required("required")
         }),
         onSubmit: (values: TformData) => {
-            if (location) {
+            if (location && file) {
                 let formdata = new FormData()
                 let Data = {
                     visit_in_credientials: location,
@@ -86,7 +63,7 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                     is_old_party: values.is_old_party
                 }
                 formdata.append("body", JSON.stringify(Data))
-                formdata.append("media", values.media)
+                formdata.append("media", file)
                 mutate({ id: visit._id, body: formdata })
                 setLocation(undefined)
             }
@@ -171,31 +148,8 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                         {...formik.getFieldProps('is_old_party')}
                     />} label="Is Old ?" />
 
-                    <TextField
-                        fullWidth
-                        focused
-                        required
-                        error={
-                            formik.touched.media && formik.errors.media ? true : false
-                        }
-                        helperText={
-                            formik.touched.media && formik.errors.media ? String(formik.errors.media) : ""
-                        }
-                        label="Upload Party Photo"
-                        type="file"
-                        name="media"
-                        onBlur={formik.handleBlur}
-                        onChange={(e) => {
-                            e.preventDefault()
-                            const target: Target = e.currentTarget
-                            let files = target.files
-                            if (files) {
-                                let file = files[0]
-                                formik.setFieldValue("media", file)
-                                setFile(file)
-                            }
-                        }}
-                    />
+                    <UploadFileButton name="media" required={true} camera={true} isLoading={isLoading} label="Upload Party Photo" file={file} setFile={setFile} disabled={isLoading} />
+
                     {
                         isError ? (
                             <AlertBar message={error?.response.data.message} color="error" />
@@ -211,13 +165,7 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                         fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
                     </Button>
                 </Stack>
-
-                {formik.values.media && <Stack sx={{ bgcolor: 'lightblue', m: 1, p: 1, border: 5, borderColor: 'darkgreen', borderRadius: 2 }}>
-                    {/* @ts-ignore */}
-                    {formik.values.media && <img src={formik.values.media && URL.createObjectURL(formik.values.media)} alt="image" />}
-                </Stack>}
             </Stack>
-
         </form >
     )
 }

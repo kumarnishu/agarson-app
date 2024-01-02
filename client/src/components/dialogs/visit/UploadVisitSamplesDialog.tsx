@@ -1,20 +1,20 @@
-import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
 import { IVisitReport } from '../../../types/visit.types';
 import { AxiosResponse } from 'axios';
 import { queryClient } from '../../../main';
-import { BackendError, Target } from '../../..';
+import { BackendError } from '../../..';
 import { IUser } from '../../../types/user.types';
 import { useMutation } from 'react-query';
 import AlertBar from '../../snacks/AlertBar';
 import { UploadVisitSamplesPhoto } from '../../../services/VisitServices';
+import UploadFileButton from '../../buttons/UploadFileButton';
 
 function UploadVisitSamplesDialog({ visit }: { visit: IVisitReport }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const [file, setFile] = useState<File>()
-    const [formdata, setFormData] = useState<FormData>()
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IUser>, BackendError, {
             id: string;
@@ -52,44 +52,17 @@ function UploadVisitSamplesDialog({ visit }: { visit: IVisitReport }) {
                 </IconButton>
                 <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Upload Shoes Samples</DialogTitle>
                 <DialogContent >
-                    <TextField
-                        sx={{ mt: 2 }}
-                        fullWidth
-                        error={
-                            !formdata ? true : false
-                        }
-                        helperText={
-                            !formdata ? "Please Upload Shoes Samples having with you" : ""
-                        }
-                        label="Upload Samples"
-                        focused
-                        required
-                        type="file"
-                        name="media"
-                        onChange={(e) => {
-                            e.preventDefault()
-                            const target: Target = e.currentTarget
-                            let files = target.files
-                            if (files) {
-                                let file = files[0]
-                                let formdata1 = new FormData()
-                                formdata1.append("media", file)
-                                setFile(file)
-                                setFormData(formdata1)
-                            }
-                        }}
-                    />
+                    <UploadFileButton name="media" required={true} camera={true} isLoading={isLoading} label="Upload Samples" file={file} setFile={setFile} disabled={isLoading} />
                     <Button variant="contained" color="error" onClick={() => {
-                        if (formdata)
+                        if (file) {
+                            let formdata = new FormData()
+                            formdata.append("media", file)
                             mutate({ id: visit._id, body: formdata })
+                        }
                     }}
                         disabled={Boolean(isLoading)}
                         fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
                     </Button>
-                    {file && <Stack sx={{ bgcolor: 'lightblue', m: 1, p: 1, border: 5, borderColor: 'darkgreen', borderRadius: 2 }}>
-                        {/* @ts-ignore */}
-                        {file && <img src={file && URL.createObjectURL(file)} alt="image" />}
-                    </Stack>}
                 </DialogContent>
 
             </Dialog >
