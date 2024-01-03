@@ -328,9 +328,6 @@ export default function VisitAdminPage() {
         if (sorted) {
             let result = visits.sort(sortBy('person.username'))
             setVisits(result)
-        }else{
-            let result = visits.sort(sortBy('-created_at'))
-            setVisits(result)
         }
     }, [sorted])
     return (
