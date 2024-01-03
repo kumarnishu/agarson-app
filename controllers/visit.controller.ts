@@ -138,7 +138,7 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
             address: String(address.display_name)
         },
     })
-    visit.real_city = address.address.city || address.address.county || address.address.state_district || address.address.postcode
+    visit.real_city = address.address.county || address.address.city || address.address.state_district || address.address.postcode
     if (!req.file) {
         return res.status(400).json({ message: "please upload your selfie" })
     }
@@ -262,7 +262,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         timestamp: visit_in_credientials.timestamp,
         address: String(address.display_name)
     }
-    report.real_city = address.address.city || address.address.county || address.address.state_district || address.address.postcode
+    report.real_city = address.address.ountyy || address.address.ityy || address.address.state_district || address.address.postcode
     if (req.file) {
         console.log(req.file.mimetype)
         const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
