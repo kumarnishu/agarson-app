@@ -4,7 +4,7 @@ import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { Machine } from "../models/production/machine.model"
 import { Article } from "../models/production/article.model"
 import { Dye } from "../models/production/dye.types"
-
+import xlsx from "xlsx"
 //get
 export const GetMachines = async (req: Request, res: Response, next: NextFunction) => {
     let machines = await Machine.find({ active: true }).populate('created_by').populate('updated_by').sort('name')
@@ -56,6 +56,104 @@ export const CreateMachine = async (req: Request, res: Response, next: NextFunct
     return res.status(201).json(machine)
 }
 
+export const BulkUploadMachine = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer);
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: { name: string, display_name: string }[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        console.log(workbook_response)
+        let newMachines: { name: string, display_name: string }[] = []
+        workbook_response.forEach(async (machine) => {
+            let name: string | null = machine.name
+            let display_name: string | null = machine.display_name
+            console.log(display_name, name)
+            newMachines.push({ name: name, display_name: display_name })
+        })
+        console.log(newMachines)
+        newMachines.forEach(async (mac) => {
+            let machine = await Machine.findOne({ display_name: mac.display_name })
+            if (!machine)
+                await new Machine({ name: mac.name, display_name: mac.display_name, created_by: req.user, updated_by: req.user }).save()
+        })
+    }
+    return res.status(200).json({ message: "machines updated" });
+}
+export const BulkUploadDye = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer);
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: { dye_number: number, size: string }[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        console.log(workbook_response)
+        let newDyes: { dye_number: number, size: string }[] = []
+        workbook_response.forEach(async (dye) => {
+            let dye_number: number | null = dye.dye_number
+            let size: string | null = dye.size
+            newDyes.push({ dye_number: dye_number, size: size })
+        })
+        console.log(newDyes)
+        newDyes.forEach(async (mac) => {
+            let dye = await Dye.findOne({ dye_number: mac.dye_number })
+            if (!dye)
+                await new Dye({ dye_number: mac.dye_number, size: mac.size, created_by: req.user, updated_by: req.user }).save()
+        })
+    }
+    return res.status(200).json({ message: "dyes updated" });
+}
+export const BulkUploadArticle = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer);
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: { name: string, display_name: string }[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        console.log(workbook_response)
+        let newArticles: { name: string, display_name: string }[] = []
+        workbook_response.forEach(async (article) => {
+            let name: string | null = article.name
+            let display_name: string | null = article.display_name
+            console.log(display_name, name)
+            newArticles.push({ name: name, display_name: display_name })
+        })
+        console.log(newArticles)
+        newArticles.forEach(async (mac) => {
+            let article = await Article.findOne({ display_name: mac.display_name })
+            if (!article)
+                await new Article({ name: mac.name, display_name: mac.display_name, created_by: req.user, updated_by: req.user }).save()
+        })
+    }
+    return res.status(200).json({ message: "articles updated" });
+}
 export const UpdateMachine = async (req: Request, res: Response, next: NextFunction) => {
     const { name, display_name } = req.body as {
         name: string,
@@ -226,14 +324,26 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
 
     if (!machine || !dye || !article || !weight)
         return res.status(400).json({ message: "please fill all reqired fields" })
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 7
+    previous_date.setDate(day)
+
+    let shoe_weights = await ShoeWeight.find({ created_at: { $gte: previous_date } })
+    shoe_weights = shoe_weights.filter((shoe_weight) => {
+        if (shoe_weight.created_at.getDate() === new Date().getDate() && shoe_weight.created_at.getMonth() === new Date().getMonth() && shoe_weight.created_at.getFullYear() === new Date().getFullYear()) {
+            return shoe_weight
+        }
+    })
+
 
     let m1 = await Machine.findById(machine)
     let d1 = await Dye.findById(dye)
     let art1 = await Article.findById(article)
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
-    if ((await ShoeWeight.find({ created_at: new Date() })).length < 3)
+    if (shoe_weights.length === 3)
         return res.status(400).json({ message: "no more shoe wieght allowed to upload" })
+
     let shoe_weight = new ShoeWeight({
         machine: m1, dye: d1, article: art1, shoe_weight: weight
     })

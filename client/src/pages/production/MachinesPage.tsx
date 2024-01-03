@@ -16,6 +16,7 @@ import NewMachineDialog from '../../components/dialogs/production/CreateMachineD
 import { IMachine } from '../../types/production.types'
 import { GetMachines } from '../../services/ProductionServices'
 import MachinesTable from '../../components/tables/MachinesTable'
+import UploadMachinesFromExcelButton from '../../components/buttons/UploadMachinesButton'
 
 
 type SelectedData = {
@@ -126,6 +127,8 @@ export default function MachinePage() {
         <Stack
           direction="row"
         >
+          {!LoggedInUser?.contacts_access_fields.is_hidden ?
+            < UploadMachinesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
           {/* search bar */}
           < Stack direction="row" spacing={2} >
 

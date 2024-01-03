@@ -16,6 +16,7 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import NewArticleDialog from '../../components/dialogs/production/CreateArticleDialog'
 import { IArticle } from '../../types/production.types'
 import { GetArticles } from '../../services/ProductionServices'
+import UploadArticlesFromExcelButton from '../../components/buttons/UploadArticlesButton'
 
 
 type SelectedData = {
@@ -131,7 +132,8 @@ export default function ArticlePage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-
+            {!LoggedInUser?.contacts_access_fields.is_hidden ?
+              < UploadArticlesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
             <TextField
               fullWidth
               size="small"

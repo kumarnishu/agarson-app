@@ -10,9 +10,9 @@ function ViewTextDialog({ text, setText }: { text: string, setText: React.Dispat
         >
 
             <DialogContent>
-                <pre style={{ fontSize: '16px' }} color="error">
+                <p style={{ fontSize: '14px',wordSpacing:'2px' }} >
                     {text}
-                </pre>
+                </p>
 
             </DialogContent>
 

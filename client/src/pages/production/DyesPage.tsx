@@ -16,6 +16,7 @@ import { IDye } from '../../types/production.types'
 import { GetDyes } from '../../services/ProductionServices'
 import NewDyeDialog from '../../components/dialogs/production/CreateDyeDialog'
 import DyesTable from '../../components/tables/DyesTable'
+import UploadDyesFromExcelButton from '../../components/buttons/UploadDyesButton'
 
 
 type SelectedData = {
@@ -128,6 +129,8 @@ export default function DyePage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
+            {!LoggedInUser?.contacts_access_fields.is_hidden ?
+              < UploadDyesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
             <TextField
               fullWidth
               size="small"

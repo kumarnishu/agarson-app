@@ -5,6 +5,18 @@ export const CreateMachine = async (body: { name: string, display_name: string }
     return await apiClient.post(`machines`, body);
 };
 
+export const CreateProduction = async (body: {
+    machine: string,
+    thekedar: string,
+    article: string,
+    manpower: number,
+    production: number,
+    big_repair: number,
+    small_repair: number,
+}) => {
+    return await apiClient.post(`productions`, body);
+}
+
 export const UpdateMachine = async ({ body, id }: { body: { name: string, display_name: string }, id: string }) => {
     return await apiClient.put(`machines/${id}`, body);
 };
@@ -56,7 +68,7 @@ export const CreateShoeWeight = async ({ body }: { body: FormData }) => {
 export const UpdateShoeWeight = async ({ id, body }: { id: string, body: FormData }) => {
     return await apiClient.put(`weights/${id}`, body);
 }
-export const ValidateShoeWeight = async ( id: string) => {
+export const ValidateShoeWeight = async (id: string) => {
     return await apiClient.patch(`weights/validate/${id}`);
 }
 export const GetShoeWeights = async () => {
@@ -112,4 +124,14 @@ export const UpdateRunningMouldReport = async ({ id, body }: {
 
 export const GetRunningMouldReports = async () => {
     return await apiClient.get(`running_mould_reports`);
+}
+
+export const BulkUploadMachines = async (body: FormData) => {
+    return await apiClient.put(`machines/upload/bulk`, body);
+}
+export const BulkUploadDyes = async (body: FormData) => {
+    return await apiClient.put(`dyes/upload/bulk`, body);
+}
+export const BulkUploadArticles = async (body: FormData) => {
+    return await apiClient.put(`articles/upload/bulk`, body);
 }

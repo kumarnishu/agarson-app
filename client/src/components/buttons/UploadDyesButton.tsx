@@ -5,16 +5,16 @@ import { styled } from "styled-components"
 import { BackendError } from "../.."
 import { Button, CircularProgress, Snackbar } from "@mui/material"
 import { Upload } from "@mui/icons-material"
-import { BulkContactUpdateFromExcel } from "../../services/ContactServices"
+import { BulkUploadDyes } from "../../services/ProductionServices"
 
 const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadContactsFromExcelButton({ disabled }: { disabled: boolean }) {
+function UploadDyesFromExcelButton({ disabled }: { disabled: boolean }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any[]>, BackendError, FormData>
-        (BulkContactUpdateFromExcel)
+        (BulkUploadDyes)
     const [file, setFile] = React.useState<File | null>(null)
 
 
@@ -76,4 +76,4 @@ function UploadContactsFromExcelButton({ disabled }: { disabled: boolean }) {
     )
 }
 
-export default UploadContactsFromExcelButton
+export default UploadDyesFromExcelButton
