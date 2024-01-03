@@ -10,7 +10,7 @@ export const UpdateMachine = async ({ body, id }: { body: { name: string, displa
 };
 
 export const ToogleMachine = async (id: string) => {
-    return await apiClient.delete(`machines/toogle/${id}`);
+    return await apiClient.patch(`machines/toogle/${id}`);
 };
 
 export const GetMachines = async () => {
@@ -26,7 +26,7 @@ export const UpdateDye = async ({ body, id }: { body: { dye_number: number, size
 };
 
 export const ToogleDye = async (id: string) => {
-    return await apiClient.delete(`dyes/toogle/${id}`);
+    return await apiClient.patch(`dyes/toogle/${id}`);
 };
 
 export const GetDyes = async () => {
@@ -42,7 +42,7 @@ export const UpdateArticle = async ({ body, id }: { body: { name: string, displa
 };
 
 export const ToogleArticle = async (id: string) => {
-    return await apiClient.delete(`articles/toogle/${id}`);
+    return await apiClient.patch(`articles/toogle/${id}`);
 };
 
 export const GetArticles = async () => {

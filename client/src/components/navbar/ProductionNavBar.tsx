@@ -51,17 +51,24 @@ export default function ProductionNavBar() {
                                     }}
                                 >
 
-                                    <StyledLink to={paths.production}>Production</StyledLink>
-                                    {user.productions_access_fields.is_editable &&
-                                        <>
+
+                                    <>
+                                        {window.screen.width > 500 && <>
+                                            <StyledLink to={paths.my_shoe_weight}>My Shoe Weights</StyledLink>
+                                            <StyledLink to={paths.my_dye_repair}>My Dye Repair</StyledLink>
+                                            <StyledLink to={paths.my_running_mould}>My Running Mould</StyledLink>
+                                            <StyledLink to={paths.my_production}>My Production</StyledLink>
+                                        </>}
+                                        {user.is_admin && <>
                                             <StyledLink to={paths.shoe_weight}>Shoe Weights</StyledLink>
                                             <StyledLink to={paths.dye_repair}>Dye Repair</StyledLink>
                                             <StyledLink to={paths.running_mould}>Running Mould</StyledLink>
+                                            <StyledLink to={paths.production}>Production</StyledLink>
                                             <StyledLink to={paths.articles}>Articles</StyledLink>
                                             <StyledLink to={paths.machines}>Machines</StyledLink>
                                             <StyledLink to={paths.dyes}>Dyes</StyledLink>
-                                            <StyledLink to={paths.production_admin_page}>Production Admin</StyledLink>
                                         </>}
+                                    </>
                                     <StyledLink to={paths.production_help_page}>Help</StyledLink>
                                 </Stack>
 

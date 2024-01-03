@@ -43,8 +43,6 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                         <STableRow>
                             <STableHeadCell
                             >
-
-
                                 <Checkbox
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
@@ -67,6 +65,14 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                     Actions
 
                                 </STableHeadCell>}
+                            <STableHeadCell
+                            >
+
+                                Date
+
+                            </STableHeadCell>
+
+
                             <STableHeadCell
                             >
 
@@ -99,8 +105,24 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                             <STableHeadCell
                             >
 
-                                Shoe Weight
+                                St. Sole Weight
 
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Shoe Weight
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                St. Upper Weight
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Sole Weight
                             </STableHeadCell>
                             <STableHeadCell
                             >
@@ -205,6 +227,9 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
 
                                             </STableCell>}
                                         <STableCell>
+                                            {shoe_weight.created_at && new Date(shoe_weight.created_at).toLocaleDateString()}
+                                        </STableCell>
+                                        <STableCell>
 
                                             {shoe_weight.shoe_photo && <IconButton
                                                 onClick={() => {
@@ -229,7 +254,16 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                             {shoe_weight.dye.size}
                                         </STableCell>
                                         <STableCell>
+                                            {shoe_weight.article.sizes[0].standard_weight}
+                                        </STableCell>
+                                        <STableCell>
                                             {shoe_weight.shoe_weight}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.article.sizes[0].upper_weight}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.shoe_weight - shoe_weight.article.sizes[0].upper_weight}
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.created_at && new Date(shoe_weight.created_at).toLocaleString()}

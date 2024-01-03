@@ -18,7 +18,6 @@ import moment from 'moment'
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
 
 
-
 type Props = {
     visit: IVisitReport | undefined
     setVisit: React.Dispatch<React.SetStateAction<IVisitReport | undefined>>,
@@ -27,9 +26,11 @@ type Props = {
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
     selectedVisits: IVisitReport[]
     setSelectedVisits: React.Dispatch<React.SetStateAction<IVisitReport[]>>,
+    setSorted: React.Dispatch<React.SetStateAction<boolean>>
+    sorted: boolean
 }
 
-function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selectedVisits, setSelectedVisits }: Props) {
+function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, setSelectAll, selectedVisits, setSelectedVisits }: Props) {
     const [data, setData] = useState<IVisitReport[]>(visits)
     const { setChoice } = useContext(ChoiceContext)
     const [text, setText] = useState<string>()
@@ -38,7 +39,6 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
     useEffect(() => {
         setData(visits)
     }, [visits])
-
     return (
         <>
             <Box sx={{
@@ -126,7 +126,8 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                 Phone
 
                             </STableHeadCell>
-                            <STableHeadCell
+                            <STableHeadCell style={{ color: sorted ? "red" : "", fontWeight: 'bold' }}
+                                onClick={() => setSorted(!sorted)}
                             >
 
                                 Salesman
@@ -376,7 +377,9 @@ function VisitSTable({ visit, visits, setVisit, selectAll, setSelectAll, selecte
                                         </STableCell>
                                         <STableCell
                                             onClick={() => {
-                                                setText(visit.party_name)
+                                                if (visit.summary) {
+                                                    setText(visit.summary)
+                                                }
                                             }}
                                         >
                                             {visit.party_name && visit.party_name.slice(0, 30)}

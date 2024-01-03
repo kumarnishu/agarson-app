@@ -61,7 +61,7 @@ import PasswordsAdminPage from './pages/passwords/PasswordsAdminPage.tsx'
 import PasswordNavbar from './components/navbar/PasswordNavbar.tsx'
 import AccessReportPage from './pages/users/FeatureAccessReportPage.tsx'
 import ProductionNavBar from './components/navbar/ProductionNavBar.tsx'
-import ProductionPage from './pages/production/ProductionPage.tsx'
+import ProductionPage from './pages/production/MyProductionPage.tsx'
 import ProductionAdminPage from './pages/production/ProductionAdminPage.tsx'
 import RunningMouldPage from './pages/production/RunningMouldPage.tsx'
 import DyeRepairPage from './pages/production/DyeRepairPage.tsx'
@@ -70,6 +70,10 @@ import DyesPage from './pages/production/DyesPage.tsx'
 import ArticlesPage from './pages/production/ArticlesPage.tsx'
 import ProductionHelpPage from './pages/production/ProductionHelpPage.tsx'
 import ShoeWeightPage from './pages/production/ShoeWeightPage.tsx'
+import MyProductionPage from './pages/production/MyProductionPage.tsx'
+import MyShoeWeightPage from './pages/production/MyShoeWeightPage.tsx'
+import MyDyeRepairPage from './pages/production/MyDyeRepairPage.tsx'
+import MyRunningMouldPage from './pages/production/MyRunningMouldPage.tsx'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -127,13 +131,16 @@ export enum paths {
 
   //production
   production = "/production",
-  production_admin_page = "production_admin_page",
   shoe_weight = "shoe_weight",
   dye_repair = "dye_repair",
+  running_mould = "running_mould",
+  my_production = "my_production",
+  my_shoe_weight = "my_shoe_weight",
+  my_dye_repair = "my_dye_repair",
+  my_running_mould = "my_running_mould",
   machines = "machines",
   dyes = "dyes",
   articles = "articles",
-  running_mould = "running_mould",
   production_help_page = "production_help_page",
 
   //bot
@@ -248,11 +255,11 @@ function AppRoutes() {
             < Route path={paths.production} element={<ProductionNavBar />}>
               <Route index
                 element={
-                  <ProductionPage />
+                  <ProductionAdminPage />
                 }
               />
               <Route
-                path={paths.production_admin_page} element={
+                path={paths.production} element={
                   <ProductionAdminPage />
                 }
               />
@@ -269,6 +276,26 @@ function AppRoutes() {
               <Route
                 path={paths.shoe_weight} element={
                   <ShoeWeightPage />
+                }
+              />
+              <Route
+                path={paths.my_production} element={
+                  <MyProductionPage />
+                }
+              />
+              <Route
+                path={paths.my_running_mould} element={
+                  <MyRunningMouldPage />
+                }
+              />
+              <Route
+                path={paths.my_dye_repair} element={
+                  <MyDyeRepairPage />
+                }
+              />
+              <Route
+                path={paths.my_shoe_weight} element={
+                  <MyShoeWeightPage />
                 }
               />
               <Route

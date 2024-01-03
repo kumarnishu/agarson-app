@@ -7,22 +7,32 @@ import { Dye } from "../models/production/dye.types"
 
 //get
 export const GetMachines = async (req: Request, res: Response, next: NextFunction) => {
-    let machines = await Machine.find({active:true}).populate('created_by').populate('updated_by').sort('name')
+    let machines = await Machine.find({ active: true }).populate('created_by').populate('updated_by').sort('name')
     return res.status(200).json(machines)
 }
 export const GetArticles = async (req: Request, res: Response, next: NextFunction) => {
-    let articles = await Article.find({active:true}).populate('created_by').populate('updated_by').sort('name')
+    let articles = await Article.find({ active: true }).populate('created_by').populate('updated_by').sort('name')
     return res.status(200).json(articles)
 }
 
 export const GetDyes = async (req: Request, res: Response, next: NextFunction) => {
-    let dyes = await Dye.find({active:true}).populate('created_by').populate('updated_by').sort('dye_number')
+    let dyes = await Dye.find({ active: true }).populate('created_by').populate('updated_by').sort('dye_number')
     return res.status(200).json(dyes)
 }
 export const GetShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
     let weights = await ShoeWeight.find().populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('dye_number')
     return res.status(200).json(weights)
 }
+export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
+    let weights = await ShoeWeight.find().populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('dye_number')
+    weights = weights.filter((weight) => {
+        if (weight.created_at.getDate() === new Date().getDate() && weight.created_at.getMonth() === new Date().getMonth() && weight.created_at.getFullYear() === new Date().getFullYear() && weight.created_by.username === req.user.username)
+            return weight
+    })
+    return res.status(200).json(weights)
+}
+
+
 
 //post/put/patch/delete
 export const CreateMachine = async (req: Request, res: Response, next: NextFunction) => {
@@ -37,9 +47,9 @@ export const CreateMachine = async (req: Request, res: Response, next: NextFunct
         return res.status(400).json({ message: "already exists this machine" })
     let machine = await new Machine({
         name: name, display_name: display_name,
-        created_at:new Date(),
+        created_at: new Date(),
         updated_by: req.user,
-        updated_at:new Date(),
+        updated_at: new Date(),
         created_by: req.user,
     }).save()
 
@@ -68,6 +78,18 @@ export const UpdateMachine = async (req: Request, res: Response, next: NextFunct
     await machine.save()
     return res.status(200).json(machine)
 }
+export const ToogleMachine = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let machine = await Machine.findById(id)
+    if (!machine)
+        return res.status(404).json({ message: "machine not found" })
+    machine.active = !machine.active
+    machine.updated_at = new Date()
+    machine.updated_by = req.user
+    await machine.save()
+    return res.status(200).json(machine)
+
+}
 
 export const CreateArticle = async (req: Request, res: Response, next: NextFunction) => {
     const { name, display_name, sizes } = req.body as {
@@ -85,7 +107,7 @@ export const CreateArticle = async (req: Request, res: Response, next: NextFunct
     }
     if (await Article.findOne({ name: name }))
         return res.status(400).json({ message: "already exists this article" })
-    let machine =await new Article({
+    let machine = await new Article({
         name: name, display_name: display_name, created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -126,6 +148,19 @@ export const UpdateArticle = async (req: Request, res: Response, next: NextFunct
     return res.status(200).json(article)
 
 }
+export const ToogleArticle = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let article = await Article.findById(id)
+    if (!article)
+        return res.status(404).json({ message: "article not found" })
+    article.active = !article.active
+    article.updated_at = new Date()
+    article.updated_by = req.user
+    await article.save()
+    return res.status(200).json(article)
+
+}
+
 export const CreateDye = async (req: Request, res: Response, next: NextFunction) => {
     const { dye_number, size } = req.body as {
         dye_number: number,
@@ -140,7 +175,8 @@ export const CreateDye = async (req: Request, res: Response, next: NextFunction)
         dye_number: dye_number, size: size, created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
-        updated_by: req.user }).save()
+        updated_by: req.user
+    }).save()
     return res.status(201).json(dye)
 }
 export const UpdateDye = async (req: Request, res: Response, next: NextFunction) => {
@@ -166,6 +202,19 @@ export const UpdateDye = async (req: Request, res: Response, next: NextFunction)
     await dye.save()
     return res.status(200).json(dye)
 }
+
+export const ToogleDye = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let dye = await Dye.findById(id)
+    if (!dye)
+        return res.status(404).json({ message: "dye not found" })
+    dye.active = !dye.active
+    dye.updated_at = new Date()
+    dye.updated_by = req.user
+    await dye.save()
+    return res.status(200).json(dye)
+}
+
 export const CreateShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body) as {
         machine: string,
@@ -183,13 +232,15 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     let art1 = await Article.findById(article)
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
+    if ((await ShoeWeight.find({ created_at: new Date() })).length < 3)
+        return res.status(400).json({ message: "no more shoe wieght allowed to upload" })
     let shoe_weight = new ShoeWeight({
         machine: m1, dye: d1, article: art1, shoe_weight: weight
     })
     if (req.file) {
         console.log(req.file.mimetype)
         const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
-        const storageLocation = `visits/media`;
+        const storageLocation = `productions/media`;
         if (!allowedFiles.includes(req.file.mimetype))
             return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
         if (req.file.size > 10 * 1024 * 1024)

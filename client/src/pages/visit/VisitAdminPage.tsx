@@ -18,10 +18,11 @@ import { IVisit, IVisitReport } from '../../types/visit.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import AttendenceTable from '../../components/tables/AttendenceTable'
 import { UserContext } from '../../contexts/userContext'
-
+import sortBy from "sort-by"
 
 export default function VisitAdminPage() {
     const [display, setDisplay] = useState(false)
+    const [sorted, setSorted] = useState(false)
     const [attendences, setAttendences] = useState<{
         _id: string; date: Date; visits: IVisit[]
     }[]>([])
@@ -323,6 +324,15 @@ export default function VisitAdminPage() {
         }
     }, [fuzzyvisits])
 
+    useEffect(() => {
+        if (sorted) {
+            let result = visits.sort(sortBy('person.username'))
+            setVisits(result)
+        }else{
+            let result = visits.sort(sortBy('-created_at'))
+            setVisits(result)
+        }
+    }, [sorted])
     return (
         <>
 
@@ -507,6 +517,8 @@ export default function VisitAdminPage() {
                 <Box sx={{ px: 2 }}>
                     <VisitTable
                         visit={visit}
+                        sorted={sorted}
+                        setSorted={setSorted}
                         setVisit={setVisit}
                         selectAll={selectAll}
                         selectedVisits={selectedVisits}
