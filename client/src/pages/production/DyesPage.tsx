@@ -129,7 +129,7 @@ export default function DyePage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {!LoggedInUser?.contacts_access_fields.is_hidden ?
+            {LoggedInUser?.productions_access_fields.is_editable ?
               < UploadDyesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
             <TextField
               fullWidth

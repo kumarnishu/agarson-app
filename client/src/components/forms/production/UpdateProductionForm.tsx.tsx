@@ -9,27 +9,30 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IArticle, IMachine, IProduction } from '../../../types/production.types';
-import { CreateProduction, GetArticles, GetMachines } from '../../../services/ProductionServices';
+import { GetArticles, GetMachines, UpdateProduction } from '../../../services/ProductionServices';
 import { IUser } from '../../../types/user.types';
 import { GetUsers } from '../../../services/UserServices';
 import { UserContext } from '../../../contexts/userContext';
 
-function NewProductionForm() {
+function UpdateProductionForm({ production }: { production: IProduction }) {
     const { user } = useContext(UserContext)
     const { data: users } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
     const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IProduction>, BackendError, {
-            machine: string,
-            thekedar: string,
-            article: string,
-            manpower: number,
-            production: number,
-            big_repair: number,
-            small_repair: number,
+            id: string,
+            body: {
+                machine: string,
+                thekedar: string,
+                article: string,
+                manpower: number,
+                production: number,
+                big_repair: number,
+                small_repair: number
+            }
         }>
-        (CreateProduction, {
+        (UpdateProduction, {
             onSuccess: () => {
                 queryClient.invalidateQueries('productions')
             }
@@ -39,13 +42,13 @@ function NewProductionForm() {
 
     const formik = useFormik({
         initialValues: {
-            machine: '',
-            thekedar: '',
-            article: '',
-            manpower: 0,
-            production: 0,
-            big_repair: 0,
-            small_repair: 0,
+            machine: production.machine._id,
+            thekedar: production.thekedar._id,
+            article: production.article._id,
+            manpower: production.manpower,
+            production: production.production,
+            big_repair: production.big_repair,
+            small_repair: production.small_repair
         },
         validationSchema: Yup.object({
             machine: Yup.string()
@@ -65,13 +68,17 @@ function NewProductionForm() {
         }),
         onSubmit: (values) => {
             mutate({
-                machine: values.machine,
-                thekedar: values.thekedar,
-                article: values.article,
-                manpower: values.manpower,
-                production: values.production,
-                big_repair: values.big_repair,
-                small_repair: values.small_repair,
+                id: production._id,
+                body: {
+                    machine: values.machine,
+                    thekedar: values.thekedar,
+                    article: values.article,
+                    manpower: values.manpower,
+                    production: values.production,
+                    big_repair: values.big_repair,
+                    small_repair: values.small_repair,
+                }
+
             })
         }
     });
@@ -248,16 +255,16 @@ function NewProductionForm() {
                 }
                 {
                     isSuccess ? (
-                        <AlertBar message="new production created" color="success" />
+                        <AlertBar message="updated" color="success" />
                     ) : null
                 }
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
-                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Create Production"}
+                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Update Production"}
                 </Button>
             </Stack>
         </form>
     )
 }
 
-export default NewProductionForm
+export default UpdateProductionForm

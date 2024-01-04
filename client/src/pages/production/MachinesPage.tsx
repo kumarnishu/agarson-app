@@ -127,7 +127,7 @@ export default function MachinePage() {
         <Stack
           direction="row"
         >
-          {!LoggedInUser?.contacts_access_fields.is_hidden ?
+          {LoggedInUser?.productions_access_fields.is_editable ?
             < UploadMachinesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
           {/* search bar */}
           < Stack direction="row" spacing={2} >

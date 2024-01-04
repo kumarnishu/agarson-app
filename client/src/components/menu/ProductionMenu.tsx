@@ -25,7 +25,7 @@ function ProductionMenu() {
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
                 }>
-                <StyledLink to={paths.my_production}>My Production</StyledLink>
+                <StyledLink to={paths.production}>Home</StyledLink>
             </MenuItem>
             <MenuItem
                 onClick={
@@ -88,7 +88,7 @@ function ProductionMenu() {
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
                 }>
-                <StyledLink to={paths.production}>Production</StyledLink>
+                <StyledLink to={paths.production_admin}>Production</StyledLink>
             </MenuItem>}
             <MenuItem
                 onClick={

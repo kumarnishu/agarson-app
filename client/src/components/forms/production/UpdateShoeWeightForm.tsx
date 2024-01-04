@@ -1,7 +1,7 @@
 import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
@@ -9,9 +9,8 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
-import UploadFileButton from '../../buttons/UploadFileButton';
-import { CreateShoeWeight, GetArticles, GetDyes, GetMachines } from '../../../services/ProductionServices';
-import { IArticle, IDye, IMachine } from '../../../types/production.types';
+import { GetArticles, GetDyes, GetMachines, UpdateShoeWeight } from '../../../services/ProductionServices';
+import { IArticle, IDye, IMachine, IShoeWeight } from '../../../types/production.types';
 
 
 type TformData = {
@@ -21,16 +20,16 @@ type TformData = {
     weight: number
 }
 
-function CreateShoeWeightForm() {
-    const [file, setFile] = useState<File>()
+function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
     const { data: dyes } = useQuery<AxiosResponse<IDye[]>, BackendError>("dyes", async () => GetDyes())
     const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
     const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IUser>, BackendError, {
-            body: FormData;
+            id: string,
+            body: FormData
         }>
-        (CreateShoeWeight, {
+        (UpdateShoeWeight, {
             onSuccess: () => {
                 queryClient.invalidateQueries('shoe_weights')
             }
@@ -40,10 +39,10 @@ function CreateShoeWeightForm() {
 
     const formik = useFormik<TformData>({
         initialValues: {
-            machine: "",
-            dye: "",
-            article: "",
-            weight: 0
+            machine: shoe_weight.machine._id,
+            dye: shoe_weight.dye._id,
+            article: shoe_weight.article._id,
+            weight: shoe_weight.shoe_weight
         },
         validationSchema: Yup.object({
             weight: Yup.number().required("required weight"),
@@ -53,29 +52,19 @@ function CreateShoeWeightForm() {
 
         }),
         onSubmit: (values: TformData) => {
-            if (file) {
-                let formdata = new FormData()
-                let Data = {
-                    weight: values.weight,
-                    article: values.article,
-                    dye: values.dye,
-                    machine: values.machine
-                }
-                formdata.append("body", JSON.stringify(Data))
-                formdata.append("media", file)
-                mutate({ body: formdata })
-                setFile(undefined)
+            let formdata = new FormData()
+            let Data = {
+                weight: values.weight,
+                article: values.article,
+                dye: values.dye,
+                machine: values.machine
             }
-            else {
-                alert("Upload a file")
-            }
+            formdata.append("body", JSON.stringify(Data))
+            mutate({ id: shoe_weight._id, body: formdata })
         }
     });
 
-    useEffect(() => {
-        if (file)
-            setFile(file)
-    }, [file])
+
 
     useEffect(() => {
         if (isSuccess) {
@@ -98,7 +87,7 @@ function CreateShoeWeightForm() {
                     {/* machine */}
                     < TextField
                         select
-                       
+
                         SelectProps={{
                             native: true,
                         }}
@@ -128,7 +117,7 @@ function CreateShoeWeightForm() {
                     {/* articles */}
                     < TextField
                         select
-                       
+
                         SelectProps={{
                             native: true,
                         }}
@@ -157,7 +146,7 @@ function CreateShoeWeightForm() {
                     {/* dyes */}
                     < TextField
                         select
-                       
+
                         SelectProps={{
                             native: true,
                         }}
@@ -199,7 +188,7 @@ function CreateShoeWeightForm() {
                         }
                         {...formik.getFieldProps('weight')}
                     />
-                    <UploadFileButton name="media" required={true} camera={true} isLoading={isLoading} label="Upload Shoe Weight Photo" file={file} setFile={setFile} disabled={isLoading} />
+
 
                     {
                         isError ? (
@@ -208,12 +197,12 @@ function CreateShoeWeightForm() {
                     }
                     {
                         isSuccess ? (
-                            <AlertBar message="Added Shoe weight" color="success" />
+                            <AlertBar message="Updated Shoe weight" color="success" />
                         ) : null
                     }
                     <Button size="large" variant="contained" color="primary" type="submit"
                         disabled={Boolean(isLoading)}
-                        fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
+                        fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Update"}
                     </Button>
                 </Stack>
             </Stack>
@@ -221,4 +210,4 @@ function CreateShoeWeightForm() {
     )
 }
 
-export default CreateShoeWeightForm
+export default UpdateShoeWeightForm

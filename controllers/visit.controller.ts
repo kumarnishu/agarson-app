@@ -250,7 +250,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         timestamp: visit_in_credientials.timestamp,
         address: String(address.display_name)
     }
-    report.real_city = address.address.county || address.address.city || address.address.city_district || address.address.state_district || address.address.postcode
+    report.real_city = address.address.suburb ||address.address.county || address.address.city || address.address.city_district || address.address.state_district || address.address.postcode
     if (req.file) {
         console.log(req.file.mimetype)
         const allowedFiles = ["image/png", "image/jpeg", "image/gif"];

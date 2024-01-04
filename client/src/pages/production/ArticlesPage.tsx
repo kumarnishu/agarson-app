@@ -132,7 +132,7 @@ export default function ArticlePage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {!LoggedInUser?.contacts_access_fields.is_hidden ?
+            {LoggedInUser?.productions_access_fields.is_editable ?
               < UploadArticlesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
             <TextField
               fullWidth

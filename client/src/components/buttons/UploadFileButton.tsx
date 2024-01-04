@@ -41,7 +41,8 @@ function UploadFileButton({ disabled, file, name, required, camera, label, isLoa
                                     hidden
                                     required={required}
                                     name={name}
-                                    capture
+                                    capture={"environment"}
+                                    accept="image/*"
                                     type="file"
                                     onChange={
                                         (e: any) => {

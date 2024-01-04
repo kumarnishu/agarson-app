@@ -132,10 +132,10 @@ export enum paths {
 
   //production
   production = "/production",
+  production_admin ="production_admin",
   shoe_weight = "shoe_weight",
   dye_repair = "dye_repair",
   running_mould = "running_mould",
-  my_production = "my_production",
   my_shoe_weight = "my_shoe_weight",
   my_dye_repair = "my_dye_repair",
   my_running_mould = "my_running_mould",
@@ -256,11 +256,11 @@ function AppRoutes() {
             < Route path={paths.production} element={<ProductionNavBar />}>
               <Route index
                 element={
-                  <ProductionAdminPage />
+                  <MyProductionPage />
                 }
               />
               <Route
-                path={paths.production} element={
+                path={paths.production_admin} element={
                   <ProductionAdminPage />
                 }
               />
@@ -280,7 +280,7 @@ function AppRoutes() {
                 }
               />
               <Route
-                path={paths.my_production} element={
+                path={paths.production} element={
                   <MyProductionPage />
                 }
               />

@@ -5,6 +5,8 @@ import { Machine } from "../models/production/machine.model"
 import { Article } from "../models/production/article.model"
 import { Dye } from "../models/production/dye.types"
 import xlsx from "xlsx"
+import { Production } from "../models/production/production.types"
+import { User } from "../models/users/user.model"
 //get
 export const GetMachines = async (req: Request, res: Response, next: NextFunction) => {
     let machines = await Machine.find({ active: true }).populate('created_by').populate('updated_by').sort('name')
@@ -32,6 +34,19 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
     return res.status(200).json(weights)
 }
 
+export const GetProductions = async (req: Request, res: Response, next: NextFunction) => {
+    let productions = await Production.find().populate('machine').populate('thekedar').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+    return res.status(200).json(productions)
+}
+export const GetMyTodayProductions = async (req: Request, res: Response, next: NextFunction) => {
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 3
+    previous_date.setDate(day)
+
+    let productions = await Production.find({ created_at: { $gte: previous_date } }).populate('machine').populate('thekedar').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+  
+    return res.status(200).json(productions)
+}
 
 
 //post/put/patch/delete
@@ -414,3 +429,117 @@ export const ValidateShoeWeight = async (req: Request, res: Response, next: Next
     await shoe_weight.save()
     return res.status(200).json(shoe_weight)
 }
+
+
+export const CreateProduction = async (req: Request, res: Response, next: NextFunction) => {
+    let {
+        machine,
+        thekedar,
+        article,
+        manpower,
+        production,
+        big_repair,
+        small_repair
+    } = req.body as {
+        machine: string,
+        thekedar: string,
+        article: string,
+        manpower: number,
+        production: number,
+        big_repair: number,
+        small_repair: number
+    }
+
+    if (!machine || !thekedar || !article || !manpower || !production || !big_repair || !small_repair)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 7
+    previous_date.setDate(day)
+
+    let productions = await Production.find({ created_at: { $gte: previous_date } })
+    let remoteproduction = productions.find((prouction) => {
+        if (prouction.created_at.getDate() === new Date().getDate() && prouction.created_at.getMonth() === new Date().getMonth() && prouction.created_at.getFullYear() === new Date().getFullYear()) {
+            return prouction
+        }
+    })
+    if (remoteproduction)
+        return res.status(400).json({ message: "producton alreday created" })
+
+    let m1 = await Machine.findById(machine)
+    let t1 = await User.findById(thekedar)
+    let art1 = await Article.findById(article)
+
+    if (!m1 || !t1 || !art1)
+        return res.status(400).json({ message: "not a valid request" })
+    let new_prouction = new Production({
+        machine: m1,
+        thekedar: t1,
+        article: art1,
+        manpower: manpower,
+        production: production,
+        big_repair: big_repair,
+        small_repair: small_repair
+    })
+
+    new_prouction.created_at = new Date()
+    new_prouction.updated_at = new Date()
+    new_prouction.created_by = req.user
+    new_prouction.updated_by = req.user
+    await new_prouction.save()
+    return res.status(201).json(new_prouction)
+}
+
+export const UpdateProduction = async (req: Request, res: Response, next: NextFunction) => {
+    let { machine,
+        thekedar,
+        article,
+        manpower,
+        production,
+        big_repair,
+        small_repair
+    } = req.body as {
+        machine: string,
+        thekedar: string,
+        article: string,
+        manpower: number,
+        production: number,
+        big_repair: number,
+        small_repair: number
+    }
+
+    if (!machine || !thekedar || !article || !manpower || !production || !big_repair || !small_repair)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 7
+    previous_date.setDate(day)
+
+    const id = req.params.id
+    let remote_production = await Production.findById(id)
+    if (!remote_production)
+        return res.status(404).json({ message: "production not found" })
+
+
+    let m1 = await Machine.findById(machine)
+    let t1 = await User.findById(thekedar)
+    let art1 = await Article.findById(article)
+
+    if (!m1 || !t1 || !art1)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+
+    remote_production.machine = m1
+    remote_production.thekedar = t1
+    remote_production.article = art1
+    remote_production.manpower = manpower
+    remote_production.production = production
+    remote_production.big_repair = big_repair
+    remote_production.small_repair = small_repair
+    remote_production.created_at = new Date()
+    remote_production.updated_at = new Date()
+    remote_production.created_by = req.user
+    remote_production.updated_by = req.user
+    await remote_production.save()
+    return res.status(200).json(remote_production)
+}
+
+
+
