@@ -4,7 +4,6 @@ import { IVisit, IVisitBody, IVisitReport, IVisitReportBody } from "../types/vis
 import { Visit } from "../models/visit/visit.model"
 import { VisitReport } from "../models/visit/visit.report.model"
 import { IUser } from "../types/user.types"
-import { v4 as uuidv4 } from 'uuid';
 
 // get attendence reports
 export const GetVisitsAttendence = async (req: Request, res: Response, next: NextFunction) => {
@@ -442,47 +441,3 @@ export const MakeVisitOut = async (req: Request, res: Response, next: NextFuncti
 }
 
 
-export const GetAttendenceReport = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let id = req.query.id
-    let start_date = req.query.start_date
-    let end_date = req.query.end_date
-    let visits: IVisitReport[] = []
-    let count = 0
-    let dt1 = new Date(String(start_date))
-    let dt2 = new Date(String(end_date))
-    let user_ids: string[] = []
-    user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
-
-
-
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        if (!id) {
-            if (user_ids.length > 0) {
-                visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: { $in: user_ids } }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-                count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: { $in: user_ids } }).countDocuments()
-            }
-
-            else {
-                visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-                count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 } }).countDocuments()
-            }
-        }
-
-
-        if (id) {
-            visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: id }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: id }).populate('person').countDocuments()
-        }
-
-        return res.status(200).json({
-            visits,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
-}

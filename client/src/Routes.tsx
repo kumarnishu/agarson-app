@@ -73,6 +73,7 @@ import MyProductionPage from './pages/production/MyProductionPage.tsx'
 import MyShoeWeightPage from './pages/production/MyShoeWeightPage.tsx'
 import MyDyeRepairPage from './pages/production/MyDyeRepairPage.tsx'
 import MyRunningMouldPage from './pages/production/MyRunningMouldPage.tsx'
+import VisitAttendencePage from './pages/visit/VisitAttendencePage.tsx'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -95,6 +96,7 @@ export enum paths {
   //visit
   visit = 'visit',
   visit_admin = 'visit_admin',
+  visit_attendence = 'visit_attendence',
   visit_help = "visit_help",
 
   //task
@@ -328,6 +330,11 @@ function AppRoutes() {
               <Route
                 path={paths.visit} element={
                   <MyVisitPage />
+                }
+              />
+              <Route
+                path={paths.visit_attendence} element={
+                  <VisitAttendencePage />
                 }
               />
               <Route

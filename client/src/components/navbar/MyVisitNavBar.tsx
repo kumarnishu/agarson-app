@@ -51,8 +51,9 @@ export default function VisitNavBar() {
                                     }}
                                 >
 
-                                    <StyledLink to={paths.visit}>My Visit</StyledLink>
-                                    <StyledLink to={paths.visit_admin}>Reports</StyledLink>
+                                    <StyledLink to={paths.visit}>Home</StyledLink>
+                                    <StyledLink to={paths.visit_admin}>Visit Reports</StyledLink>
+                                    <StyledLink to={paths.visit_attendence}>Visit Attendence</StyledLink>
                                     <StyledLink to={paths.visit_help}>Help</StyledLink>
                                 </Stack>
 

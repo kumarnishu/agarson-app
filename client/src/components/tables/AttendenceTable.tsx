@@ -16,16 +16,8 @@ type Props = {
     attendences: IVisit[],
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    selectedAttendeces: {
-        _id: string,
-        date: Date,
-        visits: IVisit[]
-    }[]
-    setSelectedAttendeces: React.Dispatch<React.SetStateAction<{
-        _id: string,
-        date: Date,
-        visits: IVisit[]
-    }[]>>
+    selectedAttendeces: IVisit[]
+    setSelectedAttendeces: React.Dispatch<React.SetStateAction<IVisit[]>>
 }
 
 function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendeces, setAttendence, selectAll, setSelectAll }: Props) {
@@ -129,7 +121,7 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
                                 return (
                                     <React.Fragment key={index}>
                                         {
-                                            attendence.visits.map((visit, index) => {
+                                            attendences.map((visit, index) => {
                                                 return (
                                                     <STableRow
                                                         key={index}
@@ -191,17 +183,17 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
                                                             {visit.visit_reports[0] && visit.visit_reports[0].city}
                                                         </STableCell>
                                                         <STableCell>
-                                                            {visit.real_city || ""}
+                                                            {visit.visit_reports[0] && visit.visit_reports[0].real_city || ""}
                                                         </STableCell>
                                                         <STableCell>
-                                                            {visit.created_by.username}
+                                                            {visit.visit_reports[0] && visit.visit_reports[0].created_by.username}
                                                         </STableCell>
                                                         <STableCell>
                                                             {visit.is_present ? "Present" : ""}
                                                         </STableCell>
 
                                                         <STableCell>
-                                                            {visit.start_day_credientials.address}
+                                                            {visit.visit_reports[0] && visit.visit_reports[0].visit_in_credientials.address}
                                                         </STableCell>
                                                     </STableRow>
                                                 )

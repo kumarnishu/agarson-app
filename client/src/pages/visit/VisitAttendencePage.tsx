@@ -4,7 +4,7 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { FuzzySearchVisits, GetVisits } from '../../services/VisitServices'
+import { FuzzySearchVisits, GetVisitAttendences } from '../../services/VisitServices'
 import DBPagination from '../../components/pagination/DBpagination';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
@@ -13,26 +13,24 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
-import VisitTable from '../../components/tables/VisitTable'
-import { IVisitReport } from '../../types/visit.types'
+import { IVisit } from '../../types/visit.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
-import sortBy from "sort-by"
+import AttendenceTable from '../../components/tables/AttendenceTable'
 
 export default function VisitAdminPage() {
-    const [sorted, setSorted] = useState(false)
     const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
-    const [visit, setVisit] = useState<IVisitReport>()
-    const [visits, setVisits] = useState<IVisitReport[]>([])
+    const [visit, setVisit] = useState<IVisit>()
+    const [visits, setVisits] = useState<IVisit[]>([])
     const [selectAll, setSelectAll] = useState(false)
     const MemoData = React.useMemo(() => visits, [visits])
-    const [preFilteredData, setPreFilteredData] = useState<IVisitReport[]>([])
+    const [preFilteredData, setPreFilteredData] = useState<IVisit[]>([])
     const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filterCount, setFilterCount] = useState(0)
-    const [selectedVisits, setSelectedVisits] = useState<IVisitReport[]>([])
+    const [selectedVisits, setSelectedVisits] = useState<IVisit[]>([])
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
         start_date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
@@ -40,47 +38,22 @@ export default function VisitAdminPage() {
     })
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
-    const { data, isLoading, refetch: ReftechVisits } = useQuery<AxiosResponse<{ visits: IVisitReport[], page: number, total: number, limit: number }>, BackendError>(["visits", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisits({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+    const { data, isLoading, refetch: ReftechVisits } = useQuery<AxiosResponse<{
+        visits: IVisit[], page: number, total: number, limit: number
+    }>, BackendError>(["attendence", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisitAttendences({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
 
-    const { data: fuzzyvisits, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ visits: IVisitReport[], page: number, total: number, limit: number }>, BackendError>(["fuzzyvisits", filter], async () => FuzzySearchVisits({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
+    const { data: fuzzyvisits, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ visits: IVisit[], page: number, total: number, limit: number }>, BackendError>(["fuzzyattendence", filter], async () => FuzzySearchVisits({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
         enabled: false
     })
 
     const [selectedData, setSelectedData] = useState<{
         date: string,
-        start_day: string,
-        start_day_location: string,
-        start_day_coordinates: string,
-        start_day_photo: string,
-        end_day: string,
-        end_day_location: string,
-        end_day_coordinates: string,
-        end_day_photo: string,
-        visit_in: string,
-        visit_in_location: string,
-        visit_in_coordinates: string,
-        visit_in_photo: string,
-        visit_out: string,
-        visit_out_location: string,
-        visit_out_coordinates: string,
         person: string,
-        party: string,
-        mobile: string,
-        station: string,
-        is_validated: string,
-        is_old: string,
-        turnover: string,
-        dealer_of: string,
-        references_taken: string,
-        reviews_taken: number,
-        summary: string,
-        ankit_input: string,
-        brijesh_input: string,
-        created_at: string,
-        updated_at: string,
-        updated_by: string,
-        created_by: string,
+        visit_in: string,
+        geocity: string,
+        attendence: string,
+        address: string,
     }[]>()
 
     const [sent, setSent] = useState(false)
@@ -89,7 +62,7 @@ export default function VisitAdminPage() {
     function handleExcel() {
         setAnchorEl(null)
         try {
-            selectedData && ExportToExcel(selectedData, "visits_data")
+            selectedData && ExportToExcel(selectedData, "attendences_data")
             setSent(true)
             setSelectAll(false)
             setSelectedData([])
@@ -106,75 +79,21 @@ export default function VisitAdminPage() {
     useEffect(() => {
         let data: {
             date: string,
-            start_day: string,
-            start_day_location: string,
-            start_day_coordinates: string,
-            start_day_photo: string,
-            end_day: string,
-            end_day_location: string,
-            end_day_coordinates: string,
-            end_day_photo: string,
-            visit_in: string,
-            visit_in_location: string,
-            visit_in_coordinates: string,
-            visit_in_photo: string,
-            visit_out: string,
-            visit_out_location: string,
-            visit_out_coordinates: string,
             person: string,
-            party: string,
-            station: string,
-            mobile: string,
-            is_validated: string,
-            is_old: string,
-            turnover: string,
-            dealer_of: string,
-            references_taken: string,
-            reviews_taken: number,
-            summary: string,
-            ankit_input: string,
-            brijesh_input: string,
-            created_at: string,
-            updated_at: string,
-            updated_by: string,
-            created_by: string,
+            geocity: string,
+            visit_in: string,
+            attendence: string,
+            address: string,
         }[] = []
         selectedVisits.map((visit) => {
             return data.push(
                 {
-                    date: new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleDateString(),
-                    start_day: new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleTimeString(),
-                    start_day_location: visit.visit.start_day_credientials && visit.visit.start_day_credientials.address,
-                    start_day_coordinates: visit.visit.start_day_credientials && visit.visit.start_day_credientials.latitude + "," + visit.visit.start_day_credientials.longitude,
-                    start_day_photo: visit.visit.start_day_photo && visit.visit.start_day_photo?.public_url || "",
-                    end_day: new Date(visit.visit.end_day_credentials && visit.visit.end_day_credentials.timestamp).toLocaleTimeString(),
-                    end_day_location: visit.visit.end_day_credentials && visit.visit.end_day_credentials.address,
-                    end_day_coordinates: visit.visit.end_day_credentials && visit.visit.end_day_credentials.latitude + "," + visit.visit.end_day_credentials.longitude,
-                    end_day_photo: visit.visit.end_day_photo && visit.visit.end_day_photo?.public_url || "",
-                    visit_in: new Date(visit.visit_in_credientials && visit.visit_in_credientials.timestamp).toLocaleTimeString(),
-                    visit_in_location: visit.visit_in_credientials && visit.visit_in_credientials.address,
-                    visit_in_coordinates: visit.visit_in_credientials && visit.visit_in_credientials.latitude + "," + visit.visit_in_credientials.longitude,
-                    visit_in_photo: visit.visit_in_photo && visit.visit_in_photo?.public_url || "",
-                    visit_out: new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp).toLocaleTimeString(),
-                    visit_out_location: visit.visit_out_credentials && visit.visit_out_credentials.address,
-                    visit_out_coordinates: visit.visit_out_credentials && visit.visit_out_credentials.latitude + "," + visit.visit_out_credentials.longitude,
-                    person: visit.person.username,
-                    party: visit.party_name,
-                    mobile: visit.mobile,
-                    station: visit.city,
-                    is_validated: visit.visit_validated ? "yes" : "no",
-                    is_old: visit.is_old_party ? "old" : "new",
-                    turnover: visit.turnover,
-                    dealer_of: visit.dealer_of,
-                    references_taken: visit.refs_given,
-                    reviews_taken: visit.reviews_taken,
-                    summary: visit.summary,
-                    ankit_input: visit.ankit_input && visit.ankit_input.input,
-                    brijesh_input: visit.brijesh_input && visit.brijesh_input.input,
-                    created_at: visit.created_at.toLocaleString(),
-                    created_by: visit.created_by.username,
-                    updated_by: visit.updated_by.username,
-                    updated_at: visit.updated_at.toLocaleString(),
+                    date: new Date(visit.start_day_credientials.timestamp).toLocaleDateString(),
+                    person: visit.created_by.username,
+                    geocity: visit.visit_reports[0] && visit.visit_reports[0].real_city,
+                    visit_in: visit.visit_reports[0] && new Date(visit.visit_reports[0].visit_in_credientials.timestamp).toLocaleTimeString('Lt'),
+                    attendence: visit.start_day_credientials ? "Present" : "Absent",
+                    address: visit.visit_reports[0] && visit.visit_reports[0].visit_in_credientials.address,
                 })
         })
         if (data.length > 0)
@@ -239,13 +158,6 @@ export default function VisitAdminPage() {
             setFilterCount(count)
         }
     }, [fuzzyvisits])
-
-    useEffect(() => {
-        if (sorted) {
-            let result = visits.sort(sortBy('person.username'))
-            setVisits(result)
-        }
-    }, [sorted])
     return (
         <>
 
@@ -269,7 +181,7 @@ export default function VisitAdminPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    Visit
+                    Attendence
                 </Typography>
 
                 <Stack
@@ -415,16 +327,14 @@ export default function VisitAdminPage() {
             {isLoading && <TableSkeleton />}
             {!isLoading &&
                 <Box sx={{ px: 2 }}>
-                    <VisitTable
-                        visit={visit}
-                        sorted={sorted}
-                        setSorted={setSorted}
-                        setVisit={setVisit}
+                    <AttendenceTable
+                        attendence={visit}
+                        setAttendence={setVisit}
                         selectAll={selectAll}
-                        selectedVisits={selectedVisits}
-                        setSelectedVisits={setSelectedVisits}
+                        selectedAttendeces={selectedVisits}
+                        setSelectedAttendeces={setSelectedVisits}
                         setSelectAll={setSelectAll}
-                        visits={MemoData}
+                        attendences={MemoData}
                     />
                 </Box>}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
@@ -433,3 +343,5 @@ export default function VisitAdminPage() {
     )
 
 }
+
+

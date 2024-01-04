@@ -23,15 +23,21 @@ function VisitMenu() {
                 onClick={
                     () => setMenu({ type: VisitMenuActions.close_visit_menu, anchorEl: null })
                 }>
-                <StyledLink to={paths.visit}>My Visit</StyledLink>
+                <StyledLink to={paths.visit}>Home</StyledLink>
             </MenuItem>
             <MenuItem
                 onClick={
                     () => setMenu({ type: VisitMenuActions.close_visit_menu, anchorEl: null })
                 }>
-                <StyledLink to={paths.visit_admin}>Reports</StyledLink>
+                <StyledLink to={paths.visit_admin}>Visit Reports</StyledLink>
             </MenuItem>
-
+            <MenuItem
+                onClick={
+                    () => setMenu({ type: VisitMenuActions.close_visit_menu, anchorEl: null })
+                }>
+                <StyledLink to={paths.visit_attendence}>Visit Attendence</StyledLink>
+            </MenuItem>
+            
             <MenuItem
                 onClick={
                     () => setMenu({ type: VisitMenuActions.close_visit_menu, anchorEl: null })
