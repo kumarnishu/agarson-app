@@ -13,8 +13,10 @@ import { LoadingProvider } from './contexts/loaderContext.tsx';
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      refetchOnReconnect: true,
+      refetchOnMount: true,
       retry: false,
-      refetchOnWindowFocus:false
+      staleTime: 200
     }
   }
 });
