@@ -9,6 +9,8 @@ import { GetMyShoeWeights } from "../../services/ProductionServices"
 import { IShoeWeight } from "../../types/production.types"
 import NewShoeWeightDialog from "../../components/dialogs/production/CreateShoeWeightDialog"
 
+
+
 function MyShoeWeightPage() {
   const { setChoice } = useContext(ChoiceContext)
   const { data, isLoading } = useQuery<AxiosResponse<IShoeWeight[]>, BackendError>("weights", GetMyShoeWeights)
@@ -29,20 +31,24 @@ function MyShoeWeightPage() {
                 gap={2}
               >
                 <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
+                  Dye/Size : {weight.dye.dye_number}/{weight.dye.size}
+                </Typography>
+                <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
                   Machine : {weight.machine.name}
                 </Typography>
                 <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
                   Article : {weight.article.name}
                 </Typography>
                 <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
-                  Dye/Size : {weight.dye.dye_number}/{weight.dye.size}
-                </Typography>
-                <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
                   St.Weight : {weight.article.sizes.find((size) => size.size === weight.dye.size)?.standard_weight}
                 </Typography>
+
                 <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
-                  Weight : {weight.shoe_weight}
+                  Weight : 
+                  {/* @ts-ignore */}
+                  <span style={{ fontWeight: 'bold', fontSize: 16, color: weight.article.sizes.find((size) => size.size === weight.dye.size)?.standard_weight  < weight.shoe_weight ? "red" : "green" }}>{weight.shoe_weight}</span>
                 </Typography>
+
                 <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                   Datetime : {moment(new Date(weight.created_at)).format('MMMM Do YYYY, h:mm:ss a')}
                 </Typography>
