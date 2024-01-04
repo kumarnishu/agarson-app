@@ -396,7 +396,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                         <STableCell>
                                             {visit.mobile}
                                         </STableCell>
-                                        <STableCell>
+                                        <STableCell >
                                             {visit.person.username}
                                         </STableCell>
 

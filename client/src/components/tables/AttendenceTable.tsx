@@ -2,12 +2,12 @@ import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from "../styled/STyledTable"
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
-import { IVisit } from '../../types/visit.types'
 import moment from 'moment'
 import ToogleAttendenceDialog from '../dialogs/visit/ToogleAttendenceDialog'
 import { Edit } from '@mui/icons-material'
 import { ChoiceContext, VisitChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
+import { IVisit } from '../../types/visit.types'
 
 
 type Props = {
@@ -20,10 +20,9 @@ type Props = {
     setSelectedAttendeces: React.Dispatch<React.SetStateAction<IVisit[]>>
 }
 
-function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendeces, setAttendence, selectAll, setSelectAll }: Props) {
+function AttendenceTable({ attendences, attendence, selectedAttendeces, setSelectedAttendeces, setAttendence, selectAll, setSelectAll }: Props) {
     const { user } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
-    const [visit, setVisit] = useState<IVisit>()
     const [data, setData] = useState<IVisit[]>(attendences)
     const [text, setText] = useState<string>()
 
@@ -43,8 +42,6 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
                         <STableRow>
                             <STableHeadCell
                             >
-
-
                                 <Checkbox
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
@@ -118,96 +115,89 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
                         {
 
                             data && data.map((attendence, index) => {
-                                return (
-                                    <React.Fragment key={index}>
-                                        {
-                                            attendences.map((visit, index) => {
-                                                return (
-                                                    <STableRow
-                                                        key={index}
+                                if (attendence.visit_reports.length > 0)
+                                    return (
+                                        <STableRow
+                                            key={index}
+                                        >
+                                            {selectAll ?
+
+                                                <STableCell>
+
+
+                                                    <Checkbox size="small"
+                                                        checked={Boolean(selectAll)}
+                                                    />
+
+
+                                                </STableCell>
+                                                :
+                                                null}
+                                            {!selectAll ?
+
+                                                <STableCell>
+
+                                                    <Checkbox size="small"
+                                                        onChange={(e) => {
+                                                            setAttendence(attendence)
+                                                            if (e.target.checked) {
+                                                                setSelectedAttendeces([...selectedAttendeces, attendence])
+                                                            }
+                                                            if (!e.target.checked) {
+                                                                setSelectedAttendeces((attendences) => attendences.filter((item) => {
+                                                                    return item._id !== attendence._id
+                                                                }))
+                                                            }
+                                                        }}
+                                                    />
+
+                                                </STableCell>
+                                                :
+                                                null}
+                                            {user?.visit_access_fields.is_editable && <STableCell>
+                                                <Tooltip title="change attendence">
+                                                    <IconButton color="success"
+                                                        onClick={() => {
+                                                            setChoice({ type: VisitChoiceActions.mark_attendence })
+                                                            setAttendence(attendence)
+                                                        }}
                                                     >
-                                                        {selectAll ?
+                                                        <Edit />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </STableCell>}
+                                            <STableCell>
+                                                {attendence.created_at && new Date(attendence.created_at).toLocaleDateString()}
+                                            </STableCell>
 
-                                                            <STableCell>
+                                            <STableCell>
+                                                {attendence.visit_reports[0] && attendence.visit_reports[0].visit_in_credientials && attendence.visit_reports[0].visit_in_credientials.timestamp && moment(new Date(attendence.visit_reports[0].visit_in_credientials.timestamp)).format('LT')}
+                                            </STableCell>
+                                            <STableCell>
+                                                {attendence.visit_reports[0] && attendence.visit_reports[0].city}
+                                            </STableCell>
+                                            <STableCell>
+                                                {attendence.visit_reports[0] && attendence.visit_reports[0].real_city || ""}
+                                            </STableCell>
+                                            <STableCell>
+                                                {attendence && attendence.created_by.username}
+                                            </STableCell>
+                                            <STableCell>
+                                                {attendence.is_present ? "Present" : ""}
+                                            </STableCell>
 
-
-                                                                <Checkbox size="small"
-                                                                    checked={Boolean(selectAll)}
-                                                                />
-
-
-                                                            </STableCell>
-                                                            :
-                                                            null}
-                                                        {!selectAll ?
-
-                                                            <STableCell>
-
-                                                                <Checkbox size="small"
-                                                                    onChange={(e) => {
-                                                                        setAttendence(attendence)
-                                                                        if (e.target.checked) {
-                                                                            setSelectedAttendeces([...selectedAttendeces, attendence])
-                                                                        }
-                                                                        if (!e.target.checked) {
-                                                                            setSelectedAttendeces((attendences) => attendences.filter((item) => {
-                                                                                return item._id !== attendence._id
-                                                                            }))
-                                                                        }
-                                                                    }}
-                                                                />
-
-                                                            </STableCell>
-                                                            :
-                                                            null}
-                                                        {user?.visit_access_fields.is_editable && <STableCell>
-                                                            <Tooltip title="Edit Summary">
-                                                                <IconButton color="success"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: VisitChoiceActions.mark_attendence })
-                                                                        setVisit(visit)
-                                                                    }}
-                                                                >
-                                                                    <Edit />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        </STableCell>}
-                                                        <STableCell>
-                                                            {visit.created_at && new Date(visit.created_at).toLocaleDateString()}
-                                                        </STableCell>
-
-                                                        <STableCell>
-                                                            {visit.visit_reports[0] && visit.visit_reports[0].visit_in_credientials && visit.visit_reports[0].visit_in_credientials.timestamp && moment(new Date(visit.visit_reports[0].visit_in_credientials.timestamp)).format('LT')}
-                                                        </STableCell>
-                                                        <STableCell>
-                                                            {visit.visit_reports[0] && visit.visit_reports[0].city}
-                                                        </STableCell>
-                                                        <STableCell>
-                                                            {visit.visit_reports[0] && visit.visit_reports[0].real_city || ""}
-                                                        </STableCell>
-                                                        <STableCell>
-                                                            {visit.visit_reports[0] && visit.visit_reports[0].created_by.username}
-                                                        </STableCell>
-                                                        <STableCell>
-                                                            {visit.is_present ? "Present" : ""}
-                                                        </STableCell>
-
-                                                        <STableCell>
-                                                            {visit.visit_reports[0] && visit.visit_reports[0].visit_in_credientials.address}
-                                                        </STableCell>
-                                                    </STableRow>
-                                                )
-                                            })
-                                        }
-                                    </React.Fragment>
-                                )
+                                            <STableCell>
+                                                {attendence.visit_reports[0] && attendence.visit_reports[0].visit_in_credientials.address}
+                                            </STableCell>
+                                        </STableRow>
+                                    )
                             })
 
                         }
                     </STableBody>
                 </STable>
             </Box >
-            {visit && <ToogleAttendenceDialog visit={visit} />}
+            {attendence && <ToogleAttendenceDialog visit={attendence} />}
             {text && <ViewTextDialog text={text} setText={setText} />}
         </>
     )

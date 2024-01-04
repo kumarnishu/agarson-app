@@ -4,7 +4,7 @@ node_modules
 # production
 dist
 build
-.env
+.env*
 
 # vite gitignore files
 *.log
