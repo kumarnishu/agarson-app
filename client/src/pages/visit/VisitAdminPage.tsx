@@ -4,7 +4,7 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { FuzzySearchVisits, GetVisitAttendences, GetVisits } from '../../services/VisitServices'
+import { FuzzySearchVisits, GetVisits } from '../../services/VisitServices'
 import DBPagination from '../../components/pagination/DBpagination';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
@@ -23,31 +23,20 @@ import sortBy from "sort-by"
 export default function VisitAdminPage() {
     const [display, setDisplay] = useState(false)
     const [sorted, setSorted] = useState(false)
-    const [attendences, setAttendences] = useState<{
-        _id: string; date: Date; visits: IVisit[]
-    }[]>([])
     const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
-    const [attendence, setAttendence] = useState<{
-        _id: string; date: Date; visits: IVisit[]
-    }>()
+    const [attendence, setAttendence] = useState<IVisit[]>()
     const [visit, setVisit] = useState<IVisitReport>()
     const [visits, setVisits] = useState<IVisitReport[]>([])
     const [selectAll, setSelectAll] = useState(false)
-    const AttendenceMemoData = React.useMemo(() => attendences, [attendences])
     const MemoData = React.useMemo(() => visits, [visits])
     const [preFilteredData, setPreFilteredData] = useState<IVisitReport[]>([])
-    const [preFilteredAttendenceData, setPreFiltereAttendencedData] = useState<{
-        _id: string; date: Date; visits: IVisit[]
-    }[]>([])
     const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filterCount, setFilterCount] = useState(0)
     const [selectedVisits, setSelectedVisits] = useState<IVisitReport[]>([])
-    const [selectedAttendeces, setSelectedAttendeces] = useState<{
-        _id: string; date: Date; visits: IVisit[]
-    }[]>([])
+    const [selectedAttendeces, setSelectedAttendeces] = useState<IVisit[]>([])
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
         start_date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
@@ -56,13 +45,6 @@ export default function VisitAdminPage() {
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
     const { data, isLoading, refetch: ReftechVisits } = useQuery<AxiosResponse<{ visits: IVisitReport[], page: number, total: number, limit: number }>, BackendError>(["visits", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisits({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
-
-    const { data: attendencesData, isLoading: isAttendenceLoading, refetch: ReftechVisitAttendence } = useQuery<AxiosResponse<{
-        result: {
-            _id: string; date: Date; visits: IVisit[]
-        }[], page: number, total: number, limit: number
-    }>, BackendError>(["attendence", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisitAttendences({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
-
 
     const { data: fuzzyvisits, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ visits: IVisitReport[], page: number, total: number, limit: number }>, BackendError>(["fuzzyvisits", filter], async () => FuzzySearchVisits({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
         enabled: false
@@ -106,7 +88,7 @@ export default function VisitAdminPage() {
     const [selectedData2, setSelectedData2] = useState<{
         date: string,
         person: string,
-        start_time: string,
+        visit_in: string,
         attendence: string,
         address: string,
 
@@ -223,26 +205,26 @@ export default function VisitAdminPage() {
     }, [selectedVisits])
 
     //refine data2
-    useEffect(() => {
-        let data: {
-            date: string,
-            person: string,
-            start_time: string,
-            attendence: string,
-            address: string,
-        }[] = []
-        selectedAttendeces.forEach((attend) => {
-            attend.visits.map((visit1: IVisit) => {
-                data.push({
-                    date: new Date(attend.date).toLocaleDateString(), person: visit1.created_by.username, attendence: visit1.is_present ? "Present" : "",
-                    start_time: moment(new Date(visit1.start_day_credientials.timestamp)).format('LT'),
-                    address: visit1.start_day_credientials.address
-                })
-            })
-        })
-        if (data.length > 0)
-            setSelectedData2(data)
-    }, [selectedAttendeces])
+    // useEffect(() => {
+    //     let data: {
+    //         date: string,
+    //         person: string,
+    //         visit_in: string,
+    //         attendence: string,
+    //         address: string,
+    //     }[] = []
+    //     selectedAttendeces.forEach((attend) => {
+    //         data.push({
+    //             // date: attend.visit_reports[0] && new Date(attend.visit_reports[0].visit_in_credientials.timestamp).toLocaleDateString(),
+    //             // person: attend.visit_reports[0] && attend.visit_reports[0].created_by.username,
+    //             // attendence: attend.visit_reports[0] && attend.visit_reports[0].is_present ? "Present" : "",
+    //             // visit_in: attend.visit_reports[0] && moment(new Date(attend.visit_reports[0].start_day_credientials.timestamp)).format('LT'),
+    //             // address: visit1.start_day_credientials.address
+    //         })
+    //     })
+    //     if (data.length > 0)
+    //         setSelectedData2(data)
+    // }, [selectedAttendeces])
 
     useEffect(() => {
         if (isUsersSuccess)
@@ -253,41 +235,16 @@ export default function VisitAdminPage() {
     useEffect(() => {
         if (!filter) {
             setVisits(preFilteredData)
-            setAttendences(preFilteredAttendenceData)
             setPaginationData(preFilteredPaginationData)
         }
     }, [filter])
 
-    useEffect(() => {
-        if (attendencesData && !filter && display) {
-            setAttendences(attendencesData.data.result)
-            setPreFiltereAttendencedData(attendencesData.data.result)
-            setPreFilteredPaginationData({
-                ...paginationData,
-                page: attendencesData.data.page,
-                limit: attendencesData.data.limit,
-                total: attendencesData.data.total
-            })
-            setPaginationData({
-                ...paginationData,
-                page: attendencesData.data.page,
-                limit: attendencesData.data.limit,
-                total: attendencesData.data.total
-            })
-        }
-    }, [attendencesData])
 
     useEffect(() => {
         if (filter) {
             refetchFuzzy()
         }
     }, [paginationData])
-
-    useEffect(() => {
-        if (display) {
-            ReftechVisitAttendence()
-        }
-    }, [display, dates, userId])
 
     useEffect(() => {
         if (data && !filter && !display) {
@@ -336,7 +293,7 @@ export default function VisitAdminPage() {
             {
                 isLoading && <LinearProgress />
             }
-            {isAttendenceLoading && <LinearProgress />}
+           
             {
                 isFuzzyLoading && <LinearProgress />
             }
@@ -354,7 +311,7 @@ export default function VisitAdminPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    {display ? `Attendence : ${attendences.length} days` : "Visit"}
+                    {display ? `Attendence : ${visits.length}` : "Visit"}
                 </Typography>
 
                 <Stack
@@ -533,7 +490,7 @@ export default function VisitAdminPage() {
                         selectedAttendeces={selectedAttendeces}
                         setSelectedAttendeces={setSelectedAttendeces}
                         setSelectAll={setSelectAll}
-                        attendences={AttendenceMemoData}
+                        attendences={attendeces}
                     />
                 </Box>}
             <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />

@@ -11,21 +11,9 @@ import { UserContext } from '../../contexts/userContext'
 
 
 type Props = {
-    attendence: {
-        _id: string,
-        date: Date,
-        visits: IVisit[];
-    } | undefined
-    setAttendence: React.Dispatch<React.SetStateAction<{
-        _id: string,
-        date: Date,
-        visits: IVisit[];
-    } | undefined>>,
-    attendences: {
-        _id: string,
-        date: Date,
-        visits: IVisit[];
-    }[],
+    attendence: IVisit | undefined
+    setAttendence: React.Dispatch<React.SetStateAction<IVisit | undefined>>,
+    attendences: IVisit[],
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
     selectedAttendeces: {
@@ -44,11 +32,7 @@ function AttendenceTable({ attendences, selectedAttendeces, setSelectedAttendece
     const { user } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
     const [visit, setVisit] = useState<IVisit>()
-    const [data, setData] = useState<{
-        _id: string,
-        date: Date,
-        visits: IVisit[];
-    }[]>(attendences)
+    const [data, setData] = useState<IVisit[]>(attendences)
     const [text, setText] = useState<string>()
 
     useEffect(() => {

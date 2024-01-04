@@ -19,7 +19,6 @@ export const GetVisitsAttendence = async (req: Request, res: Response, next: Nex
     let dt2 = new Date(String(end_date))
     let user_ids: string[] = []
     user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
-    let result: { _id: string, date: Date, visits: IVisit[] }[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (user_ids.length > 0) {
@@ -37,18 +36,8 @@ export const GetVisitsAttendence = async (req: Request, res: Response, next: Nex
             visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
-        let startDate = new Date(dt1)
-        let endDate = new Date(dt2)
-        while (startDate < endDate) {
-            let data = visits.filter((visit) => {
-                if (visit.created_at.getDate() === new Date(startDate).getDate() && visit.created_at.getMonth() === new Date(startDate).getMonth() && visit.created_at.getFullYear() === new Date(startDate).getFullYear())
-                    return visit
-            })
-            result.push({ _id: uuidv4(), date: new Date(startDate), visits: data })
-            startDate.setDate(new Date(startDate).getDate() + 1)
-        }
         return res.status(200).json({
-            result,
+            visits,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit

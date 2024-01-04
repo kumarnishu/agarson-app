@@ -382,7 +382,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                                 }
                                             }}
                                         >
-                                            {visit.party_name && visit.party_name.slice(0, 30)}
+                                            {visit.party_name && visit.party_name.slice(0, 30)}{visit.is_old_party ? " : old" : ""}
                                         </STableCell>
 
                                         <STableCell>
