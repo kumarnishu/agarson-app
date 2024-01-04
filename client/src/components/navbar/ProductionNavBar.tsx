@@ -52,7 +52,7 @@ export default function ProductionNavBar() {
                                 >
 
                                     <>
-                                        {window.screen.width > 500 && <>
+                                        {window.screen.width < 500 && <>
                                             <StyledLink to={paths.production}>Home</StyledLink>
                                             <StyledLink to={paths.my_shoe_weight}>My Shoe Weights</StyledLink>
                                             <StyledLink to={paths.my_dye_repair}>My Dye Repair</StyledLink>
