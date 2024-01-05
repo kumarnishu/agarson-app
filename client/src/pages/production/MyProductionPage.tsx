@@ -52,7 +52,7 @@ function MyProductionPage() {
                     Created By :<b>{production.created_by.username}</b>
                   </Typography>
                   <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', color: 'grey', }}>
-                    <b>{moment(new Date(production.created_at)).calendar()}</b>
+                    <b>Date : {moment(new Date(production.created_at)).format('DD/MM/YYYY')}</b>
                   </Typography>
 
                 </Stack>
