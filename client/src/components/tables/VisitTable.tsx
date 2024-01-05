@@ -382,7 +382,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                                 }
                                             }}
                                         >
-                                            {visit.party_name && visit.party_name.slice(0, 30)}{visit.is_old_party ? <span style={{color:'red'}}> : old</span> : ""}
+                                            {visit.party_name && visit.party_name.slice(0, 30)}{visit.is_old_party ? <span style={{ color: 'red' }}> : old</span> : ""}
                                         </STableCell>
 
                                         <STableCell>
@@ -478,7 +478,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                     </>
                     : null
             }
-            {text && <ViewTextDialog text={text} setText={setText} />}
+            {text && <ViewTextDialog wrap={true} text={text} setText={setText} />}
         </>
     )
 }
