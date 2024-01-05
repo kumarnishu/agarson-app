@@ -40,7 +40,7 @@ export const GetProductions = async (req: Request, res: Response, next: NextFunc
 }
 export const GetMyTodayProductions = async (req: Request, res: Response, next: NextFunction) => {
     let previous_date = new Date()
-    let day = previous_date.getDate() - 3
+    let day = previous_date.getDate() - 2
     previous_date.setDate(day)
 
     let productions = await Production.find({ created_at: { $gte: previous_date } }).populate('machine').populate('thekedar').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
