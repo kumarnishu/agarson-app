@@ -56,7 +56,6 @@ export const GetMyTodayProductions = async (req: Request, res: Response, next: N
     previous_date.setDate(day)
 
     let productions = await Production.find({ created_at: { $gte: previous_date } }).populate('machine').populate('thekedar').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
-
     return res.status(200).json(productions)
 }
 
@@ -468,9 +467,12 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
     let day = previous_date.getDate() - 7
     previous_date.setDate(day)
 
+    let production_date = new Date()
+    production_date.setDate(production_date.getDate() - 1)
+
     let productions = await Production.find({ created_at: { $gte: previous_date } })
     let remoteproduction = productions.find((prouction) => {
-        if (prouction.created_at.getDate() === new Date().getDate() && prouction.created_at.getMonth() === new Date().getMonth() && prouction.created_at.getFullYear() === new Date().getFullYear()) {
+        if (prouction.created_at.getDate() === new Date(production_date).getDate() && prouction.created_at.getMonth() === new Date(production_date).getMonth() && prouction.created_at.getFullYear() === new Date(production_date).getFullYear()) {
             return prouction
         }
     })
@@ -493,7 +495,7 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
         small_repair: small_repair
     })
 
-    new_prouction.created_at = new Date()
+    new_prouction.created_at = production_date
     new_prouction.updated_at = new Date()
     new_prouction.created_by = req.user
     new_prouction.updated_by = req.user

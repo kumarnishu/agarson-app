@@ -19,8 +19,8 @@ function MyShoeWeightPage() {
     <>
       {isLoading && <LinearProgress />}
       <Stack direction={'column'} >
-        <Typography variant="h6" sx={{ fontSize: '18',p:2, textAlign: 'center' }}>Daily Sole Weights</Typography>
-        <Stack sx={{ justifyContent: 'center', px: 2,gap:2 }}>
+        <Typography variant="h6" sx={{ fontSize: '18', p: 1, textAlign: 'center' }}>Daily Sole Weights</Typography>
+        <Stack sx={{ justifyContent: 'center', px: 2, gap: 2 }}>
           < TextField
             select
             value={dye}
@@ -46,11 +46,11 @@ function MyShoeWeightPage() {
               })
             }
           </TextField>
-          <Button variant="contained" disabled={isLoading} size="large" sx={{fontWeight: 'bold', fontSize: 14 }} color="info"
+          <Button variant="contained" disabled={isLoading} size="large" sx={{ fontWeight: 'bold', fontSize: 14 }} color="info"
             onClick={() => { setChoice({ type: ProductionChoiceActions.create_shoe_weight }) }}
           >+ New Shoe Weight</Button>
         </Stack>
-        <Stack sx={{ p: 1 }}>
+        <Stack>
           {data && data.data.map((weight, index) => {
             return (
               <Paper key={index} elevation={8} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white', borderRadius: 2 }}>
@@ -58,28 +58,31 @@ function MyShoeWeightPage() {
                   direction="column"
                   gap={2}
                 >
-                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 12 }}>
-                    Dye/Size : {weight.dye.dye_number}/{weight.dye.size}
+                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
+                    Dye Number : {weight.dye.dye_number}
                   </Typography>
-                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 12 }}>
+                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
+                    Size : {weight.dye.size}
+                  </Typography>
+                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Machine : {weight.machine.name}
                   </Typography>
-                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 12 }}>
+                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Article : {weight.article.name}
                   </Typography>
-                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 12 }}>
-                    St.Weight : {weight.article.sizes.find((size) => size.size === weight.dye.size)?.standard_weight}
+                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
+                    Stanadard Sole Weight : {weight.article.sizes.find((size) => size.size === weight.dye.size)?.standard_weight}
                   </Typography>
 
-                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 12 }}>
-                    Weight :
+                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
+                    My Sole Weight :
                     {/* @ts-ignore */}
-                    <span style={{ fontWeight: 'bold', fontSize: 16, color: weight.article.sizes.find((size) => size.size === weight.dye.size)?.standard_weight < weight.shoe_weight ? "red" : "green" }}> {weight.shoe_weight - weight.article.sizes.find((size) => size.size === weight.dye.size)?.upper_weight}</span>
+                    <span style={{ fontWeight: 'bold', fontSize: 16, color: weight.shoe_weight - weight.article.sizes.find((size) => size.size === weight.dye.size)?.upper_weight > weight.article.sizes.find((size) => size.size === weight.dye.size)?.standard_weight ? "red" : "green" }}> {weight.shoe_weight - weight.article.sizes.find((size) => size.size === weight.dye.size)?.upper_weight}</span>
                   </Typography>
-                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', fontSize: 12 }}>
-                    Created By :<b>{weight.created_by.username}</b>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
+                    Created By : <b>{weight.created_by.username}</b>
                   </Typography>
-                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', color: 'grey', fontSize: 12 }}>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', color: 'grey', fontSize: 14 }}>
                     <b>{moment(new Date(weight.created_at)).calendar()}</b>
                   </Typography>
 

@@ -264,7 +264,8 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                             {shoe_weight.article.sizes.find((size) => size.size === shoe_weight.dye.size)?.upper_weight}
                                         </STableCell>
                                         <STableCell>
-                                            {shoe_weight.shoe_weight}
+                                            {/* @ts-ignore */}
+                                            {shoe_weight.shoe_weight - shoe_weight.article.sizes.find((size) => size.size === shoe_weight.dye.size)?.upper_weight}
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.created_at && new Date(shoe_weight.created_at).toLocaleString()}
