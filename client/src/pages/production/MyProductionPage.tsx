@@ -35,7 +35,16 @@ function MyProductionPage() {
                   Article : {production.article.name}
                 </Typography>
                 <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
-                  Thekedar : {production.thekedar.username}
+                  Thekedar :  <span style={{ fontWeight: 'bold', fontSize: 16, color: 'grey' }}> {production.thekedar.username}</span>
+                </Typography>
+                <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
+                  Production : <span style={{ fontWeight: 'bold', fontSize: 16, color: 'green' }}> {production.production}</span>
+                </Typography>
+                <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
+                  Small Repair : <span style={{ fontWeight: 'bold', fontSize: 14, color: 'grey' }}> {production.small_repair}</span>
+                </Typography>
+                <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
+                  Big Repair : <span style={{ fontWeight: 'bold', fontSize: 16, color: 'red' }}> {production.big_repair}</span>
                 </Typography>
                 <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                   Datetime : {moment(new Date(production.created_at)).format('MMMM Do YYYY, h:mm:ss a')}
@@ -44,7 +53,7 @@ function MyProductionPage() {
             </Paper>
           )
         })}
-      </Stack>
+      </Stack >
       <NewProductionDialog />
     </>
 

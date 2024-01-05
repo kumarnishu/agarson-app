@@ -13,7 +13,7 @@ import NewShoeWeightDialog from "../../components/dialogs/production/CreateShoeW
 
 function MyShoeWeightPage() {
   const { setChoice } = useContext(ChoiceContext)
-  const { data, isLoading } = useQuery<AxiosResponse<IShoeWeight[]>, BackendError>("weights", GetMyShoeWeights)
+  const { data, isLoading } = useQuery<AxiosResponse<IShoeWeight[]>, BackendError>("shoe_weights", GetMyShoeWeights)
   return (
     <>
       {isLoading && <LinearProgress />}
@@ -46,7 +46,7 @@ function MyShoeWeightPage() {
                 <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
                   Weight : 
                   {/* @ts-ignore */}
-                  <span style={{ fontWeight: 'bold', fontSize: 16, color: weight.article.sizes.find((size) => size.size === weight.dye.size)?.standard_weight  < weight.shoe_weight ? "red" : "green" }}>{weight.shoe_weight}</span>
+                  <span style={{ fontWeight: 'bold', fontSize: 16, color: weight.article.sizes.find((size) => size.size === weight.dye.size)?.standard_weight  < weight.shoe_weight ? "red" : "green" }}> {weight.shoe_weight}</span>
                 </Typography>
 
                 <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
