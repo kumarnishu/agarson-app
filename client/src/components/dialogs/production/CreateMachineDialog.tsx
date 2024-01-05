@@ -8,7 +8,7 @@ import NewMachineForm from '../../forms/production/CreateMachineForm';
 function NewMachineDialog() {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
-        <Dialog open={choice === ProductionChoiceActions.create_machine ? true : false}
+        <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === ProductionChoiceActions.create_machine ? true : false}
             onClose={() => setChoice({ type: ProductionChoiceActions.close_production })}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: ProductionChoiceActions.close_production })}>

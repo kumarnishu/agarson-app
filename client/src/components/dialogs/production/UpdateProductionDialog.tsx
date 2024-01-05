@@ -9,7 +9,7 @@ import UpdateProductionForm from '../../forms/production/UpdateProductionForm.ts
 function UpdateProductionDialog({ production }: { production: IProduction }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
-        <Dialog open={choice === ProductionChoiceActions.update_production ? true : false}
+        <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === ProductionChoiceActions.update_production ? true : false}
             onClose={() => setChoice({ type: ProductionChoiceActions.close_production })}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: ProductionChoiceActions.close_production })}>

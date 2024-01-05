@@ -9,7 +9,7 @@ import UpdateShoeWeightForm from '../../forms/production/UpdateShoeWeightForm';
 function UpdateShoeWeightDialog({ shoe_weight }: { shoe_weight: IShoeWeight }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
-        <Dialog open={choice === ProductionChoiceActions.update_shoe_weight ? true : false}
+        <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === ProductionChoiceActions.update_shoe_weight ? true : false}
             onClose={() => setChoice({ type: ProductionChoiceActions.close_production })}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: ProductionChoiceActions.close_production })}>

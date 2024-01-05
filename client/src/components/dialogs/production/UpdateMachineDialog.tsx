@@ -9,7 +9,7 @@ import UpdateMachineForm from '../../forms/production/UpdateMachineForm';
 function UpdateMachineDialog({ machine }: { machine: IMachine }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
-        <Dialog open={choice === ProductionChoiceActions.update_machine ? true : false}
+        <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === ProductionChoiceActions.update_machine ? true : false}
             onClose={() => setChoice({ type: ProductionChoiceActions.close_production })}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: ProductionChoiceActions.close_production })}>
