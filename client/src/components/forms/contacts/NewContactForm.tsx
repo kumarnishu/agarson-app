@@ -87,7 +87,7 @@ function NewContactForm() {
                         formik.touched.designation && formik.errors.designation ? true : false
                     }
                     id="designation"
-                    label="Party"
+                    label="Designation"
                     helperText={
                         formik.touched.designation && formik.errors.designation ? formik.errors.designation : ""
                     }

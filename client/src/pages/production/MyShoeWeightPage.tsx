@@ -19,10 +19,9 @@ function MyShoeWeightPage() {
     <>
       {isLoading && <LinearProgress />}
       <Stack direction={'column'} >
-        <Typography variant="h6" sx={{ fontSize: '18', textAlign: 'center' }}>Daily Sole Weights</Typography>
-        <Stack sx={{ justifyContent: 'center', px: 2 }}>
+        <Typography variant="h6" sx={{ fontSize: '18',p:2, textAlign: 'center' }}>Daily Sole Weights</Typography>
+        <Stack sx={{ justifyContent: 'center', px: 2,gap:2 }}>
           < TextField
-            size='small'
             select
             value={dye}
             SelectProps={{
@@ -47,8 +46,7 @@ function MyShoeWeightPage() {
               })
             }
           </TextField>
-
-          <Button variant="outlined" disabled={isLoading} size="large" sx={{ mx: 8, my: 2, fontWeight: 'bold', fontSize: 14 }} color="info"
+          <Button variant="contained" disabled={isLoading} size="large" sx={{fontWeight: 'bold', fontSize: 14 }} color="info"
             onClick={() => { setChoice({ type: ProductionChoiceActions.create_shoe_weight }) }}
           >+ New Shoe Weight</Button>
         </Stack>

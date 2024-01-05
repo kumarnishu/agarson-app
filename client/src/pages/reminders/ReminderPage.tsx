@@ -15,9 +15,10 @@ import NewReminderMessageDialog from '../../components/dialogs/reminders/NewRemi
 import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { GetReminders } from '../../services/ReminderServices'
-import { IReminder } from '../../types/reminder.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
+import { IReminder } from '../../types/reminder.types'
+import { IContactReport } from '../../types/contact.types'
 
 type SelectedData = {
   name?: string,
@@ -31,13 +32,28 @@ type SelectedData = {
 
 export default function ReminderPage() {
   const [hidden, setHidden] = useState(false)
-  const { data, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<IReminder[]>, BackendError>(["reminders", hidden], async () => GetReminders(String(hidden)))
-  const [reminder, setReminder] = useState<IReminder>()
-  const [reminders, setReminders] = useState<IReminder[]>([])
+  const { data, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<{
+    reminder: IReminder,
+    contacts: IContactReport[]
+  }[]>, BackendError>(["reminders", hidden], async () => GetReminders(String(hidden)))
+  const [reminder, setReminder] = useState<{
+    reminder: IReminder,
+    contacts: IContactReport[]
+  }>()
+  const [reminders, setReminders] = useState<{
+    reminder: IReminder,
+    contacts: IContactReport[]
+  }[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => reminders, [reminders])
-  const [preFilteredData, setPreFilteredData] = useState<IReminder[]>([])
-  const [selectedReminders, setSelectedReminders] = useState<IReminder[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<{
+    reminder: IReminder,
+    contacts: IContactReport[]
+  }[]>([])
+  const [selectedReminders, setSelectedReminders] = useState<{
+    reminder: IReminder,
+    contacts: IContactReport[]
+  }[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const [selectedData, setSelectedData] = useState<SelectedData[]>([])
   const [sent, setSent] = useState(false)
@@ -64,20 +80,20 @@ export default function ReminderPage() {
   }
 
   // refine data
-  useEffect(() => {
-    let data: SelectedData[] = []
-    selectedReminders.map((reminder) => {
-      return data.push({
-        name: reminder.name,
-        type: reminder.message ? "custom" : "template",
-        status: reminder.is_active ? "active" : "disabled",
-        start_time: new Date(reminder.created_at),
-        updated_at: new Date(reminder.updated_at),
-        created_by: reminder.created_by && reminder.created_by.username
-      })
-    })
-    setSelectedData(data)
-  }, [selectedReminders])
+  // useEffect(() => {
+  //   let data: SelectedData[] = []
+  //   selectedReminders.map((reminder) => {
+  //     return data.push({
+  //       name: reminder.name,
+  //       type: reminder.message ? "custom" : "template",
+  //       status: reminder.is_active ? "active" : "disabled",
+  //       start_time: new Date(reminder.created_at),
+  //       updated_at: new Date(reminder.updated_at),
+  //       created_by: reminder.created_by && reminder.created_by.username
+  //     })
+  //   })
+  //   setSelectedData(data)
+  // }, [selectedReminders])
 
   useEffect(() => {
     if (isSuccess) {
@@ -90,7 +106,7 @@ export default function ReminderPage() {
   useEffect(() => {
     if (filter) {
       if (reminders) {
-        const searcher = new FuzzySearch(reminders, ["name", "type", "is_active", "created_by", "is_random__template", "auto_refresh", "connected_number", "daily_limit", ""], {
+        const searcher = new FuzzySearch(reminders, ["reminder.name", "contacts.contact.mobile", "contacts.contact.name", "contact.designation", "reminder.type", "reminder.is_active", "reminder.created_by", "reminder.is_random__template", "reminder.auto_refresh", "reminder.connected_number", "reminder.daily_limit", ""], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);

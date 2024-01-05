@@ -16,9 +16,9 @@ function MyProductionPage() {
     <>
       {isLoading && <LinearProgress />}
       <Stack direction={'column'} justifyContent={'center'}>
-        <Typography variant="h6" sx={{ fontSize: '18', textAlign: 'center' }}>Daily Productions</Typography>
+        <Typography variant="h6" sx={{ p:2,fontSize: '18', textAlign: 'center' }}>Daily Productions</Typography>
         {data && data?.data.length !== 3 && <Stack sx={{ justifyContent: 'center' }}>
-          < Button variant="outlined" disabled={isLoading} size="large" sx={{ mx: 8, my: 2, fontWeight: 'bold', fontSize: 12 }} color="info"
+          < Button variant="contained" disabled={isLoading} size="large" sx={{ mx: 8, my: 2, fontWeight: 'bold', fontSize: 12 }} color="info"
             onClick={() => { setChoice({ type: ProductionChoiceActions.create_production }) }}
           >+ Create Production</Button>
         </Stack >}

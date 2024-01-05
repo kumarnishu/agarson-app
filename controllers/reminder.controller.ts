@@ -18,6 +18,7 @@ import { GetRefreshCronString } from "../utils/GetRefreshCronString"
 import { Contact } from "../models/contact/contact.model"
 import { IReminder, IReminderBody } from "../types/reminder.types"
 import { IMessage, IMessageTemplate } from "../types/template.types"
+import { IContact, IContactReport } from "../types/contact.types"
 
 
 
@@ -25,11 +26,23 @@ import { IMessage, IMessageTemplate } from "../types/template.types"
 export const GetReminders = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = String(req.query.hidden)
     let reminders: IReminder[] = []
+    let result: {
+        reminder: IReminder,
+        contacts: IContactReport[]
+    }[] = []
     if (hidden === "true")
         reminders = await Reminder.find().populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("index_num")
     else
         reminders = await Reminder.find({ is_hidden: false }).populate('templates').populate('created_by').populate('updated_at').populate('updated_by').sort("index_num")
-    return res.status(200).json(reminders)
+
+    for (let i = 0; i < reminders.length; i++) {
+        let contacts = await ContactReport.find({ reminder: reminders[i]._id }).populate('contact').populate('updated_by').populate('created_by').sort('name')
+        result.push({
+            reminder: reminders[i],
+            contacts: contacts
+        })
+    }
+    return res.status(200).json(result)
 }
 
 export const GetReminderContacts = async (req: Request, res: Response, next: NextFunction) => {

@@ -2,11 +2,11 @@ import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
 import BackupIcon from '@mui/icons-material/Backup';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import { ApartmentOutlined, Article, Book, CheckBoxOutlined, Diversity3Outlined, Key, Person3Outlined, Phone, PunchClock, TaskAltOutlined, TodayOutlined, TourOutlined } from "@mui/icons-material";
+import { ApartmentOutlined, Article, Book, CheckBoxOutlined, Diversity3Outlined, Key, LanSharp, Person3Outlined, Phone, PunchClock, TaskAltOutlined, TodayOutlined, TourOutlined } from "@mui/icons-material";
 import AppShortcutIcon from '@mui/icons-material/AppShortcut';
 import { useState } from "react";
 import ManageFeatureControlDialog from "../../components/dialogs/users/ManageFeatureControlDialog";
-import { Feature } from "../../contexts/userContext";
+import { Feature } from "../../types/access.types";
 
 function FeatureAccessReportPage() {
     const [feature, setFeature] = useState<string>()
@@ -184,6 +184,18 @@ function FeatureAccessReportPage() {
                         </Card>
                     </Grid>
 
+                    <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                            <Card
+                            onClick={() => setFeature(Feature.productions)}
+                            sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                                <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
+                                    <LanSharp sx={{ height: 50, width: 50 }} />
+                                    <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                                        Production
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                    </Grid>
 
                     {/* reminders */}
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>

@@ -11,25 +11,44 @@ import StopReminderDialog from '../dialogs/reminders/StopReminderDialog'
 import UpdateReminderMessageDialog from '../dialogs/reminders/UpdateReminderMessageDialog'
 import StartReminderMessageDialog from '../dialogs/reminders/StartReminderMessageDialog'
 import PopUp from '../popup/PopUp'
-import { IReminder } from '../../types/reminder.types'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import HideReminderDialog from '../dialogs/reminders/HideReminderDialog.tsx'
 import ViewTemplateDialog from '../dialogs/templates/ViewTemplateDialog.tsx'
 import { Asset } from '../../types/asset.types.ts'
+import { IReminder } from '../../types/reminder.types.ts'
+import { IContactReport } from '../../types/contact.types.ts'
 
 
 type Props = {
-    reminder: IReminder | undefined,
-    setReminder: React.Dispatch<React.SetStateAction<IReminder | undefined>>,
+    reminder: {
+        reminder: IReminder,
+        contacts: IContactReport[]
+    } | undefined,
+    setReminder: React.Dispatch<React.SetStateAction<{
+        reminder: IReminder,
+        contacts: IContactReport[]
+    } | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    reminders: IReminder[],
-    selectedReminders: IReminder[]
-    setSelectedReminders: React.Dispatch<React.SetStateAction<IReminder[]>>,
+    reminders: {
+        reminder: IReminder,
+        contacts: IContactReport[]
+    }[],
+    selectedReminders: {
+        reminder: IReminder,
+        contacts: IContactReport[]
+    }[]
+    setSelectedReminders: React.Dispatch<React.SetStateAction<{
+        reminder: IReminder,
+        contacts: IContactReport[]
+    }[]>>,
 }
 function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setReminder, selectedReminders, setSelectedReminders }: Props) {
-    const [data, setData] = useState<IReminder[]>(reminders)
+    const [data, setData] = useState<{
+        reminder: IReminder,
+        contacts: IContactReport[]
+    }[]>(reminders)
     const { setChoice } = useContext(ChoiceContext)
     const [template, setTemplate] = useState<{
         message?: string | undefined;
@@ -90,7 +109,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                 Reminder Name
 
                             </STableHeadCell>
-                           
+
                             <STableHeadCell
                             >
 
@@ -129,7 +148,10 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                 Next Run Date
 
                             </STableHeadCell>
-
+                            <STableHeadCell
+                            >
+                                Contacts
+                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -209,7 +231,7 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                         }
                                                         if (!e.target.checked) {
                                                             setSelectedReminders((reminders) => reminders.filter((item) => {
-                                                                return item._id !== reminder._id
+                                                                return item.reminder._id !== reminder.reminder._id
                                                             }))
                                                         }
                                                     }}
@@ -221,20 +243,20 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                         }
                                         {/* actions */}
 
-                                        <STableCell style={{ backgroundColor: reminder.is_hidden ? 'rgba(255,0,0,0.1)' : 'rgba(188, 209, 192, 0.6)' }}>
+                                        <STableCell style={{ backgroundColor: reminder.reminder.is_hidden ? 'rgba(255,0,0,0.1)' : 'rgba(188, 209, 192, 0.6)' }}>
                                             <PopUp element={<Stack direction="row">
                                                 {user?.reminders_access_fields.is_editable && <>
                                                     {
-                                                        !reminder.is_active ?
+                                                        !reminder.reminder.is_active ?
                                                             <>
                                                                 <Tooltip title="Start Reminder">
                                                                     <IconButton
                                                                         color="info"
                                                                         size="medium"
                                                                         onClick={() => {
-                                                                            if (reminder.templates)
+                                                                            if (reminder.reminder.templates)
                                                                                 setChoice({ type: ReminderChoiceActions.start_reminder })
-                                                                            if (reminder.message)
+                                                                            if (reminder.reminder.message)
                                                                                 setChoice({ type: ReminderChoiceActions.start_message_reminder })
                                                                             setReminder(reminder)
                                                                         }}>
@@ -285,12 +307,12 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                         <IconButton
                                                             color="success"
                                                             size="medium"
-                                                            disabled={Boolean(reminder.is_active)}
+                                                            disabled={Boolean(reminder.reminder.is_active)}
                                                             onClick={() => {
 
-                                                                if (reminder.templates)
+                                                                if (reminder.reminder.templates)
                                                                     setChoice({ type: ReminderChoiceActions.update_reminder })
-                                                                if (reminder.message)
+                                                                if (reminder.reminder.message)
                                                                     setChoice({ type: ReminderChoiceActions.update_message_reminder })
                                                                 setReminder(reminder)
                                                             }}>
@@ -303,17 +325,17 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                                         color="success"
                                                         size="medium"
                                                         onClick={() => {
-                                                            if (reminder.message)
+                                                            if (reminder.reminder.message)
                                                                 setTemplate({
-                                                                    message: reminder.message.message,
-                                                                    media: reminder.message.media,
-                                                                    caption: reminder.message.caption
+                                                                    message: reminder.reminder.message.message,
+                                                                    media: reminder.reminder.message.media,
+                                                                    caption: reminder.reminder.message.caption
                                                                 })
-                                                            if (reminder.templates[0])
+                                                            if (reminder.reminder.templates[0])
                                                                 setTemplate({
-                                                                    message: reminder.templates[0].message,
-                                                                    media: reminder.templates[0].media,
-                                                                    caption: reminder.templates[0].caption
+                                                                    message: reminder.reminder.templates[0].message,
+                                                                    media: reminder.reminder.templates[0].media,
+                                                                    caption: reminder.reminder.templates[0].caption
                                                                 })
                                                             setChoice({ type: TemplateChoiceActions.view_template })
                                                         }}>
@@ -334,62 +356,64 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                                             </Stack>} />
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.index_num}
+                                            {reminder.reminder.index_num}
                                         </STableCell>
 
                                         <STableCell>
-                                            {reminder.name}
+                                            {reminder.reminder.name}
                                         </STableCell>
 
                                         <STableCell>
-                                            {reminder.serial_number || "not available"}
+                                            {reminder.reminder.serial_number || "not available"}
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.is_active ?
+                                            {reminder.reminder.is_active ?
                                                 <>
-                                                    {reminder.is_paused ? <Pause /> : <Stop />}
+                                                    {reminder.reminder.is_paused ? <Pause /> : <Stop />}
                                                 </> :
                                                 'Stopped'
                                             }
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.is_todo ? "todo" : "reminder"}
+                                            {reminder.reminder.is_todo ? "todo" : "reminder"}
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.message ? "message" : "template"}
+                                            {reminder.reminder.message ? "message" : "template"}
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.run_once ? "true" : "false"}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {new Date(reminder.next_run_date).toLocaleString()}
+                                            {reminder.reminder.run_once ? "true" : "false"}
                                         </STableCell>
 
 
                                         <STableCell>
-                                            {reminder.frequency_type}
+                                            {new Date(reminder.reminder.next_run_date).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.frequency_value}
-                                        </STableCell>
-
-                                        <STableCell>
-                                            {reminder.is_random_template ? "yes" : "No"}
-                                        </STableCell>
-                                        <STableCell>
-                                            {reminder.connected_number && reminder.connected_number.toString().replace("91", "").replace("@c.us", "")}
+                                            {reminder.contacts && reminder.contacts.map((c) => { return c.contact.name }).toString()}
                                         </STableCell>
 
                                         <STableCell>
-                                            {reminder.updated_at && new Date(reminder.updated_at).toLocaleString()}
+                                            {reminder.reminder.frequency_type}
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.created_by.username}
+                                            {reminder.reminder.frequency_value}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {reminder.reminder.is_random_template ? "yes" : "No"}
                                         </STableCell>
                                         <STableCell>
-                                            {reminder.updated_by.username}
+                                            {reminder.reminder.connected_number && reminder.reminder.connected_number.toString().replace("91", "").replace("@c.us", "")}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {reminder.reminder.updated_at && new Date(reminder.reminder.updated_at).toLocaleString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {reminder.reminder.created_by.username}
+                                        </STableCell>
+                                        <STableCell>
+                                            {reminder.reminder.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>
@@ -400,14 +424,14 @@ function RemindersSTable({ reminder, selectAll, reminders, setSelectAll, setRemi
                 {
                     reminder ?
                         <>
-                            <UpdateReminderDialog reminder={reminder} />
-                            <ViewReminderDialog reminder={reminder} />
-                            <StartReminderDialog reminder={reminder} />
-                            <ResetReminderDialog reminder={reminder} />
-                            <StopReminderDialog reminder={reminder} />
-                            <UpdateReminderMessageDialog reminder={reminder} />
-                            <StartReminderMessageDialog reminder={reminder} />
-                            <HideReminderDialog reminder={reminder} />
+                            <UpdateReminderDialog reminder={reminder.reminder} />
+                            <ViewReminderDialog reminder={reminder.reminder} />
+                            <StartReminderDialog reminder={reminder.reminder} />
+                            <ResetReminderDialog reminder={reminder.reminder} />
+                            <StopReminderDialog reminder={reminder.reminder} />
+                            <UpdateReminderMessageDialog reminder={reminder.reminder} />
+                            <StartReminderMessageDialog reminder={reminder.reminder} />
+                            <HideReminderDialog reminder={reminder.reminder} />
                         </> : null
                 }
                 {template && <ViewTemplateDialog template={template} />}

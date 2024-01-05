@@ -1,24 +1,24 @@
-import { AlpsAccess, BackupAccess, BotAccess, BroadcastAccess, CheckListsAccess, ContactsAccess, CrmAccess, GreetingAccess, PasswordsAccess, ProductionsAccess, RemindersAccess, TasksAccess, TemplatesAccess, TodoAccess, UserAccess } from "../types/access.types";
+import { FeatureAccess } from "../types/access.types";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 export type AccessTypes = {
-  user_access_fields: UserAccess,
-  crm_access_fields: CrmAccess,
-  contacts_access_fields: ContactsAccess,
-  templates_access_fields: TemplatesAccess,
-  bot_access_fields: BotAccess,
-  broadcast_access_fields: BroadcastAccess,
-  backup_access_fields: BackupAccess,
-  reminders_access_fields: RemindersAccess,
-  alps_access_fields: AlpsAccess,
-  tasks_access_fields: TasksAccess,
-  checklists_access_fields: CheckListsAccess,
-  reports_access_fields: CheckListsAccess,
-  visit_access_fields: CheckListsAccess,
-  todos_access_fields: TodoAccess
-  greetings_access_fields: GreetingAccess,
-  passwords_access_fields: PasswordsAccess,
-  productions_access_fields: ProductionsAccess
+  user_access_fields: FeatureAccess,
+  crm_access_fields: FeatureAccess,
+  contacts_access_fields: FeatureAccess,
+  templates_access_fields: FeatureAccess,
+  bot_access_fields: FeatureAccess,
+  broadcast_access_fields: FeatureAccess,
+  backup_access_fields: FeatureAccess,
+  reminders_access_fields: FeatureAccess,
+  alps_access_fields: FeatureAccess,
+  tasks_access_fields: FeatureAccess,
+  checklists_access_fields: FeatureAccess,
+  reports_access_fields: FeatureAccess,
+  visit_access_fields: FeatureAccess,
+  todos_access_fields: FeatureAccess
+  greetings_access_fields: FeatureAccess,
+  passwords_access_fields: FeatureAccess,
+  productions_access_fields: FeatureAccess
 
 }
 // login
@@ -97,6 +97,16 @@ export const UpdateUserAccess = async ({ id, access_fields }: {
 
 }) => {
   return await apiClient.patch(`update/access/user/${id}`, access_fields)
+}
+export const UpdateFeatureAccess = async (body: {
+  feature: string,
+  body: {
+    access: FeatureAccess,
+    user: string
+  }[]
+
+}) => {
+  return await apiClient.put(`update/access/feature`, body)
 }
 
 // make admin

@@ -8,6 +8,7 @@ import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
 import { IUser, TUserBody } from '../types/user.types';
 import { Asset } from '../types/asset.types';
+import { Feature, FeatureAccess } from '../types/access.types';
 
 
 export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
@@ -630,7 +631,7 @@ export const AssignUsers = async (req: Request, res: Response, next: NextFunctio
     await user.save();
     res.status(200).json({ message: "assigned users successfully" });
 }
-export const UpdateAccessFields = async (req: Request, res: Response, next: NextFunction) => {
+export const UpdateUserWiseAccessFields = async (req: Request, res: Response, next: NextFunction) => {
     const { user_access_fields,
         crm_access_fields,
         contacts_access_fields,
@@ -646,7 +647,7 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
         reports_access_fields,
         todos_access_fields,
         greetings_access_fields,
-        passwords_access_fields,productions_access_fields
+        passwords_access_fields, productions_access_fields
 
     } = req.body as TUserBody
 
@@ -678,6 +679,136 @@ export const UpdateAccessFields = async (req: Request, res: Response, next: Next
     res.status(200).json({ message: " updated" })
 }
 
+export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response, next: NextFunction) => {
+    const {
+        feature, body
+    } = req.body as {
+        feature: string,
+        body: {
+            user: string,
+            access: FeatureAccess
+        }[]
+    }
+    if (feature === Feature.users) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                user_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.crm) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                crm_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.productions) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                productions_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.contacts) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                contacts_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.templates) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                templates_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.bot) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                bot_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.erp_login) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                passwords_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.broadcast) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                broadcast_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.backup) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                backup_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.reminders) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                reminders_access_fields: data.access
+            })
+        })
+    } if (feature === Feature.reports) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                reports_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.alps) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                alps_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.tasks) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                tasks_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.checklists) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                checklists_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.greetings) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                greetings_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.visit) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                visit_access_fields: data.access
+            })
+        })
+    }
+    if (feature === Feature.todos) {
+        body.forEach(async (data) => {
+            await User.findByIdAndUpdate(data.user, {
+                todos_access_fields: data.access
+            })
+        })
+    }
+    res.status(200).json({ message: " updated" })
+}
 export const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
