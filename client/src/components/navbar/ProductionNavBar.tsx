@@ -52,13 +52,11 @@ export default function ProductionNavBar() {
                                 >
 
                                     <>
-                                        {window.screen.width < 500 && <>
-                                            <StyledLink to={paths.production}>Home</StyledLink>
-                                            <StyledLink to={paths.my_shoe_weight}>My Shoe Weights</StyledLink>
-                                            <StyledLink to={paths.my_dye_repair}>My Dye Repair</StyledLink>
-                                            <StyledLink to={paths.my_running_mould}>My Running Mould</StyledLink>
-                                        </>}
-                                        {user.is_admin && <>
+                                        <StyledLink to={paths.production}>My Production</StyledLink>
+                                        <StyledLink to={paths.my_shoe_weight}>My Shoe Weights</StyledLink>
+                                        <StyledLink to={paths.my_dye_repair}>My Dye Repair</StyledLink>
+                                        <StyledLink to={paths.my_running_mould}>My Running Mould</StyledLink>
+                                        {user.productions_access_fields.is_editable && <>
                                             <StyledLink to={paths.shoe_weight}>Shoe Weights</StyledLink>
                                             <StyledLink to={paths.dye_repair}>Dye Repair</StyledLink>
                                             <StyledLink to={paths.running_mould}>Running Mould</StyledLink>

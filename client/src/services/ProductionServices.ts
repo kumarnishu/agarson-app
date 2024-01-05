@@ -63,8 +63,11 @@ export const ValidateShoeWeight = async (id: string) => {
 export const GetShoeWeights = async () => {
     return await apiClient.get(`weights`);
 }
-export const GetMyShoeWeights = async () => {
-    return await apiClient.get(`weights/me`);
+export const GetMyShoeWeights = async (dye: string | undefined) => {
+    if (dye)
+        return await apiClient.get(`weights/me?dye=${dye}`);
+    else
+        return await apiClient.get(`weights/me`);
 }
 export const GetMyProductions = async () => {
     return await apiClient.get(`productions/me`);

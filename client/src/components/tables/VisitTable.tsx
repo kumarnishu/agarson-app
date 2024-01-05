@@ -352,9 +352,8 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                         </STableCell>
 
                                         <STableCell>
-                                            {new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleDateString()}
+                                            {visit.visit.start_day_credientials && moment(new Date(visit.visit.start_day_credientials.timestamp)).format('DD/MM/YY')}
                                         </STableCell>
-
                                         <STableCell>
 
                                             {visit.visit_in_photo && <IconButton

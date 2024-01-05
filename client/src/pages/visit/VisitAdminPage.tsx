@@ -142,7 +142,7 @@ export default function VisitAdminPage() {
         selectedVisits.map((visit) => {
             return data.push(
                 {
-                    date: new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleDateString(),
+                    date: visit.visit.start_day_credientials && moment(new Date(visit.visit.start_day_credientials.timestamp)).format('DD/MM/YY'),
                     start_day: new Date(visit.visit.start_day_credientials && visit.visit.start_day_credientials.timestamp).toLocaleTimeString(),
                     start_day_location: visit.visit.start_day_credientials && visit.visit.start_day_credientials.address,
                     start_day_coordinates: visit.visit.start_day_credientials && visit.visit.start_day_credientials.latitude + "," + visit.visit.start_day_credientials.longitude,

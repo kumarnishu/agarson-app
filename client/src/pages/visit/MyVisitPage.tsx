@@ -61,8 +61,8 @@ function MyVisitPage() {
       <>
         {visits.map((visit, index) => {
           return (
-            <Paper elevation={8} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white', borderRadius: 2 }}>
-              <Stack key={index}
+            <Paper key={index} elevation={8} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white', borderRadius: 2 }}>
+              <Stack 
                 direction="column"
                 gap={2}
               >

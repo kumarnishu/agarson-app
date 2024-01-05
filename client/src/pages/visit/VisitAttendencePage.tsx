@@ -88,7 +88,7 @@ export default function VisitAdminPage() {
         selectedVisits.map((visit) => {
             return data.push(
                 {
-                    date: new Date(visit.start_day_credientials.timestamp).toLocaleDateString(),
+                    date: visit.visit.start_day_credientials && moment(new Date(visit.visit.start_day_credientials.timestamp)).format('DD/MM/YY'),
                     person: visit.created_by.username,
                     geocity: visit.visit_reports[0] && visit.visit_reports[0].real_city,
                     visit_in: visit.visit_reports[0] && new Date(visit.visit_reports[0].visit_in_credientials.timestamp).toLocaleTimeString('Lt'),

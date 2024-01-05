@@ -25,7 +25,7 @@ function ProductionMenu() {
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
                 }>
-                <StyledLink to={paths.production}>Home</StyledLink>
+                <StyledLink to={paths.production}>My Production</StyledLink>
             </MenuItem>
             <MenuItem
                 onClick={
@@ -45,46 +45,51 @@ function ProductionMenu() {
                 }>
                 <StyledLink to={paths.my_dye_repair}>My Dye Repair</StyledLink>
             </MenuItem>
-
-            {user?.is_admin && <MenuItem
+            {user?.productions_access_fields.is_editable && <MenuItem
+                onClick={
+                    () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
+                }>
+                <StyledLink to={paths.production}>Home</StyledLink>
+            </MenuItem>}
+            {user?.productions_access_fields.is_editable && <MenuItem
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.shoe_weight}>Shoe Weights</StyledLink>
             </MenuItem>}
-            {user?.is_admin && <MenuItem
+            {user?.productions_access_fields.is_editable && <MenuItem
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.running_mould}>Running Mould</StyledLink>
             </MenuItem>}
-            {user?.is_admin && <MenuItem
+            {user?.productions_access_fields.is_editable && <MenuItem
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.dye_repair}>Dye Repair</StyledLink>
             </MenuItem>}
 
-            {user?.is_admin && <MenuItem
+            {user?.productions_access_fields.is_editable && <MenuItem
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.articles}>Articles</StyledLink>
             </MenuItem>}
-            {user?.is_admin && <MenuItem
+            {user?.productions_access_fields.is_editable && <MenuItem
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.dyes}>Dyes</StyledLink>
             </MenuItem>}
 
-            {user?.is_admin && <MenuItem
+            {user?.productions_access_fields.is_editable && <MenuItem
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
                 }>
                 <StyledLink to={paths.machines}>Machines</StyledLink>
             </MenuItem>}
-            {user?.is_admin && <MenuItem
+            {user?.productions_access_fields.is_editable && <MenuItem
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
                 }>

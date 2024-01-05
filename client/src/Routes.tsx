@@ -132,7 +132,7 @@ export enum paths {
 
   //production
   production = "/production",
-  production_admin ="production_admin",
+  production_admin = "production_admin",
   shoe_weight = "shoe_weight",
   dye_repair = "dye_repair",
   running_mould = "running_mould",
@@ -256,6 +256,11 @@ function AppRoutes() {
             < Route path={paths.production} element={<ProductionNavBar />}>
               <Route index
                 element={
+                  <MyProductionPage />
+                }
+              />
+              <Route
+                path={paths.production} element={
                   <MyProductionPage />
                 }
               />

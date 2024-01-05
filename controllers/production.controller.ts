@@ -7,6 +7,8 @@ import { Dye } from "../models/production/dye.types"
 import xlsx from "xlsx"
 import { Production } from "../models/production/production.types"
 import { User } from "../models/users/user.model"
+import { IShoeWeight } from "../types/production.types"
+
 //get
 export const GetMachines = async (req: Request, res: Response, next: NextFunction) => {
     let machines = await Machine.find({ active: true }).populate('created_by').populate('updated_by').sort('name')
@@ -26,7 +28,17 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
     return res.status(200).json(weights)
 }
 export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
-    let weights = await ShoeWeight.find().populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('dye_number')
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 2
+    previous_date.setDate(day)
+    let dye = req.query.dye
+    let weights: IShoeWeight[] = []
+    if (dye) {
+        weights = await ShoeWeight.find({ created_at: { $gte: previous_date }, dye: dye }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('dye_number')
+    }
+    else {
+        weights = await ShoeWeight.find({ created_at: { $gte: previous_date } }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('dye_number')
+    }
     weights = weights.filter((weight) => {
         if (weight.created_at.getDate() === new Date().getDate() && weight.created_at.getMonth() === new Date().getMonth() && weight.created_at.getFullYear() === new Date().getFullYear() && weight.created_by.username === req.user.username)
             return weight
@@ -44,7 +56,7 @@ export const GetMyTodayProductions = async (req: Request, res: Response, next: N
     previous_date.setDate(day)
 
     let productions = await Production.find({ created_at: { $gte: previous_date } }).populate('machine').populate('thekedar').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
-  
+
     return res.status(200).json(productions)
 }
 
@@ -342,22 +354,22 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     let previous_date = new Date()
     let day = previous_date.getDate() - 7
     previous_date.setDate(day)
+    let d1 = await Dye.findById(dye)
+    let m1 = await Machine.findById(machine)
+    let art1 = await Article.findById(article)
+    if (!m1 || !d1 || !art1)
+        return res.status(400).json({ message: "please fill all reqired fields" })
 
-    let shoe_weights = await ShoeWeight.find({ created_at: { $gte: previous_date } })
+
+    let shoe_weights = await ShoeWeight.find({ created_at: { $gte: previous_date }, dye: d1._id })
     shoe_weights = shoe_weights.filter((shoe_weight) => {
         if (shoe_weight.created_at.getDate() === new Date().getDate() && shoe_weight.created_at.getMonth() === new Date().getMonth() && shoe_weight.created_at.getFullYear() === new Date().getFullYear()) {
             return shoe_weight
         }
     })
 
-
-    let m1 = await Machine.findById(machine)
-    let d1 = await Dye.findById(dye)
-    let art1 = await Article.findById(article)
-    if (!m1 || !d1 || !art1)
-        return res.status(400).json({ message: "please fill all reqired fields" })
     if (shoe_weights.length === 3)
-        return res.status(400).json({ message: "no more shoe wieght allowed to upload" })
+        return res.status(400).json({ message: "no more shoe wieght allowed to upload for the same dye" })
 
     let shoe_weight = new ShoeWeight({
         machine: m1, dye: d1, article: art1, shoe_weight: weight
