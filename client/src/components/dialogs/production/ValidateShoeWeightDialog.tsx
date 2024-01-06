@@ -17,7 +17,7 @@ function ValidateShoeWeightDialog({ weight }: { weight: IShoeWeight }) {
         <AxiosResponse<IUser>, BackendError, string>
         (ValidateShoeWeight, {
             onSuccess: () => {
-                queryClient.invalidateQueries('weights')
+                queryClient.invalidateQueries('shoe_weights')
             }
         })
     useEffect(() => {
