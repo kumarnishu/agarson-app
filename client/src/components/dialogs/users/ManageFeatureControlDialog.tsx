@@ -1,13 +1,12 @@
 import { Box, Button, Checkbox, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Stack, Typography } from "@mui/material"
 import { Cancel } from "@mui/icons-material"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { IUser } from "../../../types/user.types"
 import { Feature, FeatureAccess } from "../../../types/access.types"
 import { useMutation, useQuery } from "react-query"
 import { AxiosResponse } from "axios"
 import { BackendError } from "../../.."
 import { GetUsers, UpdateFeatureAccess } from "../../../services/UserServices"
-import { ChoiceContext, UserChoiceActions } from "../../../contexts/dialogContext"
 import AlertBar from "../../snacks/AlertBar"
 import { STable, STableBody, STableCell, STableHead, STableRow } from "../../styled/STyledTable"
 import { queryClient } from "../../../main"
@@ -18,7 +17,6 @@ type TSelectedData = {
 }
 
 function ManageFeatureControlDialog({ feature, setFeature }: { feature: string | undefined, setFeature: React.Dispatch<React.SetStateAction<string | undefined>> }) {
-    const { setChoice } = useContext(ChoiceContext)
     let [selectedData, setSelectedData] = useState<TSelectedData[]>()
     const { data: usersData, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
@@ -47,8 +45,16 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                     }
                 }
             }))
+
         }
     }, [isUserSuccess])
+
+    useEffect(() => {
+        if (isSuccess) {
+            setFeature(undefined)
+        }
+    }, [isSuccess])
+    
     return (
         <>
             {
@@ -67,7 +73,10 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                     setSelectedData(undefined)
                 }}
             >
-                <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setFeature(undefined)}>
+                <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => {
+
+                    setFeature(undefined)
+                }}>
                     <Cancel fontSize='large' />
                 </IconButton>
 
@@ -2254,6 +2263,7 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                                     mutate({ feature: feature, body: selectedData })
                                     setSelectedData(undefined)
                                 }
+
                             }}
 
                         >
@@ -2262,7 +2272,7 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                         </Button>
                         <Button fullWidth size={"small"} variant="outlined" color="primary"
                             onClick={() => {
-                                setChoice({ type: UserChoiceActions.close_user })
+                                setFeature(undefined)
                                 setSelectedData(undefined)
                             }}
 
@@ -2272,10 +2282,10 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                         </Button>
                     </Stack>
                 </DialogContent>
-                
+
             </Dialog >
-           
-          
+
+
         </>
     )
 }

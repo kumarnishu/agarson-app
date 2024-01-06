@@ -50,7 +50,7 @@ function MyProductionPage() {
             {
               articles && articles.data && articles.data.map((article, index) => {
                 return (<option key={index} value={article._id}>
-                  {article.name}
+                  {article.display_name}
                 </option>)
               })
             }
@@ -73,13 +73,16 @@ function MyProductionPage() {
                     Machine : {production.machine.name}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Article : {production.article.name}
+                    Articles : {production.articles.map((a) => { return a.display_name }).toString()}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Thekedar :  {production.thekedar.username}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Production : <span style={{ fontWeight: 'bold', color: 'green', fontSize: 14 }}> {production.production}</span>
+                  </Typography>
+                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
+                    Production Hours : <span style={{ fontWeight: 'bold', color: 'green', fontSize: 14 }}> {production.production_hours}</span>
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Small Repair : <span style={{ fontWeight: 'bold', color: 'grey', fontSize: 14 }}> {production.small_repair}</span>
@@ -91,7 +94,7 @@ function MyProductionPage() {
                     Created By : {production.created_by.username}
                   </Typography>
                   <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', color: 'grey', }}>
-                    <b>Date : {moment(new Date(production.created_at)).format('DD/MM/YYYY')}</b>
+                    <b>Timestamp : {moment(new Date(production.created_at)).format('LT')}</b>
                   </Typography>
 
                 </Stack>

@@ -58,6 +58,7 @@ function UploadVisitSamplesDialog({ visit }: { visit: IVisitReport }) {
                             let formdata = new FormData()
                             formdata.append("media", file)
                             mutate({ id: visit._id, body: formdata })
+                            setFile(undefined)
                         }
                     }}
                         disabled={Boolean(isLoading)}

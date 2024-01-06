@@ -5,7 +5,7 @@ import { Machine } from "../models/production/machine.model"
 import { Article } from "../models/production/article.model"
 import { Dye } from "../models/production/dye.types"
 import xlsx from "xlsx"
-import { Production } from "../models/production/production.types"
+import { Production } from "../models/production/production.model"
 import { User } from "../models/users/user.model"
 import { IArticle, IDye, IMachine, IProduction, IShoeWeight } from "../types/production.types"
 
@@ -43,26 +43,21 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
     return res.status(200).json(weights)
 }
 export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 2
-    previous_date.setDate(day)
+    let dt1 = new Date()
+    dt1.setDate(new Date().getDate() - 1)
     let dye = req.query.dye
     let weights: IShoeWeight[] = []
     if (dye) {
-        weights = await ShoeWeight.find({ created_at: { $gte: previous_date }, dye: dye }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+        weights = await ShoeWeight.find({ created_at: { $gt: dt1 }, dye: dye, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
     }
     else {
-        weights = await ShoeWeight.find({ created_at: { $gte: previous_date } }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
     }
-    weights = weights.filter((weight) => {
-        if (weight.created_at.getDate() === new Date().getDate() && weight.created_at.getMonth() === new Date().getMonth() && weight.created_at.getFullYear() === new Date().getFullYear() && weight.created_by.username === req.user.username)
-            return weight
-    })
     return res.status(200).json(weights)
 }
 
 export const GetProductions = async (req: Request, res: Response, next: NextFunction) => {
-    let productions = await Production.find().populate('machine').populate('thekedar').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+    let productions = await Production.find().populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-created_at')
     return res.status(200).json(productions)
 }
 export const GetMyTodayProductions = async (req: Request, res: Response, next: NextFunction) => {
@@ -73,14 +68,13 @@ export const GetMyTodayProductions = async (req: Request, res: Response, next: N
     dt2.setDate(dt1.getDate() + 1)
     let productions: IProduction[] = []
     if (article) {
-        productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 }, article: article }).populate('machine').populate('thekedar').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+        productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 }, article: article }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
     }
     if (!article)
-        productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('machine').populate('thekedar').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+        productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
 
     return res.status(200).json(productions)
 }
-
 
 //post/put/patch/delete
 export const CreateMachine = async (req: Request, res: Response, next: NextFunction) => {
@@ -468,57 +462,53 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
     let {
         machine,
         thekedar,
-        article,
+        articles,
         manpower,
         production,
         big_repair,
+        production_hours,
         small_repair,
         date
     } = req.body as {
         machine: string,
         date: string,
+        production_hours: number,
         thekedar: string,
-        article: string,
+        articles: string[],
         manpower: number,
         production: number,
         big_repair: number,
         small_repair: number
     }
 
-    if (!machine || !thekedar || !article || !manpower || !production || !date)
+    if (!machine || !thekedar || !articles || !manpower || !production || !date || !production_hours)
         return res.status(400).json({ message: "please fill all reqired fields" })
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 3
-    previous_date.setDate(day)
+
 
     let production_date = new Date(date)
 
-    let productions = await Production.find({ created_at: { $gte: previous_date }, article: article })
-    let remoteproduction = productions.find((prouction) => {
-        if (prouction.created_at.getDate() === new Date(production_date).getDate() && prouction.created_at.getMonth() === new Date(production_date).getMonth() && prouction.created_at.getFullYear() === new Date(production_date).getFullYear()) {
-            return prouction
-        }
-    })
-    if (remoteproduction)
-        return res.status(400).json({ message: "producton alreday created" })
 
+    if (articles.length === 0) {
+        return res.status(400).json({ message: "select an article" })
+    }
     let m1 = await Machine.findById(machine)
     let t1 = await User.findById(thekedar)
-    let art1 = await Article.findById(article)
 
-    if (!m1 || !t1 || !art1)
+    if (!m1 || !t1)
         return res.status(400).json({ message: "not a valid request" })
     let new_prouction = new Production({
         machine: m1,
         thekedar: t1,
-        article: art1,
+        production_hours: production_hours,
+        articles: articles,
         manpower: manpower,
         production: production,
         big_repair: big_repair,
         small_repair: small_repair
     })
 
-    new_prouction.created_at = production_date
+    new_prouction.date = production_date
+    new_prouction.created_at = new Date()
     new_prouction.updated_at = new Date()
     new_prouction.created_by = req.user
     new_prouction.updated_by = req.user
@@ -530,7 +520,8 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
     let {
         machine,
         thekedar,
-        article,
+        articles,
+        production_hours,
         manpower,
         production,
         big_repair,
@@ -539,48 +530,50 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
     } = req.body as {
         machine: string,
         date: string,
+        production_hours: number,
         thekedar: string,
-        article: string,
+        articles: string[],
         manpower: number,
         production: number,
         big_repair: number,
         small_repair: number
     }
 
-    if (!machine || !thekedar || !article || !manpower || !production || !date)
+    if (!machine || !thekedar || !articles || !manpower || !production || !date)
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     if (!id)
         return res.status(400).json({ message: "not a valid request" })
     let production_date = new Date(date)
-    let remote_production = await Production.findById(id).populate('article')
+    let remote_production = await Production.findById(id)
 
     if (!remote_production)
         return res.status(404).json({ message: "producton not exists" })
 
-
+    if (articles.length === 0) {
+        return res.status(400).json({ message: "select an article" })
+    }
     let m1 = await Machine.findById(machine)
     let t1 = await User.findById(thekedar)
-    let art1 = await Article.findById(article)
 
-    if (!m1 || !t1 || !art1)
-        return res.status(400).json({ message: "please fill all reqired fields" })
-
-    if (art1.name !== remote_production.article.name || remote_production.created_at.getDate() !== new Date(production_date).getDate()) {
-        return res.status(400).json({ message: "date and article should not be changed" })
-    }
-    remote_production.machine = m1
-    remote_production.thekedar = t1
-    remote_production.article = art1
-    remote_production.manpower = manpower
-    remote_production.production = production
-    remote_production.big_repair = big_repair
-    remote_production.small_repair = small_repair
-    remote_production.created_at = new Date(production_date)
-    remote_production.updated_at = new Date()
-    remote_production.updated_by = req.user
-    await remote_production.save()
-    return res.status(200).json(remote_production)
+    if (!m1 || !t1)
+        return res.status(400).json({ message: "not a valid request" })
+    await Production.findByIdAndUpdate(remote_production._id,
+        {
+            machine: m1,
+            thekedar: t1,
+            articles: articles,
+            manpower: manpower,
+            production: production,
+            production_hours: production_hours,
+            big_repair: big_repair,
+            small_repair: small_repair,
+            date: production_date,
+            created_at: new Date(),
+            updated_at: new Date(),
+            updated_by: req.user
+        })
+    return res.status(200).json({ message: "production updated" })
 }
 
 

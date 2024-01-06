@@ -13,11 +13,15 @@ const ProductionSchema = new mongoose.Schema<IProduction, mongoose.Model<IProduc
         ref: 'User',
         required: true
     },
-    article: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article',
-        required: true
-    },
+    articles: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Article',
+            required: true
+        }
+    ],
+    date: { type: Date, required: true },
+    production_hours: Number ,
     manpower: Number,
     production: Number,
     big_repair: Number,

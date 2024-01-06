@@ -98,6 +98,12 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                             <STableHeadCell
                             >
 
+                                Production Hours
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Man Power
 
                             </STableHeadCell>
@@ -209,7 +215,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                         </STableCell>
 
                                         <STableCell>
-                                            {production.article.name}
+                                            {production.articles.map((a) => { return a.display_name }).toString()}
                                         </STableCell>
 
                                         <STableCell>
@@ -222,6 +228,9 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
 
                                         <STableCell>
                                             {production.production}
+                                        </STableCell>
+                                        <STableCell>
+                                            {production.production_hours}
                                         </STableCell>
                                         <STableCell>
                                             {production.manpower}

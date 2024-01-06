@@ -26,11 +26,12 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
             body: {
                 machine: string,
                 thekedar: string,
-                article: string,
+                articles: string[],
                 manpower: number,
                 production: number,
                 big_repair: number,
                 small_repair: number,
+                production_hours: number,
                 date: string
             }
         }>
@@ -46,7 +47,8 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
         initialValues: {
             machine: production.machine._id,
             thekedar: production.thekedar._id,
-            article: production.article._id,
+            production_hours: production.production_hours,
+            articles: production.articles.map((a) => { return a._id }),
             manpower: production.manpower,
             production: production.production,
             big_repair: production.big_repair,
@@ -58,9 +60,11 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                 .required('Required field'),
             thekedar: Yup.string()
                 .required('Required field'),
-            article: Yup.string()
+            articles: Yup.array()
                 .required('Required field'),
             manpower: Yup.number()
+                .required('Required field'),
+            production_hours: Yup.number()
                 .required('Required field'),
             production: Yup.number()
                 .required('Required field'),
@@ -75,8 +79,9 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                 id: production._id,
                 body: {
                     machine: values.machine,
+                    production_hours: values.production_hours,
                     thekedar: values.thekedar,
-                    article: values.article,
+                    articles: values.articles,
                     manpower: values.manpower,
                     production: values.production,
                     big_repair: values.big_repair,
@@ -96,7 +101,6 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
         }
     }, [isSuccess, setChoice])
 
-
     return (
         <form onSubmit={formik.handleSubmit}>
 
@@ -107,7 +111,7 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
             >
                 < TextField
                     type="date"
-                    disabled
+
                     focused
                     error={
                         formik.touched.date && formik.errors.date ? true : false
@@ -144,7 +148,7 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                     {
                         machines && machines.data && machines.data.map((machine, index) => {
                             return (<option key={index} value={machine._id}>
-                                {machine.name}
+                                {machine.display_name}
                             </option>)
 
                         })
@@ -188,26 +192,26 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                     focused
                     SelectProps={{
                         native: true,
+                        multiple: true
                     }}
                     error={
-                        formik.touched.article && formik.errors.article ? true : false
+                        formik.touched.articles && formik.errors.articles ? true : false
                     }
-                    id="article"
-                    disabled
+                    id="articles"
+
                     helperText={
-                        formik.touched.article && formik.errors.article ? formik.errors.article : ""
+                        formik.touched.articles && formik.errors.articles ? formik.errors.articles : ""
                     }
-                    {...formik.getFieldProps('article')}
+                    {...formik.getFieldProps('articles')}
                     required
-                    label="Select Article"
+                    label="Select Articles"
                     fullWidth
                 >
-                    <option key={'00'} value={undefined}>
-                    </option>
+
                     {
                         articles && articles.data && articles.data.map((article, index) => {
                             return (<option key={index} value={article._id}>
-                                {article.name}
+                                {article.display_name}
                             </option>)
                         })
                     }
@@ -225,6 +229,20 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                         formik.touched.manpower && formik.errors.manpower ? formik.errors.manpower : ""
                     }
                     {...formik.getFieldProps('manpower')}
+                />
+                <TextField
+                    required
+                    fullWidth
+                    type="number"
+                    error={
+                        formik.touched.production_hours && formik.errors.production_hours ? true : false
+                    }
+                    id="production_hours"
+                    label="Production Hours"
+                    helperText={
+                        formik.touched.production_hours && formik.errors.production_hours ? formik.errors.production_hours : ""
+                    }
+                    {...formik.getFieldProps('production_hours')}
                 />
                 <TextField
                     required
@@ -279,7 +297,7 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                         <AlertBar message="updated" color="success" />
                     ) : null
                 }
-                <Button variant="contained" color="primary" type="submit"
+                <Button variant="contained" size="large" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Update Production"}
                 </Button>

@@ -24,9 +24,10 @@ function NewProductionForm() {
         <AxiosResponse<IProduction>, BackendError, {
             machine: string,
             thekedar: string,
-            article: string,
+            articles: string[],
             manpower: number,
             production: number,
+            production_hours: number,
             big_repair: number,
             small_repair: number,
             date: string
@@ -43,23 +44,26 @@ function NewProductionForm() {
         initialValues: {
             machine: '',
             thekedar: '',
-            article: '',
+            articles: [],
+            production_hours: 0,
             manpower: 0,
             production: 0,
             big_repair: 0,
             small_repair: 0,
-            date: moment(new Date()).format("DD/MM/YYYY")
+            date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
         },
         validationSchema: Yup.object({
             machine: Yup.string()
                 .required('Required field'),
             thekedar: Yup.string()
                 .required('Required field'),
-            article: Yup.string()
+            articles: Yup.array()
                 .required('Required field'),
             manpower: Yup.number()
                 .required('Required field'),
             production: Yup.number()
+                .required('Required field'),
+            production_hours: Yup.number()
                 .required('Required field'),
             big_repair: Yup.number()
                 .required('Required field'),
@@ -71,7 +75,8 @@ function NewProductionForm() {
             mutate({
                 machine: values.machine,
                 thekedar: values.thekedar,
-                article: values.article,
+                articles: values.articles,
+                production_hours: values.production_hours,
                 manpower: values.manpower,
                 production: values.production,
                 big_repair: values.big_repair,
@@ -101,6 +106,7 @@ function NewProductionForm() {
                 < TextField
                     type="date"
                     focused
+
                     error={
                         formik.touched.date && formik.errors.date ? true : false
                     }
@@ -117,7 +123,8 @@ function NewProductionForm() {
                     select
 
                     SelectProps={{
-                        native: true,
+                        native: true
+
                     }}
                     error={
                         formik.touched.machine && formik.errors.machine ? true : false
@@ -136,7 +143,7 @@ function NewProductionForm() {
                     {
                         machines && machines.data && machines.data.map((machine, index) => {
                             return (<option key={index} value={machine._id}>
-                                {machine.name}
+                                {machine.display_name}
                             </option>)
 
                         })
@@ -177,28 +184,27 @@ function NewProductionForm() {
                 {/* articles */}
                 < TextField
                     select
-
+                    focused
                     SelectProps={{
                         native: true,
+                        multiple: true
                     }}
                     error={
-                        formik.touched.article && formik.errors.article ? true : false
+                        formik.touched.articles && formik.errors.articles ? true : false
                     }
-                    id="article"
+                    id="articles"
                     helperText={
-                        formik.touched.article && formik.errors.article ? formik.errors.article : ""
+                        formik.touched.articles && formik.errors.articles ? formik.errors.articles : ""
                     }
-                    {...formik.getFieldProps('article')}
+                    {...formik.getFieldProps('articles')}
                     required
-                    label="Select Article"
+                    label="Select Articles"
                     fullWidth
                 >
-                    <option key={'00'} value={undefined}>
-                    </option>
                     {
                         articles && articles.data && articles.data.map((article, index) => {
                             return (<option key={index} value={article._id}>
-                                {article.name}
+                                {article.display_name}
                             </option>)
                         })
                     }
@@ -216,6 +222,20 @@ function NewProductionForm() {
                         formik.touched.manpower && formik.errors.manpower ? formik.errors.manpower : ""
                     }
                     {...formik.getFieldProps('manpower')}
+                />
+                <TextField
+                    required
+                    fullWidth
+                    type="number"
+                    error={
+                        formik.touched.production_hours && formik.errors.production_hours ? true : false
+                    }
+                    id="production_hours"
+                    label="Production Hours"
+                    helperText={
+                        formik.touched.production_hours && formik.errors.production_hours ? formik.errors.production_hours : ""
+                    }
+                    {...formik.getFieldProps('production_hours')}
                 />
                 <TextField
                     required

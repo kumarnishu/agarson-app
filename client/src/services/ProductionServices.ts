@@ -88,11 +88,12 @@ export const GetMyProductions = async ({ date, article }: { date: string, articl
 export const CreateProduction = async (body: {
     machine: string,
     thekedar: string,
-    article: string,
+    articles: string[],
     manpower: number,
     production: number,
     big_repair: number,
     small_repair: number,
+    production_hours: number,
     date: String
 }) => {
     return await apiClient.post(`productions`, body);
@@ -102,7 +103,8 @@ export const UpdateProduction = async ({ id, body }: {
     body: {
         machine: string,
         thekedar: string,
-        article: string,
+        production_hours: number,
+        articles: string[],
         manpower: number,
         production: number,
         big_repair: number,

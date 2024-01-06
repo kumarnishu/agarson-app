@@ -21,7 +21,7 @@ import ProductionsTable from '../../components/tables/ProductionTable'
 type SelectedData = {
   machine?: string,
   thekedar?: string,
-  article?: string,
+  articles?: string,
   manpower?: number,
   production?: number,
   small_repair?: number,
@@ -33,7 +33,7 @@ let template: SelectedData[] = [
   {
     machine: "",
     thekedar: "",
-    article: "",
+    articles: '',
     manpower: 0,
     production: 0,
     small_repair: 0,
@@ -81,7 +81,7 @@ export default function ProductionAdminPage() {
       return data.push({
         machine: production.machine.name,
         thekedar: production.thekedar.username,
-        article: production.article.name,
+        articles: production.articles.map((a) => { return a.display_name }).toString(),
         manpower: production.manpower,
         production: production.production,
         small_repair: production.small_repair,
