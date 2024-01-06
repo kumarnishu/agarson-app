@@ -111,7 +111,7 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
             >
                 < TextField
                     type="date"
-
+                    disabled
                     focused
                     error={
                         formik.touched.date && formik.errors.date ? true : false

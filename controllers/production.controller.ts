@@ -559,6 +559,7 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
     let previous_date = new Date()
     let day = previous_date.getDate() - 3
     previous_date.setDate(day)
+
     if (new Date(date) < previous_date || new Date(date) > new Date())
         return res.status(400).json({ message: "invalid date, should be within last 2 days" })
     if (!machine || !thekedar || !articles || !manpower || !production || !date)
@@ -569,19 +570,6 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
     let production_date = new Date(date)
     let remote_production = await Production.findById(id)
 
-
-    let previous_date2 = new Date(date)
-    let day2 = previous_date2.getDate() - 3
-    previous_date2.setDate(day2)
-
-    let prods = await Production.find({ created_at: { $gte: previous_date2 }, machine: machine })
-    prods = prods.filter((prod) => {
-        if (prod.date.getDate() === new Date(date).getDate() && prod.date.getMonth() === new Date(date).getMonth() && prod.date.getFullYear() === new Date(date).getFullYear()) {
-            return prod
-        }
-    })
-    if (prods.length === 2)
-        return res.status(400).json({ message: "not allowed more than 2 productions for the same machine" })
 
     if (!remote_production)
         return res.status(404).json({ message: "producton not exists" })
@@ -604,7 +592,6 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
             production_hours: production_hours,
             big_repair: big_repair,
             small_repair: small_repair,
-            date: production_date,
             created_at: new Date(),
             updated_at: new Date(),
             updated_by: req.user

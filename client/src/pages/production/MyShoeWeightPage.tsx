@@ -77,12 +77,12 @@ function MyShoeWeightPage() {
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     My Sole Weight :
                     {/* @ts-ignore */}
-                    <span style={{ fontWeight: 'bold', fontSize: 16, color: weight.shoe_weight - weight.article.sizes.find((size) => size.size === weight.dye.size)?.upper_weight > weight.article.sizes.find((size) => size.size === weight.dye.size)?.standard_weight ? "red" : "green" }}> {weight.shoe_weight - weight.article.sizes.find((size) => size.size === weight.dye.size)?.upper_weight}</span>
+                    <span style={{ fontWeight: 'bold', fontSize: 16, color: weight.shoe_weight - weight.article.sizes.find((size) => size.size === weight.dye.size)?.upper_weight > weight.article.sizes.find((size) => size.size === weight.dye.size)?.standard_weight ? "red" : "" }}> {weight.shoe_weight - weight.article.sizes.find((size) => size.size === weight.dye.size)?.upper_weight}</span>
                   </Typography>
                   <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Created By : <b>{weight.created_by.username}</b>
+                    Created By : {weight.created_by.username}
                   </Typography>
-                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', color: 'grey', fontSize: 14 }}>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', color: 'blue', fontSize: 14 }}>
                     <b>{moment(new Date(weight.created_at)).calendar()}</b>
                   </Typography>
 

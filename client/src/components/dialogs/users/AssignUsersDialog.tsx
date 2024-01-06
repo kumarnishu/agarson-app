@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress, TextField } from '@mui/material'
 import { useContext, useEffect, useState } from 'react';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
@@ -92,10 +92,16 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                     </Typography>
                     <Button onClick={() => formik.setValues({ ids: [] })}>Remove All</Button>
                     <form onSubmit={formik.handleSubmit}>
-                        < select
-                            id="ids"
-                            multiple
-                            style={{ width: '100%', height: '300px', padding: 2 }}
+                        < TextField
+                            select
+                            SelectProps={{
+                                native: true,
+                                multiple: true
+                            }}
+                            focused
+                            id="users"
+                            label="Select Users"
+                            fullWidth
                             {...formik.getFieldProps('ids')}
                         >
                             {
@@ -105,7 +111,7 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                                     </option>)
                                 })
                             }
-                        </select>
+                        </TextField>
                         <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color="primary" type="submit"
                             disabled={Boolean(isLoading)}
                             fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Assign"}

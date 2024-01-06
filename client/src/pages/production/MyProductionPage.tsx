@@ -57,7 +57,7 @@ function MyProductionPage() {
           </TextField>
         </Stack>
         <Stack sx={{ justifyContent: 'center' }}>
-          < Button variant="contained" disabled={isLoading} size="large" sx={{ mx: 2,  fontWeight: 'bold', fontSize: 14 }} color="info"
+          < Button variant="contained" disabled={isLoading} size="large" sx={{ mx: 2, fontWeight: 'bold', fontSize: 14 }} color="info"
             onClick={() => { setChoice({ type: ProductionChoiceActions.create_production }) }}
           >+ Create Production</Button>
         </Stack >
@@ -72,28 +72,28 @@ function MyProductionPage() {
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Machine : {production.machine.name}
                   </Typography>
-                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
+                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14, letterSpacing: 1, wordBreak: 'break-all' }}>
                     Articles : {production.articles.map((a) => { return a.display_name }).toString()}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Thekedar :  {production.thekedar.username}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Production : <span style={{ fontWeight: 'bold', color: 'green', fontSize: 14 }}> {production.production}</span>
+                    Production :  {production.production}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Production Hours : <span style={{ fontWeight: 'bold', color: 'green', fontSize: 14 }}> {production.production_hours}</span>
+                    Production Hours : {production.production_hours}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Small Repair : <span style={{ fontWeight: 'bold', color: 'grey', fontSize: 14 }}> {production.small_repair}</span>
+                    Small Repair : {production.small_repair}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Big Repair : <span style={{ fontWeight: 'bold', color: 'red', fontSize: 14 }}> {production.big_repair}</span>
+                    Big Repair : {production.big_repair}
                   </Typography>
                   <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Created By : {production.created_by.username}
                   </Typography>
-                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', color: 'grey', }}>
+                  <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', color: 'blue', }}>
                     <b>Timestamp : {moment(new Date(production.created_at)).format('LT')}</b>
                   </Typography>
 
