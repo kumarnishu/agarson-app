@@ -20,7 +20,7 @@ function MyShoeWeightPage() {
       {isLoading && <LinearProgress />}
       <Stack direction={'column'} >
         <Typography variant="h6" sx={{ fontSize: '18', p: 1, textAlign: 'center' }}>Daily Sole Weights</Typography>
-        <Stack sx={{ justifyContent: 'center', px: 2, gap: 2 }}>
+        <Stack sx={{ justifyContent: 'center', px: 2, gap: 1 }}>
           < TextField
             select
             value={dye}
@@ -56,7 +56,7 @@ function MyShoeWeightPage() {
               <Paper key={index} elevation={8} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white', borderRadius: 2 }}>
                 <Stack
                   direction="column"
-                  gap={2}
+                  gap={1}
                 >
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Dye Number : {weight.dye.dye_number}

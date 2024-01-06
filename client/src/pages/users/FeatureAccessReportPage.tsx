@@ -19,7 +19,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.users)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <Person3Outlined sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -32,7 +32,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.todos)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ color: 'red', display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <TaskAltOutlined sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ color: 'red', fontSize: 16 }} component="div">
@@ -47,7 +47,7 @@ function FeatureAccessReportPage() {
 
                         <Card 
                         onClick={()=>setFeature(Feature.tasks)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <TodayOutlined sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -62,7 +62,7 @@ function FeatureAccessReportPage() {
 
                         <Card 
                         onClick={()=>setFeature(Feature.checklists)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <CheckBoxOutlined sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -75,7 +75,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.crm)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <Diversity3Outlined sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -88,7 +88,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.reports)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <Book sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -100,7 +100,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.visit)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <TourOutlined sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -113,7 +113,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.alps)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <ApartmentOutlined sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -128,7 +128,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.bot)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <WhatsAppIcon sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -143,7 +143,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.templates)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <Article sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -157,7 +157,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.broadcast)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <CampaignIcon sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -173,7 +173,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.contacts)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <Phone sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -187,7 +187,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                             <Card
                             onClick={() => setFeature(Feature.productions)}
-                            sx={{ bgcolor: 'white', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                            sx={{ bgcolor: 'whitesmoke', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                                 <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                     <LanSharp sx={{ height: 50, width: 50 }} />
                                     <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -201,7 +201,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.reminders)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <PunchClock sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -216,7 +216,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.greetings)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <AppShortcutIcon sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -230,7 +230,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.erp_login)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <Key sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">
@@ -246,7 +246,7 @@ function FeatureAccessReportPage() {
                     <Grid item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                         <Card 
                         onClick={()=>setFeature(Feature.backup)}
-                        sx={{ bgcolor: 'white', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                        sx={{ bgcolor: 'whitesmoke', cursor: 'pointer', boxShadow: 4, border: 10, borderRadius: 3, borderColor: 'white' }}>
                             <CardContent sx={{ display: 'flex', direction: "row", alignItems: "center", gap: 2 }}>
                                 <BackupIcon sx={{ height: 50, width: 50 }} />
                                 <Typography variant="button" sx={{ fontSize: 16 }} component="div">

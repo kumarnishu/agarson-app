@@ -57,23 +57,23 @@ function MyProductionPage() {
           </TextField>
         </Stack>
         <Stack sx={{ justifyContent: 'center' }}>
-          < Button variant="contained" disabled={isLoading} size="large" sx={{ mx: 8, my: 2, fontWeight: 'bold', fontSize: 14 }} color="info"
+          < Button variant="contained" disabled={isLoading} size="large" sx={{ mx: 2,  fontWeight: 'bold', fontSize: 14 }} color="info"
             onClick={() => { setChoice({ type: ProductionChoiceActions.create_production }) }}
           >+ Create Production</Button>
         </Stack >
-        <Stack sx={{ p: 1 }}>
+        <Stack>
           {data && data.data.map((production, index) => {
             return (
               <Paper key={index} elevation={8} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white', borderRadius: 2 }}>
                 <Stack
                   direction="column"
-                  gap={2}
+                  gap={1}
                 >
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Machine : {production.machine.name}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Articles : {production.machine.display_name}
+                    Articles : {production.articles.map((a) => { return a.display_name }).toString()}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Thekedar :  {production.thekedar.username}
