@@ -18,6 +18,7 @@ import { IVisitReport } from '../../types/visit.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
 import sortBy from "sort-by"
+import { jsPDF } from "jspdf";
 
 export default function VisitAdminPage() {
     const [sorted, setSorted] = useState(false)
@@ -101,7 +102,14 @@ export default function VisitAdminPage() {
         }
     }
 
-
+    async function handlePDf() {
+        let image=document.createElement('img')
+        image.src ="https://storage.googleapis.com/agarson-app-bucket/visits%2Fmedia%2F1704460373810%2F17044603177044253061095964996884.jpg"
+        const doc = new jsPDF();
+        doc.text("Hello world!", 10, 10);
+        doc.addImage(image, "JPEG", 15, 40, 180, 180);
+        doc.save("a4.pdf");
+    }
     // refine data
     useEffect(() => {
         let data: {
@@ -248,7 +256,6 @@ export default function VisitAdminPage() {
     }, [sorted])
     return (
         <>
-
             {
                 isLoading && <LinearProgress />
             }
@@ -336,7 +343,12 @@ export default function VisitAdminPage() {
                                 handleExcel()
                             }}
                             >Export To Excel</MenuItem>
+                            < MenuItem onClick={() => {
+                                handlePDf()
+                            }}
+                            >Export To Pdf</MenuItem>
                         </Menu >
+
                     </>
                 </Stack >
             </Stack >
