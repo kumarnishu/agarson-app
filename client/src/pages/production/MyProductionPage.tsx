@@ -1,27 +1,66 @@
-import { Button, LinearProgress, Paper, Stack, Typography } from "@mui/material"
+import { Button, LinearProgress, Paper, Stack, TextField, Typography } from "@mui/material"
 import NewProductionDialog from "../../components/dialogs/production/CreateProductionDialog"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { ChoiceContext, ProductionChoiceActions } from "../../contexts/dialogContext"
 import { BackendError } from "../.."
-import { IProduction } from "../../types/production.types"
+import { IArticle, IProduction } from "../../types/production.types"
 import { AxiosResponse } from "axios"
 import { useQuery } from "react-query"
-import { GetMyProductions } from "../../services/ProductionServices"
+import { GetArticles, GetMyProductions } from "../../services/ProductionServices"
 import moment from "moment"
 
 function MyProductionPage() {
+  const [date, setDate] = useState<string>(moment(new Date().setDate(new Date().getDate() - 1)).format('YYYY-MM-DD'))
+  const [article, setArticle] = useState<string>()
   const { setChoice } = useContext(ChoiceContext)
-  const { data, isLoading } = useQuery<AxiosResponse<IProduction[]>, BackendError>("productions", GetMyProductions)
+  const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
+  const { data, isLoading } = useQuery<AxiosResponse<IProduction[]>, BackendError>(["productions", date, article], async () => GetMyProductions({ date: date, article: article }))
   return (
     <>
       {isLoading && <LinearProgress />}
       <Stack direction={'column'} justifyContent={'center'}>
-        <Typography variant="h6" sx={{ pt:2,fontSize: '18', textAlign: 'center' }}>Daily Productions</Typography>
-        {data && data?.data.length !== 3 && <Stack sx={{ justifyContent: 'center' }}>
+        <Typography variant="h6" sx={{ pt: 2, fontSize: '18', textAlign: 'center' }}>Daily Productions</Typography>
+
+        <Stack gap={1} direction={'row'} p={2}>
+          < TextField
+            type="date"
+            focused
+            value={date}
+            id="date"
+            label="Production Date"
+            fullWidth
+            required
+            onChange={(e) => setDate(e.target.value)}
+
+          />
+          < TextField
+            select
+            SelectProps={{
+              native: true,
+            }}
+            value={article}
+            id="article"
+            required
+            label="Select Article"
+            fullWidth
+            onChange={(e) => setArticle(e.target.value)}
+          >
+            <option key={'00'} value={undefined}>
+            </option>
+            {
+              articles && articles.data && articles.data.map((article, index) => {
+                return (<option key={index} value={article._id}>
+                  {article.name}
+                </option>)
+              })
+            }
+          </TextField>
+        </Stack>
+        <Stack sx={{ justifyContent: 'center' }}>
           < Button variant="contained" disabled={isLoading} size="large" sx={{ mx: 8, my: 2, fontWeight: 'bold', fontSize: 14 }} color="info"
             onClick={() => { setChoice({ type: ProductionChoiceActions.create_production }) }}
           >+ Create Production</Button>
-        </Stack >}
+        </Stack >
         <Stack sx={{ p: 1 }}>
           {data && data.data.map((production, index) => {
             return (
@@ -37,19 +76,19 @@ function MyProductionPage() {
                     Article : {production.article.name}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Thekedar :  <span style={{ fontWeight: 'bold', color: 'grey' }}> {production.thekedar.username}</span>
+                    Thekedar :  {production.thekedar.username}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Production : <span style={{ fontWeight: 'bold', color: 'green', fontSize: 14 }}> {production.production}</span>
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Small Repair : <span style={{ fontWeight: 'bold', color: 'grey' }}> {production.small_repair}</span>
+                    Small Repair : <span style={{ fontWeight: 'bold', color: 'grey', fontSize: 14 }}> {production.small_repair}</span>
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Big Repair : <span style={{ fontWeight: 'bold', color: 'red', fontSize: 14 }}> {production.big_repair}</span>
                   </Typography>
                   <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Created By :<b>{production.created_by.username}</b>
+                    Created By : {production.created_by.username}
                   </Typography>
                   <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', color: 'grey', }}>
                     <b>Date : {moment(new Date(production.created_at)).format('DD/MM/YYYY')}</b>

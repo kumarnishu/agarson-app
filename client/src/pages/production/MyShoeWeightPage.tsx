@@ -11,7 +11,7 @@ import NewShoeWeightDialog from "../../components/dialogs/production/CreateShoeW
 
 
 function MyShoeWeightPage() {
-  const { data: dyes } = useQuery<AxiosResponse<IDye[]>, BackendError>("dyes", GetDyes)
+  const { data: dyes } = useQuery<AxiosResponse<IDye[]>, BackendError>("dyes", async () => GetDyes(String(false)))
   const { setChoice } = useContext(ChoiceContext)
   const [dye, setDye] = useState<string>()
   const { data, isLoading } = useQuery<AxiosResponse<IShoeWeight[]>, BackendError>(["shoe_weights", dye], async () => GetMyShoeWeights(dye))

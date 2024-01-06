@@ -13,6 +13,7 @@ import { GetArticles, GetMachines, UpdateProduction } from '../../../services/Pr
 import { IUser } from '../../../types/user.types';
 import { GetUsers } from '../../../services/UserServices';
 import { UserContext } from '../../../contexts/userContext';
+import moment from 'moment';
 
 function UpdateProductionForm({ production }: { production: IProduction }) {
     const { user } = useContext(UserContext)
@@ -29,7 +30,8 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                 manpower: number,
                 production: number,
                 big_repair: number,
-                small_repair: number
+                small_repair: number,
+                date: string
             }
         }>
         (UpdateProduction, {
@@ -48,7 +50,8 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
             manpower: production.manpower,
             production: production.production,
             big_repair: production.big_repair,
-            small_repair: production.small_repair
+            small_repair: production.small_repair,
+            date: moment(production.created_at).format("YYYY-MM-DD")
         },
         validationSchema: Yup.object({
             machine: Yup.string()
@@ -65,6 +68,7 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                 .required('Required field'),
             small_repair: Yup.number()
                 .required('Required field'),
+            date: Yup.string().required('Required field'),
         }),
         onSubmit: (values) => {
             mutate({
@@ -77,6 +81,7 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                     production: values.production,
                     big_repair: values.big_repair,
                     small_repair: values.small_repair,
+                    date: values.date
                 }
 
             })
@@ -100,7 +105,22 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                 gap={2}
                 pt={2}
             >
-
+                < TextField
+                    type="date"
+                    disabled
+                    focused
+                    error={
+                        formik.touched.date && formik.errors.date ? true : false
+                    }
+                    id="date"
+                    label="Production Date"
+                    fullWidth
+                    required
+                    helperText={
+                        formik.touched.date && formik.errors.date ? formik.errors.date : ""
+                    }
+                    {...formik.getFieldProps('date')}
+                />
                 < TextField
                     select
 
@@ -165,7 +185,7 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                 {/* articles */}
                 < TextField
                     select
-
+                    focused
                     SelectProps={{
                         native: true,
                     }}
@@ -173,6 +193,7 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                         formik.touched.article && formik.errors.article ? true : false
                     }
                     id="article"
+                    disabled
                     helperText={
                         formik.touched.article && formik.errors.article ? formik.errors.article : ""
                     }

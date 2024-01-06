@@ -80,20 +80,20 @@ export default function ReminderPage() {
   }
 
   // refine data
-  // useEffect(() => {
-  //   let data: SelectedData[] = []
-  //   selectedReminders.map((reminder) => {
-  //     return data.push({
-  //       name: reminder.name,
-  //       type: reminder.message ? "custom" : "template",
-  //       status: reminder.is_active ? "active" : "disabled",
-  //       start_time: new Date(reminder.created_at),
-  //       updated_at: new Date(reminder.updated_at),
-  //       created_by: reminder.created_by && reminder.created_by.username
-  //     })
-  //   })
-  //   setSelectedData(data)
-  // }, [selectedReminders])
+  useEffect(() => {
+    let data: SelectedData[] = []
+    selectedReminders.map((reminder) => {
+      return data.push({
+        name: reminder.reminder.name,
+        type: reminder.reminder.message ? "custom" : "template",
+        status: reminder.reminder.is_active ? "active" : "disabled",
+        start_time: new Date(reminder.reminder.created_at),
+        updated_at: new Date(reminder.reminder.updated_at),
+        created_by: reminder.reminder.created_by && reminder.reminder.created_by.username
+      })
+    })
+    setSelectedData(data)
+  }, [selectedReminders])
 
   useEffect(() => {
     if (isSuccess) {

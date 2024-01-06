@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, FormControlLabel, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -35,7 +35,8 @@ let template: SelectedData[] = [
 ]
 
 export default function DyePage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IDye[]>, BackendError>("dyes", GetDyes)
+  const [hidden, setHidden] = useState(false)
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IDye[]>, BackendError>(["dyes", hidden], async () => GetDyes(String(hidden)))
   const [dye, setDye] = useState<IDye>()
   const [dyes, setDyes] = useState<IDye[]>([])
   const [selectAll, setSelectAll] = useState(false)
@@ -131,6 +132,10 @@ export default function DyePage() {
           < Stack direction="row" spacing={2} >
             {LoggedInUser?.productions_access_fields.is_editable ?
               < UploadDyesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
+            <FormControlLabel control={<Switch
+              defaultChecked={Boolean(hidden)}
+              onChange={() => setHidden(!hidden)}
+            />} label="Show hidden" />
             <TextField
               fullWidth
               size="small"

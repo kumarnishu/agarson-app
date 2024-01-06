@@ -3,7 +3,7 @@ import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../popup/PopUp'
-import { Edit, TextRotationAngledown } from '@mui/icons-material'
+import { Edit, RestartAlt } from '@mui/icons-material'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { IArticle } from '../../types/production.types'
@@ -75,6 +75,12 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                             >
 
                                 Display name
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Status
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -171,8 +177,8 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                                                         <Edit />
                                                                     </IconButton>
                                                                 </Tooltip>
-                                                                {user?.productions_access_fields.is_deletion_allowed &&
-                                                                    <Tooltip title="Delete">
+                                                                {user?.productions_access_fields.is_editable &&
+                                                                    <Tooltip title="Toogle">
                                                                         <IconButton color="primary"
                                                                             onClick={() => {
                                                                                 setArticle(article)
@@ -180,7 +186,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
 
                                                                             }}
                                                                         >
-                                                                            <TextRotationAngledown />
+                                                                            <RestartAlt />
                                                                         </IconButton>
                                                                     </Tooltip>}
                                                             </>
@@ -194,6 +200,9 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                         </STableCell>
                                         <STableCell>
                                             {article.display_name}
+                                        </STableCell>
+                                        <STableCell>
+                                            {article.active ? "active" : "inactive"}
                                         </STableCell>
                                         <STableCell>
                                             {article.sizes.map((size) => { return size.size }).toString()}

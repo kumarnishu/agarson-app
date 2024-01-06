@@ -8,6 +8,7 @@ import { IProduction } from '../../types/production.types'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
 import { Edit } from '@mui/icons-material'
 import UpdateProductionDialog from '../dialogs/production/UpdateProductionDialog'
+import moment from 'moment'
 
 
 type Props = {
@@ -204,7 +205,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
 
                                             </STableCell>}
                                         <STableCell>
-                                            {production.created_at && new Date(production.created_at).toLocaleDateString()}
+                                            {production.created_at && moment(new Date(production.created_at)).format('DD/MM/YY')}
                                         </STableCell>
 
                                         <STableCell>

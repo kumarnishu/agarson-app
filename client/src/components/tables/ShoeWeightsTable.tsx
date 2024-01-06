@@ -10,6 +10,7 @@ import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogCon
 import { Check, Edit, Photo } from '@mui/icons-material'
 import ValidateShoeWeightDialog from '../dialogs/production/ValidateShoeWeightDialog'
 import UpdateShoeWeightDialog from '../dialogs/production/UpdateShoeWeightDialog'
+import moment from 'moment'
 
 
 
@@ -228,7 +229,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
 
                                             </STableCell>}
                                         <STableCell>
-                                            {shoe_weight.created_at && new Date(shoe_weight.created_at).toLocaleDateString()}
+                                            {shoe_weight.created_at && moment(new Date(shoe_weight.created_at)).format('DD/MM/YY')}
                                         </STableCell>
                                         <STableCell>
 

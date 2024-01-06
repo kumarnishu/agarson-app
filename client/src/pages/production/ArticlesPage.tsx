@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, FormControlLabel, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -37,7 +37,8 @@ let template: SelectedData[] = [
 ]
 
 export default function ArticlePage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", GetArticles)
+  const [hidden, setHidden] = useState(false)
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IArticle[]>, BackendError>(["articles", hidden], async () => GetArticles(String(hidden)))
   const [article, setArticle] = useState<IArticle>()
   const [articles, setArticles] = useState<IArticle[]>([])
   const [selectAll, setSelectAll] = useState(false)
@@ -134,6 +135,11 @@ export default function ArticlePage() {
           < Stack direction="row" spacing={2} >
             {LoggedInUser?.productions_access_fields.is_editable ?
               < UploadArticlesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
+            <FormControlLabel control={<Switch
+              defaultChecked={Boolean(hidden)}
+              onChange={() => setHidden(!hidden)}
+            />} label="Show hidden" />
+
             <TextField
               fullWidth
               size="small"

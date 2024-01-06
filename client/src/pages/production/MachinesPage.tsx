@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, FormControlLabel, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -35,7 +35,8 @@ let template: SelectedData[] = [
 ]
 
 export default function MachinePage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", GetMachines)
+  const [hidden, setHidden] = useState(false)
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IMachine[]>, BackendError>(["machines", hidden], async () => GetMachines(String(hidden)))
   const [machine, setMachine] = useState<IMachine>()
   const [machines, setMachines] = useState<IMachine[]>([])
   const [selectAll, setSelectAll] = useState(false)
@@ -131,7 +132,10 @@ export default function MachinePage() {
             < UploadMachinesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-
+            <FormControlLabel control={<Switch
+              defaultChecked={Boolean(hidden)}
+              onChange={() => setHidden(!hidden)}
+            />} label="Show hidden" />
             <TextField
               fullWidth
               size="small"

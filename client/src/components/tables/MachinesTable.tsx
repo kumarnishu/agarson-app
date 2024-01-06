@@ -3,7 +3,7 @@ import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../popup/PopUp'
-import {  Edit, TextRotationAngledown } from '@mui/icons-material'
+import { Edit, RestartAlt } from '@mui/icons-material'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { IMachine } from '../../types/production.types'
@@ -74,10 +74,16 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                             <STableHeadCell
                             >
 
+                                Status
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Display name
 
                             </STableHeadCell>
-                          
+
                             <STableHeadCell
                             >
 
@@ -165,8 +171,8 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                                                         <Edit />
                                                                     </IconButton>
                                                                 </Tooltip>
-                                                                {user?.productions_access_fields.is_deletion_allowed &&
-                                                                    <Tooltip title="Delete">
+                                                                {user?.productions_access_fields.is_editable &&
+                                                                    <Tooltip title="Toogle">
                                                                         <IconButton color="primary"
                                                                             onClick={() => {
                                                                                 setMachine(machine)
@@ -174,7 +180,7 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
 
                                                                             }}
                                                                         >
-                                                                            <TextRotationAngledown />
+                                                                            <RestartAlt />
                                                                         </IconButton>
                                                                     </Tooltip>}
                                                             </>
@@ -187,9 +193,12 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                             {machine.name}
                                         </STableCell>
                                         <STableCell>
+                                            {machine.active ? "active":"inactive"}
+                                        </STableCell>
+                                        <STableCell>
                                             {machine.display_name}
                                         </STableCell>
-                                      
+
                                         <STableCell>
                                             {machine.created_at && new Date(machine.created_at).toLocaleString()}
                                         </STableCell>

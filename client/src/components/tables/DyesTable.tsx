@@ -3,7 +3,7 @@ import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../popup/PopUp'
-import { Edit, TextRotationAngledown } from '@mui/icons-material'
+import { Edit, RestartAlt } from '@mui/icons-material'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { IDye } from '../../types/production.types'
@@ -75,6 +75,12 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                             >
 
                                Size
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Status
 
                             </STableHeadCell>
 
@@ -165,8 +171,8 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                                                         <Edit />
                                                                     </IconButton>
                                                                 </Tooltip>
-                                                                {user?.productions_access_fields.is_deletion_allowed &&
-                                                                    <Tooltip title="Delete">
+                                                                {user?.productions_access_fields.is_editable &&
+                                                                    <Tooltip title="Toogle">
                                                                         <IconButton color="primary"
                                                                             onClick={() => {
                                                                                 setDye(dye)
@@ -174,7 +180,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
 
                                                                             }}
                                                                         >
-                                                                            <TextRotationAngledown />
+                                                                            <RestartAlt />
                                                                         </IconButton>
                                                                     </Tooltip>}
                                                             </>
@@ -188,6 +194,9 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                         </STableCell>
                                         <STableCell>
                                             {dye.size}
+                                        </STableCell>
+                                        <STableCell>
+                                            {dye.active ? "active" : "inactive"}
                                         </STableCell>
 
                                         <STableCell>

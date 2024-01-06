@@ -13,6 +13,7 @@ import { CreateProduction, GetArticles, GetMachines } from '../../../services/Pr
 import { IUser } from '../../../types/user.types';
 import { GetUsers } from '../../../services/UserServices';
 import { UserContext } from '../../../contexts/userContext';
+import moment from 'moment';
 
 function NewProductionForm() {
     const { user } = useContext(UserContext)
@@ -28,6 +29,7 @@ function NewProductionForm() {
             production: number,
             big_repair: number,
             small_repair: number,
+            date: string
         }>
         (CreateProduction, {
             onSuccess: () => {
@@ -46,6 +48,7 @@ function NewProductionForm() {
             production: 0,
             big_repair: 0,
             small_repair: 0,
+            date: moment(new Date()).format("DD/MM/YYYY")
         },
         validationSchema: Yup.object({
             machine: Yup.string()
@@ -62,6 +65,7 @@ function NewProductionForm() {
                 .required('Required field'),
             small_repair: Yup.number()
                 .required('Required field'),
+            date: Yup.string().required('Required field'),
         }),
         onSubmit: (values) => {
             mutate({
@@ -72,6 +76,7 @@ function NewProductionForm() {
                 production: values.production,
                 big_repair: values.big_repair,
                 small_repair: values.small_repair,
+                date: values.date
             })
         }
     });
@@ -93,7 +98,21 @@ function NewProductionForm() {
                 gap={2}
                 pt={2}
             >
-
+                < TextField
+                    type="date"
+                    focused
+                    error={
+                        formik.touched.date && formik.errors.date ? true : false
+                    }
+                    id="date"
+                    label="Production Date"
+                    fullWidth
+                    required
+                    helperText={
+                        formik.touched.date && formik.errors.date ? formik.errors.date : ""
+                    }
+                    {...formik.getFieldProps('date')}
+                />
                 < TextField
                     select
 
@@ -146,7 +165,7 @@ function NewProductionForm() {
                     </option>
                     {
                         users && users.data.map((user, index) => {
-                            if (!user.productions_access_fields.is_hidden)
+                            if (!user.productions_access_fields.is_hidden && !user.productions_access_fields.is_editable)
                                 return (<option key={index} value={user._id}>
                                     {user.username}
                                 </option>)

@@ -14,7 +14,10 @@ export const ToogleMachine = async (id: string) => {
     return await apiClient.patch(`machines/toogle/${id}`);
 };
 
-export const GetMachines = async () => {
+export const GetMachines = async (hidden?: string) => {
+    if (hidden) {
+        return await apiClient.get(`machines?hidden=${hidden}`);
+    }
     return await apiClient.get(`machines`);
 };
 
@@ -30,8 +33,11 @@ export const ToogleDye = async (id: string) => {
     return await apiClient.patch(`dyes/toogle/${id}`);
 };
 
-export const GetDyes = async () => {
-    return await apiClient.get(`dyes`);
+export const GetDyes = async (hidden?: string) => {
+    if (hidden)
+        return await apiClient.get(`dyes?hidden=${hidden}`);
+    else
+        return await apiClient.get(`dyes`);
 };
 
 export const CreateArticle = async (body: { name: string, display_name: string, sizes: { size: string, standard_weight: number, upper_weight: number }[] }) => {
@@ -46,8 +52,11 @@ export const ToogleArticle = async (id: string) => {
     return await apiClient.patch(`articles/toogle/${id}`);
 };
 
-export const GetArticles = async () => {
-    return await apiClient.get(`articles`);
+export const GetArticles = async (hidden?: string) => {
+    if (hidden)
+        return await apiClient.get(`articles?hidden=${hidden}`);
+    else
+        return await apiClient.get(`articles`);
 };
 
 export const CreateShoeWeight = async ({ body }: { body: FormData }) => {
@@ -69,8 +78,11 @@ export const GetMyShoeWeights = async (dye: string | undefined) => {
     else
         return await apiClient.get(`weights/me`);
 }
-export const GetMyProductions = async () => {
-    return await apiClient.get(`productions/me`);
+export const GetMyProductions = async ({ date, article }: { date: string, article?: string }) => {
+    if (article)
+        return await apiClient.get(`productions/me/?date=${date}&article=${article}`);
+    else
+        return await apiClient.get(`productions/me/?date=${date}`);
 }
 
 export const CreateProduction = async (body: {
@@ -81,6 +93,7 @@ export const CreateProduction = async (body: {
     production: number,
     big_repair: number,
     small_repair: number,
+    date: String
 }) => {
     return await apiClient.post(`productions`, body);
 }
@@ -94,6 +107,7 @@ export const UpdateProduction = async ({ id, body }: {
         production: number,
         big_repair: number,
         small_repair: number,
+        date: String
     }, id: string
 
 }) => {
