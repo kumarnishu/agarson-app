@@ -68,10 +68,10 @@ export const GetMyTodayProductions = async (req: Request, res: Response, next: N
     dt2.setDate(dt1.getDate() + 1)
     let productions: IProduction[] = []
     if (machine) {
-        productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 }, machine: machine }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
+        productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, machine: machine }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
     }
     if (!machine)
-        productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
+        productions = await Production.find({ date: { $gte: dt1, $lt: dt2 } }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
 
     return res.status(200).json(productions)
 }
@@ -486,6 +486,19 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
     if (new Date(date) < previous_date || new Date(date) > new Date())
         return res.status(400).json({ message: "invalid date, should be within last 2 days" })
 
+    let previous_date2 = new Date(date)
+    let day2 = previous_date2.getDate() - 3
+    previous_date2.setDate(day2)
+
+    let prods = await Production.find({ created_at: { $gte: previous_date2 }, machine: machine })
+    prods = prods.filter((prod) => {
+        if (prod.date.getDate() === new Date(date).getDate() && prod.date.getMonth() === new Date(date).getMonth() && prod.date.getFullYear() === new Date(date).getFullYear()) {
+            return prod
+        }
+    })
+    if (prods.length === 2)
+        return res.status(400).json({ message: "not allowed more than 2 productions for the same machine" })
+
     if (!machine || !thekedar || !articles || !manpower || !production || !date || !production_hours)
         return res.status(400).json({ message: "please fill all reqired fields" })
 
@@ -555,6 +568,20 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
         return res.status(400).json({ message: "not a valid request" })
     let production_date = new Date(date)
     let remote_production = await Production.findById(id)
+
+
+    let previous_date2 = new Date(date)
+    let day2 = previous_date2.getDate() - 3
+    previous_date2.setDate(day2)
+
+    let prods = await Production.find({ created_at: { $gte: previous_date2 }, machine: machine })
+    prods = prods.filter((prod) => {
+        if (prod.date.getDate() === new Date(date).getDate() && prod.date.getMonth() === new Date(date).getMonth() && prod.date.getFullYear() === new Date(date).getFullYear()) {
+            return prod
+        }
+    })
+    if (prods.length === 2)
+        return res.status(400).json({ message: "not allowed more than 2 productions for the same machine" })
 
     if (!remote_production)
         return res.status(404).json({ message: "producton not exists" })

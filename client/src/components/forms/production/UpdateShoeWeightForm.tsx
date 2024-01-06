@@ -108,7 +108,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         {
                             machines && machines.data && machines.data.map((machine, index) => {
                                 return (<option key={index} value={machine._id}>
-                                    {machine.name}
+                                    {machine.display_name}
                                 </option>)
 
                             })
@@ -138,7 +138,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         {
                             articles && articles.data && articles.data.map((article, index) => {
                                 return (<option key={index} value={article._id}>
-                                    {article.name}
+                                    {article.display_name}
                                 </option>)
                             })
                         }
