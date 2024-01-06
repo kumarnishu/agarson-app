@@ -211,7 +211,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
 
                                             </STableCell>}
                                         <STableCell>
-                                            {production.created_at && moment(new Date(production.created_at)).format('DD/MM/YY')}
+                                            {production.date && moment(new Date(production.date)).format('DD/MM/YY')}
                                         </STableCell>
 
                                         <STableCell>
