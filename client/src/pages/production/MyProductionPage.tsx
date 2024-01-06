@@ -3,18 +3,18 @@ import NewProductionDialog from "../../components/dialogs/production/CreateProdu
 import { useContext, useState } from "react"
 import { ChoiceContext, ProductionChoiceActions } from "../../contexts/dialogContext"
 import { BackendError } from "../.."
-import { IArticle, IProduction } from "../../types/production.types"
+import { IMachine, IProduction } from "../../types/production.types"
 import { AxiosResponse } from "axios"
 import { useQuery } from "react-query"
-import { GetArticles, GetMyProductions } from "../../services/ProductionServices"
+import { GetMachines, GetMyProductions } from "../../services/ProductionServices"
 import moment from "moment"
 
 function MyProductionPage() {
   const [date, setDate] = useState<string>(moment(new Date().setDate(new Date().getDate() - 1)).format('YYYY-MM-DD'))
-  const [article, setArticle] = useState<string>()
+  const [machine, setArticle] = useState<string>()
   const { setChoice } = useContext(ChoiceContext)
-  const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
-  const { data, isLoading } = useQuery<AxiosResponse<IProduction[]>, BackendError>(["productions", date, article], async () => GetMyProductions({ date: date, article: article }))
+  const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
+  const { data, isLoading } = useQuery<AxiosResponse<IProduction[]>, BackendError>(["productions", date, machine], async () => GetMyProductions({ date: date, machine: machine }))
   return (
     <>
       {isLoading && <LinearProgress />}
@@ -38,19 +38,19 @@ function MyProductionPage() {
             SelectProps={{
               native: true,
             }}
-            value={article}
-            id="article"
+            value={machine}
+            id="machines"
             required
-            label="Select Article"
+            label="Select Machine"
             fullWidth
             onChange={(e) => setArticle(e.target.value)}
           >
             <option key={'00'} value={undefined}>
             </option>
             {
-              articles && articles.data && articles.data.map((article, index) => {
-                return (<option key={index} value={article._id}>
-                  {article.display_name}
+              machines && machines.data && machines.data.map((machine, index) => {
+                return (<option key={index} value={machine._id}>
+                  {machine.display_name}
                 </option>)
               })
             }
@@ -73,7 +73,7 @@ function MyProductionPage() {
                     Machine : {production.machine.name}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                    Articles : {production.articles.map((a) => { return a.display_name }).toString()}
+                    Articles : {production.machine.display_name}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Thekedar :  {production.thekedar.username}

@@ -78,9 +78,9 @@ export const GetMyShoeWeights = async (dye: string | undefined) => {
     else
         return await apiClient.get(`weights/me`);
 }
-export const GetMyProductions = async ({ date, article }: { date: string, article?: string }) => {
-    if (article)
-        return await apiClient.get(`productions/me/?date=${date}&article=${article}`);
+export const GetMyProductions = async ({ date, machine }: { date: string, machine?: string }) => {
+    if (machine)
+        return await apiClient.get(`productions/me/?date=${date}&machine=${machine}`);
     else
         return await apiClient.get(`productions/me/?date=${date}`);
 }

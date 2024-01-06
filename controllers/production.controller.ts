@@ -61,16 +61,16 @@ export const GetProductions = async (req: Request, res: Response, next: NextFunc
     return res.status(200).json(productions)
 }
 export const GetMyTodayProductions = async (req: Request, res: Response, next: NextFunction) => {
-    let article = req.query.article
+    let machine = req.query.machine
     let date = String(req.query.date)
     let dt1 = new Date(date)
     let dt2 = new Date(date)
     dt2.setDate(dt1.getDate() + 1)
     let productions: IProduction[] = []
-    if (article) {
-        productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 }, article: article }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
+    if (machine) {
+        productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 }, machine: machine }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
     }
-    if (!article)
+    if (!machine)
         productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
 
     return res.status(200).json(productions)
