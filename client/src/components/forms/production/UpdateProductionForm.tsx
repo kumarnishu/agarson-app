@@ -134,6 +134,7 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
                     error={
                         formik.touched.machine && formik.errors.machine ? true : false
                     }
+                    disabled
                     id="machine"
                     helperText={
                         formik.touched.machine && formik.errors.machine ? formik.errors.machine : ""
