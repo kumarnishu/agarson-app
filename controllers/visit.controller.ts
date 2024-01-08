@@ -4,7 +4,9 @@ import { IVisit, IVisitBody, IVisitReport, IVisitReportBody } from "../types/vis
 import { Visit } from "../models/visit/visit.model"
 import { VisitReport } from "../models/visit/visit.report.model"
 import { IUser } from "../types/user.types"
-
+import PdfPrinter from "pdfmake"
+import path from "path"
+import axios from "axios"
 // get attendence reports
 export const GetVisitsAttendence = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
@@ -440,3 +442,75 @@ export const MakeVisitOut = async (req: Request, res: Response, next: NextFuncti
     return res.status(200).json({ message: "visit out successful" })
 }
 
+export const ExportVisitsToPdf = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let id = req.query.id
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let visits: IVisit[] = []
+    let dt1 = new Date(String(start_date))
+    let dt2 = new Date(String(end_date))
+    let user_ids: string[] = []
+    user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        if (!id) {
+            if (user_ids.length > 0) {
+                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+
+            }
+
+            else {
+                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+
+            }
+        }
+
+        if (id) {
+            visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+
+        }
+        var printer = new PdfPrinter({
+            Roboto: {
+                normal: path.resolve('fonts', 'Roboto-Regular.ttf'),
+                bold: path.resolve('fonts', 'Roboto-Bold.ttf'),
+            }
+        })
+
+        try {
+            var result = await axios.get('http://www.bo.agarson.in/logo.jpg', {
+                responseType: 'arraybuffer'
+            })
+        } catch (err) {
+            return next(err)
+        }
+        // @ts-ignore
+        var image = new Buffer.from(result.data, 'base64')
+        var doc = printer.createPdfKitDocument({
+            info: {
+                title: 'PDF with External Image',
+                author: 'Matt Hagemann',
+                subject: 'PDF with External Image',
+            },
+            content: [
+                'pdfmake (since it\'s based on pdfkit) supports JPEG and PNG format',
+                'If no width/height/fit is provided, image original size will be used',
+                {
+                    image: image,
+                    width: 150
+                }],
+            defaultStyle: {
+                fontSize: 11,
+                font: 'Roboto', // The font name was defined above.
+                lineHeight: 1.2,
+            }
+        })
+
+        doc.end()
+        res.setHeader('Content-type', 'application/pdf')
+        res.setHeader('Content-disposition', 'inline; filename="Example.pdf"')
+        doc.pipe(res)
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
