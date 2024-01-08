@@ -95,6 +95,12 @@ function ProductionMenu() {
                 }>
                 <StyledLink to={paths.production_admin}>Production</StyledLink>
             </MenuItem>}
+            {user?.productions_access_fields.is_editable && <MenuItem
+                onClick={
+                    () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })
+                }>
+                <StyledLink to={paths.machine_categories}>Machine categoies</StyledLink>
+            </MenuItem>}
             <MenuItem
                 onClick={
                     () => setMenu({ type: ProductionMenuActions.close_production_menu, anchorEl: null })

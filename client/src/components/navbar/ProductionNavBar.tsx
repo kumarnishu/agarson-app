@@ -64,6 +64,8 @@ export default function ProductionNavBar() {
                                             <StyledLink to={paths.articles}>Articles</StyledLink>
                                             <StyledLink to={paths.machines}>Machines</StyledLink>
                                             <StyledLink to={paths.dyes}>Dyes</StyledLink>
+                                            <StyledLink to={paths.machine_categories}>Machine categoies</StyledLink>
+
                                         </>}
                                     </>
                                     <StyledLink to={paths.production_help_page}>Help</StyledLink>

@@ -75,7 +75,7 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
 
         if (id) {
             visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: id }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: id }).populate('person').countDocuments()
+            count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: id }).countDocuments()
         }
 
         return res.status(200).json({
@@ -126,7 +126,7 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
             address: String(address.display_name)
         },
     })
-    visit.real_city = address.address.suburb||address.address.city || address.address.county || address.address.state_district || address.address.postcode
+    visit.real_city = address.address.suburb || address.address.city || address.address.county || address.address.state_district || address.address.postcode
     if (!req.file) {
         return res.status(400).json({ message: "please upload your selfie" })
     }
@@ -250,7 +250,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         timestamp: visit_in_credientials.timestamp,
         address: String(address.display_name)
     }
-    report.real_city = address.address.suburb ||address.address.county || address.address.city || address.address.city_district || address.address.state_district || address.address.postcode
+    report.real_city = address.address.suburb || address.address.county || address.address.city || address.address.city_district || address.address.state_district || address.address.postcode
     if (req.file) {
         console.log(req.file.mimetype)
         const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
@@ -439,5 +439,4 @@ export const MakeVisitOut = async (req: Request, res: Response, next: NextFuncti
     await report.save()
     return res.status(200).json({ message: "visit out successful" })
 }
-
 

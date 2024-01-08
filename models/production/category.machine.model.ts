@@ -1,25 +1,13 @@
 import mongoose from "mongoose"
-import { IMachine } from "../../types/production.types"
+import { IMachineCategory } from "../../types/production.types"
 
 
-const MachineSchema = new mongoose.Schema<IMachine, mongoose.Model<IMachine, {}, {}>, {}>({
-    name: {
-        type: String,
-        required: true,
-        trim: true,
-        lowercase: true
-    },
-    display_name: {
+const MachineCategorySchema = new mongoose.Schema<IMachineCategory, mongoose.Model<IMachineCategory, {}, {}>, {}>({
+    categories: [{
         type: String,
         required: true,
         trim: true
-    }
-    ,
-    category: String,
-    active: {
-        type: Boolean,
-        default: true
-    },
+    }],
     created_at: {
         type: Date,
         default: new Date(),
@@ -44,4 +32,4 @@ const MachineSchema = new mongoose.Schema<IMachine, mongoose.Model<IMachine, {},
     }
 })
 
-export const Machine = mongoose.model<IMachine, mongoose.Model<IMachine, {}, {}>>("Machine", MachineSchema)
+export const MachineCategory = mongoose.model<IMachineCategory, mongoose.Model<IMachineCategory, {}, {}>>("MachineCategory", MachineCategorySchema)

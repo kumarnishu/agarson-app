@@ -83,6 +83,12 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                 Display name
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Category
+
+                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -198,7 +204,9 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                         <STableCell>
                                             {machine.display_name}
                                         </STableCell>
-
+                                        <STableCell>
+                                            {machine.category}
+                                        </STableCell>
                                         <STableCell>
                                             {machine.created_at && new Date(machine.created_at).toLocaleString()}
                                         </STableCell>

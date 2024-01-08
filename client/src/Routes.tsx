@@ -74,6 +74,7 @@ import MyShoeWeightPage from './pages/production/MyShoeWeightPage.tsx'
 import MyDyeRepairPage from './pages/production/MyDyeRepairPage.tsx'
 import MyRunningMouldPage from './pages/production/MyRunningMouldPage.tsx'
 import VisitAttendencePage from './pages/visit/VisitAttendencePage.tsx'
+import UpdateMachineCategoriesPage from './pages/production/UpdateMachineCategoriesPage.tsx'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -132,6 +133,7 @@ export enum paths {
 
   //production
   production = "/production",
+  machine_categories ="machine_categories",
   production_admin = "production_admin",
   shoe_weight = "shoe_weight",
   dye_repair = "dye_repair",
@@ -262,6 +264,11 @@ function AppRoutes() {
               <Route
                 path={paths.production} element={
                   <MyProductionPage />
+                }
+              />
+              <Route
+                path={paths.machine_categories} element={
+                  <UpdateMachineCategoriesPage />
                 }
               />
               <Route

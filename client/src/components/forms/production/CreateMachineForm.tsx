@@ -2,19 +2,19 @@ import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IMachine } from '../../../types/production.types';
-import { CreateMachine } from '../../../services/ProductionServices';
+import { IMachine, IMachineCategory } from '../../../types/production.types';
+import { CreateMachine, GetMachineCategories } from '../../../services/ProductionServices';
 
 function NewMachineForm() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IMachine>, BackendError, {
-            name: string, display_name: string
+            name: string, display_name: string, category: string
         }>
         (CreateMachine, {
             onSuccess: () => {
@@ -22,23 +22,31 @@ function NewMachineForm() {
             }
         })
 
+    const { data: catgeories } = useQuery<AxiosResponse<IMachineCategory>, BackendError>("machine_catgeories", GetMachineCategories, {
+        staleTime: 10000
+    })
+
     const { setChoice } = useContext(ChoiceContext)
 
     const formik = useFormik({
         initialValues: {
             name: "",
             display_name: "",
+            category: "",
         },
         validationSchema: Yup.object({
             name: Yup.string()
                 .required('Required field'),
             display_name: Yup.string()
                 .required('Required field'),
+            category: Yup.string()
+                .required('Required field'),
         }),
         onSubmit: (values) => {
             mutate({
                 name: values.name,
                 display_name: values.display_name,
+                category:values.category
             })
         }
     });
@@ -89,7 +97,36 @@ function NewMachineForm() {
                     }
                     {...formik.getFieldProps('display_name')}
                 />
-
+                < TextField
+                    size='small'
+                    select
+                    SelectProps={{
+                        native: true,
+                    }}
+                    fullWidth
+                    required
+                    error={
+                        formik.touched.category && formik.errors.category ? true : false
+                    }
+                    focused
+                    id="category"
+                    label="category"
+                    helperText={
+                        formik.touched.category && formik.errors.category ? formik.errors.category : ""
+                    }
+                    {...formik.getFieldProps('category')}
+                >
+                    <option key={'00'} value={undefined}>
+                        
+                    </option>
+                    {
+                        catgeories && catgeories.data && catgeories.data.categories.map((category, index) => {
+                            return (<option key={index} value={category}>
+                                {category}
+                            </option>)
+                        })
+                    }
+                </TextField>
                 {
                     isError ? (
                         <AlertBar message={error?.response.data.message} color="error" />

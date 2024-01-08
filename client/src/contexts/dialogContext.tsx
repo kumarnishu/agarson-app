@@ -19,7 +19,7 @@ type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_ch
 type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
   | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark"
 
-type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "create_shoe_weight" | "update_shoe_weight" | "create_production" | "update_production"
+type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "create_shoe_weight" | "delete_production" | "update_shoe_weight" | "create_production" | "update_production"
 
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
 type BroadcastChoices = "create_broadcast" | "update_broadcast" | "delete_broadcast" | "close_broadcast" | "view_broadcast" | 'start_broadcast' | "reset_broadcast" | "stop_broadcast" | "create_message_broadcast" | "update_message_broadcast"
@@ -75,6 +75,7 @@ export enum ProductionChoiceActions {
   create_shoe_weight = "create_shoe_weight",
   update_shoe_weight = "update_shoe_weight",
   create_production = "create_production",
+  delete_production = "delete_production",
   update_production = "update_production"
 }
 
@@ -340,6 +341,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case ProductionChoiceActions.update_production: return type
     case ProductionChoiceActions.create_shoe_weight: return type
     case ProductionChoiceActions.update_shoe_weight: return type
+    case ProductionChoiceActions.delete_production: return type
 
     // template choice action
     case TemplateChoiceActions.create_template: return type

@@ -1,12 +1,12 @@
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
-export const CreateMachine = async (body: { name: string, display_name: string }) => {
+export const CreateMachine = async (body: { name: string, display_name: string ,category: string }) => {
     return await apiClient.post(`machines`, body);
 };
 
 
-export const UpdateMachine = async ({ body, id }: { body: { name: string, display_name: string }, id: string }) => {
+export const UpdateMachine = async ({ body, id }: { body: { name: string, display_name: string ,category: string }, id: string }) => {
     return await apiClient.put(`machines/${id}`, body);
 };
 
@@ -116,11 +116,17 @@ export const UpdateProduction = async ({ id, body }: {
     return await apiClient.put(`productions/${id}`, body);
 }
 
-export const GetProductions = async () => {
-    return await apiClient.get(`productions`);
+export const DeleteProduction = async (id: string) => {
+    return await apiClient.delete(`productions/${id}`);
 }
 
+export const GetProductions = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+    if (id)
+        return await apiClient.get(`productions/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+    else
+        return await apiClient.get(`productions/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
 
+}
 export const UpdateRepairDyeReport = async ({ id, body }: {
     id: string, body: {
         machine: string,
@@ -159,4 +165,15 @@ export const BulkUploadDyes = async (body: FormData) => {
 }
 export const BulkUploadArticles = async (body: FormData) => {
     return await apiClient.put(`articles/upload/bulk`, body);
+}
+
+export const UpdateMachineCategories = async ({ body }: { body: { categories?: string[] } }) => {
+    return await apiClient.put(`machine/categories`, body)
+}
+export const GetMachineCategories = async () => {
+    return await apiClient.get(`machine/categories`)
+}
+
+export const FuzzySearchProductions = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
+    return await apiClient.get(`search/visits?key=${searchString}&limit=${limit}&page=${page}`)
 }

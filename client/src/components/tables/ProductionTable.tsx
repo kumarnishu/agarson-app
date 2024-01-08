@@ -6,9 +6,10 @@ import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { IProduction } from '../../types/production.types'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
-import { Edit } from '@mui/icons-material'
+import { Delete, Edit } from '@mui/icons-material'
 import UpdateProductionDialog from '../dialogs/production/UpdateProductionDialog'
 import moment from 'moment'
+import DeleteProductionDialog from '../dialogs/production/DeleteProductionDialog'
 
 
 type Props = {
@@ -194,7 +195,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                                     element={
                                                         <Stack direction="row">
                                                             <>
-                                                                {user?.visit_access_fields.is_editable && <Tooltip title="edit">
+                                                                {user?.productions_access_fields.is_editable && <Tooltip title="edit">
                                                                     <IconButton color="info"
                                                                         onClick={() => {
                                                                             setChoice({ type: ProductionChoiceActions.update_production })
@@ -202,6 +203,16 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                                                         }}
                                                                     >
                                                                         <Edit />
+                                                                    </IconButton>
+                                                                </Tooltip>}
+                                                                {user?.productions_access_fields.is_deletion_allowed && <Tooltip title="delete">
+                                                                    <IconButton color="error"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: ProductionChoiceActions.delete_production })
+                                                                            setProduction(production)
+                                                                        }}
+                                                                    >
+                                                                        <Delete />
                                                                     </IconButton>
                                                                 </Tooltip>}
                                                             </>
@@ -264,6 +275,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
             </Box>
             {production && <>
                 <UpdateProductionDialog production={production} />
+                <DeleteProductionDialog production={production} />
             </>
             }
         </>

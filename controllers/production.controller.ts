@@ -8,8 +8,15 @@ import xlsx from "xlsx"
 import { Production } from "../models/production/production.model"
 import { User } from "../models/users/user.model"
 import { IArticle, IDye, IMachine, IProduction, IShoeWeight } from "../types/production.types"
+import { MachineCategory } from "../models/production/category.machine.model"
+import { IUser } from "../types/user.types"
 
 //get
+export const GetMachineCategories = async (req: Request, res: Response, next: NextFunction) => {
+    let categoryObj = await MachineCategory.findOne()
+    return res.status(200).json(categoryObj)
+}
+
 export const GetMachines = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = String(req.query.hidden)
     let machines: IMachine[] = []
@@ -57,9 +64,49 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
 }
 
 export const GetProductions = async (req: Request, res: Response, next: NextFunction) => {
-    let productions = await Production.find().populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-created_at')
-    return res.status(200).json(productions)
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let id = req.query.id
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let productions: IProduction[] = []
+    let count = 0
+    let dt1 = new Date(String(start_date))
+    let dt2 = new Date(String(end_date))
+    let user_ids: string[] = []
+    user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
+
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        if (!id) {
+            if (user_ids.length > 0) {
+                productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 }, thekedar: { $in: user_ids } }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await Production.find({ created_at: { $gte: dt1, $lt: dt2 }, thekedar: { $in: user_ids } }).countDocuments()
+            }
+
+            else {
+                productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 }, thekedar: req.user._id }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await Production.find({ created_at: { $gte: dt1, $lt: dt2 } }).countDocuments()
+            }
+        }
+
+
+        if (id) {
+            productions = await Production.find({ created_at: { $gte: dt1, $lt: dt2 }, thekedar: id }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await Production.find({ created_at: { $gte: dt1, $lt: dt2 }, thekedar: id }).countDocuments()
+        }
+
+        return res.status(200).json({
+            productions,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
 }
+
+
 export const GetMyTodayProductions = async (req: Request, res: Response, next: NextFunction) => {
     let machine = req.query.machine
     let date = String(req.query.date)
@@ -78,17 +125,18 @@ export const GetMyTodayProductions = async (req: Request, res: Response, next: N
 
 //post/put/patch/delete
 export const CreateMachine = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, display_name } = req.body as {
+    const { name, display_name, category } = req.body as {
         name: string,
-        display_name: string
+        display_name: string,
+        category: string
     }
-    if (!name) {
+    if (!name || !display_name || !category) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     if (await Machine.findOne({ name: name }))
         return res.status(400).json({ message: "already exists this machine" })
     let machine = await new Machine({
-        name: name, display_name: display_name,
+        name: name, display_name: display_name, category: category,
         created_at: new Date(),
         updated_by: req.user,
         updated_at: new Date(),
@@ -111,22 +159,23 @@ export const BulkUploadMachine = async (req: Request, res: Response, next: NextF
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: { name: string, display_name: string }[] = xlsx.utils.sheet_to_json(
+        let workbook_response: { name: string, display_name: string, category: string }[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         console.log(workbook_response)
-        let newMachines: { name: string, display_name: string }[] = []
+        let newMachines: { name: string, display_name: string, category: string }[] = []
         workbook_response.forEach(async (machine) => {
             let name: string | null = machine.name
             let display_name: string | null = machine.display_name
+            let category: string | null = machine.category
             console.log(display_name, name)
-            newMachines.push({ name: name, display_name: display_name })
+            newMachines.push({ name: name, display_name: display_name, category: category })
         })
         console.log(newMachines)
         newMachines.forEach(async (mac) => {
-            let machine = await Machine.findOne({ display_name: mac.display_name })
+            let machine = await Machine.findOne({ name: mac.name })
             if (!machine)
-                await new Machine({ name: mac.name, display_name: mac.display_name, created_by: req.user, updated_by: req.user }).save()
+                await new Machine({ name: mac.name, display_name: mac.display_name, category: mac.category, created_by: req.user, updated_by: req.user }).save()
         })
     }
     return res.status(200).json({ message: "machines updated" });
@@ -197,11 +246,12 @@ export const BulkUploadArticle = async (req: Request, res: Response, next: NextF
     return res.status(200).json({ message: "articles updated" });
 }
 export const UpdateMachine = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, display_name } = req.body as {
+    const { name, display_name, category } = req.body as {
         name: string,
-        display_name: string
+        display_name: string,
+        category: string
     }
-    if (!name) {
+    if (!name || !display_name || !category) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     const id = req.params.id
@@ -213,6 +263,7 @@ export const UpdateMachine = async (req: Request, res: Response, next: NextFunct
             return res.status(400).json({ message: "already exists this machine" })
     machine.name = name
     machine.display_name = display_name
+    machine.category = category
     machine.updated_at = new Date()
     machine.updated_by = req.user
     await machine.save()
@@ -598,6 +649,30 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
         })
     return res.status(200).json({ message: "production updated" })
 }
+export const DeleteProduction = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    if (!id)
+        return res.status(400).json({ message: "not a valid request" })
+    let remote_production = await Production.findById(id)
+    if (!remote_production)
+        return res.status(404).json({ message: "producton not exists" })
+
+    await Production.findByIdAndDelete(remote_production._id)
+    return res.status(200).json({ message: "production removed" })
+}
 
 
 
+export const UpdateMachineCategories = async (req: Request, res: Response, next: NextFunction) => {
+    const { categories } = req.body as { categories: string[] }
+    await MachineCategory.findOneAndRemove()
+    let cat = new MachineCategory({ categories: categories })
+    cat.created_at = new Date()
+    cat.updated_at = new Date()
+    if (req.user) {
+        cat.created_by = req.user
+        cat.updated_by = req.user
+    }
+    await cat.save()
+    return res.status(200).json({ message: "updated categories" })
+}
