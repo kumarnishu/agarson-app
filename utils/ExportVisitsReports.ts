@@ -9,7 +9,7 @@ import fs from "fs"
 import { CronJob } from "cron"
 
 
-export async function handleVisitReport(client: Client){
+export async function handleVisitReport(client: Client) {
     let cronString1 = `00 20 1/1 * *`
     let cronString2 = `00 9 1/1 * *`
     console.log("running trigger")
@@ -19,19 +19,19 @@ export async function handleVisitReport(client: Client){
         dt2.setDate(new Date(dt1).getDate() + 1)
         dt1.setHours(8)
         dt1.setMinutes(0)
-        await ExportVisitsToPdf(client,dt1,dt2) 
+        await ExportVisitsToPdf(client, dt1, dt2)
     }).start()
 
     new CronJob(cronString2, async () => {
         let dt1 = new Date()
         let dt2 = new Date()
-        dt2.setDate(new Date(dt1).getDate() -1)
+        dt1.setDate(new Date(dt1).getDate() - 1)
         dt1.setHours(8)
         dt1.setMinutes(0)
-        await ExportVisitsToPdf(client,dt1,dt2)
+        await ExportVisitsToPdf(client, dt1, dt2)
     }).start()
 }
-export async function ExportVisitsToPdf(client: Client,dt1:Date,dt2:Date) {
+export async function ExportVisitsToPdf(client: Client, dt1: Date, dt2: Date) {
     let visits: IVisit[] = []
     console.log("generating pdf")
     visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate("visit_reports").populate('created_by')
@@ -42,12 +42,12 @@ export async function ExportVisitsToPdf(client: Client,dt1:Date,dt2:Date) {
         }
     })
     let Content: Content[] = []
-    
+
 
     for (let i = 0; i < visits.length; i++) {
         if (visits[i]) {
             Content.push({ text: `Daily Visit Reports : ${new Date(dt1).toLocaleDateString()}`, style: { 'alignment': 'center', fontSize: 24 } });
-            
+
             if (visits[i].start_day_credientials) {
                 let startday_photo = await imageUrlToBase64(visits[i].start_day_photo?.public_url || "").then((response) => {
                     return response
@@ -107,9 +107,9 @@ export async function ExportVisitsToPdf(client: Client,dt1:Date,dt2:Date) {
                                     height: 500,
                                 },
                                 "\n\n",
-                                { text: `Visit in\n`, style: { 'alignment': 'center', fontSize: 22 } },
+                                { text: `${report.party_name}\n`, style: { 'alignment': 'center', fontSize: 22, bold: true } },
                                 {
-                                    text: `In : ${new Date(report.visit_in_credientials.timestamp).toLocaleTimeString()} ,  Out : ${new Date(report.visit_in_credientials.timestamp).toLocaleTimeString()}`,
+                                    text: `In : ${new Date(report.visit_in_credientials.timestamp).toLocaleTimeString()} ,  Out : ${new Date(report.visit_out_credentials.timestamp).toLocaleTimeString()}`,
                                     style: { 'alignment': 'center', fontSize: 20 },
 
                                 },
@@ -136,13 +136,9 @@ export async function ExportVisitsToPdf(client: Client,dt1:Date,dt2:Date) {
                                     height: 500,
                                 },
                                 "\n\n",
-                                { text: `Work Summary\n\n`, style: { 'alignment': 'center', fontSize: 20 } },
-                                {
-                                    text: `In : ${new Date(report.visit_out_credentials.timestamp).toLocaleTimeString()} , Out : ${new Date(report.visit_out_credentials.timestamp).toLocaleTimeString()}`,
-                                    style: { 'alignment': 'center', fontSize: 20 },
-
-                                }
+                                { text: `Work Summary\n\n`, style: { 'alignment': 'center', fontSize: 20 } }
                                 ,
+
                                 {
                                     text: `${report.visit_in_credientials.address}`,
                                     style: { 'alignment': 'center', fontSize: 20 },
@@ -150,7 +146,7 @@ export async function ExportVisitsToPdf(client: Client,dt1:Date,dt2:Date) {
                                 },
                                 "\n",
                                 {
-                                    text: `${report.summary}`,
+                                    text: `${report.summary || ""}`,
                                     style: { 'alignment': 'center', fontSize: 20 },
 
                                 }
@@ -178,10 +174,10 @@ export async function ExportVisitsToPdf(client: Client,dt1:Date,dt2:Date) {
                                     height: 500,
                                 },
 
-                                { text: `\nEnd Day\n\n`, style: { 'alignment': 'center', fontSize:22 } },
+                                { text: `\nEnd Day\n\n`, style: { 'alignment': 'center', fontSize: 22 } },
                                 {
                                     text: `${new Date(visits[i].end_day_credentials.timestamp).toLocaleTimeString()}`,
-                                    style: { 'alignment': 'center', fontSize: 20},
+                                    style: { 'alignment': 'center', fontSize: 20 },
 
                                 },
 
