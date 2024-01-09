@@ -17,7 +17,7 @@ import { Contact } from "../models/contact/contact.model";
 import { ReminderManager } from "../app";
 import { Chat } from "../models/bot/chat.model";
 import { SendGreetingTemplates } from "./sendGreetingMessage";
-import { ExportVisitsToPdf } from "./ExportVisitsReports";
+import { handleVisitReport } from "./ExportVisitsReports";
 
 export var clients: { client_id: string, client: Client }[] = []
 export let users: { id: string }[] = []
@@ -64,7 +64,7 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
     client.on("ready", async () => {
         if (client.info.wid.user) {
             io.to(client_id).emit("ready", client.info.wid.user)
-            console.log("ready",client_id)
+            console.log("ready", client_id)
             let user = await User.findOne({ client_id: client_id })
             if (user) {
                 await User.findByIdAndUpdate(user._id, {
@@ -80,7 +80,7 @@ export async function createWhatsappClient(client_id: string, client_data_path: 
             if (client.info && client.info.wid) {
                 if (user && client?.info.wid._serialized === process.env.WAGREETING_PHONE) {
                     await SendGreetingTemplates(client, user)
-                    await ExportVisitsToPdf(client)
+                    await handleVisitReport(client)
                 }
 
                 let broadcasts = await Broadcast.find({ connected_number: client?.info.wid._serialized })

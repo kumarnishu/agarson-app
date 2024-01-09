@@ -6,7 +6,22 @@ import { Content } from "pdfmake/interfaces"
 import { imageUrlToBase64 } from "./UrlToBase64"
 import { Client, MessageMedia } from "whatsapp-web.js";
 import fs from "fs"
+import { CronJob } from "cron"
 
+
+export async function handleVisitReport(client: Client){
+    let cronString1 = `20 18 1/1 * *`
+    let cronString2 = `00 9 1/1 * *`
+    console.log("running trigger")
+    new CronJob(cronString1, async () => {
+        
+        await ExportVisitsToPdf(client) 
+    }).start()
+
+    new CronJob(cronString2, async () => {
+        await ExportVisitsToPdf(client)
+    }).start()
+}
 export async function ExportVisitsToPdf(client: Client) {
     let visits: IVisit[] = []
     let dt1 = new Date()
@@ -25,11 +40,12 @@ export async function ExportVisitsToPdf(client: Client) {
         }
     })
     let Content: Content[] = []
-    Content.push({ text: `Daily Visit Reports : ${new Date(dt1).toLocaleDateString()}`, style: { 'alignment': 'center', fontSize: 24 } });
+    
 
     for (let i = 0; i < visits.length; i++) {
-        console.log(visits[i].visit_reports)
         if (visits[i]) {
+            Content.push({ text: `Daily Visit Reports : ${new Date(dt1).toLocaleDateString()}`, style: { 'alignment': 'center', fontSize: 24 } });
+            
             if (visits[i].start_day_credientials) {
                 let startday_photo = await imageUrlToBase64(visits[i].start_day_photo?.public_url || "").then((response) => {
                     return response
