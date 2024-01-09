@@ -10,27 +10,29 @@ import { CronJob } from "cron"
 
 
 export async function handleVisitReport(client: Client){
-    let cronString1 = `20 18 1/1 * *`
+    let cronString1 = `00 20 1/1 * *`
     let cronString2 = `00 9 1/1 * *`
     console.log("running trigger")
     new CronJob(cronString1, async () => {
-        
-        await ExportVisitsToPdf(client) 
+        let dt1 = new Date()
+        let dt2 = new Date()
+        dt2.setDate(new Date(dt1).getDate() + 1)
+        dt1.setHours(8)
+        dt1.setMinutes(0)
+        await ExportVisitsToPdf(client,dt1,dt2) 
     }).start()
 
     new CronJob(cronString2, async () => {
-        await ExportVisitsToPdf(client)
+        let dt1 = new Date()
+        let dt2 = new Date()
+        dt2.setDate(new Date(dt1).getDate() -1)
+        dt1.setHours(8)
+        dt1.setMinutes(0)
+        await ExportVisitsToPdf(client,dt1,dt2)
     }).start()
 }
-export async function ExportVisitsToPdf(client: Client) {
+export async function ExportVisitsToPdf(client: Client,dt1:Date,dt2:Date) {
     let visits: IVisit[] = []
-    let dt1 = new Date()
-    let dt2 = new Date()
-    dt2.setDate(new Date(dt1).getDate() + 1)
-    dt1.setHours(8)
-    dt1.setMinutes(0)
-    console.log(dt1)
-    console.log(dt2)
     console.log("generating pdf")
     visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate("visit_reports").populate('created_by')
     var printer = new PdfPrinter({
