@@ -10,7 +10,7 @@ import { CronJob } from "cron"
 
 
 export async function handleVisitReport(client: Client) {
-    let cronString1 = `00 20 1/1 * *`
+    let cronString1 = `15 18 1/1 * *`
     let cronString2 = `00 9 1/1 * *`
     console.log("running trigger")
     new CronJob(cronString1, async () => {
