@@ -18,7 +18,6 @@ import { IVisitReport } from '../../types/visit.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
 import sortBy from "sort-by"
-import { saveAs } from 'file-saver'
 
 export default function VisitAdminPage() {
     const [sorted, setSorted] = useState(false)
@@ -334,13 +333,6 @@ export default function VisitAdminPage() {
                                 handleExcel()
                             }}
                             >Export To Excel</MenuItem>
-                            < MenuItem onClick={() => {
-                                if (userId)
-                                    saveAs(`/api/v1/visits/export/?id=${userId}&start_date=${dates.start_date}&end_date=${dates.end_date}&limit=${paginationData.limit}&page=${paginationData.page}`, "Example.pdf")
-                                else
-                                    saveAs(`/api/v1/visits/export/?start_date=${dates.start_date}&end_date=${dates.end_date}&limit=${paginationData.limit}&page=${paginationData.page}`, "Example.pdf")
-                            }}
-                            >Export To Pdf</MenuItem>
                         </Menu >
 
                     </>
