@@ -23,7 +23,7 @@ router.route("/visit/ankit/input/:id").patch(isAuthenticatedUser, AddAnkitInput)
 router.route("/visit/brijesh/input/:id").patch(isAuthenticatedUser, AddBrijeshInput)
 router.route("/visit/validate/:id").patch(isAuthenticatedUser, ValidateVisit)
 router.route("/visit/toogle/:id").patch(isAuthenticatedUser, ToogleAttendence)
-router.route("/visits/exports/:id").get(isAuthenticatedUser, ExportVisitsToPdf)
+router.route("/visits/export").get(isAuthenticatedUser, ExportVisitsToPdf)
 
 
 export default router

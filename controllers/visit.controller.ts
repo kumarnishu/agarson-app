@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express"
+import { NextFunction, Request, Response, response } from "express"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { IVisit, IVisitBody, IVisitReport, IVisitReportBody } from "../types/visit.types"
 import { Visit } from "../models/visit/visit.model"
@@ -7,6 +7,8 @@ import { IUser } from "../types/user.types"
 import PdfPrinter from "pdfmake"
 import path from "path"
 import axios from "axios"
+import { imageUrlToBase64 } from "../utils/UrlToBase64"
+import { Content } from "pdfmake/interfaces"
 // get attendence reports
 export const GetVisitsAttendence = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
@@ -456,18 +458,18 @@ export const ExportVisitsToPdf = async (req: Request, res: Response, next: NextF
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (user_ids.length > 0) {
-                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate("visit_reports").populate('created_by').populate('updated_by').skip((page - 1) * limit).limit(limit)
 
             }
 
             else {
-                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate("visit_reports").populate('created_by').populate('updated_by').skip((page - 1) * limit).limit(limit)
 
             }
         }
 
         if (id) {
-            visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate("visit_reports").populate('created_by').populate('updated_by').skip((page - 1) * limit).limit(limit)
 
         }
         var printer = new PdfPrinter({
@@ -477,31 +479,172 @@ export const ExportVisitsToPdf = async (req: Request, res: Response, next: NextF
             }
         })
 
-        try {
-            var result = await axios.get('http://www.bo.agarson.in/logo.jpg', {
-                responseType: 'arraybuffer'
-            })
-        } catch (err) {
-            return next(err)
+        let Content: Content[] = []
+        Content.push({ text: `Daily Visit Reports : ${new Date(dt1).toLocaleDateString()}`, style: { 'alignment': 'center', fontSize: 24 } });
+
+        for (let i = 0; i < visits.length; i++) {
+            if (visits[i]) {
+                if (visits[i].start_day_credientials) {
+                    let startday_photo = await imageUrlToBase64(visits[i].start_day_photo?.public_url || "").then((response) => {
+                        return response
+                    })
+                    if (startday_photo) {
+                        Content.push(
+                            {
+                                text: `${visits[i].created_by.username}\n\n`,
+                                style: { 'alignment': 'center', fontSize: 16 },
+
+                            }
+                        ),
+                            Content.push(
+                                {
+                                    alignment: 'center',
+                                    stack: [
+                                        {
+                                            image: startday_photo,
+                                            width: 500,
+                                            height: 500,
+                                        },
+                                        "\n\n",
+                                        { text: `Start Day\n`, style: { 'alignment': 'center', fontSize: 16 } },
+                                        {
+                                            text: `${new Date(visits[i].start_day_credientials.timestamp).toLocaleTimeString()}`,
+                                            style: { 'alignment': 'center', fontSize: 12 },
+
+                                        },
+
+                                        {
+                                            text: `${visits[i].start_day_credientials.address}`,
+                                            style: { 'alignment': 'center', fontSize: 12 },
+
+                                        },
+                                    ]
+                                }
+                            )
+                    }
+                }
+                for (let j = 0; j < visits[i].visit_reports.length; j++) {
+                    let report = visits[i].visit_reports[j]
+                        let visitInPhoto = await imageUrlToBase64(report.visit_in_photo?.public_url || "").then((response) => {
+                            return response
+                        })
+                        let uploadsamplesPhoto = await imageUrlToBase64(report.visit_samples_photo?.public_url || "").then((response) => {
+                            return response
+                        })
+
+                        if (visitInPhoto) {
+                            Content.push(
+                                {
+                                    alignment: 'center',
+                                    stack: [
+                                        {
+                                            image: visitInPhoto,
+                                            width: 500,
+                                            height: 500,
+                                        },
+                                        "\n\n",
+                                        { text: `Visit in\n`, style: { 'alignment': 'center', fontSize: 16 } },
+                                        {
+                                            text: `In : ${new Date(report.visit_in_credientials.timestamp).toLocaleTimeString()} ,  Out : ${new Date(report.visit_in_credientials.timestamp).toLocaleTimeString()}`,
+                                            style: { 'alignment': 'center', fontSize: 11 },
+
+                                        },
+
+                                        {
+                                            text: ` ${report.visit_in_credientials.address}`,
+                                            style: { 'alignment': 'center', fontSize: 12 },
+
+                                        }
+                                    ]
+                                }
+                            )
+
+                        }
+
+                        if (uploadsamplesPhoto) {
+                            Content.push(
+                                {
+                                    alignment: 'center',
+                                    stack: [
+                                        {
+                                            image: uploadsamplesPhoto,
+                                            width: 500,
+                                            height: 500,
+                                        },
+                                        "\n\n",
+                                        { text: `Work Summary\n`, style: { 'alignment': 'center', fontSize: 16 } },
+                                        {
+                                            text: `In : ${new Date(report.visit_out_credentials.timestamp).toLocaleTimeString()} , Out : ${new Date(report.visit_out_credentials.timestamp).toLocaleTimeString()}`,
+                                            style: { 'alignment': 'center', fontSize: 11 },
+
+                                        }
+                                        ,
+                                        {
+                                            text: `${report.visit_in_credientials.address}`,
+                                            style: { 'alignment': 'center', fontSize: 12 },
+
+                                        },
+                                        "\n\n",
+                                        {
+                                            text: `${report.summary}`,
+                                            style: { 'alignment': 'center', fontSize: 14 },
+
+                                        }
+                                    ]
+                                }
+                            )
+
+
+                        }
+                }
+
+                if (visits[i].end_day_credentials) {
+                    let enddayPhoto = await imageUrlToBase64(visits[i].end_day_photo?.public_url || "").then((response) => {
+                        return response
+                    })
+
+                    if (enddayPhoto) {
+                        Content.push(
+                            {
+                                alignment: 'center',
+                                stack: [
+                                    {
+                                        image: enddayPhoto,
+                                        width: 500,
+                                        height: 500,
+                                    },
+                                    
+                                    { text: `End Day\n`, style: { 'alignment': 'center', fontSize: 16 } },
+                                    {
+                                        text: `${new Date(visits[i].end_day_credentials.timestamp).toLocaleTimeString()}`,
+                                        style: { 'alignment': 'center', fontSize: 11 },
+
+                                    },
+
+                                    {
+                                        text: `${visits[i].end_day_credentials.address}`,
+                                        style: { 'alignment': 'center', fontSize: 12 },
+
+                                    },
+                                ]
+                            }
+                        )
+                    }
+                }
+            }
+
         }
-        // @ts-ignore
-        var image = new Buffer.from(result.data, 'base64')
+
         var doc = printer.createPdfKitDocument({
             info: {
-                title: 'PDF with External Image',
-                author: 'Matt Hagemann',
-                subject: 'PDF with External Image',
+                title: 'Visit Reports',
+                author: 'Agarson',
+                subject: 'Visit Reports',
             },
-            content: [
-                'pdfmake (since it\'s based on pdfkit) supports JPEG and PNG format',
-                'If no width/height/fit is provided, image original size will be used',
-                {
-                    image: image,
-                    width: 150
-                }],
+            content: Content,
             defaultStyle: {
-                fontSize: 11,
-                font: 'Roboto', // The font name was defined above.
+                fontSize: 16,
+                font: 'Roboto',
                 lineHeight: 1.2,
             }
         })

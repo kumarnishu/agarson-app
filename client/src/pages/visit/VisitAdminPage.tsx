@@ -336,9 +336,9 @@ export default function VisitAdminPage() {
                             >Export To Excel</MenuItem>
                             < MenuItem onClick={() => {
                                 if (userId)
-                                    saveAs(`/api/v1/visits/?id=${userId}&start_date=${dates.start_date}&end_date=${dates.end_date}&limit=${paginationData.limit}&page=${paginationData.page}`, "Example.pdf")
+                                    saveAs(`/api/v1/visits/export/?id=${userId}&start_date=${dates.start_date}&end_date=${dates.end_date}&limit=${paginationData.limit}&page=${paginationData.page}`, "Example.pdf")
                                 else
-                                    saveAs(`/api/v1/visits/?start_date=${dates.start_date}&end_date=${dates.end_date}&limit=${paginationData.limit}&page=${paginationData.page}`, "Example.pdf")
+                                    saveAs(`/api/v1/visits/export/?start_date=${dates.start_date}&end_date=${dates.end_date}&limit=${paginationData.limit}&page=${paginationData.page}`, "Example.pdf")
                             }}
                             >Export To Pdf</MenuItem>
                         </Menu >
