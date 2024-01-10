@@ -1,22 +1,18 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
-import { Avatar, Box, IconButton, Tooltip, Typography } from '@mui/material';
+import {  Box,  Typography } from '@mui/material';
 import { useContext } from 'react';
-import { UserMenuActions, MenuContext } from '../../contexts/menuContext';
 import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
-import ProfileMenu from '../menu/ProfileMenu';
-import ResetPasswordSendMailDialog from '../dialogs/users/ResetPasswordSendMailDialog';
-import SignUpDialog from '../dialogs/users/SignUpDialog';
 import AgarsonLogo from '../logo/Agarson';
+import ProfileLogo from '../logo/ProfileLogo';
 
 export const StyledLink = styled(Link)`
     text-decoration: none;
     color:white;
 `
 export default function DashBoardNavBar() {
-    const { setMenu } = useContext(MenuContext)
     const { user } = useContext(UserContext)
     return (
         <>
@@ -27,14 +23,15 @@ export default function DashBoardNavBar() {
                 }}
                 >
                     {/* child stack1 */}
-                    <Stack direction="row" justifyContent={"center"}
-                        alignItems="center" gap={2} pl={1}>
+                    <Stack direction="row" gap={2} pl={1}>
                         <StyledLink to={paths.dashboard}>
                             <AgarsonLogo width={35} height={35} title='Go To Dashboard' />
                         </StyledLink>
-                        <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
-                            Dashboard
-                        </Typography>
+                        <StyledLink to={paths.dashboard}>
+                            <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
+                                Dashboard
+                            </Typography>
+                        </StyledLink>
                     </Stack>
                     {/* child stack2 */}
                     <Stack direction="row"
@@ -61,17 +58,8 @@ export default function DashBoardNavBar() {
                                     alignItems="center"
                                     gap={2}
                                 >
+                                    <ProfileLogo />
 
-                                    <Tooltip title={user.username || "open settings"}>
-                                        <IconButton
-                                            onClick={(e) => setMenu({ type: UserMenuActions.profile_menu, anchorEl: e.currentTarget })
-                                            }
-                                        >
-                                            <Avatar
-                                                sx={{ width: 30, height: 30 }}
-                                                alt="img1" src={user.dp?.public_url} />
-                                        </IconButton>
-                                    </Tooltip>
                                 </Stack>
                             </>
                             :
@@ -81,9 +69,7 @@ export default function DashBoardNavBar() {
                 </Stack>
             </Box >
             <Outlet />
-            <ProfileMenu />
-            <ResetPasswordSendMailDialog />
-            <SignUpDialog />
+          
 
         </>
     )

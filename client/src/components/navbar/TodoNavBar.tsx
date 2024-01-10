@@ -1,24 +1,18 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
-import { Avatar, Box, IconButton, Tooltip } from '@mui/material';
+import {  Box,  Typography } from '@mui/material';
 import { useContext } from 'react';
-import { MenuContext, TodoMenuActions, UserMenuActions } from '../../contexts/menuContext';
 import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
-import ResetPasswordSendMailDialog from '../dialogs/users/ResetPasswordSendMailDialog';
-import SignUpDialog from '../dialogs/users/SignUpDialog';
 import AgarsonLogo from '../logo/Agarson';
-import ProfileMenu from '../menu/ProfileMenu';
-import { Menu } from '@mui/icons-material';
-import TodoMenu from '../menu/TodoMenu';
+import ProfileLogo from '../logo/ProfileLogo';
 
 export const StyledLink = styled(Link)`
     text-decoration: none;
     color:white;
 `
 export default function TodoNavBar() {
-    const { setMenu } = useContext(MenuContext)
     const { user } = useContext(UserContext)
     return (
         <>
@@ -29,10 +23,11 @@ export default function TodoNavBar() {
                 }}
                 >
                     {/* child stack1 */}
-                    <Stack direction="column" gap={2} pl={1}>
+                    <Stack direction="row" gap={2} pl={1}>
                         <StyledLink to={paths.dashboard}>
                             <AgarsonLogo width={35} height={35} title='Go To Dashboard' />
                         </StyledLink>
+                      
                     </Stack>
                     {/* child stack2 */}
                     <Stack direction="row"
@@ -41,21 +36,7 @@ export default function TodoNavBar() {
                     >
                         {user ?
                             <>
-                                {/* stack1 nav links*/}
-                                <Stack
-                                    direction="row"
-                                    gap={2}
-                                    px={2}
-                                    sx={{
-                                        display: { xs: 'none', md: 'flex' }
-                                    }}
-                                >
-
-                                    <StyledLink to={paths.todos}>Todos</StyledLink>
-                                    {user.is_admin && <StyledLink to={paths.todo_admin_page}>Todo Admin</StyledLink>}
-                                    <StyledLink to={paths.todo_help_page}>Help</StyledLink>
-                                </Stack>
-
+                              
                                 {/* stack2 right icons*/}
                                 <Stack
                                     direction="row"
@@ -63,29 +44,12 @@ export default function TodoNavBar() {
                                     alignItems="center"
                                     gap={2}
                                 >
-                                    <Tooltip title="open menu">
-                                        <IconButton
-                                            onClick={(e) => setMenu({ type: TodoMenuActions.todo_menu, anchorEl: e.currentTarget })
-                                            }
-                                            sx={{
-                                                color: "white",
-                                                display: {
-                                                    xs: 'block', md: 'none'
-                                                }
-                                            }}>
-                                            <Menu />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title={user.username || "open settings"}>
-                                        <IconButton
-                                            onClick={(e) => setMenu({ type: UserMenuActions.profile_menu, anchorEl: e.currentTarget })
-                                            }
-                                        >
-                                            <Avatar
-                                                sx={{ width: 30, height: 30 }}
-                                                alt="img1" src={user.dp?.public_url} />
-                                        </IconButton>
-                                    </Tooltip>
+                                    <StyledLink to={paths.todo_dashboard}>
+                                        <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
+                                            Home
+                                        </Typography>
+                                    </StyledLink>
+                                    <ProfileLogo />
                                 </Stack>
                             </>
                             :
@@ -95,10 +59,6 @@ export default function TodoNavBar() {
                 </Stack>
             </Box >
             <Outlet />
-            <TodoMenu />
-            <ProfileMenu />
-            <ResetPasswordSendMailDialog />
-            <SignUpDialog />
         </>
     )
 }

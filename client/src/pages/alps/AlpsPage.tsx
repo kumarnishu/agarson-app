@@ -109,7 +109,7 @@ export default function AlpsPage() {
   useEffect(() => {
     if (!filter)
       setAlps(preFilteredData)
-  }, [filter])
+  }, [filter, filterCount])
 
 
   useEffect(() => {
@@ -125,7 +125,7 @@ export default function AlpsPage() {
   useEffect(() => {
     setItemOffset(reactPaginationData.page * reactPaginationData.limit % reactPaginationData.total)
   }, [reactPaginationData])
-  console.log(filterCount)
+
   return (
     <>
 
@@ -215,17 +215,17 @@ export default function AlpsPage() {
       </Stack >
       {/* table */}
       {isLoading && <TableSkeleton />}
-      {!isLoading && 
-      < AlpsTable
-        alp={alp}
-        setAlp={setAlp}
-        selectAll={selectAll}
-        selectedAlps={selectedAlps}
-        setSelectedAlps={setSelectedAlps}
-        setSelectAll={setSelectAll}
-        alps={filter ? currentItems : MemoData}
-        selectableAlps={filter ? allfuzzyalps : alps}
-      />}
+      {!isLoading &&
+        < AlpsTable
+          alp={alp}
+          setAlp={setAlp}
+          selectAll={selectAll}
+          selectedAlps={selectedAlps}
+          setSelectedAlps={setSelectedAlps}
+          setSelectAll={setSelectAll}
+          alps={filter ? currentItems : MemoData}
+          selectableAlps={filter ? allfuzzyalps : alps}
+        />}
 
       {!filter ? <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} /> :
         <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={FuzzyMemoData}

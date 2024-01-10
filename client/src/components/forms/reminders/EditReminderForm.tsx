@@ -12,7 +12,7 @@ import AlertBar from '../../snacks/AlertBar';
 import { UpdateReminder } from '../../../services/ReminderServices';
 import { GetContacts } from '../../../services/ContactServices';
 import FuzzySearch from "fuzzy-search";
-import SelectContactPage from '../../../pages/reminders/SelectContactPage';
+import SelectContactPage from '../../../pages/reminders/SelectContactBox';
 import { IReminder } from '../../../types/reminder.types';
 import { IMessageTemplate, ITemplateCategoryField } from '../../../types/template.types';
 import { IUser } from '../../../types/user.types';

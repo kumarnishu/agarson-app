@@ -15,7 +15,7 @@ type Props = {
     setFilter: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
-export default function SelectContactPage({ contact, selectAll, contacts, setSelectAll, setContact, selectedContacts, setSelectedContacts, setFilter }: Props) {
+export default function SelectContactBox({ contact, selectAll, contacts, setSelectAll, setContact, selectedContacts, setSelectedContacts, setFilter }: Props) {
 
     return (
         <>

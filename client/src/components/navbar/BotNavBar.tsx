@@ -1,25 +1,19 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
-import { Avatar, Box, IconButton, Tooltip } from '@mui/material';
+import {  Box,  Typography } from '@mui/material';
 import { useContext } from 'react';
-import { UserMenuActions, BotMenuActions, MenuContext } from '../../contexts/menuContext';
 import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
-import ResetPasswordSendMailDialog from '../dialogs/users/ResetPasswordSendMailDialog';
-import SignUpDialog from '../dialogs/users/SignUpDialog';
-import { Menu } from '@mui/icons-material';
 import AgarsonLogo from '../logo/Agarson';
-import BotMenu from '../menu/BotMenu';
-import ProfileMenu from '../menu/ProfileMenu';
 import RefreshWhatsappButton from '../buttons/RefreshWhatsappButton';
+import ProfileLogo from '../logo/ProfileLogo';
 
 export const StyledLink = styled(Link)`
     text-decoration: none;
     color:white;
 `
 export default function BotNavBar() {
-    const { setMenu } = useContext(MenuContext)
     const { user } = useContext(UserContext)
     return (
         <>
@@ -30,10 +24,11 @@ export default function BotNavBar() {
                 }}
                 >
                     {/* child stack1 */}
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" gap={2} pl={1}>
                         <StyledLink to={paths.dashboard}>
                             <AgarsonLogo width={35} height={35} title='Go To Dashboard' />
                         </StyledLink>
+                      
                         <RefreshWhatsappButton />
                     </Stack>
                     {/* child stack2 */}
@@ -43,20 +38,7 @@ export default function BotNavBar() {
                     >
                         {user ?
                             <>
-                                {/* stack1 nav links*/}
-                                <Stack
-                                    direction="row"
-                                    gap={2}
-                                    px={2}
-                                    sx={{
-                                        display: { xs: 'none', md: 'flex' }
-                                    }}
-                                >
-                                    <StyledLink to={paths.flows}>Flows</StyledLink>
-                                    <StyledLink to={paths.chats}>Chats</StyledLink>
-                                    <StyledLink to={paths.trackers}>Trackers</StyledLink>
-                                    <StyledLink to={paths.bot_help}>Help</StyledLink>
-                                </Stack>
+                               
 
                                 {/* stack2 right icons*/}
                                 <Stack
@@ -65,30 +47,12 @@ export default function BotNavBar() {
                                     alignItems="center"
                                     gap={2}
                                 >
-
-                                    <Tooltip title="open menu">
-                                        <IconButton
-                                            onClick={(e) => setMenu({ type: BotMenuActions.bot_menu, anchorEl: e.currentTarget })
-                                            }
-                                            sx={{
-                                                color: "white",
-                                                display: {
-                                                    xs: 'block', md: 'none'
-                                                }
-                                            }}>
-                                            <Menu />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title={user.username || "open settings"}>
-                                        <IconButton
-                                            onClick={(e) => setMenu({ type: UserMenuActions.profile_menu, anchorEl: e.currentTarget })
-                                            }
-                                        >
-                                            <Avatar
-                                                sx={{ width: 30, height: 30 }}
-                                                alt="img1" src={user.dp?.public_url} />
-                                        </IconButton>
-                                    </Tooltip>
+                                    <StyledLink to={paths.bot_dashboard}>
+                                        <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
+                                            Home
+                                        </Typography>
+                                    </StyledLink>
+                                   <ProfileLogo/>
                                 </Stack>
                             </>
                             :
@@ -98,10 +62,7 @@ export default function BotNavBar() {
                 </Stack>
             </Box >
             <Outlet />
-            <BotMenu />
-            <ProfileMenu />
-            <ResetPasswordSendMailDialog />
-            <SignUpDialog />
+          
         </>
     )
 }

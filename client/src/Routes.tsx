@@ -10,7 +10,7 @@ import BroadcastNavBar from './components/navbar/BroadcastNavBar'
 import UsersNavBar from './components/navbar/UsersNavBar'
 import EmailVerifyPage from './pages/users/EmailVerifyPage'
 import UsersPage from './pages/users/UsersPage'
-import DashBoardPage from './pages/DashBoardPage'
+import DashBoardPage from './dashboards/MainDashBoardPage.tsx'
 import LeadsPage from './pages/crm/LeadsPage'
 import FlowsPage from './pages/bot/FlowsPage'
 import BackupPage from './pages/backup/BackupPage'
@@ -24,13 +24,8 @@ import ContactNavBar from './components/navbar/ContactNavBar'
 import ContactPage from './pages/contacts/ContactPage'
 import AlpsNavBar from './components/navbar/AlpsNavBar'
 import AlpsPage from './pages/alps/AlpsPage'
-import UsersHelpPage from './pages/users/UsersHelpPage'
 import CrmHelpPage from './pages/crm/CrmHelpPage'
 import BotHelpPage from './pages/bot/BotHelpPage'
-import TemplatesHelpPage from './pages/templates/TemplatesHelpPage'
-import BroadcastHelpPage from './pages/broadcast/BroadcastHelpPage'
-import ContactHelpPage from './pages/contacts/ContactHelpPage'
-import ReminderHelpPage from './pages/reminders/ReminderHelpPage'
 import CrmReminderPage from './pages/crm/CrmReminderPage'
 import CrmActivitiesPage from './pages/crm/CrmActivitiesPage'
 import TasksPage from './pages/tasks/TasksPage'
@@ -43,7 +38,6 @@ import CheckListHelpPage from './pages/checklists/CheckListHelpPage'
 import CheckListNavBar from './components/navbar/CheckListNavBar'
 import ReportsNavBar from './components/navbar/ReportsNavBar'
 import MyVisitPage from './pages/visit/MyVisitPage'
-import VisitHelpPage from './pages/visit/VisitHelpPage'
 import VisitNavBar from './components/navbar/MyVisitNavBar'
 import VisitAdminPage from './pages/visit/VisitAdminPage'
 import TodosPage from './pages/todo/TodosPage'
@@ -56,10 +50,9 @@ import GreetingsHelpPage from './pages/greetings/GreetingsHelpPage.tsx'
 import GreetingsPage from './pages/greetings/GreetingsPage.tsx'
 import GreetingsNavBar from './components/navbar/GreetingsNavBar.tsx'
 import PasswordsPage from './pages/passwords/PasswordsPage.tsx'
-import PasswordHelpPage from './pages/passwords/PasswordsHelpPage.tsx'
 import PasswordsAdminPage from './pages/passwords/PasswordsAdminPage.tsx'
 import PasswordNavbar from './components/navbar/PasswordNavbar.tsx'
-import AccessReportPage from './pages/users/FeatureAccessReportPage.tsx'
+import AccessReportPage from './pages/users/FeatureWiseAccessReportPage.tsx'
 import ProductionNavBar from './components/navbar/ProductionNavBar.tsx'
 import ProductionAdminPage from './pages/production/ProductionAdminPage.tsx'
 import RunningMouldPage from './pages/production/RunningMouldPage.tsx'
@@ -75,6 +68,23 @@ import MyDyeRepairPage from './pages/production/MyDyeRepairPage.tsx'
 import MyRunningMouldPage from './pages/production/MyRunningMouldPage.tsx'
 import VisitAttendencePage from './pages/visit/VisitAttendencePage.tsx'
 import UpdateMachineCategoriesPage from './pages/production/UpdateMachineCategoriesPage.tsx'
+import UsersDashboard from './dashboards/UsersDashboard.tsx'
+import VisitDashboard from './dashboards/VisitDashboard.tsx'
+import TodosDashboard from './dashboards/TodosDashboard.tsx'
+import ProductionDashboard from './dashboards/ProductionDashboard.tsx'
+import CrmDashboard from './dashboards/CrmDashboard.tsx'
+import BotDashboard from './dashboards/BotDashboard.tsx'
+import TemplatesDashboard from './dashboards/TemplatesDashboard.tsx'
+import BroadcastDashboard from './dashboards/BroadcastDashboard.tsx'
+import TasksDashboard from './dashboards/TasksDashboard.tsx'
+import ChecklistDashboard from './dashboards/ChecklistDashboard.tsx'
+import ContactsDashboard from './dashboards/ContactsDashboard.tsx'
+import ErpLoginDashboard from './dashboards/ErpLoginDashboard.tsx'
+import RemindersDashboard from './dashboards/RemindersDashboard.tsx'
+import GreetingsDashboard from './dashboards/GreetingsDashboard.tsx'
+import AlpsDashboard from './dashboards/AlpsDashboard.tsx'
+import BackupDashboard from './dashboards/BackupDashboard.tsx'
+import ReportsDashboard from './dashboards/ReportsDashboard.tsx'
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -85,44 +95,68 @@ const TrackersPage = React.lazy(() => import('./pages/bot/TrackersPage'))
 
 export enum paths {
 
-  //helppage
-  crm_help = "help/crm",
-  bot_help = "help/bot",
-  broadcast_help = "help/broadcast",
-  templates_help = "help/templates",
-  reminder_help = "help/reminder",
-  contact_help = "help/contact",
-  users_help = "help/users",
+  //dashboards
+  user_dashboard = "/user_dashboard",
+  crm_dashboard = "/crm_dashboard",
+  reports_dashboard = "/reports_dashboard",
+  todo_dashboard = "/todo_dashboard",
+  task_dashboard = "/task_dashboard",
+  production_dashboard = "/production_dashboard",
+  bot_dashboard = "/bot_dashboard",
+  reminder_dashboard = "/reminder_dashboard",
+  templates_dashboard = "/templates_dashboard",
+  broadcast_dashboard = "/broadcast_dashboard",
+  erp_login_dashboard = "/erp_login_dashboard",
+  backup_dashboard = "/backup_dashboard",
+  greetings_dashboard = "/greetings_dashboard",
+  checklist_dashboard = "/checklist_dashboard",
+  alps_dashboard = "/alps_dashboard",
+  contacts_dashboard = "/contacts_dashboard",
+  visit_dashboard = "/visit_dashboard",
+
+
+  //help pages
+  user_help_page = "user_help_page",
+  crm_help_page = "crm_help_page",
+  todo_help_page = "todo_help_page",
+  task_help_page = "task_help_page",
+  production_help_page = "production_help_page",
+  bot_help_page = "bot_help_page",
+  reminder_help_page = "reminder_help_page",
+  templates_help_page = "templates_help_page",
+  broadcast_help_page = "broadcast_help_page",
+  erp_login_help_page = "erp_login_help_page",
+  backup_help_page = "backup_help_page",
+  greetings_help_page = "greetings_help_page",
+  checklist_help_page = "checklist_help_page",
+  alps_help_page = "alps_help_page",
+  contacts_help_page = "contacts_help_page",
+  visits_help_page = "visits_help_page",
 
   //visit
   visit = 'visit',
   visit_admin = 'visit_admin',
   visit_attendence = 'visit_attendence',
-  visit_help = "visit_help",
 
   //task
-  tasks = "/tasks",
-  task_help_page = "task_help_page",
+  tasks = "tasks",
   task_admin_page = "task_admin_page",
 
   //todo
-  todos = "/todos",
-  todo_help_page = "todo_help_page",
+  todos = "todos",
   todo_admin_page = "todo_admin_page",
 
   //passwords
-  passwords = "/passwords",
-  password_help_page = "password_help_page",
+  passwords = "passwords",
   password_admin_page = "password_admin_page",
 
   //checklists
-  checklists = "/checklists",
-  checklist_help_page = "checklist_help_page",
+  checklists = "checklists",
   checklist_admin_page = "checklist_admin_page",
 
 
   //crm
-  crm = "/crm",
+  crm = "crm",
   crm_reminders = "crm_reminders",
   crm_activities = "crm_activities",
   leads = "leads",
@@ -132,7 +166,7 @@ export enum paths {
   useless_leads = "useless_leads",
 
   //production
-  production = "/production",
+  production = "production",
   machine_categories ="machine_categories",
   production_admin = "production_admin",
   shoe_weight = "shoe_weight",
@@ -144,26 +178,24 @@ export enum paths {
   machines = "machines",
   dyes = "dyes",
   articles = "articles",
-  production_help_page = "production_help_page",
 
   //bot
-  bot = "/bot",
+  bot = "bot",
   chats = "chats",
   flows = "flows",
   trackers = "trackers",
 
 
   //reports
-  reports = "/reports",
+  reports = "reports",
   leads_report = "leads_report",
   tour_reports = "tour_reports",
 
   //broadcast 
-  broadcast = "/broadcast",
+  broadcast = "broadcast",
 
   // greeting
-  greetings = "/greetings",
-  greetings_help_page = "greetings_help_page",
+  greetings = "greetings",
 
   //reminders
   reminders = "reminders",
@@ -173,11 +205,11 @@ export enum paths {
 
   // templates
   templates = "templates",
-  update_categories = "update_categories",
+  template_categories = "template_categories",
 
   //users
   users = "users",
-  users_reports = "users_reports",
+  feature_reports = "feature_reports",
   login = "/",
   dashboard = "/",
   reset_password = "/password/reset/:token",
@@ -185,6 +217,7 @@ export enum paths {
 
   //backup
   backup_page = "backup_page",
+
   //alps
   alps = "alps"
 }
@@ -208,10 +241,15 @@ function AppRoutes() {
             />
           </Route>
           {!user.user_access_fields.is_hidden &&
-            < Route path={paths.users} element={<UsersNavBar />}>
+            < Route path={paths.user_dashboard} element={<UsersNavBar />}>
               <Route index
                 element={
-                  <UsersPage />
+                  <UsersDashboard/>
+                }
+              />
+              <Route
+                path={paths.user_dashboard} element={
+                  <UsersDashboard />
                 }
               />
               <Route
@@ -221,21 +259,22 @@ function AppRoutes() {
               />
 
               <Route
-                path={paths.users_reports} element={
+                path={paths.feature_reports} element={
                   <AccessReportPage />
                 }
               />
-              <Route
-                path={paths.users_help} element={
-                  <UsersHelpPage />
-                }
-              />
+             
             </Route>}
           {!user.todos_access_fields.is_hidden &&
-            < Route path={paths.todos} element={<TodoNavBar />}>
+            < Route path={paths.todo_dashboard} element={<TodoNavBar />}>
               <Route index
                 element={
-                  <TodosPage />
+                  <TodosDashboard />
+                }
+              />
+              <Route
+                path={paths.todo_dashboard} element={
+                  <TodosDashboard />
                 }
               />
               <Route
@@ -255,10 +294,15 @@ function AppRoutes() {
               />
             </Route>}
           {!user.productions_access_fields.is_hidden &&
-            < Route path={paths.production} element={<ProductionNavBar />}>
+            < Route path={paths.production_dashboard} element={<ProductionNavBar />}>
               <Route index
                 element={
-                  <MyProductionPage />
+                  <ProductionDashboard />
+                }
+              />
+              <Route
+                path={paths.production_dashboard} element={
+                  <ProductionDashboard />
                 }
               />
               <Route
@@ -333,10 +377,15 @@ function AppRoutes() {
               />
             </Route>}
           {!user.visit_access_fields.is_hidden &&
-            < Route path={paths.visit} element={<VisitNavBar />}>
+            < Route path={paths.visit_dashboard} element={<VisitNavBar />}>
               <Route index
                 element={
-                  <MyVisitPage />
+                  <VisitDashboard />
+                }
+              />
+              <Route
+                path={paths.visit_dashboard} element={
+                  <VisitDashboard />
                 }
               />
               <Route
@@ -354,18 +403,18 @@ function AppRoutes() {
                   <VisitAdminPage />
                 }
               />
-              <Route
-                path={paths.visit_help} element={
-                  <VisitHelpPage />
-                }
-              />
+             
             </Route>}
 
           {!user.crm_access_fields.is_hidden &&
-            < Route path={paths.crm} element={<CrmNavBar />
+            < Route path={paths.crm_dashboard} element={<CrmNavBar />
             }>
               <Route index element={
-                <LeadsPage />
+                <CrmDashboard />
+              }
+              />
+              <Route path={paths.crm_dashboard} index element={
+                <Suspense fallback={<LinearProgress />}><CrmDashboard /></Suspense>
               }
               />
               <Route path={paths.leads} index element={
@@ -406,18 +455,22 @@ function AppRoutes() {
               />
 
               <Route
-                path={paths.crm_help} element={
+                path={paths.crm_help_page} element={
                   <CrmHelpPage />
                 }
               />
             </Route>}
           {!user.bot_access_fields.is_hidden &&
-            < Route path={paths.bot} element={<BotNavBar />
+            < Route path={paths.bot_dashboard} element={<BotNavBar />
             }>
               <Route
                 index element={
-                  <FlowsPage />
+                  <BotDashboard />
                 }
+              />
+              <Route path={paths.bot_dashboard} element={
+                < BotDashboard />
+              }
               />
               <Route path={paths.flows} element={
                 < FlowsPage />
@@ -435,64 +488,67 @@ function AppRoutes() {
               }
               />
               <Route
-                path={paths.bot_help} element={
+                path={paths.bot_help_page} element={
                   <BotHelpPage />
                 }
               />
             </Route>}
 
           {!user.templates_access_fields.is_hidden &&
-            < Route path={paths.templates} element={<TemplatesNavBar />
+            < Route path={paths.templates_dashboard} element={<TemplatesNavBar />
             }>
 
               <Route
                 index element={
-                  <TemplatesPage />
+                  <TemplatesDashboard />
                 }
+              />
+              <Route path={paths.templates_dashboard} element={
+                < TemplatesDashboard />
+              }
               />
               <Route path={paths.templates} element={
                 < TemplatesPage />
               }
               />
-              <Route path={paths.update_categories} element={
+              <Route path={paths.template_categories} element={
                 < UpdateTemplateCategoriesPage />
               }
               />
-              <Route
-                path={paths.templates_help} element={
-                  <TemplatesHelpPage />
-                }
-              />
+             
             </Route>}
 
           {!user.broadcast_access_fields.is_hidden &&
-            < Route path={paths.broadcast} element={<BroadcastNavBar />
+            < Route path={paths.broadcast_dashboard} element={<BroadcastNavBar />
             }>
               <Route
                 index element={
-                  <BroadcastPage />
+                  <BroadcastDashboard />
                 }
+              />
+              <Route path={paths.broadcast_dashboard} element={
+                < BroadcastDashboard />
+              }
               />
               <Route path={paths.broadcast} element={
                 < BroadcastPage />
               }
               />
-              <Route
-                path={paths.broadcast_help} element={
-                  <BroadcastHelpPage />
-                }
-              />
+             
 
             </Route>}
           {!user.tasks_access_fields.is_hidden &&
-            < Route path={paths.tasks} element={<TaskNavBar />
+            < Route path={paths.task_dashboard} element={<TaskNavBar />
             }>
               <Route
                 index element={
-                  <TasksPage />
+                  <TasksDashboard />
                 }
               />
-
+              <Route path={paths.task_dashboard} element={
+                < TasksDashboard />
+              }
+              />
               <Route path={paths.tasks} element={
                 < TasksPage />
               }
@@ -511,14 +567,17 @@ function AppRoutes() {
             </Route>}
 
           {!user.checklists_access_fields.is_hidden &&
-            < Route path={paths.checklists} element={<CheckListNavBar />
+            < Route path={paths.checklist_dashboard} element={<CheckListNavBar />
             }>
               <Route
                 index element={
-                  <CheckListPage />
+                  <ChecklistDashboard />
                 }
               />
-
+              <Route path={paths.checklist_dashboard} element={
+                < ChecklistDashboard />
+              }
+              />
               <Route path={paths.checklists} element={
                 < CheckListPage />
               }
@@ -538,12 +597,16 @@ function AppRoutes() {
             </Route>}
 
           {!user.reports_access_fields.is_hidden &&
-            < Route path={paths.reports} element={<ReportsNavBar />
+            < Route path={paths.reports_dashboard} element={<ReportsNavBar />
             }>
               <Route
                 index element={
-                  <VisitAdminPage />
+                  <ReportsDashboard />
                 }
+              />
+              <Route path={paths.reports_dashboard} element={
+                <ReportsDashboard />
+              }
               />
               <Route path={paths.tour_reports} element={
                 <VisitAdminPage />
@@ -556,31 +619,35 @@ function AppRoutes() {
             </Route>}
 
           {!user.contacts_access_fields.is_hidden &&
-            < Route path={paths.contacts} element={<ContactNavBar />
+            < Route path={paths.contacts_dashboard} element={<ContactNavBar />
             }>
               <Route
                 index element={
-                  <ContactPage />
+                  <ContactsDashboard />
                 }
+              />
+              <Route path={paths.contacts_dashboard} element={
+                < ContactsDashboard />
+              }
               />
               <Route path={paths.contacts} element={
                 < ContactPage />
               }
               />
-              <Route
-                path={paths.contact_help} element={
-                  <ContactHelpPage />
-                }
-              />
+            
 
             </Route>}
           {!user.passwords_access_fields.is_hidden &&
-            < Route path={paths.passwords} element={<PasswordNavbar />
+            < Route path={paths.erp_login_dashboard} element={<PasswordNavbar />
             }>
               <Route
                 index element={
-                  <PasswordsPage />
+                  <ErpLoginDashboard />
                 }
+              />
+              <Route path={paths.erp_login_dashboard} element={
+                < ErpLoginDashboard />
+              }
               />
               <Route path={paths.passwords} element={
                 < PasswordsPage />
@@ -590,38 +657,38 @@ function AppRoutes() {
                 < PasswordsAdminPage />
               }
               />
-              <Route
-                path={paths.password_help_page} element={
-                  <PasswordHelpPage />
-                }
-              />
+            
 
             </Route>}
           {!user.reminders_access_fields.is_hidden &&
-            < Route path={paths.reminders} element={<ReminderNavBar />
+            < Route path={paths.reminder_dashboard} element={<ReminderNavBar />
             }>
               <Route
                 index element={
-                  <ReminderPage />
+                  <RemindersDashboard />
                 }
+              />
+              <Route path={paths.reminder_dashboard} element={
+                < RemindersDashboard />
+              }
               />
               <Route path={paths.reminders} element={
                 < ReminderPage />
               }
               />
-              <Route
-                path={paths.reminder_help} element={
-                  <ReminderHelpPage />
-                }
-              />
+             
             </Route>}
           {!user.greetings_access_fields.is_hidden &&
-            < Route path={paths.greetings} element={<GreetingsNavBar />
+            < Route path={paths.greetings_dashboard} element={<GreetingsNavBar />
             }>
               <Route
                 index element={
-                  <GreetingsPage />
+                  <GreetingsDashboard />
                 }
+              />
+              <Route path={paths.greetings_dashboard} element={
+                < GreetingsDashboard />
+              }
               />
               <Route path={paths.greetings} element={
                 < GreetingsPage />
@@ -635,12 +702,16 @@ function AppRoutes() {
             </Route>}
 
           {!user.alps_access_fields.is_hidden &&
-            < Route path={paths.alps} element={<AlpsNavBar />
+            < Route path={paths.alps_dashboard} element={<AlpsNavBar />
             }>
               <Route
                 index element={
                   <AlpsPage />
                 }
+              />
+              <Route path={paths.alps_dashboard} element={
+                < AlpsDashboard />
+              }
               />
               <Route path={paths.alps} element={
                 < AlpsPage />
@@ -648,10 +719,15 @@ function AppRoutes() {
               />
             </Route>}
           {!user.backup_access_fields.is_hidden &&
-            <Route path={paths.backup_page} element={<DashBoardNavBar />}>
+            <Route path={paths.backup_dashboard} element={<DashBoardNavBar />}>
               <Route index
                 element={
-                  <BackupPage />
+                  <BackupDashboard />
+                }
+              />
+              <Route
+                path={paths.backup_dashboard} element={
+                  <BackupDashboard />
                 }
               />
               <Route

@@ -11,7 +11,7 @@ import AlertBar from '../../snacks/AlertBar';
 import { UpdateReminderWithMessage } from '../../../services/ReminderServices';
 import { GetContacts } from '../../../services/ContactServices';
 import FuzzySearch from "fuzzy-search";
-import SelectContactPage from '../../../pages/reminders/SelectContactPage';
+import SelectContactPage from '../../../pages/reminders/SelectContactBox';
 import { IReminder } from '../../../types/reminder.types';
 import { IContact } from '../../../types/contact.types';
 import { IUser } from '../../../types/user.types';

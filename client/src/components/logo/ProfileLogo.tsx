@@ -1,4 +1,4 @@
-import { Button, Menu, MenuItem } from '@mui/material'
+import { Avatar, Button, IconButton, Menu, MenuItem, Tooltip } from '@mui/material'
 import { useContext, useEffect } from 'react'
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -101,4 +101,25 @@ function ProfileMenu() {
     )
 }
 
-export default ProfileMenu
+
+function ProfileLogo() {
+    const { user } = useContext(UserContext)
+    const { setMenu } = useContext(MenuContext)
+    return (
+        <>
+            <Tooltip title={user?.username || "open settings"}>
+                <IconButton
+                    onClick={(e) => setMenu({ type: UserMenuActions.profile_menu, anchorEl: e.currentTarget })
+                    }
+                >
+                    <Avatar
+                        sx={{ width: 30, height: 30 }}
+                        alt="img1" src={user?.dp?.public_url} />
+                </IconButton>
+            </Tooltip>
+            <ProfileMenu />
+        </>
+    )
+}
+
+export default ProfileLogo
