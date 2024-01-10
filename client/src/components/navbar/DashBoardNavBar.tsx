@@ -58,6 +58,7 @@ export default function DashBoardNavBar() {
                                     alignItems="center"
                                     gap={2}
                                 >
+                                    
                                     <ProfileLogo />
 
                                 </Stack>

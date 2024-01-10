@@ -1,6 +1,5 @@
 import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
-import sortBy from "sort-by";
 import { Feature } from "../../types/access.types";
 import { paths } from "../../Routes";
 import { BlueAgarsonLogo } from "../../components/logo/Agarson";
@@ -16,6 +15,7 @@ function FeatureWiseAccessReportPage() {
         tmpfeatures.push({ feature: Feature.users, is_visible: true, url: paths.user_dashboard })
         tmpfeatures.push({ feature: Feature.todos, is_visible: true, url: paths.todo_dashboard })
         tmpfeatures.push({ feature: Feature.tasks, is_visible: true, url: paths.task_dashboard })
+        tmpfeatures.push({ feature: Feature.productions, is_visible: true, url: paths.production_dashboard })
         tmpfeatures.push({ feature: Feature.checklists, is_visible: true, url: paths.checklist_dashboard })
         tmpfeatures.push({ feature: Feature.crm, is_visible: true, url: paths.crm_dashboard })
         tmpfeatures.push({ feature: Feature.bot, is_visible: true, url: paths.bot_dashboard })
@@ -30,9 +30,7 @@ function FeatureWiseAccessReportPage() {
         tmpfeatures.push({ feature: Feature.erp_login, is_visible: true, url: paths.erp_login_dashboard })
         tmpfeatures.push({ feature: Feature.backup, is_visible: true, url: paths.backup_dashboard })
 
-
-        let sortedData = tmpfeatures.sort(sortBy('feature'))
-        setFeatures(sortedData)
+        setFeatures(tmpfeatures)
 
     }, [])
 

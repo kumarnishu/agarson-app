@@ -1,10 +1,9 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
-import { Box, Typography } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
+import { Box, Paper, Typography } from '@mui/material';
 import { paths } from '../../Routes';
-import AgarsonLogo from '../logo/Agarson';
+import AgarsonLogo, { BlueAgarsonLogo } from '../logo/Agarson';
 import ProfileLogo from '../logo/ProfileLogo';
 
 export const StyledLink = styled(Link)`
@@ -40,15 +39,16 @@ export default function UsersNavBar() {
                             gap={2}
                         >
 
-                            <StyledLink to={paths.user_dashboard}>
-                                <Stack flexDirection={'row'} gap={2}>
-                                    <HomeIcon sx={{ height: 30, width: 30 }} />
-
-                                    <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
-                                        Users
-                                    </Typography>
-                                </Stack>
-                            </StyledLink>
+                            <Link to={paths.user_dashboard} style={{ textDecoration: 'none' }}>
+                                <Paper sx={{ bgcolor: 'white', boxShadow: 1, border: 10, borderRadius: 1, borderColor: 'white' }}>
+                                    <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
+                                        <BlueAgarsonLogo width={20} height={20} title='users' />
+                                        <Typography variant="button" sx={{ fontSize: 12 }} component="div">
+                                            users
+                                        </Typography>
+                                    </Stack>
+                                </Paper>
+                            </Link>
                             <ProfileLogo />
                         </Stack>
 
