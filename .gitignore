@@ -5,6 +5,7 @@ node_modules
 dist
 build
 .env*
+visit_reports.pdf
 
 # vite gitignore files
 *.log
