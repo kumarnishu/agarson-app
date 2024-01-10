@@ -3,7 +3,6 @@ import { paths } from "../Routes"
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { BlueAgarsonLogo } from "../components/logo/Agarson";
-import sortBy from "sort-by";
 import { UserContext } from "../contexts/userContext";
 
 function ProductionDashboard() {
@@ -17,12 +16,17 @@ function ProductionDashboard() {
     tmpfeatures.push({ feature: 'my sole weight', is_visible: true, url: paths.my_shoe_weight })
     tmpfeatures.push({ feature: 'my dye repair', is_visible: true, url: paths.my_dye_repair })
     tmpfeatures.push({ feature: 'my running mould', is_visible: true, url: paths.my_running_mould })
-    user?.productions_access_fields.is_editable && tmpfeatures.push({ feature: 'production reports', is_visible: true, url: paths.production_admin })
-    user?.productions_access_fields.is_editable && tmpfeatures.push({ feature: 'sole weight reports', is_visible: true, url: paths.shoe_weight })
-    user?.productions_access_fields.is_editable && tmpfeatures.push({ feature: 'dye repair reports', is_visible: true, url: paths.dye_repair })
-    user?.productions_access_fields.is_editable && tmpfeatures.push({ feature: 'running mould reports', is_visible: true, url: paths.running_mould })
-    let sortedData = tmpfeatures.sort(sortBy('feature'))
-    setFeatures(sortedData)
+    if (user?.productions_access_fields.is_editable) {
+      tmpfeatures.push({ feature: 'production ', is_visible: true, url: paths.production_admin })
+      tmpfeatures.push({ feature: 'sole weight ', is_visible: true, url: paths.shoe_weight })
+      tmpfeatures.push({ feature: 'dye repair ', is_visible: true, url: paths.dye_repair })
+      tmpfeatures.push({ feature: 'running mould ', is_visible: true, url: paths.running_mould })
+      tmpfeatures.push({ feature: 'machines ', is_visible: true, url: paths.machines })
+      tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
+      tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })
+      tmpfeatures.push({ feature: 'articles', is_visible: true, url: paths.articles })
+    }
+    setFeatures(tmpfeatures)
   }, [])
 
   return (

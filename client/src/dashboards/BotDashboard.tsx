@@ -3,7 +3,6 @@ import { paths } from "../Routes"
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BlueAgarsonLogo } from "../components/logo/Agarson";
-import sortBy from "sort-by";
 
 function BotDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
@@ -14,8 +13,7 @@ function BotDashboard() {
     tmpfeatures.push({ feature: 'flows ', is_visible: true, url: paths.flows })
     tmpfeatures.push({ feature: 'trackers', is_visible: true, url: paths.trackers })
     tmpfeatures.push({ feature: 'chats backup', is_visible: true, url: paths.chats })
-    let sortedData = tmpfeatures.sort(sortBy('feature'))
-    setFeatures(sortedData)
+    setFeatures(tmpfeatures)
   }, [])
 
   return (

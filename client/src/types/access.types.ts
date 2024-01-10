@@ -13,7 +13,7 @@ export enum Feature {
     reports = "reports",
     visit = "visit",
     contacts = "contacts",
-    bot = "bot",
+    bot = "wa bot",
     broadcast = "broadcast",
     reminders = "reminders",
     backup = "backup",

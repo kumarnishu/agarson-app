@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext";
 import { BlueAgarsonLogo } from "../components/logo/Agarson";
-import sortBy from "sort-by";
 import { Feature } from "../types/access.types";
 
 function MainDashBoardPage() {
@@ -32,9 +31,7 @@ function MainDashBoardPage() {
     !user?.passwords_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.erp_login, is_visible: true, url: paths.erp_login_dashboard })
     !user?.backup_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.backup, is_visible: true, url: paths.backup_dashboard })
 
-    
-    let sortedData = tmpfeatures.sort(sortBy('feature'))
-    setFeatures(sortedData)
+    setFeatures(tmpfeatures)
 
   }, [user])
 

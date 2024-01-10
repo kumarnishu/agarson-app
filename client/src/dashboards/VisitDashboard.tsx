@@ -3,7 +3,7 @@ import { paths } from "../Routes"
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BlueAgarsonLogo } from "../components/logo/Agarson";
-import sortBy from "sort-by";
+
 
 function VisitDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
@@ -14,8 +14,7 @@ function VisitDashboard() {
     tmpfeatures.push({ feature: 'my visit ', is_visible: true, url: paths.visit })
     tmpfeatures.push({ feature: 'visit reports', is_visible: true, url: paths.visit_admin })
     tmpfeatures.push({ feature: 'visit attendence', is_visible: true, url: paths.visit_attendence })
-    let sortedData = tmpfeatures.sort(sortBy('feature'))
-    setFeatures(sortedData)
+    setFeatures(tmpfeatures)
   }, [])
 
   return (

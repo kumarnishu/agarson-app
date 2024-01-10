@@ -3,7 +3,6 @@ import { paths } from "../Routes"
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { BlueAgarsonLogo } from "../components/logo/Agarson";
-import sortBy from "sort-by";
 import { UserContext } from "../contexts/userContext";
 
 function TasksDashboard() {
@@ -14,8 +13,7 @@ function TasksDashboard() {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     tmpfeatures.push({ feature: 'my tasks ', is_visible: true, url: paths.tasks })
     user?.tasks_access_fields.is_editable && tmpfeatures.push({ feature: 'task admin', is_visible: true, url: paths.task_admin_page })
-    let sortedData = tmpfeatures.sort(sortBy('feature'))
-    setFeatures(sortedData)
+    setFeatures(tmpfeatures)
   }, [])
 
   return (

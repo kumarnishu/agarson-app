@@ -866,6 +866,7 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
     if (mobile !== user.mobile)
         mobileverified = false
     await User.findByIdAndUpdate(user.id, {
+        username,
         email,
         mobile,
         email_verified: emaileverified,

@@ -3,7 +3,6 @@ import { paths } from "../Routes"
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { BlueAgarsonLogo } from "../components/logo/Agarson";
-import sortBy from "sort-by";
 import { UserContext } from "../contexts/userContext";
 
 function ErpLoginDashboard() {
@@ -14,8 +13,7 @@ function ErpLoginDashboard() {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     tmpfeatures.push({ feature: 'erp passwords ', is_visible: true, url: paths.passwords })
     user?.passwords_access_fields.is_editable && tmpfeatures.push({ feature: 'erp passwords admin', is_visible: true, url: paths.password_admin_page })
-    let sortedData = tmpfeatures.sort(sortBy('feature'))
-    setFeatures(sortedData)
+    setFeatures(tmpfeatures)
   }, [])
 
   return (

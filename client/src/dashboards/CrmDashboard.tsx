@@ -3,7 +3,6 @@ import { paths } from "../Routes"
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { BlueAgarsonLogo } from "../components/logo/Agarson";
-import sortBy from "sort-by";
 import { UserContext } from "../contexts/userContext";
 
 function CrmDashboard() {
@@ -19,8 +18,7 @@ function CrmDashboard() {
     tmpfeatures.push({ feature: 'my reminders', is_visible: true, url: paths.crm_reminders })
     user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'lead fields', is_visible: true, url: paths.updateble_fields_lead })
     tmpfeatures.push({ feature: 'help', is_visible: true, url: paths.crm_help_page })
-    let sortedData = tmpfeatures.sort(sortBy('feature'))
-    setFeatures(sortedData)
+    setFeatures(tmpfeatures)
   }, [])
 
   return (
