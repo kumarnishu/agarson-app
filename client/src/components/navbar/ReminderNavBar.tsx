@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
 import { Box, Typography } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
@@ -44,9 +45,13 @@ export default function ReminderNavBar() {
                                     alignItems="center"
                                     gap={2}
                                 > <StyledLink to={paths.reminder_dashboard}>
-                                        <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
-                                            Home
-                                        </Typography>
+                                        <Stack flexDirection={'row'} gap={2}>
+                                            <HomeIcon sx={{ height: 30, width: 30 }} />
+
+                                            <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
+                                                Reminders
+                                            </Typography>
+                                        </Stack>
                                     </StyledLink>
                                     <ProfileLogo />
                                 </Stack>

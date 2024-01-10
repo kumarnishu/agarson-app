@@ -13,7 +13,7 @@ function ProductionDashboard() {
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-    user?.productions_access_fields.is_editable && tmpfeatures.push({ feature: 'my production ', is_visible: true, url: paths.production })
+    tmpfeatures.push({ feature: 'my production ', is_visible: true, url: paths.production })
     tmpfeatures.push({ feature: 'my sole weight', is_visible: true, url: paths.my_shoe_weight })
     tmpfeatures.push({ feature: 'my dye repair', is_visible: true, url: paths.my_dye_repair })
     tmpfeatures.push({ feature: 'my running mould', is_visible: true, url: paths.my_running_mould })

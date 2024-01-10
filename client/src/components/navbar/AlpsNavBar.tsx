@@ -7,6 +7,7 @@ import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
 import AgarsonLogo from '../logo/Agarson';
 import ProfileLogo from '../logo/ProfileLogo';
+import HomeIcon from '@mui/icons-material/Home';
 
 export const StyledLink = styled(Link)`
     text-decoration: none;
@@ -44,10 +45,15 @@ export default function AlpsNavBar() {
                                     justifyContent={"center"}
                                     alignItems="center"
                                     gap={2}
-                                > <StyledLink to={paths.alps_dashboard}>
-                                        <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
-                                            Home
-                                        </Typography>
+                                > 
+                                <StyledLink to={paths.alps_dashboard}>
+                                        <Stack flexDirection={'row'} gap={2}>
+                                            <HomeIcon sx={{ height: 30, width: 30 }} />
+
+                                            <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
+                                                Alps
+                                            </Typography>
+                                        </Stack>
                                     </StyledLink>
                                     <ProfileLogo />
                                 </Stack>

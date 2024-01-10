@@ -109,11 +109,12 @@ function ProfileLogo() {
         <>
             <Tooltip title={user?.username || "open settings"}>
                 <IconButton
+                    sx={{ border: 2, p: 0,mr:1, borderColor: 'white' }}
                     onClick={(e) => setMenu({ type: UserMenuActions.profile_menu, anchorEl: e.currentTarget })
                     }
                 >
                     <Avatar
-                        sx={{ width: 30, height: 30 }}
+                        sx={{ width: 28, height: 28 }}
                         alt="img1" src={user?.dp?.public_url} />
                 </IconButton>
             </Tooltip>

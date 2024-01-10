@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
 import { Box, Typography } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
 import { paths } from '../../Routes';
 import AgarsonLogo from '../logo/Agarson';
 import ProfileLogo from '../logo/ProfileLogo';
@@ -43,9 +44,13 @@ export default function ReportsNavBar() {
                         >
 
                             <StyledLink to={paths.reports_dashboard}>
-                                <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
-                                    Home
-                                </Typography>
+                                <Stack flexDirection={'row'} gap={2}>
+                                    <HomeIcon sx={{ height: 30, width: 30 }} />
+
+                                    <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
+                                        Reports
+                                    </Typography>
+                                </Stack>
                             </StyledLink>
                             <ProfileLogo />
                         </Stack>
