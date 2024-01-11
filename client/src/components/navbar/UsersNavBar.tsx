@@ -6,11 +6,13 @@ import { paths } from '../../Routes';
 import AgarsonLogo, { BlueAgarsonLogo } from '../logo/Agarson';
 import ProfileLogo from '../logo/ProfileLogo';
 
+
 export const StyledLink = styled(Link)`
     text-decoration: none;
     color:white;
 `
 export default function UsersNavBar() {
+   
     return (
         <>
             <Box sx={{ bgcolor: 'rgba(0,0,255,0.7)', width: '100%', p: 0.6 }}>
@@ -39,7 +41,7 @@ export default function UsersNavBar() {
                             gap={2}
                         >
 
-                            <Link to={paths.user_dashboard} style={{ textDecoration: 'none' }}>
+                            <Link to={paths.user_dashboard} replace={true} style={{ textDecoration: 'none' }}>
                                 <Paper sx={{ bgcolor: 'white', boxShadow: 1, border: 10, borderRadius: 1, borderColor: 'white' }}>
                                     <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                                         <BlueAgarsonLogo width={20} height={20} title='users' />

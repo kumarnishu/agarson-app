@@ -16,6 +16,7 @@ function CrmDashboard() {
     tmpfeatures.push({ feature: 'refers', is_visible: true, url: paths.refers })
     tmpfeatures.push({ feature: 'useless', is_visible: true, url: paths.useless_leads })
     tmpfeatures.push({ feature: 'my reminders', is_visible: true, url: paths.crm_reminders })
+    tmpfeatures.push({ feature: 'activities', is_visible: true, url: paths.crm_activities })
     user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'lead fields', is_visible: true, url: paths.updateble_fields_lead })
     tmpfeatures.push({ feature: 'help', is_visible: true, url: paths.crm_help_page })
     setFeatures(tmpfeatures)

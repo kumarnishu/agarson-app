@@ -1,6 +1,6 @@
 import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext";
 import { BlueAgarsonLogo } from "../components/logo/Agarson";
@@ -25,7 +25,7 @@ function MainDashBoardPage() {
     !user?.alps_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.alps, is_visible: true, url: paths.alps_dashboard })
     !user?.reminders_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.reminders, is_visible: true, url: paths.reminder_dashboard })
     !user?.templates_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.templates, is_visible: true, url: paths.templates_dashboard })
-    !user?.contacts_access_fields.is_hidden && tmpfeatures.push({ feature:Feature.contacts, is_visible: true, url: paths.contacts_dashboard })
+    !user?.contacts_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.contacts, is_visible: true, url: paths.contacts_dashboard })
     !user?.greetings_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.greetings, is_visible: true, url: paths.greetings_dashboard })
     !user?.broadcast_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.broadcast, is_visible: true, url: paths.broadcast_dashboard })
     !user?.passwords_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.erp_login, is_visible: true, url: paths.erp_login_dashboard })
@@ -55,7 +55,9 @@ function MainDashBoardPage() {
           )
         })}
       </Grid>
+      <Outlet />
     </>
+
   )
 }
 

@@ -2,89 +2,91 @@ import { LinearProgress } from '@mui/material'
 import React, { Suspense, useContext } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { UserContext } from './contexts/userContext'
-import LoginPage from './pages/users/LoginPage'
-import DashBoardNavBar from './components/navbar/DashBoardNavBar'
-import CrmNavBar from './components/navbar/CrmNavBar'
-import BotNavBar from './components/navbar/BotNavBar'
-import BroadcastNavBar from './components/navbar/BroadcastNavBar'
-import UsersNavBar from './components/navbar/UsersNavBar'
-import EmailVerifyPage from './pages/users/EmailVerifyPage'
-import UsersPage from './pages/users/UsersPage'
-import DashBoardPage from './dashboards/MainDashBoardPage.tsx'
-import LeadsPage from './pages/crm/LeadsPage'
-import FlowsPage from './pages/bot/FlowsPage'
-import BackupPage from './pages/backup/BackupPage'
-import BroadcastPage from './pages/broadcast/BroadcastPage'
-import UseLessLeadsPage from './pages/crm/UseLessLeadsPage'
-import TemplatesNavBar from './components/navbar/TemplatesNavBar'
-import TemplatesPage from './pages/templates/TemplatesPage'
-import ReminderNavBar from './components/navbar/ReminderNavBar'
-import ReminderPage from './pages/reminders/ReminderPage'
-import ContactNavBar from './components/navbar/ContactNavBar'
-import ContactPage from './pages/contacts/ContactPage'
-import AlpsNavBar from './components/navbar/AlpsNavBar'
-import AlpsPage from './pages/alps/AlpsPage'
-import CrmHelpPage from './pages/crm/CrmHelpPage'
-import BotHelpPage from './pages/bot/BotHelpPage'
-import CrmReminderPage from './pages/crm/CrmReminderPage'
-import CrmActivitiesPage from './pages/crm/CrmActivitiesPage'
-import TasksPage from './pages/tasks/TasksPage'
-import TaskHelpPage from './pages/tasks/TaskHelpPage'
-import TaskNavBar from './components/navbar/TaskNavBar'
-import TasksAdminPage from './pages/tasks/TasksAdminPage'
-import CheckListPage from './pages/checklists/CheckListPage'
-import CheckListAdminPage from './pages/checklists/CheckListAdminPage'
-import CheckListHelpPage from './pages/checklists/CheckListHelpPage'
-import CheckListNavBar from './components/navbar/CheckListNavBar'
-import ReportsNavBar from './components/navbar/ReportsNavBar'
-import MyVisitPage from './pages/visit/MyVisitPage'
-import VisitNavBar from './components/navbar/MyVisitNavBar'
-import VisitAdminPage from './pages/visit/VisitAdminPage'
-import TodosPage from './pages/todo/TodosPage'
-import TodoHelpPage from './pages/todo/TodoHelpPage'
-import TodosAdminPage from './pages/todo/TodosAdminPage'
-import TodoNavBar from './components/navbar/TodoNavBar'
-import ChatsPage from './pages/bot/ChatsPage'
-import UpdateTemplateCategoriesPage from './pages/templates/UpdateTemplateCategoriesPage.tsx'
-import GreetingsHelpPage from './pages/greetings/GreetingsHelpPage.tsx'
-import GreetingsPage from './pages/greetings/GreetingsPage.tsx'
-import GreetingsNavBar from './components/navbar/GreetingsNavBar.tsx'
-import PasswordsPage from './pages/passwords/PasswordsPage.tsx'
-import PasswordsAdminPage from './pages/passwords/PasswordsAdminPage.tsx'
-import PasswordNavbar from './components/navbar/PasswordNavbar.tsx'
-import AccessReportPage from './pages/users/FeatureWiseAccessReportPage.tsx'
-import ProductionNavBar from './components/navbar/ProductionNavBar.tsx'
-import ProductionAdminPage from './pages/production/ProductionAdminPage.tsx'
-import RunningMouldPage from './pages/production/RunningMouldPage.tsx'
-import DyeRepairPage from './pages/production/DyeRepairPage.tsx'
-import MachinesPage from './pages/production/MachinesPage.tsx'
-import DyesPage from './pages/production/DyesPage.tsx'
-import ArticlesPage from './pages/production/ArticlesPage.tsx'
-import ProductionHelpPage from './pages/production/ProductionHelpPage.tsx'
-import ShoeWeightPage from './pages/production/ShoeWeightPage.tsx'
-import MyProductionPage from './pages/production/MyProductionPage.tsx'
-import MyShoeWeightPage from './pages/production/MyShoeWeightPage.tsx'
-import MyDyeRepairPage from './pages/production/MyDyeRepairPage.tsx'
-import MyRunningMouldPage from './pages/production/MyRunningMouldPage.tsx'
-import VisitAttendencePage from './pages/visit/VisitAttendencePage.tsx'
-import UpdateMachineCategoriesPage from './pages/production/UpdateMachineCategoriesPage.tsx'
-import UsersDashboard from './dashboards/UsersDashboard.tsx'
-import VisitDashboard from './dashboards/VisitDashboard.tsx'
-import TodosDashboard from './dashboards/TodosDashboard.tsx'
-import ProductionDashboard from './dashboards/ProductionDashboard.tsx'
+
+import DashBoardNavBar from './components/navbar/DashBoardNavBar.tsx'
+import MainDashBoardPage from './dashboards/MainDashBoardPage.tsx'
+import CrmNavBar from './components/navbar/CrmNavBar.tsx'
+import BotNavBar from './components/navbar/BotNavBar.tsx'
 import CrmDashboard from './dashboards/CrmDashboard.tsx'
-import BotDashboard from './dashboards/BotDashboard.tsx'
+import UsersNavBar from './components/navbar/UsersNavBar'
+import UsersDashboard from './dashboards/UsersDashboard.tsx'
+import TodosDashboard from './dashboards/TodosDashboard.tsx'
+import TodoNavBar from './components/navbar/TodoNavBar'
+import ProductionNavBar from './components/navbar/ProductionNavBar.tsx'
+import ProductionDashboard from './dashboards/ProductionDashboard.tsx'
+import VisitNavBar from './components/navbar/MyVisitNavBar'
+import VisitDashboard from './dashboards/VisitDashboard.tsx'
+import TemplatesNavBar from './components/navbar/TemplatesNavBar'
 import TemplatesDashboard from './dashboards/TemplatesDashboard.tsx'
+import BroadcastNavBar from './components/navbar/BroadcastNavBar'
 import BroadcastDashboard from './dashboards/BroadcastDashboard.tsx'
+import TaskNavBar from './components/navbar/TaskNavBar'
 import TasksDashboard from './dashboards/TasksDashboard.tsx'
 import ChecklistDashboard from './dashboards/ChecklistDashboard.tsx'
-import ContactsDashboard from './dashboards/ContactsDashboard.tsx'
-import ErpLoginDashboard from './dashboards/ErpLoginDashboard.tsx'
-import RemindersDashboard from './dashboards/RemindersDashboard.tsx'
-import GreetingsDashboard from './dashboards/GreetingsDashboard.tsx'
-import AlpsDashboard from './dashboards/AlpsDashboard.tsx'
+import CheckListNavBar from './components/navbar/CheckListNavBar'
+import ReportsNavBar from './components/navbar/ReportsNavBar'
+import ReportsDashboard from './dashboards/ReportsDashboard'
+import ContactNavBar from './components/navbar/ContactNavBar'
+import PasswordNavbar from './components/navbar/PasswordNavbar.tsx'
+import ReminderNavBar from './components/navbar/ReminderNavBar'
+import GreetingsNavBar from './components/navbar/GreetingsNavBar.tsx'
+import AlpsNavBar from './components/navbar/AlpsNavBar'
 import BackupDashboard from './dashboards/BackupDashboard.tsx'
-import ReportsDashboard from './dashboards/ReportsDashboard.tsx'
+import AlpsDashboard from './dashboards/AlpsDashboard.tsx'
+import GreetingsDashboard from './dashboards/GreetingsDashboard.tsx'
+import RemindersDashboard from './dashboards/RemindersDashboard'
+import BotDashboard from './dashboards/BotDashboard.tsx'
+import ErpLoginDashboard from './dashboards/ErpLoginDashboard.tsx'
+import ContactsDashboard from './dashboards/ContactsDashboard.tsx'
+
+const ContactPage = React.lazy(() => import('./pages/contacts/ContactPage'))
+const LoginPage = React.lazy(() => import('./pages/users/LoginPage'))
+const EmailVerifyPage = React.lazy(() => import('./pages/users/EmailVerifyPage'))
+const UsersPage = React.lazy(() => import('./pages/users/UsersPage'))
+const FlowsPage = React.lazy(() => import('./pages/bot/FlowsPage'))
+const BackupPage = React.lazy(() => import('./pages/backup/BackupPage'))
+const BroadcastPage = React.lazy(() => import('./pages/broadcast/BroadcastPage'))
+const UseLessLeadsPage = React.lazy(() => import('./pages/crm/UseLessLeadsPage'))
+const TemplatesPage = React.lazy(() => import('./pages/templates/TemplatesPage'))
+const ReminderPage = React.lazy(() => import('./pages/reminders/ReminderPage'))
+const AlpsPage = React.lazy(() => import('./pages/alps/AlpsPage'))
+const CrmHelpPage = React.lazy(() => import('./pages/crm/CrmHelpPage'))
+const BotHelpPage = React.lazy(() => import('./pages/bot/BotHelpPage'))
+const CrmReminderPage = React.lazy(() => import('./pages/crm/CrmReminderPage'))
+const TasksPage = React.lazy(() => import('./pages/tasks/TasksPage'))
+const TaskHelpPage = React.lazy(() => import('./pages/tasks/TaskHelpPage'))
+const TasksAdminPage = React.lazy(() => import('./pages/tasks/TasksAdminPage'))
+const CheckListPage = React.lazy(() => import('./pages/checklists/CheckListPage'))
+const CheckListAdminPage = React.lazy(() => import('./pages/checklists/CheckListAdminPage'))
+const CheckListHelpPage = React.lazy(() => import('./pages/checklists/CheckListHelpPage'))
+const MyVisitPage = React.lazy(() => import('./pages/visit/MyVisitPage'))
+const VisitAdminPage = React.lazy(() => import('./pages/visit/VisitAdminPage'))
+const TodosPage = React.lazy(() => import('./pages/todo/TodosPage'))
+const TodoHelpPage = React.lazy(() => import('./pages/todo/TodoHelpPage'))
+const TodosAdminPage = React.lazy(() => import('./pages/todo/TodosAdminPage'))
+const ChatsPage = React.lazy(() => import('./pages/bot/ChatsPage'))
+const UpdateTemplateCategoriesPage = React.lazy(() => import('./pages/templates/UpdateTemplateCategoriesPage.tsx'))
+const GreetingsHelpPage = React.lazy(() => import('./pages/greetings/GreetingsHelpPage.tsx'))
+const GreetingsPage = React.lazy(() => import('./pages/greetings/GreetingsPage.tsx'))
+const PasswordsPage = React.lazy(() => import('./pages/passwords/PasswordsPage.tsx'))
+const PasswordsAdminPage = React.lazy(() => import('./pages/passwords/PasswordsAdminPage.tsx'))
+const AccessReportPage = React.lazy(() => import('./pages/users/FeatureWiseAccessReportPage.tsx'))
+const ProductionAdminPage = React.lazy(() => import('./pages/production/ProductionAdminPage.tsx'))
+const RunningMouldPage = React.lazy(() => import('./pages/production/RunningMouldPage.tsx'))
+const DyeRepairPage = React.lazy(() => import('./pages/production/DyeRepairPage.tsx'))
+const MachinesPage = React.lazy(() => import('./pages/production/MachinesPage.tsx'))
+const DyesPage = React.lazy(() => import('./pages/production/DyesPage.tsx'))
+const ArticlesPage = React.lazy(() => import('./pages/production/ArticlesPage.tsx'))
+const ProductionHelpPage = React.lazy(() => import('./pages/production/ProductionHelpPage.tsx'))
+const ShoeWeightPage = React.lazy(() => import('./pages/production/ShoeWeightPage.tsx'))
+const MyProductionPage = React.lazy(() => import('./pages/production/MyProductionPage.tsx'))
+const MyShoeWeightPage = React.lazy(() => import('./pages/production/MyShoeWeightPage.tsx'))
+const MyDyeRepairPage = React.lazy(() => import('./pages/production/MyDyeRepairPage.tsx'))
+const MyRunningMouldPage = React.lazy(() => import('./pages/production/MyRunningMouldPage.tsx'))
+const VisitAttendencePage = React.lazy(() => import('./pages/visit/VisitAttendencePage.tsx'))
+const UpdateMachineCategoriesPage = React.lazy(() => import('./pages/production/UpdateMachineCategoriesPage.tsx'))
+
+
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
@@ -92,6 +94,8 @@ const CustomersPage = React.lazy(() => import('./pages/crm/CustomersPage'))
 const ReferralPartyPage = React.lazy(() => import('./pages/crm/ReferralPartyPage'))
 const UpdateLeadFieldsPage = React.lazy(() => import('./pages/crm/UpdateLeadFieldsPage'))
 const TrackersPage = React.lazy(() => import('./pages/bot/TrackersPage'))
+const CrmActivitiesPage = React.lazy(() => import('./pages/crm/CrmActivitiesPage'))
+const LeadsPage = React.lazy(() => import('./pages/crm/LeadsPage'))
 
 export enum paths {
 
@@ -167,7 +171,7 @@ export enum paths {
 
   //production
   production = "production",
-  machine_categories ="machine_categories",
+  machine_categories = "machine_categories",
   production_admin = "production_admin",
   shoe_weight = "shoe_weight",
   dye_repair = "dye_repair",
@@ -236,7 +240,7 @@ function AppRoutes() {
             <Route
               path={paths.dashboard}
               element={
-                <DashBoardPage />
+                <MainDashBoardPage />
               }
             />
           </Route>
@@ -244,7 +248,7 @@ function AppRoutes() {
             < Route path={paths.user_dashboard} element={<UsersNavBar />}>
               <Route index
                 element={
-                  <UsersDashboard/>
+                  <UsersDashboard />
                 }
               />
               <Route
@@ -254,16 +258,16 @@ function AppRoutes() {
               />
               <Route
                 path={paths.users} element={
-                  <UsersPage />
+                  <Suspense fallback={<LinearProgress />}><UsersPage /></Suspense>
                 }
               />
 
               <Route
                 path={paths.feature_reports} element={
-                  <AccessReportPage />
+                  <Suspense fallback={<LinearProgress />}><AccessReportPage /></Suspense>
                 }
               />
-             
+
             </Route>}
           {!user.todos_access_fields.is_hidden &&
             < Route path={paths.todo_dashboard} element={<TodoNavBar />}>
@@ -279,17 +283,17 @@ function AppRoutes() {
               />
               <Route
                 path={paths.todos} element={
-                  <TodosPage />
+                  <Suspense fallback={<LinearProgress />}><TodosPage /></Suspense>
                 }
               />
               <Route
                 path={paths.todo_admin_page} element={
-                  <TodosAdminPage />
+                  <Suspense fallback={<LinearProgress />}><TodosAdminPage /></Suspense>
                 }
               />
               <Route
                 path={paths.todo_help_page} element={
-                  <TodoHelpPage />
+                  <Suspense fallback={<LinearProgress />}> <TodoHelpPage /></Suspense>
                 }
               />
             </Route>}
@@ -307,72 +311,72 @@ function AppRoutes() {
               />
               <Route
                 path={paths.production} element={
-                  <MyProductionPage />
+                  <Suspense fallback={<LinearProgress />}> <MyProductionPage /></Suspense>
                 }
               />
               <Route
                 path={paths.machine_categories} element={
-                  <UpdateMachineCategoriesPage />
+                  <Suspense fallback={<LinearProgress />}> <UpdateMachineCategoriesPage /></Suspense>
                 }
               />
               <Route
                 path={paths.production_admin} element={
-                  <ProductionAdminPage />
+                  <Suspense fallback={<LinearProgress />}> <ProductionAdminPage /></Suspense>
                 }
               />
               <Route
                 path={paths.running_mould} element={
-                  <RunningMouldPage />
+                  <Suspense fallback={<LinearProgress />}> <RunningMouldPage /></Suspense>
                 }
               />
               <Route
                 path={paths.dye_repair} element={
-                  <DyeRepairPage />
+                  <Suspense fallback={<LinearProgress />}> <DyeRepairPage /></Suspense>
                 }
               />
               <Route
                 path={paths.shoe_weight} element={
-                  <ShoeWeightPage />
+                  <Suspense fallback={<LinearProgress />}> <ShoeWeightPage /></Suspense>
                 }
               />
               <Route
                 path={paths.production} element={
-                  <MyProductionPage />
+                  <Suspense fallback={<LinearProgress />}> <MyProductionPage /></Suspense>
                 }
               />
               <Route
                 path={paths.my_running_mould} element={
-                  <MyRunningMouldPage />
+                  <Suspense fallback={<LinearProgress />}> <MyRunningMouldPage /></Suspense>
                 }
               />
               <Route
                 path={paths.my_dye_repair} element={
-                  <MyDyeRepairPage />
+                  <Suspense fallback={<LinearProgress />}> <MyDyeRepairPage /></Suspense>
                 }
               />
               <Route
                 path={paths.my_shoe_weight} element={
-                  <MyShoeWeightPage />
+                  <Suspense fallback={<LinearProgress />}> <MyShoeWeightPage /></Suspense>
                 }
               />
               <Route
                 path={paths.machines} element={
-                  <MachinesPage />
+                  <Suspense fallback={<LinearProgress />}> <MachinesPage /></Suspense>
                 }
               />
               <Route
                 path={paths.dyes} element={
-                  <DyesPage />
+                  <Suspense fallback={<LinearProgress />}> <DyesPage /></Suspense>
                 }
               />
               <Route
                 path={paths.articles} element={
-                  <ArticlesPage />
+                  <Suspense fallback={<LinearProgress />}> <ArticlesPage /></Suspense>
                 }
               />
               <Route
                 path={paths.production_help_page} element={
-                  <ProductionHelpPage />
+                  <Suspense fallback={<LinearProgress />}> <ProductionHelpPage /></Suspense>
                 }
               />
             </Route>}
@@ -390,20 +394,20 @@ function AppRoutes() {
               />
               <Route
                 path={paths.visit} element={
-                  <MyVisitPage />
+                  <Suspense fallback={<LinearProgress />}> <MyVisitPage /></Suspense>
                 }
               />
               <Route
                 path={paths.visit_attendence} element={
-                  <VisitAttendencePage />
+                  <Suspense fallback={<LinearProgress />}> <VisitAttendencePage /></Suspense>
                 }
               />
               <Route
                 path={paths.visit_admin} element={
-                  <VisitAdminPage />
+                  <Suspense fallback={<LinearProgress />}> <VisitAdminPage /></Suspense>
                 }
               />
-             
+
             </Route>}
 
           {!user.crm_access_fields.is_hidden &&
@@ -473,23 +477,23 @@ function AppRoutes() {
               }
               />
               <Route path={paths.flows} element={
-                < FlowsPage />
+                <Suspense fallback={<LinearProgress />}> < FlowsPage /></Suspense>
               }
               />
               <Route path={paths.chats} element={
-                < ChatsPage />
+                <Suspense fallback={<LinearProgress />}>  < ChatsPage /></Suspense>
               }
               />
 
               <Route path={paths.trackers} element={
                 <Suspense fallback={<LinearProgress />}>
-                  < TrackersPage />
+                  <Suspense fallback={<LinearProgress />}> < TrackersPage /></Suspense>
                 </Suspense>
               }
               />
               <Route
                 path={paths.bot_help_page} element={
-                  <BotHelpPage />
+                  <Suspense fallback={<LinearProgress />}>  <BotHelpPage /></Suspense>
                 }
               />
             </Route>}
@@ -508,14 +512,14 @@ function AppRoutes() {
               }
               />
               <Route path={paths.templates} element={
-                < TemplatesPage />
+                <Suspense fallback={<LinearProgress />}> < TemplatesPage /></Suspense>
               }
               />
               <Route path={paths.template_categories} element={
-                < UpdateTemplateCategoriesPage />
+                <Suspense fallback={<LinearProgress />}> < UpdateTemplateCategoriesPage /></Suspense>
               }
               />
-             
+
             </Route>}
 
           {!user.broadcast_access_fields.is_hidden &&
@@ -531,10 +535,10 @@ function AppRoutes() {
               }
               />
               <Route path={paths.broadcast} element={
-                < BroadcastPage />
+                <Suspense fallback={<LinearProgress />}> < BroadcastPage /></Suspense>
               }
               />
-             
+
 
             </Route>}
           {!user.tasks_access_fields.is_hidden &&
@@ -550,17 +554,17 @@ function AppRoutes() {
               }
               />
               <Route path={paths.tasks} element={
-                < TasksPage />
+                <Suspense fallback={<LinearProgress />}>  < TasksPage /></Suspense>
               }
               />
               < Route
                 path={paths.task_admin_page} element={
-                  <TasksAdminPage />
+                  <Suspense fallback={<LinearProgress />}> <TasksAdminPage /></Suspense>
                 }
               />
               <Route
                 path={paths.task_help_page} element={
-                  <TaskHelpPage />
+                  <Suspense fallback={<LinearProgress />}> <TaskHelpPage /></Suspense>
                 }
               />
 
@@ -579,18 +583,18 @@ function AppRoutes() {
               }
               />
               <Route path={paths.checklists} element={
-                < CheckListPage />
+                <Suspense fallback={<LinearProgress />}>< CheckListPage /></Suspense>
               }
               />
 
               <Route
                 path={paths.checklist_admin_page} element={
-                  <CheckListAdminPage />
+                  <Suspense fallback={<LinearProgress />}> <CheckListAdminPage /></Suspense>
                 }
               />
               <Route
                 path={paths.checklist_help_page} element={
-                  <CheckListHelpPage />
+                  <Suspense fallback={<LinearProgress />}><CheckListHelpPage /></Suspense>
                 }
               />
 
@@ -609,11 +613,11 @@ function AppRoutes() {
               }
               />
               <Route path={paths.tour_reports} element={
-                <VisitAdminPage />
+                <Suspense fallback={<LinearProgress />}><VisitAdminPage /></Suspense>
               }
               />
               <Route path={paths.leads_report} element={
-                < CrmActivitiesPage />
+                <Suspense fallback={<LinearProgress />}>< CrmActivitiesPage /></Suspense>
               }
               />
             </Route>}
@@ -631,10 +635,13 @@ function AppRoutes() {
               }
               />
               <Route path={paths.contacts} element={
-                < ContactPage />
+                <Suspense fallback={<LinearProgress />}>
+
+                  < ContactPage />
+                </Suspense>
               }
               />
-            
+
 
             </Route>}
           {!user.passwords_access_fields.is_hidden &&
@@ -650,14 +657,20 @@ function AppRoutes() {
               }
               />
               <Route path={paths.passwords} element={
-                < PasswordsPage />
+                <Suspense fallback={<LinearProgress />}>
+                  < PasswordsPage />
+                </Suspense>
+
               }
               />
               <Route path={paths.password_admin_page} element={
-                < PasswordsAdminPage />
+                <Suspense fallback={<LinearProgress />}>
+                  < PasswordsAdminPage />
+                </Suspense>
+
               }
               />
-            
+
 
             </Route>}
           {!user.reminders_access_fields.is_hidden &&
@@ -673,10 +686,12 @@ function AppRoutes() {
               }
               />
               <Route path={paths.reminders} element={
-                < ReminderPage />
+                <Suspense fallback={<LinearProgress />}>
+                  < ReminderPage />
+                </Suspense>
               }
               />
-             
+
             </Route>}
           {!user.greetings_access_fields.is_hidden &&
             < Route path={paths.greetings_dashboard} element={<GreetingsNavBar />
@@ -691,12 +706,18 @@ function AppRoutes() {
               }
               />
               <Route path={paths.greetings} element={
-                < GreetingsPage />
+                <Suspense fallback={<LinearProgress />}>
+
+                  < GreetingsPage />
+                </Suspense>
               }
               />
               <Route
                 path={paths.greetings_help_page} element={
-                  <GreetingsHelpPage />
+                  <Suspense fallback={<LinearProgress />}>
+
+                    <GreetingsHelpPage />
+                  </Suspense>
                 }
               />
             </Route>}
@@ -706,7 +727,7 @@ function AppRoutes() {
             }>
               <Route
                 index element={
-                  <AlpsPage />
+                  <AlpsDashboard />
                 }
               />
               <Route path={paths.alps_dashboard} element={
@@ -714,7 +735,9 @@ function AppRoutes() {
               }
               />
               <Route path={paths.alps} element={
-                < AlpsPage />
+                <Suspense fallback={<LinearProgress />}>
+                  < AlpsPage />
+                </Suspense>
               }
               />
             </Route>}
@@ -732,7 +755,7 @@ function AppRoutes() {
               />
               <Route
                 path={paths.backup_page} element={
-                  <BackupPage />
+                  <Suspense fallback={<LinearProgress />}><BackupPage /></Suspense>
                 }
               />
             </Route>}

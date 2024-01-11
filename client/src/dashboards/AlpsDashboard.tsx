@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BlueAgarsonLogo } from "../components/logo/Agarson";
 
-function TodosDashboard() {
+function AlpsDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
 
   //process feature and access
@@ -39,4 +39,4 @@ function TodosDashboard() {
 }
 
 
-export default TodosDashboard
+export default AlpsDashboard

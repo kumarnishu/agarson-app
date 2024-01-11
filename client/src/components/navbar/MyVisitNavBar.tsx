@@ -41,7 +41,7 @@ export default function VisitNavBar() {
                                     justifyContent={"center"}
                                     alignItems="center"
                                     gap={2}
-                                > <Link to={paths.visit_dashboard} style={{ textDecoration: 'none' }}>
+                                > <Link to={paths.visit_dashboard} replace={true} style={{ textDecoration: 'none' }}>
                                         <Paper sx={{ bgcolor: 'white', boxShadow: 1, border: 10, borderRadius: 1, borderColor: 'white' }}>
                                             <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                                                 <BlueAgarsonLogo width={20} height={20} title='users' />

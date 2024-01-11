@@ -27,7 +27,7 @@ export default function DashBoardNavBar() {
                         <StyledLink to={paths.dashboard}>
                             <AgarsonLogo width={35} height={35} title='Go To Dashboard' />
                         </StyledLink>
-                        <StyledLink to={paths.dashboard}>
+                        <StyledLink to={paths.dashboard} replace={true}>
                             <Typography component={"h1"} sx={{ fontWeight: 600, fontSize: 20, color: 'white' }} variant="button">
                                 Dashboard
                             </Typography>

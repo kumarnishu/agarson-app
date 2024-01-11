@@ -14,12 +14,12 @@ import { Login } from '../../../services/UserServices';
 import { IUser } from '../../../types/user.types';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
-
+import { Navigate } from "react-router-dom";
 
 function LoginForm() {
   const goto = useNavigate()
   const { mutate, data, isSuccess, isLoading, isError, error } = useMutation
-    <AxiosResponse<{user:IUser,token:string}>,
+    <AxiosResponse<{ user: IUser, token: string }>,
       BackendError,
       { username: string, password: string, multi_login_token?: string }
     >(Login)
@@ -64,80 +64,81 @@ function LoginForm() {
       setTimeout(() => {
         setUser(data.data.user)
         setChoice({ type: UserChoiceActions.close_user })
-        goto(paths.dashboard)
       }, 400)
     }
   }, [setUser, goto, setChoice, isSuccess, data])
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <>
+      {isSuccess && <Navigate to={paths.dashboard} replace={true} />}
+      <form onSubmit={formik.handleSubmit}>
 
-      <Stack
-        direction="column"
-        p={2}
-        gap={2}
-        sx={{ minWidth: '300px' }}
-      >
-        <TextField
-          variant="outlined"
-          focused
-          fullWidth
-          required
-          error={
-            formik.touched.username && formik.errors.username ? true : false
-          }
-          id="username"
-          label="Username or Email"
-          helperText={
-            formik.touched.username && formik.errors.username ? formik.errors.username : ""
-          }
-          {...formik.getFieldProps('username')}
-        />
-        <TextField
-          variant="outlined"
-          focused
-          required
+        <Stack
+          direction="column"
+          p={2}
+          gap={2}
+          sx={{ minWidth: '300px' }}
+        >
+          <TextField
+            variant="outlined"
+            focused
+            fullWidth
+            required
+            error={
+              formik.touched.username && formik.errors.username ? true : false
+            }
+            id="username"
+            label="Username or Email"
+            helperText={
+              formik.touched.username && formik.errors.username ? formik.errors.username : ""
+            }
+            {...formik.getFieldProps('username')}
+          />
+          <TextField
+            variant="outlined"
+            focused
+            required
 
-          error={
-            formik.touched.password && formik.errors.password ? true : false
+            error={
+              formik.touched.password && formik.errors.password ? true : false
+            }
+            id="password"
+            label="Password"
+            fullWidth
+            helperText={
+              formik.touched.password && formik.errors.password ? formik.errors.password : ""
+            }
+            type={visiblity ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handlePasswordVisibility}
+                    onMouseDown={(e) => handleMouseDown(e)}
+                  >
+                    {visiblity ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            {...formik.getFieldProps('password')}
+          />
+          {
+            isError ? (
+              <AlertBar message={error?.response.data.message} color="error" />
+            ) : null
           }
-          id="password"
-          label="Password"
-          fullWidth
-          helperText={
-            formik.touched.password && formik.errors.password ? formik.errors.password : ""
+          {
+            isSuccess ? (
+              <AlertBar message="logged in" color="success" />
+            ) : null
           }
-          type={visiblity ? "text" : "password"}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handlePasswordVisibility}
-                  onMouseDown={(e) => handleMouseDown(e)}
-                >
-                  {visiblity ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          {...formik.getFieldProps('password')}
-        />
-        {
-          isError ? (
-            <AlertBar message={error?.response.data.message} color="error" />
-          ) : null
-        }
-        {
-          isSuccess ? (
-            <AlertBar message="logged in" color="success" />
-          ) : null
-        }
-        <Button size="large" variant="contained"
-          disabled={Boolean(isLoading)}
-          type="submit" fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Login"}
-        </Button>
-      </Stack>
-    </form>
+          <Button size="large" variant="contained"
+            disabled={Boolean(isLoading)}
+            type="submit" fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Login"}
+          </Button>
+        </Stack>
+      </form></>
   )
 }
 
