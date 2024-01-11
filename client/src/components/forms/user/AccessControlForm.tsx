@@ -1227,7 +1227,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                     <AlertBar message="   Access For selected user updated successfully" color="success" />
                 ) : null
             }
-            <Stack gap={2}>
+            <Stack gap={2}pt={1}>
                 <Button fullWidth variant="contained" color="primary"
                     onClick={() => {
                         mutate({ id: user._id, access_fields: AccessFields })
