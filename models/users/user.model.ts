@@ -172,6 +172,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      default: []
     }
   ],
   last_login: {

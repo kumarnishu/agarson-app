@@ -480,6 +480,11 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
+    user.alps_access_fields = {
+        is_hidden: true,
+        is_editable: false,
+        is_deletion_allowed: false
+    }
     user.visit_access_fields = {
         is_hidden: true,
         is_editable: false,

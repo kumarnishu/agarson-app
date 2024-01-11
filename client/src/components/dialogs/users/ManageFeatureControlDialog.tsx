@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, CircularProgress, Dialog,  IconButton, Stack, Typography } from "@mui/material"
+import { Box, Button, Checkbox, CircularProgress, Dialog, IconButton, Stack, Typography } from "@mui/material"
 import { Cancel } from "@mui/icons-material"
 import { useContext, useEffect, useState } from "react"
 import { IUser } from "../../../types/user.types"
@@ -37,16 +37,193 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
 
     useEffect(() => {
         if (isUserSuccess) {
-            setSelectedData(usersData && usersData.data.map((user) => {
-                return {
-                    user: user._id, access: {
-                        is_editable: user.user_access_fields.is_editable,
-                        is_hidden: user.user_access_fields.is_hidden,
-                        is_deletion_allowed: user.user_access_fields.is_deletion_allowed
+            if (feature === Feature.users){
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.user_access_fields.is_editable,
+                            is_hidden: user.user_access_fields.is_hidden,
+                            is_deletion_allowed: user.user_access_fields.is_deletion_allowed
+                        }
                     }
-                }
-            }))
-
+                }))
+            }
+            if (feature === Feature.crm) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.crm_access_fields.is_editable,
+                            is_hidden: user.crm_access_fields.is_hidden,
+                            is_deletion_allowed: user.crm_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.todos) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.todos_access_fields.is_editable,
+                            is_hidden: user.todos_access_fields.is_hidden,
+                            is_deletion_allowed: user.todos_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.tasks) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.tasks_access_fields.is_editable,
+                            is_hidden: user.tasks_access_fields.is_hidden,
+                            is_deletion_allowed: user.tasks_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.productions) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.productions_access_fields.is_editable,
+                            is_hidden: user.productions_access_fields.is_hidden,
+                            is_deletion_allowed: user.productions_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.checklists) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.checklists_access_fields.is_editable,
+                            is_hidden: user.checklists_access_fields.is_hidden,
+                            is_deletion_allowed: user.checklists_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.bot) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.bot_access_fields.is_editable,
+                            is_hidden: user.bot_access_fields.is_hidden,
+                            is_deletion_allowed: user.bot_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.reports) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.reports_access_fields.is_editable,
+                            is_hidden: user.reports_access_fields.is_hidden,
+                            is_deletion_allowed: user.reports_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.visit) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.visit_access_fields.is_editable,
+                            is_hidden: user.visit_access_fields.is_hidden,
+                            is_deletion_allowed: user.visit_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.alps) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.alps_access_fields.is_editable,
+                            is_hidden: user.alps_access_fields.is_hidden,
+                            is_deletion_allowed: user.alps_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.reminders) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.reminders_access_fields.is_editable,
+                            is_hidden: user.reminders_access_fields.is_hidden,
+                            is_deletion_allowed: user.reminders_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.templates) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.templates_access_fields.is_editable,
+                            is_hidden: user.templates_access_fields.is_hidden,
+                            is_deletion_allowed: user.templates_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.contacts) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.contacts_access_fields.is_editable,
+                            is_hidden: user.contacts_access_fields.is_hidden,
+                            is_deletion_allowed: user.contacts_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.greetings) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.greetings_access_fields.is_editable,
+                            is_hidden: user.greetings_access_fields.is_hidden,
+                            is_deletion_allowed: user.greetings_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.broadcast) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.broadcast_access_fields.is_editable,
+                            is_hidden: user.broadcast_access_fields.is_hidden,
+                            is_deletion_allowed: user.broadcast_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.erp_login) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.passwords_access_fields.is_editable,
+                            is_hidden: user.passwords_access_fields.is_hidden,
+                            is_deletion_allowed: user.passwords_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
+            if (feature === Feature.backup) {
+                setSelectedData(usersData && usersData.data.map((user) => {
+                    return {
+                        user: user._id, access: {
+                            is_editable: user.backup_access_fields.is_editable,
+                            is_hidden: user.backup_access_fields.is_hidden,
+                            is_deletion_allowed: user.backup_access_fields.is_deletion_allowed
+                        }
+                    }
+                }))
+            }
         }
     }, [isUserSuccess])
 
