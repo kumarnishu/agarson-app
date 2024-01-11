@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, CircularProgress, Dialog, DialogTitle, IconButton, Stack, Typography } from "@mui/material"
+import { Box, Button, Checkbox, CircularProgress, Dialog,  IconButton, Stack, Typography } from "@mui/material"
 import { Cancel } from "@mui/icons-material"
 import { useContext, useEffect, useState } from "react"
 import { IUser } from "../../../types/user.types"
