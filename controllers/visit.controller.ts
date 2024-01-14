@@ -5,7 +5,6 @@ import { Visit } from "../models/visit/visit.model"
 import { VisitReport } from "../models/visit/visit.report.model"
 import { IUser } from "../types/user.types"
 
-
 // get attendence reports
 export const GetVisitsAttendence = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
@@ -91,12 +90,11 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
 }
 
 export const getMyTodayVisit = async (req: Request, res: Response, next: NextFunction) => {
-    let dt1 = new Date()
-    let dt2 = new Date()
-    dt2.setDate(new Date(dt1).getDate() + 1)
-    dt1.setHours(8)
-    dt1.setMinutes(0)
-    let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, person: req.user._id }).populate('visit_reports').populate('created_by').populate('updated_by')
+    let visits = await Visit.find({ person: req.user._id }).populate('visit_reports').populate('created_by').populate('updated_by')
+    let visit = visits.find((visit) => {
+        if (visit.created_at.getDate() === new Date().getDate() && visit.created_at.getMonth() === new Date().getMonth() && visit.created_at.getFullYear() === new Date().getFullYear() && visit.created_by.username === req.user.username)
+            return visit
+    })
     return res.status(200).json(visit)
 }
 
@@ -109,12 +107,12 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
     if (!start_day_credientials) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
-    let dt1 = new Date()
-    let dt2 = new Date()
-    dt2.setDate(new Date(dt1).getDate() + 1)
-    dt1.setHours(8)
-    dt1.setMinutes(0)
-    let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, person: req.user._id })
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 7
+    previous_date.setDate(day)
+
+    let visits = await Visit.find({ created_at: { $gte: previous_date } })
+    let visit = visits.find((visit) => visit.created_at.getDate() === new Date().getDate() && visit.created_at.getMonth() === new Date().getMonth() && visit.created_at.getFullYear() === new Date().getFullYear() && visit.created_by.username == req.user.username)
     if (visit)
         return res.status(403).json({ message: "day has already started" })
     let address = await (await fetch(`https://geocode.maps.co/reverse?lat=${start_day_credientials.latitude}&lon=${start_day_credientials.longitude}&&api_key=${process.env.GECODE_API_KEY}`)).json()
