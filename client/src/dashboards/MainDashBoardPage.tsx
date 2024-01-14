@@ -15,20 +15,20 @@ function MainDashBoardPage() {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     !user?.user_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.users, is_visible: true, url: paths.user_dashboard })
     !user?.productions_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.productions, is_visible: true, url: paths.production_dashboard })
-    !user?.todos_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.todos, is_visible: true, url: paths.todo_dashboard })
-    !user?.tasks_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.tasks, is_visible: true, url: paths.task_dashboard })
+   
     !user?.checklists_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.checklists, is_visible: true, url: paths.checklist_dashboard })
     !user?.crm_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.crm, is_visible: true, url: paths.crm_dashboard })
     !user?.bot_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.bot, is_visible: true, url: paths.bot_dashboard })
     !user?.reports_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.reports, is_visible: true, url: paths.reports_dashboard })
     !user?.visit_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.visit, is_visible: true, url: paths.visit_dashboard })
-    !user?.alps_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.alps, is_visible: true, url: paths.alps_dashboard })
-    !user?.reminders_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.reminders, is_visible: true, url: paths.reminder_dashboard })
+   
+   
     !user?.templates_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.templates, is_visible: true, url: paths.templates_dashboard })
-    !user?.contacts_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.contacts, is_visible: true, url: paths.contacts_dashboard })
+    
     !user?.greetings_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.greetings, is_visible: true, url: paths.greetings_dashboard })
-    !user?.broadcast_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.broadcast, is_visible: true, url: paths.broadcast_dashboard })
+   
     !user?.passwords_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.erp_login, is_visible: true, url: paths.erp_login_dashboard })
+    
     !user?.backup_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.backup, is_visible: true, url: paths.backup_dashboard })
 
     setFeatures(tmpfeatures)

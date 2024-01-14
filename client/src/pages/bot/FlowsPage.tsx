@@ -5,7 +5,6 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
 import FlowsTable from '../../components/tables/FlowsTable'
 import { BackendError } from '../..'
@@ -130,8 +129,7 @@ export default function FlowsPage() {
           direction="row"
         >
           {/* search bar */}
-          < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
-          }>
+          < Stack direction="row" spacing={2} >
             <TextField
               fullWidth
               size="small"

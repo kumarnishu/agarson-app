@@ -10,61 +10,37 @@ import BotNavBar from './components/navbar/BotNavBar.tsx'
 import CrmDashboard from './dashboards/CrmDashboard.tsx'
 import UsersNavBar from './components/navbar/UsersNavBar'
 import UsersDashboard from './dashboards/UsersDashboard.tsx'
-import TodosDashboard from './dashboards/TodosDashboard.tsx'
-import TodoNavBar from './components/navbar/TodoNavBar'
 import ProductionNavBar from './components/navbar/ProductionNavBar.tsx'
 import ProductionDashboard from './dashboards/ProductionDashboard.tsx'
 import VisitNavBar from './components/navbar/MyVisitNavBar'
 import VisitDashboard from './dashboards/VisitDashboard.tsx'
 import TemplatesNavBar from './components/navbar/TemplatesNavBar'
 import TemplatesDashboard from './dashboards/TemplatesDashboard.tsx'
-import BroadcastNavBar from './components/navbar/BroadcastNavBar'
-import BroadcastDashboard from './dashboards/BroadcastDashboard.tsx'
-import TaskNavBar from './components/navbar/TaskNavBar'
-import TasksDashboard from './dashboards/TasksDashboard.tsx'
 import ChecklistDashboard from './dashboards/ChecklistDashboard.tsx'
 import CheckListNavBar from './components/navbar/CheckListNavBar'
 import ReportsNavBar from './components/navbar/ReportsNavBar'
 import ReportsDashboard from './dashboards/ReportsDashboard'
-import ContactNavBar from './components/navbar/ContactNavBar'
 import PasswordNavbar from './components/navbar/PasswordNavbar.tsx'
-import ReminderNavBar from './components/navbar/ReminderNavBar'
 import GreetingsNavBar from './components/navbar/GreetingsNavBar.tsx'
-import AlpsNavBar from './components/navbar/AlpsNavBar'
 import BackupDashboard from './dashboards/BackupDashboard.tsx'
-import AlpsDashboard from './dashboards/AlpsDashboard.tsx'
 import GreetingsDashboard from './dashboards/GreetingsDashboard.tsx'
-import RemindersDashboard from './dashboards/RemindersDashboard'
 import BotDashboard from './dashboards/BotDashboard.tsx'
 import ErpLoginDashboard from './dashboards/ErpLoginDashboard.tsx'
-import ContactsDashboard from './dashboards/ContactsDashboard.tsx'
-
-const ContactPage = React.lazy(() => import('./pages/contacts/ContactPage'))
 const LoginPage = React.lazy(() => import('./pages/users/LoginPage'))
 const EmailVerifyPage = React.lazy(() => import('./pages/users/EmailVerifyPage'))
 const UsersPage = React.lazy(() => import('./pages/users/UsersPage'))
 const FlowsPage = React.lazy(() => import('./pages/bot/FlowsPage'))
 const BackupPage = React.lazy(() => import('./pages/backup/BackupPage'))
-const BroadcastPage = React.lazy(() => import('./pages/broadcast/BroadcastPage'))
 const UseLessLeadsPage = React.lazy(() => import('./pages/crm/UseLessLeadsPage'))
 const TemplatesPage = React.lazy(() => import('./pages/templates/TemplatesPage'))
-const ReminderPage = React.lazy(() => import('./pages/reminders/ReminderPage'))
-const AlpsPage = React.lazy(() => import('./pages/alps/AlpsPage'))
 const CrmHelpPage = React.lazy(() => import('./pages/crm/CrmHelpPage'))
 const BotHelpPage = React.lazy(() => import('./pages/bot/BotHelpPage'))
 const CrmReminderPage = React.lazy(() => import('./pages/crm/CrmReminderPage'))
-const TasksPage = React.lazy(() => import('./pages/tasks/TasksPage'))
-const TaskHelpPage = React.lazy(() => import('./pages/tasks/TaskHelpPage'))
-const TasksAdminPage = React.lazy(() => import('./pages/tasks/TasksAdminPage'))
 const CheckListPage = React.lazy(() => import('./pages/checklists/CheckListPage'))
 const CheckListAdminPage = React.lazy(() => import('./pages/checklists/CheckListAdminPage'))
 const CheckListHelpPage = React.lazy(() => import('./pages/checklists/CheckListHelpPage'))
 const MyVisitPage = React.lazy(() => import('./pages/visit/MyVisitPage'))
 const VisitAdminPage = React.lazy(() => import('./pages/visit/VisitAdminPage'))
-const TodosPage = React.lazy(() => import('./pages/todo/TodosPage'))
-const TodoHelpPage = React.lazy(() => import('./pages/todo/TodoHelpPage'))
-const TodosAdminPage = React.lazy(() => import('./pages/todo/TodosAdminPage'))
-const ChatsPage = React.lazy(() => import('./pages/bot/ChatsPage'))
 const UpdateTemplateCategoriesPage = React.lazy(() => import('./pages/templates/UpdateTemplateCategoriesPage.tsx'))
 const GreetingsHelpPage = React.lazy(() => import('./pages/greetings/GreetingsHelpPage.tsx'))
 const GreetingsPage = React.lazy(() => import('./pages/greetings/GreetingsPage.tsx'))
@@ -72,8 +48,6 @@ const PasswordsPage = React.lazy(() => import('./pages/passwords/PasswordsPage.t
 const PasswordsAdminPage = React.lazy(() => import('./pages/passwords/PasswordsAdminPage.tsx'))
 const AccessReportPage = React.lazy(() => import('./pages/users/FeatureWiseAccessReportPage.tsx'))
 const ProductionAdminPage = React.lazy(() => import('./pages/production/ProductionAdminPage.tsx'))
-const RunningMouldPage = React.lazy(() => import('./pages/production/RunningMouldPage.tsx'))
-const DyeRepairPage = React.lazy(() => import('./pages/production/DyeRepairPage.tsx'))
 const MachinesPage = React.lazy(() => import('./pages/production/MachinesPage.tsx'))
 const DyesPage = React.lazy(() => import('./pages/production/DyesPage.tsx'))
 const ArticlesPage = React.lazy(() => import('./pages/production/ArticlesPage.tsx'))
@@ -81,8 +55,6 @@ const ProductionHelpPage = React.lazy(() => import('./pages/production/Productio
 const ShoeWeightPage = React.lazy(() => import('./pages/production/ShoeWeightPage.tsx'))
 const MyProductionPage = React.lazy(() => import('./pages/production/MyProductionPage.tsx'))
 const MyShoeWeightPage = React.lazy(() => import('./pages/production/MyShoeWeightPage.tsx'))
-const MyDyeRepairPage = React.lazy(() => import('./pages/production/MyDyeRepairPage.tsx'))
-const MyRunningMouldPage = React.lazy(() => import('./pages/production/MyRunningMouldPage.tsx'))
 const VisitAttendencePage = React.lazy(() => import('./pages/visit/VisitAttendencePage.tsx'))
 const UpdateMachineCategoriesPage = React.lazy(() => import('./pages/production/UpdateMachineCategoriesPage.tsx'))
 
@@ -103,38 +75,26 @@ export enum paths {
   user_dashboard = "/user_dashboard",
   crm_dashboard = "/crm_dashboard",
   reports_dashboard = "/reports_dashboard",
-  todo_dashboard = "/todo_dashboard",
-  task_dashboard = "/task_dashboard",
   production_dashboard = "/production_dashboard",
   bot_dashboard = "/bot_dashboard",
-  reminder_dashboard = "/reminder_dashboard",
   templates_dashboard = "/templates_dashboard",
-  broadcast_dashboard = "/broadcast_dashboard",
   erp_login_dashboard = "/erp_login_dashboard",
   backup_dashboard = "/backup_dashboard",
   greetings_dashboard = "/greetings_dashboard",
   checklist_dashboard = "/checklist_dashboard",
-  alps_dashboard = "/alps_dashboard",
-  contacts_dashboard = "/contacts_dashboard",
   visit_dashboard = "/visit_dashboard",
 
 
   //help pages
   user_help_page = "user_help_page",
   crm_help_page = "crm_help_page",
-  todo_help_page = "todo_help_page",
-  task_help_page = "task_help_page",
   production_help_page = "production_help_page",
   bot_help_page = "bot_help_page",
-  reminder_help_page = "reminder_help_page",
   templates_help_page = "templates_help_page",
-  broadcast_help_page = "broadcast_help_page",
   erp_login_help_page = "erp_login_help_page",
   backup_help_page = "backup_help_page",
   greetings_help_page = "greetings_help_page",
   checklist_help_page = "checklist_help_page",
-  alps_help_page = "alps_help_page",
-  contacts_help_page = "contacts_help_page",
   visits_help_page = "visits_help_page",
 
   //visit
@@ -142,14 +102,8 @@ export enum paths {
   visit_admin = 'visit_admin',
   visit_attendence = 'visit_attendence',
 
-  //task
-  tasks = "tasks",
-  task_admin_page = "task_admin_page",
-
-  //todo
-  todos = "todos",
-  todo_admin_page = "todo_admin_page",
-
+ 
+  
   //passwords
   passwords = "passwords",
   password_admin_page = "password_admin_page",
@@ -174,18 +128,15 @@ export enum paths {
   machine_categories = "machine_categories",
   production_admin = "production_admin",
   shoe_weight = "shoe_weight",
-  dye_repair = "dye_repair",
-  running_mould = "running_mould",
+  
   my_shoe_weight = "my_shoe_weight",
-  my_dye_repair = "my_dye_repair",
-  my_running_mould = "my_running_mould",
+ 
   machines = "machines",
   dyes = "dyes",
   articles = "articles",
 
   //bot
   bot = "bot",
-  chats = "chats",
   flows = "flows",
   trackers = "trackers",
 
@@ -195,17 +146,10 @@ export enum paths {
   leads_report = "leads_report",
   tour_reports = "tour_reports",
 
-  //broadcast 
-  broadcast = "broadcast",
-
+  
   // greeting
   greetings = "greetings",
 
-  //reminders
-  reminders = "reminders",
-
-  //contacts
-  contacts = "contacts",
 
   // templates
   templates = "templates",
@@ -222,8 +166,7 @@ export enum paths {
   //backup
   backup_page = "backup_page",
 
-  //alps
-  alps = "alps"
+  
 }
 
 function AppRoutes() {
@@ -269,34 +212,7 @@ function AppRoutes() {
               />
 
             </Route>}
-          {!user.todos_access_fields.is_hidden &&
-            < Route path={paths.todo_dashboard} element={<TodoNavBar />}>
-              <Route index
-                element={
-                  <TodosDashboard />
-                }
-              />
-              <Route
-                path={paths.todo_dashboard} element={
-                  <TodosDashboard />
-                }
-              />
-              <Route
-                path={paths.todos} element={
-                  <Suspense fallback={<LinearProgress />}><TodosPage /></Suspense>
-                }
-              />
-              <Route
-                path={paths.todo_admin_page} element={
-                  <Suspense fallback={<LinearProgress />}><TodosAdminPage /></Suspense>
-                }
-              />
-              <Route
-                path={paths.todo_help_page} element={
-                  <Suspense fallback={<LinearProgress />}> <TodoHelpPage /></Suspense>
-                }
-              />
-            </Route>}
+         
           {!user.productions_access_fields.is_hidden &&
             < Route path={paths.production_dashboard} element={<ProductionNavBar />}>
               <Route index
@@ -324,16 +240,7 @@ function AppRoutes() {
                   <Suspense fallback={<LinearProgress />}> <ProductionAdminPage /></Suspense>
                 }
               />
-              <Route
-                path={paths.running_mould} element={
-                  <Suspense fallback={<LinearProgress />}> <RunningMouldPage /></Suspense>
-                }
-              />
-              <Route
-                path={paths.dye_repair} element={
-                  <Suspense fallback={<LinearProgress />}> <DyeRepairPage /></Suspense>
-                }
-              />
+             
               <Route
                 path={paths.shoe_weight} element={
                   <Suspense fallback={<LinearProgress />}> <ShoeWeightPage /></Suspense>
@@ -344,16 +251,7 @@ function AppRoutes() {
                   <Suspense fallback={<LinearProgress />}> <MyProductionPage /></Suspense>
                 }
               />
-              <Route
-                path={paths.my_running_mould} element={
-                  <Suspense fallback={<LinearProgress />}> <MyRunningMouldPage /></Suspense>
-                }
-              />
-              <Route
-                path={paths.my_dye_repair} element={
-                  <Suspense fallback={<LinearProgress />}> <MyDyeRepairPage /></Suspense>
-                }
-              />
+              
               <Route
                 path={paths.my_shoe_weight} element={
                   <Suspense fallback={<LinearProgress />}> <MyShoeWeightPage /></Suspense>
@@ -480,10 +378,7 @@ function AppRoutes() {
                 <Suspense fallback={<LinearProgress />}> < FlowsPage /></Suspense>
               }
               />
-              <Route path={paths.chats} element={
-                <Suspense fallback={<LinearProgress />}>  < ChatsPage /></Suspense>
-              }
-              />
+              
 
               <Route path={paths.trackers} element={
                 <Suspense fallback={<LinearProgress />}>
@@ -522,53 +417,8 @@ function AppRoutes() {
 
             </Route>}
 
-          {!user.broadcast_access_fields.is_hidden &&
-            < Route path={paths.broadcast_dashboard} element={<BroadcastNavBar />
-            }>
-              <Route
-                index element={
-                  <BroadcastDashboard />
-                }
-              />
-              <Route path={paths.broadcast_dashboard} element={
-                < BroadcastDashboard />
-              }
-              />
-              <Route path={paths.broadcast} element={
-                <Suspense fallback={<LinearProgress />}> < BroadcastPage /></Suspense>
-              }
-              />
-
-
-            </Route>}
-          {!user.tasks_access_fields.is_hidden &&
-            < Route path={paths.task_dashboard} element={<TaskNavBar />
-            }>
-              <Route
-                index element={
-                  <TasksDashboard />
-                }
-              />
-              <Route path={paths.task_dashboard} element={
-                < TasksDashboard />
-              }
-              />
-              <Route path={paths.tasks} element={
-                <Suspense fallback={<LinearProgress />}>  < TasksPage /></Suspense>
-              }
-              />
-              < Route
-                path={paths.task_admin_page} element={
-                  <Suspense fallback={<LinearProgress />}> <TasksAdminPage /></Suspense>
-                }
-              />
-              <Route
-                path={paths.task_help_page} element={
-                  <Suspense fallback={<LinearProgress />}> <TaskHelpPage /></Suspense>
-                }
-              />
-
-            </Route>}
+         
+          
 
           {!user.checklists_access_fields.is_hidden &&
             < Route path={paths.checklist_dashboard} element={<CheckListNavBar />
@@ -622,28 +472,7 @@ function AppRoutes() {
               />
             </Route>}
 
-          {!user.contacts_access_fields.is_hidden &&
-            < Route path={paths.contacts_dashboard} element={<ContactNavBar />
-            }>
-              <Route
-                index element={
-                  <ContactsDashboard />
-                }
-              />
-              <Route path={paths.contacts_dashboard} element={
-                < ContactsDashboard />
-              }
-              />
-              <Route path={paths.contacts} element={
-                <Suspense fallback={<LinearProgress />}>
-
-                  < ContactPage />
-                </Suspense>
-              }
-              />
-
-
-            </Route>}
+         
           {!user.passwords_access_fields.is_hidden &&
             < Route path={paths.erp_login_dashboard} element={<PasswordNavbar />
             }>
@@ -673,26 +502,7 @@ function AppRoutes() {
 
 
             </Route>}
-          {!user.reminders_access_fields.is_hidden &&
-            < Route path={paths.reminder_dashboard} element={<ReminderNavBar />
-            }>
-              <Route
-                index element={
-                  <RemindersDashboard />
-                }
-              />
-              <Route path={paths.reminder_dashboard} element={
-                < RemindersDashboard />
-              }
-              />
-              <Route path={paths.reminders} element={
-                <Suspense fallback={<LinearProgress />}>
-                  < ReminderPage />
-                </Suspense>
-              }
-              />
-
-            </Route>}
+         
           {!user.greetings_access_fields.is_hidden &&
             < Route path={paths.greetings_dashboard} element={<GreetingsNavBar />
             }>
@@ -722,25 +532,7 @@ function AppRoutes() {
               />
             </Route>}
 
-          {!user.alps_access_fields.is_hidden &&
-            < Route path={paths.alps_dashboard} element={<AlpsNavBar />
-            }>
-              <Route
-                index element={
-                  <AlpsDashboard />
-                }
-              />
-              <Route path={paths.alps_dashboard} element={
-                < AlpsDashboard />
-              }
-              />
-              <Route path={paths.alps} element={
-                <Suspense fallback={<LinearProgress />}>
-                  < AlpsPage />
-                </Suspense>
-              }
-              />
-            </Route>}
+          
           {!user.backup_access_fields.is_hidden &&
             <Route path={paths.backup_dashboard} element={<DashBoardNavBar />}>
               <Route index

@@ -1,11 +1,10 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
-import { AssignFlow, CreateFlow, DeleteTracker, DestroyFlow, FuzzySearchTrackers, GetConnectedUsers, GetFlows, GetTrackers, GetWhatsappChats, ResetTrackers, ToogleFlowStatus, ToogleTrackerStatus, UpdateFlow, UpdateTrackerName } from "../controllers/bot.controller";
+import { AssignFlow, CreateFlow, DeleteTracker, DestroyFlow, FuzzySearchTrackers, GetConnectedUsers, GetFlows, GetTrackers,  ResetTrackers, ToogleFlowStatus, ToogleTrackerStatus, UpdateFlow, UpdateTrackerName } from "../controllers/bot.controller";
 
 const router = express.Router()
 
 router.route("/flows").get(isAuthenticatedUser, GetFlows)
-router.route("/chats").get(isAuthenticatedUser, GetWhatsappChats)
 router.route("/flows").post(isAuthenticatedUser, CreateFlow)
 router.route("/flows/:id").delete(isAuthenticatedUser, DestroyFlow)
 router.route("/flows/:id").put(isAuthenticatedUser, UpdateFlow)

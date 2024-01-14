@@ -1,13 +1,12 @@
 import { Position } from "reactflow"
 import CustomHandle from "./CustomHandle"
-import { darkColor } from "../../utils/colors"
 import { Stack, Typography } from "@mui/material"
 
 
 export function StartNode({ data }: { data: any }) {
     return (
         <>
-            <Stack sx={{ backgroundColor: darkColor, border: '5', borderColor: 'white', color: 'white', borderRadius: 2, p: 1 }}>
+            <Stack sx={{ backgroundColor: 'black', border: '5', borderColor: 'white', color: 'white', borderRadius: 2, p: 1 }}>
                 {data.media_value || "type trigger keywords"}
             </Stack>
             <CustomHandle type="source" position={Position.Bottom} isConnectable={1} />

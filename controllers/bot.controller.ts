@@ -6,7 +6,6 @@ import { User } from "../models/users/user.model";
 import isMongoId from "validator/lib/isMongoId";
 import { IUser } from "../types/user.types";
 import { IMenuTracker, TFlowBody, TrackerBody } from "../types/bot.types";
-import { Chat } from "../models/bot/chat.model";
 
 //get
 export const GetFlows = async (req: Request, res: Response, next: NextFunction) => {
@@ -41,11 +40,7 @@ export const GetTrackers = async (req: Request, res: Response, next: NextFunctio
         return res.status(500).json({ message: "bad request" })
 }
 
-export const GetWhatsappChats = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = req.query.limit
-    let chats = await Chat.find({ connected_number: process.env.WAPHONE }).sort('-timestamp').limit(Number(limit))
-    return res.status(200).json(chats)
-}
+
 
 export const FuzzySearchTrackers = async (req: Request, res: Response, next: NextFunction) => {
     let key = String(req.query.key).toLowerCase()

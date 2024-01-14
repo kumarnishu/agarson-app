@@ -4,7 +4,7 @@ export type IChecklist = {
     _id: string,
     title: string,
     sheet_url: string,
-    serial_no: number,
+    serial_no:number,
     boxes: {
         desired_date: Date,
         actual_date?: Date,

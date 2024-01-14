@@ -43,8 +43,8 @@ export type IReferredParty = {
     name: string,
     customer_name: string,
     mobile: string,
-    city: string,
     lead_owners: IUser[],
+    city: string,
     state: string,
     created_at: Date,
     updated_at: Date,
@@ -55,14 +55,15 @@ export type IRemark = {
     _id: string,
     remark: string,
     lead: ILead,
-    remind_date:Date,
     created_at: Date,
+    remind_date: Date,
     updated_at: Date,
     created_by: IUser,
     updated_by: IUser
 }
 export type TRemarkBody = Request['body'] & IRemark;
 export type TReferredPartyBody = Request['body'] & IReferredParty;
+
 export type ILead = {
     _id: string,
     name: string,
@@ -87,6 +88,7 @@ export type ILead = {
     lead_owners: IUser[],
     visiting_card: Asset,
     is_customer: boolean,
+    brijesh_input: { input: string, created_by: IUser, timestamp: Date }
     referred_party?: IReferredParty,
     referred_party_name?: string,
     referred_party_mobile?: string,

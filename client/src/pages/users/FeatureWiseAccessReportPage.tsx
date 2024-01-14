@@ -13,20 +13,14 @@ function FeatureWiseAccessReportPage() {
     useEffect(() => {
         let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
         tmpfeatures.push({ feature: Feature.users, is_visible: true, url: paths.user_dashboard })
-        tmpfeatures.push({ feature: Feature.todos, is_visible: true, url: paths.todo_dashboard })
-        tmpfeatures.push({ feature: Feature.tasks, is_visible: true, url: paths.task_dashboard })
         tmpfeatures.push({ feature: Feature.productions, is_visible: true, url: paths.production_dashboard })
         tmpfeatures.push({ feature: Feature.checklists, is_visible: true, url: paths.checklist_dashboard })
         tmpfeatures.push({ feature: Feature.crm, is_visible: true, url: paths.crm_dashboard })
         tmpfeatures.push({ feature: Feature.bot, is_visible: true, url: paths.bot_dashboard })
         tmpfeatures.push({ feature: Feature.reports, is_visible: true, url: paths.reports_dashboard })
         tmpfeatures.push({ feature: Feature.visit, is_visible: true, url: paths.visit_dashboard })
-        tmpfeatures.push({ feature: Feature.alps, is_visible: true, url: paths.alps_dashboard })
-        tmpfeatures.push({ feature: Feature.reminders, is_visible: true, url: paths.reminder_dashboard })
         tmpfeatures.push({ feature: Feature.templates, is_visible: true, url: paths.templates_dashboard })
-        tmpfeatures.push({ feature: Feature.contacts, is_visible: true, url: paths.contacts_dashboard })
         tmpfeatures.push({ feature: Feature.greetings, is_visible: true, url: paths.greetings_dashboard })
-        tmpfeatures.push({ feature: Feature.broadcast, is_visible: true, url: paths.broadcast_dashboard })
         tmpfeatures.push({ feature: Feature.erp_login, is_visible: true, url: paths.erp_login_dashboard })
         tmpfeatures.push({ feature: Feature.backup, is_visible: true, url: paths.backup_dashboard })
 

@@ -9,26 +9,17 @@ import { connectDatabase } from './config/db';
 import UserRoutes from "./routes/user.routes";
 import LeadRoutes from "./routes/lead.routes";
 import BotRoutes from "./routes/bot.routes";
-import BroadCastRoutes from "./routes/brodcast.route";
-import ContactRoutes from "./routes/contact.routes";
-import ReminderRoutes from "./routes/reminder.route";
 import WaTemplateRoutes from "./routes/watemplate.routes";
-import AlpsRoutes from "./routes/alps.route";
 import CheckListkRoutes from "./routes/checklist.routes";
-import TaskRoutes from "./routes/task.routes";
 import VisitRoutes from "./routes/visit.routes";
 import GreetingRoutes from "./routes/greeting.route";
 import PasswordRoutes from "./routes/password.routes";
-import TodoRoutes from "./routes/todo.routes";
 import ProductionRoutes from "./routes/production.routes";
 import CronJobManager from "cron-job-manager";
-
-
 import path from 'path';
 import morgan from "morgan";
 import { Server } from "socket.io";
 import { createWhatsappClient, getCurrentUser, userJoin, userLeave } from "./utils/CreateWhatsappClient";
-import { ReConnectWhatsapp } from './utils/RestartServices';
 import { Storage } from '@google-cloud/storage';
 
 
@@ -64,15 +55,7 @@ if (ENV === "development") {
     }))
 }
 
-if (ENV === "production") {
-    if (process.env.ALPS_URL) {
-        origin = process.env.ALPS_URL
-        app.use(cors({
-            origin: [origin],
-            credentials: true
-        }))
-    }
-}
+
 let io: Server | undefined = undefined
 io = new Server(server, {
     cors: {
@@ -118,9 +101,6 @@ export const bucketName = String(process.env.bucketName)
 export const bucket = storage.bucket(bucketName)
 
 
-// restart jobs when restart server
-ReConnectWhatsapp()
-
 export const ReminderManager = new CronJobManager()
 export const GreetingManager = new CronJobManager()
 export const BroadcastManager = new CronJobManager()
@@ -130,16 +110,10 @@ app.use("/api/v1", UserRoutes)
 app.use("/api/v1", LeadRoutes)
 app.use("/api/v1", BotRoutes)
 app.use("/api/v1", WaTemplateRoutes)
-app.use("/api/v1", BroadCastRoutes)
-app.use("/api/v1", ReminderRoutes)
-app.use("/api/v1", ContactRoutes)
-app.use("/api/v1", AlpsRoutes)
-app.use("/api/v1", TaskRoutes)
 app.use("/api/v1", CheckListkRoutes)
 app.use("/api/v1", VisitRoutes)
 app.use("/api/v1", PasswordRoutes)
 app.use("/api/v1", ProductionRoutes)
-app.use("/api/v1", TodoRoutes)
 app.use("/api/v1", GreetingRoutes)
 
 

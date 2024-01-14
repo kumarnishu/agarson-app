@@ -129,7 +129,7 @@ export default function MachinePage() {
           direction="row"
         >
           {LoggedInUser?.productions_access_fields.is_editable ?
-            < UploadMachinesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
+            < UploadMachinesFromExcelButton disabled={Boolean(!LoggedInUser?.productions_access_fields.is_editable)} /> : null}
           {/* search bar */}
           < Stack direction="row" spacing={2} >
             <FormControlLabel control={<Switch

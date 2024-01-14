@@ -1,22 +1,17 @@
 import React, { useReducer } from "react"
 
 type UserMenu = "profile_menu" | "close_user_menu" | "user_menu"
-
 type CrmMenu = | "close_crm_menu" | "crm_menu"
 type VisitMenu = | "close_visit_menu" | "visit_menu"
 type ReportMenu = | "close_report_menu" | "report_menu"
-
 type CheckListMenu = "close_checklist_menu" | "checklist_menu"
 type BotMenu = "close_bot_menu" | "bot_menu"
-
-type TaskMenu = "close_task_menu" | "task_menu"
 type PasswordMenu = "close_password_menu" | "password_menu"
-type TodoMenu = "close_todo_menu" | "todo_menu"
 type ProductionMenu = "close_production_menu" | "production_menu"
 
 
 type MenuState = {
-    type: UserMenu | CrmMenu | BotMenu | CheckListMenu | PasswordMenu | TaskMenu | null | VisitMenu | ReportMenu | TodoMenu | ProductionMenu
+    type: UserMenu | CrmMenu | BotMenu | CheckListMenu | PasswordMenu  | null | VisitMenu | ReportMenu  | ProductionMenu
     anchorEl: HTMLElement | null
 }
 
@@ -71,7 +66,7 @@ export enum UserMenuActions {
 }
 
 type Action = {
-    type: UserMenuActions | CrmMenuActions | BotMenuActions | CheckListMenuActions | TaskMenuActions | ReportsMenuActions | VisitMenuActions | PasswordMenuActions | TodoMenuActions | ProductionMenuActions
+    type: UserMenuActions | CrmMenuActions | BotMenuActions | CheckListMenuActions  | ReportsMenuActions | VisitMenuActions | PasswordMenuActions  | ProductionMenuActions
     anchorEl: HTMLElement | null
 }
 
@@ -93,9 +88,6 @@ function reducer(state: MenuState | null, action: Action) {
         case ProductionMenuActions.close_production_menu: return action
         case ProductionMenuActions.production_menu: return action
 
-        case TodoMenuActions.close_todo_menu: return action
-        case TodoMenuActions.todo_menu: return action
-
         // visit
         case VisitMenuActions.close_visit_menu: return action
         case VisitMenuActions.visit_menu: return action
@@ -115,11 +107,6 @@ function reducer(state: MenuState | null, action: Action) {
 
         case PasswordMenuActions.close_password_menu: return action
         case PasswordMenuActions.password_menu: return action
-        // task menu action
-        case TaskMenuActions.close_task_menu: return action
-        case TaskMenuActions.task_menu: return action
-
-
         default: return state
     }
 }

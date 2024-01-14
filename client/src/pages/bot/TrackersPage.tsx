@@ -6,7 +6,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import DBPagination from '../../components/pagination/DBpagination';
 import TrackersTable from '../../components/tables/TrackersTable';
-import ReactPagination from '../../components/pagination/ReactPagination'
 import { FuzzySearchTrackers, GetTrackers, ResetTrackers } from '../../services/BotServices'
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
@@ -241,22 +240,19 @@ export default function TrackersPage() {
             </Stack>
             {/* table */}
             {isLoading && <TableSkeleton />}
-            {!isLoading && 
-            <TrackersTable
-                tracker={tracker}
-                setTracker={setTracker}
-                selectAll={selectAll}
-                selectedTrackers={selectedTrackers}
-                setSelectedTrackers={setSelectedTrackers}
-                setSelectAll={setSelectAll}
-                trackers={filter ? currentItems : MemoData}
-                selectableTrackers={filter ? allfuzzytrackers : trackers}
-            />}
+            {!isLoading &&
+                <TrackersTable
+                    tracker={tracker}
+                    setTracker={setTracker}
+                    selectAll={selectAll}
+                    selectedTrackers={selectedTrackers}
+                    setSelectedTrackers={setSelectedTrackers}
+                    setSelectAll={setSelectAll}
+                    trackers={filter ? currentItems : MemoData}
+                    selectableTrackers={filter ? allfuzzytrackers : trackers}
+                />}
 
-            {!filter ? <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} /> :
-                <ReactPagination reactPaginationData={reactPaginationData} setReactPaginationData={setReactPaginationData} data={FuzzyMemoData}
-                />
-            }
+            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
 
         </>
 

@@ -14,13 +14,10 @@ function ProductionDashboard() {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     tmpfeatures.push({ feature: 'my production ', is_visible: true, url: paths.production })
     tmpfeatures.push({ feature: 'my sole weight', is_visible: true, url: paths.my_shoe_weight })
-    tmpfeatures.push({ feature: 'my dye repair', is_visible: true, url: paths.my_dye_repair })
-    tmpfeatures.push({ feature: 'my running mould', is_visible: true, url: paths.my_running_mould })
+    
     if (user?.productions_access_fields.is_editable) {
       tmpfeatures.push({ feature: 'production ', is_visible: true, url: paths.production_admin })
       tmpfeatures.push({ feature: 'sole weight ', is_visible: true, url: paths.shoe_weight })
-      tmpfeatures.push({ feature: 'dye repair ', is_visible: true, url: paths.dye_repair })
-      tmpfeatures.push({ feature: 'running mould ', is_visible: true, url: paths.running_mould })
       tmpfeatures.push({ feature: 'machines ', is_visible: true, url: paths.machines })
       tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
       tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })

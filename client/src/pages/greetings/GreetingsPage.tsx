@@ -4,7 +4,6 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { headColor } from '../../utils/colors'
 import FuzzySearch from "fuzzy-search";
 import { BackendError } from '../..'
 import GreetingsTable from '../../components/tables/GreetingTable'
@@ -142,7 +141,7 @@ export default function GreetingPage() {
           {!user?.greetings_access_fields.is_hidden ?
             < UploadGreetingsExcelButton disabled={Boolean(!user?.greetings_access_fields.is_editable)} /> : null}
 
-          < Stack direction="row" spacing={2} sx={{ bgcolor: headColor }
+          < Stack direction="row" spacing={2} sx={{ bgcolor: 'whitesmoke' }
           }>
             <TextField
               fullWidth

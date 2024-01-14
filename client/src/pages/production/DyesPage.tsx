@@ -131,7 +131,7 @@ export default function DyePage() {
           {/* search bar */}
           < Stack direction="row" spacing={2} >
             {LoggedInUser?.productions_access_fields.is_editable ?
-              < UploadDyesFromExcelButton disabled={Boolean(!LoggedInUser?.contacts_access_fields.is_editable)} /> : null}
+              < UploadDyesFromExcelButton disabled={Boolean(!LoggedInUser?.productions_access_fields.is_editable)} /> : null}
             <FormControlLabel control={<Switch
               defaultChecked={Boolean(hidden)}
               onChange={() => setHidden(!hidden)}

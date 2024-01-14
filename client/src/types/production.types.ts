@@ -3,7 +3,7 @@ import { IUser } from "./user.types"
 
 export type IDye = {
     _id: string,
-    active:boolean,
+    active: boolean,
     dye_number: number,
     size: string,
     created_at: Date,
@@ -12,7 +12,7 @@ export type IDye = {
     updated_by: IUser
 }
 
-export type IMachineCategory = {
+export type IMachineCategory={
     _id: string,
     categories: string[],
     created_at: Date,

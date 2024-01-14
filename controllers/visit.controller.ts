@@ -90,11 +90,13 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
 }
 
 export const getMyTodayVisit = async (req: Request, res: Response, next: NextFunction) => {
-    let visits = await Visit.find({ person: req.user._id }).populate('visit_reports').populate('created_by').populate('updated_by')
-    let visit = visits.find((visit) => {
-        if (visit.created_at.getDate() === new Date().getDate() && visit.created_at.getMonth() === new Date().getMonth() && visit.created_at.getFullYear() === new Date().getFullYear() && visit.created_by.username === req.user.username)
-            return visit
-    })
+    let dt1 = new Date()
+    let dt2 = new Date()
+    dt2.setDate(new Date(dt2).getDate() +1)
+    dt1.setHours(8)
+    dt1.setMinutes(0)
+
+    let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate('visit_reports').populate('created_by').populate('updated_by')
     return res.status(200).json(visit)
 }
 
@@ -107,12 +109,14 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
     if (!start_day_credientials) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 7
-    previous_date.setDate(day)
+    let dt1 = new Date()
+    let dt2 = new Date()
+    dt2.setDate(new Date(dt2).getDate() + 1)
+    dt1.setHours(8)
+    dt1.setMinutes(0)
 
-    let visits = await Visit.find({ created_at: { $gte: previous_date } })
-    let visit = visits.find((visit) => visit.created_at.getDate() === new Date().getDate() && visit.created_at.getMonth() === new Date().getMonth() && visit.created_at.getFullYear() === new Date().getFullYear() && visit.created_by.username == req.user.username)
+    let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate('visit_reports').populate('created_by').populate('updated_by')
+
     if (visit)
         return res.status(403).json({ message: "day has already started" })
     let address = await (await fetch(`https://geocode.maps.co/reverse?lat=${start_day_credientials.latitude}&lon=${start_day_credientials.longitude}&&api_key=${process.env.GECODE_API_KEY}`)).json()

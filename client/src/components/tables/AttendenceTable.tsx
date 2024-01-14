@@ -167,7 +167,7 @@ function AttendenceTable({ attendences, attendence, selectedAttendeces, setSelec
                                                 </Tooltip>
                                             </STableCell>}
                                             <STableCell>
-                                                {attendence.created_at && moment(new Date(attendence.created_at).toLocaleDateString()).format('DD/MM/YY')}
+                                                {attendence.created_at && moment(new Date(attendence.created_at)).format('DD/MM/YY')}
                                             </STableCell>
 
                                             <STableCell>

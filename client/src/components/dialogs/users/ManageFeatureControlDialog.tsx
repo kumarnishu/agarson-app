@@ -59,28 +59,8 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                     }
                 }))
             }
-            if (feature === Feature.todos) {
-                setSelectedData(usersData && usersData.data.map((user) => {
-                    return {
-                        user: user._id, access: {
-                            is_editable: user.todos_access_fields.is_editable,
-                            is_hidden: user.todos_access_fields.is_hidden,
-                            is_deletion_allowed: user.todos_access_fields.is_deletion_allowed
-                        }
-                    }
-                }))
-            }
-            if (feature === Feature.tasks) {
-                setSelectedData(usersData && usersData.data.map((user) => {
-                    return {
-                        user: user._id, access: {
-                            is_editable: user.tasks_access_fields.is_editable,
-                            is_hidden: user.tasks_access_fields.is_hidden,
-                            is_deletion_allowed: user.tasks_access_fields.is_deletion_allowed
-                        }
-                    }
-                }))
-            }
+           
+            
             if (feature === Feature.productions) {
                 setSelectedData(usersData && usersData.data.map((user) => {
                     return {
@@ -136,28 +116,8 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                     }
                 }))
             }
-            if (feature === Feature.alps) {
-                setSelectedData(usersData && usersData.data.map((user) => {
-                    return {
-                        user: user._id, access: {
-                            is_editable: user.alps_access_fields.is_editable,
-                            is_hidden: user.alps_access_fields.is_hidden,
-                            is_deletion_allowed: user.alps_access_fields.is_deletion_allowed
-                        }
-                    }
-                }))
-            }
-            if (feature === Feature.reminders) {
-                setSelectedData(usersData && usersData.data.map((user) => {
-                    return {
-                        user: user._id, access: {
-                            is_editable: user.reminders_access_fields.is_editable,
-                            is_hidden: user.reminders_access_fields.is_hidden,
-                            is_deletion_allowed: user.reminders_access_fields.is_deletion_allowed
-                        }
-                    }
-                }))
-            }
+          
+            
             if (feature === Feature.templates) {
                 setSelectedData(usersData && usersData.data.map((user) => {
                     return {
@@ -169,17 +129,7 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                     }
                 }))
             }
-            if (feature === Feature.contacts) {
-                setSelectedData(usersData && usersData.data.map((user) => {
-                    return {
-                        user: user._id, access: {
-                            is_editable: user.contacts_access_fields.is_editable,
-                            is_hidden: user.contacts_access_fields.is_hidden,
-                            is_deletion_allowed: user.contacts_access_fields.is_deletion_allowed
-                        }
-                    }
-                }))
-            }
+            
             if (feature === Feature.greetings) {
                 setSelectedData(usersData && usersData.data.map((user) => {
                     return {
@@ -191,17 +141,7 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                     }
                 }))
             }
-            if (feature === Feature.broadcast) {
-                setSelectedData(usersData && usersData.data.map((user) => {
-                    return {
-                        user: user._id, access: {
-                            is_editable: user.broadcast_access_fields.is_editable,
-                            is_hidden: user.broadcast_access_fields.is_hidden,
-                            is_deletion_allowed: user.broadcast_access_fields.is_deletion_allowed
-                        }
-                    }
-                }))
-            }
+           
             if (feature === Feature.erp_login) {
                 setSelectedData(usersData && usersData.data.map((user) => {
                     return {
@@ -620,222 +560,7 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                                                 </STableCell>
                                             </>
                                         }
-                                        {feature === Feature.tasks &&
-                                            <>
-                                                <STableCell                 >
-                                                    <Stack
-                                                        direction="row"
-                                                        justifyContent="left"
-                                                        alignItems="left"
-                                                        spacing={2}
-                                                    >
-                                                        <Typography variant="button">{user.username}
-                                                        </Typography>
-                                                    </Stack>
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.tasks_access_fields.is_editable)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_editable: !user.tasks_access_fields.is_editable,
-                                                                            is_hidden: data.access.is_hidden,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.tasks_access_fields.is_hidden)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_hidden: !user.tasks_access_fields.is_hidden,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.tasks_access_fields.is_deletion_allowed)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_deletion_allowed: !user.tasks_access_fields.is_deletion_allowed,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_hidden: data.access.is_hidden
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                            </>
-                                        }
-                                        {feature === Feature.todos &&
-                                            <>
-                                                <STableCell                 >
-                                                    <Stack
-                                                        direction="row"
-                                                        justifyContent="left"
-                                                        alignItems="left"
-                                                        spacing={2}
-                                                    >
-                                                        <Typography variant="button">{user.username}
-                                                        </Typography>
-                                                    </Stack>
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.todos_access_fields.is_editable)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_editable: !user.todos_access_fields.is_editable,
-                                                                            is_hidden: data.access.is_hidden,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.todos_access_fields.is_hidden)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_hidden: !user.todos_access_fields.is_hidden,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.todos_access_fields.is_deletion_allowed)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_deletion_allowed: !user.todos_access_fields.is_deletion_allowed,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_hidden: data.access.is_hidden
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                            </>
-                                        }
-                                        {feature === Feature.broadcast &&
-                                            <>
-                                                <STableCell                 >
-                                                    <Stack
-                                                        direction="row"
-                                                        justifyContent="left"
-                                                        alignItems="left"
-                                                        spacing={2}
-                                                    >
-                                                        <Typography variant="button">{user.username}
-                                                        </Typography>
-                                                    </Stack>
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.broadcast_access_fields.is_editable)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_editable: !user.broadcast_access_fields.is_editable,
-                                                                            is_hidden: data.access.is_hidden,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.broadcast_access_fields.is_hidden)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_hidden: !user.broadcast_access_fields.is_hidden,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.broadcast_access_fields.is_deletion_allowed)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_deletion_allowed: !user.broadcast_access_fields.is_deletion_allowed,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_hidden: data.access.is_hidden
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                            </>
-                                        }
+                                       
                                         {feature === Feature.templates &&
                                             <>
                                                 <STableCell                 >
@@ -908,78 +633,7 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                                                 </STableCell>
                                             </>
                                         }
-                                        {feature === Feature.contacts &&
-                                            <>
-                                                <STableCell                 >
-                                                    <Stack
-                                                        direction="row"
-                                                        justifyContent="left"
-                                                        alignItems="left"
-                                                        spacing={2}
-                                                    >
-                                                        <Typography variant="button">{user.username}
-                                                        </Typography>
-                                                    </Stack>
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.contacts_access_fields.is_editable)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_editable: !user.contacts_access_fields.is_editable,
-                                                                            is_hidden: data.access.is_hidden,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.contacts_access_fields.is_hidden)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_hidden: !user.contacts_access_fields.is_hidden,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.contacts_access_fields.is_deletion_allowed)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_deletion_allowed: !user.contacts_access_fields.is_deletion_allowed,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_hidden: data.access.is_hidden
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                            </>
-                                        }
+                                      
                                         {feature === Feature.bot &&
                                             <>
                                                 <STableCell                 >
@@ -1268,150 +922,8 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                                                 </STableCell>
                                             </>
                                         }
-                                        {feature === Feature.alps &&
-                                            <>
-                                                <STableCell                 >
-                                                    <Stack
-                                                        direction="row"
-                                                        justifyContent="left"
-                                                        alignItems="left"
-                                                        spacing={2}
-                                                    >
-                                                        <Typography variant="button">{user.username}
-                                                        </Typography>
-                                                    </Stack>
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.alps_access_fields.is_editable)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_editable: !user.alps_access_fields.is_editable,
-                                                                            is_hidden: data.access.is_hidden,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.alps_access_fields.is_hidden)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_hidden: !user.alps_access_fields.is_hidden,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.alps_access_fields.is_deletion_allowed)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_deletion_allowed: !user.alps_access_fields.is_deletion_allowed,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_hidden: data.access.is_hidden
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                            </>
-                                        }
-                                        {feature === Feature.reminders &&
-                                            <>
-                                                <STableCell                 >
-                                                    <Stack
-                                                        direction="row"
-                                                        justifyContent="left"
-                                                        alignItems="left"
-                                                        spacing={2}
-                                                    >
-                                                        <Typography variant="button">{user.username}
-                                                        </Typography>
-                                                    </Stack>
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.reminders_access_fields.is_editable)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_editable: !user.reminders_access_fields.is_editable,
-                                                                            is_hidden: data.access.is_hidden,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.reminders_access_fields.is_hidden)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_hidden: !user.reminders_access_fields.is_hidden,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_deletion_allowed: data.access.is_deletion_allowed
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                                <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.reminders_access_fields.is_deletion_allowed)}
-                                                        onChange={() => {
-                                                            let tmp = selectedData?.map((data) => {
-                                                                if (data.user === user._id)
-                                                                    return {
-                                                                        user: data.user,
-                                                                        access: {
-                                                                            is_deletion_allowed: !user.reminders_access_fields.is_deletion_allowed,
-                                                                            is_editable: data.access.is_editable,
-                                                                            is_hidden: data.access.is_hidden
-                                                                        }
-                                                                    }
-                                                                return data
-                                                            })
-                                                            setSelectedData(tmp)
-                                                        }}
-                                                    />
-                                                </STableCell>
-                                            </>
-                                        }
+                                        
+                                       
                                         {feature === Feature.greetings &&
                                             <>
                                                 <STableCell                 >

@@ -14,8 +14,7 @@ import { ExportLeadMobiles, ExportLeads } from "../utils/CrmUtils.js"
 import { ILead, ILeadTemplate, IReferredParty, IRemark, TLeadBody, TLeadUpdatableFieldBody, TReferredPartyBody } from "../types/crm.types.js"
 import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
-import { Broadcast } from "../models/broadcast/broadcast.model.js"
-import { BroadcastReport } from "../models/broadcast/broadcast.report.model.js"
+
 
 
 
@@ -2980,27 +2979,7 @@ export const DeleteLead = async (req: Request, res: Response, next: NextFunction
     await lead.remove()
     if (lead.visiting_card && lead.visiting_card._id)
         await destroyFile(lead.visiting_card?._id)
-    let broadcasts = await Broadcast.find({ leads_selected: true })
-    broadcasts.forEach(async (b) => {
-        if (lead?.mobile) {
-            let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead.mobile) + "@c.us" })
-            reports.forEach(async (r) => {
-                await r.remove()
-            })
-        }
-        if (lead?.alternate_mobile1) {
-            let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile1) + "@c.us" })
-            reports.forEach(async (r) => {
-                await r.remove()
-            })
-        }
-        if (lead?.alternate_mobile2) {
-            let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile2) + "@c.us" })
-            reports.forEach(async (r) => {
-                await r.remove()
-            })
-        }
-    })
+  
     return res.status(200).json({ message: "lead and related remarks are deleted" })
 }
 
@@ -3237,46 +3216,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                         newlead.remarks = [new_remark]
                     }
                     await newlead.save()
-                    let broadcasts = await Broadcast.find({ leads_selected: true })
-                    broadcasts.forEach(async (b) => {
-                        if (uniqueNumbers[0])
-                            await new BroadcastReport({
-                                mobile: "91" + uniqueNumbers[0] + "@c.us",
-                                customer_name: "",
-                                is_buisness: false,
-                                status: "pending",
-                                created_at: new Date(),
-                                updated_at: new Date(),
-                                created_by: req.user,
-                                updated_by: req.user,
-                                broadcast: b
-                            }).save()
-
-                        if (uniqueNumbers[1])
-                            await new BroadcastReport({
-                                mobile: "91" + uniqueNumbers[1] + "@c.us",
-                                customer_name: "",
-                                is_buisness: false,
-                                status: "pending",
-                                created_at: new Date(),
-                                updated_at: new Date(),
-                                created_by: req.user,
-                                updated_by: req.user,
-                                broadcast: b
-                            }).save()
-                        if (uniqueNumbers[2])
-                            await new BroadcastReport({
-                                mobile: "91" + uniqueNumbers[2] + "@c.us",
-                                customer_name: "",
-                                is_buisness: false,
-                                status: "pending",
-                                created_at: new Date(),
-                                updated_at: new Date(),
-                                created_by: req.user,
-                                updated_by: req.user,
-                                broadcast: b
-                            }).save()
-                    })
+                  
                 }
             }
         })
@@ -3347,46 +3287,7 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
         lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
         await lead.save()
-        let broadcasts = await Broadcast.find({ leads_selected: true })
-        broadcasts.forEach(async (b) => {
-            if (lead?.mobile)
-                await new BroadcastReport({
-                    mobile: "91" + lead.mobile + "@c.us",
-                    customer_name: "",
-                    is_buisness: false,
-                    status: "pending",
-                    created_at: new Date(),
-                    updated_at: new Date(),
-                    created_by: req.user,
-                    updated_by: req.user,
-                    broadcast: b
-                }).save()
-
-            if (lead?.alternate_mobile1)
-                await new BroadcastReport({
-                    mobile: "91" + lead.alternate_mobile1 + "@c.us",
-                    customer_name: "",
-                    is_buisness: false,
-                    status: "pending",
-                    created_at: new Date(),
-                    updated_at: new Date(),
-                    created_by: req.user,
-                    updated_by: req.user,
-                    broadcast: b
-                }).save()
-            if (lead?.alternate_mobile2)
-                await new BroadcastReport({
-                    mobile: "91" + lead.alternate_mobile2 + "@c.us",
-                    customer_name: "",
-                    is_buisness: false,
-                    status: "pending",
-                    created_at: new Date(),
-                    updated_at: new Date(),
-                    created_by: req.user,
-                    updated_by: req.user,
-                    broadcast: b
-                }).save()
-        })
+       
     }
     else {
         if (remark) {
@@ -3408,27 +3309,7 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
         lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
         await lead.save()
-        let broadcasts = await Broadcast.find({ leads_selected: true })
-        broadcasts.forEach(async (b) => {
-            if (lead?.mobile) {
-                let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead.mobile) + "@c.us" })
-                reports.forEach(async (r) => {
-                    await r.remove()
-                })
-            }
-            if (lead?.alternate_mobile1) {
-                let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile1) + "@c.us" })
-                reports.forEach(async (r) => {
-                    await r.remove()
-                })
-            }
-            if (lead?.alternate_mobile2) {
-                let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile2) + "@c.us" })
-                reports.forEach(async (r) => {
-                    await r.remove()
-                })
-            }
-        })
+       
 
     }
     return res.status(200).json({ message: "successfully changed stage" })
@@ -3634,27 +3515,7 @@ export const BulkDeleteUselessLeads = async (req: Request, res: Response, next: 
             if (lead.visiting_card && lead.visiting_card._id)
                 await destroyFile(lead.visiting_card?._id)
 
-            let broadcasts = await Broadcast.find({ leads_selected: true })
-            broadcasts.forEach(async (b) => {
-                if (lead?.mobile) {
-                    let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead.mobile) + "@c.us" })
-                    reports.forEach(async (r) => {
-                        await r.remove()
-                    })
-                }
-                if (lead?.alternate_mobile1) {
-                    let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile1) + "@c.us" })
-                    reports.forEach(async (r) => {
-                        await r.remove()
-                    })
-                }
-                if (lead?.alternate_mobile2) {
-                    let reports = await BroadcastReport.find({ broadcast: b, mobile: "91" + String(lead?.alternate_mobile2) + "@c.us" })
-                    reports.forEach(async (r) => {
-                        await r.remove()
-                    })
-                }
-            })
+           
         }
     }
     return res.status(200).json({ message: "lead and related remarks are deleted" })

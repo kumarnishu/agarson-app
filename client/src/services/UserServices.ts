@@ -4,18 +4,12 @@ import { apiClient } from "./utils/AxiosInterceptor";
 export type AccessTypes = {
   user_access_fields: FeatureAccess,
   crm_access_fields: FeatureAccess,
-  contacts_access_fields: FeatureAccess,
   templates_access_fields: FeatureAccess,
   bot_access_fields: FeatureAccess,
-  broadcast_access_fields: FeatureAccess,
   backup_access_fields: FeatureAccess,
-  reminders_access_fields: FeatureAccess,
-  alps_access_fields: FeatureAccess,
-  tasks_access_fields: FeatureAccess,
   checklists_access_fields: FeatureAccess,
   reports_access_fields: FeatureAccess,
   visit_access_fields: FeatureAccess,
-  todos_access_fields: FeatureAccess
   greetings_access_fields: FeatureAccess,
   passwords_access_fields: FeatureAccess,
   productions_access_fields: FeatureAccess

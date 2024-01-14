@@ -350,31 +350,19 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-    owner.todos_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
+   
     owner.reports_access_fields = {
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
-    owner.alps_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
+    
     owner.crm_access_fields = {
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
-    owner.contacts_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
+    
     owner.templates_access_fields = {
         is_hidden: false,
         is_editable: true,
@@ -385,11 +373,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-    owner.broadcast_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
+   
     owner.backup_access_fields = {
         is_hidden: false,
         is_editable: true,
@@ -400,11 +384,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-    owner.tasks_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
+   
     owner.checklists_access_fields = {
         is_hidden: false,
         is_editable: true,
@@ -480,11 +460,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    user.alps_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
+   
     user.visit_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -500,11 +476,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    user.todos_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
+   
     user.reports_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -515,11 +487,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    user.contacts_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
+   
     user.templates_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -530,11 +498,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    user.broadcast_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
+    
     user.backup_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -545,11 +509,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    user.tasks_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
+    
     user.checklists_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -639,20 +599,16 @@ export const AssignUsers = async (req: Request, res: Response, next: NextFunctio
 export const UpdateUserWiseAccessFields = async (req: Request, res: Response, next: NextFunction) => {
     const { user_access_fields,
         crm_access_fields,
-        contacts_access_fields,
         templates_access_fields,
         bot_access_fields,
-        broadcast_access_fields,
         backup_access_fields,
         reminders_access_fields,
-        alps_access_fields,
-        tasks_access_fields,
         checklists_access_fields,
         visit_access_fields,
         reports_access_fields,
-        todos_access_fields,
         greetings_access_fields,
-        passwords_access_fields, productions_access_fields
+        passwords_access_fields, 
+        productions_access_fields
 
     } = req.body as TUserBody
 
@@ -665,17 +621,12 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
     await User.findByIdAndUpdate(user._id, {
         user_access_fields,
         crm_access_fields,
-        contacts_access_fields,
         templates_access_fields,
         bot_access_fields,
-        broadcast_access_fields,
         backup_access_fields,
         reminders_access_fields,
-        alps_access_fields,
-        tasks_access_fields,
         checklists_access_fields,
         reports_access_fields,
-        todos_access_fields,
         visit_access_fields,
         greetings_access_fields,
         passwords_access_fields,
@@ -715,13 +666,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-    if (feature === Feature.contacts) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                contacts_access_fields: data.access
-            })
-        })
-    }
+   
     if (feature === Feature.templates) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
@@ -743,13 +688,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-    if (feature === Feature.broadcast) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                broadcast_access_fields: data.access
-            })
-        })
-    }
+   
     if (feature === Feature.backup) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
@@ -770,20 +709,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-    if (feature === Feature.alps) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                alps_access_fields: data.access
-            })
-        })
-    }
-    if (feature === Feature.tasks) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                tasks_access_fields: data.access
-            })
-        })
-    }
+   
     if (feature === Feature.checklists) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
@@ -805,13 +731,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-    if (feature === Feature.todos) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                todos_access_fields: data.access
-            })
-        })
-    }
+    
     res.status(200).json({ message: " updated" })
 }
 export const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {

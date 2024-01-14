@@ -1,7 +1,7 @@
 import { IUser } from "./user.types"
 
 export type IGreeting = {
-    _id: string,
+    _id:string,
     name: string,
     party: string,
     category: string,

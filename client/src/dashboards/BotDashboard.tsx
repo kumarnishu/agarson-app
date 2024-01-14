@@ -12,7 +12,6 @@ function BotDashboard() {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     tmpfeatures.push({ feature: 'flows ', is_visible: true, url: paths.flows })
     tmpfeatures.push({ feature: 'trackers', is_visible: true, url: paths.trackers })
-    tmpfeatures.push({ feature: 'chats backup', is_visible: true, url: paths.chats })
     setFeatures(tmpfeatures)
   }, [])
 
