@@ -1,7 +1,7 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
-import {  Box,  Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
@@ -16,7 +16,7 @@ export default function DashBoardNavBar() {
     const { user } = useContext(UserContext)
     return (
         <>
-            <Box sx={{ bgcolor: 'rgba(0,0,255,0.7)', width: '100%', py: 1.5}}>
+            <Box sx={{ bgcolor: 'rgba(0,0,255,0.7)', width: '100%', py: 1.5 }}>
                 {/* parent stack */}
                 <Stack direction="row" sx={{
                     justifyContent: "space-between", alignItems: "center"
@@ -24,7 +24,7 @@ export default function DashBoardNavBar() {
                 >
                     {/* child stack1 */}
                     <Stack direction="row" gap={2} pl={1}>
-                        <StyledLink to={paths.dashboard}>
+                        <StyledLink to={paths.dashboard} replace={true}>
                             <AgarsonLogo width={35} height={35} title='Go To Dashboard' />
                         </StyledLink>
                         <StyledLink to={paths.dashboard} replace={true}>
@@ -58,7 +58,7 @@ export default function DashBoardNavBar() {
                                     alignItems="center"
                                     gap={2}
                                 >
-                                    
+
                                     <ProfileLogo />
 
                                 </Stack>
@@ -70,7 +70,7 @@ export default function DashBoardNavBar() {
                 </Stack>
             </Box >
             <Outlet />
-          
+
 
         </>
     )
