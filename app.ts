@@ -19,8 +19,9 @@ import CronJobManager from "cron-job-manager";
 import path from 'path';
 import morgan from "morgan";
 import { Server } from "socket.io";
-import { createWhatsappClient, getCurrentUser, userJoin, userLeave } from "./utils/CreateWhatsappClient";
+import { createWhatsappClient, getCurrentUser, logger, userJoin, userLeave } from "./utils/CreateWhatsappClient";
 import { Storage } from '@google-cloud/storage';
+import { pinoHttp } from 'pino-http';
 
 
 const app = express()
@@ -38,8 +39,7 @@ app.use(cookieParser());
 app.use(compression())
 
 //logger
-app.use(morgan('tiny'))
-
+app.use(pinoHttp)
 
 
 //mongodb database
@@ -71,7 +71,7 @@ io.on("connection", (socket) => {
         const user = userJoin(id)
         socket.join(user.id)
         if (io)
-            createWhatsappClient(id, path, io)
+            createWhatsappClient(id, io)
         socket.on("disconnect", (reason) => {
             let user = getCurrentUser(id)
             if (user)
