@@ -1,4 +1,4 @@
-import { Button, LinearProgress, Paper, Stack, Typography } from "@mui/material"
+import { Box, Button, LinearProgress, Paper, Stack, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { useQuery } from "react-query"
 import { AxiosResponse } from "axios"
@@ -62,7 +62,7 @@ function MyVisitPage() {
         {visits.map((visit, index) => {
           return (
             <Paper key={index} elevation={8} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white', borderRadius: 2 }}>
-              <Stack 
+              <Stack
                 direction="column"
                 gap={2}
               >
@@ -102,8 +102,10 @@ function MyVisitPage() {
 
 
       {
-        !visit && <Stack sx={{ height: '100vh' }}>
-          <img src={background} alt="background" style={{ objectFit: 'cover' }} />
+        !visit && <Box>
+          <Stack sx={{ height: '80vh', bgcolor: 'rgba(0,0,255,0.7)' }}>
+            <img src={background} alt="background" style={{ objectFit: 'fill' }} />
+          </Stack >
           <Button size="large" sx={{ p: 3, fontSize: 20 }} color="error" variant="contained"
             disabled={isLoading}
             fullWidth
@@ -112,7 +114,7 @@ function MyVisitPage() {
                 setChoice({ type: VisitChoiceActions.start_day })
               }
             }>Start My Day</Button >
-        </Stack >
+        </Box>
       }
       {!visit && <StartMydayDialog />}
 

@@ -46,7 +46,6 @@ function UpdateLeadFieldsPage() {
 
     return (
         <>
-            {isLoading || <LinearProgress />}
             {isSuccess && <AlertBar message='Fields Saved Successfuly' color="success" />}
 
             {user?.crm_access_fields.is_editable &&
