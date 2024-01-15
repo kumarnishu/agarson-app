@@ -9,7 +9,7 @@ export type ITemplateCategoryField = {
     created_by: IUser,
     updated_by: IUser
 }
-export type ITemplateCategoryFieldBody = Request['body'] & ITemplateCategoryField;
+
 
 export type IMessageTemplate = {
     _id: string,
@@ -23,10 +23,5 @@ export type IMessageTemplate = {
     created_by: IUser,
     updated_by: IUser
 }
-export type IMessage = {
-    message?: string,
-    caption?: string,
-    media?: Asset
-}
+
 export type IMessageTemplateBody = Request['body'] & IMessageTemplate;
-export type IMessageBody = Request['body'] & IMessage;

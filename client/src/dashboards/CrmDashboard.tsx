@@ -8,6 +8,7 @@ import { UserContext } from "../contexts/userContext";
 function CrmDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
   const { user } = useContext(UserContext)
+  
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
@@ -15,9 +16,10 @@ function CrmDashboard() {
     tmpfeatures.push({ feature: 'customers', is_visible: true, url: paths.customers })
     tmpfeatures.push({ feature: 'refers', is_visible: true, url: paths.refers })
     tmpfeatures.push({ feature: 'useless', is_visible: true, url: paths.useless_leads })
-    tmpfeatures.push({ feature: 'my reminders', is_visible: true, url: paths.crm_reminders })
+    tmpfeatures.push({ feature: 'reminders', is_visible: true, url: paths.crm_reminders })
     tmpfeatures.push({ feature: 'activities', is_visible: true, url: paths.crm_activities })
-    user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'lead fields', is_visible: true, url: paths.updateble_fields_lead })
+    user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'fields', is_visible: true, url: paths.updateble_fields_lead })
+    user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'Wa Broadcast', is_visible: true, url: paths.broadcast })
     tmpfeatures.push({ feature: 'help', is_visible: true, url: paths.crm_help_page })
     setFeatures(tmpfeatures)
   }, [])

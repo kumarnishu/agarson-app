@@ -1,4 +1,5 @@
 import { Asset } from "./asset.types"
+import { IMessageTemplate } from "./template.types"
 import { IUser } from "./user.types"
 
 export type ILeadTemplate = {
@@ -88,7 +89,7 @@ export type ILead = {
     lead_owners: IUser[],
     visiting_card: Asset,
     is_customer: boolean,
-    brijesh_input: { input: string, created_by: IUser, timestamp: Date }
+    last_whatsapp: Date,
     referred_party?: IReferredParty,
     referred_party_name?: string,
     referred_party_mobile?: string,
@@ -99,3 +100,27 @@ export type ILead = {
     updated_by: IUser
 }
 export type TLeadBody = Request['body'] & ILead;
+
+
+
+export type IBroadcast = {
+    _id: string,
+    name: string,
+    next_run_date: Date
+    cron_key: string,
+    counter: number,
+    is_active: boolean,
+    connected_users: IUser[],
+    templates: IMessageTemplate[]
+    is_random_template: boolean
+    daily_limit: number,
+    is_paused: boolean,
+    time_gap: string,
+    autoRefresh: boolean,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
+
+export type IBroadcastBody = Request['body'] & IBroadcast;

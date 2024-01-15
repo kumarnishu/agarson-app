@@ -511,7 +511,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
 
                     <STableCell>
-                      {lead.lead_owners ? lead.lead_owners.map((owner) => { return owner.username + " & " }) : [""]}
+                      {lead.lead_owners.map((owner) => { return owner.username}).toString()}
                     </STableCell>
 
 

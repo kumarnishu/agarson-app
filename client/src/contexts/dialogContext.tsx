@@ -15,7 +15,7 @@ type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_ch
 
 
 type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
-  | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark"
+  | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark" | "create_broadcast" | "update_broadcast" | "stop_broadcast" | "start_broadcast"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "create_shoe_weight" | "delete_production" | "update_shoe_weight" | "create_production" | "update_production"
 
@@ -35,7 +35,7 @@ type BotChoices = "create_flow"
 
 
 
-type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices  | VisitChoices | CheckListChoices | GreetingChoices | PasswordChoices | ProductionChoices
+type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | VisitChoices | CheckListChoices | GreetingChoices | PasswordChoices | ProductionChoices
 
 const initialState: ChoiceState | null = null
 
@@ -151,7 +151,11 @@ export enum LeadChoiceActions {
   convert_useless = "convert_useless",
   assign_refer = "assign_refer",
   bulk_assign_leads = "bulk_assign_leads",
-  bulk_assign_refers = "bulk_assign_refers"
+  bulk_assign_refers = "bulk_assign_refers",
+  create_broadcast = "create_broadcast",
+  update_broadcast = "update_broadcast",
+  stop_broadcast = "stop_broadcast",
+  start_broadcast = "start_broadcast"
 }
 
 export enum UserChoiceActions {
@@ -182,7 +186,7 @@ export enum UserChoiceActions {
 
 type Action = {
   type: UserChoiceActions |
-  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | PasswordChoiceActions |  CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions | ProductionChoiceActions
+  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | PasswordChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions | ProductionChoiceActions
 }
 
 // reducer
@@ -236,6 +240,10 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.convert_useless: return type
     case LeadChoiceActions.bulk_assign_leads: return type
     case LeadChoiceActions.bulk_assign_refers: return type
+    case LeadChoiceActions.create_broadcast: return type
+    case LeadChoiceActions.update_broadcast: return type
+    case LeadChoiceActions.stop_broadcast: return type
+    case LeadChoiceActions.start_broadcast: return type
 
 
     //bot choice actions

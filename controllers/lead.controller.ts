@@ -14,8 +14,7 @@ import { ExportLeadMobiles, ExportLeads } from "../utils/CrmUtils.js"
 import { ILead, ILeadTemplate, IReferredParty, IRemark, TLeadBody, TLeadUpdatableFieldBody, TReferredPartyBody } from "../types/crm.types.js"
 import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
-
-
+import { Broadcast } from "../models/leads/broadcast.model.js"
 
 
 // get request
@@ -2383,7 +2382,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                         }
                     ]
                 }).sort('-created_at')
-            }else{
+            } else {
                 leads = await Lead.find({
                     stage: 'useless',
                     $and: [
@@ -2476,234 +2475,234 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
             }
         }
         if (key.length == 4) {
-          if(id){
-              leads = await Lead.find({
-                lead_owners:id,
-                  stage: 'useless',
-                  $and: [
-                      {
-                          $or: [
-                              { name: { $regex: key[0], $options: 'i' } },
-                              { city: { $regex: key[0], $options: 'i' } },
-                              { customer_name: { $regex: key[0], $options: 'i' } },
-                              { customer_designation: { $regex: key[0], $options: 'i' } },
-                              { mobile: { $regex: key[0], $options: 'i' } },
-                              { email: { $regex: key[0], $options: 'i' } },
-                              { state: { $regex: key[0], $options: 'i' } },
-                              { country: { $regex: key[0], $options: 'i' } },
-                              { address: { $regex: key[0], $options: 'i' } },
-                              { work_description: { $regex: key[0], $options: 'i' } },
-                              { turnover: { $regex: key[0], $options: 'i' } },
-                              { alternate_mobile1: { $regex: key[0], $options: 'i' } },
-                              { alternate_mobile2: { $regex: key[0], $options: 'i' } },
-                              { alternate_email: { $regex: key[0], $options: 'i' } },
-                              { lead_type: { $regex: key[0], $options: 'i' } },
-                              { stage: { $regex: key[0], $options: 'i' } },
-                              { lead_source: { $regex: key[0], $options: 'i' } },
-                              { last_remark: { $regex: key[0], $options: 'i' } },
+            if (id) {
+                leads = await Lead.find({
+                    lead_owners: id,
+                    stage: 'useless',
+                    $and: [
+                        {
+                            $or: [
+                                { name: { $regex: key[0], $options: 'i' } },
+                                { city: { $regex: key[0], $options: 'i' } },
+                                { customer_name: { $regex: key[0], $options: 'i' } },
+                                { customer_designation: { $regex: key[0], $options: 'i' } },
+                                { mobile: { $regex: key[0], $options: 'i' } },
+                                { email: { $regex: key[0], $options: 'i' } },
+                                { state: { $regex: key[0], $options: 'i' } },
+                                { country: { $regex: key[0], $options: 'i' } },
+                                { address: { $regex: key[0], $options: 'i' } },
+                                { work_description: { $regex: key[0], $options: 'i' } },
+                                { turnover: { $regex: key[0], $options: 'i' } },
+                                { alternate_mobile1: { $regex: key[0], $options: 'i' } },
+                                { alternate_mobile2: { $regex: key[0], $options: 'i' } },
+                                { alternate_email: { $regex: key[0], $options: 'i' } },
+                                { lead_type: { $regex: key[0], $options: 'i' } },
+                                { stage: { $regex: key[0], $options: 'i' } },
+                                { lead_source: { $regex: key[0], $options: 'i' } },
+                                { last_remark: { $regex: key[0], $options: 'i' } },
 
-                          ]
-                      },
-                      {
-                          $or: [
-                              { name: { $regex: key[1], $options: 'i' } },
-                              { city: { $regex: key[1], $options: 'i' } },
-                              { customer_name: { $regex: key[1], $options: 'i' } },
-                              { customer_designation: { $regex: key[1], $options: 'i' } },
-                              { mobile: { $regex: key[1], $options: 'i' } },
-                              { email: { $regex: key[1], $options: 'i' } },
-                              { state: { $regex: key[1], $options: 'i' } },
-                              { country: { $regex: key[1], $options: 'i' } },
-                              { address: { $regex: key[1], $options: 'i' } },
-                              { work_description: { $regex: key[1], $options: 'i' } },
-                              { turnover: { $regex: key[1], $options: 'i' } },
-                              { alternate_mobile1: { $regex: key[1], $options: 'i' } },
-                              { alternate_mobile2: { $regex: key[1], $options: 'i' } },
-                              { alternate_email: { $regex: key[1], $options: 'i' } },
-                              { lead_type: { $regex: key[1], $options: 'i' } },
-                              { stage: { $regex: key[1], $options: 'i' } },
-                              { lead_source: { $regex: key[1], $options: 'i' } },
-                              { last_remark: { $regex: key[1], $options: 'i' } },
+                            ]
+                        },
+                        {
+                            $or: [
+                                { name: { $regex: key[1], $options: 'i' } },
+                                { city: { $regex: key[1], $options: 'i' } },
+                                { customer_name: { $regex: key[1], $options: 'i' } },
+                                { customer_designation: { $regex: key[1], $options: 'i' } },
+                                { mobile: { $regex: key[1], $options: 'i' } },
+                                { email: { $regex: key[1], $options: 'i' } },
+                                { state: { $regex: key[1], $options: 'i' } },
+                                { country: { $regex: key[1], $options: 'i' } },
+                                { address: { $regex: key[1], $options: 'i' } },
+                                { work_description: { $regex: key[1], $options: 'i' } },
+                                { turnover: { $regex: key[1], $options: 'i' } },
+                                { alternate_mobile1: { $regex: key[1], $options: 'i' } },
+                                { alternate_mobile2: { $regex: key[1], $options: 'i' } },
+                                { alternate_email: { $regex: key[1], $options: 'i' } },
+                                { lead_type: { $regex: key[1], $options: 'i' } },
+                                { stage: { $regex: key[1], $options: 'i' } },
+                                { lead_source: { $regex: key[1], $options: 'i' } },
+                                { last_remark: { $regex: key[1], $options: 'i' } },
 
-                          ]
-                      },
-                      {
-                          $or: [
-                              { name: { $regex: key[2], $options: 'i' } },
-                              { city: { $regex: key[2], $options: 'i' } },
-                              { customer_name: { $regex: key[2], $options: 'i' } },
-                              { customer_designation: { $regex: key[2], $options: 'i' } },
-                              { mobile: { $regex: key[2], $options: 'i' } },
-                              { email: { $regex: key[2], $options: 'i' } },
-                              { state: { $regex: key[2], $options: 'i' } },
-                              { country: { $regex: key[2], $options: 'i' } },
-                              { address: { $regex: key[2], $options: 'i' } },
-                              { work_description: { $regex: key[2], $options: 'i' } },
-                              { turnover: { $regex: key[2], $options: 'i' } },
-                              { alternate_mobile2: { $regex: key[2], $options: 'i' } },
-                              { alternate_mobile2: { $regex: key[2], $options: 'i' } },
-                              { alternate_email: { $regex: key[2], $options: 'i' } },
-                              { lead_type: { $regex: key[2], $options: 'i' } },
-                              { stage: { $regex: key[2], $options: 'i' } },
-                              { lead_source: { $regex: key[2], $options: 'i' } },
-                              { last_remark: { $regex: key[2], $options: 'i' } },
+                            ]
+                        },
+                        {
+                            $or: [
+                                { name: { $regex: key[2], $options: 'i' } },
+                                { city: { $regex: key[2], $options: 'i' } },
+                                { customer_name: { $regex: key[2], $options: 'i' } },
+                                { customer_designation: { $regex: key[2], $options: 'i' } },
+                                { mobile: { $regex: key[2], $options: 'i' } },
+                                { email: { $regex: key[2], $options: 'i' } },
+                                { state: { $regex: key[2], $options: 'i' } },
+                                { country: { $regex: key[2], $options: 'i' } },
+                                { address: { $regex: key[2], $options: 'i' } },
+                                { work_description: { $regex: key[2], $options: 'i' } },
+                                { turnover: { $regex: key[2], $options: 'i' } },
+                                { alternate_mobile2: { $regex: key[2], $options: 'i' } },
+                                { alternate_mobile2: { $regex: key[2], $options: 'i' } },
+                                { alternate_email: { $regex: key[2], $options: 'i' } },
+                                { lead_type: { $regex: key[2], $options: 'i' } },
+                                { stage: { $regex: key[2], $options: 'i' } },
+                                { lead_source: { $regex: key[2], $options: 'i' } },
+                                { last_remark: { $regex: key[2], $options: 'i' } },
 
-                          ]
-                      },
-                      {
-                          $or: [
-                              { name: { $regex: key[3], $options: 'i' } },
-                              { city: { $regex: key[3], $options: 'i' } },
-                              { customer_name: { $regex: key[3], $options: 'i' } },
-                              { customer_designation: { $regex: key[3], $options: 'i' } },
-                              { mobile: { $regex: key[3], $options: 'i' } },
-                              { email: { $regex: key[3], $options: 'i' } },
-                              { state: { $regex: key[3], $options: 'i' } },
-                              { country: { $regex: key[3], $options: 'i' } },
-                              { address: { $regex: key[3], $options: 'i' } },
-                              { work_description: { $regex: key[3], $options: 'i' } },
-                              { turnover: { $regex: key[3], $options: 'i' } },
-                              { alternate_mobile3: { $regex: key[3], $options: 'i' } },
-                              { alternate_mobile2: { $regex: key[3], $options: 'i' } },
-                              { alternate_email: { $regex: key[3], $options: 'i' } },
-                              { lead_type: { $regex: key[3], $options: 'i' } },
-                              { stage: { $regex: key[3], $options: 'i' } },
-                              { lead_source: { $regex: key[3], $options: 'i' } },
-                              { last_remark: { $regex: key[3], $options: 'i' } },
+                            ]
+                        },
+                        {
+                            $or: [
+                                { name: { $regex: key[3], $options: 'i' } },
+                                { city: { $regex: key[3], $options: 'i' } },
+                                { customer_name: { $regex: key[3], $options: 'i' } },
+                                { customer_designation: { $regex: key[3], $options: 'i' } },
+                                { mobile: { $regex: key[3], $options: 'i' } },
+                                { email: { $regex: key[3], $options: 'i' } },
+                                { state: { $regex: key[3], $options: 'i' } },
+                                { country: { $regex: key[3], $options: 'i' } },
+                                { address: { $regex: key[3], $options: 'i' } },
+                                { work_description: { $regex: key[3], $options: 'i' } },
+                                { turnover: { $regex: key[3], $options: 'i' } },
+                                { alternate_mobile3: { $regex: key[3], $options: 'i' } },
+                                { alternate_mobile2: { $regex: key[3], $options: 'i' } },
+                                { alternate_email: { $regex: key[3], $options: 'i' } },
+                                { lead_type: { $regex: key[3], $options: 'i' } },
+                                { stage: { $regex: key[3], $options: 'i' } },
+                                { lead_source: { $regex: key[3], $options: 'i' } },
+                                { last_remark: { $regex: key[3], $options: 'i' } },
 
-                          ]
-                      }
-                  ]
-                  ,
+                            ]
+                        }
+                    ]
+                    ,
 
-              }
-              ).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-                  path: 'remarks',
-                  populate: [
-                      {
-                          path: 'created_by',
-                          model: 'User'
-                      },
-                      {
-                          path: 'updated_by',
-                          model: 'User'
-                      }
-                  ]
-              }).sort('-created_at')
-          }else{
-              leads = await Lead.find({
-                  stage: 'useless',
-                  $and: [
-                      {
-                          $or: [
-                              { name: { $regex: key[0], $options: 'i' } },
-                              { city: { $regex: key[0], $options: 'i' } },
-                              { customer_name: { $regex: key[0], $options: 'i' } },
-                              { customer_designation: { $regex: key[0], $options: 'i' } },
-                              { mobile: { $regex: key[0], $options: 'i' } },
-                              { email: { $regex: key[0], $options: 'i' } },
-                              { state: { $regex: key[0], $options: 'i' } },
-                              { country: { $regex: key[0], $options: 'i' } },
-                              { address: { $regex: key[0], $options: 'i' } },
-                              { work_description: { $regex: key[0], $options: 'i' } },
-                              { turnover: { $regex: key[0], $options: 'i' } },
-                              { alternate_mobile1: { $regex: key[0], $options: 'i' } },
-                              { alternate_mobile2: { $regex: key[0], $options: 'i' } },
-                              { alternate_email: { $regex: key[0], $options: 'i' } },
-                              { lead_type: { $regex: key[0], $options: 'i' } },
-                              { stage: { $regex: key[0], $options: 'i' } },
-                              { lead_source: { $regex: key[0], $options: 'i' } },
-                              { last_remark: { $regex: key[0], $options: 'i' } },
+                }
+                ).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
+                }).sort('-created_at')
+            } else {
+                leads = await Lead.find({
+                    stage: 'useless',
+                    $and: [
+                        {
+                            $or: [
+                                { name: { $regex: key[0], $options: 'i' } },
+                                { city: { $regex: key[0], $options: 'i' } },
+                                { customer_name: { $regex: key[0], $options: 'i' } },
+                                { customer_designation: { $regex: key[0], $options: 'i' } },
+                                { mobile: { $regex: key[0], $options: 'i' } },
+                                { email: { $regex: key[0], $options: 'i' } },
+                                { state: { $regex: key[0], $options: 'i' } },
+                                { country: { $regex: key[0], $options: 'i' } },
+                                { address: { $regex: key[0], $options: 'i' } },
+                                { work_description: { $regex: key[0], $options: 'i' } },
+                                { turnover: { $regex: key[0], $options: 'i' } },
+                                { alternate_mobile1: { $regex: key[0], $options: 'i' } },
+                                { alternate_mobile2: { $regex: key[0], $options: 'i' } },
+                                { alternate_email: { $regex: key[0], $options: 'i' } },
+                                { lead_type: { $regex: key[0], $options: 'i' } },
+                                { stage: { $regex: key[0], $options: 'i' } },
+                                { lead_source: { $regex: key[0], $options: 'i' } },
+                                { last_remark: { $regex: key[0], $options: 'i' } },
 
-                          ]
-                      },
-                      {
-                          $or: [
-                              { name: { $regex: key[1], $options: 'i' } },
-                              { city: { $regex: key[1], $options: 'i' } },
-                              { customer_name: { $regex: key[1], $options: 'i' } },
-                              { customer_designation: { $regex: key[1], $options: 'i' } },
-                              { mobile: { $regex: key[1], $options: 'i' } },
-                              { email: { $regex: key[1], $options: 'i' } },
-                              { state: { $regex: key[1], $options: 'i' } },
-                              { country: { $regex: key[1], $options: 'i' } },
-                              { address: { $regex: key[1], $options: 'i' } },
-                              { work_description: { $regex: key[1], $options: 'i' } },
-                              { turnover: { $regex: key[1], $options: 'i' } },
-                              { alternate_mobile1: { $regex: key[1], $options: 'i' } },
-                              { alternate_mobile2: { $regex: key[1], $options: 'i' } },
-                              { alternate_email: { $regex: key[1], $options: 'i' } },
-                              { lead_type: { $regex: key[1], $options: 'i' } },
-                              { stage: { $regex: key[1], $options: 'i' } },
-                              { lead_source: { $regex: key[1], $options: 'i' } },
-                              { last_remark: { $regex: key[1], $options: 'i' } },
+                            ]
+                        },
+                        {
+                            $or: [
+                                { name: { $regex: key[1], $options: 'i' } },
+                                { city: { $regex: key[1], $options: 'i' } },
+                                { customer_name: { $regex: key[1], $options: 'i' } },
+                                { customer_designation: { $regex: key[1], $options: 'i' } },
+                                { mobile: { $regex: key[1], $options: 'i' } },
+                                { email: { $regex: key[1], $options: 'i' } },
+                                { state: { $regex: key[1], $options: 'i' } },
+                                { country: { $regex: key[1], $options: 'i' } },
+                                { address: { $regex: key[1], $options: 'i' } },
+                                { work_description: { $regex: key[1], $options: 'i' } },
+                                { turnover: { $regex: key[1], $options: 'i' } },
+                                { alternate_mobile1: { $regex: key[1], $options: 'i' } },
+                                { alternate_mobile2: { $regex: key[1], $options: 'i' } },
+                                { alternate_email: { $regex: key[1], $options: 'i' } },
+                                { lead_type: { $regex: key[1], $options: 'i' } },
+                                { stage: { $regex: key[1], $options: 'i' } },
+                                { lead_source: { $regex: key[1], $options: 'i' } },
+                                { last_remark: { $regex: key[1], $options: 'i' } },
 
-                          ]
-                      },
-                      {
-                          $or: [
-                              { name: { $regex: key[2], $options: 'i' } },
-                              { city: { $regex: key[2], $options: 'i' } },
-                              { customer_name: { $regex: key[2], $options: 'i' } },
-                              { customer_designation: { $regex: key[2], $options: 'i' } },
-                              { mobile: { $regex: key[2], $options: 'i' } },
-                              { email: { $regex: key[2], $options: 'i' } },
-                              { state: { $regex: key[2], $options: 'i' } },
-                              { country: { $regex: key[2], $options: 'i' } },
-                              { address: { $regex: key[2], $options: 'i' } },
-                              { work_description: { $regex: key[2], $options: 'i' } },
-                              { turnover: { $regex: key[2], $options: 'i' } },
-                              { alternate_mobile2: { $regex: key[2], $options: 'i' } },
-                              { alternate_mobile2: { $regex: key[2], $options: 'i' } },
-                              { alternate_email: { $regex: key[2], $options: 'i' } },
-                              { lead_type: { $regex: key[2], $options: 'i' } },
-                              { stage: { $regex: key[2], $options: 'i' } },
-                              { lead_source: { $regex: key[2], $options: 'i' } },
-                              { last_remark: { $regex: key[2], $options: 'i' } },
+                            ]
+                        },
+                        {
+                            $or: [
+                                { name: { $regex: key[2], $options: 'i' } },
+                                { city: { $regex: key[2], $options: 'i' } },
+                                { customer_name: { $regex: key[2], $options: 'i' } },
+                                { customer_designation: { $regex: key[2], $options: 'i' } },
+                                { mobile: { $regex: key[2], $options: 'i' } },
+                                { email: { $regex: key[2], $options: 'i' } },
+                                { state: { $regex: key[2], $options: 'i' } },
+                                { country: { $regex: key[2], $options: 'i' } },
+                                { address: { $regex: key[2], $options: 'i' } },
+                                { work_description: { $regex: key[2], $options: 'i' } },
+                                { turnover: { $regex: key[2], $options: 'i' } },
+                                { alternate_mobile2: { $regex: key[2], $options: 'i' } },
+                                { alternate_mobile2: { $regex: key[2], $options: 'i' } },
+                                { alternate_email: { $regex: key[2], $options: 'i' } },
+                                { lead_type: { $regex: key[2], $options: 'i' } },
+                                { stage: { $regex: key[2], $options: 'i' } },
+                                { lead_source: { $regex: key[2], $options: 'i' } },
+                                { last_remark: { $regex: key[2], $options: 'i' } },
 
-                          ]
-                      },
-                      {
-                          $or: [
-                              { name: { $regex: key[3], $options: 'i' } },
-                              { city: { $regex: key[3], $options: 'i' } },
-                              { customer_name: { $regex: key[3], $options: 'i' } },
-                              { customer_designation: { $regex: key[3], $options: 'i' } },
-                              { mobile: { $regex: key[3], $options: 'i' } },
-                              { email: { $regex: key[3], $options: 'i' } },
-                              { state: { $regex: key[3], $options: 'i' } },
-                              { country: { $regex: key[3], $options: 'i' } },
-                              { address: { $regex: key[3], $options: 'i' } },
-                              { work_description: { $regex: key[3], $options: 'i' } },
-                              { turnover: { $regex: key[3], $options: 'i' } },
-                              { alternate_mobile3: { $regex: key[3], $options: 'i' } },
-                              { alternate_mobile2: { $regex: key[3], $options: 'i' } },
-                              { alternate_email: { $regex: key[3], $options: 'i' } },
-                              { lead_type: { $regex: key[3], $options: 'i' } },
-                              { stage: { $regex: key[3], $options: 'i' } },
-                              { lead_source: { $regex: key[3], $options: 'i' } },
-                              { last_remark: { $regex: key[3], $options: 'i' } },
+                            ]
+                        },
+                        {
+                            $or: [
+                                { name: { $regex: key[3], $options: 'i' } },
+                                { city: { $regex: key[3], $options: 'i' } },
+                                { customer_name: { $regex: key[3], $options: 'i' } },
+                                { customer_designation: { $regex: key[3], $options: 'i' } },
+                                { mobile: { $regex: key[3], $options: 'i' } },
+                                { email: { $regex: key[3], $options: 'i' } },
+                                { state: { $regex: key[3], $options: 'i' } },
+                                { country: { $regex: key[3], $options: 'i' } },
+                                { address: { $regex: key[3], $options: 'i' } },
+                                { work_description: { $regex: key[3], $options: 'i' } },
+                                { turnover: { $regex: key[3], $options: 'i' } },
+                                { alternate_mobile3: { $regex: key[3], $options: 'i' } },
+                                { alternate_mobile2: { $regex: key[3], $options: 'i' } },
+                                { alternate_email: { $regex: key[3], $options: 'i' } },
+                                { lead_type: { $regex: key[3], $options: 'i' } },
+                                { stage: { $regex: key[3], $options: 'i' } },
+                                { lead_source: { $regex: key[3], $options: 'i' } },
+                                { last_remark: { $regex: key[3], $options: 'i' } },
 
-                          ]
-                      }
-                  ]
-                  ,
+                            ]
+                        }
+                    ]
+                    ,
 
-              }
-              ).populate('lead_owners').populate('updated_by').populate('created_by').populate({
-                  path: 'remarks',
-                  populate: [
-                      {
-                          path: 'created_by',
-                          model: 'User'
-                      },
-                      {
-                          path: 'updated_by',
-                          model: 'User'
-                      }
-                  ]
-              }).sort('-created_at')
-          }
+                }
+                ).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+                    path: 'remarks',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        }
+                    ]
+                }).sort('-created_at')
+            }
         }
 
         if (!req.user?.is_admin) {
@@ -2756,7 +2755,6 @@ export const BackUpAllLeads = async (req: Request, res: Response, next: NextFunc
 
     res.status(200).json({ message: "no leads found" })
 }
-
 
 // post/put/patch/delete
 export const CreateLead = async (req: Request, res: Response, next: NextFunction) => {
@@ -2963,8 +2961,6 @@ export const UpdateLead = async (req: Request, res: Response, next: NextFunction
 }
 
 
-
-
 export const DeleteLead = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
@@ -2979,7 +2975,7 @@ export const DeleteLead = async (req: Request, res: Response, next: NextFunction
     await lead.remove()
     if (lead.visiting_card && lead.visiting_card._id)
         await destroyFile(lead.visiting_card?._id)
-  
+
     return res.status(200).json({ message: "lead and related remarks are deleted" })
 }
 
@@ -3216,7 +3212,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                         newlead.remarks = [new_remark]
                     }
                     await newlead.save()
-                  
+
                 }
             }
         })
@@ -3287,7 +3283,7 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
         lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
         await lead.save()
-       
+
     }
     else {
         if (remark) {
@@ -3309,7 +3305,7 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
         lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
         await lead.save()
-       
+
 
     }
     return res.status(200).json({ message: "successfully changed stage" })
@@ -3515,7 +3511,7 @@ export const BulkDeleteUselessLeads = async (req: Request, res: Response, next: 
             if (lead.visiting_card && lead.visiting_card._id)
                 await destroyFile(lead.visiting_card?._id)
 
-           
+
         }
     }
     return res.status(200).json({ message: "lead and related remarks are deleted" })
@@ -3665,5 +3661,76 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
     await rremark.remove()
     return res.status(200).json({ message: " remark deleted successfully" })
 
+}
+
+export const GetBroadcast = async (req: Request, res: Response, next: NextFunction) => {
+    let broadcast = await Broadcast.findOne().populate('templates').populate('connected_users').populate('updated_by').populate('created_by')
+    return res.status(200).json(broadcast)
+}
+export const StartBroadcast = async (req: Request, res: Response, next: NextFunction) => {
+    let broadcast = await Broadcast.findOne().populate('templates').populate('connected_users').populate('updated_by').populate('created_by')
+    return res.status(200).json(broadcast)
+}
+
+export const CreateBroadcast = async (req: Request, res: Response, next: NextFunction) => {
+    const {
+        name,
+        connected_users,
+        templates,
+        is_random_template,
+        daily_limit,
+        time_gap,
+        autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean, daily_limit: number, time_gap: number, autoRefresh: boolean }
+
+    if (!name || !connected_users || !templates || !daily_limit || !time_gap || !autoRefresh)
+        return res.status(500).json({ message: "please fill all required fields" })
+    let broadcast = await Broadcast.findOne()
+    if (broadcast) {
+        return res.status(404).json({ message: "broadcast already exists" })
+    }
+    await new Broadcast({
+        name,
+        connected_users,
+        templates,
+        is_random_template,
+        daily_limit,
+        time_gap,
+        autoRefresh
+    }).save()
+    return res.status(200).json(broadcast)
+}
+
+export const UpdateBroadcast = async (req: Request, res: Response, next: NextFunction) => {
+    const {
+        name,
+        connected_users,
+        templates,
+        is_random_template,
+        daily_limit,
+        time_gap,
+        autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean, daily_limit: number, time_gap: number, autoRefresh: boolean }
+
+    if (!name || !connected_users || !templates || !daily_limit || !time_gap || !autoRefresh)
+        return res.status(500).json({ message: "please fill all required fields" })
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
+
+    await Broadcast.findByIdAndUpdate(id, {
+        name,
+        connected_users,
+        templates,
+        is_random_template,
+        daily_limit,
+        time_gap,
+        autoRefresh
+    })
+    return res.status(200).json({ message: "updated broadcast" })
+}
+
+export const StopBroadcast = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
+    await Broadcast.findByIdAndUpdate(id, { is_active: false, is_paused: false })
+    return res.status(200).json({ message: " broadcast stopped successfully" })
 }
 

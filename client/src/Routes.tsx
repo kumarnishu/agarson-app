@@ -26,6 +26,7 @@ import BackupDashboard from './dashboards/BackupDashboard.tsx'
 import GreetingsDashboard from './dashboards/GreetingsDashboard.tsx'
 import BotDashboard from './dashboards/BotDashboard.tsx'
 import ErpLoginDashboard from './dashboards/ErpLoginDashboard.tsx'
+
 const LoginPage = React.lazy(() => import('./pages/users/LoginPage'))
 const EmailVerifyPage = React.lazy(() => import('./pages/users/EmailVerifyPage'))
 const UsersPage = React.lazy(() => import('./pages/users/UsersPage'))
@@ -34,6 +35,7 @@ const BackupPage = React.lazy(() => import('./pages/backup/BackupPage'))
 const UseLessLeadsPage = React.lazy(() => import('./pages/crm/UseLessLeadsPage'))
 const TemplatesPage = React.lazy(() => import('./pages/templates/TemplatesPage'))
 const CrmHelpPage = React.lazy(() => import('./pages/crm/CrmHelpPage'))
+const BroadcastPage = React.lazy(() => import('./pages/crm/BroadcastPage'))
 const BotHelpPage = React.lazy(() => import('./pages/bot/BotHelpPage'))
 const CrmReminderPage = React.lazy(() => import('./pages/crm/CrmReminderPage'))
 const CheckListPage = React.lazy(() => import('./pages/checklists/CheckListPage'))
@@ -117,6 +119,7 @@ export enum paths {
   crm = "crm",
   crm_reminders = "crm_reminders",
   crm_activities = "crm_activities",
+  broadcast = "broadcast",
   leads = "leads",
   customers = "customers",
   updateble_fields_lead = "updateble_fields_lead",
@@ -355,7 +358,12 @@ function AppRoutes() {
                   </Suspense>
                 }
               />
-
+              <Route
+                path={paths.broadcast} element={
+                  <Suspense fallback={<LinearProgress />}><BroadcastPage />
+                  </Suspense>
+                }
+              />
               <Route
                 path={paths.crm_help_page} element={
                   <CrmHelpPage />

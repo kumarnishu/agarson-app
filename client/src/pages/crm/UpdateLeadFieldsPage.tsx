@@ -2,7 +2,7 @@ import { GetLeadFieldsUpdatable, UpdateLeadFieldsUpdatable } from '../../service
 import { AxiosResponse } from 'axios'
 import { useMutation, useQuery } from 'react-query'
 import { useContext, useEffect, useState } from 'react'
-import { Button, Grid, LinearProgress, Stack, TextField, Typography } from '@mui/material'
+import { Button, Grid, Stack, TextField, Typography } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import { BackendError } from '../..'
 import AlertBar from '../../components/snacks/AlertBar'
@@ -14,9 +14,11 @@ function UpdateLeadFieldsPage() {
     const { user } = useContext(UserContext)
     const { data: updated_fields, mutate, isLoading, isSuccess } = useMutation
         <AxiosResponse<ILeadUpdatableField>, BackendError, {
-            stages: string[],
-            lead_types: string[],
-            lead_sources: string[],
+            body?: {
+                stages: string[],
+                lead_types: string[],
+                lead_sources: string[],
+            }
         }>(UpdateLeadFieldsUpdatable)
 
     const { data, isSuccess: isFieldsSuccess } = useQuery<AxiosResponse<ILeadUpdatableField>, BackendError>("updateble-lead-leads", GetLeadFieldsUpdatable, {
@@ -43,16 +45,13 @@ function UpdateLeadFieldsPage() {
             setFields(updated_fields?.data)
         }
     }, [isSuccess, updated_fields])
-
     return (
         <>
             {isSuccess && <AlertBar message='Fields Saved Successfuly' color="success" />}
 
             {user?.crm_access_fields.is_editable &&
                 <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
-                    if (fields) {
-                        mutate(fields)
-                    }
+                    mutate({ body: fields })
                 }}
                     disabled={isLoading || !user?.crm_access_fields.is_deletion_allowed}
                 >

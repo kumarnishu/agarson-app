@@ -12,7 +12,6 @@ setInterval(() => {
     store?.writeToFile('./baileys_store_multi.json')
 }, 10_000)
 
-console.log(clients)
 
 async function createSocket(session_folder: string) {
     const { state, saveCreds } = await useMultiFileAuthState('sessions/' + session_folder)
@@ -24,10 +23,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
     const socket = await createSocket(client_id)
     store?.bind(socket.sock.ev)
 
-    // save creds
-    socket.sock.ev.on("creds.update", async () => {
-        socket.saveCreds()
-    })
+
     // connection  updates
     socket.sock.ev.on('connection.update', async (update) => {
         console.log(update)
@@ -35,19 +31,35 @@ export async function createWhatsappClient(client_id: string, io: Server) {
         if (connection === 'close') {
             if (lastDisconnect?.error) {
                 let msg = lastDisconnect.error.message
+                console.log(msg)
                 if (msg === "Connection Failure") {
-
+                    io.to(client_id).emit("disconnected_whatsapp");
                     await DeleteLocalSession(client_id)
+                    await DeleteLocalSession(client_id)
+                    createWhatsappClient(client_id, io)
                 }
-                else if (msg === "Stream Errored (conflict") {
-                    await DeleteLocalSession(client_id)
+                else if (msg === "Stream Errored (conflict)") {
+                    io.to(client_id).emit("disconnected_whatsapp");
+                    clients = clients.filter((client) => { return client.client_id === client_id })
+                    let user = await User.findOne({ client_id: client_id })
+                    if (user) {
+                        await User.findByIdAndUpdate(user._id, {
+                            connected_number: undefined
+                        })
+                    }
+                }
+                else if (msg === "Stream Errored (restart required)") {
+                    io.to(client_id).emit("loading");
+                    if (clients.find((c) => c.client_id === client_id))
+                        createWhatsappClient(client_id, io)
+                    createWhatsappClient(client_id, io)
                 }
                 else {
-                    createWhatsappClient(client_id, io)
                     console.log("retrying connection")
                 }
-            } console.log("closed connection called")
-
+            }
+            if (!clients.find((c) => c.client_id === client_id))
+                createWhatsappClient(client_id, io)
         }
         if (qr) {
             io.to(client_id).emit("qr", qr);
@@ -76,7 +88,10 @@ export async function createWhatsappClient(client_id: string, io: Server) {
         }
     })
 
-    console.log(clients)
+    // save creds
+    socket.sock.ev.on("creds.update", async () => {
+        socket.saveCreds()
+    })
 }
 
 
@@ -92,9 +107,10 @@ async function DeleteLocalSession(client_id: string) {
                 connected_number: undefined
             })
         }
+        console.log("deleted directory")
     }
     catch (err) {
-        console.log("deleted directory", err)
+        console.log(err)
     }
 }
 

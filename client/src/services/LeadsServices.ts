@@ -103,10 +103,10 @@ export const FuzzySearchCustomers = async ({ searchString, limit, page, userId }
 }
 
 export const GetCustomers = async ({ limit, page, userId }: { limit: number | undefined, page: number | undefined, userId?: string }) => {
-  if(userId)
+  if (userId)
     return await apiClient.get(`customers?limit=${limit}&page=${page}&id=${userId}`)
   else
-  return await apiClient.get(`customers?limit=${limit}&page=${page}`)
+    return await apiClient.get(`customers?limit=${limit}&page=${page}`)
 }
 
 export const NewLead = async (body: FormData) => {
@@ -175,17 +175,36 @@ export const BulkAssignLeads = async ({ body }: {
   return await apiClient.put(`bulk/assign/leads`, body)
 }
 
-export const UpdateLeadFieldsUpdatable = async (
-  body: {
+export const UpdateLeadFieldsUpdatable = async ({ body }: {
+  body?: {
     stages: string[],
     lead_types: string[],
     lead_sources: string[],
   }
-) => {
+}) => {
   return await apiClient.put(`fields/lead/update`, body)
 }
 export const GetLeadFieldsUpdatable = async () => {
   return await apiClient.get(`lead-updatable-fields`)
 }
+
+export const GetBroadcast = async () => {
+  return await apiClient.get(`broadcast`)
+}
+export const CreateBroadcast = async (body: { name: string, connected_users: string[], templates: string[], is_random_template: boolean, daily_limit: number, time_gap: number, autoRefresh: boolean }) => {
+  return await apiClient.post(`broadcast`, body)
+}
+export const UpdateBroadcast = async ({ body, id }: { id: string, body: { name: string, connected_users: string[], templates: string[], is_random_template: boolean, daily_limit: number, time_gap: number, autoRefresh: boolean } }) => {
+  return await apiClient.put(`broadcast/:${id}`, body)
+}
+
+export const StartBroadcast = async (id: string) => {
+  return await apiClient.patch(`broadcast/start/:${id}`)
+}
+
+export const StopBroadcast = async (id: string) => {
+  return await apiClient.patch(`broadcast/stop/:${id}`)
+}
+
 
 
