@@ -22,7 +22,7 @@ export default function CrmNavBar() {
                 }}
                 >
                     {/* child stack1 */}
-                    <Stack direction="row" gap={2} pl={1}>
+                    <Stack direction="row" gap={2} pl={3}>
                         <StyledLink to={paths.dashboard}>
                             <AgarsonLogo width={35} height={35} title='Go To Dashboard' />
                         </StyledLink>

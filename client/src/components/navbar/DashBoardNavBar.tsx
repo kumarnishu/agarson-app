@@ -23,7 +23,7 @@ export default function DashBoardNavBar() {
                 }}
                 >
                     {/* child stack1 */}
-                    <Stack direction="row" gap={2} pl={1}>
+                    <Stack direction="row" gap={2} pl={3}>
                         <StyledLink to={paths.dashboard} replace={true}>
                             <AgarsonLogo width={35} height={35} title='Go To Dashboard' />
                         </StyledLink>
@@ -70,8 +70,6 @@ export default function DashBoardNavBar() {
                 </Stack>
             </Box >
             <Outlet />
-
-
         </>
     )
 }

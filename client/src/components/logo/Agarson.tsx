@@ -32,7 +32,7 @@ export function BlueAgarsonLogo({ width, height, title }: Props) {
     return (
 
         <Avatar title={title}
-            sx={{ width: width, height: height, borderRadius: 10 }}
+            sx={{ width: width, height: height, borderRadius: 1.5 }}
             alt={title} src={logo3}
         />
     )
