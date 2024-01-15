@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Stack } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
@@ -51,19 +51,21 @@ function UploadVisitSamplesDialog({ visit }: { visit: IVisitReport }) {
                     <Cancel fontSize='large' />
                 </IconButton>
                 <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Upload Shoes Samples</DialogTitle>
-                <DialogContent >
-                    <UploadFileButton name="media" required={true} camera={true} isLoading={isLoading} label="Upload Samples" file={file} setFile={setFile} disabled={isLoading} />
-                    <Button variant="contained" color="error" onClick={() => {
-                        if (file) {
-                            let formdata = new FormData()
-                            formdata.append("media", file)
-                            mutate({ id: visit._id, body: formdata })
-                            setFile(undefined)
-                        }
-                    }}
-                        disabled={Boolean(isLoading)}
-                        fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
-                    </Button>
+                <DialogContent  >
+                   <Stack gap={2}>
+                        <UploadFileButton name="media" required={true} camera={true} isLoading={isLoading} label="Upload Samples" file={file} setFile={setFile} disabled={isLoading} />
+                        <Button variant="contained" color="error" onClick={() => {
+                            if (file) {
+                                let formdata = new FormData()
+                                formdata.append("media", file)
+                                mutate({ id: visit._id, body: formdata })
+                                setFile(undefined)
+                            }
+                        }}
+                            disabled={Boolean(isLoading)}
+                            fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
+                        </Button>
+                   </Stack>
                 </DialogContent>
 
             </Dialog >
