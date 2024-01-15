@@ -115,7 +115,7 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
     dt1.setHours(8)
     dt1.setMinutes(0)
 
-    let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, person: req.user._id })
+    let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id })
 
     if (visit)
         return res.status(403).json({ message: "day has already started" })
