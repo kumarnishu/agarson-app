@@ -20,7 +20,7 @@ function RefreshWhatsappDialog() {
                 if (user)
                     setUser({
                         ...user,
-                        is_whatsapp_active: false
+                        connected_number: undefined
                     })
             })
             socket.on("disconnected_whatsapp", (client_id: string) => {
@@ -29,7 +29,7 @@ function RefreshWhatsappDialog() {
                 if (user?.client_id === client_id)
                     setUser({
                         ...user,
-                        is_whatsapp_active: false
+                        connected_number: undefined
                     })
             })
             socket.on("ready", (phone) => {
@@ -38,8 +38,7 @@ function RefreshWhatsappDialog() {
                 if (user)
                     setUser({
                         ...user,
-                        connected_number: phone,
-                        is_whatsapp_active: true
+                        connected_number: phone
                     })
             })
             socket.on("loading", () => {
@@ -61,7 +60,7 @@ function RefreshWhatsappDialog() {
                             disabled={Boolean(loading)}
                             onClick={() => {
                                 if (user) {
-                                    socket?.emit("JoinRoom", user.client_id, user.client_data_path)
+                                    socket?.emit("JoinRoom", user.client_id)
                                 }
                                 setLoading(true)
                             }}>Check Whatsapp Status
@@ -69,7 +68,7 @@ function RefreshWhatsappDialog() {
 
                         <Box sx={{ p: 2 }}>
                             <>
-                                {user && user.is_whatsapp_active ?
+                                {user && user.connected_number ?
                                     <>
                                         <Typography>
                                             Congrats {String(user?.connected_number).replace("@c.us", "")} Connected

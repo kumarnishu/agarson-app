@@ -4,7 +4,6 @@ import { isvalidDate } from "../utils/isValidDate"
 import { Greeting } from "../models/greetings/greeting.model"
 import { clients } from "../utils/CreateWhatsappClient"
 import { GreetingManager } from "../app"
-import { SendGreetingTemplates } from "../utils/sendGreetingMessage"
 import xlsx from "xlsx"
 
 export const FetchGreetings = async (req: Request, res: Response, next: NextFunction) => {
@@ -94,7 +93,7 @@ export const StartAllGreetings = async (req: Request, res: Response, next: NextF
 
     if (!client)
         return res.status(500).json({ message: "whatsapp not connected" })
-    SendGreetingTemplates(client.client, req.user)
+    // SendGreetingTemplates(client.client, req.user)
     return res.status(200).json({ message: "greetings started" })
 }
 

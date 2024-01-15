@@ -40,8 +40,6 @@ export const GetTrackers = async (req: Request, res: Response, next: NextFunctio
         return res.status(500).json({ message: "bad request" })
 }
 
-
-
 export const FuzzySearchTrackers = async (req: Request, res: Response, next: NextFunction) => {
     let key = String(req.query.key).toLowerCase()
     console.log(key)
@@ -68,6 +66,7 @@ export const FuzzySearchTrackers = async (req: Request, res: Response, next: Nex
         .sort('-updated_at')
     return res.status(200).json(trackers)
 }
+
 export const GetConnectedUsers = async (req: Request, res: Response, next: NextFunction) => {
     let users = await User.find()
     users = users.filter((user) => {

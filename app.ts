@@ -17,11 +17,12 @@ import PasswordRoutes from "./routes/password.routes";
 import ProductionRoutes from "./routes/production.routes";
 import CronJobManager from "cron-job-manager";
 import path from 'path';
-import morgan from "morgan";
 import { Server } from "socket.io";
-import { createWhatsappClient, getCurrentUser, logger, userJoin, userLeave } from "./utils/CreateWhatsappClient";
+import {  getCurrentUser,  userJoin, userLeave } from "./utils/handleSocketUsers";
 import { Storage } from '@google-cloud/storage';
-import { pinoHttp } from 'pino-http';
+import morgan from 'morgan';
+import { createWhatsappClient } from './utils/CreateWhatsappClient';
+import { ReConnectWhatsapp } from './utils/RestartServices';
 
 
 const app = express()
@@ -39,7 +40,7 @@ app.use(cookieParser());
 app.use(compression())
 
 //logger
-app.use(pinoHttp)
+app.use(morgan('tiny'))
 
 
 //mongodb database
@@ -66,8 +67,8 @@ io = new Server(server, {
 
 io.on("connection", (socket) => {
     console.log("socket connected")
-    socket.on('JoinRoom', async (id: string, path: string) => {
-        console.log("running in room", id, path)
+    socket.on('JoinRoom', async (id: string) => {
+        console.log("running in room", id)
         const user = userJoin(id)
         socket.join(user.id)
         if (io)
@@ -118,6 +119,7 @@ app.use("/api/v1", GreetingRoutes)
 
 
 
+ReConnectWhatsapp()
 //react app handler
 if (ENV === "production") {
     app.use(express.static(path.join(__dirname, "build")))

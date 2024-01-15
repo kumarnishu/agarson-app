@@ -47,20 +47,11 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     required: true,
     trim: true,
   },
-  client_data_path: {
-    type: String,
-    required: true,
-    trim: true,
-  },
+  
   connected_number: {
     type: String,
     trim: true,
     index: true
-  },
-  is_whatsapp_active: {
-    type: Boolean,
-    default: false,
-    required: true,
   },
   is_admin: {
     type: Boolean,

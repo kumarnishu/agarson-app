@@ -14,7 +14,7 @@ function RefreshWhatsappButton() {
                 setChoice({ type: BotChoiceActions.refresh_whatsapp })
             }}
             >
-                {user && user.is_whatsapp_active ?
+                {user && user.connected_number ?
                     <img width="30" height="30" src="https://img.icons8.com/3d-fluency/94/whatsapp.png" alt="whatsapp" />
 
                     :
