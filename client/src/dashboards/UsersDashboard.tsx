@@ -25,7 +25,7 @@ function UsersDashboard() {
                 <Paper sx={{ p: 2, bgcolor: 'white', boxShadow: 2, border: 10, borderRadius: 3, borderColor: 'white' }}>
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                     <BlueAgarsonLogo width={35} height={35} title='users' />
-                    <Typography variant="body1" sx={{ fontSize: 16, textTransform: 'capitalize' }} component="div">
+                    <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                       {feat.feature}
                     </Typography>
                   </Stack>

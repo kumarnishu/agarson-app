@@ -22,7 +22,7 @@ export function AgarsonPngLogo({ width, height, title }: Props) {
     return (
 
         <Avatar title={title}
-            sx={{ width: width, height: height, borderRadius: 2 }}
+            sx={{ width: width, height: height, borderRadius: 10 }}
             alt="img1" src={logo2}
         />
     )
@@ -32,7 +32,7 @@ export function BlueAgarsonLogo({ width, height, title }: Props) {
     return (
 
         <Avatar title={title}
-            sx={{ width: width, height: height, borderRadius: 2 }}
+            sx={{ width: width, height: height, borderRadius: 10 }}
             alt={title} src={logo3}
         />
     )

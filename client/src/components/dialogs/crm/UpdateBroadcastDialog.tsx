@@ -15,7 +15,7 @@ function UpdateBroadcastDialog({ broadcast }: { broadcast: IBroadcast }) {
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
                     <Cancel fontSize='large' />
                 </IconButton>
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Create Broadcast</DialogTitle>
+                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Edit Broadcast</DialogTitle>
                 <DialogContent>
                     <UpdateBroadcastForm broadcast={broadcast} />
                 </DialogContent>

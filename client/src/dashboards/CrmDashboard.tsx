@@ -16,10 +16,10 @@ function CrmDashboard() {
     tmpfeatures.push({ feature: 'customers', is_visible: true, url: paths.customers })
     tmpfeatures.push({ feature: 'refers', is_visible: true, url: paths.refers })
     tmpfeatures.push({ feature: 'useless', is_visible: true, url: paths.useless_leads })
-    tmpfeatures.push({ feature: 'reminders', is_visible: true, url: paths.crm_reminders })
+    tmpfeatures.push({ feature: 'My reminders', is_visible: true, url: paths.crm_reminders })
     tmpfeatures.push({ feature: 'activities', is_visible: true, url: paths.crm_activities })
     user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'fields', is_visible: true, url: paths.updateble_fields_lead })
-    user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'Broadcast', is_visible: true, url: paths.broadcast })
+    user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'Leads Broadcast', is_visible: true, url: paths.broadcast })
     tmpfeatures.push({ feature: 'help', is_visible: true, url: paths.crm_help_page })
     setFeatures(tmpfeatures)
   }, [])
@@ -34,7 +34,7 @@ function CrmDashboard() {
                 <Paper sx={{ p: 2, bgcolor: 'white', boxShadow: 2, border: 10, borderRadius: 3, borderColor: 'white' }}>
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                     <BlueAgarsonLogo width={35} height={35} title='users' />
-                    <Typography variant="body1" sx={{ fontSize: 16, textTransform: 'capitalize' }} component="div">
+                    <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                       {feat.feature}
                     </Typography>
                   </Stack>

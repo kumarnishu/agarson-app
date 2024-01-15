@@ -22,17 +22,19 @@ function BroadcastPage() {
   return (
     <>
       {isLoading && <LinearProgress />}
-      <Typography variant="h6" sx={{ textAlign: 'center', textTransform: 'capitalize', fontSize: 14 }}>
-        Daily Broadcast
-      </Typography>
+
 
       {broadcast &&
         <Stack>
+
           <Paper elevation={8} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white', borderRadius: 2 }}>
             <Stack
               direction="column"
               gap={1}
             >
+              <Typography variant="h4" sx={{ textAlign: 'center', textTransform: 'uppercase', fontSize: 18, p: 2, fontWeight: 'bold', textDecoration: 'underline' }}>
+                Daily Leads Broadcast
+              </Typography>
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                 Broadcast Name : {broadcast.name}
               </Typography>
@@ -66,25 +68,30 @@ function BroadcastPage() {
                 Counter : {broadcast.counter}
               </Typography>
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                Connected Users : {broadcast.connected_users.map((u) => { return `${u.username}:${String(u.connected_number).split(":")[0].replace("91", "")}` }).toString()}
+                Connected Users : {broadcast.connected_users.map((u) => {
+                  if (u.connected_number)
+                    return `${u.username}:${String(u.connected_number).split(":")[0].replace("91", "")}`
+                }).toString()}
               </Typography>
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                 Connected templates : {broadcast.templates.length}
               </Typography>
 
             </Stack>
-            <Button disabled={broadcast.is_active} variant="contained" color="error" onClick={() => {
-              setChoice({ type: LeadChoiceActions.update_broadcast })
-            }} sx={{ px: 0, my: 2, mx: 1, fontWeight: 'bold', fontSize: 12 }}>Edit</Button>
-            {!broadcast.is_paused && broadcast.is_active ?
-              <Button variant="outlined" color="error" onClick={() => {
-                setChoice({ type: LeadChoiceActions.stop_broadcast })
-              }} sx={{ px: 0, my: 2, mx: 1, fontWeight: 'bold', fontSize: 12 }}>Stop</Button>
-              :
-              <Button variant="contained" color="success" onClick={() => {
-                setChoice({ type: LeadChoiceActions.start_broadcast })
-              }} sx={{ px: 0, my: 2, mx: 1, fontWeight: 'bold', fontSize: 12 }}>Start</Button>
-            }
+            <Stack flexDirection="row" gap={2}>
+              <Button fullWidth disabled={broadcast.is_active} variant="contained" color="error" onClick={() => {
+                setChoice({ type: LeadChoiceActions.update_broadcast })
+              }} sx={{ p: 2, my: 2, fontWeight: 'bold', fontSize: 12 }}>Edit</Button>
+              {!broadcast.is_paused && broadcast.is_active ?
+                <Button fullWidth variant="outlined" color="error" onClick={() => {
+                  setChoice({ type: LeadChoiceActions.stop_broadcast })
+                }} sx={{ p: 2, my: 2, fontWeight: 'bold', fontSize: 12 }}>Stop</Button>
+                :
+                <Button fullWidth variant="contained" color="success" onClick={() => {
+                  setChoice({ type: LeadChoiceActions.start_broadcast })
+                }} sx={{ p: 2, my: 2, fontWeight: 'bold', fontSize: 12 }}>Start</Button>
+              }
+            </Stack>
             {broadcast.is_paused && <Typography>Paused</Typography>}
           </Paper>
           <UpdateBroadcastDialog broadcast={broadcast} />

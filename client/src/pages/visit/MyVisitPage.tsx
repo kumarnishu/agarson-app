@@ -103,8 +103,8 @@ function MyVisitPage() {
 
       {
         !visit && <Box>
-          <Stack sx={{ height: '80vh', bgcolor: 'rgba(0,0,255,0.7)' }}>
-            <img src={background} alt="background" style={{ objectFit: 'fill' }} />
+          <Stack>
+            <img src={background} alt="background" />
           </Stack >
           <Button size="large" sx={{ p: 3, fontSize: 20 }} color="error" variant="contained"
             disabled={isLoading}
