@@ -434,7 +434,7 @@ export const MakeVisitOut = async (req: Request, res: Response, next: NextFuncti
     report.visit_out_credentials = {
         latitude: visit_out_credentials.latitude,
         longitude: visit_out_credentials.longitude,
-        timestamp: visit_out_credentials.timestamp,
+        timestamp: new Date(),
         address: String(address.display_name)
     }
 
