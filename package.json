@@ -5,7 +5,6 @@
   "main": "dist/app.js",
   "nodemonConfig": {
     "ignore": [
-      "dist",
       "sessions",
       "node_modules",
       "client",

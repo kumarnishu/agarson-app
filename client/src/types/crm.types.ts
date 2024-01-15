@@ -115,7 +115,7 @@ export type IBroadcast = {
     is_random_template: boolean
     daily_limit: number,
     is_paused: boolean,
-    time_gap: string,
+    time_gap: number,
     autoRefresh: boolean,
     created_at: Date,
     updated_at: Date,

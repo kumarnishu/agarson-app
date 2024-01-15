@@ -15,7 +15,10 @@ import { ILead, ILeadTemplate, IReferredParty, IRemark, TLeadBody, TLeadUpdatabl
 import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
 import { Broadcast } from "../models/leads/broadcast.model.js"
-
+import cron from "cron"
+import { GetDailyBroadcastCronString } from "../utils/GetDailyBroadcastCronString.js"
+import { handleBroadcast } from "../utils/handleBroadcast.js"
+import { clients } from "../utils/CreateWhatsappClient.js"
 
 // get request
 export const GetLeads = async (req: Request, res: Response, next: NextFunction) => {
@@ -3668,8 +3671,23 @@ export const GetBroadcast = async (req: Request, res: Response, next: NextFuncti
     return res.status(200).json(broadcast)
 }
 export const StartBroadcast = async (req: Request, res: Response, next: NextFunction) => {
-    let broadcast = await Broadcast.findOne().populate('templates').populate('connected_users').populate('updated_by').populate('created_by')
-    return res.status(200).json(broadcast)
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
+    let cron_string = GetDailyBroadcastCronString()
+    let broadcast = await Broadcast.findById(id)
+    if (!broadcast) {
+        return res.status(404).json({ message: "broadcast not found" })
+    }
+    await Broadcast.findByIdAndUpdate(id, {
+        is_active: true,
+        is_paused: false,
+        cron_string: cron_string,
+        next_run_date: new Date(cron.sendAt(cron_string)),
+        couter: 0
+    })
+ 
+    handleBroadcast(broadcast, clients)
+    return res.status(200).json({ message: "started" })
 }
 
 export const CreateBroadcast = async (req: Request, res: Response, next: NextFunction) => {
@@ -3682,7 +3700,7 @@ export const CreateBroadcast = async (req: Request, res: Response, next: NextFun
         time_gap,
         autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean, daily_limit: number, time_gap: number, autoRefresh: boolean }
 
-    if (!name || !connected_users || !templates || !daily_limit || !time_gap || !autoRefresh)
+    if (!name || !connected_users || !templates || !daily_limit || !time_gap)
         return res.status(500).json({ message: "please fill all required fields" })
     let broadcast = await Broadcast.findOne()
     if (broadcast) {
@@ -3695,7 +3713,11 @@ export const CreateBroadcast = async (req: Request, res: Response, next: NextFun
         is_random_template,
         daily_limit,
         time_gap,
-        autoRefresh
+        autoRefresh,
+        created_at: new Date(),
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
     }).save()
     return res.status(200).json(broadcast)
 }
@@ -3710,7 +3732,7 @@ export const UpdateBroadcast = async (req: Request, res: Response, next: NextFun
         time_gap,
         autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean, daily_limit: number, time_gap: number, autoRefresh: boolean }
 
-    if (!name || !connected_users || !templates || !daily_limit || !time_gap || !autoRefresh)
+    if (!name || !connected_users || !templates || !daily_limit || !time_gap)
         return res.status(500).json({ message: "please fill all required fields" })
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
@@ -3722,7 +3744,9 @@ export const UpdateBroadcast = async (req: Request, res: Response, next: NextFun
         is_random_template,
         daily_limit,
         time_gap,
-        autoRefresh
+        autoRefresh,
+        updated_at: new Date(),
+        updated_by: req.user
     })
     return res.status(200).json({ message: "updated broadcast" })
 }
@@ -3730,7 +3754,7 @@ export const UpdateBroadcast = async (req: Request, res: Response, next: NextFun
 export const StopBroadcast = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
-    await Broadcast.findByIdAndUpdate(id, { is_active: false, is_paused: false })
+    await Broadcast.findByIdAndUpdate(id, { is_active: false, is_paused: false, couter: 0 })
     return res.status(200).json({ message: " broadcast stopped successfully" })
 }
 

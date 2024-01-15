@@ -40,7 +40,7 @@ function NewtemplateForm() {
         initialValues: {
             name: '',
             message: '',
-            category: catgeories?.data.categories[0] || "",
+            category: catgeories?.data && catgeories?.data.categories[0] || "",
             caption: '',
             media: ''
         },
@@ -99,7 +99,6 @@ function NewtemplateForm() {
             }, 1000)
         }
     }, [isSuccess, setChoice])
-    console.log(formik.values)
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>
@@ -122,7 +121,7 @@ function NewtemplateForm() {
                         }
                         {...formik.getFieldProps('name')}
                     />
-                    < TextField
+                    {catgeories?.data && < TextField
                         size='small'
                         select
                         SelectProps={{
@@ -149,7 +148,7 @@ function NewtemplateForm() {
                                 </option>)
                             })
                         }
-                    </TextField>
+                    </TextField>}
                     <TextField
                         multiline
                         minRows={4}

@@ -1,8 +1,7 @@
 
-export const GetDailyBroadcastCronString = (start_date: Date) => {
-    let date = new Date(start_date)
+export const GetDailyBroadcastCronString = () => {
     let cronString = undefined
-    cronString = `${date.getMinutes()} ` + `${date.getHours()} ` + " *" + " * " + "1,2,3,4,5,6"
+    cronString = "0 " + "10 " + " *" + " * " + "1,2,3,4,5,6"
     return cronString
 }
 

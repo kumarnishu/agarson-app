@@ -19,7 +19,7 @@ function CrmDashboard() {
     tmpfeatures.push({ feature: 'reminders', is_visible: true, url: paths.crm_reminders })
     tmpfeatures.push({ feature: 'activities', is_visible: true, url: paths.crm_activities })
     user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'fields', is_visible: true, url: paths.updateble_fields_lead })
-    user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'Wa Broadcast', is_visible: true, url: paths.broadcast })
+    user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'Broadcast', is_visible: true, url: paths.broadcast })
     tmpfeatures.push({ feature: 'help', is_visible: true, url: paths.crm_help_page })
     setFeatures(tmpfeatures)
   }, [])

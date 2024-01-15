@@ -38,6 +38,12 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     await DeleteLocalSession(client_id)
                     createWhatsappClient(client_id, io)
                 }
+                else if (msg ==="Connection Closed"){
+                    io.to(client_id).emit("loading");
+                    if (clients.find((c) => c.client_id === client_id))
+                        createWhatsappClient(client_id, io)
+                    createWhatsappClient(client_id, io)
+                }
                 else if (msg === "Stream Errored (conflict)") {
                     io.to(client_id).emit("disconnected_whatsapp");
                     clients = clients.filter((client) => { return client.client_id === client_id })
@@ -84,6 +90,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     connected_number: socket.sock.user?.id
                 })
             }
+            socket.sock.sendMessage("917056943283@s.whatsapp.net", { text: "hi balieys" })
             clients.push({ client_id: client_id, client: socket.sock })
         }
     })
