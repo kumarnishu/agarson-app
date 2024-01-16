@@ -89,6 +89,7 @@ export type ILead = {
     lead_owners: IUser[],
     visiting_card: Asset,
     is_customer: boolean,
+    is_sent: boolean,
     last_whatsapp: Date,
     referred_party?: IReferredParty,
     referred_party_name?: string,

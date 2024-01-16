@@ -1,5 +1,5 @@
 import { Comment, Delete, DeleteOutline, Edit, Share, Visibility } from '@mui/icons-material'
-import { Box, Checkbox,  IconButton, Tooltip } from '@mui/material'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
@@ -53,19 +53,19 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               <STableHeadCell
               >
 
-                  <Checkbox
-                    indeterminate={selectAll ? true : false}
-                    checked={Boolean(selectAll)}
-                    size="small" onChange={(e) => {
-                      if (e.currentTarget.checked) {
-                        setSelectedLeads(leads)
-                        setSelectAll(true)
-                      }
-                      if (!e.currentTarget.checked) {
-                        setSelectedLeads([])
-                        setSelectAll(false)
-                      }
-                    }} />
+                <Checkbox
+                  indeterminate={selectAll ? true : false}
+                  checked={Boolean(selectAll)}
+                  size="small" onChange={(e) => {
+                    if (e.currentTarget.checked) {
+                      setSelectedLeads(leads)
+                      setSelectAll(true)
+                    }
+                    if (!e.currentTarget.checked) {
+                      setSelectedLeads([])
+                      setSelectAll(false)
+                    }
+                  }} />
 
               </STableHeadCell>
 
@@ -76,7 +76,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
               </STableHeadCell>
 
-          
+
 
 
               <STableHeadCell
@@ -286,6 +286,18 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               <STableHeadCell
               >
 
+                Whatsapp Status
+
+              </STableHeadCell>
+              <STableHeadCell
+              >
+
+                Last whatsapp
+
+              </STableHeadCell>
+              <STableHeadCell
+              >
+
                 Visiting Card
 
               </STableHeadCell>
@@ -340,7 +352,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                         element={
                           <Stack direction="row" spacing={1}>
 
-                            {user?.is_admin && lead.referred_party &&
+                            {lead.referred_party &&
                               <Tooltip title="Remove Refrerral">
                                 <IconButton color="error"
                                   onClick={() => {
@@ -394,7 +406,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                               </Tooltip>}
 
                             {
-                              user?.is_admin && lead.stage === "useless" &&
+                              lead.stage === "useless" &&
                               <Tooltip title="remove from useless">
                                 <IconButton color="success"
                                   onClick={() => {
@@ -511,7 +523,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
 
                     <STableCell>
-                      {lead.lead_owners.map((owner) => { return owner.username}).toString()}
+                      {lead.lead_owners.map((owner) => { return owner.username }).toString()}
                     </STableCell>
 
 
@@ -605,6 +617,12 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                     <STableCell>
                       {lead.updated_by.username}
 
+                    </STableCell>
+                    <STableCell>
+                      {lead.is_sent ? "Sent" : "Pending"}
+                    </STableCell>
+                    <STableCell>
+                      {new Date(lead.last_whatsapp).toLocaleString()}
                     </STableCell>
                     <STableCell
                       title="double click to download"

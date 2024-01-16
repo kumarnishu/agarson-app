@@ -90,6 +90,7 @@ export type ILead = {
     visiting_card: Asset,
     is_customer: boolean,
     last_whatsapp: Date,
+    is_sent:boolean,
     referred_party?: IReferredParty,
     referred_party_name?: string,
     referred_party_mobile?: string,

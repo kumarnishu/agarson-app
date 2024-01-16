@@ -26,7 +26,6 @@ export async function createWhatsappClient(client_id: string, io: Server) {
 
     // connection  updates
     socket.sock.ev.on('connection.update', async (update) => {
-        console.log(update)
         const { connection, qr, lastDisconnect } = update
         if (connection === 'close') {
             if (lastDisconnect?.error) {
@@ -38,38 +37,32 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     await DeleteLocalSession(client_id)
                     createWhatsappClient(client_id, io)
                 }
-                else if (msg ==="Connection Closed"){
+                else if (msg === "Connection Closed") {
                     io.to(client_id).emit("loading");
-                    if (clients.find((c) => c.client_id === client_id))
-                        createWhatsappClient(client_id, io)
                     createWhatsappClient(client_id, io)
                 }
                 else if (msg === "Stream Errored (conflict)") {
                     io.to(client_id).emit("disconnected_whatsapp");
-                    clients = clients.filter((client) => { return client.client_id === client_id })
-                    let user = await User.findOne({ client_id: client_id })
-                    if (user) {
-                        await User.findByIdAndUpdate(user._id, {
-                            connected_number: undefined
-                        })
+                    if (clients.find((c) => c.client_id === client_id)) {
+                        clients = clients.filter((client) => { return client.client_id !== client_id })
+                        let user = await User.findOne({ client_id: client_id })
+                        if (user) {
+                            await User.findByIdAndUpdate(user._id, {
+                                connected_number: undefined
+                            })
+                        }
                     }
                 }
                 else if (msg === "Stream Errored (restart required)") {
-                    io.to(client_id).emit("loading");
-                    if (clients.find((c) => c.client_id === client_id))
-                        createWhatsappClient(client_id, io)
+                    io.to(client_id).emit("loading")
                     createWhatsappClient(client_id, io)
                 }
-                else {
-                    console.log("retrying connection")
-                }
+
             }
-            if (!clients.find((c) => c.client_id === client_id))
-                createWhatsappClient(client_id, io)
         }
         if (qr) {
             io.to(client_id).emit("qr", qr);
-            clients = clients.filter((client) => { return client.client_id === client_id })
+            clients = clients.filter((client) => { return client.client_id !== client_id })
             let user = await User.findOne({ client_id: client_id })
             if (user) {
                 await User.findByIdAndUpdate(user._id, {
@@ -90,7 +83,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     connected_number: socket.sock.user?.id
                 })
             }
-            socket.sock.sendMessage("917056943283@s.whatsapp.net", { text: "hi balieys" })
+            clients = clients.filter((client) => { return client.client_id !== client_id })
             clients.push({ client_id: client_id, client: socket.sock })
         }
     })
@@ -107,7 +100,7 @@ async function DeleteLocalSession(client_id: string) {
         if (fs.existsSync(`./sessions/${client_id}`)) {
             fs.rmdirSync(`./sessions/${client_id}`, { recursive: true })
         }
-        clients = clients.filter((client) => { return client.client_id === client_id })
+        clients = clients.filter((client) => { return client.client_id !== client_id })
         let user = await User.findOne({ client_id: client_id })
         if (user) {
             await User.findByIdAndUpdate(user._id, {

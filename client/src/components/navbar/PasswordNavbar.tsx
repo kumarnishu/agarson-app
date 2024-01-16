@@ -24,7 +24,7 @@ export default function PasswordNavbar() {
                 >
                     {/* child stack1 */}
                     <Stack direction="row" gap={2} pl={3}>
-                        <StyledLink to={paths.dashboard}>
+                        <StyledLink to={paths.dashboard} replace={true}>
                             <AgarsonLogo width={35} height={35} title='Go To Dashboard' />
                         </StyledLink>
                       

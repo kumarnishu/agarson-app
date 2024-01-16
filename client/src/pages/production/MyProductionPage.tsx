@@ -94,9 +94,8 @@ function MyProductionPage() {
                     Created By : {production.created_by.username}
                   </Typography>
                   <Typography variant="subtitle1" sx={{ textTransform: 'capitalize', color: 'blue', }}>
-                    <b>Timestamp : {moment(new Date(production.created_at)).format('LT')}</b>
+                    <b>{moment(new Date(production.created_at)).calendar()}</b>
                   </Typography>
-
                 </Stack>
               </Paper>
             )

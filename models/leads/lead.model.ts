@@ -95,6 +95,8 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         index: true,
         lowercase: true
     },
+    is_sent: { type: Boolean, default: false },
+    last_whatsapp: Date,
     remarks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Remark'

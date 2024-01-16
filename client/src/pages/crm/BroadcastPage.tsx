@@ -87,12 +87,13 @@ function BroadcastPage() {
                   setChoice({ type: LeadChoiceActions.stop_broadcast })
                 }} sx={{ p: 2, my: 2, fontWeight: 'bold', fontSize: 12 }}>Stop</Button>
                 :
-                <Button fullWidth variant="contained" color="success" onClick={() => {
-                  setChoice({ type: LeadChoiceActions.start_broadcast })
-                }} sx={{ p: 2, my: 2, fontWeight: 'bold', fontSize: 12 }}>Start</Button>
+                <Button fullWidth variant="contained"
+                  disabled={broadcast.is_paused}
+                  color="success" onClick={() => {
+                    setChoice({ type: LeadChoiceActions.start_broadcast })
+                  }} sx={{ p: 2, my: 2, fontWeight: 'bold', fontSize: 12 }}>Start</Button>
               }
             </Stack>
-            {broadcast.is_paused && <Typography>Paused</Typography>}
           </Paper>
           <UpdateBroadcastDialog broadcast={broadcast} />
           <StartBroadcastDialog broadcast={broadcast} />

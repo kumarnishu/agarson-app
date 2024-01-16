@@ -18,10 +18,10 @@ function ProductionDashboard() {
     if (user?.productions_access_fields.is_editable) {
       tmpfeatures.push({ feature: 'production ', is_visible: true, url: paths.production_admin })
       tmpfeatures.push({ feature: 'sole weight ', is_visible: true, url: paths.shoe_weight })
+      tmpfeatures.push({ feature: 'articles', is_visible: true, url: paths.articles })
       tmpfeatures.push({ feature: 'machines ', is_visible: true, url: paths.machines })
       tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
       tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })
-      tmpfeatures.push({ feature: 'articles', is_visible: true, url: paths.articles })
     }
     setFeatures(tmpfeatures)
   }, [])

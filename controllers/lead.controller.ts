@@ -3682,8 +3682,8 @@ export const StartBroadcast = async (req: Request, res: Response, next: NextFunc
         is_active: true,
         is_paused: false,
         cron_string: cron_string,
-        next_run_date: new Date(cron.sendAt(cron_string)),
-        couter: 0
+        counter:0,
+        next_run_date: new Date(cron.sendAt(cron_string))
     })
  
     handleBroadcast(broadcast, clients)
