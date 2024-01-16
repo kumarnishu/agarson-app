@@ -32,6 +32,7 @@ export async function handleBroadcast(broadcast: IBroadcast, clients: {
             let tmpreports = await Lead.find({ stage: { $ne: 'useless' }, is_sent: false }).sort('-created_at').skip((i + 1 - 1) * limit).limit(limit)
             for (let j = 0; j < tmpreports.length; j++) {
                 let report = tmpreports[j]
+                console.log("no of tmp reports", tmpreports.length)
                 let timeout = setTimeout(async () => {
                     let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')
                     if (latest_broadcast && latest_broadcast?.is_active && !latest_broadcast?.is_paused) {
@@ -71,6 +72,7 @@ export async function sendTemplates(client: any, mobile: string, templates: IMes
     let message = template?.template.message
     let mimetype = template?.template.media && template?.template.media?.content_type
     let filename = template?.template.media && template?.template.media?.filename
+    console.log(template)
     if (message) {
         await client.sendMessage(mobile, {
             text: message

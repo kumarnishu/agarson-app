@@ -121,7 +121,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                         }
                         {...formik.getFieldProps('name')}
                     />
-                    <TextField
+                    {formik.values.category !== "marketing" && <TextField
                         multiline
                         minRows={4}
 
@@ -135,7 +135,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                             formik.touched.message && formik.errors.message ? formik.errors.message : ""
                         }
                         {...formik.getFieldProps('message')}
-                    />
+                    />}
                     < TextField
                         size='small'
                         select
@@ -168,7 +168,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                             })
                         }
                     </TextField>
-                    <TextField
+                    {formik.values.category !== "marketing" && <TextField
                         multiline
                         minRows={4}
 
@@ -183,7 +183,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                         }
                         {...formik.getFieldProps('caption')}
                     />
-
+                    }
                     <TextField
                         fullWidth
                         error={

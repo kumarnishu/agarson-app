@@ -149,7 +149,7 @@ function NewtemplateForm() {
                             })
                         }
                     </TextField>}
-                    <TextField
+                    {formik.values.category !== "marketing" &&<TextField
                         multiline
                         minRows={4}
                         fullWidth
@@ -162,8 +162,8 @@ function NewtemplateForm() {
                             formik.touched.message && formik.errors.message ? formik.errors.message : ""
                         }
                         {...formik.getFieldProps('message')}
-                    />
-                    <TextField
+                    />}
+                    {formik.values.category !== "marketing" &&<TextField
                         multiline
                         minRows={4}
                         error={
@@ -176,7 +176,7 @@ function NewtemplateForm() {
                             formik.touched.caption && formik.errors.caption ? formik.errors.caption : ""
                         }
                         {...formik.getFieldProps('caption')}
-                    />
+                    />}
 
                     <TextField
                         fullWidth
