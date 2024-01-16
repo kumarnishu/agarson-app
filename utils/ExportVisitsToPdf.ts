@@ -10,40 +10,9 @@ import { User } from "../models/users/user.model"
 
 
 export async function handleVisitReport(client: { client_id: string, client: any }) {
-    let dt1 = new Date()
-    let dt2 = new Date()
-    dt2.setDate(new Date(dt1).getDate() + 1)
-    dt1.setHours(0)
-    dt1.setMinutes(0)
-    await ExportVisitsToPdf(client, dt1, dt2)
-    setTimeout(async () => {
-        await ExportVisits(client)
-    }, 10000)
-
-
-    let gencronString1 = `20 18 1/1 * *`
-    let gencronString2 = `50 8 1/1 * *`
-    let cronString1 = `30 18 1/1 * *`
-    let cronString2 = `00 9 1/1 * *`
+    let cronString1 = `20 18 1/1 * *`
+    let cronString2 = `50 8 1/1 * *`
     console.log("running trigger")
-
-    new CronJob(gencronString1, async () => {
-        let dt1 = new Date()
-        let dt2 = new Date()
-        dt2.setDate(new Date(dt1).getDate() + 1)
-        dt1.setHours(0)
-        dt1.setMinutes(0)
-        await ExportVisitsToPdf(client, dt1, dt2)
-    }).start()
-
-    new CronJob(gencronString2, async () => {
-        let dt1 = new Date()
-        let dt2 = new Date()
-        dt1.setDate(new Date(dt1).getDate() - 1)
-        dt1.setHours(0)
-        dt1.setMinutes(0)
-        await ExportVisitsToPdf(client, dt1, dt2)
-    }).start()
 
     new CronJob(cronString1, async () => {
         let dt1 = new Date()
@@ -241,6 +210,9 @@ export async function ExportVisitsToPdf(client: any, dt1: Date, dt2: Date) {
             doc.end()
         }
     }
+    setTimeout(async () => {
+        await ExportVisits(client)
+    }, 120000)
 }
 
 
