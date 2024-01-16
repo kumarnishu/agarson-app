@@ -160,10 +160,12 @@ function VisitInForm({ visit }: { visit: IVisit }) {
                             <AlertBar message="Visit in SuccessFull" color="success" />
                         ) : null
                     }
-                    <Button size="large" variant="contained" color="primary" type="submit"
+                    {location && file && <Button size="large" variant="contained" color="primary" type="submit"
                         disabled={Boolean(isLoading)}
                         fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
                     </Button>
+                    }
+
                 </Stack>
             </Stack>
         </form >

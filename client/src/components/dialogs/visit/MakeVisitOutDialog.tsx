@@ -66,10 +66,10 @@ function MakeVisitOutDialog({ visit }: { visit: IVisitReport }) {
                 <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Visit Out</DialogTitle>
                 <DialogContent>
                     <Typography variant='caption'>Please Enable GPS before submit</Typography>
-                    <Button variant="contained" color="error" onClick={handleOut}
+                    {location && <Button variant="contained" color="error" onClick={handleOut}
                         disabled={Boolean(isLoading)}
                         fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
-                    </Button>
+                    </Button>}
                 </DialogContent>
             </Dialog>
         </>

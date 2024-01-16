@@ -352,7 +352,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                         </STableCell>
 
                                         <STableCell>
-                                            {visit.visit.start_day_credientials && moment(new Date(visit.visit.start_day_credientials.timestamp)).format('DD/MM/YY')}
+                                            {visit.visit && visit.visit.start_day_credientials && moment(new Date(visit.visit.start_day_credientials.timestamp)).format('DD/MM/YY')}
                                         </STableCell>
                                         <STableCell>
 

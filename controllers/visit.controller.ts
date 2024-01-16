@@ -93,7 +93,7 @@ export const getMyTodayVisit = async (req: Request, res: Response, next: NextFun
     let dt1 = new Date()
     let dt2 = new Date()
     dt2.setDate(new Date(dt2).getDate() + 1)
-    dt1.setHours(8)
+    dt1.setHours(0)
     dt1.setMinutes(0)
 
     let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate('visit_reports').populate('created_by').populate('updated_by')
@@ -103,8 +103,6 @@ export const getMyTodayVisit = async (req: Request, res: Response, next: NextFun
 //post/put/delte/patch
 export const StartMyDay = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    console.log(body)
-    console.log(req.file)
     let { start_day_credientials } = body as IVisitBody
     if (!start_day_credientials) {
         return res.status(400).json({ message: "please fill all required fields" })
@@ -112,7 +110,7 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
     let dt1 = new Date()
     let dt2 = new Date()
     dt2.setDate(new Date(dt2).getDate() + 1)
-    dt1.setHours(8)
+    dt1.setHours(0)
     dt1.setMinutes(0)
 
     let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id })
@@ -155,7 +153,6 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
     visit.updated_at = new Date()
     visit.created_by = req.user
     visit.updated_by = req.user
-    console.log(visit)
     await visit.save()
     return res.status(201).json(visit)
 }
@@ -188,7 +185,6 @@ export const EndMyDay = async (req: Request, res: Response, next: NextFunction) 
     }
 
     if (req.file) {
-        console.log(req.file.mimetype)
         const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
         const storageLocation = `visits/media`;
         if (!allowedFiles.includes(req.file.mimetype))
@@ -256,7 +252,6 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
     }
     report.real_city = address.address.suburb || address.address.county || address.address.city || address.address.city_district || address.address.state_district || address.address.postcode
     if (req.file) {
-        console.log(req.file.mimetype)
         const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
         const storageLocation = `visits/media`;
         if (!allowedFiles.includes(req.file.mimetype))
@@ -357,7 +352,6 @@ export const UploadVisitSamplesPhoto = async (req: Request, res: Response, next:
     }
 
     if (req.file) {
-        console.log(req.file.mimetype)
         const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
         const storageLocation = `visits/media`;
         if (!allowedFiles.includes(req.file.mimetype))

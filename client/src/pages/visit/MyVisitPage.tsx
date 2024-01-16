@@ -1,4 +1,4 @@
-import { Box, Button, LinearProgress, Paper, Stack, Typography } from "@mui/material"
+import { Button, LinearProgress, Paper, Stack, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { useQuery } from "react-query"
 import { AxiosResponse } from "axios"
@@ -41,11 +41,13 @@ function MyVisitPage() {
       {visit && visit.start_day_credientials &&
         <>
           {/* start day */}
-          <Typography variant="subtitle1" textAlign={'center'} sx={{ p: 1, textTransform: 'uppercase', color: 'red', fontWeight: 'bold' }}>Started Day At   {moment(new Date(visit.start_day_credientials && visit.start_day_credientials.timestamp)).format('LT')}</Typography>
+          <Typography variant="subtitle1" textAlign={'center'} sx={{ p: 1, textTransform: 'uppercase', color: 'blue', fontWeight: 'bold',fontSize:16 }}>Started Day At   {moment(new Date(visit.start_day_credientials && visit.start_day_credientials.timestamp)).format('LT')}</Typography>
 
           {/* new visit */}
           <Stack direction={'row'} px={2} alignItems={'center'} justifyContent={'center'}>
-            {!Boolean(visit.end_day_credentials) && < Button fullWidth
+            {!Boolean(visit.end_day_credentials) && < Button
+              fullWidth
+              sx={{ p: 2 }}
               disabled={visit.visit_reports.filter((report) => {
                 if (!Boolean(report.visit_out_credentials))
                   return report
@@ -62,13 +64,9 @@ function MyVisitPage() {
         {visits.map((visit, index) => {
           return (
             <Paper key={index} elevation={8} sx={{ p: 2, wordSpacing: 2, m: 2, boxShadow: 3, backgroundColor: 'white', borderRadius: 2 }}>
-              <Stack >
-                <img style={{ borderRadius: '10px', border: 1 }} src={visit.visit_in_photo?.public_url} alt={visit.party_name} />
-              </Stack>
               <Stack
                 direction="column"
                 gap={2}
-                p={1}
               >
                 <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
                   Party : {visit.party_name}
@@ -83,15 +81,15 @@ function MyVisitPage() {
                   Visit Out : {moment(new Date(visit.visit_out_credentials && visit.visit_out_credentials.timestamp)).format('LT')}
                 </Typography>
                 <Stack gap={2} direction={'row'} >
-                  {visit && !Boolean(visit.visit_out_credentials) && visit.visit_samples_photo && <Button variant="contained" sx={{ fontWeight: 'bold',pl:0 }} color="error" onClick={() => {
+                  {visit && !Boolean(visit.visit_out_credentials) && visit.visit_samples_photo && <Button sx={{ fontWeight: 'bold' }} color="error" onClick={() => {
                     setVisitReport(visit)
                     setChoice({ type: VisitChoiceActions.visit_out })
                   }}>Visit Out</Button>}
-                  {visit && !Boolean(visit.visit_out_credentials) && !visit.visit_samples_photo && <Button variant="contained" sx={{ fontWeight: 'bold',pl:0 }} color="secondary" onClick={() => {
+                  {visit && !Boolean(visit.visit_out_credentials) && !visit.visit_samples_photo && <Button sx={{ fontWeight: 'bold' }} color="secondary" onClick={() => {
                     setVisitReport(visit)
                     setChoice({ type: VisitChoiceActions.upload_samples })
                   }}>Upload Samples</Button>}
-                  {!visit.summary ? <Button variant="contained" sx={{ fontWeight: 'bold',pl:0 }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.add_summary }) }}>Add Summary</Button> : <Button sx={{ fontWeight: 'bold',pl:0 }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.edit_summary }) }}>Edit Summary</Button>}
+                  {!visit.summary ? <Button sx={{ fontWeight: 'bold' }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.add_summary }) }}>Add Summary</Button> : <Button sx={{ fontWeight: 'bold' }} color="primary" onClick={() => { setVisitReport(visit); setChoice({ type: VisitChoiceActions.edit_summary }) }}>Edit Summary</Button>}
                 </Stack>
               </Stack>
             </Paper>
@@ -106,10 +104,8 @@ function MyVisitPage() {
 
 
       {
-        !visit && <Box>
-          <Stack>
-            <img src={background} alt="background" />
-          </Stack >
+        !visit && <Stack sx={{ height: '100vh' }}>
+          <img src={background} alt="background" style={{ objectFit: 'cover' }} />
           <Button size="large" sx={{ p: 3, fontSize: 20 }} color="error" variant="contained"
             disabled={isLoading}
             fullWidth
@@ -118,7 +114,7 @@ function MyVisitPage() {
                 setChoice({ type: VisitChoiceActions.start_day })
               }
             }>Start My Day</Button >
-        </Box>
+        </Stack >
       }
       {!visit && <StartMydayDialog />}
 

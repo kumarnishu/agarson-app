@@ -73,10 +73,11 @@ function StartMydayForm() {
                             <AlertBar message="Your day Started SuccessFully" color="success" />
                         ) : null
                     }
+                    {location && file && 
                     <Button size="large" variant="contained" color="primary" type="submit"
                         disabled={Boolean(isLoading)}
                         fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
-                    </Button>
+                    </Button>}
                 </Stack>
             </Stack>
 

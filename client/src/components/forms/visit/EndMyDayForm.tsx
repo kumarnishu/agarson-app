@@ -82,10 +82,10 @@ function EndMydayForm({ visit }: { visit: IVisit }) {
                             <AlertBar message="Your day Ended SuccessFully" color="success" />
                         ) : null
                     }
-                    <Button size="large" variant="contained" color="primary" type="submit"
+                    {location && file &&  <Button size="large" variant="contained" color="primary" type="submit"
                         disabled={Boolean(isLoading)}
                         fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
-                    </Button>
+                    </Button>}
                 </Stack>
 
              
