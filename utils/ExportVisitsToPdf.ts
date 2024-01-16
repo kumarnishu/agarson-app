@@ -9,6 +9,12 @@ import { CronJob } from "cron"
 
 
 export async function handleVisitReport(client: { client_id: string, client: any }) {
+    let dt1 = new Date()
+    let dt2 = new Date()
+    dt2.setDate(new Date(dt1).getDate() + 1)
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    await ExportVisitsToPdf(client, dt1, dt2)
     let cronString1 = `10 18 1/1 * *`
     let cronString2 = `00 9 1/1 * *`
     console.log("running trigger")
@@ -206,22 +212,11 @@ export async function ExportVisitsToPdf(client: any, dt1: Date, dt2: Date) {
                 doc.pipe(fs.createWriteStream(`file`))
                 await client.sendMessage(String(process.env.WAGREETING_PHONE), {
                     document: fs.readFileSync("./file"),
-                    fileName: String(visits[i].created_by.username) + "_visits" + ".pdf",
+                    fileName: "visits_reports" + ".pdf",
                 })
             }
             Content = []
             doc.end()
         }
-    }
-}
-
-function RefreshPdf() {
-    try {
-        if (fs.existsSync('./file')) {
-            fs.rmdirSync('./file', { recursive: true })
-        }
-    }
-    catch (err) {
-        console.log(err)
     }
 }
