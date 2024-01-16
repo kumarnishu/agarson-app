@@ -30,11 +30,14 @@ export const GetMessagetemplates = async (req: Request, res: Response, next: Nex
     let limit = Number(req.query.limit) || 10
     let category = req.query.category
     let templates: IMessageTemplate[] = []
-    if (category) {
+    if (limit && category) {
         templates = await MessageTemplate.find({ category: category }).limit(limit)
     }
+    if (category && !limit) {
+        templates = await MessageTemplate.find({ category: category })
+    }
     else
-        templates = await MessageTemplate.find().limit(limit)
+        templates = await MessageTemplate.find()
     return res.status(200).json(templates)
 }
 

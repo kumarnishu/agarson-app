@@ -27,7 +27,7 @@ type FormData = {
 }
 
 function UpdateBroadcastForm({ broadcast }: { broadcast: IBroadcast }) {
-    const [category, setCategory] = useState<string>()
+    const [category, setCategory] = useState<string>("marketing")
     const { data: usersData } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { data: categoryData } = useQuery<AxiosResponse<ITemplateCategoryField>, BackendError>("catgeories", GetCategories, {
         staleTime: 10000
@@ -148,7 +148,7 @@ function UpdateBroadcastForm({ broadcast }: { broadcast: IBroadcast }) {
                     < TextField
                         size='small'
                         select
-                        defaultValue={'marketing'}
+                        value={category}
                         SelectProps={{
                             native: true,
                         }}

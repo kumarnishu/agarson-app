@@ -6,12 +6,45 @@ import { Content } from "pdfmake/interfaces"
 import { imageUrlToBase64 } from "./UrlToBase64"
 import fs from "fs"
 import { CronJob } from "cron"
+import { User } from "../models/users/user.model"
 
 
 export async function handleVisitReport(client: { client_id: string, client: any }) {
-    let cronString1 = `10 18 1/1 * *`
+    let dt1 = new Date()
+    let dt2 = new Date()
+    dt2.setDate(new Date(dt1).getDate() + 1)
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    await ExportVisitsToPdf(client, dt1, dt2)
+    setTimeout(async () => {
+        await ExportVisits(client)
+    }, 10000)
+
+
+    let gencronString1 = `20 18 1/1 * *`
+    let gencronString2 = `50 8 1/1 * *`
+    let cronString1 = `30 18 1/1 * *`
     let cronString2 = `00 9 1/1 * *`
     console.log("running trigger")
+
+    new CronJob(gencronString1, async () => {
+        let dt1 = new Date()
+        let dt2 = new Date()
+        dt2.setDate(new Date(dt1).getDate() + 1)
+        dt1.setHours(0)
+        dt1.setMinutes(0)
+        await ExportVisitsToPdf(client, dt1, dt2)
+    }).start()
+
+    new CronJob(gencronString2, async () => {
+        let dt1 = new Date()
+        let dt2 = new Date()
+        dt1.setDate(new Date(dt1).getDate() - 1)
+        dt1.setHours(0)
+        dt1.setMinutes(0)
+        await ExportVisitsToPdf(client, dt1, dt2)
+    }).start()
+
     new CronJob(cronString1, async () => {
         let dt1 = new Date()
         let dt2 = new Date()
@@ -42,8 +75,10 @@ export async function ExportVisitsToPdf(client: any, dt1: Date, dt2: Date) {
     })
     let Content: Content[] = []
 
+    let username = ""
     for (let i = 0; i < visits.length; i++) {
         if (visits[i] && visits[i].visit_reports.length > 0) {
+            username = visits[i].created_by.username
             Content.push({ text: `Daily Visit Reports : ${new Date(dt1).toLocaleDateString()}`, style: { 'alignment': 'center', fontSize: 24 } });
 
             if (visits[i].start_day_credientials) {
@@ -201,16 +236,27 @@ export async function ExportVisitsToPdf(client: any, dt1: Date, dt2: Date) {
                     lineHeight: 1.2,
                 }
             })
-            if (client) {
-                console.log("sending pdf")
-                doc.pipe(fs.createWriteStream(`file`))
-                await client.sendMessage(String(process.env.WAGREETING_PHONE), {
-                    document: fs.readFileSync("./file"),
-                    fileName: "visits_reports" + ".pdf",
-                })
-            }
+            doc.pipe(fs.createWriteStream(`./pdfs/visit/${username}_visits.pdf`))
             Content = []
             doc.end()
         }
+    }
+}
+
+
+async function ExportVisits(client: any) {
+    if (client) {
+        console.log("sending pdf")
+        let users = await User.find()
+        users.forEach(async (user) => {
+            if (!user.productions_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
+                await client.sendMessage(String(process.env.WAGREETING_PHONE), {
+                    document: fs.readFileSync(`./pdfs/visit/${user.username}_visits.pdf`),
+                    fileName: `${user.username}_visits.pdf`,
+                })
+                fs.rmSync(`./pdfs/visit/${user.username}_visits.pdf`)
+            }
+        })
+
     }
 }
