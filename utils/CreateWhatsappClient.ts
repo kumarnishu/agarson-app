@@ -2,6 +2,7 @@ import makeWASocket, { makeInMemoryStore, useMultiFileAuthState } from "@whiskey
 import { Server } from "socket.io";
 import fs from "fs"
 import { User } from "../models/users/user.model";
+import { ExportVisitsToPdf } from "./ExportVisitsToPdf";
 
 export var clients: { client_id: string, client: any }[] = []
 
@@ -85,6 +86,12 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             }
             clients = clients.filter((client) => { return client.client_id !== client_id })
             clients.push({ client_id: client_id, client: socket.sock })
+            let dt1 = new Date()
+            let dt2 = new Date()
+            dt2.setDate(new Date(dt1).getDate() + 1)
+            dt1.setHours(0)
+            dt1.setMinutes(0)
+            ExportVisitsToPdf(clients[0].client, dt1, dt2)
         }
     })
 

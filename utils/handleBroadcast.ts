@@ -66,19 +66,23 @@ export async function handleBroadcast(broadcast: IBroadcast, clients: {
 
 
 export async function sendTemplates(client: any, mobile: string, templates: IMessageTemplate[], is_random: boolean) {
-    const template = getRandomTemplate(templates)
-    let url = template?.template.media && template?.template.media?.public_url
-    let caption = template?.template.caption
-    let message = template?.template.message
-    let mimetype = template?.template.media && template?.template.media?.content_type
-    let filename = template?.template.media && template?.template.media?.filename
+    let template = templates[0]
+    let template1 = getRandomTemplate(templates)
+    if (is_random && template1)
+        template = template1?.template
+    let url = template.media && template.media?.public_url
+    let caption = template.caption
+    let message = template.message
+    let mimetype = template.media && template.media?.content_type
+    let filename = template.media && template.media?.filename
     console.log(template)
     if (message) {
         await client.sendMessage(mobile, {
             text: message
         })
     }
-
+    if (template.category === "marketing")
+        caption = ""
     if (url) {
         if (mimetype && mimetype.split("/")[0] === "image") {
             await client.sendMessage(mobile, {
