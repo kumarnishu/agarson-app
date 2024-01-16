@@ -9,12 +9,6 @@ import { CronJob } from "cron"
 
 
 export async function handleVisitReport(client: { client_id: string, client: any }) {
-    let dt1 = new Date()
-    let dt2 = new Date()
-    dt2.setDate(new Date(dt1).getDate() + 1)
-    dt1.setHours(0)
-    dt1.setMinutes(0)
-    await ExportVisitsToPdf(client, dt1, dt2)
     let cronString1 = `10 18 1/1 * *`
     let cronString2 = `00 9 1/1 * *`
     console.log("running trigger")
