@@ -17,7 +17,7 @@ import { Asset } from "../types/asset.types.js"
 import { Broadcast } from "../models/leads/broadcast.model.js"
 import cron from "cron"
 import { GetDailyBroadcastCronString } from "../utils/GetDailyBroadcastCronString.js"
-import { handleBroadcast } from "../utils/handleBroadcast.js"
+import { handleBroadcast, timeouts } from "../utils/handleBroadcast.js"
 import { clients } from "../utils/CreateWhatsappClient.js"
 
 // get request
@@ -3682,10 +3682,10 @@ export const StartBroadcast = async (req: Request, res: Response, next: NextFunc
         is_active: true,
         is_paused: false,
         cron_string: cron_string,
-        counter:0,
+        counter: 0,
         next_run_date: new Date(cron.sendAt(cron_string))
     })
- 
+
     handleBroadcast(broadcast, clients)
     return res.status(200).json({ message: "started" })
 }
@@ -3754,7 +3754,17 @@ export const UpdateBroadcast = async (req: Request, res: Response, next: NextFun
 export const StopBroadcast = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
-    await Broadcast.findByIdAndUpdate(id, { is_active: false, is_paused: false, couter: 0 })
+    let broadcast = await Broadcast.findById(id)
+    if (!broadcast)
+        return res.status(404).json({ message: "broadcast not found" })
+    broadcast.is_active = false
+    broadcast.counter = 0
+    timeouts.forEach((item) => {
+        if (String(item.id) === String(broadcast?._id)) {
+            clearTimeout(item.timeout)
+        }
+    })
+    await broadcast.save()
     return res.status(200).json({ message: " broadcast stopped successfully" })
 }
 
