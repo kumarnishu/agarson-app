@@ -223,7 +223,7 @@ export async function ExportVisitsToPdf(client: any, dt1: Date, dt2: Date) {
     }
     setTimeout(async () => {
         await ExportVisits(client)
-    }, 10000)
+    }, 120000)
 }
 
 
