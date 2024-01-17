@@ -3,7 +3,7 @@ import Lead from "../models/leads/lead.model";
 import { IBroadcast } from "../types/crm.types";
 import { IMessageTemplate } from "../types/template.types";
 import { getRandomTemplate } from "./getRandomTemplate";
-
+import cron from "cron"
 export var timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 export async function handleBroadcast(broadcast: IBroadcast, clients: {
@@ -12,11 +12,9 @@ export async function handleBroadcast(broadcast: IBroadcast, clients: {
 }[]) {
     let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')
     if (latest_broadcast && latest_broadcast.connected_users) {
-        let is_random = latest_broadcast?.is_random_template
-        let templates = latest_broadcast?.templates
         let clientids: string[] = latest_broadcast.connected_users.map((id) => { return id.client_id })
-        let timeinsec = 5000
-
+        latest_broadcast.next_run_date = new Date(cron.sendAt(broadcast.cron_string))
+        await latest_broadcast.save()
         let newclients = clients.filter((client) => {
             if (clientids.includes(client.client_id))
                 return client
@@ -29,43 +27,41 @@ export async function handleBroadcast(broadcast: IBroadcast, clients: {
         let limit = (latest_broadcast.daily_limit - latest_broadcast.counter) / newclients.length
         for (let i = 0; i < newclients.length; i++) {
             let client = newclients[i]
-            let tmpreports = await Lead.find({ stage: { $ne: 'useless' }, is_sent: false }).sort('-created_at').skip((i + 1 - 1) * limit).limit(limit)
-            for (let j = 0; j < tmpreports.length; j++) {
-                let report = tmpreports[j]
-                console.log("no of tmp reports", tmpreports.length)
-                let timeout = setTimeout(async () => {
-                    let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')
-                    if (latest_broadcast && latest_broadcast?.is_active && !latest_broadcast?.is_paused) {
-                        let mobile = "91" + String(report.mobile) + "@s.whatsapp.net"
-                        console.log("Sending to", mobile)
-                        await sendTemplates(client.client, mobile, templates, is_random)
-                        report.last_whatsapp = new Date()
-                        report.is_sent = true
-                        await report.save()
-                        latest_broadcast.counter = latest_broadcast.counter + 1
-                        latest_broadcast.updated_at = new Date()
-                        await latest_broadcast.save()
-                    }
-                }, Number(timeinsec));
-                timeouts.push({ id: broadcast._id, timeout: timeout })
-                timeinsec = timeinsec + Number(broadcast.time_gap) * 1000 + Math.ceil(Math.random() * 4) * 1000
-                console.log(timeinsec)
-            }
+            await handleReports(i, client, limit, latest_broadcast)
         }
-        const timeout = setTimeout(async () => {
-            if (latest_broadcast) {
-                latest_broadcast.is_active = false
-                latest_broadcast.counter = 0
-                await latest_broadcast.save()
-            }
-        }, timeinsec)
-        timeouts.push({ id: broadcast._id, timeout: timeout })
-
     }
 }
 
+export async function handleReports(i: number, client: any, limit: number, broadcast: IBroadcast) {
+    let is_random = broadcast.is_random_template
+    let templates = broadcast.templates
+    let timeinsec = 5000
+    let tmpreports = await Lead.find({ stage: { $ne: 'useless' }, is_sent: false }).sort('-created_at').skip((i + 1 - 1) * limit).limit(limit)
+    for (let j = 0; j < tmpreports.length; j++) {
+        let report = tmpreports[j]
+        console.log("no of tmp reports", tmpreports.length)
+        let timeout = setTimeout(async () => {
+            let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')
+            if (latest_broadcast && latest_broadcast?.is_active && !latest_broadcast?.is_paused) {
+                let mobile = "91" + String(report.mobile) + "@s.whatsapp.net"
+                console.log("Sending to", mobile, "from", client.client_id)
+                await sendTemplates(client.client, mobile, templates, is_random, broadcast)
+                report.last_whatsapp = new Date()
+                report.is_sent = true
+                await report.save()
+                latest_broadcast.updated_at = new Date()
+                await latest_broadcast.save()
+            }
+        }, Number(timeinsec));
+        timeouts.push({ id: broadcast._id, timeout: timeout })
+        timeinsec = timeinsec + Number(broadcast.time_gap) * 1000 + Math.ceil(Math.random() * 4) * 1000
 
-export async function sendTemplates(client: any, mobile: string, templates: IMessageTemplate[], is_random: boolean) {
+        console.log(timeinsec)
+    }
+}
+
+export async function sendTemplates(client: any, mobile: string, templates: IMessageTemplate[], is_random: boolean, broadcast: IBroadcast) {
+    let latest_broadcast = await Broadcast.findById(broadcast._id)
     let template = templates[0]
     let template1 = getRandomTemplate(templates)
     if (is_random && template1)
@@ -75,7 +71,6 @@ export async function sendTemplates(client: any, mobile: string, templates: IMes
     let message = template.message
     let mimetype = template.media && template.media?.content_type
     let filename = template.media && template.media?.filename
-    console.log(template)
     if (message) {
         await client.sendMessage(mobile, {
             text: message
@@ -105,5 +100,9 @@ export async function sendTemplates(client: any, mobile: string, templates: IMes
                 caption: caption,
             })
         }
+    }
+    if (latest_broadcast) {
+        latest_broadcast.counter = latest_broadcast.counter + 1
+        await latest_broadcast.save()
     }
 }

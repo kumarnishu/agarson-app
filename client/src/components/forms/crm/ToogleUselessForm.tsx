@@ -19,6 +19,7 @@ function ToogleUselessForm({ lead }: { lead: ILead }) {
         (ToogleUseless, {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')
+                queryClient.invalidateQueries('uselessleads')
             }
         })
     const { setChoice } = useContext(ChoiceContext)

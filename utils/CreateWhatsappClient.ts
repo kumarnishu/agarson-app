@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import fs from "fs"
 import { User } from "../models/users/user.model";
 import { handleVisitReport } from "./ExportVisitsToPdf";
+import Lead from "../models/leads/lead.model";
 
 export var clients: { client_id: string, client: any }[] = []
 
@@ -95,6 +96,20 @@ export async function createWhatsappClient(client_id: string, io: Server) {
     // save creds
     socket.sock.ev.on("creds.update", async () => {
         socket.saveCreds()
+    })
+
+    socket.sock.ev.on('messages.upsert', (data) => {
+        data.messages.map(async (msg) => {
+            if (msg.message && msg.message.conversation) {
+                if (String(msg.message?.conversation).toLowerCase() === "stop") {
+                    if (msg.key.remoteJid) {
+                        let id = String(msg.key.remoteJid).replace("91", "").replace("@s.whatsapp.net", "")
+                        await Lead.findOneAndUpdate({ mobile: id }, { stage: 'useless' })
+                        socket.sock.sendMessage(msg.key.remoteJid, { text: "you successfully blocked us" })
+                    }
+                }
+            }
+        })
     })
 }
 

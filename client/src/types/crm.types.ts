@@ -89,8 +89,8 @@ export type ILead = {
     lead_owners: IUser[],
     visiting_card: Asset,
     is_customer: boolean,
-    is_sent: boolean,
     last_whatsapp: Date,
+    is_sent: boolean,
     referred_party?: IReferredParty,
     referred_party_name?: string,
     referred_party_mobile?: string,
@@ -109,6 +109,7 @@ export type IBroadcast = {
     name: string,
     next_run_date: Date
     cron_key: string,
+    cron_string: string,
     counter: number,
     is_active: boolean,
     connected_users: IUser[],

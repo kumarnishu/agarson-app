@@ -109,6 +109,7 @@ export type IBroadcast = {
     name: string,
     next_run_date: Date
     cron_key: string,
+    cron_string:string,
     counter: number,
     is_active: boolean,
     connected_users: IUser[],

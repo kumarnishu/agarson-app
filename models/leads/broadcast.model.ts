@@ -19,6 +19,9 @@ const BroadcastSchema = new mongoose.Schema<IBroadcast, mongoose.Model<IBroadcas
     cron_key: {
         type: String,
     },
+    cron_string: {
+        type: String,
+    },
     is_active: {
         type: Boolean,
         default: false,
