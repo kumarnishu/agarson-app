@@ -125,18 +125,20 @@ export const GetMyTodayProductions = async (req: Request, res: Response, next: N
 
 //post/put/patch/delete
 export const CreateMachine = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, display_name, category } = req.body as {
+    const { name, display_name, category, serial_no } = req.body as {
         name: string,
         display_name: string,
+        serial_no: number,
         category: string
     }
-    if (!name || !display_name || !category) {
+    if (!name || !display_name || !category || !serial_no) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     if (await Machine.findOne({ name: name }))
         return res.status(400).json({ message: "already exists this machine" })
     let machine = await new Machine({
         name: name, display_name: display_name, category: category,
+        serial_no: serial_no,
         created_at: new Date(),
         updated_by: req.user,
         updated_at: new Date(),
@@ -159,23 +161,24 @@ export const BulkUploadMachine = async (req: Request, res: Response, next: NextF
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: { name: string, display_name: string, category: string }[] = xlsx.utils.sheet_to_json(
+        let workbook_response: { name: string, display_name: string, category: string, serial_no: number }[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         console.log(workbook_response)
-        let newMachines: { name: string, display_name: string, category: string }[] = []
+        let newMachines: { name: string, display_name: string, category: string, serial_no: number, }[] = []
         workbook_response.forEach(async (machine) => {
             let name: string | null = machine.name
             let display_name: string | null = machine.display_name
             let category: string | null = machine.category
+            let serial_no: number | null = machine.serial_no
             console.log(display_name, name)
-            newMachines.push({ name: name, display_name: display_name, category: category })
+            newMachines.push({ name: name, display_name: display_name, category: category, serial_no: machine.serial_no, })
         })
         console.log(newMachines)
         newMachines.forEach(async (mac) => {
             let machine = await Machine.findOne({ name: mac.name })
             if (!machine)
-                await new Machine({ name: mac.name, display_name: mac.display_name, category: mac.category, created_by: req.user, updated_by: req.user }).save()
+                await new Machine({ name: mac.name, display_name: mac.display_name, category: mac.category, serial_no: mac.serial_no, created_by: req.user, updated_by: req.user }).save()
         })
     }
     return res.status(200).json({ message: "machines updated" });
@@ -246,12 +249,13 @@ export const BulkUploadArticle = async (req: Request, res: Response, next: NextF
     return res.status(200).json({ message: "articles updated" });
 }
 export const UpdateMachine = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, display_name, category } = req.body as {
+    const { name, display_name, category, serial_no } = req.body as {
         name: string,
         display_name: string,
-        category: string
+        category: string,
+        serial_no: number
     }
-    if (!name || !display_name || !category) {
+    if (!name || !display_name || !category || !serial_no) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     const id = req.params.id
@@ -263,12 +267,14 @@ export const UpdateMachine = async (req: Request, res: Response, next: NextFunct
             return res.status(400).json({ message: "already exists this machine" })
     machine.name = name
     machine.display_name = display_name
+    machine.serial_no = serial_no
     machine.category = category
     machine.updated_at = new Date()
     machine.updated_by = req.user
     await machine.save()
     return res.status(200).json(machine)
 }
+
 export const ToogleMachine = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     let machine = await Machine.findById(id)

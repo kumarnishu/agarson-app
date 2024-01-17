@@ -74,6 +74,12 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                             <STableHeadCell
                             >
 
+                                Serial No
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Status
 
                             </STableHeadCell>
@@ -83,6 +89,7 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                 Display name
 
                             </STableHeadCell>
+
                             <STableHeadCell
                             >
 
@@ -199,7 +206,10 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                             {machine.name}
                                         </STableCell>
                                         <STableCell>
-                                            {machine.active ? "active":"inactive"}
+                                            {machine.serial_no}
+                                        </STableCell>
+                                        <STableCell>
+                                            {machine.active ? "active" : "inactive"}
                                         </STableCell>
                                         <STableCell>
                                             {machine.display_name}

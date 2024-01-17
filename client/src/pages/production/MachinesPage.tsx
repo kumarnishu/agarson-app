@@ -22,6 +22,8 @@ import UploadMachinesFromExcelButton from '../../components/buttons/UploadMachin
 type SelectedData = {
   name?: string,
   display_name?: string,
+  category?: string,
+  serial_no?: number,
   is_active?: boolean
   created_at?: string
   updated_at?: string
@@ -30,7 +32,9 @@ let template: SelectedData[] = [
   {
     name: "power",
     display_name: "power",
-    is_active: true
+    is_active: true,
+    category: "v1",
+    serial_no: 1
   }
 ]
 
@@ -73,6 +77,8 @@ export default function MachinePage() {
       return data.push({
         name: machine.name,
         display_name: machine.display_name,
+        category: machine.category,
+        serial_no: machine.serial_no,
         is_active: machine.active ? true : false,
         created_at: new Date(machine.created_at).toLocaleDateString(),
         updated_at: new Date(machine.updated_at).toLocaleDateString()

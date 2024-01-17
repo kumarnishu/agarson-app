@@ -379,7 +379,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-    owner.reminders_access_fields = {
+    owner.todos_access_fields = {
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
@@ -504,7 +504,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    user.reminders_access_fields = {
+    user.todos_access_fields = {
         is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
@@ -602,7 +602,7 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
         templates_access_fields,
         bot_access_fields,
         backup_access_fields,
-        reminders_access_fields,
+        todos_access_fields,
         checklists_access_fields,
         visit_access_fields,
         reports_access_fields,
@@ -624,7 +624,7 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
         templates_access_fields,
         bot_access_fields,
         backup_access_fields,
-        reminders_access_fields,
+        todos_access_fields,
         checklists_access_fields,
         reports_access_fields,
         visit_access_fields,
@@ -696,10 +696,10 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-    if (feature === Feature.reminders) {
+    if (feature === Feature.todos) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
-                reminders_access_fields: data.access
+                todos_access_fields: data.access
             })
         })
     } if (feature === Feature.reports) {

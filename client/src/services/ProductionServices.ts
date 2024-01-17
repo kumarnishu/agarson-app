@@ -1,12 +1,12 @@
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
-export const CreateMachine = async (body: { name: string, display_name: string ,category: string }) => {
+export const CreateMachine = async (body: { name: string, display_name: string, serial_no: number, category: string }) => {
     return await apiClient.post(`machines`, body);
 };
 
 
-export const UpdateMachine = async ({ body, id }: { body: { name: string, display_name: string ,category: string }, id: string }) => {
+export const UpdateMachine = async ({ body, id }: { body: { name: string, serial_no: number, display_name: string ,category: string }, id: string }) => {
     return await apiClient.put(`machines/${id}`, body);
 };
 

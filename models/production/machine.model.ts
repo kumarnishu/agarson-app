@@ -16,6 +16,7 @@ const MachineSchema = new mongoose.Schema<IMachine, mongoose.Model<IMachine, {},
     }
     ,
     category: String,
+    serial_no: { type: Number, default: 0 },
     active: {
         type: Boolean,
         default: true

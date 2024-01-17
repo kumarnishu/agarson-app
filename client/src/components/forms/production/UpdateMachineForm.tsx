@@ -15,7 +15,7 @@ import { IMachine, IMachineCategory } from '../../../types/production.types';
 function UpdateMachineForm({ machine }: { machine: IMachine }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IMachine>, BackendError, {
-            body: { name: string, display_name: string, category: string }, id: string
+            body: { name: string, display_name: string, category: string, serial_no: number, }, id: string
         }>
         (UpdateMachine, {
             onSuccess: () => {
@@ -32,6 +32,7 @@ function UpdateMachineForm({ machine }: { machine: IMachine }) {
             name: machine.name,
             display_name: machine.display_name,
             category: machine.category,
+            serial_no: machine.serial_no
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -40,11 +41,12 @@ function UpdateMachineForm({ machine }: { machine: IMachine }) {
                 .required('Required field'),
             category: Yup.string()
                 .required('Required field'),
+            serial_no: Yup.number().required("required")
 
 
         }),
         onSubmit: (values) => {
-            mutate({ id: machine._id, body: { name: values.name, display_name: values.display_name, category: values.category } })
+            mutate({ id: machine._id, body: { name: values.name, display_name: values.display_name, category: values.category, serial_no: values.serial_no } })
         }
     });
 
@@ -67,17 +69,30 @@ function UpdateMachineForm({ machine }: { machine: IMachine }) {
                 pt={2}
             >
                 <TextField
-                required
-                fullWidth
-                error={
-                    formik.touched.name && formik.errors.name ? true : false
-                }
-                id="name"
-                label="Name"
-                helperText={
-                    formik.touched.name && formik.errors.name ? formik.errors.name : ""
-                }
-                {...formik.getFieldProps('name')}
+                    required
+                    fullWidth
+                    error={
+                        formik.touched.name && formik.errors.name ? true : false
+                    }
+                    id="name"
+                    label="Name"
+                    helperText={
+                        formik.touched.name && formik.errors.name ? formik.errors.name : ""
+                    }
+                    {...formik.getFieldProps('name')}
+                />
+                <TextField
+                    required
+                    fullWidth
+                    error={
+                        formik.touched.serial_no && formik.errors.serial_no ? true : false
+                    }
+                    id="serial_no"
+                    label="Serial no"
+                    helperText={
+                        formik.touched.serial_no && formik.errors.serial_no ? formik.errors.serial_no : ""
+                    }
+                    {...formik.getFieldProps('serial_no')}
                 />
                 <TextField
 

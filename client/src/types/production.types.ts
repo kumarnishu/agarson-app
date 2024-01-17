@@ -24,6 +24,7 @@ export type IMachine = {
     _id: string,
     name: string,
     active: boolean,
+    serial_no:number
     category: string,
     display_name: string,
     created_at: Date,

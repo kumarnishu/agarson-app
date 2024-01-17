@@ -14,7 +14,7 @@ import { CreateMachine, GetMachineCategories } from '../../../services/Productio
 function NewMachineForm() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IMachine>, BackendError, {
-            name: string, display_name: string, category: string
+            name: string, display_name: string, category: string, serial_no: number
         }>
         (CreateMachine, {
             onSuccess: () => {
@@ -33,6 +33,7 @@ function NewMachineForm() {
             name: "",
             display_name: "",
             category: "",
+            serial_no: 0
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -41,12 +42,14 @@ function NewMachineForm() {
                 .required('Required field'),
             category: Yup.string()
                 .required('Required field'),
+            serial_no: Yup.number().required('required field')
         }),
         onSubmit: (values) => {
             mutate({
                 name: values.name,
                 display_name: values.display_name,
-                category:values.category
+                category: values.category,
+                serial_no: values.serial_no
             })
         }
     });
@@ -88,6 +91,19 @@ function NewMachineForm() {
                     required
                     fullWidth
                     error={
+                        formik.touched.serial_no && formik.errors.serial_no ? true : false
+                    }
+                    id="serial_no"
+                    label="Seriala no"
+                    helperText={
+                        formik.touched.serial_no && formik.errors.serial_no ? formik.errors.serial_no : ""
+                    }
+                    {...formik.getFieldProps('serial_no')}
+                />
+                <TextField
+                    required
+                    fullWidth
+                    error={
                         formik.touched.display_name && formik.errors.display_name ? true : false
                     }
                     id="display_name"
@@ -117,7 +133,7 @@ function NewMachineForm() {
                     {...formik.getFieldProps('category')}
                 >
                     <option key={'00'} value={undefined}>
-                        
+
                     </option>
                     {
                         catgeories && catgeories.data && catgeories.data.categories.map((category, index) => {

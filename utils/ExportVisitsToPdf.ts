@@ -10,7 +10,7 @@ import { ReportManager } from "../app"
 
 
 export async function handleVisitReport(client: { client_id: string, client: any }) {
-    let cronString1 = `10 18 1/1 * *`
+    let cronString1 = `8 18 1/1 * *`
     let cronString2 = `55 8 1/1 * *`
     console.log("running trigger")
     if (!ReportManager.exists("visit_reports1"))
@@ -223,6 +223,10 @@ export async function ExportVisitsToPdf(client: any, dt1: Date, dt2: Date) {
     setTimeout(async () => {
         await ExportVisits(client)
     }, 300000)
+
+    setTimeout(async () => {
+        await DeleteVisitsPdf()
+    }, 600000)
 }
 
 
@@ -239,4 +243,16 @@ async function ExportVisits(client: any) {
             }
         })
     }
+}
+
+async function DeleteVisitsPdf() {
+    let users = await User.find()
+    users.forEach(async (user) => {
+        if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
+            console.log(`deleting pdf from${`./pdfs/visit/${user.username}_visits.pdf`}`)
+            if (fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
+                fs.rmSync(`./pdfs/visit/${user.username}_visits.pdf`)
+            }
+        }
+    })
 }
