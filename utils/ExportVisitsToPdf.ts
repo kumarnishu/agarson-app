@@ -10,8 +10,8 @@ import { ReportManager } from "../app"
 
 
 export async function handleVisitReport(client: { client_id: string, client: any }) {
-    let cronString1 = `20 18 1/1 * *`
-    let cronString2 = `35 14 1/1 * *`
+    let cronString1 = `10 18 1/1 * *`
+    let cronString2 = `55 8 1/1 * *`
     console.log("running trigger")
     if (!ReportManager.exists("visit_reports1"))
         ReportManager.add("visit_reports1", cronString1, async () => {
