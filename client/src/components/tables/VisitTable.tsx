@@ -79,6 +79,12 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                             <STableHeadCell
                             >
 
+                                No
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Date
 
                             </STableHeadCell>
@@ -353,6 +359,9 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
 
                                         <STableCell>
                                             {visit.visit && visit.visit.start_day_credientials && moment(new Date(visit.visit.start_day_credientials.timestamp)).format('DD/MM/YY')}
+                                        </STableCell>
+                                        <STableCell>
+                                            {index + 1}
                                         </STableCell>
                                         <STableCell>
 

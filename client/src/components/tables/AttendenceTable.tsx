@@ -121,85 +121,84 @@ function AttendenceTable({ attendences, attendence, selectedAttendeces, setSelec
                         {
 
                             data && data.map((attendence, index) => {
-                                if (attendence.visit_reports.length > 0)
-                                    return (
-                                        <STableRow
-                                            key={index}
-                                        >
-                                            {selectAll ?
-
-                                                <STableCell>
-
-
-                                                    <Checkbox size="small"
-                                                        checked={Boolean(selectAll)}
-                                                    />
-
-
-                                                </STableCell>
-                                                :
-                                                null}
-                                            {!selectAll ?
-
-                                                <STableCell>
-
-                                                    <Checkbox size="small"
-                                                        onChange={(e) => {
-                                                            setAttendence(attendence)
-                                                            if (e.target.checked) {
-                                                                setSelectedAttendeces([...selectedAttendeces, attendence])
-                                                            }
-                                                            if (!e.target.checked) {
-                                                                setSelectedAttendeces((attendences) => attendences.filter((item) => {
-                                                                    return item._id !== attendence._id
-                                                                }))
-                                                            }
-                                                        }}
-                                                    />
-
-                                                </STableCell>
-                                                :
-                                                null}
-                                            {user?.visit_access_fields.is_editable && <STableCell>
-                                                <Tooltip title="change attendence">
-                                                    <IconButton color="success"
-                                                        onClick={() => {
-                                                            setChoice({ type: VisitChoiceActions.mark_attendence })
-                                                            setAttendence(attendence)
-                                                        }}
-                                                    >
-                                                        <Edit />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </STableCell>}
-                                            <STableCell>
-                                                {index + 1}
-                                            </STableCell>
-                                            <STableCell>
-                                                {attendence.created_at && moment(new Date(attendence.created_at)).format('DD/MM/YY')}
-                                            </STableCell>
+                                return (
+                                    <STableRow
+                                        key={index}
+                                    >
+                                        {selectAll ?
 
                                             <STableCell>
-                                                {attendence.visit_reports[0] && attendence.visit_reports[0].visit_in_credientials && attendence.visit_reports[0].visit_in_credientials.timestamp && moment(new Date(attendence.visit_reports[0].visit_in_credientials.timestamp)).format('LT')}
+
+
+                                                <Checkbox size="small"
+                                                    checked={Boolean(selectAll)}
+                                                />
+
+
                                             </STableCell>
-                                            <STableCell>
-                                                {attendence.visit_reports[0] && attendence.visit_reports[0].city}
-                                            </STableCell>
-                                            <STableCell>
-                                                {attendence.visit_reports[0] && attendence.visit_reports[0].real_city || ""}
-                                            </STableCell>
-                                            <STableCell>
-                                                {attendence && attendence.created_by.username}
-                                            </STableCell>
-                                            <STableCell>
-                                                {attendence.is_present ? "Present" : ""}
-                                            </STableCell>
+                                            :
+                                            null}
+                                        {!selectAll ?
 
                                             <STableCell>
-                                                {attendence.visit_reports[0] && attendence.visit_reports[0].visit_in_credientials.address}
+
+                                                <Checkbox size="small"
+                                                    onChange={(e) => {
+                                                        setAttendence(attendence)
+                                                        if (e.target.checked) {
+                                                            setSelectedAttendeces([...selectedAttendeces, attendence])
+                                                        }
+                                                        if (!e.target.checked) {
+                                                            setSelectedAttendeces((attendences) => attendences.filter((item) => {
+                                                                return item._id !== attendence._id
+                                                            }))
+                                                        }
+                                                    }}
+                                                />
+
                                             </STableCell>
-                                        </STableRow>
-                                    )
+                                            :
+                                            null}
+                                        {user?.visit_access_fields.is_editable && <STableCell>
+                                            <Tooltip title="change attendence">
+                                                <IconButton color="success"
+                                                    onClick={() => {
+                                                        setChoice({ type: VisitChoiceActions.mark_attendence })
+                                                        setAttendence(attendence)
+                                                    }}
+                                                >
+                                                    <Edit />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </STableCell>}
+                                        <STableCell>
+                                            {index + 1}
+                                        </STableCell>
+                                        <STableCell>
+                                            {attendence.created_at && moment(new Date(attendence.created_at)).format('DD/MM/YY')}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {attendence.visit_reports[0] && attendence.visit_reports[0].visit_in_credientials && attendence.visit_reports[0].visit_in_credientials.timestamp && moment(new Date(attendence.visit_reports[0].visit_in_credientials.timestamp)).format('LT')}
+                                        </STableCell>
+                                        <STableCell>
+                                            {attendence.visit_reports[0] && attendence.visit_reports[0].city}
+                                        </STableCell>
+                                        <STableCell>
+                                            {attendence.visit_reports[0] && attendence.visit_reports[0].real_city || ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {attendence && attendence.created_by.username}
+                                        </STableCell>
+                                        <STableCell>
+                                            {attendence.is_present ? "Present" : ""}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {attendence.visit_reports[0] && attendence.visit_reports[0].visit_in_credientials.address}
+                                        </STableCell>
+                                    </STableRow>
+                                )
                             })
 
                         }
