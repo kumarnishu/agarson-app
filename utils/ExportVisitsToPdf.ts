@@ -10,8 +10,8 @@ import { ReportManager } from "../app"
 
 
 export async function handleVisitReport(client: { client_id: string, client: any }) {
-    let cronString1 = `20 16 1/1 * *`
-    let cronString2 = `38 13 1/1 * *`
+    let cronString1 = `20 18 1/1 * *`
+    let cronString2 = `58 13 1/1 * *`
     console.log("running trigger")
     if (!ReportManager.exists("visit_reports1"))
         ReportManager.add("visit_reports1", cronString1, async () => {
@@ -20,6 +20,8 @@ export async function handleVisitReport(client: { client_id: string, client: any
             dt2.setDate(new Date(dt1).getDate() + 1)
             dt1.setHours(0)
             dt1.setMinutes(0)
+            dt2.setHours(0)
+            dt2.setMinutes(0)
             await ExportVisitsToPdf(client, dt1, dt2)
         })
     if (!ReportManager.exists("visit_reports2"))
@@ -29,6 +31,8 @@ export async function handleVisitReport(client: { client_id: string, client: any
             dt1.setDate(new Date(dt1).getDate() - 1)
             dt1.setHours(0)
             dt1.setMinutes(0)
+            dt2.setHours(0)
+            dt2.setMinutes(0)
             await ExportVisitsToPdf(client, dt1, dt2)
         })
     if (ReportManager.exists("visit_reports1")) {
@@ -224,10 +228,10 @@ export async function ExportVisitsToPdf(client: any, dt1: Date, dt2: Date) {
 
 async function ExportVisits(client: any) {
     if (client) {
-        console.log("sending pdf")
+        console.log("sending pdf from", process.env.WAGREETING_PHONE)
         let users = await User.find()
         users.forEach(async (user) => {
-            if (!user.productions_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
+            if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
                 await client.sendMessage(String(process.env.WAGREETING_PHONE), {
                     document: fs.readFileSync(`./pdfs/visit/${user.username}_visits.pdf`),
                     fileName: `${user.username}_visits.pdf`,
