@@ -11,7 +11,7 @@ import { User } from "../models/users/user.model"
 
 export async function handleVisitReport(client: { client_id: string, client: any }) {
     let cronString1 = `20 18 1/1 * *`
-    let cronString2 = `35 11 1/1 * *`
+    let cronString2 = `55 11 1/1 * *`
     console.log("running trigger")
 
     new CronJob(cronString1, async () => {
@@ -226,9 +226,7 @@ async function ExportVisits(client: any) {
                     document: fs.readFileSync(`./pdfs/visit/${user.username}_visits.pdf`),
                     fileName: `${user.username}_visits.pdf`,
                 })
-                fs.rmSync(`./pdfs/visit/${user.username}_visits.pdf`)
             }
         })
-
     }
 }
