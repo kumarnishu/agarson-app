@@ -89,14 +89,14 @@ export async function sendTemplates(client: any, mobile: string, templates: IMes
         if (mimetype && mimetype.split("/")[0] === "video") {
             await client.sendMessage(mobile, {
                 video: { url: url },
-                fileName: String(Number(new Date())) + filename,
+                fileName: filename + String(Number(new Date())),
                 caption: caption,
             })
         }
         if (mimetype === "application/pdf") {
             await client.sendMessage(mobile, {
                 document: { url: url },
-                fileName: String(Number(new Date())) + filename,
+                fileName: filename + String(Number(new Date())),
                 caption: caption,
             })
         }

@@ -105,6 +105,7 @@ export const bucket = storage.bucket(bucketName)
 export const ReminderManager = new CronJobManager()
 export const GreetingManager = new CronJobManager()
 export const BroadcastManager = new CronJobManager()
+export const ReportManager = new CronJobManager()
 
 //server routes
 app.use("/api/v1", UserRoutes)

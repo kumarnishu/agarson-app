@@ -5,32 +5,38 @@ import path from "path"
 import { Content } from "pdfmake/interfaces"
 import { imageUrlToBase64 } from "./UrlToBase64"
 import fs from "fs"
-import { CronJob } from "cron"
 import { User } from "../models/users/user.model"
+import { ReportManager } from "../app"
 
 
 export async function handleVisitReport(client: { client_id: string, client: any }) {
     let cronString1 = `20 18 1/1 * *`
-    let cronString2 = `55 11 1/1 * *`
+    let cronString2 = `30 12 1/1 * *`
     console.log("running trigger")
-
-    new CronJob(cronString1, async () => {
-        let dt1 = new Date()
-        let dt2 = new Date()
-        dt2.setDate(new Date(dt1).getDate() + 1)
-        dt1.setHours(0)
-        dt1.setMinutes(0)
-        await ExportVisitsToPdf(client, dt1, dt2)
-    }).start()
-
-    new CronJob(cronString2, async () => {
-        let dt1 = new Date()
-        let dt2 = new Date()
-        dt1.setDate(new Date(dt1).getDate() - 1)
-        dt1.setHours(0)
-        dt1.setMinutes(0)
-        await ExportVisitsToPdf(client, dt1, dt2)
-    }).start()
+    if (!ReportManager.exists("visit_reports1"))
+        ReportManager.add("visit_reports1", cronString1, async () => {
+            let dt1 = new Date()
+            let dt2 = new Date()
+            dt2.setDate(new Date(dt1).getDate() + 1)
+            dt1.setHours(0)
+            dt1.setMinutes(0)
+            await ExportVisitsToPdf(client, dt1, dt2)
+        })
+    if (!ReportManager.exists("visit_reports2"))
+        ReportManager.add("visit_reports2", cronString2, async () => {
+            let dt1 = new Date()
+            let dt2 = new Date()
+            dt1.setDate(new Date(dt1).getDate() - 1)
+            dt1.setHours(0)
+            dt1.setMinutes(0)
+            await ExportVisitsToPdf(client, dt1, dt2)
+        })
+    if (ReportManager.exists("visit_reports1")) {
+        ReportManager.start("visit_reports1")
+    }
+    if (ReportManager.exists("visit_reports2")) {
+        ReportManager.start("visit_reports2")
+    }
 }
 export async function ExportVisitsToPdf(client: any, dt1: Date, dt2: Date) {
     let visits: IVisit[] = []

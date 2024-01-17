@@ -33,7 +33,7 @@ export const GetMessagetemplates = async (req: Request, res: Response, next: Nex
     if (limit && category) {
         templates = await MessageTemplate.find({ category: category }).limit(limit)
     }
-    if (category && !limit) {
+    else if (category && !limit) {
         templates = await MessageTemplate.find({ category: category })
     }
     else
