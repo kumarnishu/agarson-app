@@ -11,7 +11,7 @@ import { User } from "../models/users/user.model"
 
 export async function handleVisitReport(client: { client_id: string, client: any }) {
     let cronString1 = `20 18 1/1 * *`
-    let cronString2 = `50 8 1/1 * *`
+    let cronString2 = `55 10 1/1 * *`
     console.log("running trigger")
 
     new CronJob(cronString1, async () => {
