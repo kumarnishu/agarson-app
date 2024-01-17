@@ -3740,7 +3740,7 @@ export const UpdateBroadcast = async (req: Request, res: Response, next: NextFun
     await Broadcast.findByIdAndUpdate(id, {
         name,
         connected_users,
-        templates,
+        templates: templates,
         is_random_template,
         daily_limit,
         time_gap,

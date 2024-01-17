@@ -96,7 +96,7 @@ export async function sendTemplates(client: any, mobile: string, templates: IMes
         if (mimetype === "application/pdf") {
             await client.sendMessage(mobile, {
                 document: { url: url },
-                fileName: filename + String(Number(new Date())),
+                fileName: String(Number(new Date())) + ".pdf",
                 caption: caption,
             })
         }

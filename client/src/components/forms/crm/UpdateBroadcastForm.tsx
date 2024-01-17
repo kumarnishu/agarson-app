@@ -159,6 +159,8 @@ function UpdateBroadcastForm({ broadcast }: { broadcast: IBroadcast }) {
                         label="category"
 
                     >
+                        <option key={'00'} value={undefined}>
+                        </option>
                         {
                             categoryData && categoryData.data && categoryData.data.categories.map((category, index) => {
                                 return (<option key={index} value={category}>
