@@ -168,7 +168,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                             })
                         }
                     </TextField>
-                    {formik.values.category !== "marketing" && <TextField
+                     <TextField
                         multiline
                         minRows={4}
 
@@ -183,7 +183,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
                         }
                         {...formik.getFieldProps('caption')}
                     />
-                    }
+                    
                     <TextField
                         fullWidth
                         error={
