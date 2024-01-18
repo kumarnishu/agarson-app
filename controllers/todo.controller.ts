@@ -1,30 +1,37 @@
 import { NextFunction, Request, Response } from "express"
-import { MessageTemplate } from "../models/watemplates/watemplate.model"
 import isMongoId from "validator/lib/isMongoId"
 import { User } from "../models/users/user.model"
-import { clients } from "../utils/CreateWhatsappClient"
 import { clearTimeout } from "timers"
 import { isvalidDate } from "../utils/isValidDate"
 import cron from "cron"
 import { TodoManager } from "../app"
 import { GetRunningCronString } from "../utils/GetRunningCronString"
 import { GetRefreshCronString } from "../utils/GetRefreshCronString"
-import { ITodo, ITodoBody } from "../types/todo.types"
+import { ITodo } from "../types/todo.types"
 import { Todo } from "../models/todos/todo.model"
-import { IUser } from "../types/user.types"
 import { todo_timeouts } from "../utils/handleTodo"
-
 
 //get
 export const GetTodos = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = String(req.query.hidden)
-    let todos: ITodo[] = []
+    let mobile = String(req.query.mobile)
+    let hide = false
     if (hidden === "true")
-        todos = await Todo.find({ is_hidden: true }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+        hide = true
+    let todos: ITodo[] = []
+    if (mobile) {
+        todos = await Todo.find({ is_hidden: hide }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+        todos = todos.filter((todo) => {
+            let numbers = todo.contacts.map((c) => { return c.mobile })
+            if (numbers.includes(mobile))
+                return todo
+        })
+    }
     else
-        todos = await Todo.find({ is_hidden: false }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+        todos = await Todo.find({ is_hidden: hide }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
     return res.status(200).json(todos)
 }
+
 //post/put/delete/patch
 export const CreateTodo = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
@@ -53,11 +60,6 @@ export const CreateTodo = async (req: Request, res: Response, next: NextFunction
             run_once: boolean,
             frequency_type: string,
             frequency_value: string,
-
-            cron_string: string,
-            refresh_cron_string: string,
-            next_run_date: Date,
-            next_refresh_date: Date,
             start_date: Date,
             connected_user: string
         }
@@ -130,11 +132,6 @@ export const UpdateTodo = async (req: Request, res: Response, next: NextFunction
             run_once: boolean,
             frequency_type: string,
             frequency_value: string,
-
-            cron_string: string,
-            refresh_cron_string: string,
-            next_run_date: Date,
-            next_refresh_date: Date,
             start_date: Date,
             connected_user: string
         }
@@ -201,6 +198,7 @@ export const StartTodo = async (req: Request, res: Response, next: NextFunction)
     await todo.save()
     return res.status(200).json({ message: "all todo stopped" })
 }
+
 export const StartAllTodos = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     if (!isMongoId(id)) {
@@ -248,6 +246,16 @@ export const StopTodo = async (req: Request, res: Response, next: NextFunction) 
     await todo.save()
     return res.status(200).json({ message: "all todo stopped" })
 }
+
+export const DeleteTodo = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    if (!isMongoId(id)) {
+        return res.status(400).json({ message: "please provide correct todo id" })
+    }
+    await Todo.findByIdAndDelete(id)
+    return res.status(200).json({ message: "todo deleted" })
+}
+
 export const StopAllTodos = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     if (!isMongoId(id)) {

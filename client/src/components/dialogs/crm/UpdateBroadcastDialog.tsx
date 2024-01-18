@@ -9,7 +9,7 @@ function UpdateBroadcastDialog({ broadcast }: { broadcast: IBroadcast }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
         <>
-            <Dialog fullScreen={Boolean(window.screen.width < 500)}  open={choice === LeadChoiceActions.update_broadcast ? true : false}
+            <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === LeadChoiceActions.update_broadcast ? true : false} onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
 
             >
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>

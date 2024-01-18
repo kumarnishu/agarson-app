@@ -79,15 +79,16 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                             <STableHeadCell
                             >
 
-                                No
+                                Date
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Date
+                                No
 
                             </STableHeadCell>
+                           
                             <STableHeadCell
                             >
 

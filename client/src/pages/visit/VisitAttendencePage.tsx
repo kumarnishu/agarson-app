@@ -197,7 +197,6 @@ export default function VisitAdminPage() {
                                 setFilter(e.currentTarget.value)
                                 setFilterCount(0)
                             }}
-                            autoFocus
                             placeholder={`${MemoData?.length} records...`}
                             style={{
                                 fontSize: '1.1rem',

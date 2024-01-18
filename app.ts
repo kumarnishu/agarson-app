@@ -15,15 +15,15 @@ import VisitRoutes from "./routes/visit.routes";
 import GreetingRoutes from "./routes/greeting.route";
 import PasswordRoutes from "./routes/password.routes";
 import ProductionRoutes from "./routes/production.routes";
+import TodoRoutes from "./routes/todo.routes";
 import CronJobManager from "cron-job-manager";
 import path from 'path';
 import { Server } from "socket.io";
-import {  getCurrentUser,  userJoin, userLeave } from "./utils/handleSocketUsers";
+import { getCurrentUser, userJoin, userLeave } from "./utils/handleSocketUsers";
 import { Storage } from '@google-cloud/storage';
 import morgan from 'morgan';
 import { createWhatsappClient } from './utils/CreateWhatsappClient';
 import { ReConnectWhatsapp } from './utils/RestartServices';
-
 
 const app = express()
 const server = createServer(app)
@@ -117,6 +117,7 @@ app.use("/api/v1", VisitRoutes)
 app.use("/api/v1", PasswordRoutes)
 app.use("/api/v1", ProductionRoutes)
 app.use("/api/v1", GreetingRoutes)
+app.use("/api/v1", TodoRoutes)
 
 
 

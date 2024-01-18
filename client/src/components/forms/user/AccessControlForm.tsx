@@ -16,6 +16,7 @@ function AccessControlForm({ user }: { user: IUser }) {
     const [AccessFields, setAccessFields] = useState<AccessTypes>({
         user_access_fields: user.user_access_fields,
         crm_access_fields: user.crm_access_fields,
+        todos_access_fields: user.todos_access_fields,
         templates_access_fields: user.templates_access_fields,
         bot_access_fields: user.bot_access_fields,
         backup_access_fields: user.backup_access_fields,
@@ -237,7 +238,73 @@ function AccessControlForm({ user }: { user: IUser }) {
 
 
                         </STableRow>
-                       
+                        {/* todo access fields */}
+                        <STableRow
+                        >
+
+                            <STableCell                 >
+                                <Stack
+                                    direction="row"
+                                    justifyContent="left"
+                                    alignItems="left"
+                                    spacing={2}
+                                >
+                                    <Typography variant="button">Todos
+                                    </Typography>
+                                </Stack>
+                            </STableCell>
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.todos_access_fields.is_editable)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            todos_access_fields: {
+                                                is_editable: Boolean(!AccessFields.todos_access_fields.is_editable),
+
+                                                is_hidden: Boolean(AccessFields.todos_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.todos_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.todos_access_fields.is_hidden)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            todos_access_fields: {
+                                                is_editable: Boolean(AccessFields.todos_access_fields.is_editable),
+
+                                                is_hidden: Boolean(!AccessFields.todos_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.todos_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+                            <STableCell>
+                                <Checkbox size="small" checked={Boolean(AccessFields.todos_access_fields.is_deletion_allowed)}
+                                    onChange={() => setAccessFields(
+                                        {
+                                            ...AccessFields,
+                                            todos_access_fields: {
+                                                is_editable: Boolean(AccessFields.todos_access_fields.is_editable),
+
+                                                is_hidden: Boolean(AccessFields.todos_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.todos_access_fields.is_deletion_allowed),
+                                            }
+                                        })}
+
+                                />
+                            </STableCell>
+
+
+
+
+
+                        </STableRow>
                         {/* production access fields */}
                         <STableRow
                         >
@@ -440,7 +507,7 @@ function AccessControlForm({ user }: { user: IUser }) {
 
 
                         </STableRow>
-                       
+
                         {/* visit access fields */}
                         <STableRow>
                             <STableCell                 >
@@ -619,7 +686,7 @@ function AccessControlForm({ user }: { user: IUser }) {
 
 
                         </STableRow>
-                        
+
                         {/* backup access fields */}
                         <STableRow
                         >
@@ -682,7 +749,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                                 />
                             </STableCell>
                         </STableRow>
-                      
+
                         {/* greetings access fields */}
                         <STableRow
                         >
@@ -828,7 +895,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                     <AlertBar message="   Access For selected user updated successfully" color="success" />
                 ) : null
             }
-            <Stack gap={2}pt={1}>
+            <Stack gap={2} pt={1}>
                 <Button fullWidth variant="contained" color="primary"
                     onClick={() => {
                         mutate({ id: user._id, access_fields: AccessFields })

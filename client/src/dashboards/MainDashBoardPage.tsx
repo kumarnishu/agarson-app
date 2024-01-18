@@ -15,7 +15,7 @@ function MainDashBoardPage() {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     !user?.user_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.users, is_visible: true, url: paths.user_dashboard })
     !user?.crm_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.crm, is_visible: true, url: paths.crm_dashboard })
-    !user?.todos_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.todos, is_visible: true, url: paths.crm_dashboard })
+    !user?.todos_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.todos, is_visible: true, url: paths.todo_dashboard })
     !user?.visit_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.visit, is_visible: true, url: paths.visit_dashboard })
     !user?.productions_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.productions, is_visible: true, url: paths.production_dashboard })
     !user?.checklists_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.checklists, is_visible: true, url: paths.checklist_dashboard })

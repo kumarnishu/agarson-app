@@ -12,11 +12,11 @@ export type ITodo = {
         is_sent: boolean,
         is_completed: false
     }[],
-    is_completed: false,
+    is_completed:false,
     is_hidden: boolean,
     replies: { reply: string, created_by: IUser, timestamp: Date }[]
-    todo_id: number,
     is_active: boolean,
+    run_once:boolean,
     is_paused: boolean,
     running_key: string,
     refresh_key: string,

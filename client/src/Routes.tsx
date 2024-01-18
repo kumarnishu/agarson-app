@@ -26,6 +26,11 @@ import BackupDashboard from './dashboards/BackupDashboard.tsx'
 import GreetingsDashboard from './dashboards/GreetingsDashboard.tsx'
 import BotDashboard from './dashboards/BotDashboard.tsx'
 import ErpLoginDashboard from './dashboards/ErpLoginDashboard.tsx'
+import TodoNavBar from './components/navbar/TodoNavbar.tsx'
+import TodoDashboard from './dashboards/TodoDashboard.tsx'
+const TodoPage = React.lazy(() => import('./pages/todos/TodoPage.tsx'))
+const TodosAdminPage = React.lazy(() => import('./pages/todos/TodosAdminPage.tsx'))
+const TodoHelpPage = React.lazy(() => import('./pages/todos/TodoHelpPage.tsx'))
 
 const LoginPage = React.lazy(() => import('./pages/users/LoginPage'))
 const EmailVerifyPage = React.lazy(() => import('./pages/users/EmailVerifyPage'))
@@ -72,7 +77,6 @@ const CrmActivitiesPage = React.lazy(() => import('./pages/crm/CrmActivitiesPage
 const LeadsPage = React.lazy(() => import('./pages/crm/LeadsPage'))
 
 export enum paths {
-
   //dashboards
   user_dashboard = "/user_dashboard",
   crm_dashboard = "/crm_dashboard",
@@ -85,6 +89,7 @@ export enum paths {
   greetings_dashboard = "/greetings_dashboard",
   checklist_dashboard = "/checklist_dashboard",
   visit_dashboard = "/visit_dashboard",
+  todo_dashboard = "/todo_dashboard",
 
 
   //help pages
@@ -98,14 +103,18 @@ export enum paths {
   greetings_help_page = "greetings_help_page",
   checklist_help_page = "checklist_help_page",
   visits_help_page = "visits_help_page",
+  todos_help_page = "todos_help_page",
 
   //visit
   visit = 'visit',
   visit_admin = 'visit_admin',
   visit_attendence = 'visit_attendence',
 
- 
-  
+  //todo
+  todo = 'todo',
+  todo_admin = 'todo_admin',
+
+
   //passwords
   passwords = "passwords",
   password_admin_page = "password_admin_page",
@@ -131,9 +140,9 @@ export enum paths {
   machine_categories = "machine_categories",
   production_admin = "production_admin",
   shoe_weight = "shoe_weight",
-  
+
   my_shoe_weight = "my_shoe_weight",
- 
+
   machines = "machines",
   dyes = "dyes",
   articles = "articles",
@@ -149,7 +158,7 @@ export enum paths {
   leads_report = "leads_report",
   tour_reports = "tour_reports",
 
-  
+
   // greeting
   greetings = "greetings",
 
@@ -169,7 +178,7 @@ export enum paths {
   //backup
   backup_page = "backup_page",
 
-  
+
 }
 
 function AppRoutes() {
@@ -215,7 +224,7 @@ function AppRoutes() {
               />
 
             </Route>}
-         
+
           {!user.productions_access_fields.is_hidden &&
             < Route path={paths.production_dashboard} element={<ProductionNavBar />}>
               <Route index
@@ -243,7 +252,7 @@ function AppRoutes() {
                   <Suspense fallback={<LinearProgress />}> <ProductionAdminPage /></Suspense>
                 }
               />
-             
+
               <Route
                 path={paths.shoe_weight} element={
                   <Suspense fallback={<LinearProgress />}> <ShoeWeightPage /></Suspense>
@@ -254,7 +263,7 @@ function AppRoutes() {
                   <Suspense fallback={<LinearProgress />}> <MyProductionPage /></Suspense>
                 }
               />
-              
+
               <Route
                 path={paths.my_shoe_weight} element={
                   <Suspense fallback={<LinearProgress />}> <MyShoeWeightPage /></Suspense>
@@ -386,7 +395,7 @@ function AppRoutes() {
                 <Suspense fallback={<LinearProgress />}> < FlowsPage /></Suspense>
               }
               />
-              
+
 
               <Route path={paths.trackers} element={
                 <Suspense fallback={<LinearProgress />}>
@@ -425,8 +434,8 @@ function AppRoutes() {
 
             </Route>}
 
-         
-          
+
+
 
           {!user.checklists_access_fields.is_hidden &&
             < Route path={paths.checklist_dashboard} element={<CheckListNavBar />
@@ -457,6 +466,35 @@ function AppRoutes() {
               />
 
             </Route>}
+          {!user.todos_access_fields.is_hidden &&
+            < Route path={paths.todo_dashboard} element={<TodoNavBar />
+            }>
+              <Route
+                index element={
+                  <TodoDashboard />
+                }
+              />
+              <Route path={paths.todo_dashboard} element={
+                < TodoDashboard />
+              }
+              />
+              <Route path={paths.todo} element={
+                <Suspense fallback={<LinearProgress />}>< TodoPage /></Suspense>
+              }
+              />
+
+              <Route
+                path={paths.todo_admin} element={
+                  <Suspense fallback={<LinearProgress />}> <TodosAdminPage /></Suspense>
+                }
+              />
+              <Route
+                path={paths.todos_help_page} element={
+                  <Suspense fallback={<LinearProgress />}><TodoHelpPage /></Suspense>
+                }
+              />
+
+            </Route>}
 
           {!user.reports_access_fields.is_hidden &&
             < Route path={paths.reports_dashboard} element={<ReportsNavBar />
@@ -480,7 +518,7 @@ function AppRoutes() {
               />
             </Route>}
 
-         
+
           {!user.passwords_access_fields.is_hidden &&
             < Route path={paths.erp_login_dashboard} element={<PasswordNavbar />
             }>
@@ -510,7 +548,7 @@ function AppRoutes() {
 
 
             </Route>}
-         
+
           {!user.greetings_access_fields.is_hidden &&
             < Route path={paths.greetings_dashboard} element={<GreetingsNavBar />
             }>
@@ -540,7 +578,7 @@ function AppRoutes() {
               />
             </Route>}
 
-          
+
           {!user.backup_access_fields.is_hidden &&
             <Route path={paths.backup_dashboard} element={<DashBoardNavBar />}>
               <Route index

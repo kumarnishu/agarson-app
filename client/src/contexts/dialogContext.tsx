@@ -11,6 +11,8 @@ type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_
 
 type PasswordChoices = "create_password" | "delete_password" | "close_password" | "update_erp_password"
 
+type TodoChoices = "create_todo" | "update_todo" | "delete_todo" | "bulk_start_todo" | "close_todo" | "bulk_stop_todo" | "stop_todo" | "start_todo" | "update_status" | "view_replies" | "hide_todo" | "show_todo"
+
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
 
@@ -35,7 +37,7 @@ type BotChoices = "create_flow"
 
 
 
-type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | VisitChoices | CheckListChoices | GreetingChoices | PasswordChoices | ProductionChoices
+type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | VisitChoices | CheckListChoices | GreetingChoices | PasswordChoices | ProductionChoices | TodoChoices
 
 const initialState: ChoiceState | null = null
 
@@ -75,6 +77,21 @@ export enum PasswordChoiceActions {
   delete_password = "delete_password",
   close_password = "close_password",
   update_erp_password = "update_erp_password"
+}
+export enum TodoChoiceActions {
+  create_todo = "create_todo",
+  update_todo = "update_todo",
+  delete_todo = "delete_todo",
+  bulk_start_todo = "bulk_start_todo",
+  close_todo = "close_todo",
+  bulk_stop_todo = "bulk_stop_todo",
+  stop_todo = "stop_todo",
+  start_todo = "start_todo",
+  update_status = "update_status",
+  view_replies = "view_replies",
+  hide_todo = "hide_todo",
+  show_todo = "show_todo",
+
 }
 export enum VisitChoiceActions {
   upload_samples = "upload_samples",
@@ -186,7 +203,7 @@ export enum UserChoiceActions {
 
 type Action = {
   type: UserChoiceActions |
-  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | PasswordChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions | ProductionChoiceActions
+  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | PasswordChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions | TodoChoiceActions | ProductionChoiceActions
 }
 
 // reducer
@@ -300,6 +317,19 @@ function reducer(state: ChoiceState | null, action: Action) {
     case GreetingChoiceActions.start_greeting: return type
     case GreetingChoiceActions.stop_greeting: return type
 
+    //todos
+    case TodoChoiceActions.create_todo: return type
+    case TodoChoiceActions.update_todo: return type
+    case TodoChoiceActions.delete_todo: return type
+    case TodoChoiceActions.close_todo: return type
+    case TodoChoiceActions.bulk_start_todo: return type
+    case TodoChoiceActions.bulk_stop_todo: return type
+    case TodoChoiceActions.start_todo: return type
+    case TodoChoiceActions.stop_todo: return type
+    case TodoChoiceActions.view_replies: return type
+    case TodoChoiceActions.show_todo: return type
+    case TodoChoiceActions.hide_todo: return type
+    case TodoChoiceActions.update_status: return type
 
     // visit
     case VisitChoiceActions.upload_samples: return type
