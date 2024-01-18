@@ -30,11 +30,8 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
         is_completed: false
     }],
     is_completed: { type: Boolean, default: false },
-    todo_id: {
-        type: Number,
-        reuired: true
-    },
     is_active: { type: Boolean, default: false },
+    run_once: { type: Boolean, default: false },
     is_paused: { type: Boolean, default: false },
     running_key: String,
     refresh_key: String,

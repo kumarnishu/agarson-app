@@ -163,7 +163,7 @@ function NewtemplateForm() {
                         }
                         {...formik.getFieldProps('message')}
                     />}
-                    {formik.values.category !== "marketing" &&<TextField
+                   <TextField
                         multiline
                         minRows={4}
                         error={
@@ -176,7 +176,7 @@ function NewtemplateForm() {
                             formik.touched.caption && formik.errors.caption ? formik.errors.caption : ""
                         }
                         {...formik.getFieldProps('caption')}
-                    />}
+                    />
 
                     <TextField
                         fullWidth

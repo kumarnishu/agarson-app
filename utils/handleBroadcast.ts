@@ -76,8 +76,6 @@ export async function sendTemplates(client: any, mobile: string, templates: IMes
             text: message
         })
     }
-    if (template.category === "marketing")
-        caption = ""
     if (url) {
         if (mimetype && mimetype.split("/")[0] === "image") {
             await client.sendMessage(mobile, {
@@ -89,14 +87,14 @@ export async function sendTemplates(client: any, mobile: string, templates: IMes
         if (mimetype && mimetype.split("/")[0] === "video") {
             await client.sendMessage(mobile, {
                 video: { url: url },
-                fileName: filename + String(Number(new Date())),
+                fileName: filename,
                 caption: caption,
             })
         }
         if (mimetype === "application/pdf") {
             await client.sendMessage(mobile, {
                 document: { url: url },
-                fileName: String(Number(new Date())) + ".pdf",
+                fileName: filename,
                 caption: caption,
             })
         }

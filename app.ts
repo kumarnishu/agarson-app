@@ -102,7 +102,7 @@ export const bucketName = String(process.env.bucketName)
 export const bucket = storage.bucket(bucketName)
 
 
-export const ReminderManager = new CronJobManager()
+export const TodoManager = new CronJobManager()
 export const GreetingManager = new CronJobManager()
 export const BroadcastManager = new CronJobManager()
 export const ReportManager = new CronJobManager()
