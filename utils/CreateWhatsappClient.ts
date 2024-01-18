@@ -105,11 +105,12 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     if (msg.key.remoteJid) {
                         let id = String(msg.key.remoteJid).replace("91", "").replace("@s.whatsapp.net", "")
                         await Lead.findOneAndUpdate({ mobile: id }, { stage: 'useless' })
-                        socket.sock.sendMessage(msg.key.remoteJid, { text: "you successfully blocked us" })
+                        socket.sock.sendMessage(msg.key.remoteJid, { text: "you successfully stopped" })
                     }
                 }
             }
         })
+        socket.sock.ev.flush()
     })
 }
 

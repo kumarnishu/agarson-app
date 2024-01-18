@@ -40,7 +40,7 @@ app.use(cookieParser());
 app.use(compression())
 
 //logger
-app.use(morgan('tiny'))
+app.use(morgan('common'))
 
 
 //mongodb database
