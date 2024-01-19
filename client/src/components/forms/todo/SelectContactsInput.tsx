@@ -1,6 +1,5 @@
-import { Button, Checkbox, IconButton, InputAdornment, Stack, TextField, Typography } from '@mui/material'
-import { Add, Search } from '@mui/icons-material'
-import { useState } from 'react'
+import { InputAdornment, Stack, TextField } from '@mui/material'
+import { Search } from '@mui/icons-material'
 
 
 type Props = {
@@ -31,17 +30,17 @@ type Props = {
     }[]>>
 }
 
-export default function SelectContactsInput({ contact, setContact, contacts, setContacts }: Props) {
-    const [filter, setFilter] = useState<string>()
-    const [selectall, setSelectAll] = useState(false)
+export default function SelectContactsInput({ contacts }: Props) {
+    // const [filter, setFilter] = useState<string>()
+    // const [selectall, setSelectAll] = useState(false)
     return (
         <>
-           
+
             < Stack direction="row" spacing={2}>
                 <TextField
                     fullWidth
 
-                    onChange={(e) => setFilter(e.currentTarget.value)}
+                    // onChange={(e) => setFilter(e.currentTarget.value)}
                     autoFocus
                     InputProps={{
                         startAdornment: <InputAdornment position="start">
@@ -55,7 +54,7 @@ export default function SelectContactsInput({ contact, setContact, contacts, set
                     }}
                 />
             </Stack >
-            <Stack direction={"row"} alignItems={"center"} >
+            {/* <Stack direction={"row"} alignItems={"center"} >
                 <Checkbox
                     onChange={(e) => {
                         setContact(contact)
@@ -68,7 +67,7 @@ export default function SelectContactsInput({ contact, setContact, contacts, set
                     }}
                 />
                 <Typography>Select All</Typography>
-            </Stack>
+            </Stack> */}
             {/* {!selectAll && contacts.map((contact, index) => {
                 return (
                     <Stack key={index} direction={"row"} alignItems={"center"} sx={{ backgroundColor: 'whitesmoke', borderBottom: 2 }}>
