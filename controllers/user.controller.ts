@@ -350,19 +350,19 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-   
+
     owner.reports_access_fields = {
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
-    
+
     owner.crm_access_fields = {
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
-    
+
     owner.templates_access_fields = {
         is_hidden: false,
         is_editable: true,
@@ -373,7 +373,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-   
+
     owner.backup_access_fields = {
         is_hidden: false,
         is_editable: true,
@@ -384,7 +384,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-   
+
     owner.checklists_access_fields = {
         is_hidden: false,
         is_editable: true,
@@ -460,7 +460,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-   
+
     user.visit_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -476,7 +476,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-   
+
     user.reports_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -487,7 +487,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-   
+
     user.templates_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -498,7 +498,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    
+
     user.backup_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -509,7 +509,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    
+
     user.checklists_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -607,7 +607,7 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
         visit_access_fields,
         reports_access_fields,
         greetings_access_fields,
-        passwords_access_fields, 
+        passwords_access_fields,
         productions_access_fields
 
     } = req.body as TUserBody
@@ -666,7 +666,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-   
+
     if (feature === Feature.templates) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
@@ -688,7 +688,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-   
+
     if (feature === Feature.backup) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
@@ -709,7 +709,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-   
+
     if (feature === Feature.checklists) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
@@ -731,7 +731,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-    
+
     res.status(200).json({ message: " updated" })
 }
 export const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -759,10 +759,6 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
         if (await User.findOne({ email: String(email).toLowerCase().trim() }))
             return res.status(403).json({ message: `${email} already exists` });
     }
-    // check  owner to update himself
-    if ((String(user.created_by._id) === String(user._id)))
-        if ((String(user._id) === String(req.user?._id)))
-            return res.status(403).json({ message: "not allowed contact crm administrator" })
 
     //handle dp
     let dp = user.dp;

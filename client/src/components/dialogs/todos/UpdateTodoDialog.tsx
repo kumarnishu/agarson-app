@@ -1,13 +1,14 @@
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
-import NewTodoForm from '../../forms/todo/NewTodoForm'
 import { useContext } from 'react'
 import { ChoiceContext, TodoChoiceActions } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
+import UpdateTodoForm from '../../forms/todo/UpdateTodoForm'
+import { ITodo } from '../../../types/todo.types'
 
-function CreateTodoDialog({ count }: { count: number }) {
+function UpdateTodoDialog({ todo }: { todo: ITodo }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
-        <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === TodoChoiceActions.create_todo ? true : false}
+        <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === TodoChoiceActions.update_todo ? true : false}
             fullWidth
             onClose={() => setChoice({ type: TodoChoiceActions.close_todo })}
         >
@@ -16,10 +17,10 @@ function CreateTodoDialog({ count }: { count: number }) {
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>New Todo</DialogTitle>
             <DialogContent>
-                <NewTodoForm count={count} />
+                <UpdateTodoForm todo={todo} />
             </DialogContent>
         </Dialog >
     )
 }
 
-export default CreateTodoDialog
+export default UpdateTodoDialog

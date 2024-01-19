@@ -10,9 +10,9 @@ export type ITodo = {
         mobile: string,
         name: string,
         is_sent: boolean,
-        is_completed: false
+        status:string
     }[],
-    is_completed:false,
+    is_completed:boolean,
     is_hidden: boolean,
     replies: { reply: string, created_by: IUser, timestamp: Date }[]
     is_active: boolean,

@@ -12,8 +12,7 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { GetUsers } from '../../../services/UserServices';
 import { IUser } from '../../../types/user.types';
-import { Add } from '@mui/icons-material';
-
+import SelectContactsInput from './SelectContactsInput';
 
 type TformData = {
     serial_no: number,
@@ -24,7 +23,7 @@ type TformData = {
         mobile: string,
         name: string,
         is_sent: boolean,
-        is_completed: false
+        status: string
     }[],
     run_once: boolean,
     frequency_type: string,
@@ -33,27 +32,20 @@ type TformData = {
     connected_user: string
 }
 
-function NewTodoForm() {
+function NewTodoForm({ count }: { count: number }) {
     const [users, setUsers] = useState<IUser[]>([])
-    const [contact, setContact] = useState<{
-        mobile: string,
-        name: string,
-        is_sent: boolean,
-        is_completed: false
-    }>()
     const [contacts, setContacts] = useState<{
         mobile: string,
         name: string,
         is_sent: boolean,
-        is_completed: false
+        status: string
     }[]>([])
-    // const [selectAll, setSelectAll] = useState(false)
-    // const [filteredContacts, setFilteredContacts] = useState<{
-    //     mobile: string,
-    //     name: string,
-    //     is_sent: boolean,
-    //     is_completed: false
-    // }[]>([])
+    const [selectedContacts, setSelectedContacts] = useState<{
+        mobile: string,
+        name: string,
+        is_sent: boolean,
+        status: string
+    }[]>([])
 
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     // const [filter, setFilter] = useState<string>()
@@ -67,7 +59,7 @@ function NewTodoForm() {
 
     const formik = useFormik<TformData>({
         initialValues: {
-            serial_no: 1,
+            serial_no: count + 1,
             title: "",
             subtitle: "",
             category: "urgent",
@@ -94,27 +86,32 @@ function NewTodoForm() {
         onSubmit: (values: TformData) => {
             mutate({
                 ...values,
-                contacts: contacts
+                contacts: selectedContacts
             })
         }
     });
 
-    function handleAdd() {
-        if (contact) {
-            let tmpcontacts = contacts
-            if (!tmpcontacts.find((c) => c.mobile === contact.mobile)) {
-                tmpcontacts.push(contact)
-            }
-            setContacts(tmpcontacts)
-            setContact(undefined)
-        }
-    }
-    useEffect(() => {
-        if (isUsersSuccess)
-            setUsers(usersData?.data)
-    }, [users, isUsersSuccess, usersData])
 
-    console.log(contacts)
+    useEffect(() => {
+        if (isUsersSuccess) {
+            setUsers(usersData?.data)
+        }
+
+    }, [isUsersSuccess, usersData])
+
+    useEffect(() => {
+        let tmps = contacts
+        users.map((user) => {
+            if (!contacts.find((c) => c.mobile === user.mobile))
+                tmps.push({
+                    mobile: user.mobile,
+                    name: user.username,
+                    is_sent: false,
+                    status: "pending"
+                })
+        })
+
+    }, [users])
     return (
         <form onSubmit={formik.handleSubmit}>
             {
@@ -127,7 +124,7 @@ function NewTodoForm() {
                     <AlertBar message="new todo created" color="success" />
                 ) : null
             }
-            <Stack sx={{ direction: { xs: 'column', md: 'row' }, pt: 1 }} gap={1}>
+            <Stack sx={{ direction: { xs: 'column', md: 'row' }, pt: 1 }} gap={1.5}>
                 <TextField
                     type='number'
                     variant='outlined'
@@ -208,6 +205,9 @@ function NewTodoForm() {
                     }
                     {...formik.getFieldProps('connected_user')}
                 >
+                    <option value={undefined}>
+
+                    </option>
                     {
                         users && users.map(user => {
                             return (
@@ -308,34 +308,7 @@ function NewTodoForm() {
                     disabled={Boolean(isLoading)}
                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Create"}
                 </Button>
-                < Stack direction="row" spacing={2}>
-                    <TextField
-                        fullWidth
-                        onChange={(e) => {
-                            if (e.target.value) {
-                                setContact({
-                                    name: "",
-                                    mobile: e.target.value,
-                                    is_completed: false,
-                                    is_sent: false
-                                })
-                                // setFilter(e.currentTarget.value)
-                            }
-                        }}
-                        placeholder='Add Mobile Number'
-                        style={{
-                            fontSize: '1.1rem',
-                            border: '0',
-                        }}
-                    />
-                    <Button variant="contained" onClick={handleAdd}><Add /></Button>
-                </Stack >
-
-                <Stack>
-                    {contacts.map((contact) => {
-                        return <span >{contact.name ? `${contact.name} :` : contact.mobile}</span>
-                    })}
-                </Stack>
+                <SelectContactsInput contacts={contacts} setSelectedContacts={setSelectedContacts} selectedContacts={selectedContacts} setContacts={setContacts} />
             </Stack>
         </form >
     )

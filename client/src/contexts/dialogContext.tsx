@@ -11,7 +11,7 @@ type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_
 
 type PasswordChoices = "create_password" | "delete_password" | "close_password" | "update_erp_password"
 
-type TodoChoices = "create_todo" | "update_todo" | "delete_todo" | "bulk_start_todo" | "close_todo" | "bulk_stop_todo" | "stop_todo" | "start_todo" | "update_status" | "view_replies" | "hide_todo" | "show_todo"
+type TodoChoices = "create_todo" | "update_todo" | "delete_todo" | "bulk_start_todo" | "close_todo" | "bulk_stop_todo" | "stop_todo" | "start_todo" | "update_status" | "view_replies" | "hide_todo" | "show_todo" |"view_contacts"
 
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
@@ -91,6 +91,7 @@ export enum TodoChoiceActions {
   view_replies = "view_replies",
   hide_todo = "hide_todo",
   show_todo = "show_todo",
+  view_contacts ="view_contacts"
 
 }
 export enum VisitChoiceActions {
@@ -330,6 +331,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TodoChoiceActions.show_todo: return type
     case TodoChoiceActions.hide_todo: return type
     case TodoChoiceActions.update_status: return type
+    case TodoChoiceActions.view_contacts: return type
 
     // visit
     case VisitChoiceActions.upload_samples: return type

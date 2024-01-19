@@ -27,7 +27,7 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
         mobile: String,
         name: String,
         is_sent: Boolean,
-        is_completed: false
+        status: String
     }],
     is_completed: { type: Boolean, default: false },
     is_active: { type: Boolean, default: false },

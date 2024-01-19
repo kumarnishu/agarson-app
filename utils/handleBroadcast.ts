@@ -12,21 +12,16 @@ export async function handleBroadcast(broadcast: IBroadcast, clients: {
 }[]) {
     let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')
     if (latest_broadcast && latest_broadcast.connected_users) {
-        let clientids: string[] = latest_broadcast.connected_users.map((id) => { return id.client_id })
         latest_broadcast.next_run_date = new Date(cron.sendAt(broadcast.cron_string))
         await latest_broadcast.save()
-        let newclients = clients.filter((client) => {
-            if (clientids.includes(client.client_id))
-                return client
-        })
-        console.log("no of clients", newclients.length)
+        console.log("no of clients", clients.length)
         let count = await Lead.find({ stage: { $ne: 'useless' }, is_sent: false }).limit(latest_broadcast.daily_limit - latest_broadcast.counter).countDocuments()
         if (count === 0 && latest_broadcast.autoRefresh) {
             await Lead.updateMany({ is_sent: true }, { is_sent: false })
         }
-        let limit = (latest_broadcast.daily_limit - latest_broadcast.counter) / newclients.length
-        for (let i = 0; i < newclients.length; i++) {
-            let client = newclients[i]
+        let limit = (latest_broadcast.daily_limit - latest_broadcast.counter) / clients.length
+        for (let i = 0; i < clients.length; i++) {
+            let client = clients[i]
             await handleReports(i, client, limit, latest_broadcast)
         }
     }

@@ -17,6 +17,7 @@ import { IUser } from '../../types/user.types'
 import { ITodo } from '../../types/todo.types'
 import { GetTodos } from '../../services/TodoServices'
 import CreateTodoDialog from '../../components/dialogs/todos/CreateTodoDialog'
+import FuzzySearch from 'fuzzy-search'
 
 
 type ITodoTemplate = {
@@ -86,20 +87,24 @@ export default function TodosPage() {
     }, [users, isUsersSuccess, usersData])
 
     useEffect(() => {
-        if (!filter) {
-            setTodos(preFilteredData)
-        }
-    }, [filter])
-
-
-
-    useEffect(() => {
         if (data && !filter) {
             setTodos(data.data)
             setPreFilteredData(data.data)
         }
     }, [data])
 
+    useEffect(() => {
+        if (filter) {
+            const searcher = new FuzzySearch(todos, ["title", "subtitle", "category", "contacts.mobile", "contacts.name", "replies.reply", "frequency_type"], {
+                caseSensitive: false,
+            });
+            const result = searcher.search(filter);
+            setTodos(result)
+        }
+        if (!filter)
+            setTodos(preFilteredData)
+
+    }, [filter])
 
     return (
         <>
@@ -157,7 +162,7 @@ export default function TodosPage() {
                                 {
                                     users.map((user, index) => {
                                         if (!user.crm_access_fields.is_hidden)
-                                            return (<option key={index} value={user._id}>
+                                            return (<option key={index} value={user.mobile}>
                                                 {user.username}
                                             </option>)
                                         else
@@ -239,7 +244,7 @@ export default function TodosPage() {
                             >Export To Excel</MenuItem>
 
                         </Menu >
-                        <CreateTodoDialog/>
+                        <CreateTodoDialog count={todos.length} />
                     </>
                 </Stack >
             </Stack >

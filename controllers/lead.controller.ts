@@ -3678,6 +3678,14 @@ export const StartBroadcast = async (req: Request, res: Response, next: NextFunc
     if (!broadcast) {
         return res.status(404).json({ message: "broadcast not found" })
     }
+    let clientids: string[] = broadcast.connected_users.map((user) => { return user.client_id })
+    let newclients = clients.filter((client) => {
+        if (clientids.includes(client.client_id))
+            return client
+    })
+    if (newclients.length === 0) {
+        return res.status(400).json({ message: "no whatsapp connected" })
+    }
     await Broadcast.findByIdAndUpdate(id, {
         is_active: true,
         is_paused: false,
@@ -3686,7 +3694,7 @@ export const StartBroadcast = async (req: Request, res: Response, next: NextFunc
         next_run_date: new Date(cron.sendAt(cron_string))
     })
 
-    handleBroadcast(broadcast, clients)
+    await handleBroadcast(broadcast, newclients)
     return res.status(200).json({ message: "started" })
 }
 

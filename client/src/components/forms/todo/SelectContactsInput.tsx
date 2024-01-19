@@ -1,78 +1,109 @@
-import { InputAdornment, Stack, TextField } from '@mui/material'
-import { Search } from '@mui/icons-material'
+import { Button, Checkbox, InputAdornment, Stack, TextField, Typography } from '@mui/material'
+import { Add, Search } from '@mui/icons-material'
+import { useEffect, useState } from 'react'
+import FuzzySearch from 'fuzzy-search'
 
 
 type Props = {
-    contact: {
-        mobile: string;
-        name: string;
-        is_sent: boolean;
-        is_completed: false;
-    } | undefined,
-    setContact: React.Dispatch<React.SetStateAction<{
-        mobile: string;
-        name: string;
-        is_sent: boolean;
-        is_completed: false;
-    } | undefined>>
     contacts: {
         mobile: string,
         name: string,
         is_sent: boolean,
-        is_completed: false
+        status: string
     }[],
 
     setContacts: React.Dispatch<React.SetStateAction<{
         mobile: string,
         name: string,
         is_sent: boolean,
-        is_completed: false
+        status: string
+    }[]>>
+    selectedContacts: {
+        mobile: string,
+        name: string,
+        is_sent: boolean,
+        status: string
+    }[],
+
+    setSelectedContacts: React.Dispatch<React.SetStateAction<{
+        mobile: string,
+        name: string,
+        is_sent: boolean,
+        status: string
     }[]>>
 }
 
-export default function SelectContactsInput({ contacts }: Props) {
-    // const [filter, setFilter] = useState<string>()
-    // const [selectall, setSelectAll] = useState(false)
+export default function SelectContactsInput({ contacts, selectedContacts, setSelectedContacts }: Props) {
+    const [filter, setFilter] = useState<string>()
+    const [contact, setContact] = useState<{
+        mobile: string,
+        name: string,
+        is_sent: boolean,
+        status: string
+    }>()
+    const [filterdContacts, setFilteredContacts] = useState<{
+        mobile: string,
+        name: string,
+        is_sent: boolean,
+        status: string
+    }[]>(contacts)
+
+    useEffect(() => {
+        if (filter) {
+            if (contacts) {
+                const searcher = new FuzzySearch(contacts, ["name", "mobile"], {
+                    caseSensitive: false,
+                });
+                const result = searcher.search(filter);
+                setFilteredContacts(result)
+            }
+        }
+        if (!filter)
+            setFilteredContacts(contacts)
+
+    }, [filter])
     return (
         <>
-
+            {/* add new mobile number */}
             < Stack direction="row" spacing={2}>
                 <TextField
                     fullWidth
-
-                    // onChange={(e) => setFilter(e.currentTarget.value)}
-                    autoFocus
+                    type="search"
                     InputProps={{
-                        startAdornment: <InputAdornment position="start">
-                            <Search />
-                        </InputAdornment>,
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <Search />
+                            </InputAdornment>
+                        ),
                     }}
-                    placeholder={`${contacts?.length} contacts...`}
+                    onChange={(e) => {
+                        setFilter(e.currentTarget.value)
+                        if (String(e.currentTarget.value).length === 10)
+                            setContact({
+                                name: "",
+                                mobile: e.target.value,
+                                status: "pending",
+                                is_sent: false
+                            })
+                    }
+                    }
+                    placeholder={`${selectedContacts?.length} contacts selected`}
                     style={{
                         fontSize: '1.1rem',
                         border: '0',
                     }}
                 />
+                <Button variant="contained" onClick={() => {
+                    if (contact) {
+                        setSelectedContacts([...selectedContacts, contact])
+                    }
+                }}><Add /></Button>
             </Stack >
-            {/* <Stack direction={"row"} alignItems={"center"} >
-                <Checkbox
-                    onChange={(e) => {
-                        setContact(contact)
-                        if (e.target.checked) {
-                            setSelectAll(true)
-                        }
-                        if (!e.target.checked) {
-                            setSelectAll(false)
-                        }
-                    }}
-                />
-                <Typography>Select All</Typography>
-            </Stack> */}
-            {/* {!selectAll && contacts.map((contact, index) => {
+            {!filter && selectedContacts.map((contact, index) => {
                 return (
                     <Stack key={index} direction={"row"} alignItems={"center"} sx={{ backgroundColor: 'whitesmoke', borderBottom: 2 }}>
                         <Checkbox
-                            checked={Boolean(selectedContacts.filter((cont) => { return cont._id === contact._id }).length)}
+                            checked={Boolean(selectedContacts.filter((cont) => { return cont.mobile === contact.mobile }).length)}
                             onChange={(e) => {
                                 setContact(contact)
                                 if (e.target.checked) {
@@ -80,7 +111,7 @@ export default function SelectContactsInput({ contacts }: Props) {
                                 }
                                 if (!e.target.checked) {
                                     setSelectedContacts((contacts) => contacts.filter((item) => {
-                                        return item._id !== contact._id
+                                        return item.mobile !== contact.mobile
                                     }))
                                 }
                             }}
@@ -92,11 +123,22 @@ export default function SelectContactsInput({ contacts }: Props) {
                     </Stack>
                 )
             })}
-            {selectAll && contacts.map((contact, index) => {
+            {filter && filterdContacts.map((contact, index) => {
                 return (
                     <Stack key={index} direction={"row"} alignItems={"center"} sx={{ backgroundColor: 'whitesmoke', borderBottom: 2 }}>
                         <Checkbox
-                            checked={Boolean(selectAll)}
+                            checked={Boolean(selectedContacts.filter((cont) => { return cont.mobile === contact.mobile }).length)}
+                            onChange={(e) => {
+                                setContact(contact)
+                                if (e.target.checked) {
+                                    setSelectedContacts([...selectedContacts, contact])
+                                }
+                                if (!e.target.checked) {
+                                    setSelectedContacts((contacts) => contacts.filter((item) => {
+                                        return item.mobile !== contact.mobile
+                                    }))
+                                }
+                            }}
                         />
                         <Stack p={1}>
                             <Typography variant='button'>{contact.name}</Typography>
@@ -104,9 +146,8 @@ export default function SelectContactsInput({ contacts }: Props) {
                         </Stack>
                     </Stack>
                 )
-            })} */}
+            })}
         </>
-
     )
 
 }

@@ -4,6 +4,8 @@ import fs from "fs"
 import { User } from "../models/users/user.model";
 import { handleVisitReport } from "./ExportVisitsToPdf";
 import Lead from "../models/leads/lead.model";
+import { Todo } from "../models/todos/todo.model";
+import { HandleTodoMessage } from "./handleTodo";
 
 export var clients: { client_id: string, client: any }[] = []
 
@@ -88,8 +90,22 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             clients = clients.filter((client) => { return client.client_id !== client_id })
             clients.push({ client_id: client_id, client: socket.sock })
             let client = clients.find((client) => client.client_id === process.env.WACLIENT_ID)
-            if (client)
+            if (client) {
+                console.log("handling visit reports")
                 handleVisitReport(client.client)
+            }
+
+            let todos = await Todo.find().populate('connected_user')
+            todos.forEach(async (todo) => {
+                console.log("running here")
+                let reminderClient = clients.find((client) => client.client_id === todo.connected_user.client_id)
+                if (reminderClient) {
+                    if (todo.is_active || todo.is_paused) {
+                        console.log("handling todos")
+                        await HandleTodoMessage(todo, reminderClient.client)
+                    }
+                }
+            })
         }
     })
 

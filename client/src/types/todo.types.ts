@@ -10,7 +10,7 @@ export type ITodo = {
         mobile: string,
         name: string,
         is_sent: boolean,
-        is_completed: false
+        status: string
     }[],
     is_completed:false,
     is_hidden: boolean,
