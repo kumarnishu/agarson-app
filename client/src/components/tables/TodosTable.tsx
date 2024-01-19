@@ -1,12 +1,9 @@
-import { Comment, Delete, DeleteOutline, Edit, EditCalendar, HideImageRounded, RestartAlt, Share, Stop, Visibility, VisibilitySharp } from '@mui/icons-material'
+import { Delete, Edit, EditCalendar, HideImageRounded, RestartAlt, Stop, Visibility, VisibilitySharp } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
-import AddTaskIcon from '@mui/icons-material/AddTask';
-import BackHandIcon from '@mui/icons-material/BackHand';
-import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { ITodo } from '../../types/todo.types'
