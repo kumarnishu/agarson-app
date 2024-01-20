@@ -96,6 +96,7 @@ export default function SelectContactsInput({ contacts, selectedContacts, setSel
                 <Button variant="contained" onClick={() => {
                     if (contact) {
                         setSelectedContacts([...selectedContacts, contact])
+                        setContact(undefined)
                     }
                 }}><Add /></Button>
             </Stack >
@@ -114,6 +115,7 @@ export default function SelectContactsInput({ contacts, selectedContacts, setSel
                                         return item.mobile !== contact.mobile
                                     }))
                                 }
+                                setContact(undefined)
                             }}
                         />
                         <Stack p={1}>
@@ -138,6 +140,7 @@ export default function SelectContactsInput({ contacts, selectedContacts, setSel
                                         return item.mobile !== contact.mobile
                                     }))
                                 }
+                                setContact(undefined)
                             }}
                         />
                         <Stack p={1}>

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, IconButton, Paper } from '@mui/material'
 import NewTodoForm from '../../forms/todo/NewTodoForm'
 import { useContext } from 'react'
 import { ChoiceContext, TodoChoiceActions } from '../../../contexts/dialogContext'
@@ -7,7 +7,7 @@ import { Cancel } from '@mui/icons-material'
 function CreateTodoDialog({ count }: { count: number }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
-        <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === TodoChoiceActions.create_todo ? true : false}
+        <Dialog component={Paper} fullScreen={Boolean(window.screen.width < 500)} open={choice === TodoChoiceActions.create_todo ? true : false}
             fullWidth
             onClose={() => setChoice({ type: TodoChoiceActions.close_todo })}
         >

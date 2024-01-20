@@ -13,6 +13,21 @@ import { HandleTodoMessage, todo_timeouts } from "../utils/handleTodo"
 import { clients } from "../utils/CreateWhatsappClient"
 
 //get
+export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
+    let hidden = req.query.hidden
+    let hide = false
+    if (hidden === "true")
+        hide = true
+    let todos = await Todo.find({ is_hidden: hide }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+    todos = todos.filter((todo) => {
+        let numbers = todo.contacts.map((c) => { return c.mobile })
+        console.log(numbers)
+        if (numbers.includes(String(req.user.mobile)))
+            return todo
+    })
+    console.log(todos.length)
+    return res.status(200).json(todos)
+}
 export const GetTodos = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = req.query.hidden
     let mobile = req.query.mobile
@@ -20,19 +35,10 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
     if (hidden === "true")
         hide = true
     let todos: ITodo[] = []
+    if (!mobile) {
+        todos = await Todo.find({ is_hidden: hide }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+    }
     if (mobile) {
-        todos = await Todo.find({ is_hidden: hide }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
-        todos = todos.filter((todo) => {
-            let numbers = todo.contacts.map((c) => { return c.mobile })
-            console.log(numbers)
-            if (numbers.includes(String(mobile)))
-                return todo
-        })
-    }
-    if (!mobile && req.user.is_admin) {
-        todos = await Todo.find({ is_hidden: hide }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
-    }
-    if (!mobile && !req.user.is_admin) {
         todos = await Todo.find({ is_hidden: hide }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
         todos = todos.filter((todo) => {
             let numbers = todo.contacts.map((c) => { return c.mobile })
@@ -84,6 +90,9 @@ export const CreateTodo = async (req: Request, res: Response, next: NextFunction
 
     if (contacts.length == 0)
         return res.status(400).json({ "message": "must provide one contact" })
+    if (run_once && new Date(start_date) <= new Date()) {
+        return res.status(400).json({ message: "date is in the past" })
+    }
     let count = await Todo.countDocuments()
     serial_no = serial_no || count + 1
     let todo = new Todo({
@@ -106,6 +115,8 @@ export const CreateTodo = async (req: Request, res: Response, next: NextFunction
     todo.frequency_type = frequency_type
     todo.is_active = false
     todo.next_run_date = new Date(cron.sendAt(todo.cron_string))
+    if (run_once)
+        todo.next_run_date = new Date(cron.sendAt(new Date(start_date)))
     todo.next_refresh_date = new Date(cron.sendAt(todo.refresh_cron_string))
     todo.running_key = String(todo._id) + "todo"
     todo.refresh_key = String(todo._id) + "refresh"
@@ -155,6 +166,9 @@ export const UpdateTodo = async (req: Request, res: Response, next: NextFunction
 
     if (contacts.length == 0)
         return res.status(400).json({ "message": "must provide one contact" })
+    if (run_once && new Date(start_date) <= new Date()) {
+        return res.status(400).json({ message: "date is in the past" })
+    }
     const id = req.params.id
     let todo = await Todo.findById(id)
     if (!todo)
@@ -176,6 +190,8 @@ export const UpdateTodo = async (req: Request, res: Response, next: NextFunction
     todo.frequency_value = frequency_value
     todo.frequency_type = frequency_type
     todo.next_run_date = new Date(cron.sendAt(todo.cron_string))
+    if (run_once)
+        todo.next_run_date = new Date(cron.sendAt(new Date(start_date)))
     todo.next_refresh_date = new Date(cron.sendAt(todo.refresh_cron_string))
     await todo.save()
     if (TodoManager.exists(todo.running_key))
@@ -193,7 +209,9 @@ export const StartTodo = async (req: Request, res: Response, next: NextFunction)
     let todo = await Todo.findById(id).populate('connected_user')
     if (!todo)
         return res.status(400).json({ message: "not found" })
-
+    if (todo.run_once && new Date(todo.start_date) <= new Date()) {
+        return res.status(400).json({ message: "date is in the past" })
+    }
     todo_timeouts.forEach((item) => {
         if (String(item.id) === String(todo?._id)) {
             clearTimeout(item.timeout)
@@ -207,7 +225,6 @@ export const StartTodo = async (req: Request, res: Response, next: NextFunction)
     if (!client)
         return res.status(400).json({ message: "no whatsapp connected with the connected number" })
 
-    await HandleTodoMessage(todo, client.client)
     todo.is_active = true
     todo.is_paused = false
     let contacts = todo.contacts
@@ -219,7 +236,8 @@ export const StartTodo = async (req: Request, res: Response, next: NextFunction)
         }
     })
     await todo.save()
-    return res.status(200).json({ message: "all todo stopped" })
+    await HandleTodoMessage(todo, client.client)
+    return res.status(200).json({ message: "todo started" })
 }
 
 export const StartAllTodos = async (req: Request, res: Response, next: NextFunction) => {
@@ -267,7 +285,7 @@ export const StopTodo = async (req: Request, res: Response, next: NextFunction) 
     todo.is_active = false
     todo.is_paused = false
     await todo.save()
-    return res.status(200).json({ message: "all todo stopped" })
+    return res.status(200).json({ message: "todo stopped" })
 }
 
 export const DeleteTodo = async (req: Request, res: Response, next: NextFunction) => {

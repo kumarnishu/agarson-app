@@ -28,7 +28,7 @@ import BotDashboard from './dashboards/BotDashboard.tsx'
 import ErpLoginDashboard from './dashboards/ErpLoginDashboard.tsx'
 import TodoNavBar from './components/navbar/TodoNavbar.tsx'
 import TodoDashboard from './dashboards/TodoDashboard.tsx'
-const TodoPage = React.lazy(() => import('./pages/todos/TodoPage.tsx'))
+const TodoPage = React.lazy(() => import('./pages/todos/MyTodoPage.tsx'))
 const TodosAdminPage = React.lazy(() => import('./pages/todos/TodosAdminPage.tsx'))
 const TodoHelpPage = React.lazy(() => import('./pages/todos/TodoHelpPage.tsx'))
 
