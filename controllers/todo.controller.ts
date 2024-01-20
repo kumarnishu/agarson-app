@@ -7,18 +7,16 @@ import cron from "cron"
 import { TodoManager } from "../app"
 import { GetRunningCronString } from "../utils/GetRunningCronString"
 import { GetRefreshCronString } from "../utils/GetRefreshCronString"
-import { ITodo } from "../types/todo.types"
+import { ITodo, ITodoTemplate } from "../types/todo.types"
 import { Todo } from "../models/todos/todo.model"
 import { HandleTodoMessage, todo_timeouts } from "../utils/handleTodo"
 import { clients } from "../utils/CreateWhatsappClient"
+import xlsx from "xlsx"
 
 //get
 export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = req.query.hidden
-    let hide = false
-    if (hidden === "true")
-        hide = true
-    let todos = await Todo.find({ is_hidden: hide }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+    let todos = await Todo.find({ is_hidden: hidden }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
     todos = todos.filter((todo) => {
         let numbers = todo.contacts.map((c) => { return c.mobile })
         console.log(numbers)
@@ -30,23 +28,46 @@ export const GetMyTodos = async (req: Request, res: Response, next: NextFunction
 }
 export const GetTodos = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = req.query.hidden
+    let visible = req.query.visible
     let mobile = req.query.mobile
-    let hide = false
-    if (hidden === "true")
-        hide = true
+    let showall = false
+    if (String(hidden) === "false" && String(visible) === "false") {
+        showall = true
+    }
+    if (String(hidden) !== "false" && String(visible) !== "false") {
+        showall = true
+    }
+
     let todos: ITodo[] = []
-    if (!mobile) {
-        todos = await Todo.find({ is_hidden: hide }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+    if (showall) {
+        if (!mobile) {
+            todos = await Todo.find().populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+        }
+        if (mobile) {
+            todos = await Todo.find().populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = todos.filter((todo) => {
+                let numbers = todo.contacts.map((c) => { return c.mobile })
+                console.log(numbers)
+                if (numbers.includes(String(mobile)))
+                    return todo
+            })
+        }
     }
-    if (mobile) {
-        todos = await Todo.find({ is_hidden: hide }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
-        todos = todos.filter((todo) => {
-            let numbers = todo.contacts.map((c) => { return c.mobile })
-            console.log(numbers)
-            if (numbers.includes(String(mobile)))
-                return todo
-        })
+    if (!showall) {
+        if (!mobile) {
+            todos = await Todo.find({ is_hidden: hidden }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+        }
+        if (mobile) {
+            todos = await Todo.find({ is_hidden: hidden }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = todos.filter((todo) => {
+                let numbers = todo.contacts.map((c) => { return c.mobile })
+                console.log(numbers)
+                if (numbers.includes(String(mobile)))
+                    return todo
+            })
+        }
     }
+
     return res.status(200).json(todos)
 }
 
@@ -347,7 +368,6 @@ export const ToogleHideTodo = async (req: Request, res: Response, next: NextFunc
     return res.status(200).json({ message: "todo hidden" })
 }
 
-
 export const UpdateStatus = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     const { status, reply } = req.body as { status: string, reply: string }
@@ -380,3 +400,192 @@ export const UpdateStatus = async (req: Request, res: Response, next: NextFuncti
     await todo.save()
     return res.status(200).json({ message: `todo staus updated` });
 }
+
+export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next: NextFunction) => {
+    let result: ITodoTemplate[] = []
+    let create_operation = true
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer);
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: ITodoTemplate[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        console.log(workbook_response[0].start_date)
+        console.log(new Date(workbook_response[0].start_date))
+
+        // workbook_response.forEach(async (lead) => {
+        //     let mobile: number | null = Number(lead.mobile)
+        //     let alternate_mobile1: number | null = Number(lead.alternate_mobile1)
+        //     let alternate_mobile2: number | null = Number(lead.alternate_mobile2)
+
+        //     let validated = true
+
+        //     //important
+        //     if (mobile && Number.isNaN(mobile)) {
+        //         validated = false
+        //         statusText = "invalid mobile"
+        //     }
+        //     if (alternate_mobile1 && Number.isNaN(alternate_mobile1)) {
+        //         validated = false
+        //         statusText = "invalid alternate mobile 1"
+        //     }
+        //     if (alternate_mobile2 && Number.isNaN(alternate_mobile2)) {
+        //         validated = false
+        //         statusText = "invalid alternate mobile 2"
+        //     }
+        //     if (alternate_mobile1 && String(alternate_mobile1).length !== 10)
+        //         alternate_mobile1 = null
+        //     if (alternate_mobile2 && String(alternate_mobile2).length !== 10)
+        //         alternate_mobile2 = null
+
+        //     if (lead.is_customer && typeof (lead.is_customer) !== "boolean") {
+        //         validated = false
+        //         statusText = "invalid is icustomer"
+        //     }
+        //     if (mobile && String(mobile).length !== 10) {
+        //         validated = false
+        //         statusText = "invalid mobile"
+        //     }
+
+        //     if (lead.created_at && !isvalidDate(new Date(lead.created_at))) {
+        //         validated = false
+        //         statusText = "invalid date"
+        //     }
+        //     if (lead.updated_at && !isvalidDate(new Date(lead.updated_at))) {
+        //         validated = false
+        //         statusText = "invalid date"
+        //     }
+
+        //     // duplicate number checker
+        //     let uniqueNumbers: number[] = []
+        //     if (mobile && !OldNumbers.includes(mobile)) {
+        //         uniqueNumbers.push(mobile)
+        //         OldNumbers.push(mobile)
+
+        //     }
+        //     else
+        //         statusText = "duplicate"
+        //     if (alternate_mobile1 && !OldNumbers.includes(alternate_mobile1)) {
+        //         uniqueNumbers.push(alternate_mobile1)
+        //         OldNumbers.push(alternate_mobile1)
+        //     }
+        //     if (alternate_mobile2 && !OldNumbers.includes(alternate_mobile2)) {
+        //         uniqueNumbers.push(alternate_mobile2)
+        //         OldNumbers.push(alternate_mobile2)
+        //     }
+        //     if (uniqueNumbers.length === 0)
+        //         validated = false
+
+        //     if (!isMongoId(String(lead._id)) && !validated) {
+        //         result.push({
+        //             ...lead,
+        //             status: statusText
+        //         })
+        //     }
+
+        //     if (lead.lead_owners) {
+        //         let names = String((lead.lead_owners)).split(",")
+        //         for (let i = 0; i < names.length; i++) {
+        //             let owner = await User.findOne({ username: names[i] })
+        //             if (owner)
+        //                 new_lead_owners.push(owner)
+        //         }
+
+        //     }
+        //     //update and create new nead
+        //     console.log(validated)
+        //     if (lead._id && isMongoId(String(lead._id))) {
+        //         console.log(new_lead_owners)
+        //         create_operation = false
+        //         let targetLead = await Lead.findById(lead._id)
+        //         if (targetLead) {
+        //             if (lead.remarks) {
+        //                 if (!lead.remarks.length) {
+        //                     let new_remark = new Remark({
+        //                         remark: lead.remarks,
+        //                         lead: lead,
+        //                         created_at: new Date(),
+        //                         created_by: req.user,
+        //                         updated_at: new Date(),
+        //                         updated_by: req.user
+        //                     })
+        //                     await new_remark.save()
+        //                     targetLead.last_remark = lead.remarks
+        //                     targetLead.remarks = [new_remark]
+        //                 }
+        //                 else {
+        //                     let last_remark = targetLead.remarks[targetLead.remarks.length - 1]
+        //                     await Remark.findByIdAndUpdate(last_remark._id, {
+        //                         remark: lead.remarks,
+        //                         lead: lead,
+        //                         updated_at: new Date(),
+        //                         updated_by: req.user
+        //                     })
+        //                     targetLead.last_remark = last_remark.remark
+        //                 }
+
+        //             }
+
+        //             await Lead.findByIdAndUpdate(lead._id, {
+        //                 ...lead,
+        //                 remarks: targetLead.remarks,
+        //                 mobile: uniqueNumbers[0] || mobile,
+        //                 alternate_mobile1: uniqueNumbers[1] || alternate_mobile1 || null,
+        //                 alternate_mobile2: uniqueNumbers[2] || alternate_mobile2 || null,
+        //                 lead_owners: new_lead_owners,
+        //                 updated_by: req.user,
+        //                 updated_at: new Date(Date.now())
+        //             })
+        //         }
+
+        //     }
+
+        //     if (validated) {
+        //         if (!lead._id || !isMongoId(String(lead._id))) {
+        //             let newlead = new Lead({
+        //                 ...lead,
+        //                 _id: new Types.ObjectId(),
+        //                 mobile: uniqueNumbers[0] || null,
+        //                 alternate_mobile1: uniqueNumbers[1] || null,
+        //                 alternate_mobile2: uniqueNumbers[2] || null,
+        //                 lead_owners: new_lead_owners,
+        //                 created_by: req.user,
+        //                 updated_by: req.user,
+        //                 updated_at: new Date(Date.now()),
+        //                 created_at: new Date(Date.now()),
+        //                 remarks: undefined
+        //             })
+        //             if (lead.remarks) {
+        //                 let new_remark = new Remark({
+        //                     remark: lead.remarks,
+        //                     lead: newlead,
+        //                     created_at: new Date(),
+        //                     created_by: req.user,
+        //                     updated_at: new Date(),
+        //                     updated_by: req.user
+        //                 })
+        //                 await new_remark.save()
+        //                 newlead.last_remark = lead.remarks
+        //                 newlead.remarks = [new_remark]
+        //             }
+        //             await newlead.save()
+
+        //         }
+        //     }
+        // })
+
+    }
+    // if (!create_operation && String(req.user?._id) !== String(req.user?.created_by._id))
+    //     return res.status(403).json({ message: "not allowed this operation" })
+    return res.status(200).json(result);
+}
+

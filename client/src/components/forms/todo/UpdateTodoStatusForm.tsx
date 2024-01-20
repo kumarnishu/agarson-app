@@ -22,7 +22,7 @@ function UpdateTodoStatusForm({ todo }: { todo: ITodo }) {
         (UpdateTodoStatus, {
             onSuccess: () => {
                 queryClient.invalidateQueries('todos')
-                queryClient.invalidateQueries('self_todos')
+                queryClient.invalidateQueries('my_todos')
             }
         })
 
@@ -33,7 +33,7 @@ function UpdateTodoStatusForm({ todo }: { todo: ITodo }) {
     }>({
         initialValues: {
             status: todo.contacts.find((c) => c.mobile === user?.mobile)?.status || "pending",
-            reply: todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply || ""
+            reply: ''
         },
         validationSchema: Yup.object({
             status: Yup.string().required("required field"),
@@ -62,7 +62,6 @@ function UpdateTodoStatusForm({ todo }: { todo: ITodo }) {
             }, 1000)
         }
     }, [isSuccess, setChoice])
-    console.log(formik.values)
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack

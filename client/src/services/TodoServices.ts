@@ -1,13 +1,14 @@
 import { apiClient } from "./utils/AxiosInterceptor";
 
-export const GetTodos = async ({ hidden, mobile }: { hidden: boolean, mobile?: string }) => {
+export const GetTodos = async ({ hidden, mobile, visible }: { hidden: boolean, visible: boolean, mobile?: string }) => {
     if (mobile)
-        return await apiClient.get(`todos/?hidden=${hidden}&mobile=${mobile}`)
+        return await apiClient.get(`todos/?hidden=${hidden}&mobile=${mobile}&visible=${visible}`)
     else
-        return await apiClient.get(`todos/?hidden=${hidden}`)
+        return await apiClient.get(`todos/?hidden=${hidden}&visible=${visible}`)
+
 }
 export const GetMyTodos = async ({ hidden }: { hidden: boolean }) => {
-        return await apiClient.get(`todos/me/?hidden=${hidden}`)
+    return await apiClient.get(`todos/me/?hidden=${hidden}`)
 }
 export const CreateTodo = async (body: {
     serial_no: number,
@@ -72,8 +73,8 @@ export const UpdateTodoStatus = async ({ id, body }: { id: string, body: { statu
     return await apiClient.patch(`todos/status/${id}`, body);
 };
 
-
-
-
+export const BulkTodoUpdateFromExcel = async (body: FormData) => {
+    return await apiClient.put(`todos/bulk/new`, body)
+}
 
 

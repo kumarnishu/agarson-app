@@ -14,6 +14,7 @@ import UpdateTodoStatusDialog from '../dialogs/todos/UpdateTodoStatusDialog'
 import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
 import ViewTodoContactsDialog from '../dialogs/todos/ViewTodoContactsDialog'
 import DeleteTodoDialog from '../dialogs/todos/DeleteTodoDialog'
+import ViewTextDialog from '../dialogs/text/ViewTextDialog'
 
 
 type Props = {
@@ -29,6 +30,7 @@ type Props = {
 function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTodos, setSelectedTodos }: Props) {
     const { setChoice } = useContext(ChoiceContext)
     const [data, setData] = useState<ITodo[]>(todos)
+    const [text, setText] = useState<string>()
 
     useEffect(() => {
         setData(todos)
@@ -108,7 +110,12 @@ function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedT
                                 Category
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                                Last Reply
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -117,12 +124,7 @@ function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedT
                             </STableHeadCell>
 
 
-                            <STableHeadCell
-                            >
 
-                                Last Reply
-
-                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -276,16 +278,16 @@ function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedT
                                         <STableCell>
                                             {todo.category}
                                         </STableCell>
-
+                                        <STableCell>
+                                            {todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply.slice(0, 20)}
+                                        </STableCell>
 
                                         <STableCell>
 
                                             {todo.contacts.map((c) => { return c.mobile + " " + c.name }).toString()}
 
                                         </STableCell>
-                                        <STableCell>
-                                            {todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply}
-                                        </STableCell>
+
                                         <STableCell>
                                             {todo.frequency_type}
                                         </STableCell>
@@ -329,9 +331,11 @@ function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedT
                         <ViewTodoRepliesDialog todo={todo} />
                         <ViewTodoContactsDialog todo={todo} />
                         <DeleteTodoDialog id={todo._id} />
+
                     </>
                     : null
             }
+            {text && <ViewTextDialog text={text} setText={setText} />}
         </>
     )
 }

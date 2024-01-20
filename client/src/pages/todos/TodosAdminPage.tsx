@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, FormControlLabel, IconButton, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
+import { Checkbox, Fade, FormControlLabel, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -14,22 +14,32 @@ import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { GetUsers } from '../../services/UserServices'
 import { IUser } from '../../types/user.types'
-import { ITodo } from '../../types/todo.types'
+import { ITodo, ITodoTemplate } from '../../types/todo.types'
 import { GetTodos } from '../../services/TodoServices'
 import CreateTodoDialog from '../../components/dialogs/todos/CreateTodoDialog'
 import FuzzySearch from 'fuzzy-search'
-
-
-type ITodoTemplate = {
-    _id: string,
-    serial_no: number,
-    title: string,
-    subtitle: string,
-}
-
+import UploadTodoExcelButton from '../../components/buttons/UploadTodoExcelButton'
+const template: ITodoTemplate[] = [
+    {
+        _id: "",
+        serial_no: 1,
+        title: "work title",
+        subtitle: 'work subtitle',
+        category: 'urgent',
+        contacts: ["nishu", "7056943283"],
+        is_completed: true,
+        is_hidden: true,
+        last_reply: "done this work",
+        run_once: false,
+        frequency_type: "daily",
+        frequency_value: "1",
+        start_date: new Date(),
+    }
+]
 export default function TodosPage() {
     const [users, setUsers] = useState<IUser[]>([])
     const [hidden, setHidden] = useState(false)
+    const [visible, setVisible] = useState(true)
     const [mobile, setMobile] = useState<string>()
     const [filter, setFilter] = useState<string | undefined>()
     const { user: LoggedInUser } = useContext(UserContext)
@@ -40,8 +50,8 @@ export default function TodosPage() {
     const [preFilteredData, setPreFilteredData] = useState<ITodo[]>([])
 
     const [selectedTodos, setSelectedTodos] = useState<ITodo[]>([])
-    const [selectedData, setSelectedData] = useState<ITodoTemplate[]>([])
-    const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["todos", hidden, mobile], async () => GetTodos({ hidden: hidden, mobile: mobile }))
+    const [selectedData, setSelectedData] = useState<ITodoTemplate[]>(template)
+    const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["todos", hidden, mobile, visible], async () => GetTodos({ hidden: hidden, visible: visible, mobile: mobile }))
 
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
@@ -75,6 +85,15 @@ export default function TodosPage() {
                     serial_no: todo.serial_no,
                     title: todo.title,
                     subtitle: todo.subtitle,
+                    category: todo.category,
+                    contacts: todo.contacts.map((c) => { return c.name }),
+                    is_completed: todo.is_completed,
+                    is_hidden: todo.is_hidden,
+                    last_reply: todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply || "",
+                    run_once: todo.run_once,
+                    frequency_type: todo.frequency_type,
+                    frequency_value: todo.frequency_value,
+                    start_date: todo.start_date,
                 })
         })
         if (data.length > 0)
@@ -133,14 +152,18 @@ export default function TodosPage() {
                 <Stack
                     direction="row"
                 >
-                    <FormControlLabel control={<Switch
+                    <FormControlLabel control={<Checkbox
                         defaultChecked={Boolean(hidden)}
                         onChange={() => setHidden(!hidden)}
                     />} label="Hidden" />
+                    <FormControlLabel control={<Checkbox
+                        defaultChecked={Boolean(visible)}
+                        onChange={() => setVisible(!visible)}
+                    />} label="Visible" />
 
                     {/* search bar */}
-                    < Stack direction="row" spacing={2}>
-                        {/* {LoggedInUser?.crm_access_fields.is_editable && <UploadTodosExcelButton />} */}
+                    < Stack direction='row' spacing={2}>
+                        {LoggedInUser?.todos_access_fields.is_editable && <UploadTodoExcelButton />}
                         {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 &&
                             < TextField
                                 size='small'

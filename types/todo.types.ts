@@ -1,5 +1,20 @@
 import { IUser } from "./user.types"
 
+export type ITodoTemplate = {
+    _id: string,
+    serial_no: number,
+    title: string,
+    subtitle: string,
+    category: string,
+    contacts: string[],
+    is_completed: boolean,
+    is_hidden: boolean,
+    last_reply: string,
+    run_once: boolean,
+    frequency_type: string,
+    frequency_value: string,
+    start_date: Date
+}
 export type ITodo = {
     _id: string,
     serial_no: number,
@@ -10,13 +25,13 @@ export type ITodo = {
         mobile: string,
         name: string,
         is_sent: boolean,
-        status:string
+        status: string
     }[],
-    is_completed:boolean,
+    is_completed: boolean,
     is_hidden: boolean,
     replies: { reply: string, created_by: IUser, timestamp: Date }[]
     is_active: boolean,
-    run_once:boolean,
+    run_once: boolean,
     is_paused: boolean,
     running_key: string,
     refresh_key: string,
