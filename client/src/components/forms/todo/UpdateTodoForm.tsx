@@ -79,7 +79,48 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
       contacts: Yup.array().required('required field'),
       run_once: Yup.boolean(),
       frequency_type: Yup.string().required('required field'),
-      frequency_value: Yup.string().required('required field'),
+      frequency_value: Yup.string().required('required field').test('value', "invalid frequency value", value => {
+        let ftype = formik.values.frequency_type
+        let validated = true
+        if (ftype === "minutes" && Number(value) > 59 || Number(value) < 1) {
+          validated = false
+        }
+        console.log(validated)
+        if (ftype === "hours" && Number(value) > 23 || Number(value) < 1) {
+          validated = false
+        }
+        if (ftype === "days" && Number(value) > 31 || Number(value) < 1) {
+          validated = false
+        }
+
+        if (ftype === "months" && value && value.length > 0) {
+          value.split(",").map((v) => {
+            if (Number(v) < 1 || Number(v) > 31)
+              validated = false
+          })
+        }
+
+        if (ftype === "weekdays" && value && value.length > 0) {
+          value.split(",").map((v) => {
+            if (Number(v) < 1 || Number(v) > 7)
+              validated = false
+          })
+        }
+
+        if (ftype === "monthdays" && value && value.length > 0) {
+         value.split(",").map((v) => {
+            if (Number(v) < 1 || Number(v) > 31)
+              validated = false
+          })
+        }
+        if (ftype === "yeardays" && value && value.length > 0) {
+         value.split(",").map((v) => {
+            if (Number(v) < 1 || Number(v) > 31)
+              validated = false
+          })
+        }
+        return validated
+      }),
       start_date: Yup.string().required('required field'),
       connected_user: Yup.string().required('required field')
 
@@ -94,7 +135,6 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
       })
     }
   });
-
 
   useEffect(() => {
     if (isUsersSuccess) {

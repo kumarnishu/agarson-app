@@ -6,14 +6,13 @@ export type ITodoTemplate = {
     title: string,
     subtitle: string,
     category: string,
-    contacts: string[],
-    is_completed: boolean,
+    contacts: string,
     is_hidden: boolean,
     last_reply: string,
     run_once: boolean,
     frequency_type: string,
     frequency_value: string,
-    start_date: Date
+    start_date: string
 }
 export type ITodo = {
     _id: string,

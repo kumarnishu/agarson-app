@@ -25,15 +25,14 @@ const template: ITodoTemplate[] = [
         serial_no: 1,
         title: "work title",
         subtitle: 'work subtitle',
-        category: 'urgent',
-        contacts: ["nishu", "7056943283"],
-        is_completed: true,
+        category: String(["urgent", "temp"]),
+        contacts: "nishu,7056943283",
         is_hidden: true,
         last_reply: "done this work",
         run_once: false,
         frequency_type: "daily",
         frequency_value: "1",
-        start_date: new Date(),
+        start_date: "2024-01-20T07:04:00.000Z",
     }
 ]
 export default function TodosPage() {
@@ -86,14 +85,16 @@ export default function TodosPage() {
                     title: todo.title,
                     subtitle: todo.subtitle,
                     category: todo.category,
-                    contacts: todo.contacts.map((c) => { return c.name }),
-                    is_completed: todo.is_completed,
+                    contacts: todo.contacts.map((c) => {
+                        let result = c.name || c.mobile
+                        return result
+                    }).toString(),
                     is_hidden: todo.is_hidden,
                     last_reply: todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply || "",
                     run_once: todo.run_once,
                     frequency_type: todo.frequency_type,
                     frequency_value: todo.frequency_value,
-                    start_date: todo.start_date,
+                    start_date: String(todo.start_date),
                 })
         })
         if (data.length > 0)

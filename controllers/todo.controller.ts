@@ -403,7 +403,6 @@ export const UpdateStatus = async (req: Request, res: Response, next: NextFuncti
 
 export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next: NextFunction) => {
     let result: ITodoTemplate[] = []
-    let create_operation = true
     if (!req.file)
         return res.status(400).json({
             message: "please provide an Excel file",
@@ -421,171 +420,84 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
         );
         console.log(workbook_response[0].start_date)
         console.log(new Date(workbook_response[0].start_date))
+        let statusText = ""
+        workbook_response.forEach(async (todo) => {
+            let _id: string | null = String(todo._id)
+            let serial_no: number | null = Number(todo.serial_no)
+            let title: string | null = todo.title
+            let subtitle: string | null = todo.subtitle
+            let category: string | null = todo.category
+            let contacts: string | null = todo.contacts
+            let last_reply: string | null = todo.last_reply
+            let frequency_type: string | null = todo.frequency_type
+            let frequency_value: string | null = todo.frequency_value
+            let start_date: string | null = todo.start_date
+            let run_once: string | null = String(todo.run_once).toLowerCase()
 
-        // workbook_response.forEach(async (lead) => {
-        //     let mobile: number | null = Number(lead.mobile)
-        //     let alternate_mobile1: number | null = Number(lead.alternate_mobile1)
-        //     let alternate_mobile2: number | null = Number(lead.alternate_mobile2)
+            let validated = true
+            if (serial_no && Number.isNaN(serial_no)) {
+                validated = false
+                statusText = "invalid serial number"
+            }
+            if (frequency_type && frequency_value) {
+                if (frequency_type === "minutes" && Number(frequency_value) > 59 || Number(frequency_value) < 1) {
+                    validated = false
+                    statusText = "invalid frquency value"
+                }
+                if (frequency_type === "hours" && Number(frequency_value) > 23 || Number(frequency_value) < 1) {
+                    validated = false
+                    statusText = "invalid frquency value"
+                }
+                if (frequency_type === "days" && Number(frequency_value) > 31 || Number(frequency_value) < 1) {
+                    validated = false
+                    statusText = "invalid frquency value"
+                }
 
-        //     let validated = true
+                if (frequency_type === "months" && frequency_value && frequency_value.length > 0) {
+                    frequency_value.split(",").map((v) => {
+                        if (Number(v) < 1 || Number(v) > 31) {
+                            validated = false
+                            statusText = "invalid frquency value"
+                        }
+                    })
 
-        //     //important
-        //     if (mobile && Number.isNaN(mobile)) {
-        //         validated = false
-        //         statusText = "invalid mobile"
-        //     }
-        //     if (alternate_mobile1 && Number.isNaN(alternate_mobile1)) {
-        //         validated = false
-        //         statusText = "invalid alternate mobile 1"
-        //     }
-        //     if (alternate_mobile2 && Number.isNaN(alternate_mobile2)) {
-        //         validated = false
-        //         statusText = "invalid alternate mobile 2"
-        //     }
-        //     if (alternate_mobile1 && String(alternate_mobile1).length !== 10)
-        //         alternate_mobile1 = null
-        //     if (alternate_mobile2 && String(alternate_mobile2).length !== 10)
-        //         alternate_mobile2 = null
+                }
 
-        //     if (lead.is_customer && typeof (lead.is_customer) !== "boolean") {
-        //         validated = false
-        //         statusText = "invalid is icustomer"
-        //     }
-        //     if (mobile && String(mobile).length !== 10) {
-        //         validated = false
-        //         statusText = "invalid mobile"
-        //     }
+                if (frequency_type === "weekdays" && frequency_value && frequency_value.length > 0) {
+                    frequency_value.split(",").map((v) => {
+                        if (Number(v) < 1 || Number(v) > 7) {
+                            validated = false
+                            statusText = "invalid frquency value"
+                        }
+                    })
+                }
 
-        //     if (lead.created_at && !isvalidDate(new Date(lead.created_at))) {
-        //         validated = false
-        //         statusText = "invalid date"
-        //     }
-        //     if (lead.updated_at && !isvalidDate(new Date(lead.updated_at))) {
-        //         validated = false
-        //         statusText = "invalid date"
-        //     }
+                if (frequency_type === "monthdays" && frequency_value && frequency_value.length > 0) {
+                    frequency_value.split(",").map((v) => {
+                        if (Number(v) < 1 || Number(v) > 31) {
+                            validated = false
+                            statusText = "invalid frquency value"
+                        }
+                    })
+                }
+                if (frequency_type === "yeardays" && frequency_value && frequency_value.length > 0) {
+                    frequency_value.split(",").map((v) => {
+                        if (Number(v) < 1 || Number(v) > 31) {
+                            validated = false
+                            statusText = "invalid frquency value"
+                        }
+                    })
+                }
+            }
+            if (run_once === "true") {
 
-        //     // duplicate number checker
-        //     let uniqueNumbers: number[] = []
-        //     if (mobile && !OldNumbers.includes(mobile)) {
-        //         uniqueNumbers.push(mobile)
-        //         OldNumbers.push(mobile)
+            }
+            else {
 
-        //     }
-        //     else
-        //         statusText = "duplicate"
-        //     if (alternate_mobile1 && !OldNumbers.includes(alternate_mobile1)) {
-        //         uniqueNumbers.push(alternate_mobile1)
-        //         OldNumbers.push(alternate_mobile1)
-        //     }
-        //     if (alternate_mobile2 && !OldNumbers.includes(alternate_mobile2)) {
-        //         uniqueNumbers.push(alternate_mobile2)
-        //         OldNumbers.push(alternate_mobile2)
-        //     }
-        //     if (uniqueNumbers.length === 0)
-        //         validated = false
-
-        //     if (!isMongoId(String(lead._id)) && !validated) {
-        //         result.push({
-        //             ...lead,
-        //             status: statusText
-        //         })
-        //     }
-
-        //     if (lead.lead_owners) {
-        //         let names = String((lead.lead_owners)).split(",")
-        //         for (let i = 0; i < names.length; i++) {
-        //             let owner = await User.findOne({ username: names[i] })
-        //             if (owner)
-        //                 new_lead_owners.push(owner)
-        //         }
-
-        //     }
-        //     //update and create new nead
-        //     console.log(validated)
-        //     if (lead._id && isMongoId(String(lead._id))) {
-        //         console.log(new_lead_owners)
-        //         create_operation = false
-        //         let targetLead = await Lead.findById(lead._id)
-        //         if (targetLead) {
-        //             if (lead.remarks) {
-        //                 if (!lead.remarks.length) {
-        //                     let new_remark = new Remark({
-        //                         remark: lead.remarks,
-        //                         lead: lead,
-        //                         created_at: new Date(),
-        //                         created_by: req.user,
-        //                         updated_at: new Date(),
-        //                         updated_by: req.user
-        //                     })
-        //                     await new_remark.save()
-        //                     targetLead.last_remark = lead.remarks
-        //                     targetLead.remarks = [new_remark]
-        //                 }
-        //                 else {
-        //                     let last_remark = targetLead.remarks[targetLead.remarks.length - 1]
-        //                     await Remark.findByIdAndUpdate(last_remark._id, {
-        //                         remark: lead.remarks,
-        //                         lead: lead,
-        //                         updated_at: new Date(),
-        //                         updated_by: req.user
-        //                     })
-        //                     targetLead.last_remark = last_remark.remark
-        //                 }
-
-        //             }
-
-        //             await Lead.findByIdAndUpdate(lead._id, {
-        //                 ...lead,
-        //                 remarks: targetLead.remarks,
-        //                 mobile: uniqueNumbers[0] || mobile,
-        //                 alternate_mobile1: uniqueNumbers[1] || alternate_mobile1 || null,
-        //                 alternate_mobile2: uniqueNumbers[2] || alternate_mobile2 || null,
-        //                 lead_owners: new_lead_owners,
-        //                 updated_by: req.user,
-        //                 updated_at: new Date(Date.now())
-        //             })
-        //         }
-
-        //     }
-
-        //     if (validated) {
-        //         if (!lead._id || !isMongoId(String(lead._id))) {
-        //             let newlead = new Lead({
-        //                 ...lead,
-        //                 _id: new Types.ObjectId(),
-        //                 mobile: uniqueNumbers[0] || null,
-        //                 alternate_mobile1: uniqueNumbers[1] || null,
-        //                 alternate_mobile2: uniqueNumbers[2] || null,
-        //                 lead_owners: new_lead_owners,
-        //                 created_by: req.user,
-        //                 updated_by: req.user,
-        //                 updated_at: new Date(Date.now()),
-        //                 created_at: new Date(Date.now()),
-        //                 remarks: undefined
-        //             })
-        //             if (lead.remarks) {
-        //                 let new_remark = new Remark({
-        //                     remark: lead.remarks,
-        //                     lead: newlead,
-        //                     created_at: new Date(),
-        //                     created_by: req.user,
-        //                     updated_at: new Date(),
-        //                     updated_by: req.user
-        //                 })
-        //                 await new_remark.save()
-        //                 newlead.last_remark = lead.remarks
-        //                 newlead.remarks = [new_remark]
-        //             }
-        //             await newlead.save()
-
-        //         }
-        //     }
-        // })
+            }
+        })
 
     }
-    // if (!create_operation && String(req.user?._id) !== String(req.user?.created_by._id))
-    //     return res.status(403).json({ message: "not allowed this operation" })
     return res.status(200).json(result);
 }
 

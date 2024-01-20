@@ -15,7 +15,7 @@ function UpdateTodoDialog({ todo }: { todo: ITodo }) {
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: TodoChoiceActions.close_todo })}>
                 <Cancel fontSize='large' />
             </IconButton>
-            <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>New Todo</DialogTitle>
+            <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Edit Todo</DialogTitle>
             <DialogContent>
                 <UpdateTodoForm todo={todo} />
             </DialogContent>

@@ -3030,7 +3030,6 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
 
 export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next: NextFunction) => {
     let result: ILeadTemplate[] = []
-    let create_operation = true
     if (!req.file)
         return res.status(400).json({
             message: "please provide an Excel file",
@@ -3142,7 +3141,6 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             console.log(validated)
             if (lead._id && isMongoId(String(lead._id))) {
                 console.log(new_lead_owners)
-                create_operation = false
                 let targetLead = await Lead.findById(lead._id)
                 if (targetLead) {
                     if (lead.remarks) {
@@ -3221,10 +3219,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
         })
 
     }
-    if (!create_operation && String(req.user?._id) !== String(req.user?.created_by._id))
-        return res.status(403).json({ message: "not allowed this operation" })
     return res.status(200).json(result);
-
 }
 
 export const ConvertCustomer = async (req: Request, res: Response, next: NextFunction) => {
