@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, IconButton, Paper, Stack, Typography } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { TodoChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';

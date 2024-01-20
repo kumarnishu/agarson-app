@@ -1,9 +1,8 @@
-import { Delete, Edit, EditCalendar, HideImageRounded, Person2, RestartAlt, Stop, Visibility, VisibilitySharp } from '@mui/icons-material'
+import { EditCalendar, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
-import { UserContext } from '../../contexts/userContext'
 import PopUp from '../popup/PopUp'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { ITodo } from '../../types/todo.types'
@@ -27,9 +26,8 @@ type Props = {
     setSelectedTodos: React.Dispatch<React.SetStateAction<ITodo[]>>,
 }
 
-function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTodos, setSelectedTodos }: Props) {
+function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTodos, setSelectedTodos }: Props) {
     const { setChoice } = useContext(ChoiceContext)
-    const { user } = useContext(UserContext)
     const [data, setData] = useState<ITodo[]>(todos)
 
     useEffect(() => {
@@ -227,92 +225,6 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             <PopUp
                                                 element={
                                                     <Stack direction="row" spacing={1}>
-
-
-                                                        {user?.todos_access_fields.is_deletion_allowed &&
-                                                            <Tooltip title="delete">
-                                                                <IconButton color="error"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: TodoChoiceActions.delete_todo })
-                                                                        setTodo(todo)
-
-                                                                    }}
-                                                                >
-                                                                    <Delete />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        }
-                                                        {todo.is_active ?
-                                                            <Tooltip title="Stop">
-                                                                <IconButton color="secondary"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: TodoChoiceActions.stop_todo })
-                                                                        setTodo(todo)
-                                                                    }}
-                                                                >
-                                                                    <Stop />
-                                                                </IconButton>
-                                                            </Tooltip> :
-                                                            <Tooltip title="Start">
-                                                                <IconButton color="secondary"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: TodoChoiceActions.start_todo })
-                                                                        setTodo(todo)
-                                                                    }}
-                                                                >
-                                                                    <RestartAlt />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        }
-
-                                                        {!todo.is_hidden && todo.is_completed &&
-                                                            <Tooltip title="Hide">
-                                                                <IconButton color="secondary"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: TodoChoiceActions.hide_todo })
-                                                                        setTodo(todo)
-                                                                    }}
-                                                                >
-                                                                    <HideImageRounded />
-                                                                </IconButton>
-                                                            </Tooltip>}
-                                                        {todo.is_hidden && <Tooltip title="Show">
-                                                            <IconButton color="secondary"
-                                                                onClick={() => {
-                                                                    setChoice({ type: TodoChoiceActions.show_todo })
-                                                                    setTodo(todo)
-                                                                }}
-                                                            >
-                                                                <VisibilitySharp />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        }
-                                                        <Tooltip title="View Contacts">
-                                                            <IconButton color="secondary"
-                                                                onClick={() => {
-                                                                    setChoice({ type: TodoChoiceActions.view_contacts })
-                                                                    setTodo(todo)
-                                                                }}
-                                                            >
-                                                                <Person2 />
-                                                            </IconButton>
-                                                        </Tooltip>
-
-                                                        {user?.todos_access_fields.is_editable &&
-                                                            <Tooltip title="edit">
-                                                                <IconButton color="secondary"
-                                                                    onClick={() => {
-
-                                                                        setChoice({ type: TodoChoiceActions.update_todo })
-                                                                        setTodo(todo)
-                                                                    }}
-
-                                                                >
-                                                                    <Edit />
-                                                                </IconButton>
-                                                            </Tooltip>}
-
-
                                                         <Tooltip title="view replies">
                                                             <IconButton color="primary"
                                                                 onClick={() => {
@@ -424,4 +336,4 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
     )
 }
 
-export default TodosTable
+export default MyTodosTable

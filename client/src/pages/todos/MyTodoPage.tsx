@@ -4,7 +4,6 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import TodosTable from '../../components/tables/TodosTable';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import ExportToExcel from '../../utils/ExportToExcel'
@@ -15,6 +14,7 @@ import { IUser } from '../../types/user.types'
 import { ITodo } from '../../types/todo.types'
 import FuzzySearch from 'fuzzy-search'
 import { GetMyTodos } from '../../services/TodoServices'
+import MyTodosTable from '../../components/tables/MyTodosTable'
 
 
 type ITodoTemplate = {
@@ -186,7 +186,7 @@ export default function TodosPage() {
       </Stack >
       {/* table */}
       {isLoading && <TableSkeleton />}
-      {!isLoading && < TodosTable
+      {!isLoading && < MyTodosTable
         todo={todo}
         setTodo={setTodo}
         selectAll={selectAll}
