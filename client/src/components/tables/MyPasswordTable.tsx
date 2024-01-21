@@ -19,7 +19,7 @@ function MyPasswordTable({ passwords }: Props) {
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '83.5vh'
+                height: '80vh'
             }}>
                 <STable
                 >

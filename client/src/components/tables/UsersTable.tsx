@@ -42,7 +42,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '75vh'
+                height: '80vh'
             }}>
                 <STable
 

@@ -42,6 +42,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
         <>
             <Box sx={{
                 overflow: "scroll",
+                height: '80vh'
             }}>
                 <STable>
                     <STableHead style={{
@@ -212,7 +213,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             null
                                         }
 
-                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active || todo.is_paused ? "green" : "rgba(200,0,0,0.8)" }}>
+                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active || todo.is_paused ? "green" : "red" }}>
                                             <PopUp
                                                 element={
                                                     <Stack direction="row" spacing={1}>
@@ -332,19 +333,19 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         </STableCell>
 
                                         <STableCell title={todo.title}>
-                                            {todo.title.slice(0, 20)}
+                                            {todo.title && todo.title.slice(0, 20)}
                                         </STableCell>
 
 
                                         <STableCell title={todo.subtitle}>
-                                            {todo.subtitle.slice(0, 10)}
+                                            {todo.subtitle && todo.subtitle.slice(0, 10)}
                                         </STableCell>
 
                                         <STableCell title={todo.category}>
-                                            {todo.category.slice(0, 10)}
+                                            {todo.category && todo.category.slice(0, 10)}
                                         </STableCell>
                                         <STableCell title={todo.category2}>
-                                            {todo.category2.slice(0, 20)}
+                                            {todo.category2 && todo.category2.slice(0, 20)}
                                         </STableCell>
                                         <STableCell title={todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply || ""}>
                                             {todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply.slice(0, 20)}

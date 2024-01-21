@@ -33,7 +33,7 @@ function AttendenceTable({ attendences, attendence, selectedAttendeces, setSelec
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '63vh'
+                height: '80vh'
             }}>
                 <STable
                 >

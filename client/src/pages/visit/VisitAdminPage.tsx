@@ -257,14 +257,14 @@ export default function VisitAdminPage() {
 
             <Stack
                 spacing={2}
-                padding={1}
+                pt={1}
                 direction="row"
                 justifyContent="space-between"
             >
                 <Typography
                     variant={'h6'}
                     component={'h1'}
-                    sx={{ pl: 1 }}
+                    sx={{ pl: 2}}
                 >
                     Visit
                 </Typography>
@@ -410,7 +410,7 @@ export default function VisitAdminPage() {
             {/* table */}
             {isLoading && <TableSkeleton />}
             {!isLoading &&
-                <Box sx={{ px: 2 }}>
+                <Box sx={{ px: 1 }}>
                     <VisitTable
                         visit={visit}
                         sorted={sorted}

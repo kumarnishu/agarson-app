@@ -32,7 +32,7 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '80vh'
+                height: '80vh'
             }}>
                 <STable
                 >

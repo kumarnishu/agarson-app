@@ -35,7 +35,7 @@ function FlowsTable({ flow, selectAll, flows, setSelectAll, setFlow, selectedFlo
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '70vh'
+                height: '80vh'
             }}>
                 <STable
                 >

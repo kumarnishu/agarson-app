@@ -43,7 +43,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
         <>
             <Box sx={{
                 overflow: "scroll",
-                maxHeight: '64vh'
+                height: '70vh'
             }}>
                 <STable
                 >

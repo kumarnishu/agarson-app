@@ -18,13 +18,13 @@ type Props = {
 function DBPagination({ paginationData, setFilterCount, setPaginationData }: Props) {
     return (
         <>
-            <Stack sx={{ position: 'fixed', bottom: 0, bgcolor: 'whitesmoke', right: 0 }} direction={'row'} justifyContent={'space-evenly'} p={1}>
+            <Stack sx={{ position: 'fixed', bottom: 0, width: '100vw',bgcolor: 'whitesmoke', right: 0 }} direction={'row'} justifyContent={'space-evenly'} p={1}>
                 <Stack direction={'row'}
                     spacing={2}
                     px={2}
                     justifyContent="center" alignItems={"center"}
                 >
-                    <label htmlFor="records">Limit</label>
+                    <label htmlFor="records">Show</label>
                     <select id="records"
                         style={{ width: '55px' }}
                         value={paginationData.limit}
@@ -45,7 +45,7 @@ function DBPagination({ paginationData, setFilterCount, setPaginationData }: Pro
                             })
                         }
                     </select>
-                    <label> {`${paginationData.page}  Of  ${paginationData.total} `}</label>
+                    <label> Pages {`${paginationData.page}  Of  ${paginationData.total} `}</label>
                 </Stack>
                 <Stack
                     spacing={2} direction={"row"}
