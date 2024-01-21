@@ -21,9 +21,10 @@ function DBPagination({ paginationData, setFilterCount, setPaginationData }: Pro
             <Stack sx={{ position: 'fixed', bottom: 0, bgcolor: 'whitesmoke', right: 0 }} direction={'row'} justifyContent={'space-evenly'} p={1}>
                 <Stack direction={'row'}
                     spacing={2}
+                    px={2}
                     justifyContent="center" alignItems={"center"}
                 >
-                    <label htmlFor="records">Show Records</label>
+                    <label htmlFor="records">Limit</label>
                     <select id="records"
                         style={{ width: '55px' }}
                         value={paginationData.limit}
@@ -44,7 +45,7 @@ function DBPagination({ paginationData, setFilterCount, setPaginationData }: Pro
                             })
                         }
                     </select>
-                    <label> {`Pages ${paginationData.page}  Of  ${paginationData.total}`}</label>
+                    <label> {`${paginationData.page}  Of  ${paginationData.total} `}</label>
                 </Stack>
                 <Stack
                     spacing={2} direction={"row"}
@@ -61,7 +62,7 @@ function DBPagination({ paginationData, setFilterCount, setPaginationData }: Pro
                     >
                         <ArrowBackIcon />
                     </IconButton>
-                    <label htmlFor="page">Goto Page</label>
+                    <label htmlFor="page">Goto</label>
                     <input type="text" id="page" value={paginationData.page}
                         disabled={paginationData.page == paginationData.total}
                         onChange={(e) => {
@@ -89,7 +90,7 @@ function DBPagination({ paginationData, setFilterCount, setPaginationData }: Pro
                 </Stack>
             </Stack>
         </>
-    
+
     )
 }
 
