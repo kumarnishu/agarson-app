@@ -1,20 +1,13 @@
-import { Delete, Edit, EditCalendar, HideImageRounded, Person2, RestartAlt, Stop, Visibility } from '@mui/icons-material'
+import {  EditCalendar, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
-import { UserContext } from '../../contexts/userContext'
 import PopUp from '../popup/PopUp'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { ITodo } from '../../types/todo.types'
-import StartTodoDialog from '../dialogs/todos/StartTodoDialog'
-import StopTodoDialog from '../dialogs/todos/StopTodoDialog'
-import ToogleHideTodoDialog from '../dialogs/todos/ToogleHideTodoDialog'
-import UpdateTodoDialog from '../dialogs/todos/UpdateTodoDialog'
 import UpdateTodoStatusDialog from '../dialogs/todos/UpdateTodoStatusDialog'
 import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
-import ViewTodoContactsDialog from '../dialogs/todos/ViewTodoContactsDialog'
-import DeleteTodoDialog from '../dialogs/todos/DeleteTodoDialog'
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
 
 
@@ -30,7 +23,6 @@ type Props = {
 
 function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTodos, setSelectedTodos }: Props) {
     const { setChoice } = useContext(ChoiceContext)
-    const { user } = useContext(UserContext)
     const [data, setData] = useState<ITodo[]>(todos)
     const [text, setText] = useState<string>()
 
