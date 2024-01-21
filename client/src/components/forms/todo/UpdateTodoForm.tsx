@@ -19,6 +19,7 @@ type TformData = {
   title: string,
   subtitle: string,
   category: string,
+  category2: string,
   contacts: {
     mobile: string,
     name: string,
@@ -63,13 +64,14 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
       title: todo.title,
       subtitle: todo.subtitle,
       category: todo.category,
+      category2: todo.category2,
       run_once: todo.run_once,
       contacts: selectedContacts,
       frequency_type: todo.frequency_type,
       frequency_value: todo.frequency_value
       ,
       start_date: moment(todo.start_date).format("YYYY-MM-DDThh:mm"),
-      connected_user: todo.connected_user._id
+      connected_user: todo.connected_user && todo.connected_user._id
     },
     validationSchema: Yup.object({
       serial_no: Yup.number(),
@@ -82,40 +84,49 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
       frequency_value: Yup.string().required('required field').test('value', "invalid frequency value", value => {
         let ftype = formik.values.frequency_type
         let validated = true
-        if (ftype === "minutes" && Number(value) > 59 || Number(value) < 1) {
-          validated = false
+        if (ftype === "minutes") {
+          if (Number.isNaN(Number(value)) || Number(value) > 59 || Number(value) < 1)
+            validated = false
         }
-        console.log(validated)
-        if (ftype === "hours" && Number(value) > 23 || Number(value) < 1) {
-          validated = false
+        if (ftype === "hours") {
+          if (Number.isNaN(Number(value)) || Number(value) > 23 || Number(value) < 1)
+            validated = false
         }
-        if (ftype === "days" && Number(value) > 31 || Number(value) < 1) {
-          validated = false
+        if (ftype === "days") {
+          if (Number.isNaN(Number(value)) || Number(value) > 31 || Number(value) < 1)
+            validated = false
         }
 
         if (ftype === "months" && value && value.length > 0) {
-          value.split(",").map((v) => {
-            if (Number(v) < 1 || Number(v) > 31)
+          let frequency = value.split("-")[0]
+          let monthdays = value.split("-")[1]
+          if (frequency && monthdays) {
+            if (Number.isNaN(Number(frequency)) || Number(frequency) > 12 || Number(frequency) < 1)
               validated = false
-          })
+            monthdays.split(",").map((v) => {
+              if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 31)
+                validated = false
+            })
+          }
+          else validated = false
         }
 
         if (ftype === "weekdays" && value && value.length > 0) {
           value.split(",").map((v) => {
-            if (Number(v) < 1 || Number(v) > 7)
+            if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 7)
               validated = false
           })
         }
 
         if (ftype === "monthdays" && value && value.length > 0) {
-         value.split(",").map((v) => {
-            if (Number(v) < 1 || Number(v) > 31)
+          value.split(",").map((v) => {
+            if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 31)
               validated = false
           })
         }
         if (ftype === "yeardays" && value && value.length > 0) {
-         value.split(",").map((v) => {
-            if (Number(v) < 1 || Number(v) > 31)
+          value.split(",").map((v) => {
+            if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 31)
               validated = false
           })
         }
@@ -229,6 +240,20 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
             formik.touched.category && formik.errors.category ? formik.errors.category : ""
           }
           {...formik.getFieldProps('category')}
+        />
+        <TextField
+          variant='outlined'
+          fullWidth
+          required
+          error={
+            formik.touched.category2 && formik.errors.category2 ? true : false
+          }
+          id="category2"
+          label="Category 2"
+          helperText={
+            formik.touched.category2 && formik.errors.category2 ? formik.errors.category2 : ""
+          }
+          {...formik.getFieldProps('category2')}
         />
 
         <TextField

@@ -13,6 +13,7 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
         required: true
     },
     category: { type: String },
+    category2: { type: String },
     replies: [{
         reply: String,
         created_by: {

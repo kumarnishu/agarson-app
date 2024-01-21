@@ -1,4 +1,4 @@
-import { Delete, Edit, EditCalendar, HideImageRounded, Person2, RestartAlt, Stop, Visibility } from '@mui/icons-material'
+import { Delete, Edit, EditCalendar, HideImageRounded, Pause, Person2, RestartAlt, Stop, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -77,7 +77,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                             <STableHeadCell
                             >
-                                Hidden/Visble
+                                Status
                             </STableHeadCell>
 
 
@@ -91,7 +91,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             <STableHeadCell
                             >
 
-                                Status
+                                Todo Status
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -113,6 +113,12 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             >
 
                                 Category
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Category2
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -271,7 +277,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                         }
 
 
-                                                        <Tooltip title="Toole Hide">
+                                                        <Tooltip title="Toogle Hide">
                                                             <IconButton color="error"
                                                                 onClick={() => {
                                                                     setChoice({ type: TodoChoiceActions.hide_todo })
@@ -340,7 +346,12 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             />
                                         </STableCell>
                                         <STableCell>
-                                            {todo.is_hidden ? "Hidden" : "Visible"}
+                                            {todo.is_active ?
+                                                <>
+                                                    {todo.is_paused ? <Pause /> : <Stop />}
+                                                </> :
+                                                'Stopped'
+                                            }
                                         </STableCell>
                                         <STableCell>
                                             {todo.serial_no}
@@ -360,6 +371,9 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                                         <STableCell>
                                             {todo.category}
+                                        </STableCell>
+                                        <STableCell>
+                                            {todo.category2}
                                         </STableCell>
                                         <STableCell>
                                             {todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply.slice(0, 20)}

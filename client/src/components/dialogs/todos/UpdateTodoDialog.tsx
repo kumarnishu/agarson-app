@@ -17,7 +17,7 @@ function UpdateTodoDialog({ todo }: { todo: ITodo }) {
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Edit Todo</DialogTitle>
             <DialogContent>
-                <UpdateTodoForm todo={todo} />
+                {todo && <UpdateTodoForm todo={todo} />}
             </DialogContent>
         </Dialog >
     )

@@ -3121,7 +3121,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             if (uniqueNumbers.length === 0)
                 validated = false
 
-            if (!isMongoId(String(lead._id)) && !validated) {
+            if (!validated) {
                 result.push({
                     ...lead,
                     status: statusText

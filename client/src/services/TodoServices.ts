@@ -55,9 +55,14 @@ export const UpdateTodo = async ({ id, body }: {
 export const StopTodo = async (id: string) => {
     return await apiClient.patch(`todos/stop/${id}`);
 };
-
+export const StopAllTodos = async ({ ids }: { ids: string[] }) => {
+    return await apiClient.patch(`todos/bulk/stop`, { ids: ids });
+};
 export const StartTodo = async (id: string) => {
     return await apiClient.patch(`todos/start/${id}`);
+};
+export const StartAllTodos = async ({ ids }: { ids: string[] }) => {
+    return await apiClient.patch(`todos/bulk/start`, { ids: ids });
 };
 export const DeleteTodo = async (id: string) => {
     return await apiClient.delete(`todos/${id}`);

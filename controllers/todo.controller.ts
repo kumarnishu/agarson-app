@@ -12,6 +12,7 @@ import { Todo } from "../models/todos/todo.model"
 import { HandleTodoMessage, todo_timeouts } from "../utils/handleTodo"
 import { clients } from "../utils/CreateWhatsappClient"
 import xlsx from "xlsx"
+import { IUser } from "../types/user.types"
 
 //get
 export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
@@ -78,6 +79,7 @@ export const CreateTodo = async (req: Request, res: Response, next: NextFunction
         title,
         subtitle,
         category,
+        category2,
         contacts,
         run_once,
         frequency_type,
@@ -89,6 +91,7 @@ export const CreateTodo = async (req: Request, res: Response, next: NextFunction
             title: string,
             subtitle: string,
             category: string,
+            category2: string,
             contacts: {
                 mobile: string,
                 name: string,
@@ -121,6 +124,7 @@ export const CreateTodo = async (req: Request, res: Response, next: NextFunction
         title: title,
         subtitle: subtitle,
         category: category,
+        category2: category2,
         contacts: contacts,
         connected_user: connected_user,
         created_at: new Date(),
@@ -154,6 +158,7 @@ export const UpdateTodo = async (req: Request, res: Response, next: NextFunction
         title,
         subtitle,
         category,
+        category2,
         contacts,
         run_once,
         frequency_type,
@@ -165,6 +170,7 @@ export const UpdateTodo = async (req: Request, res: Response, next: NextFunction
             title: string,
             subtitle: string,
             category: string,
+            category2: string,
             contacts: {
                 mobile: string,
                 name: string,
@@ -201,6 +207,7 @@ export const UpdateTodo = async (req: Request, res: Response, next: NextFunction
     todo.title = title
     todo.subtitle = subtitle
     todo.category = category
+    todo.category2 = category2
     todo.contacts = contacts
     todo.updated_at = new Date()
     todo.updated_by = req.user
@@ -215,11 +222,7 @@ export const UpdateTodo = async (req: Request, res: Response, next: NextFunction
         todo.next_run_date = new Date(cron.sendAt(new Date(start_date)))
     todo.next_refresh_date = new Date(cron.sendAt(todo.refresh_cron_string))
     await todo.save()
-    if (TodoManager.exists(todo.running_key))
-        TodoManager.deleteJob(todo.running_key)
-    if (TodoManager.exists(todo.refresh_key))
-        TodoManager.deleteJob(todo.refresh_key)
-    return res.status(201).json({ "message": "todo created" })
+    return res.status(201).json({ "message": "todo updated" })
 }
 
 export const StartTodo = async (req: Request, res: Response, next: NextFunction) => {
@@ -262,27 +265,29 @@ export const StartTodo = async (req: Request, res: Response, next: NextFunction)
 }
 
 export const StartAllTodos = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct todo id" })
-    }
-    let todos = await Todo.find()
-    todos.forEach(async (todo) => {
-        todo_timeouts.forEach((item) => {
-            if (String(item.id) === String(todo?._id)) {
-                clearTimeout(item.timeout)
+    let { ids } = req.body as { ids: string[] }
+    ids.forEach(async (id) => {
+        let todo = await Todo.findById(id).populate('connected_user')
+        if (todo) {
+            let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)
+            if (client) {
+                todo_timeouts.forEach((item) => {
+                    if (String(item.id) === String(todo?._id)) {
+                        clearTimeout(item.timeout)
+                    }
+                })
+                if (TodoManager.exists(todo.running_key))
+                    TodoManager.deleteJob(todo.running_key)
+                if (TodoManager.exists(todo.refresh_key))
+                    TodoManager.deleteJob(todo.refresh_key)
+                todo.is_active = true
+                todo.is_paused = false
+                await todo.save()
+                await HandleTodoMessage(todo, client.client)
             }
-        })
-        if (TodoManager.exists(todo.running_key))
-            TodoManager.deleteJob(todo.running_key)
-        if (TodoManager.exists(todo.refresh_key))
-            TodoManager.deleteJob(todo.refresh_key)
-        todo.is_active = true
-        todo.is_paused = false
-        await todo.save()
+        }
     })
-
-    return res.status(200).json({ message: "all todo stopped" })
+    return res.status(200).json({ message: "all todo started" })
 }
 
 export const StopTodo = async (req: Request, res: Response, next: NextFunction) => {
@@ -331,26 +336,24 @@ export const DeleteTodo = async (req: Request, res: Response, next: NextFunction
 }
 
 export const StopAllTodos = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct todo id" })
-    }
-    let todos = await Todo.find()
-    todos.forEach(async (todo) => {
-        todo_timeouts.forEach((item) => {
-            if (String(item.id) === String(todo?._id)) {
-                clearTimeout(item.timeout)
-            }
-        })
-        if (TodoManager.exists(todo.running_key))
-            TodoManager.deleteJob(todo.running_key)
-        if (TodoManager.exists(todo.refresh_key))
-            TodoManager.deleteJob(todo.refresh_key)
-        todo.is_active = false
-        todo.is_paused = false
-        await todo.save()
+    let { ids } = req.body as { ids: string[] }
+    ids.forEach(async (id) => {
+        let todo = await Todo.findById(id).populate('connected_user')
+        if (todo) {
+            todo_timeouts.forEach((item) => {
+                if (String(item.id) === String(todo?._id)) {
+                    clearTimeout(item.timeout)
+                }
+            })
+            if (TodoManager.exists(todo.running_key))
+                TodoManager.deleteJob(todo.running_key)
+            if (TodoManager.exists(todo.refresh_key))
+                TodoManager.deleteJob(todo.refresh_key)
+            todo.is_active = false
+            todo.is_paused = false
+            await todo.save()
+        }
     })
-
     return res.status(200).json({ message: "all todo stopped" })
 }
 
@@ -421,82 +424,288 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
         console.log(workbook_response[0].start_date)
         console.log(new Date(workbook_response[0].start_date))
         let statusText = ""
-        workbook_response.forEach(async (todo) => {
+        let newContacts: {
+            name: string,
+            mobile: string,
+            is_sent: boolean,
+            status: string
+        }[] = []
+        for (let i = 0; i < workbook_response.length; i++) {
+            let todo = workbook_response[i]
             let _id: string | null = String(todo._id)
             let serial_no: number | null = Number(todo.serial_no)
             let title: string | null = todo.title
             let subtitle: string | null = todo.subtitle
             let category: string | null = todo.category
+            let category2: string | null = todo.category2
             let contacts: string | null = todo.contacts
             let last_reply: string | null = todo.last_reply
             let frequency_type: string | null = todo.frequency_type
             let frequency_value: string | null = todo.frequency_value
             let start_date: string | null = todo.start_date
             let run_once: string | null = String(todo.run_once).toLowerCase()
+            let connected_user: string | null = String(todo.connected_user).toLowerCase()
 
             let validated = true
+
+            if (!connected_user) {
+                validated = false
+                statusText = "please provide connected username"
+            }
+
+            if (!contacts) {
+                validated = false
+                statusText = "one contact required"
+            }
             if (serial_no && Number.isNaN(serial_no)) {
                 validated = false
                 statusText = "invalid serial number"
             }
+            if (!isvalidDate(new Date(start_date))) {
+                validated = false
+                statusText = "invalid start date"
+            }
+            if (run_once !== "true") {
+                if (!frequency_type || !frequency_value) {
+                    validated = false
+                    statusText = "frequecy required when run once false"
+                }
+            }
+
             if (frequency_type && frequency_value) {
-                if (frequency_type === "minutes" && Number(frequency_value) > 59 || Number(frequency_value) < 1) {
-                    validated = false
-                    statusText = "invalid frquency value"
+                let ftype = frequency_type
+                let value = frequency_value
+
+                if (ftype === "minutes") {
+                    if (Number.isNaN(Number(value)) || Number(value) > 59 || Number(value) < 1) {
+                        validated = false
+                        statusText = "invalid frequency"
+                    }
                 }
-                if (frequency_type === "hours" && Number(frequency_value) > 23 || Number(frequency_value) < 1) {
-                    validated = false
-                    statusText = "invalid frquency value"
+                if (ftype === "hours") {
+                    if (Number.isNaN(Number(value)) || Number(value) > 23 || Number(value) < 1) {
+                        validated = false
+                        statusText = "invalid frequency"
+                    }
                 }
-                if (frequency_type === "days" && Number(frequency_value) > 31 || Number(frequency_value) < 1) {
-                    validated = false
-                    statusText = "invalid frquency value"
+                if (ftype === "days") {
+                    if (Number.isNaN(Number(value)) || Number(value) > 31 || Number(value) < 1) {
+                        validated = false
+                        statusText = "invalid frequency"
+                    }
+                }
+                if (ftype === "months" && value) {
+                    console.log("ent in months")
+                    let frequency = String(value).split("-")[0]
+                    let monthdays = String(value).split("-")[1]
+                    if (frequency && monthdays) {
+                        if (Number.isNaN(Number(frequency)) || Number(frequency) > 12 || Number(frequency) < 1) {
+                            validated = false
+                            statusText = "invalid frequency"
+                        }
+                        monthdays.split(",").map((v) => {
+                            if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 31) {
+                                validated = false
+                                statusText = "invalid frequency"
+                            }
+                        })
+                    }
+                    else {
+                        validated = false
+                        statusText = "invalid frequency"
+                    }
                 }
 
-                if (frequency_type === "months" && frequency_value && frequency_value.length > 0) {
-                    frequency_value.split(",").map((v) => {
-                        if (Number(v) < 1 || Number(v) > 31) {
+                if (ftype === "weekdays" && value && value.length > 0) {
+                    value.split(",").map((v) => {
+                        if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 7) {
                             validated = false
-                            statusText = "invalid frquency value"
+                            statusText = "invalid frequency"
                         }
                     })
-
                 }
 
-                if (frequency_type === "weekdays" && frequency_value && frequency_value.length > 0) {
-                    frequency_value.split(",").map((v) => {
-                        if (Number(v) < 1 || Number(v) > 7) {
+                if (ftype === "monthdays" && value && value.length > 0) {
+                    value.split(",").map((v) => {
+                        if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 31) {
                             validated = false
-                            statusText = "invalid frquency value"
+                            statusText = "invalid frequency"
                         }
                     })
                 }
-
-                if (frequency_type === "monthdays" && frequency_value && frequency_value.length > 0) {
-                    frequency_value.split(",").map((v) => {
-                        if (Number(v) < 1 || Number(v) > 31) {
+                if (ftype === "yeardays" && value && value.length > 0) {
+                    value.split(",").map((v) => {
+                        if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 31) {
                             validated = false
-                            statusText = "invalid frquency value"
-                        }
-                    })
-                }
-                if (frequency_type === "yeardays" && frequency_value && frequency_value.length > 0) {
-                    frequency_value.split(",").map((v) => {
-                        if (Number(v) < 1 || Number(v) > 31) {
-                            validated = false
-                            statusText = "invalid frquency value"
+                            statusText = "invalid frequency"
                         }
                     })
                 }
             }
-            if (run_once === "true") {
+            console.log(validated, "validated")
+            if (contacts) {
+                newContacts = []
+                for (let i = 0; i <= contacts.split(",").length; i++) {
+                    let contact = contacts.split(",")[i]
+                    let user = await User.findOne({ mobile: contact })
+                    let user2 = await User.findOne({ username: contact })
+                    if (user) {
+                        newContacts.push({
+                            name: user.username,
+                            mobile: user.mobile,
+                            is_sent: false,
+                            status: 'pending'
+                        })
+                    }
+                    if (!user) {
+                        if (user2)
+                            newContacts.push({
+                                name: user2.username,
+                                mobile: user2.mobile,
+                                is_sent: false,
+                                status: 'pending'
+                            })
+                    }
+                    if (!user && !user2) {
+                        if (String(contact).length === 10) {
+                            newContacts.push({
+                                name: "",
+                                mobile: contact,
+                                is_sent: false,
+                                status: 'pending'
+                            })
+                        }
+                    }
+                }
 
             }
-            else {
-
+            if (!validated) {
+                result.push({
+                    ...todo,
+                    status: statusText
+                })
             }
-        })
 
+            if (validated) {
+                if (todo._id || isMongoId(String(todo._id))) {
+                    let newtodo = await Todo.findById(_id)
+                    let newConNuser: IUser | null = null
+                    if (connected_user) {
+                        let user = await User.findOne({ username: connected_user })
+                        if (user && user.connected_number) {
+                            newConNuser = user
+                        }
+                    }
+                    if (newtodo) {
+                        let new_run_once = false
+                        if (run_once === "true")
+                            new_run_once = true
+                        else
+                            new_run_once = false
+
+                        let cronstring = GetRunningCronString(frequency_type, frequency_value, new Date(start_date)) || ""
+                        let refresh_cron_string = GetRefreshCronString(frequency_type, frequency_value, new Date(start_date)) || ""
+                        let next_run_date = new Date()
+                        let next_refresh_date = new Date()
+                        if (cronstring)
+                            next_run_date = new Date(cron.sendAt(cronstring))
+                        if (refresh_cron_string)
+                            next_refresh_date = new Date(cron.sendAt(refresh_cron_string))
+                        if (new_run_once && new Date(start_date) > new Date())
+                            next_run_date = new Date(cron.sendAt(new Date(start_date)))
+                        let replies = newtodo.replies
+                        replies.push({ reply: last_reply, created_by: req.user, timestamp: new Date() })
+                        await Todo.findByIdAndUpdate(newtodo._id, {
+                            serial_no: serial_no,
+                            title: title,
+                            subtitle: subtitle,
+                            category: category,
+                            category2: category2,
+                            connected_user: newConNuser?._id || undefined,
+                            run_once: new_run_once,
+                            start_date: new Date(start_date),
+                            next_run_date: next_run_date,
+                            next_refresh_date: next_refresh_date,
+                            cron_string: cronstring,
+                            refresh_cron_string: refresh_cron_string,
+                            frequency_type: frequency_type,
+                            frequency_value: frequency_value,
+                            is_active: false,
+                            is_paused: false,
+                            replies: replies,
+                            running_key: String(newtodo._id) + "todo",
+                            refresh_key: String(newtodo._id) + "refresh",
+                            contacts: newContacts,
+                            updated_by: req.user,
+                            updated_at: new Date()
+                        })
+                    }
+                }
+            }
+            if (validated) {
+                if (!todo._id || !isMongoId(String(todo._id))) {
+                    let tmptodo = await Todo.findOne({ title: title })
+                    let newConNuser: IUser | null = null
+                    if (connected_user) {
+                        let user = await User.findOne({ username: connected_user })
+                        if (user && user.connected_number) {
+                            newConNuser = user
+                        }
+                    }
+                    if (!tmptodo) {
+                        let new_run_once = false
+                        if (run_once === "true")
+                            new_run_once = true
+                        else
+                            new_run_once = false
+                        let replies = []
+                        replies.push({ reply: last_reply, created_by: req.user, timestamp: new Date() })
+                        let cronstring = GetRunningCronString(frequency_type, frequency_value, new Date(start_date))
+                        let refresh_cron_string = GetRefreshCronString(frequency_type, frequency_value, new Date(start_date))
+                        let next_run_date = new Date()
+                        let next_refresh_date = new Date()
+                        if (cronstring)
+                            next_run_date = new Date(cron.sendAt(cronstring))
+                        if (refresh_cron_string)
+                            next_refresh_date = new Date(cron.sendAt(refresh_cron_string))
+                        if (new_run_once && new Date(start_date) > new Date())
+                            next_run_date = new Date(cron.sendAt(new Date(start_date)))
+
+                        let newtodo = new Todo({
+                            serial_no: serial_no,
+                            title: title,
+                            subtitle: subtitle,
+                            category: category,
+                            category2: category2,
+                            frequency_type: frequency_type,
+                            frequency_value: frequency_value,
+                            run_once: new_run_once,
+                            start_date: new Date(start_date),
+                            next_run_date: next_run_date,
+                            next_refresh_date: next_refresh_date,
+                            cron_string: cronstring,
+                            connected_user: newConNuser?._id || undefined,
+                            refresh_cron_string: refresh_cron_string,
+                            replies: replies,
+                            is_active: false,
+                            is_paused: false,
+                            contacts: newContacts,
+                            created_by: req.user,
+                            updated_by: req.user,
+                            created_at: new Date(),
+                            updated_at: new Date()
+                        })
+                        newtodo.running_key = String(newtodo._id) + "todo"
+                        newtodo.refresh_key = String(newtodo._id) + "refresh"
+                        await newtodo.save()
+                        if (TodoManager.exists(newtodo.running_key))
+                            TodoManager.deleteJob(newtodo.running_key)
+                        if (TodoManager.exists(newtodo.refresh_key))
+                            TodoManager.deleteJob(newtodo.refresh_key)
+                    }
+                }
+            }
+        }
     }
     return res.status(200).json(result);
 }

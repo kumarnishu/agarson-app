@@ -19,13 +19,16 @@ import { GetTodos } from '../../services/TodoServices'
 import CreateTodoDialog from '../../components/dialogs/todos/CreateTodoDialog'
 import FuzzySearch from 'fuzzy-search'
 import UploadTodoExcelButton from '../../components/buttons/UploadTodoExcelButton'
+import StartAllTodoDialog from '../../components/dialogs/todos/StartAllTodoDialog'
+import StopAllTodoDialog from '../../components/dialogs/todos/StopAllTodoDialog'
 const template: ITodoTemplate[] = [
     {
         _id: "",
         serial_no: 1,
         title: "work title",
         subtitle: 'work subtitle',
-        category: String(["urgent", "temp"]),
+        category: "vijay dye",
+        category2: "urgent",
         contacts: "nishu,7056943283",
         is_hidden: true,
         last_reply: "done this work",
@@ -33,6 +36,7 @@ const template: ITodoTemplate[] = [
         frequency_type: "daily",
         frequency_value: "1",
         start_date: "2024-01-20T07:04:00.000Z",
+        connected_user: 'nishu'
     }
 ]
 export default function TodosPage() {
@@ -85,6 +89,7 @@ export default function TodosPage() {
                     title: todo.title,
                     subtitle: todo.subtitle,
                     category: todo.category,
+                    category2: todo.category2,
                     contacts: todo.contacts.map((c) => {
                         let result = c.name || c.mobile
                         return result
@@ -95,6 +100,7 @@ export default function TodosPage() {
                     frequency_type: todo.frequency_type,
                     frequency_value: todo.frequency_value,
                     start_date: String(todo.start_date),
+                    connected_user: todo.connected_user.username
                 })
         })
         if (data.length > 0)
@@ -269,6 +275,8 @@ export default function TodosPage() {
 
                         </Menu >
                         <CreateTodoDialog count={todos.length} />
+                        <StartAllTodoDialog ids={selectedTodos.map((todo) => { return todo._id })} />
+                        <StopAllTodoDialog ids={selectedTodos.map((todo) => { return todo._id })} />
                     </>
                 </Stack >
             </Stack >
