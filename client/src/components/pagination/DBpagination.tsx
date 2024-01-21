@@ -1,4 +1,4 @@
-import { Grid, IconButton, Stack } from "@mui/material"
+import { IconButton, Stack } from "@mui/material"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
@@ -17,11 +17,11 @@ type Props = {
 }
 function DBPagination({ paginationData, setFilterCount, setPaginationData }: Props) {
     return (
-        <Grid sx={{ bgcolor: "whitesmoke" }} container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Grid item xs={12} md={6} >
-                <Stack
-                    spacing={2} direction={"row"}
-                    justifyContent="center" p={2} alignItems={"center"}
+        <>
+            <Stack sx={{ position: 'fixed', bottom: 0, bgcolor: 'whitesmoke', right: 0 }} direction={'row'} justifyContent={'space-evenly'} p={1}>
+                <Stack direction={'row'}
+                    spacing={2}
+                    justifyContent="center" alignItems={"center"}
                 >
                     <label htmlFor="records">Show Records</label>
                     <select id="records"
@@ -46,11 +46,9 @@ function DBPagination({ paginationData, setFilterCount, setPaginationData }: Pro
                     </select>
                     <label> {`Pages ${paginationData.page}  Of  ${paginationData.total}`}</label>
                 </Stack>
-            </Grid>
-            <Grid item xs={12} md={6}>
                 <Stack
                     spacing={2} direction={"row"}
-                    justifyContent="center" p={2} alignItems={"center"}>
+                    justifyContent="center" alignItems={"center"}>
                     {/* movement */}
                     <IconButton size="small" sx={{ p: 0, m: 0 }}
                         disabled={paginationData.page == 1}
@@ -89,8 +87,9 @@ function DBPagination({ paginationData, setFilterCount, setPaginationData }: Pro
                         <ArrowForwardIcon />
                     </IconButton>
                 </Stack>
-            </Grid>
-        </Grid>
+            </Stack>
+        </>
+    
     )
 }
 

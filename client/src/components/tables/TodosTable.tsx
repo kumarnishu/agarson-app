@@ -1,4 +1,4 @@
-import { Delete, Edit, EditCalendar, HideImageRounded, Pause, Person2, RestartAlt, Stop, Visibility } from '@mui/icons-material'
+import { Delete, Edit, EditCalendar, HideImageRounded, Person2, RestartAlt, Stop, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -42,7 +42,6 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
         <>
             <Box sx={{
                 overflow: "scroll",
-                height: '83vh'
             }}>
                 <STable>
                     <STableHead style={{
@@ -77,12 +76,6 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                             <STableHeadCell
                             >
-                                Status
-                            </STableHeadCell>
-
-
-                            <STableHeadCell
-                            >
 
                                 No
 
@@ -91,7 +84,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             <STableHeadCell
                             >
 
-                                Todo Status
+                                Status
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -139,6 +132,12 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             <STableHeadCell
                             >
 
+                                Next Run date
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Frequency Type
 
                             </STableHeadCell>
@@ -162,32 +161,11 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             <STableHeadCell
                             >
 
-                                connected Number
+                                connected No
 
                             </STableHeadCell>
 
 
-                            <STableHeadCell
-                            >
-
-                                Next Run date
-
-                            </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-
-                                Updated At
-
-                            </STableHeadCell>
-
-
-                            <STableHeadCell
-                            >
-
-                                Created By
-
-                            </STableHeadCell>
                         </STableRow>
                     </STableHead>
                     <STableBody >
@@ -234,7 +212,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             null
                                         }
 
-                                        <STableCell style={{ zIndex: -1 }}>
+                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active || todo.is_paused ? "green" : "rgba(200,0,0,0.8)" }}>
                                             <PopUp
                                                 element={
                                                     <Stack direction="row" spacing={1}>
@@ -345,46 +323,51 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                     </Stack>}
                                             />
                                         </STableCell>
-                                        <STableCell>
-                                            {todo.is_active ?
-                                                <>
-                                                    {todo.is_paused ? <Pause /> : <Stop />}
-                                                </> :
-                                                'Stopped'
-                                            }
-                                        </STableCell>
-                                        <STableCell>
+
+                                        <STableCell >
                                             {todo.serial_no}
                                         </STableCell>
                                         <STableCell>
                                             {todo.contacts.find((c) => c.status !== "done") ? "Pending" : "Done"}
                                         </STableCell>
 
-                                        <STableCell>
+                                        <STableCell title={todo.title}>
                                             {todo.title.slice(0, 20)}
                                         </STableCell>
 
 
-                                        <STableCell>
-                                            {todo.subtitle.slice(0, 50)}
+                                        <STableCell title={todo.subtitle}>
+                                            {todo.subtitle.slice(0, 10)}
                                         </STableCell>
 
-                                        <STableCell>
-                                            {todo.category}
+                                        <STableCell title={todo.category}>
+                                            {todo.category.slice(0, 10)}
                                         </STableCell>
-                                        <STableCell>
-                                            {todo.category2}
+                                        <STableCell title={todo.category2}>
+                                            {todo.category2.slice(0, 20)}
                                         </STableCell>
-                                        <STableCell>
+                                        <STableCell title={todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply || ""}>
                                             {todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply.slice(0, 20)}
                                         </STableCell>
 
-                                        <STableCell>
+                                        <STableCell title={todo.contacts.map((c) => {
+                                            let result = c.name
+                                            if (!c.name)
+                                                result = c.mobile
+                                            return result
+                                        }).toString()}>
 
-                                            {todo.contacts.map((c) => { return c.mobile + " " + c.name }).toString()}
+                                            {todo.contacts.map((c) => {
+                                                let result = c.name
+                                                if (!c.name)
+                                                    result = c.mobile
+                                                return result
+                                            }).toString().slice(0, 20)}
 
                                         </STableCell>
-
+                                        <STableCell>
+                                            {new Date(todo.next_run_date).toLocaleString()}
+                                        </STableCell>
                                         <STableCell>
                                             {todo.frequency_type}
                                         </STableCell>
@@ -397,17 +380,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         </STableCell>
 
                                         <STableCell>
-                                            {todo.connected_user && todo.connected_user.connected_number?.split(":")[0] + "," + todo.connected_user.username}
-                                        </STableCell>
-
-                                        <STableCell>
-                                            {new Date(todo.next_run_date).toLocaleString()}
-                                        </STableCell>
-                                        <STableCell>
-                                            {new Date(todo.updated_at).toLocaleString()}
-                                        </STableCell>
-                                        <STableCell>
-                                            {todo.created_by.username}
+                                            {todo.connected_user && todo.connected_user.connected_number?.split(":")[0]}
                                         </STableCell>
                                     </STableRow>
                                 )

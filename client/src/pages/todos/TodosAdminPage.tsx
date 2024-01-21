@@ -145,13 +145,12 @@ export default function TodosPage() {
                 padding={1}
                 direction="row"
                 justifyContent="space-between"
-                width="100vw"
             >
 
                 <Typography
                     variant={'h6'}
                     component={'h1'}
-                    sx={{ pl: 1 }}
+                    sx={{ p: 1 }}
                 >
                     Todos
                 </Typography>

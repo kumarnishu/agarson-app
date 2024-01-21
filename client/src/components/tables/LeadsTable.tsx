@@ -43,7 +43,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
     <>
       <Box sx={{
         overflow: "scroll",
-        height: '75vh'
+        height: '82vh'
       }}>
         <STable>
           <STableHead style={{

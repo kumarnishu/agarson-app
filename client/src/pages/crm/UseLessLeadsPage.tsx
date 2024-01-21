@@ -196,7 +196,7 @@ export default function UselessLeadsPage() {
         padding={1}
         direction="row"
         justifyContent="space-between"
-        width="100vw"
+        
       >
 
         <Typography

@@ -260,7 +260,6 @@ export default function VisitAdminPage() {
                 padding={1}
                 direction="row"
                 justifyContent="space-between"
-                width="100vw"
             >
                 <Typography
                     variant={'h6'}
