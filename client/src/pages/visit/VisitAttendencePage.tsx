@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Box, Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -206,15 +206,15 @@ export default function VisitAdminPage() {
                                     refetchFuzzy()
                                 }
                             }}
-                        />
-                        <IconButton
-                            sx={{ bgcolor: 'whitesmoke' }}
-                            onClick={() => {
-                                refetchFuzzy()
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search />
+                                    </InputAdornment>
+                                ),
                             }}
-                        >
-                            <Search />
-                        </IconButton>
+                        />
+                       
 
                     </Stack >
                     <>

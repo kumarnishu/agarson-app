@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Box, Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -264,7 +264,7 @@ export default function VisitAdminPage() {
                 <Typography
                     variant={'h6'}
                     component={'h1'}
-                    sx={{ pl: 2}}
+                    sx={{ pl: 2 }}
                 >
                     Visit
                 </Typography>
@@ -287,21 +287,19 @@ export default function VisitAdminPage() {
                                 fontSize: '1.1rem',
                                 border: '0',
                             }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search />
+                                    </InputAdornment>
+                                ),
+                            }}
                             onKeyUp={(e) => {
                                 if (e.key === "Enter") {
                                     refetchFuzzy()
                                 }
                             }}
                         />
-                        <IconButton
-                            sx={{ bgcolor: 'whitesmoke' }}
-                            onClick={() => {
-                                refetchFuzzy()
-                            }}
-                        >
-                            <Search />
-                        </IconButton>
-
                     </Stack >
                     <>
 

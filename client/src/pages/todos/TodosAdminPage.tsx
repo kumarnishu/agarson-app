@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Checkbox, Fade, FormControlLabel, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Checkbox, Fade, FormControlLabel, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -210,14 +210,15 @@ export default function TodosPage() {
                                 fontSize: '1.1rem',
                                 border: '0',
                             }}
-                        />
-                        <IconButton
-                            sx={{ bgcolor: 'whitesmoke' }}
-                            onClick={() => {
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search />
+                                    </InputAdornment>
+                                ),
                             }}
-                        >
-                            <Search />
-                        </IconButton>
+                        />
+                        
                     </Stack >
                     <>
 
