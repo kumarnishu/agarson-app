@@ -213,7 +213,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             null
                                         }
 
-                                        <STableCell style={{ zIndex: -1 }}>
+                                        <STableCell style={{ zIndex: -1, backgroundColor: !todo.is_active ? "whitesmoke" : "yellow" }}>
                                             <PopUp color={todo.is_active || todo.is_paused ? "success" : "error"}
                                                 element={
                                                     <Stack direction="row" spacing={1}>
@@ -221,7 +221,9 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                                                         {user?.todos_access_fields.is_deletion_allowed &&
                                                             <Tooltip title="delete">
-                                                                <IconButton color="error"
+                                                                <IconButton
+                                                                    disabled={todo.is_active || todo.is_paused}
+                                                                    color="error"
                                                                     onClick={() => {
                                                                         setChoice({ type: TodoChoiceActions.delete_todo })
                                                                         setTodo(todo)
@@ -280,13 +282,14 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                                                         {user?.todos_access_fields.is_editable &&
                                                             <Tooltip title="edit">
-                                                                <IconButton color="primary"
+                                                                <IconButton
+                                                                    disabled={todo.is_active || todo.is_paused}
+                                                                    color="primary"
                                                                     onClick={() => {
 
                                                                         setChoice({ type: TodoChoiceActions.update_todo })
                                                                         setTodo(todo)
                                                                     }}
-
                                                                 >
                                                                     <Edit />
                                                                 </IconButton>
@@ -299,8 +302,6 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                                                                     setChoice({ type: TodoChoiceActions.view_replies })
                                                                     setTodo(todo)
-
-
                                                                 }}
                                                             >
                                                                 <Visibility />
@@ -311,10 +312,8 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                             <IconButton
                                                                 color="success"
                                                                 onClick={() => {
-
                                                                     setChoice({ type: TodoChoiceActions.update_status })
                                                                     setTodo(todo)
-
                                                                 }}
                                                             >
                                                                 <EditCalendar />
@@ -394,7 +393,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
             {
                 todo ?
                     <>
-                        <StartTodoDialog id={todo._id} />
+                        < StartTodoDialog id={todo._id} />
                         <ToogleHideTodoDialog todo={todo} />
                         <StopTodoDialog id={todo._id} />
                         <UpdateTodoDialog todo={todo} />

@@ -438,20 +438,18 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             let subtitle: string | null = todo.subtitle
             let category: string | null = todo.category
             let category2: string | null = todo.category2
-            let contacts: string | null = todo.contacts
+            let contacts: string | null = String(todo.contacts).toLowerCase()
             let last_reply: string | null = todo.last_reply
-            let frequency_type: string | null = todo.frequency_type
+            let frequency_type: string | null = String(todo.frequency_type).toLowerCase()
             let frequency_value: string | null = todo.frequency_value
             let start_date: string | null = todo.start_date
             let run_once: string | null = String(todo.run_once).toLowerCase()
+            let is_hidden: string | null = String(todo.is_hidden).toLowerCase()
             let connected_user: string | null = String(todo.connected_user).toLowerCase()
-
+            let hidden = false
+            if (is_hidden === "true")
+                hidden = true
             let validated = true
-
-            if (!connected_user) {
-                validated = false
-                statusText = "please provide connected username"
-            }
 
             if (!contacts) {
                 validated = false
@@ -460,16 +458,6 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             if (serial_no && Number.isNaN(serial_no)) {
                 validated = false
                 statusText = "invalid serial number"
-            }
-            if (!isvalidDate(new Date(start_date))) {
-                validated = false
-                statusText = "invalid start date"
-            }
-            if (run_once !== "true") {
-                if (!frequency_type || !frequency_value) {
-                    validated = false
-                    statusText = "frequecy required when run once false"
-                }
             }
 
             if (frequency_type && frequency_value) {
@@ -542,7 +530,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                     })
                 }
             }
-            console.log(validated, "validated")
+
             if (contacts) {
                 newContacts = []
                 for (let i = 0; i <= contacts.split(",").length; i++) {
@@ -587,6 +575,8 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             }
 
             if (validated) {
+                if (!isvalidDate(start_date))
+                    start_date = new Date().toString()
                 if (todo._id || isMongoId(String(todo._id))) {
                     let newtodo = await Todo.findById(_id)
                     let newConNuser: IUser | null = null
@@ -630,6 +620,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             refresh_cron_string: refresh_cron_string,
                             frequency_type: frequency_type,
                             frequency_value: frequency_value,
+                            is_hidden: hidden,
                             is_active: false,
                             is_paused: false,
                             replies: replies,
@@ -641,8 +632,6 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                         })
                     }
                 }
-            }
-            if (validated) {
                 if (!todo._id || !isMongoId(String(todo._id))) {
                     let tmptodo = await Todo.findOne({ title: title })
                     let newConNuser: IUser | null = null
@@ -687,6 +676,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             connected_user: newConNuser?._id || undefined,
                             refresh_cron_string: refresh_cron_string,
                             replies: replies,
+                            is_hidden: hidden,
                             is_active: false,
                             is_paused: false,
                             contacts: newContacts,

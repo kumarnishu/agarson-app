@@ -179,7 +179,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
           <AlertBar message="updated" color="success" />
         ) : null
       }
-      <Stack sx={{ direction: { xs: 'column', md: 'row' }, pt: 1 }} gap={1.5}>
+      <Stack sx={{ direction: { xs: 'column', md: 'row' }, pt: 1 }} gap={2}>
         <TextField
           type='number'
           variant='outlined'

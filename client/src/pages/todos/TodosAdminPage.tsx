@@ -100,7 +100,7 @@ export default function TodosPage() {
                     frequency_type: todo.frequency_type,
                     frequency_value: todo.frequency_value,
                     start_date: String(todo.start_date),
-                    connected_user: todo.connected_user.username
+                    connected_user: todo.connected_user && todo.connected_user.username
                 })
         })
         if (data.length > 0)

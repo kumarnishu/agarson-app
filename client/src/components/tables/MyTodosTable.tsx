@@ -1,4 +1,4 @@
-import {  EditCalendar, Visibility } from '@mui/icons-material'
+import { EditCalendar, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -95,14 +95,14 @@ function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedT
 
                             </STableHeadCell>
 
-                          
+
                             <STableHeadCell
                             >
 
                                 Last Reply
 
                             </STableHeadCell>
-                          
+
 
 
 
@@ -178,7 +178,7 @@ function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedT
                                             null
                                         }
 
-                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active || todo.is_paused ? "green" :"red" }}>
+                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active || todo.is_paused ? "green" : "red" }}>
                                             <PopUp
                                                 element={
                                                     <Stack direction="row" spacing={1}>
@@ -237,7 +237,7 @@ function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedT
                                             {new Date(todo.next_run_date).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
-                                            {todo.frequency_type}
+                                            {todo.frequency_type || ""}
                                         </STableCell>
 
                                         <STableCell>
