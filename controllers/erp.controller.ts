@@ -8,7 +8,7 @@ import { PendingOrdersReport } from "../models/erp_reports/pending_orders.model"
 
 //get
 export const GetAllStates = async (req: Request, res: Response, next: NextFunction) => {
-    let states = await State.find().populate('created_by').populate('updated_by')
+    let states = await State.find().populate('updated_by').populate('created_by')
     return res.status(200).json(states)
 }
 export const CreateState = async (req: Request, res: Response, next: NextFunction) => {

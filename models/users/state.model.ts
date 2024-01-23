@@ -14,7 +14,7 @@ const StateSchema = new mongoose.Schema<IState, mongoose.Model<IState, {}, {}>, 
     },
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'State',
+        ref: 'User',
         required: true
     },
     updated_at: {
@@ -26,7 +26,7 @@ const StateSchema = new mongoose.Schema<IState, mongoose.Model<IState, {}, {}>, 
 
     updated_by: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'State',
+        ref: 'User',
         required: true
     }
 })

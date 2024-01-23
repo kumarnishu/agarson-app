@@ -27,7 +27,7 @@ function UpdateStateForm({ state }: { state: IState }) {
 
     const formik = useFormik({
         initialValues: {
-            state: "",
+            state: state.state,
 
         },
         validationSchema: Yup.object({

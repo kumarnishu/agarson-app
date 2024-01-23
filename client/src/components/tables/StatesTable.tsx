@@ -67,21 +67,10 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                             <STableHeadCell
                             >
 
-                                State Number
+                                State 
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Size
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Status
-
-                            </STableHeadCell>
+                           
 
                             <STableHeadCell
                             >
