@@ -16,6 +16,10 @@ export const GetVisitsAttendence = async (req: Request, res: Response, next: Nex
     let count = 0
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    dt2.setHours(0)
+    dt2.setMinutes(0)
     let user_ids: string[] = []
     user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
@@ -56,6 +60,10 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
     let count = 0
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    dt2.setHours(0)
+    dt2.setMinutes(0)
     let user_ids: string[] = []
     user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
 

@@ -74,7 +74,7 @@ function NewTodoForm({ count }: { count: number }) {
         validationSchema: Yup.object({
             serial_no: Yup.number(),
             title: Yup.string().required('required field'),
-            subtitle: Yup.string().required('required field'),
+            subtitle: Yup.string(),
             category: Yup.string().required('required field'),
             contacts: Yup.array().required('required field'),
             run_once: Yup.boolean(),

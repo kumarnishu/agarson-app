@@ -105,7 +105,7 @@ export const CreateTodo = async (req: Request, res: Response, next: NextFunction
             connected_user: string
         }
 
-    if (!title || !subtitle || !contacts || !frequency_type || !start_date || !frequency_value)
+    if (!title || !contacts || !frequency_type || !start_date || !frequency_value)
         return res.status(400).json({ message: "fill all required fields" })
 
     if (!isvalidDate(new Date(start_date))) {
@@ -184,7 +184,7 @@ export const UpdateTodo = async (req: Request, res: Response, next: NextFunction
             connected_user: string
         }
 
-    if (!title || !subtitle || !contacts || !frequency_type || !start_date || !frequency_value)
+    if (!title ||  !contacts || !frequency_type || !start_date || !frequency_value)
         return res.status(400).json({ message: "fill all required fields" })
 
     if (!isvalidDate(new Date(start_date))) {
