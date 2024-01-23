@@ -121,7 +121,7 @@ export default function TodosPage() {
 
     useEffect(() => {
         if (filter) {
-            const searcher = new FuzzySearch(todos, ["title", "subtitle", "category2","category", "contacts.mobile", "contacts.name", "replies.reply", "frequency_type"], {
+            const searcher = new FuzzySearch(todos, ["title", "subtitle", "category2", "category", "contacts.mobile", "contacts.name", "replies.reply", "frequency_type"], {
                 caseSensitive: false,
             });
             const result = searcher.search(filter);
@@ -139,6 +139,16 @@ export default function TodosPage() {
                 isLoading && <LinearProgress />
             }
             {/*heading, search bar and table menu */}
+            <Stack px={2} direction={'row'} justifyContent={'center'}>
+                <FormControlLabel control={<Checkbox
+                    defaultChecked={Boolean(hidden)}
+                    onChange={() => setHidden(!hidden)}
+                />} label="Hidden" />
+                <FormControlLabel control={<Checkbox
+                    defaultChecked={Boolean(visible)}
+                    onChange={() => setVisible(!visible)}
+                />} label="Visible" />
+            </Stack>
 
             <Stack
                 spacing={2}
@@ -157,15 +167,6 @@ export default function TodosPage() {
                 <Stack
                     direction="row"
                 >
-                    <FormControlLabel control={<Checkbox
-                        defaultChecked={Boolean(hidden)}
-                        onChange={() => setHidden(!hidden)}
-                    />} label="Hidden" />
-                    <FormControlLabel control={<Checkbox
-                        defaultChecked={Boolean(visible)}
-                        onChange={() => setVisible(!visible)}
-                    />} label="Visible" />
-
                     {/* search bar */}
                     < Stack direction='row' spacing={2}>
                         {LoggedInUser?.todos_access_fields.is_editable && <UploadTodoExcelButton />}
@@ -217,13 +218,10 @@ export default function TodosPage() {
                                 ),
                             }}
                         />
-                        
+
                     </Stack >
                     <>
-
                         {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-
-
                         <IconButton size="small" color="primary"
                             onClick={(e) => setAnchorEl(e.currentTarget)
                             }

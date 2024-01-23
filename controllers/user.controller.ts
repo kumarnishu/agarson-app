@@ -368,11 +368,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-    owner.bot_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
+    
 
     owner.backup_access_fields = {
         is_hidden: false,
@@ -493,11 +489,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    user.bot_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
+    
 
     user.backup_access_fields = {
         is_hidden: true,
@@ -600,7 +592,6 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
     const { user_access_fields,
         crm_access_fields,
         templates_access_fields,
-        bot_access_fields,
         backup_access_fields,
         todos_access_fields,
         checklists_access_fields,
@@ -622,7 +613,6 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
         user_access_fields,
         crm_access_fields,
         templates_access_fields,
-        bot_access_fields,
         backup_access_fields,
         todos_access_fields,
         checklists_access_fields,

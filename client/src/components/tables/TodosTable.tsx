@@ -42,7 +42,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
         <>
             <Box sx={{
                 overflow: "scroll",
-                height: '80vh'
+                height: '78vh'
             }}>
                 <STable>
                     <STableHead style={{
@@ -213,8 +213,8 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             null
                                         }
 
-                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active || todo.is_paused ? "green" : "red" }}>
-                                            <PopUp
+                                        <STableCell style={{ zIndex: -1 }}>
+                                            <PopUp color={todo.is_active || todo.is_paused ? "success" : "error"}
                                                 element={
                                                     <Stack direction="row" spacing={1}>
 

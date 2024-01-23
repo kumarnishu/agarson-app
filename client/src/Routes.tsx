@@ -6,7 +6,6 @@ import { UserContext } from './contexts/userContext'
 import DashBoardNavBar from './components/navbar/DashBoardNavBar.tsx'
 import MainDashBoardPage from './dashboards/MainDashBoardPage.tsx'
 import CrmNavBar from './components/navbar/CrmNavBar.tsx'
-import BotNavBar from './components/navbar/BotNavBar.tsx'
 import CrmDashboard from './dashboards/CrmDashboard.tsx'
 import UsersNavBar from './components/navbar/UsersNavBar'
 import UsersDashboard from './dashboards/UsersDashboard.tsx'
@@ -24,7 +23,6 @@ import PasswordNavbar from './components/navbar/PasswordNavbar.tsx'
 import GreetingsNavBar from './components/navbar/GreetingsNavBar.tsx'
 import BackupDashboard from './dashboards/BackupDashboard.tsx'
 import GreetingsDashboard from './dashboards/GreetingsDashboard.tsx'
-import BotDashboard from './dashboards/BotDashboard.tsx'
 import ErpLoginDashboard from './dashboards/ErpLoginDashboard.tsx'
 import TodoNavBar from './components/navbar/TodoNavbar.tsx'
 import TodoDashboard from './dashboards/TodoDashboard.tsx'
@@ -35,13 +33,11 @@ const TodoHelpPage = React.lazy(() => import('./pages/todos/TodoHelpPage.tsx'))
 const LoginPage = React.lazy(() => import('./pages/users/LoginPage'))
 const EmailVerifyPage = React.lazy(() => import('./pages/users/EmailVerifyPage'))
 const UsersPage = React.lazy(() => import('./pages/users/UsersPage'))
-const FlowsPage = React.lazy(() => import('./pages/bot/FlowsPage'))
 const BackupPage = React.lazy(() => import('./pages/backup/BackupPage'))
 const UseLessLeadsPage = React.lazy(() => import('./pages/crm/UseLessLeadsPage'))
 const TemplatesPage = React.lazy(() => import('./pages/templates/TemplatesPage'))
 const CrmHelpPage = React.lazy(() => import('./pages/crm/CrmHelpPage'))
 const BroadcastPage = React.lazy(() => import('./pages/crm/BroadcastPage'))
-const BotHelpPage = React.lazy(() => import('./pages/bot/BotHelpPage'))
 const CrmReminderPage = React.lazy(() => import('./pages/crm/CrmReminderPage'))
 const CheckListPage = React.lazy(() => import('./pages/checklists/CheckListPage'))
 const CheckListAdminPage = React.lazy(() => import('./pages/checklists/CheckListAdminPage'))
@@ -72,7 +68,6 @@ const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/
 const CustomersPage = React.lazy(() => import('./pages/crm/CustomersPage'))
 const ReferralPartyPage = React.lazy(() => import('./pages/crm/ReferralPartyPage'))
 const UpdateLeadFieldsPage = React.lazy(() => import('./pages/crm/UpdateLeadFieldsPage'))
-const TrackersPage = React.lazy(() => import('./pages/bot/TrackersPage'))
 const CrmActivitiesPage = React.lazy(() => import('./pages/crm/CrmActivitiesPage'))
 const LeadsPage = React.lazy(() => import('./pages/crm/LeadsPage'))
 
@@ -82,7 +77,6 @@ export enum paths {
   crm_dashboard = "/crm_dashboard",
   reports_dashboard = "/reports_dashboard",
   production_dashboard = "/production_dashboard",
-  bot_dashboard = "/bot_dashboard",
   templates_dashboard = "/templates_dashboard",
   erp_login_dashboard = "/erp_login_dashboard",
   backup_dashboard = "/backup_dashboard",
@@ -96,7 +90,6 @@ export enum paths {
   user_help_page = "user_help_page",
   crm_help_page = "crm_help_page",
   production_help_page = "production_help_page",
-  bot_help_page = "bot_help_page",
   templates_help_page = "templates_help_page",
   erp_login_help_page = "erp_login_help_page",
   backup_help_page = "backup_help_page",
@@ -146,11 +139,6 @@ export enum paths {
   machines = "machines",
   dyes = "dyes",
   articles = "articles",
-
-  //bot
-  bot = "bot",
-  flows = "flows",
-  trackers = "trackers",
 
 
   //reports
@@ -379,37 +367,6 @@ function AppRoutes() {
                 }
               />
             </Route>}
-          {!user.bot_access_fields.is_hidden &&
-            < Route path={paths.bot_dashboard} element={<BotNavBar />
-            }>
-              <Route
-                index element={
-                  <BotDashboard />
-                }
-              />
-              <Route path={paths.bot_dashboard} element={
-                < BotDashboard />
-              }
-              />
-              <Route path={paths.flows} element={
-                <Suspense fallback={<LinearProgress />}> < FlowsPage /></Suspense>
-              }
-              />
-
-
-              <Route path={paths.trackers} element={
-                <Suspense fallback={<LinearProgress />}>
-                  <Suspense fallback={<LinearProgress />}> < TrackersPage /></Suspense>
-                </Suspense>
-              }
-              />
-              <Route
-                path={paths.bot_help_page} element={
-                  <Suspense fallback={<LinearProgress />}>  <BotHelpPage /></Suspense>
-                }
-              />
-            </Route>}
-
           {!user.templates_access_fields.is_hidden &&
             < Route path={paths.templates_dashboard} element={<TemplatesNavBar />
             }>

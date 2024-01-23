@@ -24,20 +24,8 @@ type ProductionChoices = "create_machine" | "close_production" | "update_machine
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
 
 
-type BotChoices = "create_flow"
-  | "refresh_whatsapp"
-  | "update_flow"
-  | "toogle_bot_status"
-  | "update_tracker"
-  | "delete_flow"
-  | "close_bot"
-  | "view_connected_users"
-  | "update_connected_users"
-  | "toogle_flow_status" | "delete_tracker"
 
-
-
-type ChoiceState = UserChoices | LeadChoices | BotChoices | TemplateChoices | VisitChoices | CheckListChoices | GreetingChoices | PasswordChoices | ProductionChoices | TodoChoices
+type ChoiceState = UserChoices | LeadChoices  | TemplateChoices | VisitChoices | CheckListChoices | GreetingChoices | PasswordChoices | ProductionChoices | TodoChoices
 
 const initialState: ChoiceState | null = null
 
@@ -134,19 +122,7 @@ export enum TemplateChoiceActions {
 }
 
 
-export enum BotChoiceActions {
-  create_flow = "create_flow",
-  refresh_whatsapp = "refresh_whatsapp",
-  update_flow = "update_flow",
-  toogle_bot_status = "toogle_bot_status",
-  update_tracker = "update_tracker",
-  delete_tracker = "delete_tracker",
-  delete_flow = "delete_flow",
-  close_bot = "close_bot",
-  view_connected_users = "view_connected_users",
-  update_connected_users = "update_connected_users",
-  toogle_flow_status = "toogle_flow_status"
-}
+
 export enum LeadChoiceActions {
   create_lead = "create_lead",
   update_lead = "update_lead",
@@ -204,7 +180,7 @@ export enum UserChoiceActions {
 
 type Action = {
   type: UserChoiceActions |
-  LeadChoiceActions | BotChoiceActions | TemplateChoiceActions | PasswordChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions | TodoChoiceActions | ProductionChoiceActions
+  LeadChoiceActions |  TemplateChoiceActions | PasswordChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions | TodoChoiceActions | ProductionChoiceActions
 }
 
 // reducer
@@ -225,6 +201,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case UserChoiceActions.verify_email: return type
     case UserChoiceActions.block_user: return type
     case UserChoiceActions.unblock_user: return type
+    case UserChoiceActions.refresh_whatsapp: return type
     case UserChoiceActions.make_admin: return type
     case UserChoiceActions.control_access: return type
     case UserChoiceActions.remove_admin: return type
@@ -262,20 +239,6 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.update_broadcast: return type
     case LeadChoiceActions.stop_broadcast: return type
     case LeadChoiceActions.start_broadcast: return type
-
-
-    //bot choice actions
-    case BotChoiceActions.refresh_whatsapp: return type
-    case BotChoiceActions.delete_flow: return type
-    case BotChoiceActions.update_flow: return type
-    case BotChoiceActions.create_flow: return type
-    case BotChoiceActions.update_tracker: return type
-    case BotChoiceActions.toogle_bot_status: return type
-    case BotChoiceActions.close_bot: return type
-    case BotChoiceActions.view_connected_users: return type
-    case BotChoiceActions.delete_tracker: return type
-    case BotChoiceActions.toogle_flow_status: return type
-    case BotChoiceActions.update_connected_users: return type
 
     //production choice actios
     case ProductionChoiceActions.create_machine: return type

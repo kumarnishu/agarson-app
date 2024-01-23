@@ -10,7 +10,6 @@ export enum Feature {
     productions = "productions",
     reports = "reports",
     visit = "visit",
-    bot = "bot",
     todos = "todos",
     backup = "backup",
     greetings = "greetings",

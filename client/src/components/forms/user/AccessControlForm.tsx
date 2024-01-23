@@ -18,7 +18,6 @@ function AccessControlForm({ user }: { user: IUser }) {
         crm_access_fields: user.crm_access_fields,
         todos_access_fields: user.todos_access_fields,
         templates_access_fields: user.templates_access_fields,
-        bot_access_fields: user.bot_access_fields,
         backup_access_fields: user.backup_access_fields,
         checklists_access_fields: user.checklists_access_fields,
         reports_access_fields: user.reports_access_fields,
@@ -372,74 +371,7 @@ function AccessControlForm({ user }: { user: IUser }) {
 
 
                         </STableRow>
-                        {/* bot access fields */}
-                        <STableRow
-                        >
-
-                            {/* bot access row */}
-                            <STableCell                 >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    <Typography variant="button">Wa bot
-                                    </Typography>
-                                </Stack>
-                            </STableCell>
-                            <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.bot_access_fields.is_editable)}
-                                    onChange={() => setAccessFields(
-                                        {
-                                            ...AccessFields,
-                                            bot_access_fields: {
-                                                is_editable: Boolean(!AccessFields.bot_access_fields.is_editable),
-                                                is_hidden: Boolean(AccessFields.bot_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(AccessFields.bot_access_fields.is_deletion_allowed),
-                                            }
-                                        })}
-
-                                />
-                            </STableCell>
-
-                            <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.bot_access_fields.is_hidden)}
-                                    onChange={() => setAccessFields(
-                                        {
-                                            ...AccessFields,
-                                            bot_access_fields: {
-                                                is_editable: Boolean(AccessFields.bot_access_fields.is_editable),
-
-                                                is_hidden: Boolean(!AccessFields.bot_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(AccessFields.bot_access_fields.is_deletion_allowed),
-                                            }
-                                        })}
-
-                                />
-                            </STableCell>
-                            <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.bot_access_fields.is_deletion_allowed)}
-                                    onChange={() => setAccessFields(
-                                        {
-                                            ...AccessFields,
-                                            bot_access_fields: {
-                                                is_editable: Boolean(AccessFields.bot_access_fields.is_editable),
-
-                                                is_hidden: Boolean(AccessFields.bot_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(!AccessFields.bot_access_fields.is_deletion_allowed),
-                                            }
-                                        })}
-
-                                />
-                            </STableCell>
-
-
-
-
-
-                        </STableRow>
-
+                    
                         {/* checklist access fields */}
                         <STableRow
                         >

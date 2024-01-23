@@ -20,7 +20,6 @@ function MainDashBoardPage() {
     !user?.productions_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.productions, is_visible: true, url: paths.production_dashboard })
     !user?.checklists_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.checklists, is_visible: true, url: paths.checklist_dashboard })
     !user?.templates_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.templates, is_visible: true, url: paths.templates_dashboard })
-    !user?.bot_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.bot, is_visible: true, url: paths.bot_dashboard })
     !user?.reports_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.reports, is_visible: true, url: paths.reports_dashboard })
     !user?.greetings_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.greetings, is_visible: true, url: paths.greetings_dashboard })
     !user?.passwords_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.erp_login, is_visible: true, url: paths.erp_login_dashboard })

@@ -1,8 +1,8 @@
 import { useContext } from 'react'
-import RefreshWhatsappDialog from '../dialogs/bot/RefreshWhatsappDialog'
-import { BotChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
+import { UserChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
 import { Button } from '@mui/material'
+import RefreshWhatsappDialog from '../dialogs/RefreshWhatsappDialog'
 
 function RefreshWhatsappButton() {
     const { setChoice } = useContext(ChoiceContext)
@@ -10,8 +10,8 @@ function RefreshWhatsappButton() {
     return (
         <>
 
-            <Button variant="text" size="small" onClick={() => {
-                setChoice({ type: BotChoiceActions.refresh_whatsapp })
+            <Button variant="text" onClick={() => {
+                setChoice({ type: UserChoiceActions.refresh_whatsapp })
             }}
             >
                 {user && user.connected_number ?

@@ -7,6 +7,7 @@ import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
 import AgarsonLogo from '../logo/Agarson';
 import ProfileLogo from '../logo/ProfileLogo';
+import RefreshWhatsappButton from '../buttons/RefreshWhatsappButton';
 
 export const StyledLink = styled(Link)`
     text-decoration: none;
@@ -54,13 +55,12 @@ export default function DashBoardNavBar() {
                                 {/* stack2 right icons*/}
                                 <Stack
                                     direction="row"
-                                    justifyContent={"center"}
+                                    justifyContent={"space-around"}
                                     alignItems="center"
-                                    gap={2}
+                                    gap={1}
                                 >
-
+                                    {user.is_admin && <RefreshWhatsappButton />}
                                     <ProfileLogo />
-
                                 </Stack>
                             </>
                             :

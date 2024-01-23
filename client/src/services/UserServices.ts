@@ -6,7 +6,6 @@ export type AccessTypes = {
   crm_access_fields: FeatureAccess,
   todos_access_fields:FeatureAccess,
   templates_access_fields: FeatureAccess,
-  bot_access_fields: FeatureAccess,
   backup_access_fields: FeatureAccess,
   checklists_access_fields: FeatureAccess,
   reports_access_fields: FeatureAccess,

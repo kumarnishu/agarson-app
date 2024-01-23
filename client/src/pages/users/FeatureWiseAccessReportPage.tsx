@@ -17,7 +17,6 @@ function FeatureWiseAccessReportPage() {
         tmpfeatures.push({ feature: Feature.checklists, is_visible: true, url: paths.checklist_dashboard })
         tmpfeatures.push({ feature: Feature.crm, is_visible: true, url: paths.crm_dashboard })
         tmpfeatures.push({ feature: Feature.todos, is_visible: true, url: paths.todo_dashboard })
-        tmpfeatures.push({ feature: Feature.bot, is_visible: true, url: paths.bot_dashboard })
         tmpfeatures.push({ feature: Feature.reports, is_visible: true, url: paths.reports_dashboard })
         tmpfeatures.push({ feature: Feature.visit, is_visible: true, url: paths.visit_dashboard })
         tmpfeatures.push({ feature: Feature.templates, is_visible: true, url: paths.templates_dashboard })
