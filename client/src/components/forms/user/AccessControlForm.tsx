@@ -23,7 +23,7 @@ function AccessControlForm({ user }: { user: IUser }) {
         reports_access_fields: user.reports_access_fields,
         visit_access_fields: user.visit_access_fields,
         greetings_access_fields: user.greetings_access_fields,
-        passwords_access_fields: user.passwords_access_fields,
+        erp_access_fields: user.erp_access_fields,
         productions_access_fields: user.productions_access_fields
     })
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
@@ -760,15 +760,15 @@ function AccessControlForm({ user }: { user: IUser }) {
                                 </Stack>
                             </STableCell>
                             <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.passwords_access_fields.is_editable)}
+                                <Checkbox size="small" checked={Boolean(AccessFields.erp_access_fields.is_editable)}
                                     onChange={() => setAccessFields(
                                         {
                                             ...AccessFields,
-                                            passwords_access_fields: {
-                                                is_editable: Boolean(!AccessFields.passwords_access_fields.is_editable),
+                                            erp_access_fields: {
+                                                is_editable: Boolean(!AccessFields.erp_access_fields.is_editable),
 
-                                                is_hidden: Boolean(AccessFields.passwords_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(AccessFields.passwords_access_fields.is_deletion_allowed),
+                                                is_hidden: Boolean(AccessFields.erp_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.erp_access_fields.is_deletion_allowed),
                                             }
                                         })}
 
@@ -776,30 +776,30 @@ function AccessControlForm({ user }: { user: IUser }) {
                             </STableCell>
 
                             <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.passwords_access_fields.is_hidden)}
+                                <Checkbox size="small" checked={Boolean(AccessFields.erp_access_fields.is_hidden)}
                                     onChange={() => setAccessFields(
                                         {
                                             ...AccessFields,
-                                            passwords_access_fields: {
-                                                is_editable: Boolean(AccessFields.passwords_access_fields.is_editable),
+                                            erp_access_fields: {
+                                                is_editable: Boolean(AccessFields.erp_access_fields.is_editable),
 
-                                                is_hidden: Boolean(!AccessFields.passwords_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(AccessFields.passwords_access_fields.is_deletion_allowed),
+                                                is_hidden: Boolean(!AccessFields.erp_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(AccessFields.erp_access_fields.is_deletion_allowed),
                                             }
                                         })}
 
                                 />
                             </STableCell>
                             <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.passwords_access_fields.is_deletion_allowed)}
+                                <Checkbox size="small" checked={Boolean(AccessFields.erp_access_fields.is_deletion_allowed)}
                                     onChange={() => setAccessFields(
                                         {
                                             ...AccessFields,
-                                            passwords_access_fields: {
-                                                is_editable: Boolean(AccessFields.passwords_access_fields.is_editable),
+                                            erp_access_fields: {
+                                                is_editable: Boolean(AccessFields.erp_access_fields.is_editable),
 
-                                                is_hidden: Boolean(AccessFields.passwords_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(!AccessFields.passwords_access_fields.is_deletion_allowed),
+                                                is_hidden: Boolean(AccessFields.erp_access_fields.is_hidden),
+                                                is_deletion_allowed: Boolean(!AccessFields.erp_access_fields.is_deletion_allowed),
                                             }
                                         })}
 

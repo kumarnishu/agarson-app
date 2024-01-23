@@ -1,4 +1,4 @@
-import { IUser } from "./types/index"
+import { IUser } from "./types/user.types";
 
 
 declare  global {

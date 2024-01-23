@@ -1,18 +1,17 @@
 import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BlueAgarsonLogo } from "../components/logo/Agarson";
-import { UserContext } from "../contexts/userContext";
 
-function ErpLoginDashboard() {
+function ErpReportsDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
-  const { user } = useContext(UserContext)
+
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-    tmpfeatures.push({ feature: 'erp passwords ', is_visible: true, url: paths.passwords })
-    user?.passwords_access_fields.is_editable && tmpfeatures.push({ feature: 'erp passwords admin', is_visible: true, url: paths.password_admin_page })
+    tmpfeatures.push({ feature: 'pending orders ', is_visible: true, url: paths.pending_orders })
+    tmpfeatures.push({ feature: 'bills aging report ', is_visible: true, url: paths.bill_aging_report })
     setFeatures(tmpfeatures)
   }, [])
 
@@ -41,4 +40,4 @@ function ErpLoginDashboard() {
 }
 
 
-export default ErpLoginDashboard
+export default ErpReportsDashboard

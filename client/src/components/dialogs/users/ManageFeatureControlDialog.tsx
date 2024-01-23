@@ -142,13 +142,13 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                 }))
             }
 
-            if (feature === Feature.erp_login) {
+            if (feature === Feature.erp_reports) {
                 setSelectedData(usersData && usersData.data.map((user) => {
                     return {
                         user: user._id, access: {
-                            is_editable: user.passwords_access_fields.is_editable,
-                            is_hidden: user.passwords_access_fields.is_hidden,
-                            is_deletion_allowed: user.passwords_access_fields.is_deletion_allowed
+                            is_editable: user.erp_access_fields.is_editable,
+                            is_hidden: user.erp_access_fields.is_hidden,
+                            is_deletion_allowed: user.erp_access_fields.is_deletion_allowed
                         }
                     }
                 }))
@@ -778,7 +778,7 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                                                 </STableCell>
                                             </>
                                         }
-                                        {feature === Feature.erp_login &&
+                                        {feature === Feature.erp_reports &&
                                             <>
                                                 <STableCell                 >
                                                     <Stack
@@ -792,14 +792,14 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                                                     </Stack>
                                                 </STableCell>
                                                 <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.passwords_access_fields.is_editable)}
+                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.erp_access_fields.is_editable)}
                                                         onChange={() => {
                                                             let tmp = selectedData?.map((data) => {
                                                                 if (data.user === user._id)
                                                                     return {
                                                                         user: data.user,
                                                                         access: {
-                                                                            is_editable: !user.passwords_access_fields.is_editable,
+                                                                            is_editable: !user.erp_access_fields.is_editable,
                                                                             is_hidden: data.access.is_hidden,
                                                                             is_deletion_allowed: data.access.is_deletion_allowed
                                                                         }
@@ -811,14 +811,14 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                                                     />
                                                 </STableCell>
                                                 <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.passwords_access_fields.is_hidden)}
+                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.erp_access_fields.is_hidden)}
                                                         onChange={() => {
                                                             let tmp = selectedData?.map((data) => {
                                                                 if (data.user === user._id)
                                                                     return {
                                                                         user: data.user,
                                                                         access: {
-                                                                            is_hidden: !user.passwords_access_fields.is_hidden,
+                                                                            is_hidden: !user.erp_access_fields.is_hidden,
                                                                             is_editable: data.access.is_editable,
                                                                             is_deletion_allowed: data.access.is_deletion_allowed
                                                                         }
@@ -830,14 +830,14 @@ function ManageFeatureControlDialog({ feature, setFeature }: { feature: string |
                                                     />
                                                 </STableCell>
                                                 <STableCell>
-                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.passwords_access_fields.is_deletion_allowed)}
+                                                    <Checkbox size="small" disabled={!LoggedInUser?.user_access_fields.is_editable} defaultChecked={Boolean(user.erp_access_fields.is_deletion_allowed)}
                                                         onChange={() => {
                                                             let tmp = selectedData?.map((data) => {
                                                                 if (data.user === user._id)
                                                                     return {
                                                                         user: data.user,
                                                                         access: {
-                                                                            is_deletion_allowed: !user.passwords_access_fields.is_deletion_allowed,
+                                                                            is_deletion_allowed: !user.erp_access_fields.is_deletion_allowed,
                                                                             is_editable: data.access.is_editable,
                                                                             is_hidden: data.access.is_hidden
                                                                         }

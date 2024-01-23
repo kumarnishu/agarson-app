@@ -21,7 +21,7 @@ function FeatureWiseAccessReportPage() {
         tmpfeatures.push({ feature: Feature.visit, is_visible: true, url: paths.visit_dashboard })
         tmpfeatures.push({ feature: Feature.templates, is_visible: true, url: paths.templates_dashboard })
         tmpfeatures.push({ feature: Feature.greetings, is_visible: true, url: paths.greetings_dashboard })
-        tmpfeatures.push({ feature: Feature.erp_login, is_visible: true, url: paths.erp_login_dashboard })
+        tmpfeatures.push({ feature: Feature.erp_reports, is_visible: true, url: paths.erp_dashboard })
         tmpfeatures.push({ feature: Feature.backup, is_visible: true, url: paths.backup_dashboard })
 
         setFeatures(tmpfeatures)

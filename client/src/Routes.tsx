@@ -19,13 +19,16 @@ import ChecklistDashboard from './dashboards/ChecklistDashboard.tsx'
 import CheckListNavBar from './components/navbar/CheckListNavBar'
 import ReportsNavBar from './components/navbar/ReportsNavBar'
 import ReportsDashboard from './dashboards/ReportsDashboard'
-import PasswordNavbar from './components/navbar/PasswordNavbar.tsx'
+import PasswordNavbar from './components/navbar/ErpNavbar.tsx'
 import GreetingsNavBar from './components/navbar/GreetingsNavBar.tsx'
 import BackupDashboard from './dashboards/BackupDashboard.tsx'
 import GreetingsDashboard from './dashboards/GreetingsDashboard.tsx'
-import ErpLoginDashboard from './dashboards/ErpLoginDashboard.tsx'
+import ErpReportsDashboard from './dashboards/ErpReportsDashboard.tsx'
 import TodoNavBar from './components/navbar/TodoNavbar.tsx'
 import TodoDashboard from './dashboards/TodoDashboard.tsx'
+const StatesPage = React.lazy(() => import('./pages/users/StatesPage.tsx'))
+const PendingOrdersReportPage = React.lazy(() => import('./pages/erp reports/PendingOrdersReport.tsx'))
+const BillsAgingReportsPage = React.lazy(() => import('./pages/erp reports/BillsAgingReportPage.tsx'))
 const TodoPage = React.lazy(() => import('./pages/todos/MyTodoPage.tsx'))
 const TodosAdminPage = React.lazy(() => import('./pages/todos/TodosAdminPage.tsx'))
 const TodoHelpPage = React.lazy(() => import('./pages/todos/TodoHelpPage.tsx'))
@@ -47,8 +50,6 @@ const VisitAdminPage = React.lazy(() => import('./pages/visit/VisitAdminPage'))
 const UpdateTemplateCategoriesPage = React.lazy(() => import('./pages/templates/UpdateTemplateCategoriesPage.tsx'))
 const GreetingsHelpPage = React.lazy(() => import('./pages/greetings/GreetingsHelpPage.tsx'))
 const GreetingsPage = React.lazy(() => import('./pages/greetings/GreetingsPage.tsx'))
-const PasswordsPage = React.lazy(() => import('./pages/passwords/PasswordsPage.tsx'))
-const PasswordsAdminPage = React.lazy(() => import('./pages/passwords/PasswordsAdminPage.tsx'))
 const AccessReportPage = React.lazy(() => import('./pages/users/FeatureWiseAccessReportPage.tsx'))
 const ProductionAdminPage = React.lazy(() => import('./pages/production/ProductionAdminPage.tsx'))
 const MachinesPage = React.lazy(() => import('./pages/production/MachinesPage.tsx'))
@@ -78,7 +79,7 @@ export enum paths {
   reports_dashboard = "/reports_dashboard",
   production_dashboard = "/production_dashboard",
   templates_dashboard = "/templates_dashboard",
-  erp_login_dashboard = "/erp_login_dashboard",
+  erp_dashboard = "/erp_dashboard",
   backup_dashboard = "/backup_dashboard",
   greetings_dashboard = "/greetings_dashboard",
   checklist_dashboard = "/checklist_dashboard",
@@ -108,9 +109,9 @@ export enum paths {
   todo_admin = 'todo_admin',
 
 
-  //passwords
-  passwords = "passwords",
-  password_admin_page = "password_admin_page",
+  //erp reports
+  pending_orders = "pending_orders",
+  bill_aging_report = "bill_aging_report",
 
   //checklists
   checklists = "checklists",
@@ -158,6 +159,7 @@ export enum paths {
   //users
   users = "users",
   feature_reports = "feature_reports",
+  states = "states",
   login = "/",
   dashboard = "/",
   reset_password = "/password/reset/:token",
@@ -202,6 +204,11 @@ function AppRoutes() {
               <Route
                 path={paths.users} element={
                   <Suspense fallback={<LinearProgress />}><UsersPage /></Suspense>
+                }
+              />
+              <Route
+                path={paths.states} element={
+                  <Suspense fallback={<LinearProgress />}><StatesPage /></Suspense>
                 }
               />
 
@@ -476,34 +483,32 @@ function AppRoutes() {
             </Route>}
 
 
-          {!user.passwords_access_fields.is_hidden &&
-            < Route path={paths.erp_login_dashboard} element={<PasswordNavbar />
+          {!user.erp_access_fields.is_hidden &&
+            < Route path={paths.erp_dashboard} element={<PasswordNavbar />
             }>
               <Route
                 index element={
-                  <ErpLoginDashboard />
+                  <ErpReportsDashboard />
                 }
               />
-              <Route path={paths.erp_login_dashboard} element={
-                < ErpLoginDashboard />
+              <Route path={paths.erp_dashboard} element={
+                < ErpReportsDashboard />
               }
               />
-              <Route path={paths.passwords} element={
+
+              <Route path={paths.pending_orders} element={
                 <Suspense fallback={<LinearProgress />}>
-                  < PasswordsPage />
+                  < PendingOrdersReportPage />
+                </Suspense>
+              }
+              />
+              <Route path={paths.bill_aging_report} element={
+                <Suspense fallback={<LinearProgress />}>
+                  < BillsAgingReportsPage />
                 </Suspense>
 
               }
               />
-              <Route path={paths.password_admin_page} element={
-                <Suspense fallback={<LinearProgress />}>
-                  < PasswordsAdminPage />
-                </Suspense>
-
-              }
-              />
-
-
             </Route>}
 
           {!user.greetings_access_fields.is_hidden &&

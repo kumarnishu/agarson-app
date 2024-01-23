@@ -33,8 +33,7 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
 
 export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
     let users: IUser[] = []
-    let user_ids: string[] = []
-    user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
+    let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
     if (user_ids.length > 0)
         users = await User.find({ _id: { $in: user_ids } }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     else
@@ -335,7 +334,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-    owner.passwords_access_fields = {
+    owner.erp_access_fields = {
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
@@ -368,7 +367,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-    
+
 
     owner.backup_access_fields = {
         is_hidden: false,
@@ -462,7 +461,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    user.passwords_access_fields = {
+    user.erp_access_fields = {
         is_hidden: true,
         is_editable: false,
         is_deletion_allowed: false
@@ -489,7 +488,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    
+
 
     user.backup_access_fields = {
         is_hidden: true,
@@ -598,7 +597,7 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
         visit_access_fields,
         reports_access_fields,
         greetings_access_fields,
-        passwords_access_fields,
+        erp_access_fields,
         productions_access_fields
 
     } = req.body as TUserBody
@@ -619,7 +618,7 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
         reports_access_fields,
         visit_access_fields,
         greetings_access_fields,
-        passwords_access_fields,
+        erp_access_fields,
         productions_access_fields
     })
     res.status(200).json({ message: " updated" })
@@ -671,10 +670,10 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-    if (feature === Feature.erp_login) {
+    if (feature === Feature.erp_reports) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
-                passwords_access_fields: data.access
+                erp_access_fields: data.access
             })
         })
     }
@@ -938,7 +937,8 @@ export const AllowMultiLogin = async (req: Request, res: Response, next: NextFun
     }
     user.is_multi_login = true
     user.multi_login_token = null
-    user.updated_by = req.user
+    if (req.user)
+        user.updated_by = req.user
     await user.save();
     res.status(200).json({ message: "multi login allowed " });
 }
@@ -952,7 +952,8 @@ export const BlockMultiLogin = async (req: Request, res: Response, next: NextFun
     }
     user.is_multi_login = false
     user.multi_login_token = null
-    user.updated_by = req.user
+    if (req.user)
+        user.updated_by = req.user
     await user.save();
     res.status(200).json({ message: "multi login blocked " });
 }

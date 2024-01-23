@@ -1,6 +1,14 @@
 import { FeatureAccess } from "./access.types"
 import { Asset } from "./asset.types"
 
+export type IState = {
+    _id: string,
+    state: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 export type IUser = {
     _id: string,
     username: string,
@@ -15,7 +23,7 @@ export type IUser = {
     crm_access_fields: FeatureAccess,
     productions_access_fields: FeatureAccess,
     templates_access_fields: FeatureAccess,
-    passwords_access_fields: FeatureAccess,
+    erp_access_fields: FeatureAccess,
     backup_access_fields: FeatureAccess,
     todos_access_fields: FeatureAccess,
     reports_access_fields: FeatureAccess,
@@ -29,6 +37,7 @@ export type IUser = {
     multi_login_token: string | null,
     is_multi_login: boolean,
     assigned_users: IUser[]
+    assigned_states: IState[]
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

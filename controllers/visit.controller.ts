@@ -20,8 +20,7 @@ export const GetVisitsAttendence = async (req: Request, res: Response, next: Nex
     dt1.setMinutes(0)
     dt2.setHours(0)
     dt2.setMinutes(0)
-    let user_ids: string[] = []
-    user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
+    let user_ids = req.user?.assigned_users.map((user: IUser) => { return user }) || []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (user_ids.length > 0) {
@@ -30,8 +29,8 @@ export const GetVisitsAttendence = async (req: Request, res: Response, next: Nex
             }
 
             else {
-                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-                count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).countDocuments()
+                visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
             }
         }
 
@@ -64,8 +63,7 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
     dt1.setMinutes(0)
     dt2.setHours(0)
     dt2.setMinutes(0)
-    let user_ids: string[] = []
-    user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
+    let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
@@ -75,7 +73,7 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
             }
 
             else {
-                visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: req.user._id }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: req.user?._id }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
                 count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 } }).countDocuments()
             }
         }
@@ -104,7 +102,7 @@ export const getMyTodayVisit = async (req: Request, res: Response, next: NextFun
     dt1.setHours(0)
     dt1.setMinutes(0)
 
-    let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate('visit_reports').populate('created_by').populate('updated_by')
+    let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('visit_reports').populate('created_by').populate('updated_by')
     return res.status(200).json(visit)
 }
 
@@ -121,7 +119,7 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
     dt1.setHours(0)
     dt1.setMinutes(0)
 
-    let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id })
+    let visit = await Visit.findOne({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id })
 
     if (visit)
         return res.status(403).json({ message: "day has already started" })
@@ -159,8 +157,10 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
 
     visit.created_at = new Date()
     visit.updated_at = new Date()
-    visit.created_by = req.user
-    visit.updated_by = req.user
+    if (req.user) {
+        visit.created_by = req.user
+        visit.updated_by = req.user
+    }
     await visit.save()
     return res.status(201).json(visit)
 }
@@ -206,8 +206,10 @@ export const EndMyDay = async (req: Request, res: Response, next: NextFunction) 
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-    visit.updated_at = new Date()
-    visit.updated_by = req.user
+    if (req.user) {
+        visit.updated_at = new Date()
+        visit.updated_by = req.user
+    }
     await visit.save()
     return res.status(200).json({ message: "end day successful" })
 }
@@ -217,7 +219,9 @@ export const ToogleAttendence = async (req: Request, res: Response, next: NextFu
     if (!visit)
         return res.status(400).json({ message: "visit not found" })
     visit.is_present = !visit.is_present
-    visit.updated_by = req.user
+    if (req.user) {
+        visit.updated_by = req.user
+    }
     await visit.save()
     return res.status(200).json({ message: "successfull" })
 }
@@ -274,7 +278,8 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
         }
     }
     visit.updated_at = new Date()
-    visit.updated_by = req.user
+    if (req.user)
+        visit.updated_by = req.user
     let newreports: IVisitReport[] = visit.visit_reports
     newreports.push(report)
     visit.visit_reports = newreports
@@ -306,7 +311,8 @@ export const AddVisitSummary = async (req: Request, res: Response, next: NextFun
     report.reviews_taken = reviews_taken
     report.summary = summary
     report.updated_at = new Date()
-    report.updated_by = req.user
+    if (req.user)
+        report.updated_by = req.user
     await report.save()
     return res.status(200).json({ message: "Added Summary Successfully" })
 }
@@ -333,7 +339,8 @@ export const EditVisitSummary = async (req: Request, res: Response, next: NextFu
     report.reviews_taken = reviews_taken
     report.summary = summary
     report.updated_at = new Date()
-    report.updated_by = req.user
+    if (req.user)
+        report.updated_by = req.user
     await report.save()
     return res.status(200).json({ message: "updated Summary Successfully" })
 }
@@ -346,7 +353,8 @@ export const ValidateVisit = async (req: Request, res: Response, next: NextFunct
 
     report.visit_validated = true
     report.updated_at = new Date()
-    report.updated_by = req.user
+    if (req.user)
+        report.updated_by = req.user
     await report.save()
     return res.status(200).json({ message: "visit validated" })
 }
@@ -374,7 +382,8 @@ export const UploadVisitSamplesPhoto = async (req: Request, res: Response, next:
         }
     }
     report.updated_at = new Date()
-    report.updated_by = req.user
+    if (req.user)
+        report.updated_by = req.user
     await report.save()
     return res.status(200).json({ message: "samples uploaded successfull" })
 }
@@ -388,14 +397,15 @@ export const AddAnkitInput = async (req: Request, res: Response, next: NextFunct
     let report = await VisitReport.findById(id)
     if (!report)
         return res.status(400).json({ message: "visit not exists" })
-
-    report.ankit_input = {
-        input: input,
-        created_by: req.user,
-        timestamp: new Date()
+    if (req.user) {
+        report.ankit_input = {
+            input: input,
+            created_by: req.user,
+            timestamp: new Date()
+        }
+        report.updated_at = new Date()
+        report.updated_by = req.user
     }
-    report.updated_at = new Date()
-    report.updated_by = req.user
     await report.save()
     return res.status(200).json({ message: "added ankit input" })
 
@@ -410,14 +420,16 @@ export const AddBrijeshInput = async (req: Request, res: Response, next: NextFun
     let report = await VisitReport.findById(id)
     if (!report)
         return res.status(400).json({ message: "visit not exists" })
-
-    report.brijesh_input = {
-        input: input,
-        created_by: req.user,
-        timestamp: new Date()
+    if (req.user) {
+        report.brijesh_input = {
+            input: input,
+            created_by: req.user,
+            timestamp: new Date()
+        }
+        report.updated_at = new Date()
+        report.updated_by = req.user
     }
-    report.updated_at = new Date()
-    report.updated_by = req.user
+
     await report.save()
     return res.status(200).json({ message: "added brijesh input" })
 }
@@ -439,9 +451,9 @@ export const MakeVisitOut = async (req: Request, res: Response, next: NextFuncti
         timestamp: new Date(),
         address: String(address.display_name)
     }
-
     report.updated_at = new Date()
-    report.updated_by = req.user
+    if (req.user)
+        report.updated_by = req.user
     await report.save()
     return res.status(200).json({ message: "visit out successful" })
 }

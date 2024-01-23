@@ -54,11 +54,11 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
     dt1.setDate(new Date().getDate() - 1)
     let dye = req.query.dye
     let weights: IShoeWeight[] = []
-    if (dye) {
+    if (dye && req.user) {
         weights = await ShoeWeight.find({ created_at: { $gt: dt1 }, dye: dye, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
     }
     else {
-        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user?._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
     }
     return res.status(200).json(weights)
 }
@@ -73,8 +73,7 @@ export const GetProductions = async (req: Request, res: Response, next: NextFunc
     let count = 0
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
-    let user_ids: string[] = []
-    user_ids = req.user.assigned_users.map((user: IUser) => { return user._id })
+    let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
@@ -84,7 +83,7 @@ export const GetProductions = async (req: Request, res: Response, next: NextFunc
             }
 
             else {
-                productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: req.user._id }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: req.user?._id }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
                 count = await Production.find({ date: { $gte: dt1, $lt: dt2 } }).countDocuments()
             }
         }
@@ -270,7 +269,8 @@ export const UpdateMachine = async (req: Request, res: Response, next: NextFunct
     machine.serial_no = serial_no
     machine.category = category
     machine.updated_at = new Date()
-    machine.updated_by = req.user
+    if (req.user)
+        machine.updated_by = req.user
     await machine.save()
     return res.status(200).json(machine)
 }
@@ -282,7 +282,8 @@ export const ToogleMachine = async (req: Request, res: Response, next: NextFunct
         return res.status(404).json({ message: "machine not found" })
     machine.active = !machine.active
     machine.updated_at = new Date()
-    machine.updated_by = req.user
+    if (req.user)
+        machine.updated_by = req.user
     await machine.save()
     return res.status(200).json(machine)
 
@@ -340,7 +341,8 @@ export const UpdateArticle = async (req: Request, res: Response, next: NextFunct
     article.display_name = display_name
     article.sizes = sizes
     article.updated_at = new Date()
-    article.updated_by = req.user
+    if (req.user)
+        article.updated_by = req.user
     await article.save()
     return res.status(200).json(article)
 
@@ -352,7 +354,8 @@ export const ToogleArticle = async (req: Request, res: Response, next: NextFunct
         return res.status(404).json({ message: "article not found" })
     article.active = !article.active
     article.updated_at = new Date()
-    article.updated_by = req.user
+    if (req.user)
+        article.updated_by = req.user
     await article.save()
     return res.status(200).json(article)
 
@@ -395,7 +398,8 @@ export const UpdateDye = async (req: Request, res: Response, next: NextFunction)
     dye.dye_number = dye_number
     dye.size = size
     dye.updated_at = new Date()
-    dye.updated_by = req.user
+    if (req.user)
+        dye.updated_by = req.user
     await dye.save()
     return res.status(200).json(dye)
 }
@@ -407,7 +411,8 @@ export const ToogleDye = async (req: Request, res: Response, next: NextFunction)
         return res.status(404).json({ message: "dye not found" })
     dye.active = !dye.active
     dye.updated_at = new Date()
-    dye.updated_by = req.user
+    if (req.user)
+        dye.updated_by = req.user
     await dye.save()
     return res.status(200).json(dye)
 }
@@ -463,8 +468,10 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     }
     shoe_weight.created_at = new Date()
     shoe_weight.updated_at = new Date()
-    shoe_weight.created_by = req.user
-    shoe_weight.updated_by = req.user
+    if (req.user) {
+        shoe_weight.created_by = req.user
+        shoe_weight.updated_by = req.user
+    }
     await shoe_weight.save()
     return res.status(201).json(shoe_weight)
 }
@@ -496,8 +503,10 @@ export const UpdateShoeWeight = async (req: Request, res: Response, next: NextFu
     shoe_weight.shoe_weight = weight
     shoe_weight.created_at = new Date()
     shoe_weight.updated_at = new Date()
-    shoe_weight.created_by = req.user
-    shoe_weight.updated_by = req.user
+    if (req.user) {
+        shoe_weight.created_by = req.user
+        shoe_weight.updated_by = req.user
+    }
     await shoe_weight.save()
     return res.status(200).json(shoe_weight)
 }
@@ -509,7 +518,8 @@ export const ValidateShoeWeight = async (req: Request, res: Response, next: Next
         return res.status(404).json({ message: "shoe weight not found" })
     shoe_weight.is_validated = true
     shoe_weight.updated_at = new Date()
-    shoe_weight.updated_by = req.user
+    if (req.user)
+        shoe_weight.updated_by = req.user
     await shoe_weight.save()
     return res.status(200).json(shoe_weight)
 }
@@ -585,8 +595,10 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
     new_prouction.date = production_date
     new_prouction.created_at = new Date()
     new_prouction.updated_at = new Date()
-    new_prouction.created_by = req.user
-    new_prouction.updated_by = req.user
+    if (req.user) {
+        new_prouction.created_by = req.user
+        new_prouction.updated_by = req.user
+    }
     await new_prouction.save()
     return res.status(201).json(new_prouction)
 }
@@ -624,7 +636,6 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
     const id = req.params.id
     if (!id)
         return res.status(400).json({ message: "not a valid request" })
-    let production_date = new Date(date)
     let remote_production = await Production.findById(id)
 
 

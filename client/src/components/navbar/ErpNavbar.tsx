@@ -12,7 +12,7 @@ export const StyledLink = styled(Link)`
     text-decoration: none;
     color:white;
 `
-export default function PasswordNavbar() {
+export default function ErpNavbar() {
     const { user } = useContext(UserContext)
     return (
         <>
@@ -44,12 +44,12 @@ export default function PasswordNavbar() {
                                     justifyContent={"center"}
                                     alignItems="center"
                                     gap={2}
-                                >   <Link to={paths.erp_login_dashboard} replace={true} style={{ textDecoration: 'none' }}>
+                                >   <Link to={paths.erp_dashboard} replace={true} style={{ textDecoration: 'none' }}>
                                         <Paper sx={{ bgcolor: 'white', boxShadow: 1, border: 10, borderRadius: 1, borderColor: 'white' }}>
                                             <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                                                 <BlueAgarsonLogo width={20} height={20} title='users' />
                                                 <Typography variant="button" sx={{ fontSize: 12 }} component="div">
-                                                    erp login
+                                                    Erp Reports
                                                 </Typography>
                                             </Stack>
                                         </Paper>

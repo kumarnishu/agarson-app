@@ -22,7 +22,7 @@ function MainDashBoardPage() {
     !user?.templates_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.templates, is_visible: true, url: paths.templates_dashboard })
     !user?.reports_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.reports, is_visible: true, url: paths.reports_dashboard })
     !user?.greetings_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.greetings, is_visible: true, url: paths.greetings_dashboard })
-    !user?.passwords_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.erp_login, is_visible: true, url: paths.erp_login_dashboard })
+    !user?.erp_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.erp_reports, is_visible: true, url: paths.erp_dashboard })
     !user?.backup_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.backup, is_visible: true, url: paths.backup_dashboard })
 
     setFeatures(tmpfeatures)

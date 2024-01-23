@@ -65,7 +65,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         }
 
         if (!req.user?.is_admin) {
-            leads = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+            leads = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user?._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
                     {
@@ -78,7 +78,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     }
                 ]
             }).sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user._id] } }).countDocuments()
+            count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user?._id] } }).countDocuments()
         }
 
         return res.status(200).json({
@@ -136,7 +136,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
         }
 
         if (!req.user?.is_admin) {
-            leads = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+            leads = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user?._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
                     {
@@ -149,7 +149,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                     }
                 ]
             }).sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user._id] } }).countDocuments()
+            count = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user?._id] } }).countDocuments()
         }
         leads = leads.slice((page - 1) * limit, limit * page)
         return res.status(200).json({
@@ -206,7 +206,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
         }
 
         if (!req.user?.is_admin) {
-            leads = await Lead.find({ is_customer: true, lead_owners: { $in: [req.user._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
+            leads = await Lead.find({ is_customer: true, lead_owners: { $in: [req.user?._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
                     {
@@ -219,7 +219,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                     }
                 ]
             }).sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({ is_customer: true, lead_owners: { $in: [req.user._id] } }).countDocuments()
+            count = await Lead.find({ is_customer: true, lead_owners: { $in: [req.user?._id] } }).countDocuments()
         }
 
         return res.status(200).json({
@@ -238,7 +238,7 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
         refers = await ReferredParty.find().sort('name')
     }
     if (!req.user?.is_admin) {
-        refers = await ReferredParty.find({ lead_owners: { $in: [req.user._id] } }).sort('name')
+        refers = await ReferredParty.find({ lead_owners: { $in: [req.user?._id] } }).sort('name')
     }
     return res.status(200).json(refers)
 }
@@ -278,7 +278,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
         if (!req.user?.is_admin) {
             result = result.filter((item) => {
                 let owners = item.party.lead_owners.filter((owner) => {
-                    return owner.username == req.user.username
+                    return owner.username == req.user?.username
                 })
                 if (owners.length > 0)
                     return item
@@ -332,7 +332,7 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
         ]
     }).sort('-remind_date')
     reminders = reminders.filter((reminder) => {
-        return reminder.created_by.username === req.user.username
+        return reminder.created_by.username === req.user?.username
     })
     return res.status(200).json(reminders)
 }
@@ -350,7 +350,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
-            remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).populate('created_by').populate('updated_by').populate({
+            remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
                 path: 'lead',
                 populate: [
                     {
@@ -376,7 +376,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                     }
                 ]
             }).sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user._id }).countDocuments()
+            count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
         }
 
 
@@ -1064,7 +1064,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
-                    return owner.username == req.user.username
+                    return owner.username == req.user?.username
                 })
                 if (owners.length > 0)
                     return lead
@@ -1732,7 +1732,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
-                    return owner.username == req.user.username
+                    return owner.username == req.user?.username
                 })
                 if (owners.length > 0)
                     return lead
@@ -2041,7 +2041,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (!req.user?.is_admin) {
             result = result.filter((item) => {
                 let owners = item.party.lead_owners.filter((owner) => {
-                    return owner.username == req.user.username
+                    return owner.username == req.user?.username
                 })
                 if (owners.length > 0)
                     return item
@@ -2711,7 +2711,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
         if (!req.user?.is_admin) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
-                    return owner.username == req.user.username
+                    return owner.username == req.user?.username
                 })
                 if (owners.length > 0)
                     return lead
@@ -3247,7 +3247,8 @@ export const ConvertCustomer = async (req: Request, res: Response, next: NextFun
     }
     lead.is_customer = true
     lead.stage = "closed"
-    lead.updated_by = req.user
+    if (req.user)
+        lead.updated_by = req.user
     lead.updated_at = new Date(Date.now())
     await lead.save()
     return res.status(200).json({ message: "new customer created" })
@@ -3278,7 +3279,8 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
             lead.remarks = remarks
         }
         lead.stage = "open"
-        lead.updated_by = req.user
+        if (req.user)
+            lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
         await lead.save()
 
@@ -3300,7 +3302,8 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
             lead.remarks = remarks
         }
         lead.stage = "useless"
-        lead.updated_by = req.user
+        if (req.user)
+            lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
         await lead.save()
 

@@ -17,8 +17,8 @@ export const GetCheckLists = async (req: Request, res: Response, next: NextFunct
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
 
         if (!id) {
-            checklists = await Checklist.find({ created_by: req.user._id }).populate('owner').populate('updated_by').populate('created_by').sort('serial_no').skip((page - 1) * limit).limit(limit)
-            count = await Checklist.find({ created_by: req.user._id }).countDocuments()
+            checklists = await Checklist.find({ created_by: req.user?._id }).populate('owner').populate('updated_by').populate('created_by').sort('serial_no').skip((page - 1) * limit).limit(limit)
+            count = await Checklist.find({ created_by: req.user?._id }).countDocuments()
         }
         if (id) {
             checklists = await Checklist.find({ owner: id }).populate('owner').populate('updated_by').populate('created_by').sort('serial_no').skip((page - 1) * limit).limit(limit)
@@ -54,7 +54,7 @@ export const GetMyCheckLists = async (req: Request, res: Response, next: NextFun
     let start_date = req.query.start_date
     let end_date = req.query.end_date
 
-    let checklists = await Checklist.find({ owner: req.user._id }).populate('owner').populate('updated_by').populate('created_by').sort('serial_no')
+    let checklists = await Checklist.find({ owner: req.user?._id }).populate('owner').populate('updated_by').populate('created_by').sort('serial_no')
 
     if (start_date && end_date) {
         let dt1 = new Date(String(start_date))
@@ -167,7 +167,8 @@ export const AddMoreCheckBoxes = async (req: Request, res: Response, next: NextF
         }
     }
     checklist.boxes = boxes
-    checklist.updated_by = req.user
+    if (req.user)
+        checklist.updated_by = req.user
     checklist.updated_at = new Date()
     await checklist.save()
     return res.status(201).json({ message: `more boxes added successfully` });

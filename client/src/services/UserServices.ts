@@ -11,7 +11,7 @@ export type AccessTypes = {
   reports_access_fields: FeatureAccess,
   visit_access_fields: FeatureAccess,
   greetings_access_fields: FeatureAccess,
-  passwords_access_fields: FeatureAccess,
+  erp_access_fields: FeatureAccess,
   productions_access_fields: FeatureAccess
 
 }

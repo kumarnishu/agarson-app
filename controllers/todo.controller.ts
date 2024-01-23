@@ -21,7 +21,7 @@ export const GetMyTodos = async (req: Request, res: Response, next: NextFunction
     todos = todos.filter((todo) => {
         let numbers = todo.contacts.map((c) => { return c.mobile })
         console.log(numbers)
-        if (numbers.includes(String(req.user.mobile)))
+        if (numbers.includes(String(req.user?.mobile)))
             return todo
     })
     console.log(todos.length)
@@ -184,7 +184,7 @@ export const UpdateTodo = async (req: Request, res: Response, next: NextFunction
             connected_user: string
         }
 
-    if (!title ||  !contacts || !frequency_type || !start_date || !frequency_value)
+    if (!title || !contacts || !frequency_type || !start_date || !frequency_value)
         return res.status(400).json({ message: "fill all required fields" })
 
     if (!isvalidDate(new Date(start_date))) {
@@ -210,7 +210,8 @@ export const UpdateTodo = async (req: Request, res: Response, next: NextFunction
     todo.category2 = category2
     todo.contacts = contacts
     todo.updated_at = new Date()
-    todo.updated_by = req.user
+    if (req.user)
+        todo.updated_by = req.user
     todo.run_once = Boolean(run_once)
     todo.cron_string = GetRunningCronString(frequency_type, frequency_value, new Date(start_date)) || ""
     todo.start_date = new Date(start_date)
@@ -386,7 +387,7 @@ export const UpdateStatus = async (req: Request, res: Response, next: NextFuncti
     }
     let contacts = todo.contacts
     contacts = contacts.map((contact) => {
-        if (contact.mobile === req.user.mobile) {
+        if (contact.mobile === req.user?.mobile) {
             contact.status = status
             return contact
         }
@@ -394,11 +395,12 @@ export const UpdateStatus = async (req: Request, res: Response, next: NextFuncti
             return contact
     })
     let replies = todo.replies
-    replies.push({
-        reply,
-        created_by: req.user,
-        timestamp: new Date()
-    })
+    if (req.user)
+        replies.push({
+            reply,
+            created_by: req.user,
+            timestamp: new Date()
+        })
     todo.replies = replies
     await todo.save()
     return res.status(200).json({ message: `todo staus updated` });
@@ -604,7 +606,8 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                         if (new_run_once && new Date(start_date) > new Date())
                             next_run_date = new Date(cron.sendAt(new Date(start_date)))
                         let replies = newtodo.replies
-                        replies.push({ reply: last_reply, created_by: req.user, timestamp: new Date() })
+                        if (req.user)
+                            replies.push({ reply: last_reply, created_by: req.user, timestamp: new Date() })
                         await Todo.findByIdAndUpdate(newtodo._id, {
                             serial_no: Number(serial_no) || 0,
                             title: title,

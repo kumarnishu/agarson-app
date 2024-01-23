@@ -47,7 +47,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     required: true,
     trim: true,
   },
-  
+
   connected_number: {
     type: String,
     trim: true,
@@ -58,7 +58,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     default: false,
     required: true,
   },
-  
+
   productions_access_fields: {
     is_hidden: { type: Boolean, default: false },
     is_deletion_allowed: { type: Boolean, default: false },
@@ -69,7 +69,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     is_deletion_allowed: { type: Boolean, default: false },
     is_editable: { type: Boolean, default: false },
   },
-  passwords_access_fields: {
+  erp_access_fields: {
     is_hidden: { type: Boolean, default: false },
     is_deletion_allowed: { type: Boolean, default: false },
     is_editable: { type: Boolean, default: false },
@@ -79,7 +79,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     is_deletion_allowed: { type: Boolean, default: false },
     is_editable: { type: Boolean, default: false },
   },
-  
+
   greetings_access_fields: {
     is_hidden: { type: Boolean, default: false },
     is_deletion_allowed: { type: Boolean, default: false },
@@ -90,7 +90,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     is_deletion_allowed: { type: Boolean, default: false },
     is_editable: { type: Boolean, default: false },
   },
- 
+
   backup_access_fields: {
     is_hidden: { type: Boolean, default: false },
     is_deletion_allowed: { type: Boolean, default: false },
@@ -101,7 +101,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     is_deletion_allowed: { type: Boolean, default: false },
     is_editable: { type: Boolean, default: false },
   },
-  
+
   checklists_access_fields: {
     is_hidden: { type: Boolean, default: false },
     is_deletion_allowed: { type: Boolean, default: false },
@@ -117,7 +117,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     is_deletion_allowed: { type: Boolean, default: false },
     is_editable: { type: Boolean, default: false },
   },
-  
+
   email_verified: {
     type: Boolean,
     default: false,
@@ -141,11 +141,17 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
       default: []
     }
   ],
+  assigned_states: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'State',
+      default: []
+    }
+  ],
   last_login: {
     type: Date,
     default: new Date(),
     required: true,
-
   },
   created_at: {
     type: Date,

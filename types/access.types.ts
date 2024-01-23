@@ -15,5 +15,5 @@ export enum Feature {
     backup = "backup",
     greetings = "greetings",
     templates = "templates",
-    erp_login = "erp login",
+    erp_reports = "erp reports",
 }

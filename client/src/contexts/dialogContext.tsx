@@ -1,6 +1,6 @@
 import React, { useReducer } from "react"
 
-type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" | "create_department" | "update_department" |
+type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" |  "create_state" | "update_state" | "delete_state" |
   "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users"
 
 
@@ -9,9 +9,7 @@ type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting"
 type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments" | "view_visit_photo" | "mark_attendence" | "upload_samples"
 
 
-type PasswordChoices = "create_password" | "delete_password" | "close_password" | "update_erp_password"
-
-type TodoChoices = "create_todo" | "update_todo" | "delete_todo" | "bulk_start_todo" | "close_todo" | "bulk_stop_todo" | "stop_todo" | "start_todo" | "update_status" | "view_replies" | "hide_todo" | "show_todo" |"view_contacts"
+type TodoChoices = "create_todo" | "update_todo" | "delete_todo" | "bulk_start_todo" | "close_todo" | "bulk_stop_todo" | "stop_todo" | "start_todo" | "update_status" | "view_replies" | "hide_todo" | "show_todo" | "view_contacts"
 
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
@@ -25,7 +23,7 @@ type TemplateChoices = "create_template" | "update_template" | "delete_template"
 
 
 
-type ChoiceState = UserChoices | LeadChoices  | TemplateChoices | VisitChoices | CheckListChoices | GreetingChoices | PasswordChoices | ProductionChoices | TodoChoices
+type ChoiceState = UserChoices | LeadChoices | TemplateChoices | VisitChoices | CheckListChoices | GreetingChoices | ProductionChoices | TodoChoices
 
 const initialState: ChoiceState | null = null
 
@@ -60,12 +58,7 @@ export enum GreetingChoiceActions {
   bulk_stop_greeting = "bulk_stop_greeting",
   stop_greeting = "stop_greeting"
 }
-export enum PasswordChoiceActions {
-  create_password = "create_password",
-  delete_password = "delete_password",
-  close_password = "close_password",
-  update_erp_password = "update_erp_password"
-}
+
 export enum TodoChoiceActions {
   create_todo = "create_todo",
   update_todo = "update_todo",
@@ -79,7 +72,7 @@ export enum TodoChoiceActions {
   view_replies = "view_replies",
   hide_todo = "hide_todo",
   show_todo = "show_todo",
-  view_contacts ="view_contacts"
+  view_contacts = "view_contacts"
 
 }
 export enum VisitChoiceActions {
@@ -153,8 +146,6 @@ export enum LeadChoiceActions {
 }
 
 export enum UserChoiceActions {
-  create_department = "create_department",
-  update_department = "update_department",
   assign_users = "assign_users",
   signup = "signup",
   reset_password_mail = "reset_password_mail",
@@ -175,12 +166,16 @@ export enum UserChoiceActions {
   refresh_whatsapp = "refresh_whatsapp",
   update_user_password = "update_user_password",
   block_multi_login = "block_multi_login",
-  reset_multi_login = "reset_multi_login"
+  reset_multi_login = "reset_multi_login",
+  create_state = "create_state",
+  update_state = "update_state",
+  delete_state = "delete_state"
+
 }
 
 type Action = {
   type: UserChoiceActions |
-  LeadChoiceActions |  TemplateChoiceActions | PasswordChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions | TodoChoiceActions | ProductionChoiceActions
+  LeadChoiceActions | TemplateChoiceActions | CheckListChoiceActions | VisitChoiceActions | GreetingChoiceActions | TodoChoiceActions | ProductionChoiceActions
 }
 
 // reducer
@@ -189,8 +184,6 @@ function reducer(state: ChoiceState | null, action: Action) {
   switch (type) {
     // user dialogs choices
     case UserChoiceActions.signup: return type
-    case UserChoiceActions.create_department: return type
-    case UserChoiceActions.update_department: return type
     case UserChoiceActions.reset_password_mail: return type
     case UserChoiceActions.new_user: return type
     case UserChoiceActions.update_user: return type
@@ -211,6 +204,9 @@ function reducer(state: ChoiceState | null, action: Action) {
     case UserChoiceActions.reset_multi_login: return type
     case UserChoiceActions.assign_users: return type
     case UserChoiceActions.block_multi_login: return type
+    case UserChoiceActions.create_state: return type
+    case UserChoiceActions.update_state: return type
+    case UserChoiceActions.delete_state: return type
 
     // lead dialog choices
     case LeadChoiceActions.create_lead: return type
@@ -265,11 +261,6 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TemplateChoiceActions.delete_template: return type
     case TemplateChoiceActions.close_template: return type
     case TemplateChoiceActions.view_template: return type
-
-    case PasswordChoiceActions.create_password: return type
-    case PasswordChoiceActions.update_erp_password: return type
-    case PasswordChoiceActions.delete_password: return type
-    case PasswordChoiceActions.close_password: return type
 
     //greeeting
     case GreetingChoiceActions.create_greeting: return type
