@@ -150,7 +150,6 @@ export default function TodosPage() {
                 <Typography
                     variant={'h6'}
                     component={'h1'}
-                    sx={{ p: 1 }}
                 >
                     Todos
                 </Typography>

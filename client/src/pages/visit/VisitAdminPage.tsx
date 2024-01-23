@@ -257,14 +257,13 @@ export default function VisitAdminPage() {
 
             <Stack
                 spacing={2}
-                pt={1}
+                p={1}
                 direction="row"
                 justifyContent="space-between"
             >
                 <Typography
                     variant={'h6'}
                     component={'h1'}
-                    sx={{ pl: 2 }}
                 >
                     Visit
                 </Typography>
@@ -336,7 +335,7 @@ export default function VisitAdminPage() {
             </Stack >
 
             {/* filter dates and person */}
-            <Stack direction="row" p={2} gap={2}>
+            <Stack direction="row" p={1} gap={2}>
                 < TextField
 
                     size="small"
