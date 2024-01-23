@@ -606,7 +606,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                         let replies = newtodo.replies
                         replies.push({ reply: last_reply, created_by: req.user, timestamp: new Date() })
                         await Todo.findByIdAndUpdate(newtodo._id, {
-                            serial_no: serial_no,
+                            serial_no: Number(serial_no) || 0,
                             title: title,
                             subtitle: subtitle,
                             category: category,
@@ -661,7 +661,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             next_run_date = new Date(cron.sendAt(new Date(start_date)))
 
                         let newtodo = new Todo({
-                            serial_no: serial_no,
+                            serial_no: Number(serial_no) || 0,
                             title: title,
                             subtitle: subtitle,
                             category: category,

@@ -10,7 +10,7 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
     subtitle: {
         type: String,
         lowercase: true,
-        required: true
+        default: ""
     },
     category: { type: String },
     category2: { type: String },
