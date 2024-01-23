@@ -1,3 +1,4 @@
+
 import { Search } from '@mui/icons-material'
 import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
@@ -16,6 +17,7 @@ import { IState } from '../../types/user.types'
 import { GetStates } from '../../services/ErpServices'
 import CreateStateDialog from '../../components/dialogs/states/CreateStateDialog'
 import StatesTable from '../../components/tables/StatesTable'
+import UploadStatesFromExcelButton from '../../components/buttons/UploadStatesButton'
 
 
 type SelectedData = {
@@ -122,6 +124,7 @@ export default function StatePage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
+            {LoggedInUser?.user_access_fields.is_editable && <UploadStatesFromExcelButton disabled={!LoggedInUser?.user_access_fields.is_editable} />}
             <TextField
               fullWidth
               size="small"
