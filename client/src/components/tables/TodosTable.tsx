@@ -357,7 +357,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             return result
                                         }).toString()}>
 
-                                            {todo.contacts.map((c) => {
+                                            {todo.contacts && todo.contacts.length > 0 && todo.contacts.map((c) => {
                                                 let result = c.name
                                                 if (!c.name)
                                                     result = c.mobile

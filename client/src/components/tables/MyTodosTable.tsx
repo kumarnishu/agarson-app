@@ -230,7 +230,7 @@ function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedT
                                             {todo.subtitle && todo.subtitle.slice(0, 10)}
                                         </STableCell>
 
-                                        <STableCell title={todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply || ""}>
+                                        <STableCell title={todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply || ""}>
                                             {todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply.slice(0, 20)}
                                         </STableCell>
                                         <STableCell>
