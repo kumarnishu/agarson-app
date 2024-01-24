@@ -17,7 +17,7 @@ import AlertBar from '../../components/snacks/AlertBar'
 import FuzzySearch from 'fuzzy-search'
 
 export default function PendingOrdersReportPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+    const [paginationData, setPaginationData] = useState({ limit: 500, page: 1, total: 1 });
     const [reports, setPendingOrdersReport] = useState<IPendingOrdersReport[]>([])
     const [filterCount, setFilterCount] = useState(0)
     const { user } = useContext(UserContext)
