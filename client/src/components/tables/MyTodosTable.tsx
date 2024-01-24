@@ -231,7 +231,7 @@ function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedT
                                         </STableCell>
 
                                         <STableCell title={todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply || ""}>
-                                            {todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply.slice(0, 20)}
+                                            {todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply.slice(0, 20)}
                                         </STableCell>
                                         <STableCell>
                                             {new Date(todo.next_run_date).toLocaleString()}

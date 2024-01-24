@@ -15,7 +15,7 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
     category: { type: String },
     category2: { type: String },
     replies: [{
-        reply: String,
+        reply: { type: String, default: "" },
         created_by: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
