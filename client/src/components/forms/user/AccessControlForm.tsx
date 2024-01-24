@@ -755,7 +755,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                                     alignItems="left"
                                     spacing={2}
                                 >
-                                    <Typography variant="button">passwords
+                                    <Typography variant="button">Erp Reports
                                     </Typography>
                                 </Stack>
                             </STableCell>

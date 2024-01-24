@@ -130,12 +130,6 @@ export default function PendingOrdersReportPage() {
                             >
                                 Account
                             </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-                                Product family
-                            </STableHeadCell>
-
                             <STableHeadCell
                             >
                                 Article
@@ -256,9 +250,7 @@ export default function PendingOrdersReportPage() {
                                         <STableCell>
                                             {report.account}
                                         </STableCell>
-                                        <STableCell>
-                                            {report.product_family}
-                                        </STableCell>
+                                       
                                         <STableCell>
                                             {report.article}
                                         </STableCell>

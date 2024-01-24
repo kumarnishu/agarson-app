@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import xlsx from "xlsx";
-import { IState, IUser } from "../types/user.types";
+import { IState } from "../types/user.types";
 import { IBillsAgingReport, IPendingOrdersReport } from "../types/erp_report.types";
 import { BillsAgingReport } from "../models/erp_reports/bills_aging_model";
 import { State } from "../models/users/state.model";
@@ -126,6 +126,7 @@ export const BulkCreateBillsAgingReportFromExcel = async (req: Request, res: Res
         return res.status(400).json({
             message: "please provide an Excel file",
         });
+    await BillsAgingReport.deleteMany({})
     if (req.file) {
         const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
         if (!allowedFiles.includes(req.file.mimetype))
@@ -218,6 +219,7 @@ export const BulkPendingOrderReportFromExcel = async (req: Request, res: Respons
         return res.status(400).json({
             message: "please provide an Excel file",
         });
+    await PendingOrdersReport.deleteMany({})
     if (req.file) {
         const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
         if (!allowedFiles.includes(req.file.mimetype))
