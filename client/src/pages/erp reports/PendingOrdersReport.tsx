@@ -120,26 +120,27 @@ export default function PendingOrdersReportPage() {
                     {user?.erp_access_fields.is_editable && <>
                         <UploadPendingOrdersButton disabled={!user?.erp_access_fields.is_editable} />
                         <Button onClick={handleExcel}> <Download /> Template</Button>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            onChange={(e) => {
-                                setFilter(e.currentTarget.value)
-                            }}
-                            placeholder={`${reports?.length} records...`}
-                            style={{
-                                fontSize: '1.1rem',
-                                border: '0',
-                            }}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Search />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
+                       
                     </>}
+                    <TextField
+                        fullWidth
+                        size="small"
+                        onChange={(e) => {
+                            setFilter(e.currentTarget.value)
+                        }}
+                        placeholder={`${reports?.length} records...`}
+                        style={{
+                            fontSize: '1.1rem',
+                            border: '0',
+                        }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
                 </Stack>
 
 
@@ -149,7 +150,7 @@ export default function PendingOrdersReportPage() {
             {isLoading && <TableSkeleton />}
             {!isLoading && <Box sx={{
                 overflow: "scroll",
-                height: '80vh'
+                height: '76vh'
             }}>
                 <STable
                 >
