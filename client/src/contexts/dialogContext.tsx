@@ -1,7 +1,7 @@
 import React, { useReducer } from "react"
 
 type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" |  "create_state" | "update_state" | "delete_state" |
-  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users"
+  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users" |"bulk_assign_states"
 
 
 type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting" | "bulk_start_greeting" | "close_greeting" | "bulk_stop_greeting" | "stop_greeting" | "start_greeting"
@@ -146,6 +146,7 @@ export enum LeadChoiceActions {
 }
 
 export enum UserChoiceActions {
+  bulk_assign_states ="bulk_assign_states",
   assign_users = "assign_users",
   signup = "signup",
   reset_password_mail = "reset_password_mail",
@@ -207,6 +208,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case UserChoiceActions.create_state: return type
     case UserChoiceActions.update_state: return type
     case UserChoiceActions.delete_state: return type
+    case UserChoiceActions.bulk_assign_states: return type
 
     // lead dialog choices
     case LeadChoiceActions.create_lead: return type

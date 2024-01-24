@@ -21,6 +21,7 @@ export type IPendingOrdersReport = {
     account: string,
     product_family: string,
     article: string,
+    sum_total:number,
     size5: number,
     size6: number,
     size7: number,

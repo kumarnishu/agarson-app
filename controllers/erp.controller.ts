@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express"
 import xlsx from "xlsx";
-import { IState } from "../types/user.types";
+import { IState, IUser } from "../types/user.types";
 import { IBillsAgingReport, IPendingOrdersReport } from "../types/erp_report.types";
 import { BillsAgingReport } from "../models/erp_reports/bills_aging_model";
 import { State } from "../models/users/state.model";
 import { PendingOrdersReport } from "../models/erp_reports/pending_orders.model";
+import { User } from "../models/users/user.model";
 
 //get
 export const GetAllStates = async (req: Request, res: Response, next: NextFunction) => {
@@ -99,12 +100,12 @@ export const GetBillsAgingReports = async (req: Request, res: Response, next: Ne
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (req.user?.is_admin) {
-            reports = await BillsAgingReport.find().populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
+            reports = await BillsAgingReport.find().populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
             count = await BillsAgingReport.find().countDocuments()
         }
 
         else {
-            reports = await BillsAgingReport.find({ report_owner: { $in: state_ids } }).populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
+            reports = await BillsAgingReport.find({ report_owner: { $in: state_ids } }).populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
             count = await BillsAgingReport.find({ report_owner: { $in: state_ids } }).countDocuments()
         }
 
@@ -191,12 +192,12 @@ export const GetPendingOrderReports = async (req: Request, res: Response, next: 
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (req.user?.is_admin) {
-            reports = await PendingOrdersReport.find().populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
+            reports = await PendingOrdersReport.find().populate("report_owner").populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
             count = await PendingOrdersReport.find().countDocuments()
         }
 
         else {
-            reports = await PendingOrdersReport.find({ report_owner: { $in: state_ids } }).populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
+            reports = await PendingOrdersReport.find({ report_owner: { $in: state_ids } }).populate('updated_by').populate("report_owner").populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
             count = await PendingOrdersReport.find({ report_owner: { $in: state_ids } }).countDocuments()
         }
 
@@ -234,8 +235,10 @@ export const BulkPendingOrderReportFromExcel = async (req: Request, res: Respons
             let report = workbook_response[i]
             let report_owner: string | null = String(report.report_owner)
             let account: string | null = String(report.account)
+            let article: string | null = String(report.article)
             let product_family: string | null = String(report.product_family)
             let state: string | null = String(report.report_owner)
+            let sum_total: number | null = Number(report.sum_total)
             let size5: number | null = Number(report.size5)
             let size6: number | null = Number(report.size6)
             let size7: number | null = Number(report.size7)
@@ -279,31 +282,33 @@ export const BulkPendingOrderReportFromExcel = async (req: Request, res: Respons
                     await new PendingOrdersReport({
                         report_owner: owner,
                         account: account,
+                        article: article,
                         product_family: product_family,
                         state: state,
-                        size5: size5,
-                        size6: size6,
-                        size7: size7,
-                        size8: size8,
-                        size9: size9,
-                        size10: size10,
-                        size11: size11,
-                        size12_24pairs: size12_24pairs,
-                        size13: size13,
-                        size11x12: size11x12,
-                        size3: size3,
-                        size4: size4,
-                        size6to10: size6to10,
-                        size7to10: size7to10,
-                        size4to8: size4to8,
-                        size6to9: size6to9,
-                        size5to8: size5to8,
-                        size6to10A: size6to10A,
-                        size7to10B: size7to10B,
-                        size6to9A: size6to9A,
-                        size11close: size11close,
-                        size11to13: size11to13,
-                        size3to8: size3to8,
+                        size5: size5 || 0,
+                        sum_total: sum_total || 0,
+                        size6: size6 || 0,
+                        size7: size7 || 0,
+                        size8: size8 || 0,
+                        size9: size9 || 0,
+                        size10: size10 || 0,
+                        size11: size11 || 0,
+                        size12_24pairs: size12_24pairs || 0,
+                        size13: size13 || 0,
+                        size11x12: size11x12 || 0,
+                        size3: size3 || 0,
+                        size4: size4 || 0,
+                        size6to10: size6to10 || 0,
+                        size7to10: size7to10 || 0,
+                        size4to8: size4to8 || 0,
+                        size6to9: size6to9 || 0,
+                        size5to8: size5to8 || 0,
+                        size6to10A: size6to10A || 0,
+                        size7to10B: size7to10B || 0,
+                        size6to9A: size6to9A || 0,
+                        size11close: size11close || 0,
+                        size11to13: size11to13 || 0,
+                        size3to8: size3to8 || 0,
                         created_by: req.user,
                         updated_by: req.user,
                         created_at: new Date(),
@@ -316,8 +321,20 @@ export const BulkPendingOrderReportFromExcel = async (req: Request, res: Respons
     return res.status(200).json(result);
 }
 
+export const BulkAssignStates = async (req: Request, res: Response, next: NextFunction) => {
+    const { states, ids } = req.body as { states: string[], ids: string[] }
+    if (states && states.length === 0)
+        return res.status(403).json({ message: "please select one state " })
+    if (ids && ids.length === 0)
+        return res.status(403).json({ message: "please select one state owner" })
 
-
-
+    let owners = ids
+    for (let i = 0; i < owners.length; i++) {
+        await User.findByIdAndUpdate(owners[i], {
+            assigned_states: states
+        })
+    }
+    return res.status(200).json({ message: "assigned successfully" })
+}
 
 

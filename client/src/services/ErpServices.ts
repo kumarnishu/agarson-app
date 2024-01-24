@@ -8,12 +8,12 @@ export const GetStates = async () => {
 export const BulkCreateStateFromExcel = async (body: FormData) => {
     return await apiClient.put(`states`, body)
 }
-export const CreateState = async (body: { state: string}) => {
+export const CreateState = async (body: { state: string }) => {
     return await apiClient.post(`states`, body);
 };
 
 
-export const UpdateState = async ({ body, id }: { body: { state: string}, id: string }) => {
+export const UpdateState = async ({ body, id }: { body: { state: string }, id: string }) => {
     return await apiClient.put(`states/${id}`, body);
 };
 
@@ -33,3 +33,6 @@ export const BulkBillsAgingreportFromExcel = async (body: FormData) => {
     return await apiClient.put(`reports/bills/aging`, body)
 }
 
+export const AssignStates = async ({ body }: { body: { states: string[], ids: string[] } }) => {
+    return await apiClient.patch(`bulk/assign/states`, body)
+}

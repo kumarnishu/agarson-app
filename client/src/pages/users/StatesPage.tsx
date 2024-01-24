@@ -18,6 +18,7 @@ import { GetStates } from '../../services/ErpServices'
 import CreateStateDialog from '../../components/dialogs/states/CreateStateDialog'
 import StatesTable from '../../components/tables/StatesTable'
 import UploadStatesFromExcelButton from '../../components/buttons/UploadStatesButton'
+import BulkAssignStatesDialog from '../../components/dialogs/states/BulkAssignStatesDialog'
 
 
 type SelectedData = {
@@ -166,17 +167,23 @@ export default function StatePage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >{LoggedInUser?.productions_access_fields.is_editable &&
+            >{LoggedInUser?.erp_access_fields.is_editable &&
               <MenuItem onClick={() => {
                 setChoice({ type: UserChoiceActions.create_state })
                 setAnchorEl(null)
               }}
               >New State</MenuItem>}
+              {LoggedInUser?.erp_access_fields.is_editable && <MenuItem onClick={() => {
+                setChoice({ type: UserChoiceActions.bulk_assign_states })
+                setAnchorEl(null)
+              }}
+              >Assign States</MenuItem>}
               <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
             </Menu>
             <CreateStateDialog />
+            <BulkAssignStatesDialog states={selectedStates} />
           </>
 
         </Stack>

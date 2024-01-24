@@ -16,6 +16,7 @@ export const STableRow = styled.tr`
   &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer }
 `
 export const STableCell = styled.td`
+  &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer };
   text-align: left;
   background-color: white;
   padding:5px;
