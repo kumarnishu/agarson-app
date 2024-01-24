@@ -9,7 +9,7 @@ export type ITodoTemplate = {
     category2: string,
     contacts: string,
     is_hidden: boolean,
-    last_reply: string,
+    last_reply?: string,
     run_once: boolean,
     frequency_type: string,
     frequency_value: string,

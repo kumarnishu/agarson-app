@@ -31,11 +31,10 @@ const template: ITodoTemplate[] = [
         category2: "urgent",
         contacts: "nishu,7056943283",
         is_hidden: true,
-        last_reply: "done this work",
         run_once: false,
         frequency_type: "daily",
         frequency_value: "1",
-        start_date: "2024-01-20T07:04:00.000Z",
+        start_date: new Date().toLocaleString(),
         connected_user: 'nishu'
     }
 ]
@@ -95,11 +94,10 @@ export default function TodosPage() {
                         return result
                     }).toString(),
                     is_hidden: todo.is_hidden,
-                    last_reply: todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply || "",
                     run_once: todo.run_once,
-                    frequency_type: todo.frequency_type,
-                    frequency_value: todo.frequency_value,
-                    start_date: String(todo.start_date),
+                    frequency_type: todo.frequency_type ? todo.frequency_type : "",
+                    frequency_value: todo.frequency_value ? todo.frequency_value : "",
+                    start_date: new Date(todo.start_date).toLocaleString(),
                     connected_user: todo.connected_user && todo.connected_user.username
                 })
         })

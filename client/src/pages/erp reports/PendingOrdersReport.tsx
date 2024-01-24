@@ -70,7 +70,7 @@ export default function PendingOrdersReportPage() {
     }
     useEffect(() => {
         if (filter) {
-            const searcher = new FuzzySearch(reports, ["report_owner", "account", "article"], {
+            const searcher = new FuzzySearch(reports, ["report_owner.state", "account", "article"], {
                 caseSensitive: false,
             });
             const result = searcher.search(filter);

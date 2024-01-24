@@ -246,7 +246,9 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                                 </IconButton>
                                                             </Tooltip> :
                                                             <Tooltip title="Start">
-                                                                <IconButton color="secondary"
+                                                                <IconButton
+                                                                    disabled={!todo.connected_user}
+                                                                    color="secondary"
                                                                     onClick={() => {
                                                                         setChoice({ type: TodoChoiceActions.start_todo })
                                                                         setTodo(todo)

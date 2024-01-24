@@ -269,7 +269,7 @@ export const StartAllTodos = async (req: Request, res: Response, next: NextFunct
     let { ids } = req.body as { ids: string[] }
     ids.forEach(async (id) => {
         let todo = await Todo.findById(id).populate('connected_user')
-        if (todo) {
+        if (todo && !todo.run_once && new Date(todo.start_date) > new Date()) {
             let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)
             if (client) {
                 todo_timeouts.forEach((item) => {
@@ -441,7 +441,6 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             let category: string | null = todo.category
             let category2: string | null = todo.category2
             let contacts: string | null = String(todo.contacts).toLowerCase()
-            let last_reply: string | null = todo.last_reply
             let frequency_type: string | null = String(todo.frequency_type).toLowerCase()
             let frequency_value: string | null = todo.frequency_value
             let start_date: string | null = todo.start_date
@@ -453,10 +452,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                 hidden = true
             let validated = true
 
-            if (!contacts) {
-                validated = false
-                statusText = "one contact required"
-            }
+
             if (serial_no && Number.isNaN(serial_no)) {
                 validated = false
                 statusText = "invalid serial number"
@@ -577,8 +573,8 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             }
 
             if (validated) {
-                if (!isvalidDate(start_date))
-                    start_date = new Date().toString()
+                console.log(new Date(start_date))
+                
                 if (todo._id || isMongoId(String(todo._id))) {
                     let newtodo = await Todo.findById(_id)
                     let newConNuser: IUser | null = null
@@ -605,9 +601,6 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             next_refresh_date = new Date(cron.sendAt(refresh_cron_string))
                         if (new_run_once && new Date(start_date) > new Date())
                             next_run_date = new Date(cron.sendAt(new Date(start_date)))
-                        let replies = newtodo.replies
-                        if (req.user)
-                            replies.push({ reply: last_reply, created_by: req.user, timestamp: new Date() })
                         await Todo.findByIdAndUpdate(newtodo._id, {
                             serial_no: Number(serial_no) || 0,
                             title: title,
@@ -626,7 +619,6 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             is_hidden: hidden,
                             is_active: false,
                             is_paused: false,
-                            replies: replies,
                             running_key: String(newtodo._id) + "todo",
                             refresh_key: String(newtodo._id) + "refresh",
                             contacts: newContacts,
@@ -636,6 +628,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                     }
                 }
                 if (!todo._id || !isMongoId(String(todo._id))) {
+
                     let tmptodo = await Todo.findOne({ title: title })
                     let newConNuser: IUser | null = null
                     if (connected_user) {
@@ -650,8 +643,6 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             new_run_once = true
                         else
                             new_run_once = false
-                        let replies = []
-                        replies.push({ reply: last_reply, created_by: req.user, timestamp: new Date() })
                         let cronstring = GetRunningCronString(frequency_type, frequency_value, new Date(start_date))
                         let refresh_cron_string = GetRefreshCronString(frequency_type, frequency_value, new Date(start_date))
                         let next_run_date = new Date()
@@ -672,13 +663,13 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             frequency_type: frequency_type,
                             frequency_value: frequency_value,
                             run_once: new_run_once,
-                            start_date: new Date(start_date),
+                            start_date: new Date(String(start_date)),
                             next_run_date: next_run_date,
                             next_refresh_date: next_refresh_date,
                             cron_string: cronstring,
                             connected_user: newConNuser?._id || undefined,
                             refresh_cron_string: refresh_cron_string,
-                            replies: replies,
+                            replies: [],
                             is_hidden: hidden,
                             is_active: false,
                             is_paused: false,

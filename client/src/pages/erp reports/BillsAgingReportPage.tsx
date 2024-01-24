@@ -50,7 +50,7 @@ export default function BillsAgingReportsPage() {
     }
     useEffect(() => {
         if (filter) {
-            const searcher = new FuzzySearch(reports, ["report_owner", "account"], {
+            const searcher = new FuzzySearch(reports, ["report_owner.state", "account"], {
                 caseSensitive: false,
             });
             const result = searcher.search(filter);
