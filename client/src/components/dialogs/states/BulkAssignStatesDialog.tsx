@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle, Typography, IconButton } from '@mui
 import { useContext, useEffect, useState } from 'react';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
-import { IState, IUser } from '../../../types/user.types';
+import {  IState, IUser } from '../../../types/user.types';
 import { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
 import { BackendError } from '../../..';
@@ -10,7 +10,7 @@ import { GetUsers } from '../../../services/UserServices';
 import BulkAssignStatesForm from '../../forms/states/BulkAssignStatesForm';
 
 
-function BulkAssignStatesDialog({ states }: { states: IState[] }) {
+function BulkAssignStatesDialog({ states }: { states: { state: IState, users: IUser[] }[] }) {
     const [users, setUsers] = useState<IUser[]>([])
     const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { choice, setChoice } = useContext(ChoiceContext)

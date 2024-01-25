@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import xlsx from "xlsx";
-import { IState } from "../types/user.types";
+import { IState, IUser } from "../types/user.types";
 import { IBillsAgingReport, IPendingOrdersReport } from "../types/erp_report.types";
 import { BillsAgingReport } from "../models/erp_reports/bills_aging_model";
 import { State } from "../models/users/state.model";
@@ -9,9 +9,15 @@ import { User } from "../models/users/user.model";
 
 //get
 export const GetAllStates = async (req: Request, res: Response, next: NextFunction) => {
-    let states = await State.find().populate('updated_by').populate('created_by')
-    return res.status(200).json(states)
+    let result: { state: IState, users: IUser[] }[] = []
+    let states = await State.find()
+    for (let i = 0; i < states.length; i++) {
+        let users = await User.find({ assigned_states: states[i]._id })
+        result.push({ state: states[i], users: users })
+    }
+    return res.status(200).json(result)
 }
+
 export const CreateState = async (req: Request, res: Response, next: NextFunction) => {
     const { state } = req.body as {
         state: string

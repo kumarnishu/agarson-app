@@ -3,10 +3,10 @@ import { useContext } from 'react';
 import { Cancel } from '@mui/icons-material';
 import { ChoiceContext, UserChoiceActions } from '../../../contexts/dialogContext';
 import UpdateStateForm from '../../forms/states/UpdateStateForm';
-import { IState } from '../../../types/user.types';
+import { IState, IUser } from '../../../types/user.types';
 
 
-function UpdateStateDialog({ state }: { state: IState }) {
+function UpdateStateDialog({ state }: { state: { state: IState, users: IUser[] } }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
         <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === UserChoiceActions.update_state ? true : false}
@@ -20,7 +20,7 @@ function UpdateStateDialog({ state }: { state: IState }) {
             </DialogTitle>
 
             <DialogContent>
-                <UpdateStateForm state={state} />
+                <UpdateStateForm state={state.state} />
             </DialogContent>
             <Stack
                 direction="column"

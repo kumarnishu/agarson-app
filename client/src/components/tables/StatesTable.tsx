@@ -6,21 +6,21 @@ import PopUp from '../popup/PopUp'
 import { Edit } from '@mui/icons-material'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { IState } from '../../types/user.types'
 import UpdateStateDialog from '../dialogs/states/UpdateStateDialog'
+import { IState, IUser } from '../../types/user.types'
 
 
 type Props = {
-    state: IState | undefined,
-    setState: React.Dispatch<React.SetStateAction<IState | undefined>>,
+    state: { state: IState, users: IUser[] } | undefined,
+    setState: React.Dispatch<React.SetStateAction<{ state: IState, users: IUser[] } | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    states: IState[],
-    selectedStates: IState[]
-    setSelectedStates: React.Dispatch<React.SetStateAction<IState[]>>,
+    states: { state: IState, users: IUser[] }[],
+    selectedStates: { state: IState, users: IUser[] }[]
+    setSelectedStates: React.Dispatch<React.SetStateAction<{ state: IState, users: IUser[] }[]>>,
 }
 function StatesTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
-    const [data, setData] = useState<IState[]>(states)
+    const [data, setData] = useState<{ state: IState, users: IUser[] }[]>(states)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
@@ -67,36 +67,23 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                             <STableHeadCell
                             >
 
-                                State 
-
-                            </STableHeadCell>
-                           
-
-                            <STableHeadCell
-                            >
-
-                                Created At
+                                State
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Created By
+                               Users
 
                             </STableHeadCell>
+
                             <STableHeadCell
                             >
 
-                                Updated At
+                                Timestamp
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Updated By
-
-                            </STableHeadCell>
-
+                          
 
                         </STableRow>
                     </STableHead>
@@ -131,7 +118,7 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                                                         }
                                                         if (!e.target.checked) {
                                                             setSelectedStates((states) => states.filter((item) => {
-                                                                return item._id !== state._id
+                                                                return item.state._id !== state.state._id
                                                             }))
                                                         }
                                                     }}
@@ -167,23 +154,15 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
 
                                             </STableCell>}
                                         <STableCell>
-                                            {state.state}
-                                        </STableCell>
-
-                                        <STableCell>
-                                            {state.created_at && new Date(state.created_at).toLocaleString()}
+                                            {state.state.state}
                                         </STableCell>
                                         <STableCell>
-                                            {state.created_by.username}
+                                            {state.users.map((u) => { return u.username }).toString()}
                                         </STableCell>
                                         <STableCell>
-                                            {state.updated_at && new Date(state.updated_at).toLocaleString()}
+                                            {state.state.updated_at && new Date(state.state.updated_at).toLocaleString()}
                                         </STableCell>
-
-                                        <STableCell>
-                                            {state.updated_by.username}
-                                        </STableCell>
-
+                                
                                     </STableRow>
                                 )
                             })}

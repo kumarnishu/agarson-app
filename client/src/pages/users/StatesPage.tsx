@@ -13,33 +13,35 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { IState } from '../../types/user.types'
 import { GetStates } from '../../services/ErpServices'
 import CreateStateDialog from '../../components/dialogs/states/CreateStateDialog'
 import StatesTable from '../../components/tables/StatesTable'
 import UploadStatesFromExcelButton from '../../components/buttons/UploadStatesButton'
 import BulkAssignStatesDialog from '../../components/dialogs/states/BulkAssignStatesDialog'
+import { IState, IUser } from '../../types/user.types'
 
 
 type SelectedData = {
   state?: string,
+  users?: string,
   created_at?: string,
   updated_at?: string
 }
 let template: SelectedData[] = [
   {
     state: "Goa",
+    users: "nishu,rahul"
   }
 ]
 
 export default function StatePage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IState[]>, BackendError>("states", GetStates)
-  const [state, setState] = useState<IState>()
-  const [states, setStates] = useState<IState[]>([])
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("states", GetStates)
+  const [state, setState] = useState<{ state: IState, users: IUser[] }>()
+  const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => states, [states])
-  const [preFilteredData, setPreFilteredData] = useState<IState[]>([])
-  const [selectedStates, setSelectedStates] = useState<IState[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<{ state: IState, users: IUser[] }[]>([])
+  const [selectedStates, setSelectedStates] = useState<{ state: IState, users: IUser[] }[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const [selectedData, setSelectedData] = useState<SelectedData[]>(template)
   const [sent, setSent] = useState(false)
@@ -68,9 +70,10 @@ export default function StatePage() {
     let data: SelectedData[] = []
     selectedStates.map((state) => {
       return data.push({
-        state: state.state,
-        created_at: new Date(state.created_at).toLocaleDateString(),
-        updated_at: new Date(state.updated_at).toLocaleDateString()
+        state: state.state.state,
+        users: state.users.map((u) => { return u.username }).toString(),
+        created_at: new Date(state.state.created_at).toLocaleDateString(),
+        updated_at: new Date(state.state.updated_at).toLocaleDateString()
       })
     })
     if (data.length > 0)
@@ -88,7 +91,7 @@ export default function StatePage() {
   useEffect(() => {
     if (filter) {
       if (states) {
-        const searcher = new FuzzySearch(states, ["state"], {
+        const searcher = new FuzzySearch(states, ["state.state", "users.username"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);

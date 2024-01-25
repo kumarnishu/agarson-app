@@ -8,11 +8,11 @@ import { ChoiceContext, UserChoiceActions } from '../../../contexts/dialogContex
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IState, IUser } from '../../../types/user.types';
+import {  IState, IUser } from '../../../types/user.types';
 import { AssignStates } from '../../../services/ErpServices';
 
 
-function BulkAssignStatesForm({ states, users }: { states: IState[], users: IUser[] }) {
+function BulkAssignStatesForm({ states, users }: { states: { state: IState, users: IUser[] }[], users: IUser[] }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: {
@@ -34,7 +34,7 @@ function BulkAssignStatesForm({ states, users }: { states: IState[], users: IUse
     }>({
         initialValues: {
             states: states.map((state) => {
-                return state._id
+                return state.state._id
             }),
             state_owners: ['']
         },
