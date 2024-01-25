@@ -149,7 +149,7 @@ export default function PendingOrdersReportPage() {
             {/* table */}
             {isLoading && <TableSkeleton />}
             {!isLoading && <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '76vh'
             }}>
                 <STable
@@ -157,7 +157,7 @@ export default function PendingOrdersReportPage() {
                     <STableHead
                     >
                         <STableRow>
-                            <STableHeadCell
+                            <STableHeadCell style={{ padding: '8px' }}
                             >
                                 Date
                             </STableHeadCell>
@@ -175,7 +175,7 @@ export default function PendingOrdersReportPage() {
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                Sum Total
+                                Total
                             </STableHeadCell>
                             {reports.find((r) => r.size5 > 0) && <STableHeadCell
                             >
@@ -431,96 +431,96 @@ export default function PendingOrdersReportPage() {
                             </STableCell>
                             {reports.find((r) => r.size5 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size5) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size5) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size6 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size6) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size7 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size7) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size7) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size8 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size8) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size8) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size9 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size9) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size9) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size10 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size10) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size10) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size11 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size11) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size12_24pairs > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size12_24pairs) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size12_24pairs) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size13 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size13) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size13) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size11x12 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size11x12) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11x12) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size3 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size3) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size3) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size4 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size4) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size4) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size6to10 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size6to10) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to10) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size7to10 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size7to10) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size4to8 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size4to8) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size4to8) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size6to9 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size6to9) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to9) }, 0).toFixed()}</b>
                             </STableCell>}
 
                             {reports.find((r) => r.size5to8 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size5to8) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size5to8) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size6to10A > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size6to10A) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to10A) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size7to10B > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size7to10B) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10B) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size6to9A > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size6to9A) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to9A) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size11close > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size11close) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11close) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size11to13 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size11to13) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11to13) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size3to8 > 0) && <STableCell
                             >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.size3to8) }, 0).toFixed()}
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size3to8) }, 0).toFixed()}</b>
                             </STableCell>}
                         </STableRow>
                     </STableBody>

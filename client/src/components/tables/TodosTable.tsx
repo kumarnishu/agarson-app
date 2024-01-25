@@ -41,7 +41,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '78vh'
             }}>
                 <STable>

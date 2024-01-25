@@ -131,7 +131,7 @@ export default function BillsAgingReportsPage() {
             {/* table */}
             {isLoading && <TableSkeleton />}
             {!isLoading && <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '76vh'
             }}>
                 <STable
@@ -141,7 +141,7 @@ export default function BillsAgingReportsPage() {
                     >
                         <STableRow >
 
-                            <STableHeadCell
+                            <STableHeadCell style={{ padding: '8px' }}
                             >
                                 Date
                             </STableHeadCell>
@@ -153,6 +153,10 @@ export default function BillsAgingReportsPage() {
                             <STableHeadCell
                             >
                                 Account
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                Total
                             </STableHeadCell>
                             <STableHeadCell
                             >
@@ -170,10 +174,7 @@ export default function BillsAgingReportsPage() {
                             >
                                 {'>120'}
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Total
-                            </STableHeadCell>
+
                         </STableRow>
                     </STableHead>
                     <STableBody >
@@ -193,6 +194,9 @@ export default function BillsAgingReportsPage() {
                                             {report.account && report.account.slice(0, 20)}
                                         </STableCell>
                                         <STableCell>
+                                            <b> {Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120)}</b>
+                                        </STableCell>
+                                        <STableCell>
                                             {report.plu70 ? String(report.plu70) : ""}
                                         </STableCell>
                                         <STableCell>
@@ -204,37 +208,38 @@ export default function BillsAgingReportsPage() {
                                         <STableCell>
                                             {report.plus120 ? String(report.plus120) : ""}
                                         </STableCell>
-                                        <STableCell>
-                                            <b> {Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120)}</b>
-                                        </STableCell>
+
                                     </STableRow>
                                 )
                             })}
-                        <STableCell>
+                        <STableRow >
+                            <STableCell>
 
-                        </STableCell>
-                        <STableCell>
-                            <b> Total</b>
-                        </STableCell>
-                        <STableCell>
+                            </STableCell>
+                            <STableCell>
+                                <b> Total</b>
+                            </STableCell>
+                            <STableCell>
 
-                        </STableCell>
-                        <STableCell>
-                            <b> {reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()}</b>
-                        </STableCell>
-                        <STableCell>
-                            <b> {reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()}</b>
-                        </STableCell>
-                        <STableCell>
-                            <b> {reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()}</b>
-                        </STableCell>
-                        <STableCell>
-                            <b> {reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()}</b>
-                        </STableCell>
-                        <STableCell>
-                            <b> {(reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0)).toFixed()
-                            }</b>
-                        </STableCell>
+                            </STableCell>
+                            <STableCell>
+                                <b> {reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()}</b>
+                            </STableCell>
+                            <STableCell>
+                                <b> {reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()}</b>
+                            </STableCell>
+                            <STableCell>
+                                <b> {reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()}</b>
+                            </STableCell>
+                            <STableCell>
+                                <b> {reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()}</b>
+                            </STableCell>
+                            <STableCell>
+                                <b> {(reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0)).toFixed()
+                                }</b>
+                            </STableCell>
+                        </STableRow>
+
                     </STableBody>
                 </STable>
 
