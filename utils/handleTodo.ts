@@ -20,9 +20,11 @@ export async function HandleTodoMessage(todo: ITodo, client: any) {
                             if (report?.status !== "done") {
                                 const timeout = setTimeout(async () => {
                                     let mobile = report.mobile
+                                    let title = todo.title && todo.title.replaceAll("\\n", "\n")
+                                    let subtitle = todo.subtitle && todo.subtitle.replaceAll("\\n", "\n")
                                     console.log("sending message to", mobile)
                                     let contacts = todo.contacts
-                                    client.sendMessage("91" + mobile + "@s.whatsapp.net", { text: todo.title + "\n" + todo.subtitle })
+                                    client.sendMessage("91" + mobile + "@s.whatsapp.net", { text: title + "\n" + subtitle })
                                     contacts = contacts.map((contact) => {
                                         if (contact.mobile === mobile) {
                                             contact.is_sent = true
@@ -91,8 +93,10 @@ export async function HandleTodoMessage(todo: ITodo, client: any) {
                             const timeout = setTimeout(async () => {
                                 let mobile = report.mobile
                                 let contacts = todo.contacts
+                                let title = todo.title && todo.title.replaceAll("\\n", "\n")
+                                let subtitle = todo.subtitle && todo.subtitle.replaceAll("\\n", "\n")
                                 console.log("sending run once todo")
-                                client.sendMessage("91" + mobile + "@s.whatsapp.net", { text: todo.title + "\n" + todo.subtitle })
+                                client.sendMessage("91" + mobile + "@s.whatsapp.net", { text: title + "\n" + subtitle })
                                 contacts = contacts.map((contact) => {
                                     if (contact.mobile === mobile) {
                                         contact.is_sent = true

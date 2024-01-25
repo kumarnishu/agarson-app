@@ -33,7 +33,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '70vh'
             }}>
                 <STable

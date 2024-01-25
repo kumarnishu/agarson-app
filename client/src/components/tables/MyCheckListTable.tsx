@@ -29,7 +29,7 @@ function MyChecklistTable({ checklist, checklists, setChecklist, dates }: Props)
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '80vh'
             }}>
                 <STable

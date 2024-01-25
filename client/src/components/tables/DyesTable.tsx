@@ -31,7 +31,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '80vh'
             }}>
                 <STable

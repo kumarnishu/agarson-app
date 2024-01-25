@@ -42,7 +42,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
   return (
     <>
       <Box sx={{
-        overflow: "scroll",
+        overflow: "auto",
         height: '80vh'
       }}>
         <STable>

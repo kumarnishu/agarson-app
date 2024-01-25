@@ -35,7 +35,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '80vh'
             }}>
                 <STable

@@ -30,7 +30,7 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '80vh'
             }}>
                 <STable

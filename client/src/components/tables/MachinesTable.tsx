@@ -31,7 +31,7 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '80vh'
             }}>
                 <STable

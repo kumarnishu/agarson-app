@@ -49,7 +49,7 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '80vh'
             }}>
                 <STable

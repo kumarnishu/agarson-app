@@ -31,7 +31,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '80vh'
             }}>
                 <STable

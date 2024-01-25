@@ -165,12 +165,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                 connected No
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                               Start Date
-
-                            </STableHeadCell>
+                           
 
                         </STableRow>
                     </STableHead>
@@ -389,9 +384,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         <STableCell>
                                             {todo.connected_user && todo.connected_user.connected_number?.split(":")[0]}
                                         </STableCell>
-                                        <STableCell>
-                                            {todo.start_date && new Date(todo.start_date).toLocaleString()}
-                                        </STableCell>
+                                       
                                     </STableRow>
                                 )
                             })

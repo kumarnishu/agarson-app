@@ -32,7 +32,7 @@ function AttendenceTable({ attendences, attendence, selectedAttendeces, setSelec
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '70vh'
             }}>
                 <STable

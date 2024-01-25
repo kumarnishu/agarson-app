@@ -33,7 +33,7 @@ function MyTodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedT
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '80vh'
             }}>
                 <STable>

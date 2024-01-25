@@ -41,7 +41,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
     return (
         <>
             <Box sx={{
-                overflow: "scroll",
+                overflow: "auto",
                 height: '80vh'
             }}>
                 <STable
