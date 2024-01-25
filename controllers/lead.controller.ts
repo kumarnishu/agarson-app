@@ -3671,12 +3671,13 @@ export const GetBroadcast = async (req: Request, res: Response, next: NextFuncti
 export const StartBroadcast = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
-    let cron_string = GetDailyBroadcastCronString()
-    let broadcast = await Broadcast.findById(id)
+
+    let broadcast = await Broadcast.findById(id).populate('connected_users')
     if (!broadcast) {
         return res.status(404).json({ message: "broadcast not found" })
     }
     let clientids: string[] = broadcast.connected_users.map((user) => { return user.client_id })
+    console.log(clientids)
     let newclients = clients.filter((client) => {
         if (clientids.includes(client.client_id))
             return client
@@ -3687,9 +3688,8 @@ export const StartBroadcast = async (req: Request, res: Response, next: NextFunc
     await Broadcast.findByIdAndUpdate(id, {
         is_active: true,
         is_paused: false,
-        cron_string: cron_string,
-        counter: 0,
-        next_run_date: new Date(cron.sendAt(cron_string))
+        next_run_date: new Date(cron.sendAt(broadcast.cron_string)),
+        counter: 0
     })
 
     await handleBroadcast(broadcast, newclients)
@@ -3718,6 +3718,7 @@ export const CreateBroadcast = async (req: Request, res: Response, next: NextFun
         templates,
         is_random_template,
         daily_limit,
+        cron_string: GetDailyBroadcastCronString(),
         time_gap,
         autoRefresh,
         created_at: new Date(),
