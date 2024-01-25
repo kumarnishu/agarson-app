@@ -95,12 +95,9 @@ function RefreshWhatsappDialog() {
 
                         </option>
                         {usersData && usersData.data && usersData.data.map((user, index) => {
-                            if (!user.connected_number)
-                                return (<option key={index} value={user.client_id}>
-                                    {user.username}
-                                </option>)
-                            else
-                                return null
+                            return (<option key={index} value={user.client_id}>
+                                {user.username}
+                            </option>)
                         })
                         }
                     </TextField>}
