@@ -246,7 +246,6 @@ export const BulkPendingOrderReportFromExcel = async (req: Request, res: Respons
             let article: string | null = String(report.article)
             let product_family: string | null = String(report.product_family)
             let state: string | null = String(report.report_owner)
-            let sum_total: number | null = Number(report.sum_total)
             let size5: number | null = Number(report.size5)
             let size6: number | null = Number(report.size6)
             let size7: number | null = Number(report.size7)
@@ -294,7 +293,6 @@ export const BulkPendingOrderReportFromExcel = async (req: Request, res: Respons
                         product_family: product_family,
                         state: state,
                         size5: size5 || 0,
-                        sum_total: sum_total || 0,
                         size6: size6 || 0,
                         size7: size7 || 0,
                         size8: size8 || 0,

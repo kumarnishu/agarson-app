@@ -9,7 +9,6 @@ const PendingOrdersReportSchema = new mongoose.Schema<IPendingOrdersReport, mong
     account: String,
     product_family: String,
     article: String,
-    sum_total: Number,
     size5: Number,
     size6: Number,
     size7: Number,

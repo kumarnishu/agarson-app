@@ -15,6 +15,7 @@ import { Download, Search } from '@mui/icons-material'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import FuzzySearch from 'fuzzy-search'
+import moment from 'moment'
 
 
 export default function BillsAgingReportsPage() {
@@ -142,7 +143,7 @@ export default function BillsAgingReportsPage() {
 
                             <STableHeadCell
                             >
-                                No.
+                                Date
                             </STableHeadCell>
                             <STableHeadCell
                             >
@@ -183,7 +184,7 @@ export default function BillsAgingReportsPage() {
                                         key={index}
                                     >
                                         <STableCell>
-                                            {index + 1}
+                                            {report.created_at && moment(new Date(report.created_at)).format('DD/MM/YY')}
                                         </STableCell>
                                         <STableCell>
                                             {report.report_owner && report.report_owner.state}
