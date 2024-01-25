@@ -339,23 +339,14 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-    owner.greetings_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
+   
     owner.visit_access_fields = {
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
 
-    owner.reports_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
-
+   
     owner.crm_access_fields = {
         is_hidden: false,
         is_editable: true,
@@ -466,17 +457,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-    user.greetings_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-
-    user.reports_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
+   
     user.crm_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -595,8 +576,6 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
         todos_access_fields,
         checklists_access_fields,
         visit_access_fields,
-        reports_access_fields,
-        greetings_access_fields,
         erp_access_fields,
         productions_access_fields
 
@@ -615,9 +594,7 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
         backup_access_fields,
         todos_access_fields,
         checklists_access_fields,
-        reports_access_fields,
         visit_access_fields,
-        greetings_access_fields,
         erp_access_fields,
         productions_access_fields
     })
@@ -663,13 +640,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-    if (feature === Feature.bot) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                bot_access_fields: data.access
-            })
-        })
-    }
+    
     if (feature === Feature.erp_reports) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
@@ -691,12 +662,6 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
                 todos_access_fields: data.access
             })
         })
-    } if (feature === Feature.reports) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                reports_access_fields: data.access
-            })
-        })
     }
 
     if (feature === Feature.checklists) {
@@ -706,13 +671,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-    if (feature === Feature.greetings) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                greetings_access_fields: data.access
-            })
-        })
-    }
+   
     if (feature === Feature.visit) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {

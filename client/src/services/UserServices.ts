@@ -8,9 +8,7 @@ export type AccessTypes = {
   templates_access_fields: FeatureAccess,
   backup_access_fields: FeatureAccess,
   checklists_access_fields: FeatureAccess,
-  reports_access_fields: FeatureAccess,
   visit_access_fields: FeatureAccess,
-  greetings_access_fields: FeatureAccess,
   erp_access_fields: FeatureAccess,
   productions_access_fields: FeatureAccess
 

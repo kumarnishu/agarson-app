@@ -1,6 +1,5 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
-import { } from "../controllers/greeting.controller";
 import { BulkCreateTodoFromExcel, CreateTodo, DeleteTodo, GetMyTodos, GetTodos, StartAllTodos, StartTodo, StopAllTodos, StopTodo, ToogleHideTodo, UpdateStatus, UpdateTodo } from "../controllers/todo.controller";
 import { upload } from "./user.routes";
 

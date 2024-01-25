@@ -38,6 +38,17 @@ const template: ITodoTemplate[] = [
         connected_user: 'nishu'
     }
 ]
+
+let help1 = [
+    { frequency_type: "minutes", frequency_value: "2", remark: "repeat after every 2 minutes starting from 1-59" },
+    { frequency_type: "hours", frequency_value: "3", remark: "repeat after every 3 hours starting from 1-23" },
+    { frequency_type: "days", frequency_value: "1", remark: "repeat after every 1 days starting from 1-23, time will be picked from start date" },
+    { frequency_type: "weekdays", frequency_value: "1,2,3", remark: "repeat after every weeks on selected days starting from 1-7,time will picked from start date" },
+    { frequency_type: "monthdays", frequency_value: "1,2,3", remark: "repeat every months on selected dates starting from 1-31,time will picked from start date" },
+    { frequency_type: "months", frequency_value: "1-2,3,4", remark: "repeat on selected month at selected dates starting from 1-31,month will be picked from first frequency value seperated by [-] and time will picked from start date" },
+    { frequency_type: "yeardays", frequency_value: "1,2,3", remark: "repeat on selected days of selcted month in every year,month and time will picked from start date" },
+]
+
 export default function TodosPage() {
     const [users, setUsers] = useState<IUser[]>([])
     const [hidden, setHidden] = useState(false)
@@ -60,19 +71,11 @@ export default function TodosPage() {
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+    let help2 = users.map((u) => { return { username: u.username, mobile: u.mobile } })
     function handleExcel() {
         setAnchorEl(null)
         try {
-            ExportToExcel(selectedData, "todos_data", [
-                { frequency_type: "minutes", frequency_value: "2", remark: "repeat after every 2 minutes starting from 1-59" },
-                { frequency_type: "hours", frequency_value: "3", remark: "repeat after every 3 hours starting from 1-23" },
-                { frequency_type: "days", frequency_value: "1", remark: "repeat after every 1 days starting from 1-23, time will be picked from start date" },
-                { frequency_type: "weekdays", frequency_value: "1,2,3", remark: "repeat after every weeks on selected days starting from 1-7,time will picked from start date" },
-                { frequency_type: "monthdays", frequency_value: "1,2,3", remark: "repeat every months on selected dates starting from 1-31,time will picked from start date" },
-                { frequency_type: "months", frequency_value: "1-2,3,4", remark: "repeat on selected month at selected dates starting from 1-31,month will be picked from first frequency value seperated by [-] and time will picked from start date" },
-                { frequency_type: "yeardays", frequency_value: "1,2,3", remark: "repeat on selected days of selcted month in every year,month and time will picked from start date" },
-            ])
+            ExportToExcel(selectedData, "todos_data", [help1, help2])
             setSent(true)
             setSelectAll(false)
             setSelectedData([])

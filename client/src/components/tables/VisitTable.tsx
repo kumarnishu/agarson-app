@@ -88,7 +88,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                 No
 
                             </STableHeadCell>
-                           
+
                             <STableHeadCell
                             >
 
@@ -334,7 +334,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                                                                     <Comment />
                                                                                 </IconButton>
                                                                             </Tooltip>}
-                                                                        {user?.reports_access_fields.is_editable &&
+                                                                        {user.is_admin && user?.visit_access_fields.is_editable &&
                                                                             <Tooltip title="brijesh input">
                                                                                 <IconButton color="primary"
                                                                                     onClick={() => {

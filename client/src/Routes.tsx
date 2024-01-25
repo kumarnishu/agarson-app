@@ -17,12 +17,8 @@ import TemplatesNavBar from './components/navbar/TemplatesNavBar'
 import TemplatesDashboard from './dashboards/TemplatesDashboard.tsx'
 import ChecklistDashboard from './dashboards/ChecklistDashboard.tsx'
 import CheckListNavBar from './components/navbar/CheckListNavBar'
-import ReportsNavBar from './components/navbar/ReportsNavBar'
-import ReportsDashboard from './dashboards/ReportsDashboard'
 import PasswordNavbar from './components/navbar/ErpNavbar.tsx'
-import GreetingsNavBar from './components/navbar/GreetingsNavBar.tsx'
 import BackupDashboard from './dashboards/BackupDashboard.tsx'
-import GreetingsDashboard from './dashboards/GreetingsDashboard.tsx'
 import ErpReportsDashboard from './dashboards/ErpReportsDashboard.tsx'
 import TodoNavBar from './components/navbar/TodoNavbar.tsx'
 import TodoDashboard from './dashboards/TodoDashboard.tsx'
@@ -48,8 +44,6 @@ const CheckListHelpPage = React.lazy(() => import('./pages/checklists/CheckListH
 const MyVisitPage = React.lazy(() => import('./pages/visit/MyVisitPage'))
 const VisitAdminPage = React.lazy(() => import('./pages/visit/VisitAdminPage'))
 const UpdateTemplateCategoriesPage = React.lazy(() => import('./pages/templates/UpdateTemplateCategoriesPage.tsx'))
-const GreetingsHelpPage = React.lazy(() => import('./pages/greetings/GreetingsHelpPage.tsx'))
-const GreetingsPage = React.lazy(() => import('./pages/greetings/GreetingsPage.tsx'))
 const AccessReportPage = React.lazy(() => import('./pages/users/FeatureWiseAccessReportPage.tsx'))
 const ProductionAdminPage = React.lazy(() => import('./pages/production/ProductionAdminPage.tsx'))
 const MachinesPage = React.lazy(() => import('./pages/production/MachinesPage.tsx'))
@@ -76,12 +70,10 @@ export enum paths {
   //dashboards
   user_dashboard = "/user_dashboard",
   crm_dashboard = "/crm_dashboard",
-  reports_dashboard = "/reports_dashboard",
   production_dashboard = "/production_dashboard",
   templates_dashboard = "/templates_dashboard",
   erp_dashboard = "/erp_dashboard",
   backup_dashboard = "/backup_dashboard",
-  greetings_dashboard = "/greetings_dashboard",
   checklist_dashboard = "/checklist_dashboard",
   visit_dashboard = "/visit_dashboard",
   todo_dashboard = "/todo_dashboard",
@@ -142,12 +134,7 @@ export enum paths {
   articles = "articles",
 
 
-  //reports
-  reports = "reports",
-  leads_report = "leads_report",
-  tour_reports = "tour_reports",
-
-
+ 
   // greeting
   greetings = "greetings",
 
@@ -459,30 +446,6 @@ function AppRoutes() {
               />
 
             </Route>}
-
-          {!user.reports_access_fields.is_hidden &&
-            < Route path={paths.reports_dashboard} element={<ReportsNavBar />
-            }>
-              <Route
-                index element={
-                  <ReportsDashboard />
-                }
-              />
-              <Route path={paths.reports_dashboard} element={
-                <ReportsDashboard />
-              }
-              />
-              <Route path={paths.tour_reports} element={
-                <Suspense fallback={<LinearProgress />}><VisitAdminPage /></Suspense>
-              }
-              />
-              <Route path={paths.leads_report} element={
-                <Suspense fallback={<LinearProgress />}>< CrmActivitiesPage /></Suspense>
-              }
-              />
-            </Route>}
-
-
           {!user.erp_access_fields.is_hidden &&
             < Route path={paths.erp_dashboard} element={<PasswordNavbar />
             }>
@@ -511,34 +474,7 @@ function AppRoutes() {
               />
             </Route>}
 
-          {!user.greetings_access_fields.is_hidden &&
-            < Route path={paths.greetings_dashboard} element={<GreetingsNavBar />
-            }>
-              <Route
-                index element={
-                  <GreetingsDashboard />
-                }
-              />
-              <Route path={paths.greetings_dashboard} element={
-                < GreetingsDashboard />
-              }
-              />
-              <Route path={paths.greetings} element={
-                <Suspense fallback={<LinearProgress />}>
-
-                  < GreetingsPage />
-                </Suspense>
-              }
-              />
-              <Route
-                path={paths.greetings_help_page} element={
-                  <Suspense fallback={<LinearProgress />}>
-
-                    <GreetingsHelpPage />
-                  </Suspense>
-                }
-              />
-            </Route>}
+        
 
 
           {!user.backup_access_fields.is_hidden &&

@@ -20,9 +20,7 @@ function AccessControlForm({ user }: { user: IUser }) {
         templates_access_fields: user.templates_access_fields,
         backup_access_fields: user.backup_access_fields,
         checklists_access_fields: user.checklists_access_fields,
-        reports_access_fields: user.reports_access_fields,
         visit_access_fields: user.visit_access_fields,
-        greetings_access_fields: user.greetings_access_fields,
         erp_access_fields: user.erp_access_fields,
         productions_access_fields: user.productions_access_fields
     })
@@ -496,64 +494,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                                 />
                             </STableCell>
                         </STableRow>
-                        {/* reports access  */}
-                        <STableRow
-                        >
-
-                            <STableCell                 >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    <Typography variant="button">Reports
-                                    </Typography>
-                                </Stack>
-                            </STableCell>
-                            <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.reports_access_fields.is_editable)}
-                                    onChange={() => setAccessFields(
-                                        {
-                                            ...AccessFields,
-                                            reports_access_fields: {
-                                                is_editable: Boolean(!AccessFields.reports_access_fields.is_editable),
-                                                is_hidden: Boolean(AccessFields.reports_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(AccessFields.reports_access_fields.is_deletion_allowed),
-                                            }
-                                        })}
-
-                                />
-                            </STableCell>
-
-                            <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.reports_access_fields.is_hidden)}
-                                    onChange={() => setAccessFields(
-                                        {
-                                            ...AccessFields,
-                                            reports_access_fields: {
-                                                is_editable: Boolean(AccessFields.reports_access_fields.is_editable),
-                                                is_hidden: Boolean(!AccessFields.reports_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(AccessFields.reports_access_fields.is_deletion_allowed),
-                                            }
-                                        })}
-
-                                />
-                            </STableCell>
-                            <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.reports_access_fields.is_deletion_allowed)}
-                                    onChange={() => setAccessFields(
-                                        {
-                                            ...AccessFields,
-                                            reports_access_fields: {
-                                                is_editable: Boolean(AccessFields.reports_access_fields.is_editable),
-                                                is_hidden: Boolean(AccessFields.reports_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(!AccessFields.reports_access_fields.is_deletion_allowed),
-                                            }
-                                        })}
-                                />
-                            </STableCell>
-                        </STableRow>
+                      
                         {/* templates access fields */}
                         <STableRow
                         >
@@ -682,68 +623,7 @@ function AccessControlForm({ user }: { user: IUser }) {
                             </STableCell>
                         </STableRow>
 
-                        {/* greetings access fields */}
-                        <STableRow
-                        >
-
-                            <STableCell                 >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="left"
-                                    alignItems="left"
-                                    spacing={2}
-                                >
-                                    <Typography variant="button">Greetings
-                                    </Typography>
-                                </Stack>
-                            </STableCell>
-                            <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.greetings_access_fields.is_editable)}
-                                    onChange={() => setAccessFields(
-                                        {
-                                            ...AccessFields,
-                                            greetings_access_fields: {
-                                                is_editable: Boolean(!AccessFields.greetings_access_fields.is_editable),
-
-                                                is_hidden: Boolean(AccessFields.greetings_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(AccessFields.greetings_access_fields.is_deletion_allowed),
-                                            }
-                                        })}
-
-                                />
-                            </STableCell>
-
-                            <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.greetings_access_fields.is_hidden)}
-                                    onChange={() => setAccessFields(
-                                        {
-                                            ...AccessFields,
-                                            greetings_access_fields: {
-                                                is_editable: Boolean(AccessFields.greetings_access_fields.is_editable),
-
-                                                is_hidden: Boolean(!AccessFields.greetings_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(AccessFields.greetings_access_fields.is_deletion_allowed),
-                                            }
-                                        })}
-
-                                />
-                            </STableCell>
-                            <STableCell>
-                                <Checkbox size="small" checked={Boolean(AccessFields.greetings_access_fields.is_deletion_allowed)}
-                                    onChange={() => setAccessFields(
-                                        {
-                                            ...AccessFields,
-                                            greetings_access_fields: {
-                                                is_editable: Boolean(AccessFields.greetings_access_fields.is_editable),
-
-                                                is_hidden: Boolean(AccessFields.greetings_access_fields.is_hidden),
-                                                is_deletion_allowed: Boolean(!AccessFields.greetings_access_fields.is_deletion_allowed),
-                                            }
-                                        })}
-
-                                />
-                            </STableCell>
-                        </STableRow>
+                      
                         {/* password access fields */}
                         <STableRow
                         >

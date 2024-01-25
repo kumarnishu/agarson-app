@@ -8,12 +8,9 @@ export enum Feature {
     crm = "crm",
     checklists = "checklists",
     productions = "productions",
-    reports = "reports",
     visit = "visit",
-    bot = "bot",
     todos = "todos",
     backup = "backup",
-    greetings = "greetings",
     templates = "templates",
     erp_reports = "erp reports",
 }

@@ -604,7 +604,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             subtitle: subtitle,
                             category: category,
                             category2: category2,
-                            connected_user: newConNuser?._id || undefined,
+                            connected_user: newConNuser?._id || null,
                             run_once: new_run_once,
                             start_date: new Date(start_date),
                             cron_string: cronstring,
