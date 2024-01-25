@@ -1,7 +1,6 @@
 import PdfPrinter from "pdfmake"
 import path from "path"
 import { Content } from "pdfmake/interfaces"
-import { imageUrlToBase64 } from "./UrlToBase64"
 import fs from "fs"
 import { User } from "../models/users/user.model"
 import { ReportManager } from "../app"

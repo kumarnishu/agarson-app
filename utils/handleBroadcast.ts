@@ -32,18 +32,47 @@ export async function handleReports(i: number, client: any, limit: number, broad
     let templates = broadcast.templates
     let timeinsec = 5000
     let tmpreports = await Lead.find({ stage: { $ne: 'useless' }, is_sent: false }).sort('-created_at').skip((i + 1 - 1) * limit).limit(limit)
-    for (let j = 0; j < tmpreports.length; j++) {
-        let report = tmpreports[j]
-        console.log("no of tmp reports", tmpreports.length)
+    for (let j = 0; j < tmpreports.length; j = j + 5) {
         let timeout = setTimeout(async () => {
             let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')
             if (latest_broadcast && latest_broadcast?.is_active && !latest_broadcast?.is_paused) {
-                let mobile = "91" + String(report.mobile) + "@s.whatsapp.net"
-                console.log("Sending to", mobile, "from", client.client_id)
-                await sendTemplates(client.client, mobile, templates, is_random, broadcast)
-                report.last_whatsapp = new Date()
-                report.is_sent = true
-                await report.save()
+                //report1
+                let mobile1 = "91" + String(tmpreports[j].mobile) + "@s.whatsapp.net"
+                console.log("Sending to", mobile1, "from", client.client_id)
+                await sendTemplates(client.client, mobile1, templates, is_random, broadcast)
+                tmpreports[j].last_whatsapp = new Date()
+                tmpreports[j].is_sent = true
+                await tmpreports[j].save()
+
+                //report2
+                let mobile2 = "91" + String(tmpreports[j + 1].mobile) + "@s.whatsapp.net"
+                console.log("Sending to", mobile2, "from", client.client_id)
+                await sendTemplates(client.client, mobile2, templates, is_random, broadcast)
+                tmpreports[j + 1].last_whatsapp = new Date()
+                tmpreports[j + 1].is_sent = true
+                await tmpreports[j + 1].save()
+
+                let mobile3 = "91" + String(tmpreports[j + 2].mobile) + "@s.whatsapp.net"
+                console.log("Sending to", mobile3, "from", client.client_id)
+                await sendTemplates(client.client, mobile3, templates, is_random, broadcast)
+                tmpreports[j + 2].last_whatsapp = new Date()
+                tmpreports[j + 2].is_sent = true
+                await tmpreports[j + 2].save()
+
+                let mobile4 = "91" + String(tmpreports[j + 3].mobile) + "@s.whatsapp.net"
+                console.log("Sending to", mobile4, "from", client.client_id)
+                await sendTemplates(client.client, mobile4, templates, is_random, broadcast)
+                tmpreports[j + 3].last_whatsapp = new Date()
+                tmpreports[j + 3].is_sent = true
+                await tmpreports[j + 3].save()
+
+                let mobile5 = "91" + String(tmpreports[j + 4].mobile) + "@s.whatsapp.net"
+                console.log("Sending to", mobile5, "from", client.client_id)
+                await sendTemplates(client.client, mobile5, templates, is_random, broadcast)
+                tmpreports[j + 4].last_whatsapp = new Date()
+                tmpreports[j + 4].is_sent = true
+                await tmpreports[j + 4].save()
+
                 latest_broadcast.updated_at = new Date()
                 await latest_broadcast.save()
             }
