@@ -75,8 +75,8 @@ function NewTodoForm({ count }: { count: number }) {
             serial_no: Yup.number(),
             title: Yup.string().required('required field'),
             subtitle: Yup.string(),
-            category: Yup.string().required('required field'),
-            contacts: Yup.array().required('required field'),
+            category: Yup.string(),
+            contacts: Yup.array(),
             run_once: Yup.boolean(),
             frequency_type: Yup.string().required('required field'),
             frequency_value: Yup.string().required('required field').test('value', "invalid frequency value", value => {
@@ -131,7 +131,7 @@ function NewTodoForm({ count }: { count: number }) {
                 return validated
             }),
             start_date: Yup.string().required('required field'),
-            connected_user: Yup.string().required('required field')
+            connected_user: Yup.string()
 
         }),
         onSubmit: (values: TformData) => {
@@ -180,7 +180,6 @@ function NewTodoForm({ count }: { count: number }) {
                     type='number'
                     variant='outlined'
                     fullWidth
-                    required
                     error={
                         formik.touched.serial_no && formik.errors.serial_no ? true : false
                     }
@@ -195,7 +194,6 @@ function NewTodoForm({ count }: { count: number }) {
 
                     variant='outlined'
                     fullWidth
-                    required
                     error={
                         formik.touched.title && formik.errors.title ? true : false
                     }
@@ -210,7 +208,6 @@ function NewTodoForm({ count }: { count: number }) {
 
                     variant='outlined'
                     fullWidth
-                    required
                     error={
                         formik.touched.subtitle && formik.errors.subtitle ? true : false
                     }
@@ -226,7 +223,6 @@ function NewTodoForm({ count }: { count: number }) {
                 <TextField
                     variant='outlined'
                     fullWidth
-                    required
                     error={
                         formik.touched.category && formik.errors.category ? true : false
                     }
@@ -240,7 +236,6 @@ function NewTodoForm({ count }: { count: number }) {
                 <TextField
                     variant='outlined'
                     fullWidth
-                    required
                     error={
                         formik.touched.category2 && formik.errors.category2 ? true : false
                     }
@@ -254,7 +249,6 @@ function NewTodoForm({ count }: { count: number }) {
 
                 <TextField
                     fullWidth
-                    required
                     focused
                     select
                     SelectProps={{
@@ -294,7 +288,6 @@ function NewTodoForm({ count }: { count: number }) {
                     id="start_date"
                     label="Start Date&Time"
                     fullWidth
-                    required
                     helperText={
                         formik.touched.start_date && formik.errors.start_date ? formik.errors.start_date : "select date and time to send messasge after that"
                     }
@@ -315,7 +308,6 @@ function NewTodoForm({ count }: { count: number }) {
                     SelectProps={{
                         native: true
                     }}
-                    required
                     error={
                         formik.touched.frequency_type && formik.errors.frequency_type ? true : false
                     }
@@ -355,7 +347,6 @@ function NewTodoForm({ count }: { count: number }) {
 
                 <TextField
                     fullWidth
-                    required
                     error={
                         formik.touched.frequency_value && formik.errors.frequency_value ? true : false
                     }

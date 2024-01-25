@@ -77,8 +77,8 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
       serial_no: Yup.number(),
       title: Yup.string().required('required field'),
       subtitle: Yup.string(),
-      category: Yup.string().required('required field'),
-      contacts: Yup.array().required('required field'),
+      category: Yup.string(),
+      contacts: Yup.array(),
       run_once: Yup.boolean(),
       frequency_type: Yup.string().required('required field'),
       frequency_value: Yup.string().required('required field').test('value', "invalid frequency value", value => {
@@ -133,7 +133,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
         return validated
       }),
       start_date: Yup.string().required('required field'),
-      connected_user: Yup.string().required('required field')
+      connected_user: Yup.string()
 
     }),
     onSubmit: (values: TformData) => {
@@ -184,7 +184,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
           type='number'
           variant='outlined'
           fullWidth
-          required
+          
           error={
             formik.touched.serial_no && formik.errors.serial_no ? true : false
           }
@@ -199,7 +199,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
 
           variant='outlined'
           fullWidth
-          required
+          
           error={
             formik.touched.title && formik.errors.title ? true : false
           }
@@ -214,7 +214,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
 
           variant='outlined'
           fullWidth
-          required
+          
           error={
             formik.touched.subtitle && formik.errors.subtitle ? true : false
           }
@@ -230,7 +230,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
         <TextField
           variant='outlined'
           fullWidth
-          required
+          
           error={
             formik.touched.category && formik.errors.category ? true : false
           }
@@ -244,7 +244,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
         <TextField
           variant='outlined'
           fullWidth
-          required
+          
           error={
             formik.touched.category2 && formik.errors.category2 ? true : false
           }
@@ -258,7 +258,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
 
         <TextField
           fullWidth
-          required
+          
           focused
           select
           SelectProps={{
@@ -298,7 +298,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
           id="start_date"
           label="Start Date&Time"
           fullWidth
-          required
+          
           helperText={
             formik.touched.start_date && formik.errors.start_date ? formik.errors.start_date : "select date and time to send messasge after that"
           }
@@ -319,7 +319,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
           SelectProps={{
             native: true
           }}
-          required
+          
           error={
             formik.touched.frequency_type && formik.errors.frequency_type ? true : false
           }
