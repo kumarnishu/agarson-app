@@ -91,19 +91,16 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             clients.push({ client_id: client_id, client: socket.sock })
             let client = clients.find((client) => client.client_id === process.env.WACLIENT_ID)
             if (client) {
-                console.log("handling visit reports")
                 handleVisitReport(client.client)
             }
 
             let todos = await Todo.find().populate('connected_user')
             todos.forEach(async (todo) => {
-                console.log("running here")
                 if (todo.connected_user) {
                     let reminderClient = clients.find((client) => client.client_id === todo.connected_user.client_id)
                     if (reminderClient) {
                         console.log(clients.length)
                         if (todo.is_active || todo.is_paused) {
-                            console.log("handling todos")
                             await HandleTodoMessage(todo, reminderClient.client)
                         }
                     }

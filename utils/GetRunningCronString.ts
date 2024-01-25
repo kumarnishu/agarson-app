@@ -1,5 +1,6 @@
 
 export const GetRunningCronString = (frequency_type: string, frequency_value: string, start_date: Date) => {
+    console.log(frequency_type,frequency_value,start_date)
     let date = new Date(start_date)
     let ftype = frequency_type
     let freq = frequency_value

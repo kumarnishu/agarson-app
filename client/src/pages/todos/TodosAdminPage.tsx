@@ -32,7 +32,7 @@ const template: ITodoTemplate[] = [
         contacts: "nishu,7056943283",
         is_hidden: true,
         run_once: false,
-        frequency_type: "daily",
+        frequency_type: "days",
         frequency_value: "1",
         start_date: new Date().toLocaleString(),
         connected_user: 'nishu'
@@ -67,7 +67,7 @@ export default function TodosPage() {
             ExportToExcel(selectedData, "todos_data", [
                 { frequency_type: "minutes", frequency_value: "2", remark: "repeat after every 2 minutes starting from 1-59" },
                 { frequency_type: "hours", frequency_value: "3", remark: "repeat after every 3 hours starting from 1-23" },
-                { frequency_type: "daily", frequency_value: "1", remark: "repeat after every 1 days starting from 1-23, time will be picked from start date" },
+                { frequency_type: "days", frequency_value: "1", remark: "repeat after every 1 days starting from 1-23, time will be picked from start date" },
                 { frequency_type: "weekdays", frequency_value: "1,2,3", remark: "repeat after every weeks on selected days starting from 1-7,time will picked from start date" },
                 { frequency_type: "monthdays", frequency_value: "1,2,3", remark: "repeat every months on selected dates starting from 1-31,time will picked from start date" },
                 { frequency_type: "months", frequency_value: "1-2,3,4", remark: "repeat on selected month at selected dates starting from 1-31,month will be picked from first frequency value seperated by [-] and time will picked from start date" },
