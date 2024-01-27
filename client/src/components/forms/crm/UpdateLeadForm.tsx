@@ -15,6 +15,7 @@ import { UserContext } from '../../../contexts/userContext';
 import { ILead, ILeadUpdatableField } from '../../../types/crm.types';
 import { IUser } from '../../../types/user.types';
 import AlertBar from '../../snacks/AlertBar';
+import { toTitleCase } from '../../../utils/TitleCase';
 
 export type TformData = {
   name: string,
@@ -61,7 +62,7 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
       customer_designation: lead.customer_designation || "",
       mobile: lead.mobile || "",
       email: lead.email || "",
-      city: lead.city || "",
+      city: lead.city && toTitleCase(lead.city) || "",
       state: lead.state || "",
       country: lead.country || "",
       address: lead.address || "",
@@ -184,6 +185,8 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
       setFields(data.data)
     }
   }, [isFieldsSuccess, data])
+
+  console.log(formik.values)
   return (
     <form onSubmit={formik.handleSubmit}>
       <Stack
@@ -364,12 +367,8 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
 
         {/* city */}
 
-
         < TextField
-
           select
-
-
           SelectProps={{
             native: true
           }}
@@ -389,7 +388,7 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
           </option>
           {
             Cities.map((city, index) => {
-              return (<option key={index} value={String(city).toLocaleUpperCase()}>
+              return (<option key={index} value={city}>
                 {city}
               </option>)
             })

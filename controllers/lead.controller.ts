@@ -3140,7 +3140,6 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             //update and create new nead
             console.log(validated)
             if (lead._id && isMongoId(String(lead._id))) {
-                console.log(new_lead_owners)
                 let targetLead = await Lead.findById(lead._id)
                 if (targetLead) {
                     if (lead.remarks) {
@@ -3677,7 +3676,6 @@ export const StartBroadcast = async (req: Request, res: Response, next: NextFunc
         return res.status(404).json({ message: "broadcast not found" })
     }
     let clientids: string[] = broadcast.connected_users.map((user) => { return user.client_id })
-    console.log(clientids)
     let newclients = clients.filter((client) => {
         if (clientids.includes(client.client_id))
             return client
