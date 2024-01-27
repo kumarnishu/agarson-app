@@ -18,14 +18,12 @@ export type ILeadTemplate = {
     alternate_mobile1: string,
     alternate_mobile2: string,
     alternate_email: string,
+    remarks:string,
     lead_type: string
     stage: string
     lead_source: string
-    remarks: string,
     lead_owners: string,
     is_customer: boolean,
-    created_at: Date,
-    updated_at: Date,
     status?: string
 }
 export type ILeadUpdatableField = {
@@ -85,7 +83,6 @@ export type ILead = {
     stage: string
     lead_source: string
     remarks: IRemark[]
-    last_remark: string,
     lead_owners: IUser[],
     visiting_card: Asset,
     is_customer: boolean,

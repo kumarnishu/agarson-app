@@ -89,12 +89,6 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         trim: true,
         lowercase: true,
     },
-    last_remark: {
-        type: String,
-        trim: true,
-        index: true,
-        lowercase: true
-    },
     is_sent: { type: Boolean, default: false },
     last_whatsapp: Date,
     remarks: [{

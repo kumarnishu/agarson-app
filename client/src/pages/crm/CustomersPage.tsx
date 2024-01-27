@@ -6,7 +6,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchCustomers, GetCustomers } from '../../services/LeadsServices'
 import { UserContext } from '../../contexts/userContext'
-import UploadLeadsExcelButton from '../../components/buttons/UploadLeadsExcelButton';
 import DBPagination from '../../components/pagination/DBpagination';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
@@ -43,9 +42,7 @@ let template: ILeadTemplate[] = [
     lead_source: "cold calling",
     remarks: "remarks",
     lead_owners: "nishu,sandeep",
-    is_customer: false,
-    created_at: new Date(),
-    updated_at: new Date(),
+    is_customer: false
   }
 ]
 
@@ -117,10 +114,8 @@ export default function CustomersPage() {
           lead_type: lead.lead_type,
           stage: lead.stage,
           lead_source: lead.lead_source,
-          remarks: lead.last_remark || "",
+          remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
           is_customer: lead.is_customer,
-          created_at: lead.created_at,
-          updated_at: lead.updated_at,
           lead_owners: lead.lead_owners.map((owner) => { return owner.username + "," }).toString()
         })
     })
@@ -196,7 +191,7 @@ export default function CustomersPage() {
         padding={1}
         direction="row"
         justifyContent="space-between"
-        
+
       >
 
         <Typography
@@ -212,7 +207,7 @@ export default function CustomersPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton />}
+           
             {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 &&
 
               < TextField

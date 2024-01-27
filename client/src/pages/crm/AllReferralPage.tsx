@@ -47,7 +47,7 @@ function AllReferralPage({ leads }: { leads: ILead[] }) {
           lead_type: lead.lead_type,
           stage: lead.stage,
           lead_source: lead.lead_source,
-          remarks: lead.last_remark || "",
+          remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
           is_customer: lead.is_customer,
           created_at: lead.created_at,
           updated_at: lead.updated_at,
@@ -92,7 +92,7 @@ function AllReferralPage({ leads }: { leads: ILead[] }) {
                       State : <b>{lead.state}</b>
                     </Typography>
                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-                      Remarks : <b>{lead.last_remark}</b>
+                      Remarks : <b>{lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || ""}</b>
                     </Typography>
                     <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
                       Refer Date : <b>{lead.referred_date && new Date(lead.referred_date).toLocaleString()}</b>

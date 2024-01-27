@@ -43,9 +43,7 @@ let template: ILeadTemplate[] = [
     lead_source: "cold calling",
     remarks: "remarks",
     lead_owners: "nishu,sandeep",
-    is_customer: false,
-    created_at: new Date(),
-    updated_at: new Date(),
+    is_customer: false
   }
 ]
 
@@ -65,7 +63,7 @@ export default function UselessLeadsPage() {
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
 
-  const { data, isLoading, refetch: refetchLeads } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["uselessleads", paginationData], async () => GetUselessLeads({ limit: paginationData?.limit, page: paginationData?.page,userId }))
+  const { data, isLoading, refetch: refetchLeads } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["uselessleads", paginationData], async () => GetUselessLeads({ limit: paginationData?.limit, page: paginationData?.page, userId }))
 
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
@@ -117,10 +115,8 @@ export default function UselessLeadsPage() {
           lead_type: lead.lead_type,
           stage: lead.stage,
           lead_source: lead.lead_source,
-          remarks: lead.last_remark || "",
+          remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
           is_customer: lead.is_customer,
-          created_at: lead.created_at,
-          updated_at: lead.updated_at,
           lead_owners: lead.lead_owners.map((owner) => { return owner.username + "," }).toString()
         })
     })
@@ -196,7 +192,7 @@ export default function UselessLeadsPage() {
         padding={1}
         direction="row"
         justifyContent="space-between"
-        
+
       >
 
         <Typography
@@ -225,7 +221,7 @@ export default function UselessLeadsPage() {
                 <Delete />
               </IconButton>
             </Tooltip>
-            {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 && 
+            {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 &&
               < TextField
                 size='small'
                 select

@@ -26,10 +26,8 @@ export function ExportLeads(leads: ILead[]) {
                     lead_type: lead.lead_type,
                     stage: lead.stage,
                     lead_source: lead.lead_source,
-                    remarks: lead.last_remark || "",
+                    remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
                     is_customer: lead.is_customer,
-                    created_at: lead.created_at,
-                    updated_at: lead.updated_at,
                     lead_owners: lead.lead_owners.map((owner) => {
                         return owner.username + ","
                     }).toString()

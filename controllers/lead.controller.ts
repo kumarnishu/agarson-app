@@ -5,7 +5,6 @@ import Lead from "../models/leads/lead.model.js"
 import { User } from "../models/users/user.model.js"
 import { Remark } from "../models/leads/remark.model.js"
 import { uploadFileToCloud } from "../utils/uploadFile.util.js"
-import { isvalidDate } from "../utils/isValidDate.js"
 import { Types } from "mongoose"
 import { LeadUpdatableField } from "../models/leads/lead.fields.model.js"
 import { destroyFile } from "../utils/destroyFile.util.js"
@@ -2833,7 +2832,6 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
             updated_by: req.user
         })
         await new_remark.save()
-        lead.last_remark = remark
         lead.remarks = [new_remark]
     }
 
@@ -2922,32 +2920,16 @@ export const UpdateLead = async (req: Request, res: Response, next: NextFunction
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-    if (remark) {
-        if (!lead.last_remark) {
-            let new_remark = new Remark({
-                remark,
-                lead: lead,
-                created_at: new Date(),
-                created_by: req.user,
-                updated_at: new Date(),
-                updated_by: req.user
-            })
-            await new_remark.save()
-            lead.last_remark = remark
-            lead.remarks = [new_remark]
-        }
-        else {
-            let last_remark = lead.remarks[lead.remarks.length - 1]
-            await Remark.findByIdAndUpdate(last_remark._id, {
-                remark: remark,
-                lead: lead,
-                updated_at: new Date(),
-                updated_by: req.user,
-                updated_by_username: req.user?.username,
-            })
-            lead.last_remark = last_remark.remark
-        }
-    }
+    if (remark)
+        await new Remark({
+            remark,
+            lead: lead,
+            created_at: new Date(),
+            created_by: req.user,
+            updated_at: new Date(),
+            updated_by: req.user
+        }).save()
+
     await Lead.findByIdAndUpdate(lead._id, {
         ...body,
         mobile: uniqueNumbers[0] || null,
@@ -3017,7 +2999,6 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
     await new_remark.save()
     let updatedRemarks = lead.remarks
     updatedRemarks.push(new_remark)
-    lead.last_remark = remark
     lead.remarks = updatedRemarks
     if (req.user) {
         lead.updated_by = req.user
@@ -3046,26 +3027,23 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             workbook.Sheets[workbook_sheet[0]]
         );
         let statusText: string = ""
-        let oldLeads = await Lead.find()
-        let OldNumbers: number[] = []
-        oldLeads.forEach((lead) => {
-            if (lead.mobile)
-                OldNumbers.push(Number(lead.mobile))
-            if (lead.alternate_mobile1)
-                OldNumbers.push(Number(lead.alternate_mobile1))
-            if (lead.alternate_mobile2)
-                OldNumbers.push(Number(lead.alternate_mobile2))
-        })
 
         let new_lead_owners: IUser[] = []
-        workbook_response.forEach(async (lead) => {
+        for (let i = 0; i < workbook_response.length; i++) {
+            let lead = workbook_response[i]
+            console.log(lead)
             let mobile: number | null = Number(lead.mobile)
             let alternate_mobile1: number | null = Number(lead.alternate_mobile1)
             let alternate_mobile2: number | null = Number(lead.alternate_mobile2)
-
+            let uniqueNumbers: string[] = []
             let validated = true
 
             //important
+            if (!mobile) {
+                validated = false
+                statusText = "required mobile"
+            }
+
             if (mobile && Number.isNaN(mobile)) {
                 validated = false
                 statusText = "invalid mobile"
@@ -3092,42 +3070,6 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                 statusText = "invalid mobile"
             }
 
-            if (lead.created_at && !isvalidDate(new Date(lead.created_at))) {
-                validated = false
-                statusText = "invalid date"
-            }
-            if (lead.updated_at && !isvalidDate(new Date(lead.updated_at))) {
-                validated = false
-                statusText = "invalid date"
-            }
-
-            // duplicate number checker
-            let uniqueNumbers: number[] = []
-            if (mobile && !OldNumbers.includes(mobile)) {
-                uniqueNumbers.push(mobile)
-                OldNumbers.push(mobile)
-
-            }
-            else
-                statusText = "duplicate"
-            if (alternate_mobile1 && !OldNumbers.includes(alternate_mobile1)) {
-                uniqueNumbers.push(alternate_mobile1)
-                OldNumbers.push(alternate_mobile1)
-            }
-            if (alternate_mobile2 && !OldNumbers.includes(alternate_mobile2)) {
-                uniqueNumbers.push(alternate_mobile2)
-                OldNumbers.push(alternate_mobile2)
-            }
-            if (uniqueNumbers.length === 0)
-                validated = false
-
-            if (!validated) {
-                result.push({
-                    ...lead,
-                    status: statusText
-                })
-            }
-
             if (lead.lead_owners) {
                 let names = String((lead.lead_owners)).split(",")
                 for (let i = 0; i < names.length; i++) {
@@ -3135,15 +3077,94 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                     if (owner)
                         new_lead_owners.push(owner)
                 }
-
             }
-            //update and create new nead
-            console.log(validated)
+            //duplicate mobile checker
             if (lead._id && isMongoId(String(lead._id))) {
-                let targetLead = await Lead.findById(lead._id)
-                if (targetLead) {
-                    if (lead.remarks) {
-                        if (!lead.remarks.length) {
+                if (mobile) {
+                    if (String(mobile) === lead.mobile) {
+                        uniqueNumbers[0] = lead.mobile
+                    }
+                    if (String(mobile) !== lead.mobile) {
+                        uniqueNumbers[0] = String(mobile)
+                    }
+                }
+                if (alternate_mobile1) {
+                    if (String(alternate_mobile1) === lead.alternate_mobile1) {
+                        uniqueNumbers[1] = lead.alternate_mobile1
+                    }
+                    if (String(alternate_mobile1) !== lead.alternate_mobile1) {
+                        uniqueNumbers[1] = String(alternate_mobile1)
+                    }
+                }
+                if (alternate_mobile2) {
+                    if (String(alternate_mobile2) === lead.alternate_mobile2) {
+                        uniqueNumbers[2] = lead.alternate_mobile2
+                    }
+                    if (String(alternate_mobile2) !== lead.alternate_mobile2) {
+                        uniqueNumbers[2] = String(alternate_mobile2)
+                    }
+                }
+
+                uniqueNumbers = uniqueNumbers.filter((item, i, ar) => ar.indexOf(item) === i);
+
+
+                if (uniqueNumbers[0] && uniqueNumbers[0] !== lead.mobile && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[0] }, { alternate_mobile1: uniqueNumbers[0] }, { alternate_mobile2: uniqueNumbers[0] }] })) {
+                    validated = false
+                    statusText = "duplicate"
+                }
+
+                if (uniqueNumbers[1] && uniqueNumbers[1] !== lead.alternate_mobile1 && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[1] }, { alternate_mobile1: uniqueNumbers[1] }, { alternate_mobile2: uniqueNumbers[1] }] })) {
+                    validated = false
+                    statusText = "duplicate"
+                }
+                if (uniqueNumbers[2] && uniqueNumbers[2] !== lead.alternate_mobile2 && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[2] }, { alternate_mobile1: uniqueNumbers[2] }, { alternate_mobile2: uniqueNumbers[2] }] })) {
+                    validated = false
+                    statusText = "duplicate"
+                }
+            }
+            if (!lead._id || !isMongoId(String(lead._id))) {
+
+                let uniqueNumbers = []
+                if (mobile)
+                    uniqueNumbers.push(mobile)
+                if (alternate_mobile1)
+                    uniqueNumbers.push(alternate_mobile1)
+                if (alternate_mobile2)
+                    uniqueNumbers.push(alternate_mobile2)
+
+                uniqueNumbers = uniqueNumbers.filter((item, i, ar) => ar.indexOf(item) === i);
+
+                if (uniqueNumbers[0] && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[0] }, { alternate_mobile1: uniqueNumbers[0] }, { alternate_mobile2: uniqueNumbers[0] }] })) {
+                    validated = false
+                    statusText = "duplicate"
+                }
+
+
+                if (uniqueNumbers[1] && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[1] }, { alternate_mobile1: uniqueNumbers[1] }, { alternate_mobile2: uniqueNumbers[1] }] })) {
+                    validated = false
+                    statusText = "duplicate"
+                }
+
+                if (uniqueNumbers[2] && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[2] }, { alternate_mobile1: uniqueNumbers[2] }, { alternate_mobile2: uniqueNumbers[2] }] })) {
+                    validated = false
+                    statusText = "duplicate"
+
+                }
+            }
+            console.log("unique numbers", uniqueNumbers)
+
+            if (!validated) {
+                result.push({
+                    ...lead,
+                    status: statusText
+                })
+            }
+            if (validated && uniqueNumbers.length > 0) {
+                //update and create new nead
+                if (lead._id && isMongoId(String(lead._id))) {
+                    let targetLead = await Lead.findById(lead._id)
+                    if (targetLead) {
+                        if (lead.remarks) {
                             let new_remark = new Remark({
                                 remark: lead.remarks,
                                 lead: lead,
@@ -3153,37 +3174,21 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                                 updated_by: req.user
                             })
                             await new_remark.save()
-                            targetLead.last_remark = lead.remarks
                             targetLead.remarks = [new_remark]
                         }
-                        else {
-                            let last_remark = targetLead.remarks[targetLead.remarks.length - 1]
-                            await Remark.findByIdAndUpdate(last_remark._id, {
-                                remark: lead.remarks,
-                                lead: lead,
-                                updated_at: new Date(),
-                                updated_by: req.user
-                            })
-                            targetLead.last_remark = last_remark.remark
-                        }
 
+                        await Lead.findByIdAndUpdate(lead._id, {
+                            ...lead,
+                            remarks: targetLead.remarks,
+                            mobile: uniqueNumbers[0] || mobile,
+                            alternate_mobile1: uniqueNumbers[1] || alternate_mobile1 || null,
+                            alternate_mobile2: uniqueNumbers[2] || alternate_mobile2 || null,
+                            lead_owners: new_lead_owners,
+                            updated_by: req.user,
+                            updated_at: new Date(Date.now())
+                        })
                     }
-
-                    await Lead.findByIdAndUpdate(lead._id, {
-                        ...lead,
-                        remarks: targetLead.remarks,
-                        mobile: uniqueNumbers[0] || mobile,
-                        alternate_mobile1: uniqueNumbers[1] || alternate_mobile1 || null,
-                        alternate_mobile2: uniqueNumbers[2] || alternate_mobile2 || null,
-                        lead_owners: new_lead_owners,
-                        updated_by: req.user,
-                        updated_at: new Date(Date.now())
-                    })
                 }
-
-            }
-
-            if (validated) {
                 if (!lead._id || !isMongoId(String(lead._id))) {
                     let newlead = new Lead({
                         ...lead,
@@ -3208,14 +3213,12 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                             updated_by: req.user
                         })
                         await new_remark.save()
-                        newlead.last_remark = lead.remarks
                         newlead.remarks = [new_remark]
                     }
                     await newlead.save()
-
                 }
             }
-        })
+        }
 
     }
     return res.status(200).json(result);
@@ -3240,7 +3243,6 @@ export const ConvertCustomer = async (req: Request, res: Response, next: NextFun
             updated_by: req.user
         })
         await new_remark.save()
-        lead.last_remark = remark
         remarks.push(new_remark)
         lead.remarks = remarks
     }
@@ -3273,7 +3275,6 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
                 updated_by: req.user
             })
             await new_remark.save()
-            lead.last_remark = remark
             remarks.push(new_remark)
             lead.remarks = remarks
         }
@@ -3296,7 +3297,6 @@ export const ToogleUseless = async (req: Request, res: Response, next: NextFunct
                 updated_by: req.user
             })
             await new_remark.save()
-            lead.last_remark = remark
             remarks.push(new_remark)
             lead.remarks = remarks
         }
@@ -3452,7 +3452,6 @@ export const ReferLead = async (req: Request, res: Response, next: NextFunction)
             updated_by: req.user
         })
         await new_remark.save()
-        lead.last_remark = remark
         remarks.push(new_remark)
         lead.remarks = remarks
     }
@@ -3485,7 +3484,6 @@ export const RemoveLeadReferrals = async (req: Request, res: Response, next: Nex
             updated_by: req.user
         })
         await new_remark.save()
-        lead.last_remark = remark
         remarks.push(new_remark)
         lead.remarks = remarks
     }
@@ -3615,7 +3613,7 @@ export const UpdateRemark = async (req: Request, res: Response, next: NextFuncti
         return res.status(403).json({ message: "please login to access this resource" })
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
-    let rremark = await Remark.findById(id).populate('lead')
+    let rremark = await Remark.findById(id)
     if (!rremark) {
         return res.status(404).json({ message: "remark not found" })
     }
@@ -3623,17 +3621,6 @@ export const UpdateRemark = async (req: Request, res: Response, next: NextFuncti
     if (remind_date)
         rremark.remind_date = new Date(remind_date)
     await rremark.save()
-
-    let lead = await Lead.findById(rremark.lead._id).populate('remarks')
-    if (req.user && lead) {
-        let updatedRemarks = lead.remarks
-        let last_remark = updatedRemarks[updatedRemarks.length - 1]
-        if (String(rremark._id) === String(last_remark._id))
-            lead.last_remark = last_remark.remark
-        lead.updated_by = req.user
-        lead.updated_at = new Date(Date.now())
-        await lead.save()
-    }
     return res.status(200).json({ message: "remark updated successfully" })
 }
 
@@ -3644,23 +3631,8 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
     if (!rremark) {
         return res.status(404).json({ message: "remark not found" })
     }
-
-    let lead = await Lead.findById(rremark.lead._id).populate('remarks')
-    if (req.user && lead) {
-        let updatedRemarks = lead.remarks
-        updatedRemarks = updatedRemarks.filter((rr) => {
-            return String(rr._id) !== String(rremark?._id)
-        })
-        if (updatedRemarks[updatedRemarks.length - 1])
-            lead.last_remark = updatedRemarks[updatedRemarks.length - 1].remark
-        lead.remarks = updatedRemarks
-        lead.updated_by = req.user
-        lead.updated_at = new Date(Date.now())
-        await lead.save()
-    }
     await rremark.remove()
     return res.status(200).json({ message: " remark deleted successfully" })
-
 }
 
 export const GetBroadcast = async (req: Request, res: Response, next: NextFunction) => {
