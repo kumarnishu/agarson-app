@@ -9,7 +9,7 @@ import { User } from "../models/users/user.model"
 import { ReportManager } from "../app"
 
 
-export async function handleVisitReport(client: { client_id: string, client: any }) {
+export async function handleVisitReport(client: any) {
     let cronString1 = `8 18 1/1 * *`
     let cronString2 = `15 9 1/1 * *`
     console.log("running trigger")
