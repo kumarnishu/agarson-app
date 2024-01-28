@@ -199,7 +199,7 @@ export default function TodosPage() {
                                 </option>
                                 {
                                     users.map((user, index) => {
-                                        if (!user.crm_access_fields.is_hidden)
+                                        if (!user.todos_access_fields.is_hidden)
                                             return (<option key={index} value={user.mobile}>
                                                 {user.username}
                                             </option>)
@@ -250,13 +250,13 @@ export default function TodosPage() {
                             }}
                             sx={{ borderRadius: 2 }}
                         >
-                            <MenuItem
+                            {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
                                 onClick={() => {
                                     setChoice({ type: TodoChoiceActions.create_todo })
                                     setAnchorEl(null)
                                 }}
-                            > Add New</MenuItem>
-                            <MenuItem
+                            > Add New</MenuItem>}
+                            {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
                                 onClick={() => {
                                     if (selectedTodos.length === 0)
                                         alert("please select some todos")
@@ -264,9 +264,9 @@ export default function TodosPage() {
                                         setChoice({ type: TodoChoiceActions.bulk_start_todo })
                                     setAnchorEl(null)
                                 }}
-                            > Start All</MenuItem>
+                            > Start All</MenuItem>}
 
-                            <MenuItem
+                            {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
                                 onClick={() => {
                                     if (selectedTodos.length === 0)
                                         alert("please select some todos")
@@ -274,8 +274,8 @@ export default function TodosPage() {
                                         setChoice({ type: TodoChoiceActions.bulk_stop_todo })
                                     setAnchorEl(null)
                                 }}
-                            > Stop All</MenuItem>
-                            <MenuItem
+                            > Stop All</MenuItem>}
+                            {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
                                 onClick={() => {
                                     if (selectedTodos.length === 0)
                                         alert("please select some todos")
@@ -283,7 +283,7 @@ export default function TodosPage() {
                                         setChoice({ type: TodoChoiceActions.bulk_hide_todo })
                                     setAnchorEl(null)
                                 }}
-                            > Toogle Hide All</MenuItem>
+                            > Toogle Hide All</MenuItem>}
 
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
