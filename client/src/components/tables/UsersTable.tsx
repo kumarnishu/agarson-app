@@ -130,24 +130,14 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                 Last Login
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Created At
-
-                            </STableHeadCell>
+                           
                             <STableHeadCell
                             >
 
                                 Updated At
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Created By
-
-                            </STableHeadCell>
+                          
                             <STableHeadCell
                             >
 
@@ -478,15 +468,11 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                         <STableCell>
                                             <Typography variant="body1">{new Date(user.last_login).toLocaleString()}</Typography>
                                         </STableCell>
-                                        <STableCell>
-                                            {new Date(user.created_at).toLocaleDateString()}
-                                        </STableCell>
+                                      
                                         <STableCell>
                                             {new Date(user.updated_at).toLocaleDateString()}
                                         </STableCell>
-                                        <STableCell>
-                                            {user.created_by.username}
-                                        </STableCell>
+                                     
                                         <STableCell>
                                             {user.updated_by.username}
 
