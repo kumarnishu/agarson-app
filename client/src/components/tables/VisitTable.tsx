@@ -202,12 +202,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                 Visit In Address
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Created at
-
-                            </STableHeadCell>
+                            
                             <STableHeadCell
                             >
 
