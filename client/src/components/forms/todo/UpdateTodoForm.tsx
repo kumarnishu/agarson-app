@@ -8,11 +8,12 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { UpdateTodo } from '../../../services/TodoServices';
 import { ITodo } from '../../../types/todo.types';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { GetUsers } from '../../../services/UserServices';
 import { IUser } from '../../../types/user.types';
 import SelectContactsInput from './SelectContactsInput';
+import { ChoiceContext, TodoChoiceActions } from '../../../contexts/dialogContext';
 
 type TformData = {
   serial_no: number,
@@ -47,7 +48,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
     is_sent: boolean,
     status: string
   }[]>(todo.contacts)
-
+  const { setChoice } = useContext(ChoiceContext)
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
   // const [filter, setFilter] = useState<string>()
   const { mutate, isLoading, isSuccess, isError, error } = useMutation
@@ -167,6 +168,14 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
     })
 
   }, [users])
+
+  useEffect(() => {
+    if (isSuccess)
+      setTimeout(() => {
+        setChoice({ type: TodoChoiceActions.close_todo })
+      }, 1000)
+  }, [setChoice, isSuccess])
+
   return (
     <form onSubmit={formik.handleSubmit}>
       {
@@ -184,7 +193,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
           type='number'
           variant='outlined'
           fullWidth
-          
+
           error={
             formik.touched.serial_no && formik.errors.serial_no ? true : false
           }
@@ -199,7 +208,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
 
           variant='outlined'
           fullWidth
-          
+
           error={
             formik.touched.title && formik.errors.title ? true : false
           }
@@ -214,7 +223,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
 
           variant='outlined'
           fullWidth
-          
+
           error={
             formik.touched.subtitle && formik.errors.subtitle ? true : false
           }
@@ -230,7 +239,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
         <TextField
           variant='outlined'
           fullWidth
-          
+
           error={
             formik.touched.category && formik.errors.category ? true : false
           }
@@ -244,7 +253,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
         <TextField
           variant='outlined'
           fullWidth
-          
+
           error={
             formik.touched.category2 && formik.errors.category2 ? true : false
           }
@@ -258,7 +267,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
 
         <TextField
           fullWidth
-          
+
           focused
           select
           SelectProps={{
@@ -298,7 +307,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
           id="start_date"
           label="Start Date&Time"
           fullWidth
-          
+
           helperText={
             formik.touched.start_date && formik.errors.start_date ? formik.errors.start_date : "select date and time to send messasge after that"
           }
@@ -319,7 +328,7 @@ function UpdateTodoForm({ todo }: { todo: ITodo }) {
           SelectProps={{
             native: true
           }}
-          
+
           error={
             formik.touched.frequency_type && formik.errors.frequency_type ? true : false
           }

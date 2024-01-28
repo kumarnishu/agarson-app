@@ -64,6 +64,11 @@ export const StartTodo = async (id: string) => {
 export const StartAllTodos = async ({ ids }: { ids: string[] }) => {
     return await apiClient.patch(`todos/bulk/start`, { ids: ids });
 };
+
+export const ToogleHideAllTodos = async ({ ids }: { ids: string[] }) => {
+    return await apiClient.patch(`todos/bulk/hide`, { ids: ids });
+};
+
 export const DeleteTodo = async (id: string) => {
     return await apiClient.delete(`todos/${id}`);
 };

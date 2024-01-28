@@ -21,6 +21,7 @@ import FuzzySearch from 'fuzzy-search'
 import UploadTodoExcelButton from '../../components/buttons/UploadTodoExcelButton'
 import StartAllTodoDialog from '../../components/dialogs/todos/StartAllTodoDialog'
 import StopAllTodoDialog from '../../components/dialogs/todos/StopAllTodoDialog'
+import ToogleHideAllTodosDialog from '../../components/dialogs/todos/ToogleHideAllTodosDialog'
 const template: ITodoTemplate[] = [
     {
         _id: "",
@@ -274,6 +275,15 @@ export default function TodosPage() {
                                     setAnchorEl(null)
                                 }}
                             > Stop All</MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    if (selectedTodos.length === 0)
+                                        alert("please select some todos")
+                                    else
+                                        setChoice({ type: TodoChoiceActions.bulk_hide_todo })
+                                    setAnchorEl(null)
+                                }}
+                            > Toogle Hide All</MenuItem>
 
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
@@ -282,6 +292,7 @@ export default function TodosPage() {
                         <CreateTodoDialog count={todos.length} />
                         <StartAllTodoDialog ids={selectedTodos.map((todo) => { return todo._id })} />
                         <StopAllTodoDialog ids={selectedTodos.map((todo) => { return todo._id })} />
+                        <ToogleHideAllTodosDialog ids={selectedTodos.map((todo) => { return todo._id })} />
                     </>
                 </Stack >
             </Stack >

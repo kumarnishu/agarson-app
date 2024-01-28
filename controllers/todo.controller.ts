@@ -20,11 +20,11 @@ export const GetMyTodos = async (req: Request, res: Response, next: NextFunction
     let todos = await Todo.find({ is_hidden: hidden }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
     todos = todos.filter((todo) => {
         let numbers = todo.contacts.map((c) => { return c.mobile })
-       
+
         if (numbers.includes(String(req.user?.mobile)))
             return todo
     })
-    
+
     return res.status(200).json(todos)
 }
 export const GetTodos = async (req: Request, res: Response, next: NextFunction) => {
@@ -48,7 +48,7 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
             todos = await Todo.find().populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
             todos = todos.filter((todo) => {
                 let numbers = todo.contacts.map((c) => { return c.mobile })
-                
+
                 if (numbers.includes(String(mobile)))
                     return todo
             })
@@ -62,7 +62,7 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
             todos = await Todo.find({ is_hidden: hidden }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
             todos = todos.filter((todo) => {
                 let numbers = todo.contacts.map((c) => { return c.mobile })
-                
+
                 if (numbers.includes(String(mobile)))
                     return todo
             })
@@ -126,7 +126,7 @@ export const CreateTodo = async (req: Request, res: Response, next: NextFunction
         category: category,
         category2: category2,
         contacts: contacts,
-        connected_user: connected_user,
+        connected_user: connected_user || null,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -360,6 +360,18 @@ export const StopAllTodos = async (req: Request, res: Response, next: NextFuncti
     })
     return res.status(200).json({ message: "all todo stopped" })
 }
+export const TooglehideAllTodos = async (req: Request, res: Response, next: NextFunction) => {
+    let { ids } = req.body as { ids: string[] }
+    ids.forEach(async (id) => {
+        let todo = await Todo.findById(id).populate('connected_user')
+        if (todo) {
+            await Todo.findByIdAndUpdate(todo._id, {
+                is_hidden: !todo.is_hidden
+            })
+        }
+    })
+    return res.status(200).json({ message: "toogle hidden successful" })
+}
 
 export const ToogleHideTodo = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
@@ -426,7 +438,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
         let workbook_response: ITodoTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
-        
+
         let statusText = ""
         let newContacts: {
             name: string,
@@ -486,7 +498,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                     }
                 }
                 if (ftype === "months" && value) {
-                    
+
                     let frequency = String(value).split("-")[0]
                     let monthdays = String(value).split("-")[1]
                     if (frequency && monthdays) {
@@ -642,9 +654,9 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                         else
                             new_run_once = false
                         let cronstring = GetRunningCronString(frequency_type, frequency_value, new Date(start_date))
-                       
+
                         let refresh_cron_string = GetRefreshCronString(frequency_type, frequency_value, new Date(start_date))
-                        
+
                         let newtodo = new Todo({
                             serial_no: Number(serial_no) || 0,
                             title: title,

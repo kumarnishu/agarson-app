@@ -3070,14 +3070,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                 statusText = "invalid mobile"
             }
 
-            if (lead.lead_owners) {
-                let names = String((lead.lead_owners)).split(",")
-                for (let i = 0; i < names.length; i++) {
-                    let owner = await User.findOne({ username: names[i] })
-                    if (owner)
-                        new_lead_owners.push(owner)
-                }
-            }
+
             //duplicate mobile checker
             if (lead._id && isMongoId(String(lead._id))) {
                 if (mobile) {
@@ -3151,8 +3144,6 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
 
                 }
             }
-            console.log("unique numbers", uniqueNumbers)
-
             if (!validated) {
                 result.push({
                     ...lead,
@@ -3160,6 +3151,14 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                 })
             }
             if (validated && uniqueNumbers.length > 0) {
+                if (lead.lead_owners) {
+                    let names = String((lead.lead_owners)).split(",")
+                    for (let i = 0; i < names.length; i++) {
+                        let owner = await User.findOne({ username: names[i] })
+                        if (owner)
+                            new_lead_owners.push(owner)
+                    }
+                }
                 //update and create new nead
                 if (lead._id && isMongoId(String(lead._id))) {
                     let targetLead = await Lead.findById(lead._id)
@@ -3219,7 +3218,6 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                 }
             }
         }
-
     }
     return res.status(200).json(result);
 }

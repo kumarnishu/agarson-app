@@ -93,7 +93,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             let client = clients.find((client) => client.client_id === process.env.WACLIENT_ID)
             if (client) {
                 handleVisitReport(client.client)
-                handleProductionReport(client.client)
+                // handleProductionReport(client.client)
             }
 
             let todos = await Todo.find().populate('connected_user')
