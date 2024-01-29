@@ -10,7 +10,7 @@ import moment from "moment"
 import { Machine } from "../models/production/machine.model"
 
 export async function ExportProductionsToPdf(client: any) {
-    let cronString1 = `45 15 1/1 * *`
+    let cronString1 = `50 15 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
         ReportManager.add("production_reports1", cronString1, async () => {
@@ -53,7 +53,7 @@ export async function HandleProductionReports(client: any) {
     TableRow.push("DATE")
     for (let k = 0; k < users.length; k++) {
         let user = users[k]
-        TableRow.push(String(user.username))
+        TableRow.push(String(user.username).toUpperCase())
     }
     Table.push(TableRow)
 
@@ -124,7 +124,7 @@ export async function HandleProductionReports(client: any) {
     TableRow = ["DATE"]
     for (let k = 0; k < machines.length; k++) {
         let machine = machines[k]
-        TableRow.push(String(machine.name))
+        TableRow.push(String(machine.name).toUpperCase())
     }
     Table.push(TableRow)
 
