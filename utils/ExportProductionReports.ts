@@ -10,7 +10,7 @@ import moment from "moment"
 import { Machine } from "../models/production/machine.model"
 
 export async function ExportProductionsToPdf(client: any) {
-    let cronString1 = `50 15 1/1 * *`
+    let cronString1 = `00 18 16 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
         ReportManager.add("production_reports1", cronString1, async () => {
@@ -106,6 +106,7 @@ export async function HandleProductionReports(client: any) {
         table: {
             headerRows: 1,
             body: Table,
+           
         }
     })
 
@@ -185,6 +186,7 @@ export async function HandleProductionReports(client: any) {
     // hanlde production by machine categories
     Content.push({
         text: `MACHINE'S CATEGORY WISE PRODUCTION \n\n`,
+        pageOrientation: 'portrait',
         style: { 'alignment': 'center', fontSize: 14, bold: true },
         pageBreak: 'before'
     })
@@ -280,9 +282,9 @@ export async function HandleProductionReports(client: any) {
         },
         content: Content,
         defaultStyle: {
-            fontSize: 9,
+            fontSize: 7,
             font: 'Roboto',
-            lineHeight: 1,
+            lineHeight: 1
         }
     })
     doc.pipe(fs.createWriteStream(`./pdfs/production/productions.pdf`))
