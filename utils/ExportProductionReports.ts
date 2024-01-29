@@ -34,6 +34,7 @@ export async function HandleProductionReports(client: any) {
     let Content: Content[] = [
         {
             text: `TOTAL PRODUCTION BY THEKEDAR \n\n`,
+            pageOrientation: 'landscape',
             style: { 'alignment': 'center', fontSize: 14, bold: true },
         }
     ]
@@ -45,7 +46,7 @@ export async function HandleProductionReports(client: any) {
     let productions: IProduction[] = []
     let users = await User.find().sort("username")
     users = users.filter((u) => {
-        if (!u.productions_access_fields.is_hidden) {
+        if (!u.productions_access_fields.is_hidden && !u.productions_access_fields.is_editable) {
             return u
         }
     })
@@ -113,6 +114,7 @@ export async function HandleProductionReports(client: any) {
     //hanlde production by machines
     Content.push({
         text: `MACHINE WISE PRODUCTION \n\n`,
+        pageOrientation: 'landscape',
         style: { 'alignment': 'center', fontSize: 14, bold: true },
         pageBreak: 'before'
     })
@@ -120,7 +122,7 @@ export async function HandleProductionReports(client: any) {
     TableRow = []
 
     // header
-    let machines = await Machine.find().sort('serial_no')
+    let machines = await Machine.find({ is_active: true }).sort('serial_no')
     TableRow = ["DATE"]
     for (let k = 0; k < machines.length; k++) {
         let machine = machines[k]
