@@ -10,7 +10,7 @@ import moment from "moment"
 import { Machine } from "../models/production/machine.model"
 
 export async function ExportProductionsToPdf(client: any) {
-    let cronString1 = `00 30 17 1/1 * *`
+    let cronString1 = `00 40 17 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
         ReportManager.add("production_reports1", cronString1, async () => {
@@ -131,7 +131,7 @@ export async function HandleProductionReports(client: any) {
     TableRow = []
 
     // header
-    let machines = await Machine.find({ is_active: true }).sort('serial_no')
+    let machines = await Machine.find({ active: true }).sort('serial_no')
     TableRow = [{ text: 'DATE', style: { bold: true } }]
     for (let k = 0; k < machines.length; k++) {
         let machine = machines[k]
