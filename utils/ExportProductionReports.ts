@@ -10,7 +10,7 @@ import moment from "moment"
 import { Machine } from "../models/production/machine.model"
 
 export async function ExportProductionsToPdf(client: any) {
-    let cronString1 = `25 16 1/1 * *`
+    let cronString1 = `15 58 16 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
         ReportManager.add("production_reports1", cronString1, async () => {
@@ -34,12 +34,11 @@ export async function HandleProductionReports(client: any) {
     let Content: Content[] = [
         {
             text: `TOTAL PRODUCTION BY THEKEDAR \n\n`,
-            pageOrientation: 'landscape',
             style: { 'alignment': 'center', fontSize: 14, bold: true },
         }
     ]
-    let Table: string[][] = []
-    let TableRow: string[] = []
+    let Table: Content[][] = []
+    let TableRow: Content[] = []
 
 
     // handle production by thekedar
@@ -51,10 +50,10 @@ export async function HandleProductionReports(client: any) {
         }
     })
     //header 
-    TableRow.push("DATE")
+    TableRow.push({ text: 'DATE', style: { bold: true } })
     for (let k = 0; k < users.length; k++) {
         let user = users[k]
-        TableRow.push(String(user.username).toUpperCase())
+        TableRow.push({ text: String(user.username).toUpperCase(), style: { bold: true } })
     }
     Table.push(TableRow)
 
@@ -83,7 +82,8 @@ export async function HandleProductionReports(client: any) {
         TableRow = []
     }
     //footer
-    TableRow = ["TOTAL"]
+    TableRow = [{ text: 'TOTAL', style: { bold: true } }]
+
     for (let k = 0; k < users.length; k++) {
         let dt1 = new Date()
         let dt2 = new Date()
@@ -99,14 +99,14 @@ export async function HandleProductionReports(client: any) {
         if (result === 0)
             TableRow.push('')
         else
-            TableRow.push(String(result))
+            TableRow.push({ text: String(result).toUpperCase(), style: { bold: true } })
     }
     Table.push(TableRow)
     Content.push({
         table: {
             headerRows: 1,
             body: Table,
-           
+
         }
     })
 
@@ -115,7 +115,6 @@ export async function HandleProductionReports(client: any) {
     //hanlde production by machines
     Content.push({
         text: `MACHINE WISE PRODUCTION \n\n`,
-        pageOrientation: 'landscape',
         style: { 'alignment': 'center', fontSize: 14, bold: true },
         pageBreak: 'before'
     })
@@ -124,10 +123,10 @@ export async function HandleProductionReports(client: any) {
 
     // header
     let machines = await Machine.find({ is_active: true }).sort('serial_no')
-    TableRow = ["DATE"]
+    TableRow = [{ text: 'DATE', style: { bold: true } }]
     for (let k = 0; k < machines.length; k++) {
         let machine = machines[k]
-        TableRow.push(String(machine.name).toUpperCase())
+        TableRow.push({ text: String(machine.name).toUpperCase(), style: { bold: true } })
     }
     Table.push(TableRow)
 
@@ -156,7 +155,7 @@ export async function HandleProductionReports(client: any) {
         TableRow = []
     }
     //footer
-    TableRow = ["Total"]
+    TableRow = [{ text: 'TOTAL', style: { bold: true } }]
     for (let k = 0; k < machines.length; k++) {
         let dt1 = new Date()
         let dt2 = new Date()
@@ -172,7 +171,7 @@ export async function HandleProductionReports(client: any) {
         if (result === 0)
             TableRow.push('')
         else
-            TableRow.push(String(result))
+            TableRow.push({ text: String(result).toUpperCase(), style: { bold: true } })
     }
     Table.push(TableRow)
     Content.push({
@@ -186,13 +185,16 @@ export async function HandleProductionReports(client: any) {
     // hanlde production by machine categories
     Content.push({
         text: `MACHINE'S CATEGORY WISE PRODUCTION \n\n`,
-        pageOrientation: 'portrait',
-        style: { 'alignment': 'center', fontSize: 14, bold: true },
+        style: { 'alignment': 'left', fontSize: 14, bold: true },
         pageBreak: 'before'
     })
     Table = []
+
     //header
-    TableRow = ["DATE", "TOTAL", "VERTICAL+LYMPHA", "PU", "GUMBOOT"]
+    TableRow = ["DATE", "TOTAL", "VERTICAL+LYMPHA", "PU", "GUMBOOT"].map((row) => {
+        return { text: String(row).toUpperCase(), style: { bold: true } }
+    })
+
     Table.push(TableRow)
     TableRow = []
 
@@ -259,11 +261,11 @@ export async function HandleProductionReports(client: any) {
         TableRow = []
     }
     //footer
-    TableRow[0] = "Total"
-    TableRow[1] = String(Ttotal1)
-    TableRow[2] = String(Ttotal2)
-    TableRow[3] = String(Ttotal3)
-    TableRow[4] = String(Ttotal4)
+    TableRow[0] = { text: "TOTAL", style: { bold: true } }
+    TableRow[1] = { text: String(Ttotal1), style: { bold: true } }
+    TableRow[2] = { text: String(Ttotal2), style: { bold: true } }
+    TableRow[3] = { text: String(Ttotal3), style: { bold: true } }
+    TableRow[4] = { text: String(Ttotal4), style: { bold: true } }
     Table.push(TableRow)
 
     Content.push({
@@ -280,6 +282,7 @@ export async function HandleProductionReports(client: any) {
             author: 'Agarson',
             subject: 'Production Reports',
         },
+        pageOrientation: 'landscape',
         content: Content,
         defaultStyle: {
             fontSize: 7,
