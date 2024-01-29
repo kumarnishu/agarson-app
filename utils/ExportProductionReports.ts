@@ -10,7 +10,7 @@ import moment from "moment"
 import { Machine } from "../models/production/machine.model"
 
 export async function ExportProductionsToPdf(client: any) {
-    let cronString1 = `15 58 16 1/1 * *`
+    let cronString1 = `00 23 17 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
         ReportManager.add("production_reports1", cronString1, async () => {
@@ -34,14 +34,15 @@ export async function HandleProductionReports(client: any) {
     let Content: Content[] = [
         {
             text: `TOTAL PRODUCTION BY THEKEDAR \n\n`,
-            style: { 'alignment': 'center', fontSize: 14, bold: true },
+            style: { 'alignment': 'left', fontSize: 14, bold: true },
         }
     ]
     let Table: Content[][] = []
     let TableRow: Content[] = []
 
 
-    // handle production by thekedar
+    /* handle production by thekedar ************************
+    ************************************/
     let productions: IProduction[] = []
     let users = await User.find().sort("username")
     users = users.filter((u) => {
@@ -55,11 +56,13 @@ export async function HandleProductionReports(client: any) {
         let user = users[k]
         TableRow.push({ text: String(user.username).toUpperCase(), style: { bold: true } })
     }
+    TableRow.push({ text: "TOTAL", style: { bold: true } })
     Table.push(TableRow)
 
     //body
     TableRow = []
     for (let j = 0; j < 31; j++) {
+        let total = 0
         let dt1 = new Date()
         let dt2 = new Date()
         dt1.setDate(j + 1)
@@ -77,13 +80,15 @@ export async function HandleProductionReports(client: any) {
                 TableRow.push('')
             else
                 TableRow.push(String(result))
+            total += result
         }
+        TableRow.push({ text: String(total), style: { bold: true } })
         Table.push(TableRow)
         TableRow = []
     }
     //footer
     TableRow = [{ text: 'TOTAL', style: { bold: true } }]
-
+    let total = 0
     for (let k = 0; k < users.length; k++) {
         let dt1 = new Date()
         let dt2 = new Date()
@@ -96,11 +101,13 @@ export async function HandleProductionReports(client: any) {
         let user = users[k]
         productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: user._id })
         let result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+        total += result
         if (result === 0)
             TableRow.push('')
         else
             TableRow.push({ text: String(result).toUpperCase(), style: { bold: true } })
     }
+    TableRow.push({ text: String(total), style: { bold: true } })
     Table.push(TableRow)
     Content.push({
         table: {
@@ -112,7 +119,9 @@ export async function HandleProductionReports(client: any) {
 
 
 
-    //hanlde production by machines
+    /*hanlde production by machines ************************
+    ************************************/
+
     Content.push({
         text: `MACHINE WISE PRODUCTION \n\n`,
         style: { 'alignment': 'center', fontSize: 14, bold: true },
@@ -128,11 +137,13 @@ export async function HandleProductionReports(client: any) {
         let machine = machines[k]
         TableRow.push({ text: String(machine.name).toUpperCase(), style: { bold: true } })
     }
+    TableRow.push({ text: 'TOTAL', style: { bold: true } })
     Table.push(TableRow)
 
     //body
     TableRow = []
     for (let j = 0; j < 31; j++) {
+        let total = 0
         let dt1 = new Date()
         let dt2 = new Date()
         dt1.setDate(j + 1)
@@ -146,16 +157,19 @@ export async function HandleProductionReports(client: any) {
             let machine = machines[k]
             productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, machine: machine._id })
             let result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+            total += result
             if (result === 0)
                 TableRow.push('')
             else
                 TableRow.push(String(result))
         }
+        TableRow.push({ text: String(total), style: { bold: true } })
         Table.push(TableRow)
         TableRow = []
     }
     //footer
     TableRow = [{ text: 'TOTAL', style: { bold: true } }]
+    total = 0
     for (let k = 0; k < machines.length; k++) {
         let dt1 = new Date()
         let dt2 = new Date()
@@ -168,11 +182,13 @@ export async function HandleProductionReports(client: any) {
         let machine = machines[k]
         productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, machine: machine._id })
         let result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+        total += result
         if (result === 0)
             TableRow.push('')
         else
             TableRow.push({ text: String(result).toUpperCase(), style: { bold: true } })
     }
+    TableRow.push({ text: String(total), style: { bold: true } })
     Table.push(TableRow)
     Content.push({
         table: {
@@ -182,7 +198,9 @@ export async function HandleProductionReports(client: any) {
     })
 
 
-    // hanlde production by machine categories
+    /* hanlde production by machine categories************************
+    ***********************************/
+
     Content.push({
         text: `MACHINE'S CATEGORY WISE PRODUCTION \n\n`,
         style: { 'alignment': 'left', fontSize: 14, bold: true },
@@ -228,7 +246,7 @@ export async function HandleProductionReports(client: any) {
         if (total === 0)
             TableRow[2] = ""
         else
-            TableRow[2] = (String(total))
+            TableRow[2] = { text: String(total), style: { bold: true } }
 
         productions = await Production.find({ date: { $gte: dt1, $lt: dt2 } }).populate('machine')
         productions = productions.filter((prod) => { return prod.machine.category === "pu" })
@@ -298,6 +316,7 @@ export async function HandleProductionReports(client: any) {
         await SendDocument(client)
     }, 20000)
 }
+
 
 
 async function SendDocument(client: any) {
