@@ -246,7 +246,7 @@ export async function HandleProductionReports(client: any) {
         if (total === 0)
             TableRow[2] = ""
         else
-            TableRow[2] = { text: String(total), style: { bold: true } }
+            TableRow[2] = String(total)
 
         productions = await Production.find({ date: { $gte: dt1, $lt: dt2 } }).populate('machine')
         productions = productions.filter((prod) => { return prod.machine.category === "pu" })
