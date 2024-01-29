@@ -10,7 +10,7 @@ import moment from "moment"
 import { Machine } from "../models/production/machine.model"
 
 export async function ExportProductionsToPdf(client: any) {
-    let cronString1 = `00 28 17 1/1 * *`
+    let cronString1 = `00 30 17 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
         ReportManager.add("production_reports1", cronString1, async () => {
@@ -272,7 +272,7 @@ export async function HandleProductionReports(client: any) {
         if (total === 0)
             TableRow[1] = ""
         else
-            TableRow[1] = (String(total))
+            TableRow[1] = { text: String(total), style: { bold: true } }
 
         Ttotal1 += total
         Table.push(TableRow)
