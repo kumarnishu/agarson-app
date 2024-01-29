@@ -9,7 +9,7 @@ import { User } from "../models/users/user.model"
 import { ReportManager } from "../app"
 
 
-export async function handleVisitReport(client: any) {
+export async function ExportVisitsToPdf(client: any) {
     let cronString1 = `8 18 1/1 * *`
     let cronString2 = `15 9 1/1 * *`
     console.log("running trigger")
@@ -22,7 +22,7 @@ export async function handleVisitReport(client: any) {
             dt1.setMinutes(0)
             dt2.setHours(0)
             dt2.setMinutes(0)
-            await ExportVisitsToPdf(client, dt1, dt2)
+            await HandleVisitsReport(client, dt1, dt2)
         })
     if (!ReportManager.exists("visit_reports2"))
         ReportManager.add("visit_reports2", cronString2, async () => {
@@ -33,7 +33,7 @@ export async function handleVisitReport(client: any) {
             dt1.setMinutes(0)
             dt2.setHours(0)
             dt2.setMinutes(0)
-            await ExportVisitsToPdf(client, dt1, dt2)
+            await HandleVisitsReport(client, dt1, dt2)
         })
     if (ReportManager.exists("visit_reports1")) {
         ReportManager.start("visit_reports1")
@@ -42,7 +42,7 @@ export async function handleVisitReport(client: any) {
         ReportManager.start("visit_reports2")
     }
 }
-export async function ExportVisitsToPdf(client: any, dt1: Date, dt2: Date) {
+export async function HandleVisitsReport(client: any, dt1: Date, dt2: Date) {
     let visits: IVisit[] = []
     console.log("generating pdf")
     visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate("visit_reports").populate('created_by')
@@ -221,16 +221,15 @@ export async function ExportVisitsToPdf(client: any, dt1: Date, dt2: Date) {
         }
     }
     setTimeout(async () => {
-        await ExportVisits(client)
+        await SendDocument(client)
     }, 300000)
 
     setTimeout(async () => {
-        await DeleteVisitsPdf()
+        await DeleteDocument()
     }, 600000)
 }
 
-
-async function ExportVisits(client: any) {
+async function SendDocument(client: any) {
     if (client) {
         console.log("sending pdf from", process.env.WAGREETING_PHONE)
         let users = await User.find()
@@ -245,7 +244,7 @@ async function ExportVisits(client: any) {
     }
 }
 
-async function DeleteVisitsPdf() {
+async function DeleteDocument() {
     let users = await User.find()
     users.forEach(async (user) => {
         if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {

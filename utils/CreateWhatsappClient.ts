@@ -2,11 +2,11 @@ import makeWASocket, { makeInMemoryStore, useMultiFileAuthState } from "@whiskey
 import { Server } from "socket.io";
 import fs from "fs"
 import { User } from "../models/users/user.model";
-import { handleVisitReport } from "./ExportVisitsToPdf";
+import { ExportVisitsToPdf } from "./ExportVisitsToPdf";
 import Lead from "../models/leads/lead.model";
 import { Todo } from "../models/todos/todo.model";
 import { HandleTodoMessage } from "./handleTodo";
-import { handleProductionReport } from "./ExportProductionReports";
+import { ExportProductionsToPdf } from "./ExportProductionReports";
 
 export var clients: { client_id: string, client: any }[] = []
 
@@ -92,8 +92,8 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             clients.push({ client_id: client_id, client: socket.sock })
             let client = clients.find((client) => client.client_id === process.env.WACLIENT_ID)
             if (client) {
-                handleVisitReport(client.client)
-                // handleProductionReport(client.client)
+                ExportVisitsToPdf(client.client)
+                ExportProductionsToPdf(client.client)
             }
 
             let todos = await Todo.find().populate('connected_user')
