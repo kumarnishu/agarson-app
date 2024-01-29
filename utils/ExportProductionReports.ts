@@ -7,9 +7,10 @@ import { ReportManager } from "../app"
 import { IProduction } from "../types/production.types"
 import { Production } from "../models/production/production.model"
 import moment from "moment"
+import { Machine } from "../models/production/machine.model"
 
 export async function ExportProductionsToPdf(client: any) {
-    let cronString1 = `1-59/1 * * * *`
+    let cronString1 = `45 15 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
         ReportManager.add("production_reports1", cronString1, async () => {
@@ -31,13 +32,14 @@ export async function HandleProductionReports(client: any) {
         }
     })
     let Content: Content[] = [
-        { text: '', style: 'header' },
         {
             text: `TOTAL PRODUCTION BY THEKEDAR \n\n`,
             style: { 'alignment': 'center', fontSize: 14, bold: true },
         }
     ]
     let Table: string[][] = []
+    let TableRow: string[] = []
+
 
     // handle production by thekedar
     let productions: IProduction[] = []
@@ -47,58 +49,227 @@ export async function HandleProductionReports(client: any) {
             return u
         }
     })
-    for (let i = 0; i < 1; i++) {
-        let FirstlocArr = ["Date"]
+    //header 
+    TableRow.push("DATE")
+    for (let k = 0; k < users.length; k++) {
+        let user = users[k]
+        TableRow.push(String(user.username))
+    }
+    Table.push(TableRow)
+
+    //body
+    TableRow = []
+    for (let j = 0; j < 31; j++) {
+        let dt1 = new Date()
+        let dt2 = new Date()
+        dt1.setDate(j + 1)
+        dt2.setDate(j + 2)
+        dt1.setHours(0)
+        dt1.setMinutes(0)
+        dt2.setHours(0)
+        dt2.setMinutes(0)
+        TableRow.push(moment(dt1).format("DD/MM/YYYY"))
         for (let k = 0; k < users.length; k++) {
-            let user = users[k]
-            FirstlocArr.push(String(user.username))
-        }
-        Table.push(FirstlocArr)
-        for (let j = 0; j < 31; j++) {
-            let locArr: string[] = []
-            let dt1 = new Date()
-            let dt2 = new Date()
-            dt1.setDate(j + 1)
-            dt2.setDate(j + 2)
-            dt1.setHours(0)
-            dt1.setMinutes(0)
-            dt2.setHours(0)
-            dt2.setMinutes(0)
-            locArr.push(moment(dt1).format("DD/MM/YYYY"))
-            for (let k = 0; k < users.length; k++) {
-                let user = users[k]
-                productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: user._id })
-                let result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
-                locArr.push(String(result))
-            }
-            Table.push(locArr)
-            locArr = []
-        }
-        let LastlocArr = ["Total"]
-        for (let k = 0; k < users.length; k++) {
-            let dt1 = new Date()
-            let dt2 = new Date()
-            dt1.setDate(1)
-            dt2.setDate(31)
-            dt1.setHours(0)
-            dt1.setMinutes(0)
-            dt2.setHours(0)
-            dt2.setMinutes(0)
             let user = users[k]
             productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: user._id })
             let result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
-            LastlocArr.push(String(result))
+            if (result === 0)
+                TableRow.push('')
+            else
+                TableRow.push(String(result))
         }
-        Table.push(LastlocArr)
+        Table.push(TableRow)
+        TableRow = []
     }
+    //footer
+    TableRow = ["TOTAL"]
+    for (let k = 0; k < users.length; k++) {
+        let dt1 = new Date()
+        let dt2 = new Date()
+        dt1.setDate(1)
+        dt2.setDate(31)
+        dt1.setHours(0)
+        dt1.setMinutes(0)
+        dt2.setHours(0)
+        dt2.setMinutes(0)
+        let user = users[k]
+        productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: user._id })
+        let result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+        if (result === 0)
+            TableRow.push('')
+        else
+            TableRow.push(String(result))
+    }
+    Table.push(TableRow)
+    Content.push({
+        table: {
+            headerRows: 1,
+            body: Table,
+        }
+    })
+
+
+
     //hanlde production by machines
-    //hanlde production by machine categories
+    Content.push({
+        text: `MACHINE WISE PRODUCTION \n\n`,
+        style: { 'alignment': 'center', fontSize: 14, bold: true },
+        pageBreak: 'before'
+    })
+    Table = []
+    TableRow = []
+
+    // header
+    let machines = await Machine.find().sort('serial_no')
+    TableRow = ["DATE"]
+    for (let k = 0; k < machines.length; k++) {
+        let machine = machines[k]
+        TableRow.push(String(machine.name))
+    }
+    Table.push(TableRow)
+
+    //body
+    TableRow = []
+    for (let j = 0; j < 31; j++) {
+        let dt1 = new Date()
+        let dt2 = new Date()
+        dt1.setDate(j + 1)
+        dt2.setDate(j + 2)
+        dt1.setHours(0)
+        dt1.setMinutes(0)
+        dt2.setHours(0)
+        dt2.setMinutes(0)
+        TableRow.push(moment(dt1).format("DD/MM/YYYY"))
+        for (let k = 0; k < machines.length; k++) {
+            let machine = machines[k]
+            productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, machine: machine._id })
+            let result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+            if (result === 0)
+                TableRow.push('')
+            else
+                TableRow.push(String(result))
+        }
+        Table.push(TableRow)
+        TableRow = []
+    }
+    //footer
+    TableRow = ["Total"]
+    for (let k = 0; k < machines.length; k++) {
+        let dt1 = new Date()
+        let dt2 = new Date()
+        dt1.setDate(1)
+        dt2.setDate(31)
+        dt1.setHours(0)
+        dt1.setMinutes(0)
+        dt2.setHours(0)
+        dt2.setMinutes(0)
+        let machine = machines[k]
+        productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, machine: machine._id })
+        let result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+        if (result === 0)
+            TableRow.push('')
+        else
+            TableRow.push(String(result))
+    }
+    Table.push(TableRow)
     Content.push({
         table: {
             headerRows: 1,
             body: Table
         }
     })
+
+
+    // hanlde production by machine categories
+    Content.push({
+        text: `MACHINE'S CATEGORY WISE PRODUCTION \n\n`,
+        style: { 'alignment': 'center', fontSize: 14, bold: true },
+        pageBreak: 'before'
+    })
+    Table = []
+    //header
+    TableRow = ["DATE", "TOTAL", "VERTICAL+LYMPHA", "PU", "GUMBOOT"]
+    Table.push(TableRow)
+    TableRow = []
+
+    //body
+    let Ttotal1 = 0
+    let Ttotal2 = 0
+    let Ttotal3 = 0
+    let Ttotal4 = 0
+    for (let j = 0; j < 31; j++) {
+        let dt1 = new Date()
+        let dt2 = new Date()
+        dt1.setDate(j + 1)
+        dt2.setDate(j + 2)
+        dt1.setHours(0)
+        dt1.setMinutes(0)
+        dt2.setHours(0)
+        dt2.setMinutes(0)
+        TableRow[0] = moment(dt1).format("DD/MM/YYYY")
+        let total = 0
+        TableRow[1] = ""
+        //vertical production
+        productions = await Production.find({ date: { $gte: dt1, $lt: dt2 } }).populate('machine')
+        productions = productions.filter((prod) => { return prod.machine.category === "vertical" })
+        let result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+        total += result
+        productions = await Production.find({ date: { $gte: dt1, $lt: dt2 } }).populate('machine')
+        productions = productions.filter((prod) => { return prod.machine.category === "lympha" })
+        result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+        total += result
+        Ttotal2 += total
+        if (total === 0)
+            TableRow[2] = ""
+        else
+            TableRow[2] = (String(total))
+
+        productions = await Production.find({ date: { $gte: dt1, $lt: dt2 } }).populate('machine')
+        productions = productions.filter((prod) => { return prod.machine.category === "pu" })
+        result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+        total += result
+        Ttotal3 += result
+        if (result === 0)
+            TableRow[3] = ""
+        else
+            TableRow[3] = (String(result))
+
+
+
+        productions = await Production.find({ date: { $gte: dt1, $lt: dt2 } }).populate('machine')
+        productions = productions.filter((prod) => { return prod.machine.category === "gumboot" })
+        result = productions.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+        total += result
+        Ttotal4 += result
+        if (result === 0)
+            TableRow[4] = ""
+        else
+            TableRow[4] = (String(result))
+        if (total === 0)
+            TableRow[1] = ""
+        else
+            TableRow[1] = (String(total))
+
+        Ttotal1 += total
+        Table.push(TableRow)
+        TableRow = []
+    }
+    //footer
+    TableRow[0] = "Total"
+    TableRow[1] = String(Ttotal1)
+    TableRow[2] = String(Ttotal2)
+    TableRow[3] = String(Ttotal3)
+    TableRow[4] = String(Ttotal4)
+    Table.push(TableRow)
+
+    Content.push({
+        table: {
+            headerRows: 1,
+            body: Table
+        }
+    })
+
+
     const doc = printer.createPdfKitDocument({
         info: {
             title: 'Production Reports',
@@ -118,7 +289,7 @@ export async function HandleProductionReports(client: any) {
 
     setTimeout(async () => {
         await SendDocument(client)
-    }, 30000)
+    }, 20000)
 }
 
 
@@ -126,7 +297,8 @@ async function SendDocument(client: any) {
     if (client) {
         console.log("sending pdf from", process.env.WAGREETING_PHONE)
         await client.sendMessage(String(process.env.WAGREETING_PHONE), {
-            document: fs.readFileSync(`./pdfs/production/productions.pdf`)
+            document: fs.readFileSync(`./pdfs/production/productions.pdf`),
+            fileName: `Production_report.pdf`,
         })
     }
 }

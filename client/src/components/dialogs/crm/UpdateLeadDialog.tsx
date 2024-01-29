@@ -10,7 +10,7 @@ import { IUser } from '../../../types/user.types'
 import { BackendError } from '../../..'
 import { Cancel } from '@mui/icons-material'
 
-function UpdateLeadDialog({ lead }: { lead: ILead}) {
+function UpdateLeadDialog({ lead }: { lead: ILead }) {
     const [users, setUsers] = useState<IUser[]>([])
     const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { choice, setChoice } = useContext(ChoiceContext)
@@ -20,17 +20,16 @@ function UpdateLeadDialog({ lead }: { lead: ILead}) {
     }, [users, isSuccess, data])
     return (
         <Dialog fullScreen={Boolean(window.screen.width < 500)}
-        open={choice === LeadChoiceActions.update_lead ? true : false}
-        
+            open={choice === LeadChoiceActions.update_lead ? true : false}
+            onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
         >
-
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
                 <Cancel fontSize='large' />
             </IconButton>
-            
+
 
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">Update Lead Form</DialogTitle>
-           
+
             <DialogContent>
                 {lead ?
                     < UpdateLeadForm users={users} lead={lead} />

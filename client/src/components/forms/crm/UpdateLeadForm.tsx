@@ -384,8 +384,13 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
           }
           {...formik.getFieldProps('city')}
         >
-          <option value="">
+         
+          <option value={lead.city ? lead.city : ""}>
+            {lead.city ? lead.city : ""}
           </option>
+          {lead.city && <option value={""}>
+
+          </option>}
           {
             Cities.map((city, index) => {
               return (<option key={index} value={city}>
