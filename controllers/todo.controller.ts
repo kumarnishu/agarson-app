@@ -28,40 +28,36 @@ export const GetMyTodos = async (req: Request, res: Response, next: NextFunction
     return res.status(200).json(todos)
 }
 export const GetTodos = async (req: Request, res: Response, next: NextFunction) => {
-    let type = req.query.type
-    let all = req.query.all
+    let types = String(req.query.types).split(",")
+    let stopped = req.query.stopped
     let mobile = req.query.mobile
-    let showall = false
-    if (all === "true")
-        showall = true
     let todos: ITodo[] = []
-    if (showall) {
-        if (!mobile) {
-            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+    let showStopped = false
+    if (stopped === "true")
+        showStopped = true
+    if (!mobile) {
+        if (showStopped) {
+            todos = await Todo.find({ is_active: false, todo_types: { $in: types }, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
         }
-        if (mobile) {
-            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
-            todos = todos.filter((todo) => {
-                let numbers = todo.contacts.map((c) => { return c.mobile })
+        else {
+            todos = await Todo.find({ todo_types: { $in: types }, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+        }
 
-                if (numbers.includes(String(mobile)))
-                    return todo
-            })
-        }
     }
-    if (!showall) {
-        if (!mobile) {
-            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+    if (mobile) {
+        if (showStopped) {
+            todos = await Todo.find({ is_active: false, todo_types: { $in: types }, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
         }
-        if (mobile) {
-            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
-            todos = todos.filter((todo) => {
-                let numbers = todo.contacts.map((c) => { return c.mobile })
+        else {
+            todos = await Todo.find({ todo_types: { $in: types }, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+        }
 
-                if (numbers.includes(String(mobile)))
-                    return todo
-            })
-        }
+        todos = todos.filter((todo) => {
+            let numbers = todo.contacts.map((c) => { return c.mobile })
+
+            if (numbers.includes(String(mobile)))
+                return todo
+        })
     }
 
     return res.status(200).json(todos)
@@ -120,6 +116,7 @@ export const CreateTodo = async (req: Request, res: Response, next: NextFunction
         subtitle: subtitle,
         category: category,
         category2: category2,
+        todo_types: ['visible', 'all'],
         contacts: contacts,
         connected_user: connected_user || null,
         created_at: new Date(),
@@ -355,32 +352,7 @@ export const StopAllTodos = async (req: Request, res: Response, next: NextFuncti
     })
     return res.status(200).json({ message: "all todo stopped" })
 }
-export const TooglehideAllTodos = async (req: Request, res: Response, next: NextFunction) => {
-    let { ids } = req.body as { ids: string[] }
-    ids.forEach(async (id) => {
-        let todo = await Todo.findById(id).populate('connected_user')
-        if (todo) {
-            await Todo.findByIdAndUpdate(todo._id, {
-                todo_type: !todo.todo_type
-            })
-        }
-    })
-    return res.status(200).json({ message: "toogle hidden successful" })
-}
 
-export const ToogleHideTodo = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct todo id" })
-    }
-    let todo = await Todo.findById(id)
-    if (!todo)
-        return res.status(400).json({ message: "not found" })
-    await Todo.findByIdAndUpdate(todo._id, {
-        todo_type: !todo.todo_type
-    })
-    return res.status(200).json({ message: "todo hidden" })
-}
 
 export const UpdateStatus = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
@@ -415,6 +387,7 @@ export const UpdateStatus = async (req: Request, res: Response, next: NextFuncti
     await todo.save()
     return res.status(200).json({ message: `todo staus updated` });
 }
+
 
 export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next: NextFunction) => {
     let result: ITodoTemplate[] = []
@@ -454,9 +427,9 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             let frequency_value: string | null = todo.frequency_value
             let start_date: string | null = todo.start_date
             let run_once: string | null = String(todo.run_once).toLowerCase()
-            let todo_type: string | null = String(todo.todo_type).toLowerCase()
+            let todo_types: string | null = String(todo.todo_types).toLowerCase()
             let connected_user: string | null = String(todo.connected_user).toLowerCase()
-          
+
             let validated = true
 
 
@@ -616,7 +589,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             refresh_cron_string: refresh_cron_string,
                             frequency_type: frequency_type,
                             frequency_value: frequency_value,
-                            todo_type: todo_type,
+                            todo_types: todo_types.split(","),
                             is_active: false,
                             is_paused: false,
                             running_key: String(newtodo._id) + "todo",
@@ -664,7 +637,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             connected_user: newConNuser?._id || undefined,
                             refresh_cron_string: refresh_cron_string,
                             replies: [],
-                            todo_type: todo_type,
+                            todo_types: todo_types.split(","),
                             is_active: false,
                             is_paused: false,
                             contacts: newContacts,
@@ -688,3 +661,4 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
     return res.status(200).json(result);
 }
 
+        

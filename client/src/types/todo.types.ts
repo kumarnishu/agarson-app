@@ -8,8 +8,7 @@ export type ITodoTemplate = {
     category: string,
     category2: string,
     contacts: string,
-    todo_type: string,
-    last_reply: string,
+    todo_types: string,
     run_once: boolean,
     frequency_type: string,
     frequency_value: string,
@@ -31,7 +30,7 @@ export type ITodo = {
         status: string
     }[],
     is_completed: boolean,
-    todo_type: string,
+    todo_types: string[],
     replies: { reply: string, created_by: IUser, timestamp: Date }[]
     is_active: boolean,
     run_once: boolean,

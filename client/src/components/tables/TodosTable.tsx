@@ -1,4 +1,4 @@
-import { Delete, Edit, EditCalendar, HideImageRounded, Person2, RestartAlt, Stop, Visibility } from '@mui/icons-material'
+import { Delete, Edit, EditCalendar, Person2, RestartAlt, Stop, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -9,7 +9,6 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import { ITodo } from '../../types/todo.types'
 import StartTodoDialog from '../dialogs/todos/StartTodoDialog'
 import StopTodoDialog from '../dialogs/todos/StopTodoDialog'
-import ToogleHideTodoDialog from '../dialogs/todos/ToogleHideTodoDialog'
 import UpdateTodoDialog from '../dialogs/todos/UpdateTodoDialog'
 import UpdateTodoStatusDialog from '../dialogs/todos/UpdateTodoStatusDialog'
 import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
@@ -165,7 +164,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                 connected No
 
                             </STableHeadCell>
-                           
+
 
                         </STableRow>
                     </STableHead>
@@ -260,16 +259,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                         }
 
 
-                                                        <Tooltip title="Toogle Hide">
-                                                            <IconButton color="error"
-                                                                onClick={() => {
-                                                                    setChoice({ type: TodoChoiceActions.hide_todo })
-                                                                    setTodo(todo)
-                                                                }}
-                                                            >
-                                                                <HideImageRounded />
-                                                            </IconButton>
-                                                        </Tooltip>
+
 
                                                         <Tooltip title="View Contacts">
                                                             <IconButton color="secondary"
@@ -384,7 +374,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         <STableCell>
                                             {todo.connected_user && todo.connected_user.connected_number?.split(":")[0]}
                                         </STableCell>
-                                       
+
                                     </STableRow>
                                 )
                             })
@@ -397,7 +387,6 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                 todo ?
                     <>
                         < StartTodoDialog id={todo._id} />
-                        <ToogleHideTodoDialog todo={todo} />
                         <StopTodoDialog id={todo._id} />
                         <UpdateTodoDialog todo={todo} />
                         <UpdateTodoStatusDialog todo={todo} />

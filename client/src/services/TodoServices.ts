@@ -1,10 +1,10 @@
 import { apiClient } from "./utils/AxiosInterceptor";
 
-export const GetTodos = async ({ hidden, mobile, visible }: { hidden: boolean, visible: boolean, mobile?: string }) => {
+export const GetTodos = async ({ types, mobile, stopped }: { types: string[], stopped: boolean, mobile?: string }) => {
     if (mobile)
-        return await apiClient.get(`todos/?hidden=${hidden}&mobile=${mobile}&visible=${visible}`)
+        return await apiClient.get(`todos/?types=${types}&mobile=${mobile}&stopped=${stopped}`)
     else
-        return await apiClient.get(`todos/?hidden=${hidden}&visible=${visible}`)
+        return await apiClient.get(`todos/?types=${types}&stopped=${stopped}`)
 
 }
 export const GetMyTodos = async ({ type, all }: { type: string, all: boolean }) => {
@@ -65,18 +65,11 @@ export const StartAllTodos = async ({ ids }: { ids: string[] }) => {
     return await apiClient.patch(`todos/bulk/start`, { ids: ids });
 };
 
-export const ToogleHideAllTodos = async ({ ids }: { ids: string[] }) => {
-    return await apiClient.patch(`todos/bulk/hide`, { ids: ids });
-};
 
 export const DeleteTodo = async (id: string) => {
     return await apiClient.delete(`todos/${id}`);
 };
 
-
-export const ToogleHideTodo = async (id: string) => {
-    return await apiClient.patch(`todos/hide/${id}`);
-};
 
 
 export const UpdateTodoStatus = async ({ id, body }: { id: string, body: { status: string, reply: string } }) => {

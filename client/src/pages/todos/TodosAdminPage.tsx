@@ -21,7 +21,6 @@ import FuzzySearch from 'fuzzy-search'
 import UploadTodoExcelButton from '../../components/buttons/UploadTodoExcelButton'
 import StartAllTodoDialog from '../../components/dialogs/todos/StartAllTodoDialog'
 import StopAllTodoDialog from '../../components/dialogs/todos/StopAllTodoDialog'
-import ToogleHideAllTodosDialog from '../../components/dialogs/todos/ToogleHideAllTodosDialog'
 const template: ITodoTemplate[] = [
     {
         _id: "",
@@ -31,7 +30,7 @@ const template: ITodoTemplate[] = [
         category: "vijay dye",
         category2: "urgent",
         contacts: "nishu,7056943283",
-        is_hidden: true,
+        todo_types: "hidden,all",
         run_once: false,
         frequency_type: "days",
         frequency_value: "1",
@@ -52,8 +51,8 @@ let help1 = [
 
 export default function TodosPage() {
     const [users, setUsers] = useState<IUser[]>([])
-    const [hidden, setHidden] = useState(false)
-    const [visible, setVisible] = useState(true)
+    const [types, setTypes] = useState(["visible"])
+    const [stopped, setStopped] = useState(false)
     const [mobile, setMobile] = useState<string>()
     const [filter, setFilter] = useState<string | undefined>()
     const { user: LoggedInUser } = useContext(UserContext)
@@ -65,7 +64,7 @@ export default function TodosPage() {
 
     const [selectedTodos, setSelectedTodos] = useState<ITodo[]>([])
     const [selectedData, setSelectedData] = useState<ITodoTemplate[]>(template)
-    const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["todos", hidden, mobile, visible], async () => GetTodos({ hidden: hidden, visible: visible, mobile: mobile }))
+    const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["todos", types, stopped, mobile], async () => GetTodos({ types: types, mobile: mobile, stopped: stopped }))
 
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
@@ -104,7 +103,7 @@ export default function TodosPage() {
                         let result = c.name || c.mobile
                         return result
                     }).toString(),
-                    is_hidden: todo.is_hidden,
+                    todo_types: todo.todo_types.toString(),
                     run_once: todo.run_once,
                     frequency_type: todo.frequency_type ? todo.frequency_type : "",
                     frequency_value: todo.frequency_value ? todo.frequency_value : "",
@@ -141,6 +140,8 @@ export default function TodosPage() {
 
     }, [filter])
 
+    console.log(types)
+    console.log(stopped)
     return (
         <>
 
@@ -150,13 +151,69 @@ export default function TodosPage() {
             {/*heading, search bar and table menu */}
             <Stack px={2} direction={'row'} justifyContent={'center'}>
                 <FormControlLabel control={<Checkbox
-                    defaultChecked={Boolean(hidden)}
-                    onChange={() => setHidden(!hidden)}
+                    checked={Boolean(types.includes('all'))}
+                    onChange={(e) => {
+                        if (e.target.checked) {
+                            let ltypes = types.filter((t) => { return t !== "all" })
+                            ltypes.push('all')
+                            setTypes(ltypes)
+                        }
+                        if (!e.target.checked) {
+                            let ltypes = types.filter((t) => { return t !== "all" })
+                            setTypes(ltypes)
+                        }
+
+                    }}
+                />} label="All" />
+                <FormControlLabel control={<Checkbox
+                    checked={Boolean(types.includes('hidden'))}
+                    onChange={(e) => {
+                        if (e.target.checked) {
+                            let ltypes = types.filter((t) => { return t !== "hidden" })
+                            ltypes.push('hidden')
+                            setTypes(ltypes)
+                        }
+                        if (!e.target.checked) {
+                            let ltypes = types.filter((t) => { return t !== "hidden" })
+                            setTypes(ltypes)
+                        }
+
+                    }}
                 />} label="Hidden" />
                 <FormControlLabel control={<Checkbox
-                    defaultChecked={Boolean(visible)}
-                    onChange={() => setVisible(!visible)}
+                    checked={Boolean(types.includes('visible'))}
+                    onChange={(e) => {
+                        if (e.target.checked) {
+                            let ltypes = types.filter((t) => { return t !== "visible" })
+                            ltypes.push('visible')
+                            setTypes(ltypes)
+                        }
+                        if (!e.target.checked) {
+                            let ltypes = types.filter((t) => { return t !== "visible" })
+                            setTypes(ltypes)
+                        }
+
+                    }}
                 />} label="Visible" />
+                <FormControlLabel control={<Checkbox
+                    checked={Boolean(types.includes('greeting'))}
+                    onChange={(e) => {
+                        if (e.target.checked) {
+                            let ltypes = types.filter((t) => { return t !== "greeting" })
+                            ltypes.push('greeting')
+                            setTypes(ltypes)
+                        }
+                        if (!e.target.checked) {
+                            let ltypes = types.filter((t) => { return t !== "greeting" })
+                            setTypes(ltypes)
+                        }
+
+                    }}
+                />} label="Greeting" />
+                <FormControlLabel sx={{ color: 'red' }} control={<Checkbox
+                    checked={Boolean(stopped)}
+                    onChange={() => setStopped(!stopped)}
+                />} label="Stopped" />
             </Stack>
 
             <Stack
@@ -275,15 +332,7 @@ export default function TodosPage() {
                                     setAnchorEl(null)
                                 }}
                             > Stop All</MenuItem>}
-                            {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
-                                onClick={() => {
-                                    if (selectedTodos.length === 0)
-                                        alert("please select some todos")
-                                    else
-                                        setChoice({ type: TodoChoiceActions.bulk_hide_todo })
-                                    setAnchorEl(null)
-                                }}
-                            > Toogle Hide All</MenuItem>}
+
 
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
@@ -292,7 +341,7 @@ export default function TodosPage() {
                         <CreateTodoDialog count={todos.length} />
                         <StartAllTodoDialog ids={selectedTodos.map((todo) => { return todo._id })} />
                         <StopAllTodoDialog ids={selectedTodos.map((todo) => { return todo._id })} />
-                        <ToogleHideAllTodosDialog ids={selectedTodos.map((todo) => { return todo._id })} />
+
                     </>
                 </Stack >
             </Stack >

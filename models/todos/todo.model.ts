@@ -22,7 +22,7 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
         },
         timestamp: Date
     }],
-    todo_type: { type: String, default: 'visible' },
+    todo_types: [{ type: String }],
     serial_no: { type: Number, default: 0 },
     contacts: [{
         mobile: String,
