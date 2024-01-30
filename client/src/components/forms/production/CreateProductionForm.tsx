@@ -209,34 +209,8 @@ function NewProductionForm() {
                         })
                     }
                 </TextField>
-                <TextField
-                    required
-                    fullWidth
-                    type="number"
-                    error={
-                        formik.touched.manpower && formik.errors.manpower ? true : false
-                    }
-                    id="manpower"
-                    label="Man Power"
-                    helperText={
-                        formik.touched.manpower && formik.errors.manpower ? formik.errors.manpower : ""
-                    }
-                    {...formik.getFieldProps('manpower')}
-                />
-                <TextField
-                    required
-                    fullWidth
-                    type="number"
-                    error={
-                        formik.touched.production_hours && formik.errors.production_hours ? true : false
-                    }
-                    id="production_hours"
-                    label="Production Hours"
-                    helperText={
-                        formik.touched.production_hours && formik.errors.production_hours ? formik.errors.production_hours : ""
-                    }
-                    {...formik.getFieldProps('production_hours')}
-                />
+               
+                
                 <TextField
                     required
                     fullWidth
@@ -279,7 +253,34 @@ function NewProductionForm() {
                     }
                     {...formik.getFieldProps('small_repair')}
                 />
-
+                <TextField
+                    required
+                    fullWidth
+                    type="number"
+                    error={
+                        formik.touched.manpower && formik.errors.manpower ? true : false
+                    }
+                    id="manpower"
+                    label="Man Power"
+                    helperText={
+                        formik.touched.manpower && formik.errors.manpower ? formik.errors.manpower : ""
+                    }
+                    {...formik.getFieldProps('manpower')}
+                />
+                <TextField
+                    required
+                    fullWidth
+                    type="number"
+                    error={
+                        formik.touched.production_hours && formik.errors.production_hours ? true : false
+                    }
+                    id="production_hours"
+                    label="Production Hours"
+                    helperText={
+                        formik.touched.production_hours && formik.errors.production_hours ? formik.errors.production_hours : ""
+                    }
+                    {...formik.getFieldProps('production_hours')}
+                />
                 {
                     isError ? (
                         <AlertBar message={error?.response.data.message} color="error" />
