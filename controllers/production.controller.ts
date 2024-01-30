@@ -550,8 +550,8 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
     let previous_date = new Date()
     let day = previous_date.getDate() - 3
     previous_date.setDate(day)
-    if (new Date(date) < previous_date || new Date(date) > new Date())
-        return res.status(400).json({ message: "invalid date, should be within last 2 days" })
+    // if (new Date(date) < previous_date || new Date(date) > new Date())
+    //     return res.status(400).json({ message: "invalid date, should be within last 2 days" })
 
     let previous_date2 = new Date(date)
     let day2 = previous_date2.getDate() - 3
@@ -563,8 +563,8 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
             return prod
         }
     })
-    // if (prods.length === 2)
-    //     return res.status(400).json({ message: "not allowed more than 2 productions for the same machine" })
+    if (prods.length === 2)
+        return res.status(400).json({ message: "not allowed more than 2 productions for the same machine" })
 
     if (!machine || !thekedar || !articles || !manpower || !production || !date)
         return res.status(400).json({ message: "please fill all reqired fields" })
