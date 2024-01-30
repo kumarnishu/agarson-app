@@ -17,7 +17,7 @@ import { IUser } from "../types/user.types"
 //get
 export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = req.query.hidden
-    let todos = await Todo.find({ is_hidden: hidden }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+    let todos = await Todo.find({ todo_type: hidden }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
     todos = todos.filter((todo) => {
         let numbers = todo.contacts.map((c) => { return c.mobile })
 
@@ -28,24 +28,19 @@ export const GetMyTodos = async (req: Request, res: Response, next: NextFunction
     return res.status(200).json(todos)
 }
 export const GetTodos = async (req: Request, res: Response, next: NextFunction) => {
-    let hidden = req.query.hidden
-    let visible = req.query.visible
+    let type = req.query.type
+    let all = req.query.all
     let mobile = req.query.mobile
     let showall = false
-    if (String(hidden) === "false" && String(visible) === "false") {
+    if (all === "true")
         showall = true
-    }
-    if (String(hidden) !== "false" && String(visible) !== "false") {
-        showall = true
-    }
-
     let todos: ITodo[] = []
     if (showall) {
         if (!mobile) {
-            todos = await Todo.find({ created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
         }
         if (mobile) {
-            todos = await Todo.find({ created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
             todos = todos.filter((todo) => {
                 let numbers = todo.contacts.map((c) => { return c.mobile })
 
@@ -56,10 +51,10 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
     }
     if (!showall) {
         if (!mobile) {
-            todos = await Todo.find({ is_hidden: hidden, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
         }
         if (mobile) {
-            todos = await Todo.find({ is_hidden: hidden,created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
             todos = todos.filter((todo) => {
                 let numbers = todo.contacts.map((c) => { return c.mobile })
 
@@ -366,7 +361,7 @@ export const TooglehideAllTodos = async (req: Request, res: Response, next: Next
         let todo = await Todo.findById(id).populate('connected_user')
         if (todo) {
             await Todo.findByIdAndUpdate(todo._id, {
-                is_hidden: !todo.is_hidden
+                todo_type: !todo.todo_type
             })
         }
     })
@@ -382,7 +377,7 @@ export const ToogleHideTodo = async (req: Request, res: Response, next: NextFunc
     if (!todo)
         return res.status(400).json({ message: "not found" })
     await Todo.findByIdAndUpdate(todo._id, {
-        is_hidden: !todo.is_hidden
+        todo_type: !todo.todo_type
     })
     return res.status(200).json({ message: "todo hidden" })
 }
@@ -459,11 +454,9 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             let frequency_value: string | null = todo.frequency_value
             let start_date: string | null = todo.start_date
             let run_once: string | null = String(todo.run_once).toLowerCase()
-            let is_hidden: string | null = String(todo.is_hidden).toLowerCase()
+            let todo_type: string | null = String(todo.todo_type).toLowerCase()
             let connected_user: string | null = String(todo.connected_user).toLowerCase()
-            let hidden = false
-            if (is_hidden === "true")
-                hidden = true
+          
             let validated = true
 
 
@@ -623,7 +616,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             refresh_cron_string: refresh_cron_string,
                             frequency_type: frequency_type,
                             frequency_value: frequency_value,
-                            is_hidden: hidden,
+                            todo_type: todo_type,
                             is_active: false,
                             is_paused: false,
                             running_key: String(newtodo._id) + "todo",
@@ -671,7 +664,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             connected_user: newConNuser?._id || undefined,
                             refresh_cron_string: refresh_cron_string,
                             replies: [],
-                            is_hidden: hidden,
+                            todo_type: todo_type,
                             is_active: false,
                             is_paused: false,
                             contacts: newContacts,

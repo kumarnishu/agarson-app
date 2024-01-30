@@ -26,7 +26,7 @@ type ITodoTemplate = {
 
 export default function TodosPage() {
   const [users, setUsers] = useState<IUser[]>([])
-  const [hidden, setHidden] = useState(false)
+  const [all, setAll] = useState(false)
   const [filter, setFilter] = useState<string | undefined>()
   const [todo, setTodo] = useState<ITodo>()
   const [todos, setTodos] = useState<ITodo[]>([])
@@ -35,7 +35,7 @@ export default function TodosPage() {
   const [preFilteredData, setPreFilteredData] = useState<ITodo[]>([])
   const [selectedTodos, setSelectedTodos] = useState<ITodo[]>([])
   const [selectedData, setSelectedData] = useState<ITodoTemplate[]>([])
-  const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["my_todos", hidden], async () => GetMyTodos({ hidden: hidden }))
+  const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["my_todos", all], async () => GetMyTodos({ all: all, type: type }))
 
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
@@ -88,7 +88,7 @@ export default function TodosPage() {
 
   useEffect(() => {
     if (filter) {
-      const searcher = new FuzzySearch(todos, ["title", "subtitle", "category2", "category", "contacts.mobile", "contacts.name", "replies.reply", "frequency_type"], {
+      const searcher = new FuzzySearch(todos, ["title", "subtitle", "category2", "category", "contacts.mobile", "contacts.name", "replies.reply", "frequency_type", "todo_type"], {
         caseSensitive: false,
       });
       const result = searcher.search(filter);
@@ -127,8 +127,8 @@ export default function TodosPage() {
           direction="row"
         >
           <FormControlLabel control={<Switch
-            defaultChecked={Boolean(hidden)}
-            onChange={() => setHidden(!hidden)}
+            defaultChecked={Boolean(all)}
+            onChange={() => setAll(!all)}
           />} label="Hidden" />
 
           {/* search bar */}
@@ -152,7 +152,7 @@ export default function TodosPage() {
                 ),
               }}
             />
-           
+
           </Stack >
           <>
 

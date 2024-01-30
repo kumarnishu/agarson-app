@@ -8,14 +8,14 @@ export type ITodoTemplate = {
     category: string,
     category2: string,
     contacts: string,
-    is_hidden: boolean,
+    todo_types: string[],
     last_reply: string,
     run_once: boolean,
     frequency_type: string,
     frequency_value: string,
     start_date: string,
-    connected_user:string,
-    status?:string
+    connected_user: string,
+    status?: string
 }
 export type ITodo = {
     _id: string,
@@ -31,7 +31,7 @@ export type ITodo = {
         status: string
     }[],
     is_completed: boolean,
-    is_hidden: boolean,
+    todo_type: string,
     replies: { reply: string, created_by: IUser, timestamp: Date }[]
     is_active: boolean,
     run_once: boolean,

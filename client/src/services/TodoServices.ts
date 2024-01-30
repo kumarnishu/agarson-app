@@ -7,8 +7,8 @@ export const GetTodos = async ({ hidden, mobile, visible }: { hidden: boolean, v
         return await apiClient.get(`todos/?hidden=${hidden}&visible=${visible}`)
 
 }
-export const GetMyTodos = async ({ hidden }: { hidden: boolean }) => {
-    return await apiClient.get(`todos/me/?hidden=${hidden}`)
+export const GetMyTodos = async ({ type, all }: { type: string, all: boolean }) => {
+    return await apiClient.get(`todos/me/?all=${all}&type=${type}`)
 }
 export const CreateTodo = async (body: {
     serial_no: number,
