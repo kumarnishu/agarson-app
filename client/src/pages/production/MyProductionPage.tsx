@@ -85,6 +85,9 @@ function MyProductionPage() {
                     Production Hours : {production.production_hours}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
+                    Manpower : {production.manpower}
+                  </Typography>
+                  <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                     Small Repair : {production.small_repair}
                   </Typography>
                   <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
