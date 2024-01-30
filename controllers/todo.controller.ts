@@ -42,10 +42,10 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
     let todos: ITodo[] = []
     if (showall) {
         if (!mobile) {
-            todos = await Todo.find().populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
         }
         if (mobile) {
-            todos = await Todo.find().populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
             todos = todos.filter((todo) => {
                 let numbers = todo.contacts.map((c) => { return c.mobile })
 
@@ -56,10 +56,10 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
     }
     if (!showall) {
         if (!mobile) {
-            todos = await Todo.find({ is_hidden: hidden }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ is_hidden: hidden, created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
         }
         if (mobile) {
-            todos = await Todo.find({ is_hidden: hidden }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ is_hidden: hidden,created_by: req.user?._id }).populate('connected_user').populate('replies.created_by').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
             todos = todos.filter((todo) => {
                 let numbers = todo.contacts.map((c) => { return c.mobile })
 
