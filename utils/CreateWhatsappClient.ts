@@ -103,7 +103,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     if (reminderClient) {
                         console.log(clients.length)
                         if (todo.is_active || todo.is_paused) {
-                            await HandleTodoMessage(todo, reminderClient.client)
+                            // await HandleTodoMessage(todo, reminderClient.client)
                         }
                     }
                 }
