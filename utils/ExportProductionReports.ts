@@ -10,7 +10,7 @@ import moment from "moment"
 import { Machine } from "../models/production/machine.model"
 
 export async function ExportProductionsToPdf(client: any) {
-    let cronString1 = `58 15 1/1 * *`
+    let cronString1 = `22 16 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
         ReportManager.add("production_reports1", cronString1, async () => {
