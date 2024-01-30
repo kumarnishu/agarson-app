@@ -21,9 +21,9 @@ export const GetMachines = async (req: Request, res: Response, next: NextFunctio
     let hidden = String(req.query.hidden)
     let machines: IMachine[] = []
     if (hidden === "true") {
-        machines = await Machine.find().populate('created_by').populate('updated_by').sort('name')
+        machines = await Machine.find().populate('created_by').populate('updated_by').sort('serial_no')
     } else
-        machines = await Machine.find({ active: true }).populate('created_by').populate('updated_by').sort('name')
+        machines = await Machine.find({ active: true }).populate('created_by').populate('updated_by').sort('serial_no')
     return res.status(200).json(machines)
 }
 export const GetArticles = async (req: Request, res: Response, next: NextFunction) => {

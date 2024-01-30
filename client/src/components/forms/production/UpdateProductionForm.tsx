@@ -53,7 +53,7 @@ function UpdateProductionForm({ production }: { production: IProduction }) {
             production: production.production,
             big_repair: production.big_repair,
             small_repair: production.small_repair,
-            date: moment(production.created_at).format("YYYY-MM-DD")
+            date: moment(production.date).format("YYYY-MM-DD")
         },
         validationSchema: Yup.object({
             machine: Yup.string()
