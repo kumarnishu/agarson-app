@@ -1,4 +1,4 @@
-import { Delete, EditCalendar, Person2, RestartAlt, Stop, Visibility } from '@mui/icons-material'
+import { Delete, Person2, RestartAlt, Stop } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -117,7 +117,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                             </STableHeadCell>
 
-                         
+
                             <STableHeadCell
                             >
 
@@ -281,7 +281,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         <STableCell >
                                             {todo.todo_type}
                                         </STableCell>
-                                       
+
 
                                         <STableCell title={todo.contacts.map((c) => {
                                             let result = c.name
