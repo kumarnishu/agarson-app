@@ -121,7 +121,7 @@ app.use("/api/v1", TodoRoutes)
 
 
 // daily trigger
-new CronJob("51 14 1/1 * *", async () => {
+new CronJob("00 00 1/1 * *", async () => {
     let todos = await Todo.find()
     todos.forEach(async (todo) => {
         if (todo.is_active) {

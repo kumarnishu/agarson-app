@@ -70,10 +70,7 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
         let todo = await Todo.findById(id).populate('connected_user')
         if (todo && todo.connected_user) {
             let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)
-            let ok = true
-            if (todo.run_once && new Date(todo.start_date) < new Date())
-                ok = false
-            if (client && ok) {
+            if (new Date(todo.start_date) > new Date() && client) {
                 todo_timeouts.forEach((item) => {
                     if (String(item.id) === String(todo?._id)) {
                         clearTimeout(item.timeout)
