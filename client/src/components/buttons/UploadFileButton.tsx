@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, CircularProgress, Typography } from "@mui/material"
+import { Button, CircularProgress, Stack, Typography } from "@mui/material"
 import styled from "styled-components"
 
 
@@ -67,7 +67,9 @@ function UploadFileButton({ disabled, file, name, required, camera, label, isLoa
                             }
 
                         </Button>
-                        {file && <Typography sx={{ p: 1 }}>picture attached successul</Typography>
+                        {file && <Stack sx={{ bgcolor: 'lightblue', m: 1, p: 1 }}>
+                            {file && <img src={file && URL.createObjectURL(file)} alt="image" />}
+                        </Stack>
                         }
                     </>
             }
