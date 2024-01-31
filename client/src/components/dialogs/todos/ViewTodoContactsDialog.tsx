@@ -29,8 +29,9 @@ function ViewTodoContactsDialog({ todo }: { todo: ITodo }) {
                             <STableHeadCell>
                                 Whatsapp Satus
                             </STableHeadCell>
+                           
                             <STableHeadCell>
-                                Todo Satus
+                                Timestamp
                             </STableHeadCell>
                         </STableHead>
                         <STableBody>
@@ -46,8 +47,9 @@ function ViewTodoContactsDialog({ todo }: { todo: ITodo }) {
                                         <STableCell>
                                             {contact.is_sent ? "Sent" : "pending"}
                                         </STableCell>
+
                                         <STableCell>
-                                            {contact.status}
+                                            {contact.timestamp ? new Date(contact.timestamp).toLocaleString() : ""}
                                         </STableCell>
                                     </STableRow>
                                 )

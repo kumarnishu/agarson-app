@@ -1,66 +1,22 @@
 import { apiClient } from "./utils/AxiosInterceptor";
 
-export const GetTodos = async ({ types, mobile, stopped }: { types: string[], stopped: boolean, mobile?: string }) => {
+export const GetTodos = async ({ type, mobile, stopped }: { type: string, stopped: boolean, mobile?: string }) => {
     if (mobile)
-        return await apiClient.get(`todos/?types=${types}&mobile=${mobile}&stopped=${stopped}`)
+        return await apiClient.get(`todos/?type=${type}&mobile=${mobile}&stopped=${stopped}`)
     else
-        return await apiClient.get(`todos/?types=${types}&stopped=${stopped}`)
+        return await apiClient.get(`todos/?type=${type}&stopped=${stopped}`)
 
 }
-export const GetMyTodos = async ({ type, all }: { type: string, all: boolean }) => {
-    return await apiClient.get(`todos/me/?all=${all}&type=${type}`)
+export const GetMyTodos = async () => {
+    return await apiClient.get(`todos/me`)
 }
-export const CreateTodo = async (body: {
-    serial_no: number,
-    title: string,
-    subtitle: string,
-    category: string,
-    contacts: {
-        mobile: string,
-        name: string,
-        is_sent: boolean,
-        status: string
-    }[],
-    run_once: boolean,
-    frequency_type: string,
-    frequency_value: string,
-    start_date: string,
-    connected_user: string
-}) => {
-    return await apiClient.post(`todos`, body);
-};
 
-export const UpdateTodo = async ({ id, body }: {
-    id: string, body: {
-        serial_no: number,
-        title: string,
-        subtitle: string,
-        category: string,
-        contacts: {
-            mobile: string,
-            name: string,
-            is_sent: boolean,
-            status: string
-        }[],
-        run_once: boolean,
-        frequency_type: string,
-        frequency_value: string,
-        start_date: string,
-        connected_user: string
-    }
-}) => {
-    return await apiClient.put(`todos/${id}`, body);
-};
 
-export const StopTodo = async (id: string) => {
-    return await apiClient.patch(`todos/stop/${id}`);
-};
+
 export const StopAllTodos = async ({ ids }: { ids: string[] }) => {
     return await apiClient.patch(`todos/bulk/stop`, { ids: ids });
 };
-export const StartTodo = async (id: string) => {
-    return await apiClient.patch(`todos/start/${id}`);
-};
+
 export const StartAllTodos = async ({ ids }: { ids: string[] }) => {
     return await apiClient.patch(`todos/bulk/start`, { ids: ids });
 };

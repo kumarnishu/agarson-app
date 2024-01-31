@@ -20,8 +20,12 @@ import { Server } from "socket.io";
 import { getCurrentUser, userJoin, userLeave } from "./utils/handleSocketUsers";
 import { Storage } from '@google-cloud/storage';
 import morgan from 'morgan';
-import { createWhatsappClient } from './utils/CreateWhatsappClient';
+import { clients, createWhatsappClient } from './utils/CreateWhatsappClient';
 import { ReConnectWhatsapp } from './utils/RestartServices';
+import { CronJob } from 'cron';
+import { Todo } from './models/todos/todo.model';
+import cron from "cron"
+import { HandleTodoMessage } from './utils/handleTodo';
 
 const app = express()
 const server = createServer(app)
@@ -115,6 +119,24 @@ app.use("/api/v1", ErpRoutes)
 app.use("/api/v1", ProductionRoutes)
 app.use("/api/v1", TodoRoutes)
 
+
+// daily trigger
+new CronJob("51 14 1/1 * *", async () => {
+    let todos = await Todo.find()
+    todos.forEach(async (todo) => {
+        if (todo.is_active) {
+            if (new Date(todo.start_date).getDate() === new Date().getDate() && new Date(todo.start_date).getMonth() === new Date().getMonth()) {
+                todo.next_run_date = new Date(cron.sendAt(new Date(todo.start_date)))
+                await todo.save()
+                if (todo.connected_user) {
+                    let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)
+                    if (client)
+                        await HandleTodoMessage(todo, client.client)
+                }
+            }
+        }
+    })
+}).start()
 
 
 ReConnectWhatsapp()

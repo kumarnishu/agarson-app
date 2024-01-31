@@ -16,7 +16,6 @@ import { GetUsers } from '../../services/UserServices'
 import { IUser } from '../../types/user.types'
 import { ITodo, ITodoTemplate } from '../../types/todo.types'
 import { GetTodos } from '../../services/TodoServices'
-import CreateTodoDialog from '../../components/dialogs/todos/CreateTodoDialog'
 import FuzzySearch from 'fuzzy-search'
 import UploadTodoExcelButton from '../../components/buttons/UploadTodoExcelButton'
 import StartAllTodoDialog from '../../components/dialogs/todos/StartAllTodoDialog'
@@ -30,7 +29,7 @@ const template: ITodoTemplate[] = [
         category: "vijay dye",
         category2: "urgent",
         contacts: "nishu,7056943283",
-        todo_types: "hidden,all",
+        todo_type: "hidden",
         run_once: false,
         frequency_type: "days",
         frequency_value: "1",
@@ -40,18 +39,19 @@ const template: ITodoTemplate[] = [
 ]
 
 let help1 = [
-    { frequency_type: "minutes", frequency_value: "2", remark: "repeat after every 2 minutes starting from 1-59" },
-    { frequency_type: "hours", frequency_value: "3", remark: "repeat after every 3 hours starting from 1-23" },
-    { frequency_type: "days", frequency_value: "1", remark: "repeat after every 1 days starting from 1-23, time will be picked from start date" },
-    { frequency_type: "weekdays", frequency_value: "1,2,3", remark: "repeat after every weeks on selected days starting from 1-7,time will picked from start date" },
-    { frequency_type: "monthdays", frequency_value: "1,2,3", remark: "repeat every months on selected dates starting from 1-31,time will picked from start date" },
-    { frequency_type: "months", frequency_value: "1-2,3,4", remark: "repeat on selected month at selected dates starting from 1-31,month will be picked from first frequency value seperated by [-] and time will picked from start date" },
-    { frequency_type: "yeardays", frequency_value: "1,2,3", remark: "repeat on selected days of selcted month in every year,month and time will picked from start date" },
+    { property: "start date", value: new Date().toLocaleString(), remark: `start date should be in format here MONTH/DATE/YEAR, HH:MM:SS AM/PM` },
+    { property: "Frequency->minutes", value: "2", remark: "repeat after every 2 minutes starting from 1-59" },
+    { property: "Frequency->hours", value: "3", remark: "repeat after every 3 hours starting from 1-23" },
+    { property: "Frequency->days", value: "1", remark: "repeat after every 1 days starting from 1-23, time will be picked from start date" },
+    { property: "Frequency->weekdays", value: "1,2,3", remark: "repeat after every weeks on selected days starting from 1-7,time will picked from start date" },
+    { property: "Frequency->every-month-days", value: "1,2,3", remark: "repeat every month on selected dates starting from 1-31,time will picked from start date" },
+    { property: "Frequency->selected-month-days", value: "1,2,3", remark: "repeat on selected month every year on selected dates starting from 1-31,selected month and time will picked from start date" },
+    { property: "Frequency->months", value: "2", remark: "repeat after every 2 months  starting from 1-12,time will picked from start date" }
 ]
 
 export default function TodosPage() {
     const [users, setUsers] = useState<IUser[]>([])
-    const [types, setTypes] = useState(["visible"])
+    const [type, setType] = useState<string>('visible')
     const [stopped, setStopped] = useState(false)
     const [mobile, setMobile] = useState<string>()
     const [filter, setFilter] = useState<string | undefined>()
@@ -64,7 +64,7 @@ export default function TodosPage() {
 
     const [selectedTodos, setSelectedTodos] = useState<ITodo[]>([])
     const [selectedData, setSelectedData] = useState<ITodoTemplate[]>(template)
-    const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["todos", types, stopped, mobile], async () => GetTodos({ types: types, mobile: mobile, stopped: stopped }))
+    const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["todos", type, stopped, mobile], async () => GetTodos({ type: type, mobile: mobile, stopped: stopped }))
 
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
@@ -103,7 +103,7 @@ export default function TodosPage() {
                         let result = c.name || c.mobile
                         return result
                     }).toString(),
-                    todo_types: todo.todo_types.toString(),
+                    todo_type: todo.todo_type,
                     run_once: todo.run_once,
                     frequency_type: todo.frequency_type ? todo.frequency_type : "",
                     frequency_value: todo.frequency_value ? todo.frequency_value : "",
@@ -129,7 +129,7 @@ export default function TodosPage() {
 
     useEffect(() => {
         if (filter) {
-            const searcher = new FuzzySearch(todos, ["title", "subtitle", "category2", "category", "contacts.mobile", "contacts.name", "replies.reply", "frequency_type"], {
+            const searcher = new FuzzySearch(todos, ["title", "subtitle", "category2", "category", "contacts.mobile", "contacts.name", "replies.reply", "frequency_type", "todo_type"], {
                 caseSensitive: false,
             });
             const result = searcher.search(filter);
@@ -140,8 +140,6 @@ export default function TodosPage() {
 
     }, [filter])
 
-    console.log(types)
-    console.log(stopped)
     return (
         <>
 
@@ -151,67 +149,56 @@ export default function TodosPage() {
             {/*heading, search bar and table menu */}
             <Stack px={2} direction={'row'} justifyContent={'center'}>
                 <FormControlLabel control={<Checkbox
-                    checked={Boolean(types.includes('all'))}
+                    checked={Boolean(type === '')}
                     onChange={(e) => {
                         if (e.target.checked) {
-                            let ltypes = types.filter((t) => { return t !== "all" })
-                            ltypes.push('all')
-                            setTypes(ltypes)
+                            setType('')
                         }
                         if (!e.target.checked) {
-                            let ltypes = types.filter((t) => { return t !== "all" })
-                            setTypes(ltypes)
+                            setType('all')
                         }
 
                     }}
                 />} label="All" />
                 <FormControlLabel control={<Checkbox
-                    checked={Boolean(types.includes('hidden'))}
+                    checked={Boolean(type === 'hidden')}
                     onChange={(e) => {
                         if (e.target.checked) {
-                            let ltypes = types.filter((t) => { return t !== "hidden" })
-                            ltypes.push('hidden')
-                            setTypes(ltypes)
+                            setType('hidden')
                         }
                         if (!e.target.checked) {
-                            let ltypes = types.filter((t) => { return t !== "hidden" })
-                            setTypes(ltypes)
+                            setType('')
                         }
 
                     }}
                 />} label="Hidden" />
                 <FormControlLabel control={<Checkbox
-                    checked={Boolean(types.includes('visible'))}
+                    checked={Boolean(type === 'visible')}
                     onChange={(e) => {
                         if (e.target.checked) {
-                            let ltypes = types.filter((t) => { return t !== "visible" })
-                            ltypes.push('visible')
-                            setTypes(ltypes)
+                            setType('visible')
                         }
                         if (!e.target.checked) {
-                            let ltypes = types.filter((t) => { return t !== "visible" })
-                            setTypes(ltypes)
+                            setType('')
                         }
 
                     }}
                 />} label="Visible" />
                 <FormControlLabel control={<Checkbox
-                    checked={Boolean(types.includes('greeting'))}
+                    checked={Boolean(type === 'greeting')}
                     onChange={(e) => {
                         if (e.target.checked) {
-                            let ltypes = types.filter((t) => { return t !== "greeting" })
-                            ltypes.push('greeting')
-                            setTypes(ltypes)
+                            setType('greeting')
                         }
                         if (!e.target.checked) {
-                            let ltypes = types.filter((t) => { return t !== "greeting" })
-                            setTypes(ltypes)
+                            setType('')
                         }
 
                     }}
                 />} label="Greeting" />
                 <FormControlLabel sx={{ color: 'red' }} control={<Checkbox
                     checked={Boolean(stopped)}
+                    disabled={type === ""}
                     onChange={() => setStopped(!stopped)}
                 />} label="Stopped" />
             </Stack>
@@ -307,12 +294,7 @@ export default function TodosPage() {
                             }}
                             sx={{ borderRadius: 2 }}
                         >
-                            {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
-                                onClick={() => {
-                                    setChoice({ type: TodoChoiceActions.create_todo })
-                                    setAnchorEl(null)
-                                }}
-                            > Add New</MenuItem>}
+
                             {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
                                 onClick={() => {
                                     if (selectedTodos.length === 0)
@@ -321,7 +303,7 @@ export default function TodosPage() {
                                         setChoice({ type: TodoChoiceActions.bulk_start_todo })
                                     setAnchorEl(null)
                                 }}
-                            > Start All</MenuItem>}
+                            > Start Seletced</MenuItem>}
 
                             {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
                                 onClick={() => {
@@ -331,14 +313,14 @@ export default function TodosPage() {
                                         setChoice({ type: TodoChoiceActions.bulk_stop_todo })
                                     setAnchorEl(null)
                                 }}
-                            > Stop All</MenuItem>}
+                            > Stop Seletced</MenuItem>}
 
 
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
 
                         </Menu >
-                        <CreateTodoDialog count={todos.length} />
+
                         <StartAllTodoDialog ids={selectedTodos.map((todo) => { return todo._id })} />
                         <StopAllTodoDialog ids={selectedTodos.map((todo) => { return todo._id })} />
 

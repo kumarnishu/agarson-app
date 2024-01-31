@@ -1,4 +1,4 @@
-import { Delete, Edit, EditCalendar, Person2, RestartAlt, Stop, Visibility } from '@mui/icons-material'
+import { Delete, EditCalendar, Person2, RestartAlt, Stop, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -7,11 +7,6 @@ import { UserContext } from '../../contexts/userContext'
 import PopUp from '../popup/PopUp'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { ITodo } from '../../types/todo.types'
-import StartTodoDialog from '../dialogs/todos/StartTodoDialog'
-import StopTodoDialog from '../dialogs/todos/StopTodoDialog'
-import UpdateTodoDialog from '../dialogs/todos/UpdateTodoDialog'
-import UpdateTodoStatusDialog from '../dialogs/todos/UpdateTodoStatusDialog'
-import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
 import ViewTodoContactsDialog from '../dialogs/todos/ViewTodoContactsDialog'
 import DeleteTodoDialog from '../dialogs/todos/DeleteTodoDialog'
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
@@ -87,6 +82,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                 Status
 
                             </STableHeadCell>
+
                             <STableHeadCell
                             >
 
@@ -117,9 +113,11 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             <STableHeadCell
                             >
 
-                                Last Reply
+                                Todo Type
 
                             </STableHeadCell>
+
+                         
                             <STableHeadCell
                             >
 
@@ -133,6 +131,12 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             >
 
                                 Next Run date
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Start Date
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -212,16 +216,15 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             null
                                         }
 
-                                        <STableCell style={{ zIndex: -1, backgroundColor: !todo.is_active ? "whitesmoke" : "yellow" }}>
-                                            <PopUp color={todo.is_active || todo.is_paused ? "success" : "error"}
+                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke" }}>
+                                            <PopUp color={todo.is_active ? "success" : "error"}
                                                 element={
                                                     <Stack direction="row" spacing={1}>
-
 
                                                         {user?.todos_access_fields.is_deletion_allowed &&
                                                             <Tooltip title="delete">
                                                                 <IconButton
-                                                                    disabled={todo.is_active || todo.is_paused}
+                                                                    disabled={todo.is_active}
                                                                     color="error"
                                                                     onClick={() => {
                                                                         setChoice({ type: TodoChoiceActions.delete_todo })
@@ -233,33 +236,6 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                                 </IconButton>
                                                             </Tooltip>
                                                         }
-                                                        {todo.is_active ?
-                                                            <Tooltip title="Stop">
-                                                                <IconButton color="error"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: TodoChoiceActions.stop_todo })
-                                                                        setTodo(todo)
-                                                                    }}
-                                                                >
-                                                                    <Stop />
-                                                                </IconButton>
-                                                            </Tooltip> :
-                                                            <Tooltip title="Start">
-                                                                <IconButton
-                                                                    disabled={!todo.connected_user}
-                                                                    color="secondary"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: TodoChoiceActions.start_todo })
-                                                                        setTodo(todo)
-                                                                    }}
-                                                                >
-                                                                    <RestartAlt />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        }
-
-
-
 
                                                         <Tooltip title="View Contacts">
                                                             <IconButton color="secondary"
@@ -272,46 +248,6 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                                             </IconButton>
                                                         </Tooltip>
 
-                                                        {user?.todos_access_fields.is_editable &&
-                                                            <Tooltip title="edit">
-                                                                <IconButton
-                                                                    disabled={todo.is_active || todo.is_paused}
-                                                                    color="primary"
-                                                                    onClick={() => {
-
-                                                                        setChoice({ type: TodoChoiceActions.update_todo })
-                                                                        setTodo(todo)
-                                                                    }}
-                                                                >
-                                                                    <Edit />
-                                                                </IconButton>
-                                                            </Tooltip>}
-
-
-                                                        <Tooltip title="view replies">
-                                                            <IconButton color="warning"
-                                                                onClick={() => {
-
-                                                                    setChoice({ type: TodoChoiceActions.view_replies })
-                                                                    setTodo(todo)
-                                                                }}
-                                                            >
-                                                                <Visibility />
-                                                            </IconButton>
-                                                        </Tooltip>
-
-                                                        <Tooltip title="Update Status">
-                                                            <IconButton
-                                                                color="success"
-                                                                onClick={() => {
-                                                                    setChoice({ type: TodoChoiceActions.update_status })
-                                                                    setTodo(todo)
-                                                                }}
-                                                            >
-                                                                <EditCalendar />
-                                                            </IconButton>
-                                                        </Tooltip>
-
                                                     </Stack>}
                                             />
                                         </STableCell>
@@ -320,7 +256,11 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             {todo.serial_no}
                                         </STableCell>
                                         <STableCell>
-                                            {todo.contacts.find((c) => c.status !== "done") ? "Pending" : "Done"}
+                                            {todo.is_active ?
+                                                <Stop color="success" />
+                                                :
+                                                <RestartAlt color="error" />
+                                            }
                                         </STableCell>
 
                                         <STableCell title={todo.title}>
@@ -338,9 +278,10 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         <STableCell title={todo.category2}>
                                             {todo.category2 && todo.category2.slice(0, 20)}
                                         </STableCell>
-                                        <STableCell title={todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply || ""}>
-                                            {todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply && todo.replies[todo.replies.length - 1] && todo.replies[todo.replies.length - 1].reply.slice(0, 20)}
+                                        <STableCell >
+                                            {todo.todo_type}
                                         </STableCell>
+                                       
 
                                         <STableCell title={todo.contacts.map((c) => {
                                             let result = c.name
@@ -357,8 +298,12 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             }).toString().slice(0, 20)}
 
                                         </STableCell>
+
                                         <STableCell>
                                             {new Date(todo.next_run_date).toLocaleString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {new Date(todo.start_date).toLocaleString()}
                                         </STableCell>
                                         <STableCell>
                                             {todo.frequency_type}
@@ -386,11 +331,6 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
             {
                 todo ?
                     <>
-                        < StartTodoDialog id={todo._id} />
-                        <StopTodoDialog id={todo._id} />
-                        <UpdateTodoDialog todo={todo} />
-                        <UpdateTodoStatusDialog todo={todo} />
-                        <ViewTodoRepliesDialog todo={todo} />
                         <ViewTodoContactsDialog todo={todo} />
                         <DeleteTodoDialog id={todo._id} />
                     </>
