@@ -68,7 +68,7 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
     let { ids } = req.body as { ids: string[] }
     ids.forEach(async (id) => {
         let todo = await Todo.findById(id).populate('connected_user')
-        if (todo && todo.connected_user) {
+        if (todo && !todo.is_active && todo.connected_user) {
             let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)
             if (new Date(todo.start_date) > new Date() && client) {
                 todo_timeouts.forEach((item) => {
