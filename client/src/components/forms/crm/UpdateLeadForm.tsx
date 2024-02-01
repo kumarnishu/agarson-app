@@ -174,9 +174,7 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
   });
   useEffect(() => {
     if (isSuccess) {
-      setTimeout(() => {
-        setChoice({ type: LeadChoiceActions.close_lead })
-      }, 1000)
+     setChoice({ type: LeadChoiceActions.close_lead })
     }
   }, [isSuccess, setChoice])
 
@@ -384,7 +382,7 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
           }
           {...formik.getFieldProps('city')}
         >
-         
+
           <option value={lead.city ? lead.city : ""}>
             {lead.city ? lead.city : ""}
           </option>

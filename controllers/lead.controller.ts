@@ -3027,14 +3027,13 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             workbook.Sheets[workbook_sheet[0]]
         );
         let statusText: string = ""
-
-        let new_lead_owners: IUser[] = []
+        let checkednumbers: string[] = []
         for (let i = 0; i < workbook_response.length; i++) {
             let lead = workbook_response[i]
-            console.log(lead)
-            let mobile: number | null = Number(lead.mobile)
-            let alternate_mobile1: number | null = Number(lead.alternate_mobile1)
-            let alternate_mobile2: number | null = Number(lead.alternate_mobile2)
+            let new_lead_owners: IUser[] = []
+            let mobile: string | null = lead.mobile
+            let alternate_mobile1: string | null = lead.alternate_mobile1
+            let alternate_mobile2: string | null = lead.alternate_mobile2
             let uniqueNumbers: string[] = []
             let validated = true
 
@@ -3044,15 +3043,15 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                 statusText = "required mobile"
             }
 
-            if (mobile && Number.isNaN(mobile)) {
+            if (mobile && Number.isNaN(Number(mobile))) {
                 validated = false
                 statusText = "invalid mobile"
             }
-            if (alternate_mobile1 && Number.isNaN(alternate_mobile1)) {
+            if (alternate_mobile1 && Number.isNaN(Number(alternate_mobile1))) {
                 validated = false
                 statusText = "invalid alternate mobile 1"
             }
-            if (alternate_mobile2 && Number.isNaN(alternate_mobile2)) {
+            if (alternate_mobile2 && Number.isNaN(Number(alternate_mobile2))) {
                 validated = false
                 statusText = "invalid alternate mobile 2"
             }
@@ -3071,94 +3070,99 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             }
 
 
+
             //duplicate mobile checker
             if (lead._id && isMongoId(String(lead._id))) {
-                if (mobile) {
-                    if (String(mobile) === lead.mobile) {
-                        uniqueNumbers[0] = lead.mobile
+                let targetLead = await Lead.findById(lead._id)
+                if (targetLead) {
+                    if (mobile && mobile === targetLead?.mobile) {
+                        uniqueNumbers.push(targetLead?.mobile)
                     }
-                    if (String(mobile) !== lead.mobile) {
-                        uniqueNumbers[0] = String(mobile)
+                    if (alternate_mobile1 && alternate_mobile1 === targetLead?.alternate_mobile1) {
+                        uniqueNumbers.push(targetLead?.alternate_mobile1)
+                    }
+                    if (alternate_mobile2 && alternate_mobile2 === targetLead?.alternate_mobile2) {
+                        uniqueNumbers.push(targetLead?.alternate_mobile2)
+                    }
+
+                    if (mobile && mobile !== targetLead?.mobile) {
+                        let ld = await Lead.findOne({ $or: [{ mobile: mobile }, { alternate_mobile1: mobile }, { alternate_mobile2: mobile }] })
+                        if (!ld && !checkednumbers.includes(mobile)) {
+                            uniqueNumbers.push(mobile)
+                            checkednumbers.push(mobile)
+                        }
+                    }
+
+                    if (alternate_mobile1 && alternate_mobile1 !== targetLead?.alternate_mobile1) {
+                        let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile1 }, { alternate_mobile1: alternate_mobile1 }, { alternate_mobile2: alternate_mobile1 }] })
+                        if (!ld && !checkednumbers.includes(alternate_mobile1)) {
+                            uniqueNumbers.push(alternate_mobile1)
+                            checkednumbers.push(alternate_mobile1)
+                        }
+                    }
+
+                    if (alternate_mobile2 && alternate_mobile2 !== targetLead?.alternate_mobile2) {
+                        let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile2 }, { alternate_mobile1: alternate_mobile2 }, { alternate_mobile2: alternate_mobile2 }] })
+                        if (!ld && !checkednumbers.includes(alternate_mobile2)) {
+                            uniqueNumbers.push(alternate_mobile2)
+                            checkednumbers.push(alternate_mobile2)
+                        }
                     }
                 }
-                if (alternate_mobile1) {
-                    if (String(alternate_mobile1) === lead.alternate_mobile1) {
-                        uniqueNumbers[1] = lead.alternate_mobile1
+            }
+            console.log(uniqueNumbers, i + 1)
+            console.log(checkednumbers, i + 1)
+            if (!lead._id || !isMongoId(String(lead._id))) {
+                if (mobile) {
+                    let ld = await Lead.findOne({ $or: [{ mobile: mobile }, { alternate_mobile1: mobile }, { alternate_mobile2: mobile }] })
+                    if (ld) {
+                        validated = false
+                        statusText = "duplicate"
                     }
-                    if (String(alternate_mobile1) !== lead.alternate_mobile1) {
-                        uniqueNumbers[1] = String(alternate_mobile1)
+                    if (!ld) {
+                        uniqueNumbers.push(mobile)
+                    }
+                }
+
+                if (alternate_mobile1) {
+                    let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile1 }, { alternate_mobile1: alternate_mobile1 }, { alternate_mobile2: alternate_mobile1 }] })
+                    if (ld) {
+                        validated = false
+                        statusText = "duplicate"
+                    }
+                    if (!ld) {
+                        uniqueNumbers.push(alternate_mobile1)
                     }
                 }
                 if (alternate_mobile2) {
-                    if (String(alternate_mobile2) === lead.alternate_mobile2) {
-                        uniqueNumbers[2] = lead.alternate_mobile2
+                    let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile2 }, { alternate_mobile1: alternate_mobile2 }, { alternate_mobile2: alternate_mobile2 }] })
+                    if (ld) {
+                        validated = false
+                        statusText = "duplicate"
                     }
-                    if (String(alternate_mobile2) !== lead.alternate_mobile2) {
-                        uniqueNumbers[2] = String(alternate_mobile2)
+                    if (!ld) {
+                        uniqueNumbers.push(alternate_mobile2)
                     }
                 }
 
-                uniqueNumbers = uniqueNumbers.filter((item, i, ar) => ar.indexOf(item) === i);
-
-
-                if (uniqueNumbers[0] && uniqueNumbers[0] !== lead.mobile && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[0] }, { alternate_mobile1: uniqueNumbers[0] }, { alternate_mobile2: uniqueNumbers[0] }] })) {
-                    validated = false
-                    statusText = "duplicate"
-                }
-
-                if (uniqueNumbers[1] && uniqueNumbers[1] !== lead.alternate_mobile1 && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[1] }, { alternate_mobile1: uniqueNumbers[1] }, { alternate_mobile2: uniqueNumbers[1] }] })) {
-                    validated = false
-                    statusText = "duplicate"
-                }
-                if (uniqueNumbers[2] && uniqueNumbers[2] !== lead.alternate_mobile2 && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[2] }, { alternate_mobile1: uniqueNumbers[2] }, { alternate_mobile2: uniqueNumbers[2] }] })) {
-                    validated = false
-                    statusText = "duplicate"
-                }
             }
-            if (!lead._id || !isMongoId(String(lead._id))) {
 
-                let uniqueNumbers = []
-                if (mobile)
-                    uniqueNumbers.push(mobile)
-                if (alternate_mobile1)
-                    uniqueNumbers.push(alternate_mobile1)
-                if (alternate_mobile2)
-                    uniqueNumbers.push(alternate_mobile2)
-
-                uniqueNumbers = uniqueNumbers.filter((item, i, ar) => ar.indexOf(item) === i);
-
-                if (uniqueNumbers[0] && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[0] }, { alternate_mobile1: uniqueNumbers[0] }, { alternate_mobile2: uniqueNumbers[0] }] })) {
-                    validated = false
-                    statusText = "duplicate"
-                }
-
-
-                if (uniqueNumbers[1] && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[1] }, { alternate_mobile1: uniqueNumbers[1] }, { alternate_mobile2: uniqueNumbers[1] }] })) {
-                    validated = false
-                    statusText = "duplicate"
-                }
-
-                if (uniqueNumbers[2] && await Lead.findOne({ $or: [{ mobile: uniqueNumbers[2] }, { alternate_mobile1: uniqueNumbers[2] }, { alternate_mobile2: uniqueNumbers[2] }] })) {
-                    validated = false
-                    statusText = "duplicate"
-
-                }
-            }
             if (!validated) {
                 result.push({
                     ...lead,
                     status: statusText
                 })
             }
-            if (validated && uniqueNumbers.length > 0) {
-                if (lead.lead_owners) {
-                    let names = String((lead.lead_owners)).split(",")
-                    for (let i = 0; i < names.length; i++) {
-                        let owner = await User.findOne({ username: names[i] })
-                        if (owner)
-                            new_lead_owners.push(owner)
-                    }
+            if (lead.lead_owners) {
+                let names = String((lead.lead_owners)).split(",")
+                console.log(names)
+                for (let i = 0; i < names.length; i++) {
+                    let owner = await User.findOne({ username: names[i] })
+                    if (owner)
+                        new_lead_owners.push(owner)
                 }
+            }
+            if (validated && uniqueNumbers.length > 0) {
                 //update and create new nead
                 if (lead._id && isMongoId(String(lead._id))) {
                     let targetLead = await Lead.findById(lead._id)
@@ -3179,9 +3183,9 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                         await Lead.findByIdAndUpdate(lead._id, {
                             ...lead,
                             remarks: targetLead.remarks,
-                            mobile: uniqueNumbers[0] || mobile,
-                            alternate_mobile1: uniqueNumbers[1] || alternate_mobile1 || null,
-                            alternate_mobile2: uniqueNumbers[2] || alternate_mobile2 || null,
+                            mobile: uniqueNumbers[0],
+                            alternate_mobile1: uniqueNumbers[1] || null,
+                            alternate_mobile2: uniqueNumbers[2] || null,
                             lead_owners: new_lead_owners,
                             updated_by: req.user,
                             updated_at: new Date(Date.now())

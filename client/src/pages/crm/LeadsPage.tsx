@@ -116,7 +116,7 @@ export default function LeadsPage() {
           lead_source: lead.lead_source,
           remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
           is_customer: lead.is_customer,
-          lead_owners: lead.lead_owners.map((owner) => { return owner.username + "," }).toString()
+          lead_owners: lead.lead_owners.map((owner) => { return owner.username }).toString()
         })
     })
     if (data.length > 0)
@@ -207,7 +207,7 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton disabled={true} />}
+            {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
             {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 &&
               < TextField
                 size='small'
