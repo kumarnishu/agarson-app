@@ -131,7 +131,7 @@ new CronJob("00 00 1/1 * *", async () => {
                 if (todo.connected_user) {
                     let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)
                     if (client)
-                        await HandleTodoMessage(todo, client.client)
+                        await HandleTodoMessage(todo, client)
                 }
             }
         }

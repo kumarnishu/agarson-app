@@ -3,13 +3,17 @@ import path from "path"
 import { Content } from "pdfmake/interfaces"
 import fs from "fs"
 import { User } from "../models/users/user.model"
-import { ReportManager } from "../app"
+import { ReportManager, io } from "../app"
 import { IProduction } from "../types/production.types"
 import { Production } from "../models/production/production.model"
 import moment from "moment"
 import { Machine } from "../models/production/machine.model"
+import { createWhatsappClient } from "./CreateWhatsappClient"
 
-export async function ExportProductionsToPdf(client: any) {
+export async function ExportProductionsToPdf(client: {
+    client_id: string;
+    client: any;
+}) {
     let cronString1 = `52 16 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
@@ -22,7 +26,10 @@ export async function ExportProductionsToPdf(client: any) {
     }
 }
 
-export async function HandleProductionReports(client: any) {
+export async function HandleProductionReports(client: {
+    client_id: string;
+    client: any;
+}) {
     console.log("generating pdf")
 
     var printer = new PdfPrinter({
@@ -313,7 +320,13 @@ export async function HandleProductionReports(client: any) {
     doc.end()
 
     setTimeout(async () => {
-        await SendDocument(client)
+        try { await SendDocument(client.client) }
+        catch (err) {
+            if (io) {
+                await createWhatsappClient(client.client_id, io)
+                SendDocument(client.client)
+            }
+        }
     }, 20000)
 }
 

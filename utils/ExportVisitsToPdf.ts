@@ -6,10 +6,14 @@ import { Content } from "pdfmake/interfaces"
 import { imageUrlToBase64 } from "./UrlToBase64"
 import fs from "fs"
 import { User } from "../models/users/user.model"
-import { ReportManager } from "../app"
+import { ReportManager, io } from "../app"
+import { createWhatsappClient } from "./CreateWhatsappClient"
 
 
-export async function ExportVisitsToPdf(client: any) {
+export async function ExportVisitsToPdf(client: {
+    client_id: string;
+    client: any;
+}) {
     let cronString1 = `8 18 1/1 * *`
     let cronString2 = `33 9 1/1 * *`
     console.log("running trigger")
@@ -42,7 +46,10 @@ export async function ExportVisitsToPdf(client: any) {
         ReportManager.start("visit_reports2")
     }
 }
-export async function HandleVisitsReport(client: any, dt1: Date, dt2: Date) {
+export async function HandleVisitsReport(client: {
+    client_id: string;
+    client: any;
+}, dt1: Date, dt2: Date) {
     let visits: IVisit[] = []
     console.log("generating pdf")
     visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate("visit_reports").populate('created_by')
@@ -221,7 +228,13 @@ export async function HandleVisitsReport(client: any, dt1: Date, dt2: Date) {
         }
     }
     setTimeout(async () => {
-        await SendDocument(client)
+        try { await SendDocument(client.client) }
+        catch (err) {
+            if (io) {
+                await createWhatsappClient(client.client_id, io)
+                SendDocument(client.client)
+            }
+        }
     }, 300000)
 
     setTimeout(async () => {
