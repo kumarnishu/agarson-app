@@ -3165,9 +3165,13 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             if (validated && uniqueNumbers.length > 0) {
                 //update and create new nead
                 if (lead._id && isMongoId(String(lead._id))) {
-                    let targetLead = await Lead.findById(lead._id)
+                    let targetLead = await Lead.findById(lead._id).populate('remarks')
+                    let remark = targetLead?.remarks && targetLead.remarks.length > 0 && targetLead.remarks[targetLead.remarks.length - 1].remark || ""
+                    console.log(remark)
+                    console.log(lead.remarks)
                     if (targetLead) {
-                        if (lead.remarks) {
+                        if (remark !== lead.remarks) {
+                            let new_remarks = targetLead.remarks
                             let new_remark = new Remark({
                                 remark: lead.remarks,
                                 lead: lead,
@@ -3177,7 +3181,8 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                                 updated_by: req.user
                             })
                             await new_remark.save()
-                            targetLead.remarks = [new_remark]
+                            new_remarks.push(new_remark)
+                            targetLead.remarks = new_remarks
                         }
 
                         await Lead.findByIdAndUpdate(lead._id, {
