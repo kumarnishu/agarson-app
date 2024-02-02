@@ -5,11 +5,8 @@ import cron, { CronJob } from "cron"
 
 export var todo_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
-export async function HandleTodoMessage(todo: ITodo, client: {
-    client_id: string;
-    client: any;
-}) {
-    if (todo && client && todo.is_active) {
+export async function HandleTodoMessage(todo: ITodo, client: any) {
+    if (todo && client) {
         if (!todo.run_once) {
             TodoManager.add(todo.running_key
                 , todo.cron_string, async () => {
@@ -26,7 +23,7 @@ export async function HandleTodoMessage(todo: ITodo, client: {
                                 let subtitle = todo.subtitle && todo.subtitle.replaceAll("\\n", "\n")
                                 console.log("sending message to", mobile)
                                 let contacts = todo.contacts
-                                client.client.sendMessage("91" + mobile + "@s.whatsapp.net", { text: title + "\n" + subtitle })
+                                client.sendMessage("91" + mobile + "@s.whatsapp.net", { text: title + "\n" + subtitle })
                                 contacts = contacts.map((contact) => {
                                     if (contact.mobile === mobile) {
                                         contact.is_sent = true
@@ -48,7 +45,6 @@ export async function HandleTodoMessage(todo: ITodo, client: {
                     }
                     await Todo.findByIdAndUpdate(todo._id, {
                         next_run_date: new Date(cron.sendAt(todo.cron_string)),
-                        is_paused: true
                     })
 
                 })
@@ -74,7 +70,7 @@ export async function HandleTodoMessage(todo: ITodo, client: {
                             let title = todo.title && todo.title.replaceAll("\\n", "\n")
                             let subtitle = todo.subtitle && todo.subtitle.replaceAll("\\n", "\n")
                             console.log("sending run once todo")
-                            client.client.sendMessage("91" + mobile + "@s.whatsapp.net", { text: title + "\n" + subtitle })
+                            client.sendMessage("91" + mobile + "@s.whatsapp.net", { text: title + "\n" + subtitle })
                             contacts = contacts.map((contact) => {
                                 if (contact.mobile === mobile) {
                                     contact.is_sent = true

@@ -20,6 +20,7 @@ import FuzzySearch from 'fuzzy-search'
 import UploadTodoExcelButton from '../../components/buttons/UploadTodoExcelButton'
 import StartAllTodoDialog from '../../components/dialogs/todos/StartAllTodoDialog'
 import StopAllTodoDialog from '../../components/dialogs/todos/StopAllTodoDialog'
+import { queryClient } from '../../main'
 const template: ITodoTemplate[] = [
     {
         _id: "",
@@ -80,6 +81,7 @@ export default function TodosPage() {
             setSelectAll(false)
             setSelectedData([])
             setSelectedTodos([])
+            queryClient.invalidateQueries('todos')
         }
         catch (err) {
             console.log(err)

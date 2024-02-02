@@ -8,13 +8,10 @@ import { IProduction } from "../types/production.types"
 import { Production } from "../models/production/production.model"
 import moment from "moment"
 import { Machine } from "../models/production/machine.model"
-import { createWhatsappClient } from "./CreateWhatsappClient"
+import { ReConnectWhatsapp } from "./RestartServices"
 
-export async function ExportProductionsToPdf(client: {
-    client_id: string;
-    client: any;
-}) {
-    let cronString1 = `52 16 1/1 * *`
+export async function ExportProductionsToPdf(client: any) {
+    let cronString1 = `00 16 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
         ReportManager.add("production_reports1", cronString1, async () => {
@@ -26,10 +23,7 @@ export async function ExportProductionsToPdf(client: {
     }
 }
 
-export async function HandleProductionReports(client: {
-    client_id: string;
-    client: any;
-}) {
+export async function HandleProductionReports(client: any) {
     console.log("generating pdf")
 
     var printer = new PdfPrinter({
@@ -320,12 +314,10 @@ export async function HandleProductionReports(client: {
     doc.end()
 
     setTimeout(async () => {
-        try { await SendDocument(client.client) }
+        try { await SendDocument(client) }
         catch (err) {
-            if (io) {
-                await createWhatsappClient(client.client_id, io)
-                SendDocument(client.client)
-            }
+            await ReConnectWhatsapp()
+            await SendDocument(client)
         }
     }, 20000)
 }
