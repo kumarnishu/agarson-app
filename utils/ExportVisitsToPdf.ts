@@ -7,15 +7,12 @@ import { imageUrlToBase64 } from "./UrlToBase64"
 import fs from "fs"
 import { User } from "../models/users/user.model"
 import { ReportManager, io } from "../app"
-import { createWhatsappClient } from "./CreateWhatsappClient"
+import { ReConnectWhatsapp } from "./RestartServices"
 
 
-export async function ExportVisitsToPdf(client: {
-    client_id: string;
-    client: any;
-}) {
+export async function ExportVisitsToPdf(client: any) {
     let cronString1 = `8 18 1/1 * *`
-    let cronString2 = `33 9 1/1 * *`
+    let cronString2 = `1 9 1/1 * *`
     console.log("running trigger")
     if (!ReportManager.exists("visit_reports1"))
         ReportManager.add("visit_reports1", cronString1, async () => {
@@ -46,10 +43,7 @@ export async function ExportVisitsToPdf(client: {
         ReportManager.start("visit_reports2")
     }
 }
-export async function HandleVisitsReport(client: {
-    client_id: string;
-    client: any;
-}, dt1: Date, dt2: Date) {
+export async function HandleVisitsReport(client: any, dt1: Date, dt2: Date) {
     let visits: IVisit[] = []
     console.log("generating pdf")
     visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate("visit_reports").populate('created_by')
@@ -228,12 +222,10 @@ export async function HandleVisitsReport(client: {
         }
     }
     setTimeout(async () => {
-        try { await SendDocument(client.client) }
+        try { await SendDocument(client) }
         catch (err) {
-            if (io) {
-                await createWhatsappClient(client.client_id, io)
-                SendDocument(client.client)
-            }
+            await ReConnectWhatsapp()
+            await SendDocument(client)
         }
     }, 300000)
 
