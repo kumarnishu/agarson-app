@@ -69,6 +69,12 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
     ids.forEach(async (id) => {
         let todo = await Todo.findById(id).populate('connected_user')
         if (todo && !todo.is_active && todo.connected_user) {
+            let dt1 = new Date(todo.start_date).getDate()
+            let dt2 = new Date().getDate()
+            let m1 = new Date(todo.start_date).getMonth() + 1
+            let m2 = new Date().getMonth() + 1
+            let y1 = new Date(todo.start_date).getFullYear()
+            let y2 = new Date().getFullYear()
             let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)
             if (new Date(todo.start_date) > new Date() && client) {
                 todo_timeouts.forEach((item) => {
@@ -81,7 +87,7 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
                 todo.next_run_date = new Date(cron.sendAt(todo.cron_string))
                 if (todo.run_once)
                     todo.next_run_date = new Date(cron.sendAt(new Date(todo.start_date)))
-                if (new Date(todo.start_date).getDate() === new Date().getDate() && new Date(todo.start_date).getMonth() === new Date().getMonth()) {
+                if (dt1 === dt2 && m1 === m2 && y1 === y2) {
                     todo.is_active = true
                     await todo.save()
                     await HandleTodoMessage(todo, client.client)

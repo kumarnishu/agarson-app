@@ -125,7 +125,14 @@ new CronJob("00 00 1/1 * *", async () => {
     let todos = await Todo.find()
     todos.forEach(async (todo) => {
         if (todo.is_active) {
-            if (new Date(todo.start_date).getDate() === new Date().getDate() && new Date(todo.start_date).getMonth() === new Date().getMonth()) {
+            let dt1 = new Date(todo.start_date).getDate()
+            let dt2 = new Date().getDate()
+            let m1 = new Date(todo.start_date).getMonth() + 1
+            let m2 = new Date().getMonth() + 1
+            let y1 = new Date(todo.start_date).getFullYear()
+            let y2 = new Date().getFullYear()
+
+            if (dt1 === dt2 && m1 === m2 && y1 === y2) {
                 todo.next_run_date = new Date(cron.sendAt(new Date(todo.start_date)))
                 await todo.save()
                 if (todo.connected_user) {
