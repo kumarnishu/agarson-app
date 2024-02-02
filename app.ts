@@ -136,7 +136,7 @@ new CronJob("00 00 1/1 * *", async () => {
                 todo.next_run_date = new Date(cron.sendAt(new Date(todo.start_date)))
                 await todo.save()
                 if (todo.connected_user) {
-                    let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)
+                    let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)?.client
                     if (client)
                         await HandleTodoMessage(todo, client)
                 }

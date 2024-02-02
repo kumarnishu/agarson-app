@@ -8,9 +8,9 @@ import { IProduction } from "../types/production.types"
 import { Production } from "../models/production/production.model"
 import moment from "moment"
 import { Machine } from "../models/production/machine.model"
-import { ReConnectWhatsapp } from "./RestartServices"
+import { Client, MessageMedia } from "whatsapp-web.js"
 
-export async function ExportProductionsToPdf(client: any) {
+export async function ExportProductionsToPdf(client: Client) {
     let cronString1 = `00 16 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
@@ -23,7 +23,7 @@ export async function ExportProductionsToPdf(client: any) {
     }
 }
 
-export async function HandleProductionReports(client: any) {
+export async function HandleProductionReports(client: Client) {
     console.log("generating pdf")
 
     var printer = new PdfPrinter({
@@ -316,20 +316,15 @@ export async function HandleProductionReports(client: any) {
     setTimeout(async () => {
         try { await SendDocument(client) }
         catch (err) {
-            await ReConnectWhatsapp()
-            await SendDocument(client)
+            console.log(err)
         }
     }, 20000)
 }
 
 
-
-async function SendDocument(client: any) {
+async function SendDocument(client: Client) {
     if (client) {
         console.log("sending pdf from", process.env.WAGREETING_PHONE)
-        await client.sendMessage(String(process.env.WAGREETING_PHONE), {
-            document: fs.readFileSync(`./pdfs/production/productions.pdf`),
-            fileName: `Production_report.pdf`,
-        })
+        await client.sendMessage(String(process.env.WAGREETING_PHONE), MessageMedia.fromFilePath(`./pdfs/production/productions.pdf`),)
     }
 }
