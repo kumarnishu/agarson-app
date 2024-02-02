@@ -113,6 +113,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             }
         }
     });
+    client.initialize();
 }
 
 
