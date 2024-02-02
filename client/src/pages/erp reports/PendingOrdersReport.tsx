@@ -427,7 +427,31 @@ export default function PendingOrdersReportPage() {
                             <STableCell>
                             </STableCell>
                             <STableCell>
-                                <b>Total</b>
+                                <b>{
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size5) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size7) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size8) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size9) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size10) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size11) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size12_24pairs) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size13) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size11x12) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size3) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size4) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6to10) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size7to10) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size4to8) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6to9) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size5to8) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6to10A) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size7to10B) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6to9A) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size11close) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size11to13) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size3to8) }, 0).toFixed())
+                                }</b>
                             </STableCell>
                             {reports.find((r) => r.size5 > 0) && <STableCell
                             >
