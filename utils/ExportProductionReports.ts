@@ -11,7 +11,7 @@ import { Machine } from "../models/production/machine.model"
 import { Client, MessageMedia } from "whatsapp-web.js"
 
 export async function ExportProductionsToPdf(client: Client) {
-    let cronString1 = `50 10 1/1 * *`
+    let cronString1 = `40 11 1/1 * *`
     console.log("running production trigger")
     if (!ReportManager.exists("production_reports1"))
         ReportManager.add("production_reports1", cronString1, async () => {
