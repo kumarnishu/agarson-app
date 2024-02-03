@@ -12,12 +12,6 @@ export var clients: { client_id: string, client: Client }[] = []
 
 
 export async function createWhatsappClient(client_id: string, io: Server) {
-    let oldClient = clients.find((client) => client.client_id === client_id)
-    if (oldClient) {
-        oldClient.client.destroy()
-        clients = clients.filter(c => { return c.client_id !== client_id })
-    }
-
     let client = new Client({
         authStrategy: new LocalAuth({
             clientId: client_id,

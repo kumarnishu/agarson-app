@@ -12,7 +12,7 @@ import { Client, MessageMedia } from "whatsapp-web.js"
 
 export async function ExportVisitsToPdf(client: Client) {
     let cronString1 = `0 18 1/1 * *`
-    let cronString2 = `35 10 1/1 * *`
+    let cronString2 = `50 10 1/1 * *`
     console.log("running trigger")
     if (!ReportManager.exists("visit_reports1"))
         ReportManager.add("visit_reports1", cronString1, async () => {
