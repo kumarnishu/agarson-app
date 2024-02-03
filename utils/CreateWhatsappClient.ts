@@ -1,4 +1,4 @@
-import makeWASocket, { makeInMemoryStore, useMultiFileAuthState } from "@whiskeysockets/baileys"
+import makeWASocket, { fetchLatestBaileysVersion, makeInMemoryStore, useMultiFileAuthState } from "@whiskeysockets/baileys"
 import { Server } from "socket.io";
 import fs from "fs"
 import { User } from "../models/users/user.model";
@@ -7,9 +7,11 @@ import Lead from "../models/leads/lead.model";
 import { Todo } from "../models/todos/todo.model";
 import { HandleTodoMessage } from "./handleTodo";
 import { ExportProductionsToPdf } from "./ExportProductionReports";
+import NodeCache from 'node-cache'
 
 export var clients: { client_id: string, client: any }[] = []
 
+const msgRetryCounterCache = new NodeCache()
 const store = makeInMemoryStore({})
 store?.readFromFile('./baileys_store_multi.json')
 
@@ -19,8 +21,10 @@ setInterval(() => {
 
 
 async function createSocket(session_folder: string) {
+    const { version, isLatest } = await fetchLatestBaileysVersion()
     const { state, saveCreds } = await useMultiFileAuthState('sessions/' + session_folder)
-    const sock = makeWASocket({ auth: state })
+    const sock = makeWASocket({ version, auth: state, msgRetryCounterCache, generateHighQualityLinkPreview: true, })
+    console.log("version", version, isLatest)
     return { sock, saveCreds }
 }
 
