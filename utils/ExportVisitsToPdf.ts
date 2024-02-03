@@ -6,44 +6,9 @@ import { Content } from "pdfmake/interfaces"
 import { imageUrlToBase64 } from "./UrlToBase64"
 import fs from "fs"
 import { User } from "../models/users/user.model"
-import { ReportManager, io } from "../app"
+import { Client, MessageMedia } from "whatsapp-web.js"
 
-
-
-export async function ExportVisitsToPdf(client: any) {
-    let cronString1 = `0 18 1/1 * *`
-    let cronString2 = `0 9 1/1 * *`
-    console.log("running trigger")
-    if (!ReportManager.exists("visit_reports1"))
-        ReportManager.add("visit_reports1", cronString1, async () => {
-            let dt1 = new Date()
-            let dt2 = new Date()
-            dt2.setDate(new Date(dt1).getDate() + 1)
-            dt1.setHours(0)
-            dt1.setMinutes(0)
-            dt2.setHours(0)
-            dt2.setMinutes(0)
-            await HandleVisitsReport(client, dt1, dt2)
-        })
-    if (!ReportManager.exists("visit_reports2"))
-        ReportManager.add("visit_reports2", cronString2, async () => {
-            let dt1 = new Date()
-            let dt2 = new Date()
-            dt1.setDate(new Date(dt1).getDate() - 1)
-            dt1.setHours(0)
-            dt1.setMinutes(0)
-            dt2.setHours(0)
-            dt2.setMinutes(0)
-            await HandleVisitsReport(client, dt1, dt2)
-        })
-    if (ReportManager.exists("visit_reports1")) {
-        ReportManager.start("visit_reports1")
-    }
-    if (ReportManager.exists("visit_reports2")) {
-        ReportManager.start("visit_reports2")
-    }
-}
-export async function HandleVisitsReport(client: any, dt1: Date, dt2: Date) {
+export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
     let visits: IVisit[] = []
     console.log("generating pdf")
     visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate("visit_reports").populate('created_by')
@@ -220,7 +185,7 @@ export async function HandleVisitsReport(client: any, dt1: Date, dt2: Date) {
             Content = []
             doc.end()
         }
-    }
+    } ''
     setTimeout(async () => {
         try { await SendDocument(client) }
         catch (err) {
@@ -233,16 +198,13 @@ export async function HandleVisitsReport(client: any, dt1: Date, dt2: Date) {
     }, 600000)
 }
 
-async function SendDocument(client: any) {
+async function SendDocument(client: Client) {
     if (client) {
         console.log("sending pdf from", process.env.WAGREETING_PHONE)
         let users = await User.find()
         users.forEach(async (user) => {
             if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
-                await client.sendMessage(String(process.env.WAGREETING_PHONE), {
-                    document: fs.readFileSync(`./pdfs/visit/${user.username}_visits.pdf`),
-                    fileName: `${user.username}_visits.pdf`,
-                })
+                await client.sendMessage(String(process.env.WAGREETING_PHONE), MessageMedia.fromFilePath(`./pdfs/visit/${user.username}_visits.pdf`), { caption: String(" ") })
             }
         })
     }

@@ -110,7 +110,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                 Category2
 
                             </STableHeadCell>
-                           
+
 
 
                             <STableHeadCell
@@ -273,7 +273,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         <STableCell title={todo.category2}>
                                             {todo.category2 && todo.category2.slice(0, 20)}
                                         </STableCell>
-                                      
+
 
 
                                         <STableCell title={todo.contacts.map((c) => {
@@ -310,7 +310,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         </STableCell>
 
                                         <STableCell>
-                                            {todo.connected_user && todo.connected_user.connected_number?.split(":")[0]}
+                                            {todo.connected_user && todo.connected_user.connected_number && todo.connected_user.connected_number.replace("@c.us", "")}
                                         </STableCell>
 
                                     </STableRow>

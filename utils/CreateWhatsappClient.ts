@@ -1,160 +1,158 @@
-import makeWASocket, { fetchLatestBaileysVersion, makeInMemoryStore, useMultiFileAuthState } from "@whiskeysockets/baileys"
 import { Server } from "socket.io";
 import fs from "fs"
 import { User } from "../models/users/user.model";
-import { ExportVisitsToPdf } from "./ExportVisitsToPdf";
+import { HandleVisitsReport } from "./ExportVisitsToPdf";
 import Lead from "../models/leads/lead.model";
 import { Todo } from "../models/todos/todo.model";
 import { HandleTodoMessage } from "./handleTodo";
-import { ExportProductionsToPdf } from "./ExportProductionReports";
-import NodeCache from 'node-cache'
+import { HandleProductionReports } from "./ExportProductionReports";
+import { Client, LocalAuth, Message } from "whatsapp-web.js";
 
-export var clients: { client_id: string, client: any }[] = []
+export var clients: { client_id: string, client: Client }[] = []
 
-const msgRetryCounterCache = new NodeCache()
-const store = makeInMemoryStore({})
-store?.readFromFile('./baileys_store_multi.json')
-
-setInterval(() => {
-    store?.writeToFile('./baileys_store_multi.json')
-}, 10_000)
-
-
-async function createSocket(session_folder: string) {
-    const { version, isLatest } = await fetchLatestBaileysVersion()
-    const { state, saveCreds } = await useMultiFileAuthState('sessions/' + session_folder)
-    const sock = makeWASocket({ version, auth: state, msgRetryCounterCache, generateHighQualityLinkPreview: true, })
-    console.log("version", version, isLatest)
-    return { sock, saveCreds }
-}
 
 export async function createWhatsappClient(client_id: string, io: Server) {
-    const socket = await createSocket(client_id)
-    store?.bind(socket.sock.ev)
+    let oldClient = clients.find((client) => client.client_id === client_id)
+    if (oldClient) {
+        oldClient.client.destroy()
+        clients = clients.filter(c => { return c.client_id !== client_id })
+    }
 
+    let client = new Client({
+        authStrategy: new LocalAuth({
+            clientId: client_id,
+            dataPath: `./sessions/${client_id}`
+        }),
+        puppeteer: {
+            headless: true,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox'
+            ],
+            executablePath: process.env.CHROME_PATH
+        },
+        qrMaxRetries: 2,
+    });
 
-    // connection  updates
-    socket.sock.ev.on('connection.update', async (update) => {
-        const { connection, qr, lastDisconnect } = update
-        if (connection === 'close') {
-            if (lastDisconnect?.error) {
-                let msg = lastDisconnect.error.message
-                console.log(msg)
-                if (msg === "Connection Failure") {
-                    io.to(client_id).emit("disconnected_whatsapp");
-                    await DeleteLocalSession(client_id)
-                    await DeleteLocalSession(client_id)
-                    createWhatsappClient(client_id, io)
-                }
-                else if (msg === "Connection Closed") {
-                    io.to(client_id).emit("loading");
-                    createWhatsappClient(client_id, io)
-                }
-                else if (msg === "Stream Errored (conflict)") {
-                    io.to(client_id).emit("disconnected_whatsapp");
-                    if (clients.find((c) => c.client_id === client_id)) {
-                        clients = clients.filter((client) => { return client.client_id !== client_id })
-                        let user = await User.findOne({ client_id: client_id })
-                        if (user) {
-                            await User.findByIdAndUpdate(user._id, {
-                                connected_number: undefined
-                            })
-                        }
-                    }
-                }
-                else if (msg === "Stream Errored (restart required)") {
-                    io.to(client_id).emit("loading")
-                    createWhatsappClient(client_id, io)
-                }
-
-            }
-        }
-        if (qr) {
-            io.to(client_id).emit("qr", qr);
-            clients = clients.filter((client) => { return client.client_id !== client_id })
+    client.on("ready", async () => {
+        if (client.info.wid.user) {
+            io.to(client_id).emit("ready", client.info.wid.user)
             let user = await User.findOne({ client_id: client_id })
             if (user) {
                 await User.findByIdAndUpdate(user._id, {
-                    connected_number: undefined
+                    connected_number: client?.info.wid._serialized
                 })
             }
+
+            if (!clients.find((client) => client.client_id === client_id))
+                clients.push({ client_id: client_id, client: client })
+
+            // /retry functions
+            if (client.info && client.info.wid) {
+                if (user && client?.info.wid._serialized === process.env.WAGREETING_PHONE) {
+                    let todos = await Todo.find().populate('connected_user')
+                    todos.forEach(async (todo) => {
+                        if (todo.connected_user) {
+                            let reminderClient = clients.find((client) => client.client_id === todo.connected_user.client_id)
+                            if (reminderClient) {
+                                console.log(clients.length)
+                                if (todo.is_active) {
+                                    await HandleTodoMessage(todo, reminderClient.client)
+                                }
+                            }
+                        }
+                    })
+                }
+            }
         }
-        if (connection === "connecting") {
-            console.log("loading", client_id)
-            io.to(client_id).emit("loading");
-        }
-        if (connection === 'open') {
-            io.to(client_id).emit("ready", socket.sock.user?.id);
-            console.log("ready", client_id)
+        console.log("session revived for", client.info)
+    })
+    client.on('disconnected', async (reason) => {
+        console.log("reason", reason)
+        if (reason === "NAVIGATION") {
+            io.to(client_id).emit("disconnected_whatsapp", client_id)
             let user = await User.findOne({ client_id: client_id })
             if (user) {
                 await User.findByIdAndUpdate(user._id, {
-                    connected_number: socket.sock.user?.id
+                    connected_number: null
                 })
             }
-            clients = clients.filter((client) => { return client.client_id !== client_id })
-            clients.push({ client_id: client_id, client: socket.sock })
-            let client = clients.find((client) => client.client_id === process.env.WACLIENT_ID)
-            if (client) {
-                ExportVisitsToPdf(client.client)
-                ExportProductionsToPdf(client.client)
-            }
-
-            let todos = await Todo.find().populate('connected_user')
-
-            todos.forEach(async (todo) => {
-                if (todo.connected_user) {
-                    let reminderClient = clients.find((client) => client.client_id === todo.connected_user.client_id)
-                    if (reminderClient) {
-                        console.log(clients.length)
-                        if (todo.is_active) {
-                            await HandleTodoMessage(todo, reminderClient.client)
-                        }
-                    }
-                }
-            })
+            clients = clients.filter((client) => { return client.client_id === client_id })
+            if (fs.existsSync('./sessions/${client_id}'))
+                fs.rmSync(`./sessions/${client_id}`, { recursive: true, force: true })
         }
+        console.log("disconnected", client.info)
     })
 
-    // save creds
-    socket.sock.ev.on("creds.update", async () => {
-        socket.saveCreds()
-    })
-
-    socket.sock.ev.on('messages.upsert', (data) => {
-        data.messages.map(async (msg) => {
-            if (msg.message && msg.message.conversation) {
-                if (String(msg.message?.conversation).toLowerCase() === "stop") {
-                    if (msg.key.remoteJid) {
-                        let id = String(msg.key.remoteJid).replace("91", "").replace("@s.whatsapp.net", "")
-                        await Lead.findOneAndUpdate({ mobile: id }, { stage: 'useless' })
-                        socket.sock.sendMessage(msg.key.remoteJid, { text: "you successfully stopped" })
-                    }
-                }
-            }
-        })
-        socket.sock.ev.flush()
-    })
-}
-
-
-async function DeleteLocalSession(client_id: string) {
-    try {
-        if (fs.existsSync(`./sessions/${client_id}`)) {
-            fs.rmdirSync(`./sessions/${client_id}`, { recursive: true })
-        }
-        clients = clients.filter((client) => { return client.client_id !== client_id })
+    client.on('qr', async (qr) => {
+        io.to(client_id).emit("qr", qr);
+        clients = clients.filter((client) => { return client.client_id === client_id })
         let user = await User.findOne({ client_id: client_id })
         if (user) {
             await User.findByIdAndUpdate(user._id, {
                 connected_number: undefined
             })
         }
-        console.log("deleted directory")
-    }
-    catch (err) {
-        console.log(err)
-    }
+        console.log("logged out", qr, client_id)
+    });
+
+    client.on('loading_screen', async (qr) => {
+        io.to(client_id).emit("loading");
+        console.log("loading", client_id)
+    });
+    client.on('message_create', async (msg) => {
+        let dt1 = new Date()
+        let dt2 = new Date()
+        if (msg.body.toLowerCase() === "send boreports") {
+            if (new Date().getHours() <= 11) {
+                dt2.setDate(new Date(dt1).getDate())
+                dt1.setDate(new Date(dt1).getDate() - 1)
+                dt1.setHours(0)
+                dt1.setMinutes(0)
+                dt2.setHours(0)
+                dt2.setMinutes(0)
+                await client.sendMessage(String(process.env.WAGREETING_PHONE), "processing your morning reports..")
+                await HandleVisitsReport(client, dt1, dt2)
+                    .then(async () => {
+                        await HandleProductionReports(client)
+                    })
+                    .then(async () => {
+                        await client.sendMessage(String(process.env.WAGREETING_PHONE), "processed successfully")
+                    }).catch(async () => await client.sendMessage(String(process.env.WAGREETING_PHONE), "error while processing morning reports "))
+
+            }
+            if (new Date().getHours() > 11) {
+                dt1.setDate(new Date(dt1).getDate())
+                dt2.setDate(new Date(dt1).getDate() + 1)
+                dt1.setHours(0)
+                dt1.setMinutes(0)
+                dt2.setHours(0)
+                dt2.setMinutes(0)
+                await client.sendMessage(String(process.env.WAGREETING_PHONE), "processing your evening reports..")
+                await HandleVisitsReport(client, dt1, dt2)
+                    .then(async () => {
+                        await HandleProductionReports(client)
+                    })
+                    .then(async () => {
+                        await client.sendMessage(String(process.env.WAGREETING_PHONE), "processed successfully")
+                    }).catch(async () => await client.sendMessage(String(process.env.WAGREETING_PHONE), "error while processing evening reports "))
+            }
+        }
+    })
+
+    client.on('message', async (msg: Message) => {
+        if (String(msg.body).toLowerCase() === "stop") {
+            let lead = await Lead.findOne({ $or: [{ mobile: msg.from.replace("91", "").replace("@c.us", "") }, { alternate_mobile1: msg.from.replace("91", "").replace("@c.us", "") }, { alternate_mobile2: msg.from.replace("91", "").replace("@c.us", "") }] })
+            if (lead) {
+                lead.stage = "useless"
+                await lead.save()
+                await client.sendMessage(msg.from, "successfully stopped this broadcast")
+            }
+        }
+    });
+
+    client.initialize();
 }
+
 
 

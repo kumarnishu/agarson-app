@@ -59,7 +59,7 @@ export default function DashBoardNavBar() {
                                     alignItems="center"
                                     gap={1}
                                 >
-                                    {user.is_admin && <RefreshWhatsappButton />}
+                                    {user._id === user.created_by._id && <RefreshWhatsappButton />}
                                     <ProfileLogo />
                                 </Stack>
                             </>

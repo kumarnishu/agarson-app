@@ -142,7 +142,7 @@ function RefreshWhatsappDialog() {
                                             {user.username}
                                         </STableCell>
                                         <STableCell style={{ padding: 10 }}>
-                                            {user.connected_number.split(":")[0].replace("91", "")}
+                                            {user.connected_number.replace("91", "").replace("@c.us", "")}
                                         </STableCell>
                                     </STableRow>
                                 )
