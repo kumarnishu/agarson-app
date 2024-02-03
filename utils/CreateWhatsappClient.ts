@@ -24,13 +24,14 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             dataPath: `./sessions/${client_id}`
         }),
         puppeteer: {
-            headless: true,
+            headless: false,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
-            ]
+            ],
+            // browserURL:'C:/Program Files/Google/Chrome/Application'
         },
-        qrMaxRetries: 2
+        qrMaxRetries: 2,
     });
 
     client.on("ready", async () => {
