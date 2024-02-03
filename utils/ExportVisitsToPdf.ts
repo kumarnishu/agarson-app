@@ -204,7 +204,7 @@ async function SendDocument(client: Client) {
         let users = await User.find()
         users.forEach(async (user) => {
             if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
-                await client.sendMessage(String(process.env.WAGREETING_PHONE), MessageMedia.fromFilePath(`./pdfs/visit/${user.username}_visits.pdf`))
+                await client.sendMessage(String(process.env.WAGREETING_PHONE), MessageMedia.fromFilePath(`./pdfs/visit/${user.username}_visits.pdf`), { caption: "" })
             }
         })
     }
