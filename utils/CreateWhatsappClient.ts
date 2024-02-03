@@ -24,7 +24,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             dataPath: `./sessions/${client_id}`
         }),
         puppeteer: {
-            headless: false,
+            headless: true,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
