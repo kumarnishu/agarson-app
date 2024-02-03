@@ -105,23 +105,22 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
     return res.status(200).json({ message: "all todo started" })
 }
 
-export const DeleteTodo = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id)) {
-        return res.status(400).json({ message: "please provide correct todo id" })
-    }
-    let todo = await Todo.findById(id)
-    if (!todo)
-        return res.status(400).json({ message: "not found todo" })
-    todo_timeouts.forEach((item) => {
-        if (String(item.id) === String(todo?._id)) {
-            clearTimeout(item.timeout)
+export const DeleteTodos = async (req: Request, res: Response, next: NextFunction) => {
+    let { ids } = req.body as { ids: string[] }
+    ids.forEach(async (id) => {
+        let todo = await Todo.findById(id)
+        if (todo) {
+            todo_timeouts.forEach((item) => {
+                if (String(item.id) === String(todo?._id)) {
+                    clearTimeout(item.timeout)
+                }
+            })
+            if (TodoManager.exists(todo.running_key))
+                TodoManager.deleteJob(todo.running_key)
+            await Todo.findByIdAndDelete(id)
         }
     })
-    if (TodoManager.exists(todo.running_key))
-        TodoManager.deleteJob(todo.running_key)
-    await Todo.findByIdAndDelete(id)
-    return res.status(200).json({ message: "todo deleted" })
+    return res.status(200).json({ message: "all selected todos deleted" })
 }
 
 export const StopTodos = async (req: Request, res: Response, next: NextFunction) => {
@@ -140,7 +139,7 @@ export const StopTodos = async (req: Request, res: Response, next: NextFunction)
             await todo.save()
         }
     })
-    return res.status(200).json({ message: "all todo stopped" })
+    return res.status(200).json({ message: "all todos stopped" })
 }
 
 export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next: NextFunction) => {
@@ -168,6 +167,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             is_sent: boolean,
             status: string
         }[] = []
+        let frequencies = ["minutes", "hours", "months", "days", "weekdays", "every-month-days","selected-month-days"]
         for (let i = 0; i < workbook_response.length; i++) {
             let todo = workbook_response[i]
             let _id: string | null = String(todo._id)
@@ -177,7 +177,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             let category: string | null = todo.category
             let category2: string | null = todo.category2
             let contacts: string | null = String(todo.contacts).toLowerCase()
-            let frequency_type: string | null = String(todo.frequency_type).toLowerCase()
+            let frequency_type: string | null = String(todo.frequency_type).toLowerCase().trim()
             let frequency_value: string | null = todo.frequency_value
             let start_date: string | null = todo.start_date
             let run_once: string | null = String(todo.run_once).toLowerCase()
@@ -193,12 +193,11 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                 validated = false
                 statusText = "invalid serial number"
             }
-            if (!title) {
+            if (!frequencies.includes(todo.frequency_type)) {
                 validated = false
-                statusText = "invalid title"
+                statusText = "invalid frequency type"
             }
-
-            if (frequency_type && frequency_value) {
+            if (frequencies.includes(frequency_type) && frequency_type && frequency_value) {
                 let ftype = frequency_type
                 let value = frequency_value
 
@@ -253,6 +252,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                     })
                 }
             }
+
             if (contacts) {
                 newContacts = []
                 for (let i = 0; i <= contacts.split(",").length; i++) {
@@ -289,6 +289,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                 }
 
             }
+
             if (!validated) {
                 result.push({
                     ...todo,
@@ -319,10 +320,10 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
 
                         await Todo.findByIdAndUpdate(newtodo._id, {
                             serial_no: Number(serial_no) || 0,
-                            title: title,
-                            subtitle: subtitle,
-                            category: category,
-                            category2: category2,
+                            title: title || "",
+                            subtitle: subtitle || "",
+                            category: category || "",
+                            category2: category2 || "",
                             connected_user: newConNuser?._id || null,
                             run_once: new_run_once,
                             start_date: newStartDate,
@@ -364,10 +365,10 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
 
                         let newtodo = new Todo({
                             serial_no: Number(serial_no) || 0,
-                            title: title,
-                            subtitle: subtitle,
-                            category: category,
-                            category2: category2,
+                            title: title || "",
+                            subtitle: subtitle || "",
+                            category: category || "",
+                            category2: category2 || "",
                             frequency_type: frequency_type,
                             frequency_value: frequency_value,
                             run_once: new_run_once,

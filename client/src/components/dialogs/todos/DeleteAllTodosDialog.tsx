@@ -6,15 +6,15 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
-import { DeleteTodo } from '../../../services/TodoServices';
+import { DeleteTodos } from '../../../services/TodoServices';
 import { ChoiceContext, TodoChoiceActions } from '../../../contexts/dialogContext';
 
 
-function DeleteTodoDialog({ id }: { id: string }) {
+function DeleteAllTodosDialog({ ids }: { ids: string[] }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
-        <AxiosResponse<any>, BackendError, string>
-        (DeleteTodo, {
+        <AxiosResponse<any>, BackendError, { ids: string[] }>
+        (DeleteTodos, {
             onSuccess: () => {
                 queryClient.invalidateQueries('todos')
             }
@@ -22,13 +22,10 @@ function DeleteTodoDialog({ id }: { id: string }) {
 
     useEffect(() => {
         if (isSuccess)
-            setTimeout(() => {
-                setChoice({ type: TodoChoiceActions.close_todo })
-            }, 1000)
+            setChoice({ type: TodoChoiceActions.close_todo })
     }, [setChoice, isSuccess])
-
     return (
-        <Dialog open={choice === TodoChoiceActions.delete_todo ? true : false}
+        <Dialog open={choice === TodoChoiceActions.delete_bulk_todo ? true : false}
             onClose={() => setChoice({ type: TodoChoiceActions.close_todo })}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: TodoChoiceActions.close_todo })}>
@@ -36,7 +33,7 @@ function DeleteTodoDialog({ id }: { id: string }) {
             </IconButton>
 
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-                Delete Todo
+                Delete Todos
             </DialogTitle>
             {
                 isError ? (
@@ -45,13 +42,13 @@ function DeleteTodoDialog({ id }: { id: string }) {
             }
             {
                 isSuccess ? (
-                    <AlertBar message=" deleted" color="success" />
+                    <AlertBar message=" started" color="success" />
                 ) : null
             }
 
             <DialogContent>
                 <Typography variant="body1" color="error">
-                    Warning ! This will Delete todo for all connected users
+                    Warning ! This will Delete all selected todos for connected users
                 </Typography>
             </DialogContent>
             <Stack
@@ -62,13 +59,12 @@ function DeleteTodoDialog({ id }: { id: string }) {
             >
                 <Button fullWidth variant="outlined" color="error"
                     onClick={() => {
-                        setChoice({ type: TodoChoiceActions.delete_todo })
-                        mutate(id)
+                        mutate({ ids: ids })
                     }}
                     disabled={isLoading}
                 >
                     {isLoading ? <CircularProgress /> :
-                        "Delete"}
+                        "Delete Selected"}
                 </Button>
 
             </Stack >
@@ -76,4 +72,4 @@ function DeleteTodoDialog({ id }: { id: string }) {
     )
 }
 
-export default DeleteTodoDialog
+export default DeleteAllTodosDialog

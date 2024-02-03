@@ -1,14 +1,10 @@
-import { Delete, Person2, RestartAlt, Stop } from '@mui/icons-material'
+import { Person2, RestartAlt, Stop } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
-import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
-import { UserContext } from '../../contexts/userContext'
-import PopUp from '../popup/PopUp'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { ITodo } from '../../types/todo.types'
 import ViewTodoContactsDialog from '../dialogs/todos/ViewTodoContactsDialog'
-import DeleteTodoDialog from '../dialogs/todos/DeleteTodoDialog'
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
 
 
@@ -24,7 +20,6 @@ type Props = {
 
 function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTodos, setSelectedTodos }: Props) {
     const { setChoice } = useContext(ChoiceContext)
-    const { user } = useContext(UserContext)
     const [data, setData] = useState<ITodo[]>(todos)
     const [text, setText] = useState<string>()
 
@@ -212,39 +207,17 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         }
 
                                         <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke" }}>
-                                            <PopUp color={todo.is_active ? "success" : "error"}
-                                                element={
-                                                    <Stack direction="row" spacing={1}>
+                                            <Tooltip title="View Contacts">
+                                                <IconButton color={todo.is_active ? "success" : "error"}
+                                                    onClick={() => {
+                                                        setChoice({ type: TodoChoiceActions.view_contacts })
+                                                        setTodo(todo)
+                                                    }}
+                                                >
+                                                    <Person2 />
+                                                </IconButton>
+                                            </Tooltip>
 
-                                                        {user?.todos_access_fields.is_deletion_allowed &&
-                                                            <Tooltip title="delete">
-                                                                <IconButton
-                                                                    disabled={todo.is_active}
-                                                                    color="error"
-                                                                    onClick={() => {
-                                                                        setChoice({ type: TodoChoiceActions.delete_todo })
-                                                                        setTodo(todo)
-
-                                                                    }}
-                                                                >
-                                                                    <Delete />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        }
-
-                                                        <Tooltip title="View Contacts">
-                                                            <IconButton color="secondary"
-                                                                onClick={() => {
-                                                                    setChoice({ type: TodoChoiceActions.view_contacts })
-                                                                    setTodo(todo)
-                                                                }}
-                                                            >
-                                                                <Person2 />
-                                                            </IconButton>
-                                                        </Tooltip>
-
-                                                    </Stack>}
-                                            />
                                         </STableCell>
 
                                         <STableCell >
@@ -325,7 +298,6 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                 todo ?
                     <>
                         <ViewTodoContactsDialog todo={todo} />
-                        <DeleteTodoDialog id={todo._id} />
                     </>
                     : null
             }

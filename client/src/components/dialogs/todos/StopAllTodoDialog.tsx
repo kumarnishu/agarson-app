@@ -22,9 +22,7 @@ function StopAllTodoDialog({ ids }: { ids: string[] }) {
 
     useEffect(() => {
         if (isSuccess)
-            setTimeout(() => {
-                setChoice({ type: TodoChoiceActions.close_todo })
-            }, 1000)
+            setChoice({ type: TodoChoiceActions.close_todo })
     }, [setChoice, isSuccess])
 
     return (

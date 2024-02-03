@@ -3,14 +3,10 @@ import { ITodo } from "../../types/todo.types"
 
 const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>({
     title: {
-        type: String,
-        lowercase: true,
-        required: true
+        type: String
     },
     subtitle: {
-        type: String,
-        lowercase: true,
-        default: ""
+        type: String
     },
     category: { type: String },
     category2: { type: String },

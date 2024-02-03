@@ -21,6 +21,7 @@ import UploadTodoExcelButton from '../../components/buttons/UploadTodoExcelButto
 import StartAllTodoDialog from '../../components/dialogs/todos/StartAllTodoDialog'
 import StopAllTodoDialog from '../../components/dialogs/todos/StopAllTodoDialog'
 import { queryClient } from '../../main'
+import DeleteAllTodosDialog from '../../components/dialogs/todos/DeleteAllTodosDialog'
 const template: ITodoTemplate[] = [
     {
         _id: "",
@@ -296,7 +297,8 @@ export default function TodosPage() {
                             }}
                             sx={{ borderRadius: 2 }}
                         >
-
+                            < MenuItem onClick={handleExcel}
+                            >Export To Excel</MenuItem>
                             {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
                                 onClick={() => {
                                     if (selectedTodos.length === 0)
@@ -316,14 +318,22 @@ export default function TodosPage() {
                                     setAnchorEl(null)
                                 }}
                             > Stop Seletced</MenuItem>}
+                            {LoggedInUser?.todos_access_fields.is_editable && <MenuItem sx={{ color: 'red' }}
+                                onClick={() => {
+                                    if (selectedTodos.length === 0)
+                                        alert("please select some todos")
+                                    else
+                                        setChoice({ type: TodoChoiceActions.delete_bulk_todo })
+                                    setAnchorEl(null)
+                                }}
+                            > Delete Seletced</MenuItem>}
 
 
-                            < MenuItem onClick={handleExcel}
-                            >Export To Excel</MenuItem>
 
                         </Menu >
 
                         <StartAllTodoDialog ids={selectedTodos.map((todo) => { return todo._id })} />
+                        <DeleteAllTodosDialog ids={selectedTodos.map((todo) => { return todo._id })} />
                         <StopAllTodoDialog ids={selectedTodos.map((todo) => { return todo._id })} />
 
                     </>

@@ -22,10 +22,9 @@ export const StartAllTodos = async ({ ids }: { ids: string[] }) => {
 };
 
 
-export const DeleteTodo = async (id: string) => {
-    return await apiClient.delete(`todos/${id}`);
+export const DeleteTodos = async ({ ids }: { ids: string[] }) => {
+    return await apiClient.patch(`todos/bulk/delete`, { ids: ids });
 };
-
 
 
 export const UpdateTodoStatus = async ({ id, body }: { id: string, body: { status: string, reply: string } }) => {
