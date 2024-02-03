@@ -8,7 +8,6 @@ import { IProduction } from "../types/production.types"
 import { Production } from "../models/production/production.model"
 import moment from "moment"
 import { Machine } from "../models/production/machine.model"
-import { ReConnectWhatsapp } from "./RestartServices"
 
 export async function ExportProductionsToPdf(client: any) {
     let cronString1 = `00 16 1/1 * *`
@@ -316,8 +315,7 @@ export async function HandleProductionReports(client: any) {
     setTimeout(async () => {
         try { await SendDocument(client) }
         catch (err) {
-            await ReConnectWhatsapp()
-            await SendDocument(client)
+            console.log(err)
         }
     }, 20000)
 }

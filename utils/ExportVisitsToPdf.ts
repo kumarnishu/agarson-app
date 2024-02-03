@@ -7,12 +7,12 @@ import { imageUrlToBase64 } from "./UrlToBase64"
 import fs from "fs"
 import { User } from "../models/users/user.model"
 import { ReportManager, io } from "../app"
-import { ReConnectWhatsapp } from "./RestartServices"
+
 
 
 export async function ExportVisitsToPdf(client: any) {
     let cronString1 = `8 18 1/1 * *`
-    let cronString2 = `1 9 1/1 * *`
+    let cronString2 = `40 9 1/1 * *`
     console.log("running trigger")
     if (!ReportManager.exists("visit_reports1"))
         ReportManager.add("visit_reports1", cronString1, async () => {
@@ -224,10 +224,9 @@ export async function HandleVisitsReport(client: any, dt1: Date, dt2: Date) {
     setTimeout(async () => {
         try { await SendDocument(client) }
         catch (err) {
-            await ReConnectWhatsapp()
-            await SendDocument(client)
+            console.log(err)
         }
-    }, 300000)
+    }, 30000)
 
     setTimeout(async () => {
         await DeleteDocument()
