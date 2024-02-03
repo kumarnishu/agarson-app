@@ -69,16 +69,18 @@ export async function createWhatsappClient(client_id: string, io: Server) {
     })
     client.on('disconnected', async (reason) => {
         console.log("reason", reason)
-        io.to(client_id).emit("disconnected_whatsapp", client_id)
-        let user = await User.findOne({ client_id: client_id })
-        if (user) {
-            await User.findByIdAndUpdate(user._id, {
-                connected_number: null
-            })
+        if (reason === "NAVIGATION") {
+            io.to(client_id).emit("disconnected_whatsapp", client_id)
+            let user = await User.findOne({ client_id: client_id })
+            if (user) {
+                await User.findByIdAndUpdate(user._id, {
+                    connected_number: null
+                })
+            }
+            clients = clients.filter((client) => { return client.client_id === client_id })
+            if (fs.existsSync('./sessions/${client_id}'))
+                fs.rmSync(`./sessions/${client_id}`, { recursive: true, force: true })
         }
-        clients = clients.filter((client) => { return client.client_id === client_id })
-        if (fs.existsSync('./sessions/${client_id}'))
-            fs.rmSync(`./sessions/${client_id}`, { recursive: true, force: true })
         console.log("disconnected", client.info)
     })
 

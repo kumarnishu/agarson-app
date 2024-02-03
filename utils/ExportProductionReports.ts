@@ -312,6 +312,6 @@ export async function HandleProductionReports(client: Client) {
 async function SendDocument(client: Client) {
     if (client) {
         console.log("sending pdf from", process.env.WAGREETING_PHONE)
-        await client.sendMessage(String(process.env.WAGREETING_PHONE), MessageMedia.fromFilePath(`./pdfs/production/productions.pdf`),{caption:""})
+        await client.sendMessage(String(process.env.WAGREETING_PHONE), MessageMedia.fromFilePath(`./pdfs/production/productions.pdf`), { caption: String(" ") })
     }
 }
