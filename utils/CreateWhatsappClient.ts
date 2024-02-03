@@ -10,15 +10,13 @@ import { Client, LocalAuth, Message } from "whatsapp-web.js";
 
 export var clients: { client_id: string, client: Client }[] = []
 
-
-export async function createWhatsappClient(client_id: string, io: Server) {
+export async function CreateClient(client_id: string) {
     let oldClient = clients.find((client) => client.client_id === client_id)
     if (oldClient) {
         await oldClient.client.destroy()
         clients = clients.filter(c => { return c.client_id !== client_id })
     }
-
-    let client = new Client({
+    const client = new Client({
         authStrategy: new LocalAuth({
             clientId: client_id,
             dataPath: `./sessions/${client_id}`
@@ -32,7 +30,12 @@ export async function createWhatsappClient(client_id: string, io: Server) {
         },
         qrMaxRetries: 2
     });
+    await client.initialize();
+    return client
+}
 
+export async function createWhatsappClient(client_id: string, io: Server) {
+    const client = await CreateClient(client_id)
     client.on("ready", async () => {
         if (client.info.wid.user) {
             io.to(client_id).emit("ready", client.info.wid.user)
@@ -46,7 +49,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             if (!clients.find((client) => client.client_id === client_id))
                 clients.push({ client_id: client_id, client: client })
 
-            // /retry functions
+            //retry functions
             if (client.info && client.info.wid) {
                 if (user && client?.info.wid._serialized === process.env.WAGREETING_PHONE) {
                     if (client) {
@@ -55,12 +58,11 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     }
 
                     let todos = await Todo.find().populate('connected_user')
-
                     todos.forEach(async (todo) => {
                         if (todo.connected_user) {
                             let reminderClient = clients.find((client) => client.client_id === todo.connected_user.client_id)
                             if (reminderClient) {
-                                console.log(clients.length)
+
                                 if (todo.is_active) {
                                     await HandleTodoMessage(todo, reminderClient.client)
                                 }
@@ -71,6 +73,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             }
         }
         console.log("session revived for", client.info)
+        console.log(clients.length)
     })
     client.on('disconnected', async (reason) => {
         console.log("reason", reason)
@@ -86,7 +89,6 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             fs.rmSync(`./sessions/${client_id}`, { recursive: true, force: true })
         console.log("disconnected", client.info)
     })
-
     client.on('qr', async (qr) => {
         io.to(client_id).emit("qr", qr);
         clients = clients.filter((client) => { return client.client_id === client_id })
@@ -98,7 +100,6 @@ export async function createWhatsappClient(client_id: string, io: Server) {
         }
         console.log("logged out", qr, client_id)
     });
-
     client.on('loading_screen', async (qr) => {
         io.to(client_id).emit("loading");
         console.log("loading", client_id)
@@ -113,7 +114,6 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             }
         }
     });
-    client.initialize();
 }
 
 
