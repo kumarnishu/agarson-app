@@ -6,43 +6,8 @@ import { Content } from "pdfmake/interfaces"
 import { imageUrlToBase64 } from "./UrlToBase64"
 import fs from "fs"
 import { User } from "../models/users/user.model"
-import { ReportManager, io } from "../app"
 import { Client, MessageMedia } from "whatsapp-web.js"
 
-
-export async function ExportVisitsToPdf(client: Client) {
-    let cronString1 = `55 11 1/1 * *`
-    let cronString2 = `50 11 1 / 1 * *`
-    console.log("running trigger")
-    if (!ReportManager.exists("visit_reports1"))
-        ReportManager.add("visit_reports1", cronString1, async () => {
-            let dt1 = new Date()
-            let dt2 = new Date()
-            dt2.setDate(new Date(dt1).getDate() + 1)
-            dt1.setHours(0)
-            dt1.setMinutes(0)
-            dt2.setHours(0)
-            dt2.setMinutes(0)
-            await HandleVisitsReport(client, dt1, dt2)
-        })
-    if (!ReportManager.exists("visit_reports2"))
-        ReportManager.add("visit_reports2", cronString2, async () => {
-            let dt1 = new Date()
-            let dt2 = new Date()
-            dt1.setDate(new Date(dt1).getDate() - 1)
-            dt1.setHours(0)
-            dt1.setMinutes(0)
-            dt2.setHours(0)
-            dt2.setMinutes(0)
-            await HandleVisitsReport(client, dt1, dt2)
-        })
-    if (ReportManager.exists("visit_reports1")) {
-        ReportManager.start("visit_reports1")
-    }
-    if (ReportManager.exists("visit_reports2")) {
-        ReportManager.start("visit_reports2")
-    }
-}
 export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
     let visits: IVisit[] = []
     console.log("generating pdf")

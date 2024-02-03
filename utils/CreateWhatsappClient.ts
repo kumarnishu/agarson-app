@@ -1,11 +1,11 @@
 import { Server } from "socket.io";
 import fs from "fs"
 import { User } from "../models/users/user.model";
-import { ExportVisitsToPdf } from "./ExportVisitsToPdf";
+import { HandleVisitsReport } from "./ExportVisitsToPdf";
 import Lead from "../models/leads/lead.model";
 import { Todo } from "../models/todos/todo.model";
 import { HandleTodoMessage } from "./handleTodo";
-import { ExportProductionsToPdf } from "./ExportProductionReports";
+import { HandleProductionReports } from "./ExportProductionReports";
 import { Client, LocalAuth, Message } from "whatsapp-web.js";
 
 export var clients: { client_id: string, client: Client }[] = []
@@ -29,7 +29,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
             ],
-            // browserURL:'C:/Program Files/Google/Chrome/Application'
+            executablePath: process.env.CHROME_PATH
         },
         qrMaxRetries: 2,
     });
@@ -50,13 +50,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             // /retry functions
             if (client.info && client.info.wid) {
                 if (user && client?.info.wid._serialized === process.env.WAGREETING_PHONE) {
-                    if (client) {
-                        ExportVisitsToPdf(client)
-                        ExportProductionsToPdf(client)
-                    }
-
                     let todos = await Todo.find().populate('connected_user')
-
                     todos.forEach(async (todo) => {
                         if (todo.connected_user) {
                             let reminderClient = clients.find((client) => client.client_id === todo.connected_user.client_id)
@@ -104,6 +98,46 @@ export async function createWhatsappClient(client_id: string, io: Server) {
         io.to(client_id).emit("loading");
         console.log("loading", client_id)
     });
+    client.on('message_create', async (msg) => {
+        let dt1 = new Date()
+        let dt2 = new Date()
+        if (msg.body.toLowerCase() === "send boreports") {
+            if (new Date().getHours() <= 11) {
+                dt2.setDate(new Date(dt1).getDate())
+                dt1.setDate(new Date(dt1).getDate() - 1)
+                dt1.setHours(0)
+                dt1.setMinutes(0)
+                dt2.setHours(0)
+                dt2.setMinutes(0)
+                await client.sendMessage(String(process.env.WAGREETING_PHONE), "processing your morning reports..")
+                await HandleVisitsReport(client, dt1, dt2)
+                    .then(async () => {
+                        await HandleProductionReports(client)
+                    })
+                    .then(async () => {
+                        await client.sendMessage(String(process.env.WAGREETING_PHONE), "processed successfully")
+                    }).catch(async () => await client.sendMessage(String(process.env.WAGREETING_PHONE), "error while processing morning reports "))
+
+            }
+            if (new Date().getHours() > 11) {
+                dt1.setDate(new Date(dt1).getDate())
+                dt2.setDate(new Date(dt1).getDate() + 1)
+                dt1.setHours(0)
+                dt1.setMinutes(0)
+                dt2.setHours(0)
+                dt2.setMinutes(0)
+                await client.sendMessage(String(process.env.WAGREETING_PHONE), "processing your evening reports..")
+                await HandleVisitsReport(client, dt1, dt2)
+                    .then(async () => {
+                        await HandleProductionReports(client)
+                    })
+                    .then(async () => {
+                        await client.sendMessage(String(process.env.WAGREETING_PHONE), "processed successfully")
+                    }).catch(async () => await client.sendMessage(String(process.env.WAGREETING_PHONE), "error while processing evening reports "))
+            }
+        }
+    })
+
     client.on('message', async (msg: Message) => {
         if (String(msg.body).toLowerCase() === "stop") {
             let lead = await Lead.findOne({ $or: [{ mobile: msg.from.replace("91", "").replace("@c.us", "") }, { alternate_mobile1: msg.from.replace("91", "").replace("@c.us", "") }, { alternate_mobile2: msg.from.replace("91", "").replace("@c.us", "") }] })
@@ -114,6 +148,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             }
         }
     });
+
     client.initialize();
 }
 

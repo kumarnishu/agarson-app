@@ -3,25 +3,12 @@ import path from "path"
 import { Content } from "pdfmake/interfaces"
 import fs from "fs"
 import { User } from "../models/users/user.model"
-import { ReportManager, io } from "../app"
 import { IProduction } from "../types/production.types"
 import { Production } from "../models/production/production.model"
 import moment from "moment"
 import { Machine } from "../models/production/machine.model"
 import { Client, MessageMedia } from "whatsapp-web.js"
 
-export async function ExportProductionsToPdf(client: Client) {
-    let cronString1 = `50 11 1 / 1 * *`
-    console.log("running production trigger")
-    if (!ReportManager.exists("production_reports1"))
-        ReportManager.add("production_reports1", cronString1, async () => {
-            await HandleProductionReports(client)
-        })
-
-    if (ReportManager.exists("production_reports1")) {
-        ReportManager.start("production_reports1")
-    }
-}
 
 export async function HandleProductionReports(client: Client) {
     console.log("generating pdf")
@@ -325,6 +312,6 @@ export async function HandleProductionReports(client: Client) {
 async function SendDocument(client: Client) {
     if (client) {
         console.log("sending pdf from", process.env.WAGREETING_PHONE)
-        await client.sendMessage(String(process.env.WAGREETING_PHONE), MessageMedia.fromFilePath(`./pdfs/production/productions.pdf`), { caption: '' })
+        await client.sendMessage(String(process.env.WAGREETING_PHONE), MessageMedia.fromFilePath(`./pdfs/production/productions.pdf`),{caption:'none'})
     }
 }
