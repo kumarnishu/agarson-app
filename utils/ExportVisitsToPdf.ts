@@ -11,8 +11,8 @@ import { ReportManager, io } from "../app"
 
 
 export async function ExportVisitsToPdf(client: any) {
-    let cronString1 = `8 18 1/1 * *`
-    let cronString2 = `40 9 1/1 * *`
+    let cronString1 = `0 18 1/1 * *`
+    let cronString2 = `0 9 1/1 * *`
     console.log("running trigger")
     if (!ReportManager.exists("visit_reports1"))
         ReportManager.add("visit_reports1", cronString1, async () => {
