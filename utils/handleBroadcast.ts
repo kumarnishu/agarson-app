@@ -47,7 +47,14 @@ export async function handleReports(i: number, client: {
                 tmpreports[j].last_whatsapp = new Date()
                 tmpreports[j].is_sent = true
                 await tmpreports[j].save()
-
+                if (tmpreports[j].alternate_mobile1) {
+                    let altmob = "91" + String(tmpreports[j].alternate_mobile1) + "@c.us"
+                    await sendTemplates(client.client, altmob, templates, is_random, broadcast)
+                }
+                if (tmpreports[j].alternate_mobile2) {
+                    let altmob2 = "91" + String(tmpreports[j].alternate_mobile2) + "@c.us"
+                    await sendTemplates(client.client, altmob2, templates, is_random, broadcast)
+                }
                 latest_broadcast.updated_at = new Date()
                 await latest_broadcast.save()
             }
