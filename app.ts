@@ -121,9 +121,10 @@ app.use("/api/v1", TodoRoutes)
 
 
 // daily trigger
-new CronJob("00 00 1/1 * *", async () => {
+new CronJob("01 00 1/1 * *", async () => {
     let todos = await Todo.find()
-    todos.forEach(async (todo) => {
+    for (let i = 0; todos.length; i++) {
+        let todo = todos[i]
         if (todo.is_active) {
             let dt1 = new Date(todo.start_date).getDate()
             let dt2 = new Date().getDate()
@@ -133,16 +134,18 @@ new CronJob("00 00 1/1 * *", async () => {
             let y2 = new Date().getFullYear()
 
             if (dt1 === dt2 && m1 === m2 && y1 === y2) {
-                todo.next_run_date = new Date(cron.sendAt(new Date(todo.start_date)))
-                await todo.save()
+
                 if (todo.connected_user) {
                     let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)?.client
-                    if (client)
+                    if (client) {
                         await HandleTodoMessage(todo, client)
+                        todo.next_run_date = new Date(cron.sendAt(new Date(todo.start_date)))
+                        await todo.save()
+                    }
                 }
             }
         }
-    })
+    }
 }).start()
 
 

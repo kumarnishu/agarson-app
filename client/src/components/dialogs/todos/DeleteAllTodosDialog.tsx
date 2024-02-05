@@ -48,7 +48,7 @@ function DeleteAllTodosDialog({ ids }: { ids: string[] }) {
 
             <DialogContent>
                 <Typography variant="body1" color="error">
-                    Warning ! This will Delete all selected todos for connected users
+                    Warning ! This will Delete all {ids.length} selected todos for connected users
                 </Typography>
             </DialogContent>
             <Stack

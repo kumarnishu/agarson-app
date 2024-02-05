@@ -48,7 +48,7 @@ function StartAllTodoDialog({ ids }: { ids: string[] }) {
 
             <DialogContent>
                 <Typography variant="body1" color="error">
-                    Warning ! This will Start all todos for all connected users
+                    Warning ! This will Start all {ids.length} selected todos for all connected users
                 </Typography>
             </DialogContent>
             <Stack

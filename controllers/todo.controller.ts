@@ -34,24 +34,24 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
         showStopped = true
     if (!mobile) {
         if (showStopped && type) {
-            todos = await Todo.find({ is_active: false, todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ is_active: false, todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
         else if (type) {
-            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
         else {
-            todos = await Todo.find({ created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
     }
     if (mobile) {
         if (showStopped && type) {
-            todos = await Todo.find({ is_active: false, todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ is_active: false, todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
         else if (type) {
-            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
         else {
-            todos = await Todo.find({ created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+            todos = await Todo.find({ created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
         todos = todos.filter((todo) => {
             let numbers = todo.contacts.map((c) => { return c.mobile })
@@ -167,7 +167,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             is_sent: boolean,
             status: string
         }[] = []
-        let frequencies = ["minutes", "hours", "months", "days", "weekdays", "every-month-days","selected-month-days"]
+        let frequencies = ["minutes", "hours", "months", "days", "weekdays", "every-month-days", "selected-month-days"]
         for (let i = 0; i < workbook_response.length; i++) {
             let todo = workbook_response[i]
             let _id: string | null = String(todo._id)

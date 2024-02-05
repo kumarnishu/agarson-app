@@ -49,7 +49,7 @@ function StopAllTodoDialog({ ids }: { ids: string[] }) {
 
             <DialogContent>
                 <Typography variant="body1" color="error">
-                    Warning ! This will Stop all todos for all connected users
+                    Warning ! This will Stop all {ids.length} selected todos for all connected users
                 </Typography>
             </DialogContent>
             <Stack
