@@ -15,7 +15,7 @@ function TodoDashboard() {
         tmpfeatures.push({ feature: 'my todos ', is_visible: true, url: paths.todo })
         user?.todos_access_fields.is_editable && tmpfeatures.push({ feature: 'todos admin', is_visible: true, url: paths.todo_admin })
         setFeatures(tmpfeatures)
-        tmpfeatures.push({ feature: 'help ', is_visible: true, url: paths.todos_help_page })
+        
     }, [])
 
     return (
