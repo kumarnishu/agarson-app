@@ -81,11 +81,11 @@ export async function sendTemplates(client: Client, mobile: string, templates: I
     }
     if (url && !caption) {
         if (url && !caption) {
-            await client.sendMessage(mobile, await MessageMedia.fromUrl(url, { filename: filename, unsafeMime: true }))
+            await client.sendMessage(mobile, await MessageMedia.fromUrl(url, { filename: filename, unsafeMime: true }), { caption: "\n\ntype stop to unsubscribe" })
         }
     }
     if (url && caption) {
-        await client.sendMessage(mobile, (await MessageMedia.fromUrl(url, { filename: filename, unsafeMime: true })), { caption: caption })
+        await client.sendMessage(mobile, (await MessageMedia.fromUrl(url, { filename: filename, unsafeMime: true })), { caption: caption + "\n\ntype stop to unsubscribe" })
     }
     if (latest_broadcast) {
         latest_broadcast.counter = latest_broadcast.counter + 1
