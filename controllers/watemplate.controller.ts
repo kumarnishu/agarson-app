@@ -27,7 +27,7 @@ export const UpdateMessagetemplatesCategories = async (req: Request, res: Respon
 }
 
 export const GetMessagetemplates = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit) || 10
+    let limit = Number(req.query.limit)
     let category = req.query.category
     let templates: IMessageTemplate[] = []
     if (limit && category) {
