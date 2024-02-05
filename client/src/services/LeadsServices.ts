@@ -207,4 +207,29 @@ export const StopBroadcast = async (id: string) => {
 }
 
 
+export const GetMyVisitingCards = async () => {
+  return await apiClient.patch(`cards/me`)
+}
 
+export const GetVisitingCards = async ({ limit, page, userId }: { limit: number | undefined, userId?: string, page: number | undefined }) => {
+  if (userId)
+    return await apiClient.get(`cards/?limit=${limit}&page=${page}&id=${userId}`)
+  else
+    return await apiClient.get(`cards/?limit=${limit}&page=${page}`)
+
+}
+export const CreateVisitingCard = async (body: FormData) => {
+  return await apiClient.post(`cards`, body)
+}
+export const UpdateVisitingCard = async ({ body, id }: { id: string, body: FormData }) => {
+  return await apiClient.put(`cards/${id}`, body)
+}
+export const ReferVisitingCard = async ({ body, id }: { id: string, body: { refer: string } }) => {
+  return await apiClient.patch(`cards/${id}`, body)
+}
+export const ToogleStatusVisitingCard = async (id: string) => {
+  return await apiClient.patch(`cards/${id}`)
+}
+export const AddCommentsToVisitingCard = async ({ body, id }: { id: string, body: { comment: string } }) => {
+  return await apiClient.patch(`cards/${id}`, body)
+}

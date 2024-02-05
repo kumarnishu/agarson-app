@@ -132,9 +132,7 @@ new CronJob("01 00 1/1 * *", async () => {
             let m2 = new Date().getMonth() + 1
             let y1 = new Date(todo.start_date).getFullYear()
             let y2 = new Date().getFullYear()
-
             if (dt1 === dt2 && m1 === m2 && y1 === y2) {
-
                 if (todo.connected_user) {
                     let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)?.client
                     if (client) {

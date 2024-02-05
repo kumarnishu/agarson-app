@@ -402,7 +402,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                         <STableCell>
                                             <Avatar
                                                 title="double click to download"
-                                                sx={{ width: 30, height: 30 }}
+                                                sx={{ width: 25, height: 25 }}
                                                 onDoubleClick={() => {
                                                     if (user.dp && user.dp?.public_url) {
                                                         DownloadFile(user.dp.public_url, user.dp.filename)

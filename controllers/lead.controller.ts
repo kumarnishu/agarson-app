@@ -18,6 +18,8 @@ import cron from "cron"
 import { GetDailyBroadcastCronString } from "../utils/GetDailyBroadcastCronString.js"
 import { handleBroadcast, timeouts } from "../utils/handleBroadcast.js"
 import { clients } from "../utils/CreateWhatsappClient.js"
+import { VisitingCard } from "../models/leads/card.model.js"
+import { IVisitingCard } from "../types/visiting_card.types.js"
 
 // get request
 export const GetLeads = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,7 +29,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
         let count = 0
-        if (req.user?.is_admin) {
+        if (req.user?.crm_access_fields.is_editable) {
             if (id) {
                 leads = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: id }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                     path: 'remarks',
@@ -63,7 +65,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
 
         }
 
-        if (!req.user?.is_admin) {
+        if (!req.user?.crm_access_fields.is_editable) {
             leads = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user?._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
@@ -98,7 +100,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
         let count = 0
-        if (req.user?.is_admin) {
+        if (req.user?.crm_access_fields.is_editable) {
             if (id) {
                 leads = await Lead.find({ stage: 'useless', lead_owners: id }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                     path: 'remarks',
@@ -134,7 +136,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
 
         }
 
-        if (!req.user?.is_admin) {
+        if (!req.user?.crm_access_fields.is_editable) {
             leads = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user?._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
@@ -169,7 +171,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
         let count = 0
-        if (req.user?.is_admin) {
+        if (req.user?.crm_access_fields.is_editable) {
             if (id) {
                 leads = await Lead.find({ is_customer: true, lead_owners: id }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                     path: 'remarks',
@@ -204,7 +206,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
             }
         }
 
-        if (!req.user?.is_admin) {
+        if (!req.user?.crm_access_fields.is_editable) {
             leads = await Lead.find({ is_customer: true, lead_owners: { $in: [req.user?._id] } }).populate('lead_owners').populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
@@ -233,10 +235,10 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
 }
 export const GetRefers = async (req: Request, res: Response, next: NextFunction) => {
     let refers: IReferredParty[] = []
-    if (req.user?.is_admin) {
+    if (req.user?.crm_access_fields.is_editable) {
         refers = await ReferredParty.find().sort('name')
     }
-    if (!req.user?.is_admin) {
+    if (!req.user?.crm_access_fields.is_editable) {
         refers = await ReferredParty.find({ lead_owners: { $in: [req.user?._id] } }).sort('name')
     }
     return res.status(200).json(refers)
@@ -274,7 +276,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
                 leads: leads
             })
         }
-        if (!req.user?.is_admin) {
+        if (!req.user?.crm_access_fields.is_editable) {
             result = result.filter((item) => {
                 let owners = item.party.lead_owners.filter((owner) => {
                     return owner.username == req.user?.username
@@ -1060,7 +1062,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             }
         }
 
-        if (!req.user?.is_admin) {
+        if (!req.user?.crm_access_fields.is_editable) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
                     return owner.username == req.user?.username
@@ -1728,7 +1730,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
             }
         }
 
-        if (!req.user?.is_admin) {
+        if (!req.user?.crm_access_fields.is_editable) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
                     return owner.username == req.user?.username
@@ -2037,7 +2039,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 leads: leads
             })
         }
-        if (!req.user?.is_admin) {
+        if (!req.user?.crm_access_fields.is_editable) {
             result = result.filter((item) => {
                 let owners = item.party.lead_owners.filter((owner) => {
                     return owner.username == req.user?.username
@@ -2707,7 +2709,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
             }
         }
 
-        if (!req.user?.is_admin) {
+        if (!req.user?.crm_access_fields.is_editable) {
             leads = leads.filter((lead) => {
                 let owners = lead.lead_owners.filter((owner) => {
                     return owner.username == req.user?.username
@@ -3752,3 +3754,148 @@ export const StopBroadcast = async (req: Request, res: Response, next: NextFunct
     return res.status(200).json({ message: " broadcast stopped successfully" })
 }
 
+export const GetMyVisitingCards = async (req: Request, res: Response, next: NextFunction) => {
+    let cards = await VisitingCard.find({ is_closed: false }).populate('refer').populate('salesman').populate('updated_by').populate('created_by').populate({
+        path: 'comments',
+        populate: [
+            {
+                path: 'created_by',
+                model: 'User'
+            }
+        ]
+    })
+    res.status(200).json(cards)
+}
+
+export const GetVisitingCards = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    const id = req.query.id
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        let cards: IVisitingCard[] = []
+        let count = 0
+        if (id) {
+            cards = await VisitingCard.find({ is_closed: false, salesman: id }).populate('refer').populate('salesman').populate('updated_by').populate('created_by').populate({
+                path: 'comments',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            count = await VisitingCard.find({ is_closed: false, salesman: id }).countDocuments()
+        }
+        else {
+            cards = await VisitingCard.find({ is_closed: false }).populate('refer').populate('salesman').populate('updated_by').populate('created_by').populate({
+                path: 'comments',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await VisitingCard.find({ is_closed: false }).countDocuments()
+        }
+        return res.status(200).json({
+            cards,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
+
+export const CreateVisitingCard = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body)
+    let { name, city, state, salesman } = body as {
+        name: string, city: string, state: string, salesman: string
+    }
+    let card = await VisitingCard.findOne({ name: name })
+    if (card)
+        return res.status(404).json({ message: "already exists this card" })
+    await new VisitingCard({
+        name,
+        city,
+        state,
+        salesman: salesman,
+        created_at: new Date(),
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save()
+    return res.status(200).json({ message: " Visiting Card Created successfully" })
+}
+export const UpdateVisitingCard = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body)
+    let { name, city, state, salesman } = body as {
+        name: string, city: string, state: string, salesman: string
+    }
+    const id = req.params.id
+    let card = await VisitingCard.findById(id)
+    if (!card)
+        return res.status(404).json({ message: "card not found" })
+    await VisitingCard.findByIdAndUpdate(card._id, {
+        name,
+        city,
+        state,
+        salesman: salesman,
+        updated_at: new Date(),
+        updated_by: req.user
+
+    })
+    return res.status(200).json({ message: " Visiting Card Created successfully" })
+}
+
+export const ToogleStatus = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let card = await VisitingCard.findById(id)
+    if (!card)
+        return res.status(404).json({ message: "card not found" })
+    await VisitingCard.findByIdAndUpdate(card._id, {
+        is_closed: !card.is_closed,
+        updated_at: new Date(),
+        updated_by: req.user
+    })
+    return res.status(200).json({ message: " Visiting Card status updated successfully" })
+}
+
+export const ReferVisitingCard = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    const { refer } = req.body as { refer: String }
+    let card = await VisitingCard.findById(id)
+    if (!card)
+        return res.status(404).json({ message: "card not found" })
+
+    let ref = await ReferredParty.findById(refer)
+    if (!ref)
+        return res.status(404).json({ message: "refer party not found" })
+    await VisitingCard.findByIdAndUpdate(card._id, {
+        is_closed: !card.is_closed,
+        refer: refer,
+        updated_at: new Date(),
+        updated_by: req.user
+    })
+    return res.status(200).json({ message: " Visiting Card referred successfully" })
+}
+
+export const AddCommentToCard = async (req: Request, res: Response, next: NextFunction) => {
+    const { comment } = req.body as {
+        comment: string
+    }
+    const id = req.params.id
+    let card = await VisitingCard.findById(id)
+    if (!card)
+        return res.status(404).json({ message: "card not found" })
+    let replies = card.comments
+    if (req.user) {
+        replies.push({ comment: comment, created_by: req.user, timestamp: new Date() })
+    }
+    card.comments = replies
+    await card.save()
+    return res.status(200).json({ message: "comment added successfully" })
+
+}

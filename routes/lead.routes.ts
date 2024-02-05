@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless, FuzzySearchRefers, GetRefers, GetPaginatedRefers, AssignRefer, BulkAssignLeads, BulkAssignRefer, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, CreateBroadcast, UpdateBroadcast, StopBroadcast, StartBroadcast, GetBroadcast } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless, FuzzySearchRefers, GetRefers, GetPaginatedRefers, AssignRefer, BulkAssignLeads, BulkAssignRefer, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, CreateBroadcast, UpdateBroadcast, StopBroadcast, StartBroadcast, GetBroadcast, ToogleStatus, GetVisitingCards, GetMyVisitingCards, CreateVisitingCard, UpdateVisitingCard, ReferVisitingCard, AddCommentToCard } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
@@ -46,5 +46,12 @@ router.route("/broadcast").post(isAuthenticatedUser, CreateBroadcast)
 router.route("/broadcast/:id").put(isAuthenticatedUser, UpdateBroadcast)
 router.route("/broadcast/stop/:id").patch(isAuthenticatedUser, StopBroadcast)
 router.route("/broadcast/start/:id").patch(isAuthenticatedUser, StartBroadcast)
+router.route("/cards/:id").put(isAuthenticatedUser, UpdateVisitingCard)
+router.route("/cards").post(isAuthenticatedUser, CreateVisitingCard)
+router.route("/cards").get(isAuthenticatedUser, GetVisitingCards)
+router.route("/cards/me").get(isAuthenticatedUser, GetMyVisitingCards)
+router.route("/toogle/status/card/:id").patch(isAuthenticatedUser, ToogleStatus)
+router.route("/refer/card/:id").patch(isAuthenticatedUser, ReferVisitingCard)
+router.route("/comment/card/:id").patch(isAuthenticatedUser, AddCommentToCard)
 
 export default router
