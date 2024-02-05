@@ -16,7 +16,7 @@ export const GetTemplates = async ({ category, limit }: { limit?: number, catego
     if (category && limit)
         return await apiClient.get(`watemplates/?category=${category}&limit=${limit}`)
     else if (category && !limit)
-        return await apiClient.get(`watemplates/?category=${category}&limit=${limit}`)
+        return await apiClient.get(`watemplates/?category=${category}`)
     else
         return await apiClient.get(`watemplates`)
 }
