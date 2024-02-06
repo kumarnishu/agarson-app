@@ -1,4 +1,4 @@
-import makeWASocket, { fetchLatestBaileysVersion, makeInMemoryStore, useMultiFileAuthState } from "@whiskeysockets/baileys"
+import makeWASocket, { GroupMetadata, fetchLatestBaileysVersion, makeInMemoryStore, useMultiFileAuthState } from "@whiskeysockets/baileys"
 import { Server } from "socket.io";
 import fs from "fs"
 import { User } from "../models/users/user.model";
@@ -8,6 +8,9 @@ import { Todo } from "../models/todos/todo.model";
 import { HandleTodoMessage } from "./handleTodo";
 import { ExportProductionsToPdf } from "./ExportProductionReports";
 import NodeCache from 'node-cache'
+import { parties } from "./db"
+import { parse } from "path";
+// import { parties } from "./db2"
 
 export var clients: { client_id: string, client: any }[] = []
 
@@ -96,23 +99,57 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             clients.push({ client_id: client_id, client: socket.sock })
             let client = clients.find((client) => client.client_id === process.env.WACLIENT_ID)
             if (client) {
-                ExportVisitsToPdf(client.client)
-                ExportProductionsToPdf(client.client)
+                let sock = client.client
+                let result = await socket.sock.groupFetchAllParticipating()
+                let metaDeta: GroupMetadata[] = []
+
+                Object.keys(result).map((obj) => {
+                    console.log(result[obj])
+                })
+
+                // console.log(metaDeta)
+                // console.log(metaDeta.length)
+
+                // console.log(result)
+
+                // console.log(parties.length)
+                // for (let i = 0; i < parties.length; i++) {
+                //     let party = parties[i]
+                //     console.log(String(party.id) + "@g.us")
+                //     if (party && party.id) {
+                //         console.log(party.name)
+                //         try {
+                //             await sock.groupParticipantsUpdate(
+                //                 `${party.id}@g.us`,
+                //                 ["919817702306@s.whatsapp.net", "919319284966@s.whatsapp.net", "919319284965@s.whatsapp.net"],
+                //                 "remove" // replace this parameter with "remove", "demote" or "promote"
+                //             )
+                //         }
+                //         catch (err) {
+                //             console.log(err)
+                //         }
+                //     }
+                // }
+
+
+                // ExportVisitsToPdf(client.client)
+                // ExportProductionsToPdf(client.client)
+
             }
 
-            let todos = await Todo.find().populate('connected_user')
+            // let todos = await Todo.find().populate('connected_user')
 
-            todos.forEach(async (todo) => {
-                if (todo.connected_user) {
-                    let reminderClient = clients.find((client) => client.client_id === todo.connected_user.client_id)
-                    if (reminderClient) {
-                        console.log(clients.length)
-                        if (todo.is_active) {
-                            await HandleTodoMessage(todo, reminderClient.client)
-                        }
-                    }
-                }
-            })
+            // todos.forEach(async (todo) => {
+            //     if (todo.connected_user) {
+            //         let reminderClient = clients.find((client) => client.client_id === todo.connected_user.client_id)
+            //         if (reminderClient) {
+            //             console.log(clients.length)
+            //             if (todo.is_active) {
+            //                 await HandleTodoMessage(todo, reminderClient.client)
+            //             }
+            //         }
+            //     }
+            // })
         }
     })
 
@@ -122,7 +159,10 @@ export async function createWhatsappClient(client_id: string, io: Server) {
     })
 
     socket.sock.ev.on('messages.upsert', (data) => {
+
+
         data.messages.map(async (msg) => {
+            // console.log(msg)
             if (msg.message && msg.message.conversation) {
                 if (String(msg.message?.conversation).toLowerCase() === "stop") {
                     if (msg.key.remoteJid) {
