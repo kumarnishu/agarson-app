@@ -3,6 +3,7 @@ import { IReferredParty } from "./crm.types"
 import { IUser } from "./user.types"
 
 export type IVisitingCard = {
+    _id:string
     name: string,
     city: string,
     state: string,
