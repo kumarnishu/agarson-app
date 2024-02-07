@@ -114,7 +114,7 @@ function RefreshWhatsappDialog() {
 
                 <Box sx={{ p: 2 }}>
                     <>
-                        {loading && !qrCode ? <h1>Loading qr code...</h1> : null}
+                        {loading && !qrCode ? <h1>Loading ...</h1> : null}
                         {qrCode ?
                             <>
                                 <p className='p-2'>logged out ? Scan to login !</p>

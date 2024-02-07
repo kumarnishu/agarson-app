@@ -35,6 +35,7 @@ export type IPendingOrdersReport = {
     size4: number,
     size6to10: number,
     size7to10: number,
+    size8to10: number,
     size4to8: number,
     size6to9: number,
     size5to8: number,

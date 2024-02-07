@@ -49,6 +49,7 @@ export default function PendingOrdersReportPage() {
                     size4: 0,
                     size6to10: 0,
                     size7to10: 0,
+                    size8to10: 0,
                     size4to8: 0,
                     size6to9: 0,
                     size5to8: 0,
@@ -233,6 +234,10 @@ export default function PendingOrdersReportPage() {
                             >
                                 7x10
                             </STableHeadCell>}
+                            {reports.find((r) => r.size8to10 > 0) && <STableHeadCell
+                            >
+                                8x10
+                            </STableHeadCell>}
                             {reports.find((r) => r.size4to8 > 0) && <STableHeadCell
                             >
                                 4x8
@@ -374,6 +379,10 @@ export default function PendingOrdersReportPage() {
                                         >
                                             {report.size7to10 ? report.size7to10 : ""}
                                         </STableCell>}
+                                        {reports.find((r) => r.size8to10 > 0) && <STableCell
+                                        >
+                                            {report.size8to10 ? report.size8to10 : ""}
+                                        </STableCell>}
                                         {reports.find((r) => r.size4to8 > 0) && <STableCell
                                         >
                                             {report.size4to8 ? report.size4to8 : ""}
@@ -442,6 +451,7 @@ export default function PendingOrdersReportPage() {
                                     Number(reports.reduce((a, b) => { return Number(a) + Number(b.size4) }, 0).toFixed()) +
                                     Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6to10) }, 0).toFixed()) +
                                     Number(reports.reduce((a, b) => { return Number(a) + Number(b.size7to10) }, 0).toFixed()) +
+                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size8to10) }, 0).toFixed()) +
                                     Number(reports.reduce((a, b) => { return Number(a) + Number(b.size4to8) }, 0).toFixed()) +
                                     Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6to9) }, 0).toFixed()) +
                                     Number(reports.reduce((a, b) => { return Number(a) + Number(b.size5to8) }, 0).toFixed()) +
@@ -508,6 +518,10 @@ export default function PendingOrdersReportPage() {
                             {reports.find((r) => r.size7to10 > 0) && <STableCell
                             >
                                 <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10) }, 0).toFixed()}</b>
+                            </STableCell>}
+                            {reports.find((r) => r.size8to10 > 0) && <STableCell
+                            >
+                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size8to10) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size4to8 > 0) && <STableCell
                             >

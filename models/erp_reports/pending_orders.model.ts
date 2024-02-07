@@ -23,6 +23,7 @@ const PendingOrdersReportSchema = new mongoose.Schema<IPendingOrdersReport, mong
     size4: Number,
     size6to10: Number,
     size7to10: Number,
+    size8to10: Number,
     size4to8: Number,
     size6to9: Number,
     size5to8: Number,
