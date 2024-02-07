@@ -1,14 +1,14 @@
 import { Box, Checkbox, IconButton } from '@mui/material'
 import { Stack } from '@mui/system'
-import { useContext, useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
-import { UserContext } from '../../contexts/userContext'
+// import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import moment from 'moment'
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
 import { IVisitingCard } from '../../types/visiting_card.types'
 import { Photo } from '@mui/icons-material'
-import { ChoiceContext } from '../../contexts/dialogContext'
+// import { ChoiceContext } from '../../contexts/dialogContext'
 
 
 type Props = {
@@ -23,11 +23,11 @@ type Props = {
     sorted: boolean
 }
 
-function VisitingCardTable({ card, cards, setVisitingCard, selectAll, sorted, setSorted, setSelectAll, selectedVisitingCards, setSelectedVisitingCards }: Props) {
+function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelectAll, selectedVisitingCards, setSelectedVisitingCards }: Props) {
     const [data, setData] = useState<IVisitingCard[]>(cards)
-    const { setChoice } = useContext(ChoiceContext)
+    // const { setChoice } = useContext(ChoiceContext)
     const [text, setText] = useState<string>()
-    const { user } = useContext(UserContext)
+    // const { user } = useContext(UserContext)
 
     useEffect(() => {
         setData(cards)
