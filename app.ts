@@ -121,7 +121,7 @@ app.use("/api/v1", TodoRoutes)
 
 
 // daily trigger
-new CronJob("20 12 1/1 * *", async () => {
+new CronJob("12 1/1 * *", async () => {
     let todos = await Todo.find()
     for (let i = 0; todos.length; i++) {
         let todo = todos[i]
