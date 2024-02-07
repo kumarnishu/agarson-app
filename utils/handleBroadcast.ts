@@ -39,7 +39,7 @@ export async function handleReports(i: number, client: {
     for (let j = 0; j < tmpreports.length; j++) {
         let timeout = setTimeout(async () => {
             let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')
-            if (latest_broadcast && latest_broadcast?.is_active && !latest_broadcast?.is_paused) {
+            if (latest_broadcast && latest_broadcast?.is_active) {
                 //report1
                 let mobile = "91" + String(tmpreports[j].mobile) + "@c.us"
                 console.log("Sending to", mobile, "from", client.client_id)
