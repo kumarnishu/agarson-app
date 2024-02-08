@@ -34,10 +34,10 @@ const template: ITodoTemplate[] = [
         contacts: "nishu",
         todo_type: "visible",
         reply: "demo reply",
-        start_time: "12,23",
-        dates: "1,2,3,4,31",
-        months: "1,2,3,12",
-        weekdays: "1,2,7",
+        start_time: "[12:23]",
+        dates: "[1,2,3,4,31]",
+        months: "[1,2,3,12]",
+        weekdays: "[1,2,7",
         years: "[2024,2025]",
         connected_user: 'nishu'
 
@@ -106,7 +106,7 @@ export default function TodosPage() {
                     dates: todo.dates.toString(),
                     months: todo.months.toString(),
                     weekdays: todo.weekdays.toString(),
-                    years: "[" + todo.years.toString() + "]",
+                    years: todo.years.toString(),
                     connected_user: todo.connected_user && todo.connected_user.username
                 })
         })

@@ -116,7 +116,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                         {selectAll ?
 
                                             <STableCell
-
+                                                style={{ width: '60px' }}
                                             >
 
 
@@ -131,7 +131,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                         }
                                         {!selectAll ?
 
-                                            <STableCell >
+                                            <STableCell style={{ width: '60px' }}>
 
                                                 <Checkbox size="small"
                                                     onChange={(e) => {
@@ -152,7 +152,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                             null
                                         }
 
-                                        <STableCell style={{ width: '100px' }}>
+                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke", width: '100px' }}>
                                             <Tooltip title="View replies">
                                                 <IconButton
                                                     onClick={() => {
@@ -191,7 +191,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                         </STableCell>
 
 
-                                        <STableCell title={todo.title} style={{ cursor: 'pointer', color: 'blue', fontSize: 12, letterSpacing: '1px' }} onClick={() => {
+                                        <STableCell title={todo.title} style={{ cursor: 'pointer', textDecoration: todo.sheet_url ? 'underline' : 'bold', fontSize: 12, letterSpacing: '1px' }} onClick={() => {
                                             if (todo.sheet_url)
                                                 window.open(todo.sheet_url, '_blank')
                                         }}>

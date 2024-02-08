@@ -228,7 +228,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             {todo.serial_no}
                                         </STableCell>
 
-                                        <STableCell title={todo.title} style={{ cursor: 'pointer', color: 'blue',fontSize:12,letterSpacing:'1px' }} onClick={() => {
+                                        <STableCell title={todo.title} style={{ cursor: 'pointer', textDecoration: todo.sheet_url ? 'underline' : 'bold', fontSize: 12, letterSpacing: '1px' }} onClick={() => {
                                             if (todo.sheet_url)
                                                 window.open(todo.sheet_url, '_blank')
                                         }}>
@@ -267,7 +267,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             {todo.connected_user && todo.connected_user.connected_number && todo.connected_user.connected_number.replace("@c.us", "")}
                                         </STableCell>
                                         <STableCell>
-                                            {todo.start_time && todo.start_time.replace(",", ":")}
+                                            {todo.start_time && todo.start_time}
                                         </STableCell>
                                         <STableCell>
                                             {todo.dates.toString()}

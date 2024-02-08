@@ -165,8 +165,8 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                 statusText = "invalid serial number"
             }
             if (start_time) {
-                let hours = start_time.split(",")[0].trim()
-                let minutes = start_time.split(",")[1].trim()
+                let hours = start_time.replace("[", "").replace("]", "").split(":")[0].trim()
+                let minutes = start_time.replace("[", "").replace("]", "").split(":")[1].trim()
                 if (Number.isNaN(Number(hours)) || Number(hours) > 23 || Number(hours) < 1) {
                     validated = false
                     statusText = "invalid start time"
@@ -177,7 +177,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                 }
             }
             if (dates) {
-                let dts = dates.split(",").map((v) => { return Number(v.trim()) })
+                let dts = dates.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 console.log(dts)
                 for (let i = 0; i <= dts.length; i++) {
                     if (dts[i] > 31 || dts[i] < 1) {
@@ -189,7 +189,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             }
 
             if (weekdays) {
-                let dts = weekdays.split(",").map((v) => { return Number(v.trim()) })
+                let dts = weekdays.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 console.log(dts)
                 for (let i = 0; i <= dts.length; i++) {
                     if (dts[i] > 7 || dts[i] < 1) {
@@ -200,7 +200,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                 }
             }
             if (months) {
-                let dts = months.split(",").map((v) => { return Number(v.trim()) })
+                let dts = months.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 console.log(dts)
                 for (let i = 0; i <= dts.length; i++) {
                     if (dts[i] > 12 || dts[i] < 1) {
@@ -211,8 +211,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                 }
             }
             if (years) {
-                let fyers = years.replace("[", "").replace("]", "")
-                let dts = fyers.split(",").map((v) => { return Number(v.trim()) })
+                let dts = years.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 console.log(dts)
                 for (let i = 0; i <= dts.length; i++) {
                     if (dts[i] < 1970) {
@@ -268,18 +267,6 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             }
 
             if (validated) {
-                let st_time = start_time
-                let dts: number[] = []
-                let wdays: number[] = []
-                if (weekdays) {
-                    wdays = weekdays.split(",").map((v) => { return Number(v.trim()) })
-                }
-                if (dates) {
-                    dts = dates.split(",").map((v) => { return Number(v.trim()) })
-                }
-                let mths = months.split(",").map((v) => { return Number(v.trim()) })
-                let fyers = years.replace("[", "").replace("]", "")
-                let yrs = fyers.split(",").map((v) => { return Number(v.trim()) })
                 let newConNuser: IUser | null = null
 
                 if (connected_user) {
@@ -306,11 +293,11 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             connected_user: newConNuser?._id || null,
                             todo_type: todo_type,
                             replies: replies,
-                            start_time: st_time,
-                            dates: dts,
-                            months: mths,
-                            weekdays: wdays,
-                            years: yrs,
+                            start_time: start_time,
+                            dates: dates,
+                            months: months,
+                            weekdays: weekdays,
+                            years: years,
                             contacts: newContacts,
                             updated_by: req.user,
                             updated_at: new Date()
@@ -328,11 +315,11 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                         replies: [],
                         todo_type: todo_type,
                         contacts: newContacts,
-                        start_time: st_time,
-                        dates: dts,
-                        months: mths,
-                        weekdays: wdays,
-                        years: yrs,
+                        start_time: start_time,
+                        dates: dates,
+                        months: months,
+                        weekdays: weekdays,
+                        years: years,
                         created_by: req.user,
                         updated_by: req.user,
                         created_at: new Date(),
