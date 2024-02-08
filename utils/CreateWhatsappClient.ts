@@ -4,7 +4,7 @@ import { User } from "../models/users/user.model";
 import { HandleVisitsReport } from "./ExportVisitsToPdf";
 import Lead from "../models/leads/lead.model";
 import { Todo } from "../models/todos/todo.model";
-import {  SendTodoMessage } from "./SendTodoMessage";
+import { HandleDailyTodoTrigger, SendTodoMessage } from "./SendTodoMessage";
 import { HandleProductionReports } from "./ExportProductionReports";
 import { Client, LocalAuth, Message } from "whatsapp-web.js";
 
@@ -50,18 +50,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             // /retry functions
             if (client.info && client.info.wid) {
                 if (user && client?.info.wid._serialized === process.env.WAGREETING_PHONE) {
-                    let todos = await Todo.find().populate('connected_user')
-                    todos.forEach(async (todo) => {
-                        if (todo.connected_user) {
-                            let reminderClient = clients.find((client) => client.client_id === todo.connected_user.client_id)
-                            if (reminderClient) {
-                                console.log(clients.length)
-                                if (todo.is_active) {
-                                    await SendTodoMessage(todo, reminderClient.client)
-                                }
-                            }
-                        }
-                    })
+                    await HandleDailyTodoTrigger(user)
                 }
             }
         }
