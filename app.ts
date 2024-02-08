@@ -20,12 +20,8 @@ import { Server } from "socket.io";
 import { getCurrentUser, userJoin, userLeave } from "./utils/handleSocketUsers";
 import { Storage } from '@google-cloud/storage';
 import morgan from 'morgan';
-import { clients, createWhatsappClient } from './utils/CreateWhatsappClient';
+import { createWhatsappClient } from './utils/CreateWhatsappClient';
 import { ReConnectWhatsapp } from './utils/RestartServices';
-import { CronJob } from 'cron';
-import { Todo } from './models/todos/todo.model';
-import cron from "cron"
-import { HandleTodoMessage } from './utils/handleTodo';
 
 const app = express()
 const server = createServer(app)
@@ -104,7 +100,6 @@ export const bucketName = String(process.env.bucketName)
 export const bucket = storage.bucket(bucketName)
 
 
-export const TodoManager = new CronJobManager()
 export const GreetingManager = new CronJobManager()
 export const BroadcastManager = new CronJobManager()
 export const ReportManager = new CronJobManager()
@@ -118,34 +113,6 @@ app.use("/api/v1", VisitRoutes)
 app.use("/api/v1", ErpRoutes)
 app.use("/api/v1", ProductionRoutes)
 app.use("/api/v1", TodoRoutes)
-
-
-// daily trigger
-new CronJob("12 1/1 * *", async () => {
-    let todos = await Todo.find()
-    for (let i = 0; todos.length; i++) {
-        let todo = todos[i]
-        if (todo && todo.is_active) {
-            let dt1 = new Date(todo.start_date).getDate()
-            let dt2 = new Date().getDate()
-            let m1 = new Date(todo.start_date).getMonth() + 1
-            let m2 = new Date().getMonth() + 1
-            let y1 = new Date(todo.start_date).getFullYear()
-            let y2 = new Date().getFullYear()
-
-            if (todo.connected_user) {
-                let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)?.client
-                if (client) {
-                    if (dt1 === dt2 && m1 === m2 && y1 === y2) {
-                        await HandleTodoMessage(todo, client)
-                        todo.next_run_date = new Date(cron.sendAt(new Date(todo.start_date)))
-                        await todo.save()
-                    }
-                }
-            }
-        }
-    }
-}).start()
 
 
 ReConnectWhatsapp()

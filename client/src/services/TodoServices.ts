@@ -10,7 +10,9 @@ export const GetTodos = async ({ type, mobile, stopped }: { type: string, stoppe
 export const GetMyTodos = async () => {
     return await apiClient.get(`todos/me`)
 }
-
+export const AddTodoReply = async ({ id, body }: { id: string, body: { reply: string } }) => {
+    return await apiClient.patch(`todos/${id}`, body);
+};
 
 
 export const StopAllTodos = async ({ ids }: { ids: string[] }) => {

@@ -114,43 +114,12 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                 Contacts
 
                             </STableHeadCell>
-
-
-
                             <STableHeadCell
                             >
 
-                                Next Run date
+                                Last reply
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Start Date
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Frequency Type
-
-                            </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-
-                                Frequency
-
-                            </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-
-                                Run Once
-
-                            </STableHeadCell>
-
-
 
                             <STableHeadCell
                             >
@@ -158,6 +127,39 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                 connected No
 
                             </STableHeadCell>
+
+                            <STableHeadCell
+                            >
+
+                                Start Time
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Days
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Weekdays
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Months
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Years
+
+                            </STableHeadCell>
+
+                          
 
 
                         </STableRow>
@@ -266,25 +268,27 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         </STableCell>
 
                                         <STableCell>
-                                            {new Date(todo.next_run_date).toLocaleString()}
+                                            {todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply.slice(0, 50) || ""}
                                         </STableCell>
-                                        <STableCell>
-                                            {new Date(todo.start_date).toLocaleString()}
-                                        </STableCell>
-                                        <STableCell>
-                                            {todo.frequency_type}
-                                        </STableCell>
-
-                                        <STableCell>
-                                            {todo.frequency_value}
-                                        </STableCell>
-                                        <STableCell>
-                                            {todo.run_once ? "True" : "False"}
-                                        </STableCell>
-
                                         <STableCell>
                                             {todo.connected_user && todo.connected_user.connected_number && todo.connected_user.connected_number.replace("@c.us", "")}
                                         </STableCell>
+                                        <STableCell>
+                                            {todo.start_time && todo.start_time.replace(",", ":")}
+                                        </STableCell>
+                                        <STableCell>
+                                            {todo.dates.toString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {todo.weekdays.toString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {todo.months.toString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {todo.years.toString()}
+                                        </STableCell>
+                                      
 
                                     </STableRow>
                                 )

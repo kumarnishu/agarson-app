@@ -22,6 +22,7 @@ import StartAllTodoDialog from '../../components/dialogs/todos/StartAllTodoDialo
 import StopAllTodoDialog from '../../components/dialogs/todos/StopAllTodoDialog'
 import { queryClient } from '../../main'
 import DeleteAllTodosDialog from '../../components/dialogs/todos/DeleteAllTodosDialog'
+
 const template: ITodoTemplate[] = [
     {
         _id: "",
@@ -30,26 +31,19 @@ const template: ITodoTemplate[] = [
         subtitle: 'work subtitle',
         category: "vijay dye",
         category2: "urgent",
-        contacts: "nishu,7056943283",
-        todo_type: "hidden",
-        run_once: false,
-        frequency_type: "days",
-        frequency_value: "1",
-        start_date: new Date().toLocaleString(),
+        contacts: "nishu",
+        todo_type: "visible",
+        reply: "demo reply",
+        start_time: "12,23",
+        dates: "1,2,3,4,31",
+        months: "1,2,3,12",
+        weekdays: "1,2,7",
+        years: "1970,2025,2030",
         connected_user: 'nishu'
+
     }
 ]
 
-let help1 = [
-    { property: "start date", value: new Date().toLocaleString(), remark: `start date should be in format here MONTH/DATE/YEAR, HH:MM:SS AM/PM` },
-    { property: "Frequency->minutes", value: "2", remark: "repeat after every 2 minutes starting from 1-59" },
-    { property: "Frequency->hours", value: "3", remark: "repeat after every 3 hours starting from 1-23" },
-    { property: "Frequency->days", value: "1", remark: "repeat after every 1 days starting from 1-23, time will be picked from start date" },
-    { property: "Frequency->weekdays", value: "1,2,3", remark: "repeat after every weeks on selected days starting from 1-7,time will picked from start date" },
-    { property: "Frequency->every-month-days", value: "1,2,3", remark: "repeat every month on selected dates starting from 1-31,time will picked from start date" },
-    { property: "Frequency->selected-month-days", value: "1,2,3", remark: "repeat on selected month every year on selected dates starting from 1-31,selected month and time will picked from start date" },
-    { property: "Frequency->months", value: "2", remark: "repeat after every 2 months  starting from 1-12,time will picked from start date" }
-]
 
 export default function TodosPage() {
     const [users, setUsers] = useState<IUser[]>([])
@@ -73,11 +67,11 @@ export default function TodosPage() {
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    let help2 = users.map((u) => { return { username: u.username, mobile: u.mobile } })
+    let help1 = users.map((u) => { return { username: u.username, mobile: u.mobile } })
     function handleExcel() {
         setAnchorEl(null)
         try {
-            ExportToExcel(selectedData, "todos_data", [help1, help2])
+            ExportToExcel(selectedData, "todos_data", [help1])
             setSent(true)
             setSelectAll(false)
             setSelectedData([])
@@ -107,10 +101,12 @@ export default function TodosPage() {
                         return result
                     }).toString(),
                     todo_type: todo.todo_type,
-                    run_once: todo.run_once,
-                    frequency_type: todo.frequency_type ? todo.frequency_type : "",
-                    frequency_value: todo.frequency_value ? todo.frequency_value : "",
-                    start_date: new Date(todo.start_date).toLocaleString(),
+                    reply: todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply || "",
+                    start_time: todo.start_time,
+                    dates: todo.dates.toString(),
+                    months: todo.months.toString(),
+                    weekdays: todo.weekdays.toString(),
+                    years: todo.years.toString(),
                     connected_user: todo.connected_user && todo.connected_user.username
                 })
         })
@@ -132,7 +128,7 @@ export default function TodosPage() {
 
     useEffect(() => {
         if (filter) {
-            const searcher = new FuzzySearch(todos, ["title", "category2", "category", "contacts.mobile", "contacts.name", "frequency_type", "todo_type"], {
+            const searcher = new FuzzySearch(todos, ["title", "category2", "serial_no", "category", "contacts.mobile", "contacts.name"], {
                 caseSensitive: false,
             });
             const result = searcher.search(filter);

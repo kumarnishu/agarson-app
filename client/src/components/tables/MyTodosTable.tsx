@@ -54,9 +54,9 @@ function MyTodosTable({ todos, setTodo, selectAll, setSelectAll, selectedTodos, 
 
                             </STableHeadCell>
 
-                          
 
-                           
+
+
 
                             <STableHeadCell
                             >
@@ -85,43 +85,25 @@ function MyTodosTable({ todos, setTodo, selectAll, setSelectAll, selectedTodos, 
 
                             </STableHeadCell>
 
+                            <STableHeadCell
+                            >
 
+                                Last Reply
+
+                            </STableHeadCell>
 
 
 
                             <STableHeadCell
                             >
 
-                                Start Date
+                                Assigned By
 
                             </STableHeadCell>
 
-                            <STableHeadCell
-                            >
 
-                                Next Run date
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
 
-                                Frequency Type
-
-                            </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-
-                                Frequency
-
-                            </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-
-                                Run Once
-
-                            </STableHeadCell>
                         </STableRow>
                     </STableHead>
                     <STableBody >
@@ -193,20 +175,10 @@ function MyTodosTable({ todos, setTodo, selectAll, setSelectAll, selectedTodos, 
                                         </STableCell>
 
                                         <STableCell>
-                                            {new Date(todo.start_date).toLocaleString()}
+                                            {todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply.slice(0, 50) || ""}
                                         </STableCell>
                                         <STableCell>
-                                            {new Date(todo.next_run_date).toLocaleString()}
-                                        </STableCell>
-                                        <STableCell>
-                                            {todo.frequency_type || ""}
-                                        </STableCell>
-
-                                        <STableCell>
-                                            {todo.frequency_value}
-                                        </STableCell>
-                                        <STableCell>
-                                            {todo.run_once ? "True" : "False"}
+                                            {todo.connected_user && todo.connected_user.username}
                                         </STableCell>
                                     </STableRow>
                                 )

@@ -88,7 +88,7 @@ export default function TodosPage() {
 
   useEffect(() => {
     if (filter) {
-      const searcher = new FuzzySearch(todos, ["title", "subtitle", "category2", "category", "contacts.mobile", "contacts.name", "replies.reply", "frequency_type", "todo_type"], {
+      const searcher = new FuzzySearch(todos, ["title", "subtitle", "category2", "category", "contacts.mobile", "serial_no", "contacts.name", "replies.reply", "todo_type"], {
         caseSensitive: false,
       });
       const result = searcher.search(filter);

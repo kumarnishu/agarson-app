@@ -1,21 +1,14 @@
 import { NextFunction, Request, Response } from "express"
 import isMongoId from "validator/lib/isMongoId"
 import { User } from "../models/users/user.model"
-import { clearTimeout } from "timers"
-import cron from "cron"
-import { TodoManager } from "../app"
-import { GetRunningCronString } from "../utils/GetRunningCronString"
 import { ITodo, ITodoTemplate } from "../types/todo.types"
 import { Todo } from "../models/todos/todo.model"
-import { HandleTodoMessage, todo_timeouts } from "../utils/handleTodo"
-import { clients } from "../utils/CreateWhatsappClient"
 import xlsx from "xlsx"
 import { IUser } from "../types/user.types"
-import { isvalidDate } from "../utils/isValidDate"
 
 //get
 export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
-    let todos = await Todo.find().populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("title")
+    let todos = await Todo.find({ is_hidden: false }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("title")
     todos = todos.filter((todo) => {
         let numbers = todo.contacts.map((c) => { return c.mobile })
 
@@ -67,40 +60,9 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
 export const StartTodos = async (req: Request, res: Response, next: NextFunction) => {
     let { ids } = req.body as { ids: string[] }
     ids.forEach(async (id) => {
-        let todo = await Todo.findById(id).populate('connected_user')
-        if (todo && !todo.is_active && todo.connected_user) {
-            let dt1 = new Date(todo.start_date).getDate()
-            let dt2 = new Date().getDate()
-            let m1 = new Date(todo.start_date).getMonth() + 1
-            let m2 = new Date().getMonth() + 1
-            let y1 = new Date(todo.start_date).getFullYear()
-            let y2 = new Date().getFullYear()
-            let client = clients.find((c) => c.client_id === todo?.connected_user.client_id)
-            if (new Date(todo.start_date) > new Date() && client) {
-                todo_timeouts.forEach((item) => {
-                    if (String(item.id) === String(todo?._id)) {
-                        clearTimeout(item.timeout)
-                    }
-                })
-                if (TodoManager.exists(todo.running_key))
-                    TodoManager.deleteJob(todo.running_key)
-                todo.next_run_date = new Date(cron.sendAt(todo.cron_string))
-                if (todo.run_once)
-                    todo.next_run_date = new Date(cron.sendAt(new Date(todo.start_date)))
-                if (dt1 === dt2 && m1 === m2 && y1 === y2) {
-                    todo.is_active = true
-                    await todo.save()
-                    await HandleTodoMessage(todo, client.client)
-                }
-                else {
-                    todo.is_active = true
-                    //@ts-ignore
-                    todo.next_run_date = undefined
-                    await todo.save()
-                }
-
-            }
-        }
+        await Todo.findByIdAndUpdate(id, {
+            is_active: true
+        })
     })
     return res.status(200).json({ message: "all todo started" })
 }
@@ -108,17 +70,7 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
 export const DeleteTodos = async (req: Request, res: Response, next: NextFunction) => {
     let { ids } = req.body as { ids: string[] }
     ids.forEach(async (id) => {
-        let todo = await Todo.findById(id)
-        if (todo) {
-            todo_timeouts.forEach((item) => {
-                if (String(item.id) === String(todo?._id)) {
-                    clearTimeout(item.timeout)
-                }
-            })
-            if (TodoManager.exists(todo.running_key))
-                TodoManager.deleteJob(todo.running_key)
-            await Todo.findByIdAndDelete(id)
-        }
+        await Todo.findByIdAndDelete(id)
     })
     return res.status(200).json({ message: "all selected todos deleted" })
 }
@@ -126,20 +78,26 @@ export const DeleteTodos = async (req: Request, res: Response, next: NextFunctio
 export const StopTodos = async (req: Request, res: Response, next: NextFunction) => {
     let { ids } = req.body as { ids: string[] }
     ids.forEach(async (id) => {
-        let todo = await Todo.findById(id).populate('connected_user')
-        if (todo) {
-            todo_timeouts.forEach((item) => {
-                if (String(item.id) === String(todo?._id)) {
-                    clearTimeout(item.timeout)
-                }
-            })
-            if (TodoManager.exists(todo.running_key))
-                TodoManager.deleteJob(todo.running_key)
-            todo.is_active = false
-            await todo.save()
-        }
+        await Todo.findByIdAndUpdate(id, {
+            is_active: false
+        })
     })
     return res.status(200).json({ message: "all todos stopped" })
+}
+
+export const AddTodoReply = async (req: Request, res: Response, next: NextFunction) => {
+    let { reply } = req.body as { reply: string }
+    const id = req.params.id
+    let todo = await Todo.findById(id).populate('connected_user')
+    if (!todo)
+        return res.status(404).json({ message: "no todo exists" })
+    let replies = todo.replies
+    if (req.user && reply)
+        replies.push({ reply: reply, created_by: req.user, timestamp: new Date() })
+    todo.is_hidden = true
+    todo.replies = replies
+    await todo.save()
+    return res.status(200).json({ message: "reply added" })
 }
 
 export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next: NextFunction) => {
@@ -167,9 +125,10 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             is_sent: boolean,
             status: string
         }[] = []
-        let frequencies = ["minutes", "hours", "months", "days", "weekdays", "every-month-days", "selected-month-days"]
+
         for (let i = 0; i < workbook_response.length; i++) {
             let todo = workbook_response[i]
+            console.log(todo)
             let _id: string | null = String(todo._id)
             let serial_no: number | null = Number(todo.serial_no)
             let title: string | null = todo.title
@@ -177,79 +136,80 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             let category: string | null = todo.category
             let category2: string | null = todo.category2
             let contacts: string | null = String(todo.contacts).toLowerCase()
-            let frequency_type: string | null = String(todo.frequency_type).toLowerCase().trim()
-            let frequency_value: string | null = todo.frequency_value
-            let start_date: string | null = todo.start_date
-            let run_once: string | null = String(todo.run_once).toLowerCase()
+            let reply: string | null = todo.reply
+            let start_time: string | null = todo.start_time
+            let dates: string | null = todo.dates
+            let weekdays: string | null = todo.weekdays
+            let months: string | null = todo.months
+            let years: string | null = todo.years
             let todo_type: string | null = todo.todo_type ? String(todo.todo_type).toLowerCase() : ""
             let connected_user: string | null = String(todo.connected_user).toLowerCase()
 
             let validated = true
-            let newStartDate = new Date()
-            if (isvalidDate(new Date(start_date)))
-                newStartDate = new Date(start_date)
+            if (!start_time || !dates || !weekdays || !months || !years) {
+                validated = false
+                statusText = "fill all required fields"
+            }
 
             if (serial_no && Number.isNaN(serial_no)) {
                 validated = false
                 statusText = "invalid serial number"
             }
-            if (!frequencies.includes(todo.frequency_type)) {
-                validated = false
-                statusText = "invalid frequency type"
+            if (start_time) {
+                let hours = start_time.split(",")[0].trim()
+                let minutes = start_time.split(",")[1].trim()
+                if (Number.isNaN(Number(hours)) || Number(hours) > 23 || Number(hours) < 1) {
+                    validated = false
+                    statusText = "invalid start time"
+                }
+                if (Number.isNaN(Number(minutes)) || Number(minutes) > 59 || Number(minutes) < 1) {
+                    validated = false
+                    statusText = "invalid start time"
+                }
             }
-            if (frequencies.includes(frequency_type) && frequency_type && frequency_value) {
-                let ftype = frequency_type
-                let value = frequency_value
+            if (dates) {
+                let dts = dates.split(",").map((v) => { return Number(v.trim()) })
+                console.log(dts)
+                for (let i = 0; i <= dts.length; i++) {
+                    if (dts[i] > 31 || dts[i] < 1) {
+                        validated = false
+                        statusText = "invalid dates"
+                        break;
+                    }
+                }
+            }
 
-                if (ftype === "minutes") {
-                    if (Number.isNaN(Number(value)) || Number(value) > 59 || Number(value) < 1) {
+            if (weekdays) {
+                let dts = weekdays.split(",").map((v) => { return Number(v.trim()) })
+                console.log(dts)
+                for (let i = 0; i <= dts.length; i++) {
+                    if (dts[i] > 7 || dts[i] < 1) {
                         validated = false
-                        statusText = "invalid frequency"
+                        statusText = "invalid weekdays"
+                        break;
                     }
                 }
-                if (ftype === "hours") {
-                    if (Number.isNaN(Number(value)) || Number(value) > 23 || Number(value) < 1) {
+            }
+            if (months) {
+                let dts = months.split(",").map((v) => { return Number(v.trim()) })
+                console.log(dts)
+                for (let i = 0; i <= dts.length; i++) {
+                    if (dts[i] > 12 || dts[i] < 1) {
                         validated = false
-                        statusText = "invalid frequency"
+                        statusText = "invalid months"
+                        break;
                     }
                 }
-                if (ftype === "days") {
-                    if (Number.isNaN(Number(value)) || Number(value) > 31 || Number(value) < 1) {
+            }
+            if (years) {
+                let dts = years.split(",").map((v) => { return Number(v.trim()) })
+                console.log(dts)
+                for (let i = 0; i <= dts.length; i++) {
+                    if (dts[i] < 1970) {
                         validated = false
-                        statusText = "invalid frequency"
+                        statusText = "invalid years"
+                        break;
                     }
-                }
-                if (ftype === "months") {
-                    if (Number.isNaN(Number(value)) || Number(value) > 12 || Number(value) < 1) {
-                        validated = false
-                        statusText = "invalid frequency"
-                    }
-                }
-
-                if (ftype === "weekdays" && value && value.length > 0) {
-                    value.split(",").map((v) => {
-                        if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 7) {
-                            validated = false
-                            statusText = "invalid frequency"
-                        }
-                    })
-                }
-
-                if (ftype === "selected-month-days" && value && value.length > 0) {
-                    value.split(",").map((v) => {
-                        if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 31) {
-                            validated = false
-                            statusText = "invalid frequency"
-                        }
-                    })
-                }
-                if (ftype === "every-month-days" && value && value.length > 0) {
-                    value.split(",").map((v) => {
-                        if (Number.isNaN(Number(v)) || Number(v) < 1 || Number(v) > 31) {
-                            validated = false
-                            statusText = "invalid frequency"
-                        }
-                    })
                 }
             }
 
@@ -298,26 +258,27 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             }
 
             if (validated) {
+                let st_time = start_time
+                let dts = dates.split(",").map((v) => { return Number(v) })
+                let wdays = weekdays.split(",").map((v) => { return Number(v) })
+                let mths = months.split(",").map((v) => { return Number(v) })
+                let yrs = years.split(",").map((v) => { return Number(v) })
+                let newConNuser: IUser | null = null
+
+                if (connected_user) {
+                    let user = await User.findOne({ username: connected_user })
+                    if (user && user.connected_number) {
+                        newConNuser = user
+                    }
+                }
+
                 if (todo._id || isMongoId(String(todo._id))) {
                     let newtodo = await Todo.findById(_id)
-                    let newConNuser: IUser | null = null
-                    if (connected_user) {
-                        let user = await User.findOne({ username: connected_user })
-                        if (user && user.connected_number) {
-                            newConNuser = user
-                        }
-                    }
                     if (newtodo) {
-                        let new_run_once = false
-                        if (run_once === "true")
-                            new_run_once = true
-                        else
-                            new_run_once = false
-
-                        let cronstring = GetRunningCronString(frequency_type, frequency_value, new Date(start_date)) || ""
-
-
-
+                        let replies = newtodo.replies
+                        if (req.user) {
+                            replies.push({ reply: reply || "", created_by: req.user, timestamp: new Date() })
+                        }
                         await Todo.findByIdAndUpdate(newtodo._id, {
                             serial_no: Number(serial_no) || 0,
                             title: title || "",
@@ -325,71 +286,41 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                             category: category || "",
                             category2: category2 || "",
                             connected_user: newConNuser?._id || null,
-                            run_once: new_run_once,
-                            start_date: newStartDate,
-                            cron_string: cronstring,
-                            frequency_type: frequency_type,
-                            frequency_value: frequency_value,
                             todo_type: todo_type,
-                            is_active: false,
-                            is_paused: false,
-                            running_key: String(newtodo._id) + "todo",
-                            refresh_key: String(newtodo._id) + "refresh",
+                            replies: replies,
+                            start_time: st_time,
+                            dates: dts,
+                            months: mths,
+                            weekdays: wdays,
+                            years: yrs,
                             contacts: newContacts,
                             updated_by: req.user,
                             updated_at: new Date()
                         })
-                        if (TodoManager.exists(newtodo.running_key))
-                            TodoManager.deleteJob(newtodo.running_key)
-
                     }
                 }
                 if (!todo._id || !isMongoId(String(todo._id))) {
-                    let tmptodo = await Todo.findOne({ title: title })
-                    let newConNuser: IUser | null = null
-                    if (connected_user) {
-                        let user = await User.findOne({ username: connected_user })
-                        if (user && user.connected_number) {
-                            newConNuser = user
-                        }
-                    }
-                    if (!tmptodo) {
-                        let new_run_once = false
-                        if (run_once === "true")
-                            new_run_once = true
-                        else
-                            new_run_once = false
-                        let cronstring = GetRunningCronString(frequency_type, frequency_value, new Date(start_date))
+                    await new Todo({
+                        serial_no: Number(serial_no) || 0,
+                        title: title || "",
+                        subtitle: subtitle || "",
+                        category: category || "",
+                        category2: category2 || "",
+                        connected_user: newConNuser?._id || undefined,
+                        replies: [],
+                        todo_type: todo_type,
+                        contacts: newContacts,
+                        start_time: st_time,
+                        dates: dts,
+                        months: mths,
+                        weekdays: wdays,
+                        years: yrs,
+                        created_by: req.user,
+                        updated_by: req.user,
+                        created_at: new Date(),
+                        updated_at: new Date()
+                    }).save()
 
-
-
-                        let newtodo = new Todo({
-                            serial_no: Number(serial_no) || 0,
-                            title: title || "",
-                            subtitle: subtitle || "",
-                            category: category || "",
-                            category2: category2 || "",
-                            frequency_type: frequency_type,
-                            frequency_value: frequency_value,
-                            run_once: new_run_once,
-                            start_date: newStartDate,
-                            cron_string: cronstring,
-                            connected_user: newConNuser?._id || undefined,
-                            replies: [],
-                            todo_type: todo_type,
-                            is_active: false,
-                            is_paused: false,
-                            contacts: newContacts,
-                            created_by: req.user,
-                            updated_by: req.user,
-                            created_at: new Date(),
-                            updated_at: new Date()
-                        })
-                        newtodo.running_key = String(newtodo._id) + "todo"
-                        await newtodo.save()
-                        if (TodoManager.exists(newtodo.running_key))
-                            TodoManager.deleteJob(newtodo.running_key)
-                    }
                 }
             }
         }

@@ -18,15 +18,21 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
         is_sent: Boolean,
         timestamp: Date
     }],
+    replies: [{
+        reply: String,
+        created_by: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        timestamp: Date
+    }],
     is_active: { type: Boolean, default: false },
-    is_hidden: { type: Boolean, default: false },
-    run_once: { type: Boolean, default: false },
-    running_key: String,
-    frequency_type: String,
-    frequency_value: String,
-    cron_string: String,
-    next_run_date: Date,
-    start_date: Date,
+    is_hidden: { type: Boolean, default: true },
+    start_time: String,
+    dates: [Number],
+    months: [Number],
+    weekdays: [Number],
+    years: [Number],
     connected_user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
