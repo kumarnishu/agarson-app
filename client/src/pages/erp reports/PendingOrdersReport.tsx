@@ -284,7 +284,7 @@ export default function PendingOrdersReportPage() {
                                     <STableRow
                                         key={index}
                                     >
-                                        <STableCell>
+                                        <STableCell style={{padding:'10px'}}>
                                             {report.created_at && moment(new Date(report.created_at)).format('DD/MM/YY')}
                                         </STableCell>
                                         <STableCell>
@@ -297,7 +297,7 @@ export default function PendingOrdersReportPage() {
                                             {report.article && report.article.slice(0, 30)}
                                         </STableCell>
                                         <STableCell>
-                                            <b>{
+                                            <b style={{ fontSize: 12,letterSpacing:'1px' }}>{
                                                 Number(report.size5) +
                                                 Number(report.size6) +
                                                 Number(report.size7) +
@@ -436,7 +436,7 @@ export default function PendingOrdersReportPage() {
                             <STableCell>
                             </STableCell>
                             <STableCell>
-                                <b>{
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{
                                     Number(reports.reduce((a, b) => { return Number(a) + Number(b.size5) }, 0).toFixed()) +
                                     Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6) }, 0).toFixed()) +
                                     Number(reports.reduce((a, b) => { return Number(a) + Number(b.size7) }, 0).toFixed()) +
@@ -465,100 +465,100 @@ export default function PendingOrdersReportPage() {
                             </STableCell>
                             {reports.find((r) => r.size5 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size5) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size5) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size6 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size6) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size7 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size7) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size7) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size8 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size8) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size8) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size9 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size9) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size9) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size10 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size10) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size10) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size11 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size11) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size12_24pairs > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size12_24pairs) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size12_24pairs) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size13 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size13) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size13) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size11x12 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11x12) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size11x12) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size3 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size3) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size3) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size4 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size4) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size4) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size6to10 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to10) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to10) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size7to10 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size8to10 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size8to10) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size8to10) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size4to8 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size4to8) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size4to8) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size6to9 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to9) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to9) }, 0).toFixed()}</b>
                             </STableCell>}
 
                             {reports.find((r) => r.size5to8 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size5to8) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size5to8) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size6to10A > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to10A) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to10A) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size7to10B > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10B) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10B) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size6to9A > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to9A) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to9A) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size11close > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11close) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size11close) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size11to13 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11to13) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size11to13) }, 0).toFixed()}</b>
                             </STableCell>}
                             {reports.find((r) => r.size3to8 > 0) && <STableCell
                             >
-                                <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size3to8) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size3to8) }, 0).toFixed()}</b>
                             </STableCell>}
                         </STableRow>
                     </STableBody>

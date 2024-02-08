@@ -184,7 +184,7 @@ export default function BillsAgingReportsPage() {
                                     <STableRow
                                         key={index}
                                     >
-                                        <STableCell>
+                                        <STableCell style={{ padding: '10px' }}>
                                             {report.created_at && moment(new Date(report.created_at)).format('DD/MM/YY')}
                                         </STableCell>
                                         <STableCell>
@@ -194,7 +194,7 @@ export default function BillsAgingReportsPage() {
                                             {report.account && report.account.slice(0, 20)}
                                         </STableCell>
                                         <STableCell>
-                                            <b> {Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120)}</b>
+                                            <b style={{ fontSize: 12,letterSpacing:'1px' }}> {Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120)}</b>
                                         </STableCell>
                                         <STableCell>
                                             {report.plu70 ? String(report.plu70) : ""}
@@ -217,25 +217,25 @@ export default function BillsAgingReportsPage() {
 
                             </STableCell>
                             <STableCell>
-                                <b> Total</b>
-                            </STableCell>
-                            <STableCell>
 
                             </STableCell>
                             <STableCell>
-                                <b> {reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> Total</b>
                             </STableCell>
                             <STableCell>
-                                <b> {reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()}</b>
                             </STableCell>
                             <STableCell>
-                                <b> {reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()}</b>
                             </STableCell>
                             <STableCell>
-                                <b> {reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()}</b>
                             </STableCell>
                             <STableCell>
-                                <b> {(reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0)).toFixed()
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()}</b>
+                            </STableCell>
+                            <STableCell>
+                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> {(reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0)).toFixed()
                                 }</b>
                             </STableCell>
                         </STableRow>

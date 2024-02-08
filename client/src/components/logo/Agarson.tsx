@@ -2,6 +2,7 @@ import { Avatar } from "@mui/material"
 import logo from "/logo.jpg";
 import logo2 from "/logo.png";
 import logo3 from "../../assets/logo_blue.png";
+import AppsIcon from '@mui/icons-material/Apps';
 
 type Props = {
     width?: number,
@@ -28,13 +29,9 @@ export function AgarsonPngLogo({ width, height, title }: Props) {
     )
 }
 
-export function BlueAgarsonLogo({ width, height, title }: Props) {
+export function BlueAgarsonLogo({ width, height }: Props) {
     return (
-
-        <Avatar title={title}
-            sx={{ width: width, height: height, borderRadius: 1.5 }}
-            alt={title} src={logo3}
-        />
+        <AppsIcon width={width} height={height}  />
     )
 }
 
