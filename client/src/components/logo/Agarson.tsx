@@ -1,7 +1,6 @@
 import { Avatar } from "@mui/material"
 import logo from "/logo.jpg";
 import logo2 from "/logo.png";
-import logo3 from "../../assets/logo_blue.png";
 import AppsIcon from '@mui/icons-material/Apps';
 
 type Props = {
