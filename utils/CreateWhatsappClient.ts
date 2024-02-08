@@ -4,7 +4,7 @@ import { User } from "../models/users/user.model";
 import { HandleVisitsReport } from "./ExportVisitsToPdf";
 import Lead from "../models/leads/lead.model";
 import { Todo } from "../models/todos/todo.model";
-import { HandleTodoMessage } from "./handleTodo";
+import {  SendTodoMessage } from "./SendTodoMessage";
 import { HandleProductionReports } from "./ExportProductionReports";
 import { Client, LocalAuth, Message } from "whatsapp-web.js";
 
@@ -57,7 +57,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                             if (reminderClient) {
                                 console.log(clients.length)
                                 if (todo.is_active) {
-                                    await HandleTodoMessage(todo, reminderClient.client)
+                                    await SendTodoMessage(todo, reminderClient.client)
                                 }
                             }
                         }

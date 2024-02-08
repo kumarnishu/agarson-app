@@ -21,12 +21,11 @@ type ITodoTemplate = {
   _id: string,
   serial_no: number,
   title: string,
-  subtitle: string,
 }
 
 export default function TodosPage() {
   const [users, setUsers] = useState<IUser[]>([])
-  const [all, setAll] = useState(false)
+  const [hidden, setHidden] = useState(false)
   const [filter, setFilter] = useState<string | undefined>()
   const [todo, setTodo] = useState<ITodo>()
   const [todos, setTodos] = useState<ITodo[]>([])
@@ -35,7 +34,7 @@ export default function TodosPage() {
   const [preFilteredData, setPreFilteredData] = useState<ITodo[]>([])
   const [selectedTodos, setSelectedTodos] = useState<ITodo[]>([])
   const [selectedData, setSelectedData] = useState<ITodoTemplate[]>([])
-  const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>("my_todos", async () => GetMyTodos())
+  const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["my_todos", hidden], async () => GetMyTodos({ hidden: hidden }))
 
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
@@ -67,7 +66,6 @@ export default function TodosPage() {
           _id: todo._id,
           serial_no: todo.serial_no,
           title: todo.title,
-          subtitle: todo.subtitle,
         })
     })
     if (data.length > 0)
@@ -112,7 +110,6 @@ export default function TodosPage() {
         padding={1}
         direction="row"
         justifyContent="space-between"
-        width="100vw"
       >
 
         <Typography
@@ -125,10 +122,11 @@ export default function TodosPage() {
 
         <Stack
           direction="row"
+          alignItems={'center'}
         >
           <FormControlLabel control={<Switch
-            defaultChecked={Boolean(all)}
-            onChange={() => setAll(!all)}
+            defaultChecked={Boolean(hidden)}
+            onChange={() => setHidden(!hidden)}
           />} label="Hidden" />
 
           {/* search bar */}

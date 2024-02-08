@@ -9,7 +9,7 @@ type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting"
 type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments" | "view_visit_photo" | "mark_attendence" | "upload_samples"
 
 
-type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk_stop_todo" | "update_status" | "view_replies" | "view_contacts"
+type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk_stop_todo" | "add_reply" | "view_replies" | "view_contacts"
 
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
@@ -64,7 +64,7 @@ export enum TodoChoiceActions {
   bulk_start_todo = "bulk_start_todo",
   close_todo = "close_todo",
   bulk_stop_todo = "bulk_stop_todo",
-  update_status = "update_status",
+  add_reply = "add_reply",
   view_replies = "view_replies",
   view_contacts = "view_contacts"
 
@@ -274,7 +274,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case TodoChoiceActions.bulk_start_todo: return type
     case TodoChoiceActions.bulk_stop_todo: return type
     case TodoChoiceActions.view_replies: return type
-    case TodoChoiceActions.update_status: return type
+    case TodoChoiceActions.add_reply: return type
     case TodoChoiceActions.view_contacts: return type
 
     // visit

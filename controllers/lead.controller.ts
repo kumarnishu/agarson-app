@@ -3112,8 +3112,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                     }
                 }
             }
-            console.log(uniqueNumbers, i + 1)
-            console.log(checkednumbers, i + 1)
+           
             if (!lead._id || !isMongoId(String(lead._id))) {
                 if (mobile) {
                     let ld = await Lead.findOne({ $or: [{ mobile: mobile }, { alternate_mobile1: mobile }, { alternate_mobile2: mobile }] })

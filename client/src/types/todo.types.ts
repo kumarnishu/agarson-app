@@ -4,7 +4,7 @@ export type ITodoTemplate = {
     _id: string,
     serial_no: number,
     title: string,
-    subtitle: string,
+    sheet_url: string,
     category: string,
     category2: string,
     contacts: string,
@@ -22,7 +22,7 @@ export type ITodo = {
     _id: string,
     serial_no: number,
     title: string,
-    subtitle: string,
+    sheet_url: string,
     category: string,
     category2: string,
     contacts: {

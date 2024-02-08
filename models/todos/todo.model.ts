@@ -5,9 +5,10 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
     title: {
         type: String
     },
-    subtitle: {
+    sheet_url: {
         type: String
     },
+   
     category: { type: String },
     category2: { type: String },
     todo_type: { type: String },

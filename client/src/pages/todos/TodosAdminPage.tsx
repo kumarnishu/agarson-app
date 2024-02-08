@@ -28,7 +28,7 @@ const template: ITodoTemplate[] = [
         _id: "",
         serial_no: 1,
         title: "work title",
-        subtitle: 'work subtitle',
+        sheet_url: "https://sheets.google.com",
         category: "vijay dye",
         category2: "urgent",
         contacts: "nishu",
@@ -93,7 +93,7 @@ export default function TodosPage() {
                     _id: todo._id,
                     serial_no: todo.serial_no,
                     title: todo.title,
-                    subtitle: todo.subtitle,
+                    sheet_url: todo.sheet_url,
                     category: todo.category,
                     category2: todo.category2,
                     contacts: todo.contacts.map((c) => {

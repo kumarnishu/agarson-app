@@ -8,7 +8,13 @@ import { IUser } from "../types/user.types"
 
 //get
 export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
-    let todos = await Todo.find({ is_hidden: false }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("title")
+    let hidden = String(req.query.hidden)
+    let todos: ITodo[] = []
+    todos = await Todo.find({ is_hidden: false }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+    if (hidden === "true") {
+        todos = await Todo.find({ is_hidden: true }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+    }
+
     todos = todos.filter((todo) => {
         let numbers = todo.contacts.map((c) => { return c.mobile })
 
@@ -128,11 +134,10 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
 
         for (let i = 0; i < workbook_response.length; i++) {
             let todo = workbook_response[i]
-            console.log(todo)
             let _id: string | null = String(todo._id)
             let serial_no: number | null = Number(todo.serial_no)
             let title: string | null = todo.title
-            let subtitle: string | null = todo.subtitle
+            let sheet_url: string | null = todo.sheet_url
             let category: string | null = todo.category
             let category2: string | null = todo.category2
             let contacts: string | null = String(todo.contacts).toLowerCase()
@@ -276,13 +281,14 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                     let newtodo = await Todo.findById(_id)
                     if (newtodo) {
                         let replies = newtodo.replies
-                        if (req.user) {
+                        let remark = newtodo?.replies && newtodo.replies.length > 0 && newtodo.replies[newtodo.replies.length - 1].reply || ""
+                        if (req.user && remark !== todo.reply) {
                             replies.push({ reply: reply || "", created_by: req.user, timestamp: new Date() })
                         }
                         await Todo.findByIdAndUpdate(newtodo._id, {
                             serial_no: Number(serial_no) || 0,
                             title: title || "",
-                            subtitle: subtitle || "",
+                            sheet_url: sheet_url || "",
                             category: category || "",
                             category2: category2 || "",
                             connected_user: newConNuser?._id || null,
@@ -303,7 +309,7 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                     await new Todo({
                         serial_no: Number(serial_no) || 0,
                         title: title || "",
-                        subtitle: subtitle || "",
+                        sheet_url: sheet_url || "",
                         category: category || "",
                         category2: category2 || "",
                         connected_user: newConNuser?._id || undefined,

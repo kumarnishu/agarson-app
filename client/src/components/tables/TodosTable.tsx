@@ -1,4 +1,4 @@
-import { Person2, RestartAlt, Stop } from '@mui/icons-material'
+import { Person2, RemoveRedEye } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
@@ -6,6 +6,8 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import { ITodo } from '../../types/todo.types'
 import ViewTodoContactsDialog from '../dialogs/todos/ViewTodoContactsDialog'
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
+import AddReplyDialog from '../dialogs/todos/AddReplyDialog'
+import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
 
 
 type Props = {
@@ -71,12 +73,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                             </STableHeadCell>
 
-                            <STableHeadCell
-                            >
 
-                                Status
-
-                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -86,12 +83,6 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             </STableHeadCell>
 
 
-                            <STableHeadCell
-                            >
-
-                                Subtitle
-
-                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -159,7 +150,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                             </STableHeadCell>
 
-                          
+
 
 
                         </STableRow>
@@ -208,7 +199,19 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             null
                                         }
 
-                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke" }}>
+                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke", width: '100px' }}>
+                                            <Tooltip title="View replies">
+                                                <IconButton
+                                                    onClick={() => {
+                                                        setChoice({ type: TodoChoiceActions.view_replies })
+                                                        setTodo(todo)
+                                                    }}
+                                                >
+                                                    <RemoveRedEye />
+                                                </IconButton>
+                                            </Tooltip>
+
+
                                             <Tooltip title="View Contacts">
                                                 <IconButton color={todo.is_active ? "success" : "error"}
                                                     onClick={() => {
@@ -225,21 +228,12 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         <STableCell >
                                             {todo.serial_no}
                                         </STableCell>
-                                        <STableCell>
-                                            {todo.is_active ?
-                                                <Stop color="success" />
-                                                :
-                                                <RestartAlt color="error" />
-                                            }
-                                        </STableCell>
 
-                                        <STableCell title={todo.title}>
-                                            {todo.title && todo.title.slice(0, 20)}
-                                        </STableCell>
-
-
-                                        <STableCell title={todo.subtitle}>
-                                            {todo.subtitle && todo.subtitle.slice(0, 10)}
+                                        <STableCell title={todo.title} style={{ cursor: 'pointer', color: 'blue' }} onClick={() => {
+                                            if (todo.sheet_url)
+                                                window.open(todo.sheet_url, '_blank')
+                                        }}>
+                                            {todo.title && todo.title.slice(0, 30)}
                                         </STableCell>
 
                                         <STableCell title={todo.category}>
@@ -267,8 +261,8 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                                         </STableCell>
 
-                                        <STableCell>
-                                            {todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply.slice(0, 50) || ""}
+                                        <STableCell title={todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply || ""}>
+                                            {todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply.slice(0, 20) || ""}
                                         </STableCell>
                                         <STableCell>
                                             {todo.connected_user && todo.connected_user.connected_number && todo.connected_user.connected_number.replace("@c.us", "")}
@@ -288,7 +282,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         <STableCell>
                                             {todo.years.toString()}
                                         </STableCell>
-                                      
+
 
                                     </STableRow>
                                 )
@@ -302,6 +296,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                 todo ?
                     <>
                         <ViewTodoContactsDialog todo={todo} />
+                        <ViewTodoRepliesDialog todo={todo} />
                     </>
                     : null
             }

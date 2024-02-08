@@ -1,9 +1,13 @@
-import { RestartAlt, Stop } from '@mui/icons-material'
-import { Box, Checkbox } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { Chat, Person2, RemoveRedEye } from '@mui/icons-material'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
+import { useContext, useEffect, useState } from 'react'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { ITodo } from '../../types/todo.types'
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
+import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
+import ViewTodoContactsDialog from '../dialogs/todos/ViewTodoContactsDialog'
+import AddReplyDialog from '../dialogs/todos/AddReplyDialog'
+import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
 
 
 type Props = {
@@ -16,9 +20,10 @@ type Props = {
     setSelectedTodos: React.Dispatch<React.SetStateAction<ITodo[]>>,
 }
 
-function MyTodosTable({ todos, setTodo, selectAll, setSelectAll, selectedTodos, setSelectedTodos }: Props) {
+function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedTodos, setSelectedTodos }: Props) {
     const [data, setData] = useState<ITodo[]>(todos)
     const [text, setText] = useState<string>()
+    const { setChoice } = useContext(ChoiceContext)
 
     useEffect(() => {
         setData(todos)
@@ -78,12 +83,7 @@ function MyTodosTable({ todos, setTodo, selectAll, setSelectAll, selectedTodos, 
                             </STableHeadCell>
 
 
-                            <STableHeadCell
-                            >
 
-                                Subtitle
-
-                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -152,12 +152,38 @@ function MyTodosTable({ todos, setTodo, selectAll, setSelectAll, selectedTodos, 
                                             null
                                         }
 
-                                        <STableCell>
-                                            {todo.is_active ?
-                                                <Stop color="success" />
-                                                :
-                                                <RestartAlt color="error" />
-                                            }
+                                        <STableCell style={{ width: '100px' }}>
+                                            <Tooltip title="View replies">
+                                                <IconButton
+                                                    onClick={() => {
+                                                        setChoice({ type: TodoChoiceActions.view_replies })
+                                                        setTodo(todo)
+                                                    }}
+                                                >
+                                                    <RemoveRedEye />
+                                                </IconButton>
+                                            </Tooltip>
+
+                                            {!todo.is_hidden && <Tooltip title="New Reply" color="success">
+                                                <IconButton
+                                                    onClick={() => {
+                                                        setChoice({ type: TodoChoiceActions.add_reply })
+                                                        setTodo(todo)
+                                                    }}
+                                                >
+                                                    <Chat />
+                                                </IconButton>
+                                            </Tooltip>}
+                                            <Tooltip title="View Contacts">
+                                                <IconButton color={todo.is_active ? "success" : "error"}
+                                                    onClick={() => {
+                                                        setChoice({ type: TodoChoiceActions.view_contacts })
+                                                        setTodo(todo)
+                                                    }}
+                                                >
+                                                    <Person2 />
+                                                </IconButton>
+                                            </Tooltip>
                                         </STableCell>
 
                                         <STableCell >
@@ -165,16 +191,16 @@ function MyTodosTable({ todos, setTodo, selectAll, setSelectAll, selectedTodos, 
                                         </STableCell>
 
 
-                                        <STableCell title={todo.title}>
-                                            {todo.title && todo.title.slice(0, 20)}
+                                        <STableCell title={todo.title} style={{ cursor: 'pointer', color: 'blue' }} onClick={() => {
+                                            if (todo.sheet_url)
+                                                window.open(todo.sheet_url, '_blank')
+                                        }}>
+                                            {todo.title && todo.title.slice(0, 50)}
                                         </STableCell>
 
 
-                                        <STableCell title={todo.subtitle}>
-                                            {todo.subtitle && todo.subtitle.slice(0, 10)}
-                                        </STableCell>
 
-                                        <STableCell>
+                                        <STableCell title={todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply || ""}>
                                             {todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply.slice(0, 50) || ""}
                                         </STableCell>
                                         <STableCell>
@@ -190,6 +216,11 @@ function MyTodosTable({ todos, setTodo, selectAll, setSelectAll, selectedTodos, 
             </Box >
 
             {text && <ViewTextDialog text={text} setText={setText} />}
+            {todo && <>
+                <ViewTodoContactsDialog todo={todo} />
+                <AddReplyDialog todo={todo} />
+                <ViewTodoRepliesDialog todo={todo} />
+            </>}
         </>
     )
 }

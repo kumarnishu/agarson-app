@@ -7,8 +7,11 @@ export const GetTodos = async ({ type, mobile, stopped }: { type: string, stoppe
         return await apiClient.get(`todos/?type=${type}&stopped=${stopped}`)
 
 }
-export const GetMyTodos = async () => {
-    return await apiClient.get(`todos/me`)
+export const GetMyTodos = async ({ hidden }: { hidden?: boolean }) => {
+    if (hidden)
+        return await apiClient.get(`todos/me/?hidden=${hidden}`)
+    else
+        return await apiClient.get(`todos/me`)
 }
 export const AddTodoReply = async ({ id, body }: { id: string, body: { reply: string } }) => {
     return await apiClient.patch(`todos/${id}`, body);
@@ -29,9 +32,7 @@ export const DeleteTodos = async ({ ids }: { ids: string[] }) => {
 };
 
 
-export const UpdateTodoStatus = async ({ id, body }: { id: string, body: { status: string, reply: string } }) => {
-    return await apiClient.patch(`todos/status/${id}`, body);
-};
+
 
 export const BulkTodoUpdateFromExcel = async (body: FormData) => {
     return await apiClient.put(`todos/bulk/new`, body)

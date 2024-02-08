@@ -20,7 +20,7 @@ function ViewTodoContactsDialog({ todo }: { todo: ITodo }) {
                 <DialogContent>
                     <STable>
                         <STableHead>
-                            <STableHeadCell>
+                            <STableHeadCell style={{ padding: '10px' }}>
                                 Name
                             </STableHeadCell>
                             <STableHeadCell>
@@ -38,7 +38,7 @@ function ViewTodoContactsDialog({ todo }: { todo: ITodo }) {
                             {todo.contacts.map((contact, index) => {
                                 return (
                                     <STableRow key={index}>
-                                        <STableCell>
+                                        <STableCell style={{ padding: '10px' }}>
                                             {contact.name}
                                         </STableCell>
                                         <STableCell>

@@ -4,12 +4,13 @@ export type ITodoTemplate = {
     _id: string,
     serial_no: number,
     title: string,
-    subtitle: string,
+    sheet_url: string,
     category: string,
     category2: string,
     contacts: string,
     reply:string,
     todo_type: string,
+    
     start_time: string,
     dates: string,
     months: string,
@@ -22,7 +23,7 @@ export type ITodo = {
     _id: string,
     serial_no: number,
     title: string,
-    subtitle: string,
+    sheet_url: string,
     category: string,
     category2: string,
     contacts: {
