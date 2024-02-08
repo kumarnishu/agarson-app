@@ -9,8 +9,8 @@ export var todo_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 
 export async function HandleDailyTodoTrigger(user: IUser) {
-    // let cronstring = `45 ` + `16 ` + "1/" + `1` + " *" + " *"
-    let cronstring = `1/1` + " *" + ` *` + " *" + " *"
+    let cronstring = `0 ` + `0 ` + "1/" + `1` + " *" + " *"
+    // let cronstring = `1/1` + " *" + ` *` + " *" + " *"
     console.log(cronstring)
     new CronJob(cronstring, async () => {
         let reminderClient = clients.find((client) => client.client_id === user.client_id)
