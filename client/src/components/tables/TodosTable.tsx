@@ -228,7 +228,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             {todo.serial_no}
                                         </STableCell>
 
-                                        <STableCell title={todo.title} style={{ cursor: 'pointer', color: 'blue' }} onClick={() => {
+                                        <STableCell title={todo.title} style={{ cursor: 'pointer', color: 'blue',fontSize:12,letterSpacing:'1px' }} onClick={() => {
                                             if (todo.sheet_url)
                                                 window.open(todo.sheet_url, '_blank')
                                         }}>

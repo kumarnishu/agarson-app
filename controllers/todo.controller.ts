@@ -151,9 +151,13 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             let connected_user: string | null = String(todo.connected_user).toLowerCase()
 
             let validated = true
-            if (!start_time || !dates || !weekdays || !months || !years) {
+            if (!start_time || !months || !years) {
                 validated = false
                 statusText = "fill all required fields"
+            }
+            if (!dates && !weekdays) {
+                validated = false
+                statusText = "required dates or weekdays"
             }
 
             if (serial_no && Number.isNaN(serial_no)) {
@@ -207,7 +211,8 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                 }
             }
             if (years) {
-                let dts = years.split(",").map((v) => { return Number(v.trim()) })
+                let fyers = years.replace("[", "").replace("]", "")
+                let dts = fyers.split(",").map((v) => { return Number(v.trim()) })
                 console.log(dts)
                 for (let i = 0; i <= dts.length; i++) {
                     if (dts[i] < 1970) {
@@ -264,10 +269,17 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
 
             if (validated) {
                 let st_time = start_time
-                let dts = dates.split(",").map((v) => { return Number(v) })
-                let wdays = weekdays.split(",").map((v) => { return Number(v) })
-                let mths = months.split(",").map((v) => { return Number(v) })
-                let yrs = years.split(",").map((v) => { return Number(v) })
+                let dts: number[] = []
+                let wdays: number[] = []
+                if (weekdays) {
+                    wdays = weekdays.split(",").map((v) => { return Number(v.trim()) })
+                }
+                if (dates) {
+                    dts = dates.split(",").map((v) => { return Number(v.trim()) })
+                }
+                let mths = months.split(",").map((v) => { return Number(v.trim()) })
+                let fyers = years.replace("[", "").replace("]", "")
+                let yrs = fyers.split(",").map((v) => { return Number(v.trim()) })
                 let newConNuser: IUser | null = null
 
                 if (connected_user) {

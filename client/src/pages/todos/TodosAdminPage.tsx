@@ -38,7 +38,7 @@ const template: ITodoTemplate[] = [
         dates: "1,2,3,4,31",
         months: "1,2,3,12",
         weekdays: "1,2,7",
-        years: "1970,2025,2030",
+        years: "[2024,2025]",
         connected_user: 'nishu'
 
     }
@@ -106,7 +106,7 @@ export default function TodosPage() {
                     dates: todo.dates.toString(),
                     months: todo.months.toString(),
                     weekdays: todo.weekdays.toString(),
-                    years: todo.years.toString(),
+                    years: "[" + todo.years.toString() + "]",
                     connected_user: todo.connected_user && todo.connected_user.username
                 })
         })
