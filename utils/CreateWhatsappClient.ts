@@ -3,9 +3,11 @@ import fs from "fs"
 import { User } from "../models/users/user.model";
 import { HandleVisitsReport } from "./ExportVisitsToPdf";
 import Lead from "../models/leads/lead.model";
-import { HandleDailyTodoTrigger, SendTodoMessage } from "./SendTodoMessage";
+import { HandleDailyTodoTrigger } from "./SendTodoMessage";
 import { HandleProductionReports } from "./ExportProductionReports";
 import { Client, LocalAuth, Message } from "whatsapp-web.js";
+import { CronJob } from "cron";
+import { handleAllReports } from "./HandleReports";
 
 export var clients: { client_id: string, client: Client }[] = []
 
@@ -50,6 +52,16 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             // /retry functions
             if (client.info && client.info.wid) {
                 console.log("session revived for", client.info)
+                if (client_id === process.env.WACLIENT_ID) {
+                    console.log("running reports id")
+                    //handle reports
+                    new CronJob("08 18 1/1 * *", async () => {
+                        await handleAllReports(client)
+                    }).start()
+                    new CronJob("0 9 1/1 * *", async () => {
+                        await handleAllReports(client)
+                    }).start()
+                }
             }
         }
     })
@@ -89,7 +101,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
     client.on('message_create', async (msg) => {
         let dt1 = new Date()
         let dt2 = new Date()
-        if (msg.body.toLowerCase() === "send boreports") {
+        if (client && msg.body.toLowerCase() === "send boreports" && client_id === process.env.WACLIENT_ID) {
             if (new Date().getHours() <= 11) {
                 dt2.setDate(new Date(dt1).getDate())
                 dt1.setDate(new Date(dt1).getDate() - 1)
@@ -97,14 +109,14 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                 dt1.setMinutes(0)
                 dt2.setHours(0)
                 dt2.setMinutes(0)
-                await client.sendMessage(String(process.env.WAGREETING_PHONE), "processing your morning reports..")
+                await client.sendMessage(String(process.env.WAPHONE), "processing your morning reports..")
                 await HandleVisitsReport(client, dt1, dt2)
                     .then(async () => {
                         await HandleProductionReports(client)
                     })
                     .then(async () => {
-                        await client.sendMessage(String(process.env.WAGREETING_PHONE), "processed successfully")
-                    }).catch(async () => await client.sendMessage(String(process.env.WAGREETING_PHONE), "error while processing morning reports "))
+                        await client.sendMessage(String(process.env.WAPHONE), "processed successfully")
+                    }).catch(async () => await client.sendMessage(String(process.env.WAPHONE), "error while processing morning reports "))
 
             }
             if (new Date().getHours() > 11) {
@@ -114,14 +126,14 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                 dt1.setMinutes(0)
                 dt2.setHours(0)
                 dt2.setMinutes(0)
-                await client.sendMessage(String(process.env.WAGREETING_PHONE), "processing your evening reports..")
+                await client.sendMessage(String(process.env.WAPHONE), "processing your evening reports..")
                 await HandleVisitsReport(client, dt1, dt2)
                     .then(async () => {
                         await HandleProductionReports(client)
                     })
                     .then(async () => {
-                        await client.sendMessage(String(process.env.WAGREETING_PHONE), "processed successfully")
-                    }).catch(async () => await client.sendMessage(String(process.env.WAGREETING_PHONE), "error while processing evening reports "))
+                        await client.sendMessage(String(process.env.WAPHONE), "processed successfully")
+                    }).catch(async () => await client.sendMessage(String(process.env.WAPHONE), "error while processing evening reports "))
             }
         }
     })

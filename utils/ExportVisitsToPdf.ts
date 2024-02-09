@@ -8,6 +8,7 @@ import fs from "fs"
 import { User } from "../models/users/user.model"
 import { Client, MessageMedia } from "whatsapp-web.js"
 
+
 export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
     let visits: IVisit[] = []
     console.log("generating pdf")
@@ -200,11 +201,11 @@ export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
 
 async function SendDocument(client: Client) {
     if (client) {
-        console.log("sending pdf from", process.env.WAGREETING_PHONE)
+        console.log("sending pdf from", process.env.WAPHONE)
         let users = await User.find()
         users.forEach(async (user) => {
             if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
-                await client.sendMessage(String(process.env.WAGREETING_PHONE), MessageMedia.fromFilePath(`./pdfs/visit/${user.username}_visits.pdf`), { caption: String(" ") })
+                await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/visit/${user.username}_visits.pdf`), { caption: String(" ") })
             }
         })
     }
