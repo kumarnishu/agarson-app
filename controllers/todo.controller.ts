@@ -73,10 +73,10 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
             if (todo.start_time) {
                 let hours = todo.start_time.replace("[", "").replace("]", "").split(":")[0].trim()
                 let minutes = todo.start_time.replace("[", "").replace("]", "").split(":")[1].trim()
-                if (Number.isNaN(Number(hours)) || Number(hours) > 23 || Number(hours) < 1) {
+                if (Number.isNaN(Number(hours)) || Number(hours) > 23 || Number(hours) < 0) {
                     validated = false
                 }
-                if (Number.isNaN(Number(minutes)) || Number(minutes) > 59 || Number(minutes) < 1) {
+                if (Number.isNaN(Number(minutes)) || Number(minutes) > 59 || Number(minutes) < 0) {
                     validated = false
                 }
             }
@@ -321,6 +321,8 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
                         contacts: newContacts,
                         start_time: start_time,
                         dates: dates,
+                        is_active: false,
+                        is_hidden: false,
                         months: months,
                         weekdays: weekdays,
                         years: years,

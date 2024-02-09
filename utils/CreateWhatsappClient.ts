@@ -3,7 +3,6 @@ import fs from "fs"
 import { User } from "../models/users/user.model";
 import { HandleVisitsReport } from "./ExportVisitsToPdf";
 import Lead from "../models/leads/lead.model";
-import { Todo } from "../models/todos/todo.model";
 import { HandleDailyTodoTrigger, SendTodoMessage } from "./SendTodoMessage";
 import { HandleProductionReports } from "./ExportProductionReports";
 import { Client, LocalAuth, Message } from "whatsapp-web.js";
