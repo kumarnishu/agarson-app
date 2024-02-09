@@ -184,6 +184,18 @@ export default function TodosPage() {
                     }}
                 />} label="Visible" />
                 <FormControlLabel control={<Checkbox
+                    checked={Boolean(type === 'checklist')}
+                    onChange={(e) => {
+                        if (e.target.checked) {
+                            setType('checklist')
+                        }
+                        if (!e.target.checked) {
+                            setType('')
+                        }
+
+                    }}
+                />} label="Checklist" />
+                <FormControlLabel control={<Checkbox
                     checked={Boolean(type === 'greeting')}
                     onChange={(e) => {
                         if (e.target.checked) {
