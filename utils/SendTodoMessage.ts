@@ -9,8 +9,8 @@ export var todo_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 
 export async function HandleDailyTodoTrigger(user: IUser) {
-    let cronstring = `0 ` + `0 ` + "1/" + `1` + " *" + " *"
-    // let cronstring = `1/1` + " *" + ` *` + " *" + " *"
+    // let cronstring = `0 ` + `0 ` + "1/" + `1` + " *" + " *"
+    let cronstring = `1/1` + " *" + ` *` + " *" + " *"
     console.log(cronstring)
     new CronJob(cronstring, async () => {
         let reminderClient = clients.find((client) => client.client_id === user.client_id)
@@ -56,8 +56,8 @@ export async function HandleDailyTodoTrigger(user: IUser) {
 export async function SendTodoMessage(todo: ITodo, client: Client) {
     if (todo && client) {
         let date = new Date()
-        date.setHours(Number(todo.start_time.split(",")[0]))
-        date.setMinutes(Number(todo.start_time.split(",")[1]))
+        date.setHours(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[0]))
+        date.setMinutes(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[1]))
         date.setSeconds(10)
         if (new Date(date) > new Date())
             new CronJob(date, async () => {
