@@ -10,7 +10,7 @@ export var todo_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 export async function HandleDailyTodoTrigger(user: IUser) {
     let cronstring = `0 ` + `0 ` + "1/" + `1` + " *" + " *"
-    // let cronstring = `1/1` + " *" + ` *` + " *" + " *"
+    // let cronstring = `1/5` + " *" + ` *` + " *" + " *"
     console.log(cronstring)
     new CronJob(cronstring, async () => {
         let reminderClient = clients.find((client) => client.client_id === user.client_id)
@@ -41,56 +41,57 @@ export async function HandleDailyTodoTrigger(user: IUser) {
                         ok = false
                     if (!years.includes(y1))
                         ok = false
-                    if (ok && reminderClient?.client) {
-                        SendTodoMessage(todo, reminderClient?.client)
+                    if (ok && reminderClient) {
+                        let date = new Date()
+                        date.setHours(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[0]))
+                        date.setMinutes(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[1]))
+                        console.log(date.toString())
+                        
+                        console.log("sending todos")
+                        if (date > new Date())
+                            new CronJob(date, () => {
+                                if (reminderClient?.client)
+                                    SendTodoMessage(todo, reminderClient?.client)
+                            }).start()
                     }
                     console.log(ok)
                 }
-
             })
         }
-
     }).start()
 }
 
 export async function SendTodoMessage(todo: ITodo, client: Client) {
     if (todo && client) {
-        let date = new Date()
-        date.setHours(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[0]))
-        date.setMinutes(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[1]) + 5)
-        if (new Date(date) > new Date())
-            new CronJob(date, async () => {
-                console.log("running todos")
-                let timeinsec = 2000
-                let reports = todo.contacts
-                for (let i = 0; i < reports.length; i++) {
-                    let report = reports[i]
-                    const timeout = setTimeout(async () => {
-                        let latest_todo = await Todo.findById(todo._id)
+        let timeinsec = 2000
+        let reports = todo.contacts
+        for (let i = 0; i < reports.length; i++) {
+            let report = reports[i]
+            const timeout = setTimeout(async () => {
+                let latest_todo = await Todo.findById(todo._id)
 
-                        if (latest_todo && latest_todo.is_active) {
-                            let mobile = report.mobile
-                            let title = todo.title && todo.title.replaceAll("\\n", "\n")
-                            let contacts = todo.contacts
-                            await client.sendMessage("91" + mobile + "@c.us", title)
-                            contacts = contacts.map((contact) => {
-                                if (contact.mobile === mobile) {
-                                    contact.is_sent = true
-                                    contact.timestamp = new Date()
-                                    return contact
-                                }
-                                else
-                                    return contact
-                            })
-                            await Todo.findByIdAndUpdate(latest_todo._id, {
-                                contacts: contacts,
-                                is_hidden: false
-                            })
+                if (latest_todo && latest_todo.is_active) {
+                    let mobile = report.mobile
+                    let title = todo.title && todo.title.replaceAll("\\n", "\n")
+                    let contacts = todo.contacts
+                    await client.sendMessage("91" + mobile + "@c.us", title)
+                    contacts = contacts.map((contact) => {
+                        if (contact.mobile === mobile) {
+                            contact.is_sent = true
+                            contact.timestamp = new Date()
+                            return contact
                         }
-                    }, Number(timeinsec));
-                    todo_timeouts.push({ id: todo._id, timeout: timeout })
-                    timeinsec = timeinsec + 2000 + Math.ceil(Math.random() * 3) * 1000
+                        else
+                            return contact
+                    })
+                    await Todo.findByIdAndUpdate(latest_todo._id, {
+                        contacts: contacts,
+                        is_hidden: false
+                    })
                 }
-            }).start()
+            }, Number(timeinsec));
+            todo_timeouts.push({ id: todo._id, timeout: timeout })
+            timeinsec = timeinsec + 2000 + Math.ceil(Math.random() * 3) * 1000
+        }
     }
 }
