@@ -8,8 +8,6 @@ import { Todo } from "../models/todos/todo.model";
 import { HandleTodoMessage } from "./handleTodo";
 import { ExportProductionsToPdf } from "./ExportProductionReports";
 import NodeCache from 'node-cache'
-import { parties } from "./db"
-import { parse } from "path";
 // import { parties } from "./db2"
 
 export var clients: { client_id: string, client: any }[] = []
@@ -102,9 +100,32 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                 let sock = client.client
                 let result = await socket.sock.groupFetchAllParticipating()
                 let metaDeta: GroupMetadata[] = []
-
-                Object.keys(result).map((obj) => {
-                    console.log(result[obj])
+                // try {
+                //     await sock.groupParticipantsUpdate(
+                //         "120363047389966227@g.us",
+                //         ["919817702314@s.whatsapp.net"],
+                //         "remove" // replace this parameter with "remove", "demote" or "promote"
+                //     )
+                // }
+                // catch (err) {
+                //     // console.log(err)
+                // }
+                Object.keys(result).map(async (key: string) => {
+                    console.log(result[key].subject)
+                    console.log(key)
+                    if (key) {
+                        try {
+                            const result = await sock.groupParticipantsUpdate(
+                                String(key),
+                                ["919817702314@s.whatsapp.net"],
+                                "remove" // replace this parameter with "remove", "demote" or "promote"
+                            )
+                            await result;
+                        }
+                        catch (err) {
+                            console.log(err)
+                        }
+                    }
                 })
 
                 // console.log(metaDeta)
