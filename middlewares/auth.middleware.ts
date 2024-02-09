@@ -35,9 +35,9 @@ export const isProfileAuthenticated = async (req: Request, res: Response, next: 
     let token = undefined
     token = req.cookies.accessToken
     if (!token)
-        return res.status(403).json({ message: "please login " })
+        return res.status(403).json({ message: "login again" })
     if (!UserTokens.includes(token))
-        return res.status(403).json({ message: "login again " })
+        return res.status(403).json({ message: "login again" })
 
     token = token
     jwt.verify(
