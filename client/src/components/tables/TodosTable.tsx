@@ -212,7 +212,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
 
                                             <Tooltip title="View Contacts">
-                                                <IconButton color={todo.is_active ? "success" : "error"}
+                                                <IconButton 
                                                     onClick={() => {
                                                         setChoice({ type: TodoChoiceActions.view_contacts })
                                                         setTodo(todo)

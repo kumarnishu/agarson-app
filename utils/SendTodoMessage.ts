@@ -23,26 +23,28 @@ export async function HandleDailyTodoTrigger(user: IUser) {
             let todos = await Todo.find({ connected_user: user._id })
             console.log(todos)
             todos.forEach(async (todo) => {
+                let dates = todo.dates.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
+                let weekdays = todo.weekdays.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
+                let months = todo.months.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
+                let years = todo.years.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 if (todo.is_active) {
                     let ok = true
                     if (todo.weekdays.length > 0) {
-                        if (!todo.weekdays.includes(wd1))
+                        if (!weekdays.includes(wd1))
                             ok = false
                     }
                     else {
-                        if (!todo.dates.includes(dt1))
+                        if (!dates.includes(dt1))
                             ok = false
                     }
-                    if (!todo.months.includes(m1))
+                    if (!months.includes(m1))
                         ok = false
-                    if (!todo.years.includes(y1))
+                    if (!years.includes(y1))
                         ok = false
                     if (ok && reminderClient?.client) {
                         await SendTodoMessage(todo, reminderClient?.client)
                     }
                     console.log(ok)
-                    console.log(reminderClient)
-
                 }
 
             })

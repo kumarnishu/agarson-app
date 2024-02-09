@@ -8,7 +8,7 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
     sheet_url: {
         type: String
     },
-   
+
     category: { type: String },
     category2: { type: String },
     todo_type: { type: String },
@@ -30,10 +30,10 @@ const TodoSchema = new mongoose.Schema<ITodo, mongoose.Model<ITodo, {}, {}>, {}>
     is_active: { type: Boolean, default: false },
     is_hidden: { type: Boolean, default: true },
     start_time: String,
-    dates: [Number],
-    months: [Number],
-    weekdays: [Number],
-    years: [Number],
+    dates: String,
+    months: String,
+    weekdays: String,
+    years: String,
     connected_user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

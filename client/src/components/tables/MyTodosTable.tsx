@@ -175,7 +175,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                                 </IconButton>
                                             </Tooltip>}
                                             <Tooltip title="View Contacts">
-                                                <IconButton color={todo.is_active ? "success" : "error"}
+                                                <IconButton 
                                                     onClick={() => {
                                                         setChoice({ type: TodoChoiceActions.view_contacts })
                                                         setTodo(todo)
