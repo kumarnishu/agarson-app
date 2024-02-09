@@ -84,7 +84,7 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
                 let dts = todo.dates.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 console.log(dts)
                 for (let i = 0; i <= dts.length; i++) {
-                    if (dts[i] > 31 || dts[i] < 1) {
+                    if (Number.isNaN(dts[i]) || dts[i] > 31 || dts[i] < 1) {
                         validated = false
                         break;
                     }
@@ -95,7 +95,7 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
                 let dts = todo.weekdays.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 console.log(dts)
                 for (let i = 0; i <= dts.length; i++) {
-                    if (dts[i] > 7 || dts[i] < 1) {
+                    if (Number.isNaN(dts[i]) || dts[i] > 7 || dts[i] < 1) {
                         validated = false
                         break;
                     }
@@ -105,7 +105,7 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
                 let dts = todo.months.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 console.log(dts)
                 for (let i = 0; i <= dts.length; i++) {
-                    if (dts[i] > 12 || dts[i] < 1) {
+                    if (Number.isNaN(dts[i]) || dts[i] > 12 || dts[i] < 1) {
                         validated = false
                         break;
                     }
@@ -115,7 +115,7 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
                 let dts = todo.years.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 console.log(dts)
                 for (let i = 0; i <= dts.length; i++) {
-                    if (dts[i] < 1970) {
+                    if (Number.isNaN(dts[i]) || dts[i] < 1970) {
                         validated = false
                         break;
                     }
