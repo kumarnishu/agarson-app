@@ -103,10 +103,10 @@ export default function TodosPage() {
                     todo_type: todo.todo_type,
                     reply: todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply || "",
                     start_time: todo.start_time,
-                    dates: todo.dates.toString(),
-                    months: todo.months.toString(),
-                    weekdays: todo.weekdays.toString(),
-                    years: todo.years.toString(),
+                    dates: todo.dates,
+                    months: todo.months,
+                    weekdays: todo.weekdays,
+                    years: todo.years,
                     connected_user: todo.connected_user && todo.connected_user.username
                 })
         })

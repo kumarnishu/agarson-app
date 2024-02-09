@@ -212,7 +212,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
 
                                             <Tooltip title="View Contacts">
-                                                <IconButton 
+                                                <IconButton
                                                     onClick={() => {
                                                         setChoice({ type: TodoChoiceActions.view_contacts })
                                                         setTodo(todo)
@@ -270,10 +270,10 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             {todo.start_time && todo.start_time}
                                         </STableCell>
                                         <STableCell>
-                                            {todo.dates.toString()}
+                                            {todo.dates && todo.dates.toString()}
                                         </STableCell>
                                         <STableCell>
-                                            {todo.weekdays.toString()}
+                                            {todo.weekdays && todo.weekdays.toString()}
                                         </STableCell>
                                         <STableCell>
                                             {todo.months.toString()}

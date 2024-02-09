@@ -9,8 +9,8 @@ export var todo_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 
 export async function HandleDailyTodoTrigger(user: IUser) {
-    // let cronstring = `0 ` + `0 ` + "1/" + `1` + " *" + " *"
-    let cronstring = `1/1` + " *" + ` *` + " *" + " *"
+    let cronstring = `10 ` + `9 ` + "1/" + `1` + " *" + " *"
+    // let cronstring = `1/1` + " *" + ` *` + " *" + " *"
     console.log(cronstring)
     new CronJob(cronstring, async () => {
         let reminderClient = clients.find((client) => client.client_id === user.client_id)
@@ -23,17 +23,17 @@ export async function HandleDailyTodoTrigger(user: IUser) {
             let todos = await Todo.find({ connected_user: user._id })
             console.log(todos)
             todos.forEach(async (todo) => {
-                let dates = todo.dates.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
-                let weekdays = todo.weekdays.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 let months = todo.months.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 let years = todo.years.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 if (todo.is_active) {
                     let ok = true
-                    if (todo.weekdays.length > 0) {
+                    if (todo.weekdays && todo.weekdays.length > 0) {
+                        let weekdays = todo.weekdays.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                         if (!weekdays.includes(wd1))
                             ok = false
                     }
                     else {
+                        let dates = todo.dates.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                         if (!dates.includes(dt1))
                             ok = false
                     }
