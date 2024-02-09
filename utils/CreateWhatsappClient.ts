@@ -42,6 +42,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                 await User.findByIdAndUpdate(user._id, {
                     connected_number: client?.info.wid._serialized
                 })
+                await HandleDailyTodoTrigger(user)
             }
 
             if (!clients.find((client) => client.client_id === client_id))
@@ -49,12 +50,9 @@ export async function createWhatsappClient(client_id: string, io: Server) {
 
             // /retry functions
             if (client.info && client.info.wid) {
-                if (user && client?.info.wid._serialized === process.env.WAGREETING_PHONE) {
-                    await HandleDailyTodoTrigger(user)
-                }
+                console.log("session revived for", client.info)
             }
         }
-        console.log("session revived for", client.info)
     })
     client.on('disconnected', async (reason) => {
         console.log("reason", reason)

@@ -9,7 +9,7 @@ export var todo_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 
 export async function HandleDailyTodoTrigger(user: IUser) {
-    let cronstring = `10 ` + `9 ` + "1/" + `1` + " *" + " *"
+    let cronstring = `50 ` + `9 ` + "1/" + `1` + " *" + " *"
     // let cronstring = `1/1` + " *" + ` *` + " *" + " *"
     console.log(cronstring)
     new CronJob(cronstring, async () => {
@@ -21,7 +21,7 @@ export async function HandleDailyTodoTrigger(user: IUser) {
             let y1 = new Date().getFullYear()
             console.log("handling todos")
             let todos = await Todo.find({ connected_user: user._id })
-            console.log(todos)
+            console.log("todos",todos.length)
             todos.forEach(async (todo) => {
                 let months = todo.months.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
                 let years = todo.years.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
@@ -68,7 +68,7 @@ export async function SendTodoMessage(todo: ITodo, client: Client) {
                     let report = reports[i]
                     const timeout = setTimeout(async () => {
                         let latest_todo = await Todo.findById(todo._id)
-                        console.log(latest_todo)
+                        
                         if (latest_todo && latest_todo.is_active) {
                             let mobile = report.mobile
                             let title = todo.title && todo.title.replaceAll("\\n", "\n")
