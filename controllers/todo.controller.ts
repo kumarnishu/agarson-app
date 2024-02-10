@@ -69,7 +69,7 @@ export const StartTodos = async (req: Request, res: Response, next: NextFunction
         let id = ids[i]
         let todo = await Todo.findById(id)
         let validated = true
-        if (todo && !todo.is_active) {
+        if (todo && !todo.is_active && todo.connected_user) {
             if (todo.start_time) {
                 let hours = todo.start_time.replace("[", "").replace("]", "").split(":")[0].trim()
                 let minutes = todo.start_time.replace("[", "").replace("]", "").split(":")[1].trim()
@@ -272,8 +272,8 @@ export const BulkCreateTodoFromExcel = async (req: Request, res: Response, next:
             if (validated) {
                 let newConNuser: IUser | null = null
 
-                if (connected_user) {
-                    let user = await User.findOne({ username: connected_user })
+                if (connected_user && req.user) {
+                    let user = await User.findOne({ username: connected_user, _id: req.user._id })
                     if (user && user.connected_number) {
                         newConNuser = user
                     }
