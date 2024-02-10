@@ -10,9 +10,25 @@ import { IUser } from "../types/user.types"
 export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = String(req.query.hidden)
     let todos: ITodo[] = []
-    todos = await Todo.find({ is_hidden: false }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+    todos = await Todo.find({ is_hidden: false }).populate({
+                    path: 'replies',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        }
+                    ]
+                }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
     if (hidden === "true") {
-        todos = await Todo.find({ is_hidden: true }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
+        todos = await Todo.find({ is_hidden: true }).populate({
+                    path: 'replies',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        }
+                    ]
+                }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("serial_no")
     }
 
     todos = todos.filter((todo) => {
@@ -33,24 +49,72 @@ export const GetTodos = async (req: Request, res: Response, next: NextFunction) 
         showStopped = true
     if (!mobile) {
         if (showStopped && type) {
-            todos = await Todo.find({ is_active: false, todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
+            todos = await Todo.find({ is_active: false, todo_type: type, created_by: req.user?._id }).populate({
+                    path: 'replies',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        }
+                    ]
+                }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
         else if (type) {
-            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
+            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate({
+                    path: 'replies',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        }
+                    ]
+                }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
         else {
-            todos = await Todo.find({ created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
+            todos = await Todo.find({ created_by: req.user?._id }).populate({
+                    path: 'replies',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        }
+                    ]
+                }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
     }
     if (mobile) {
         if (showStopped && type) {
-            todos = await Todo.find({ is_active: false, todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
+            todos = await Todo.find({ is_active: false, todo_type: type, created_by: req.user?._id }).populate({
+                    path: 'replies',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        }
+                    ]
+                }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
         else if (type) {
-            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
+            todos = await Todo.find({ todo_type: type, created_by: req.user?._id }).populate({
+                    path: 'replies',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        }
+                    ]
+                }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
         else {
-            todos = await Todo.find({ created_by: req.user?._id }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
+            todos = await Todo.find({ created_by: req.user?._id }).populate({
+                    path: 'replies',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        }
+                    ]
+                }).populate('connected_user').populate('created_by').populate('updated_at').populate('updated_by').sort("start_date")
         }
         todos = todos.filter((todo) => {
             let numbers = todo.contacts.map((c) => { return c.mobile })
@@ -153,7 +217,15 @@ export const StopTodos = async (req: Request, res: Response, next: NextFunction)
 export const AddTodoReply = async (req: Request, res: Response, next: NextFunction) => {
     let { reply } = req.body as { reply: string }
     const id = req.params.id
-    let todo = await Todo.findById(id).populate('connected_user')
+    let todo = await Todo.findById(id).populate({
+                    path: 'replies',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        }
+                    ]
+                }).populate('connected_user')
     if (!todo)
         return res.status(404).json({ message: "no todo exists" })
     let replies = todo.replies
