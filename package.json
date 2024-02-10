@@ -6,6 +6,7 @@
   "nodemonConfig": {
     "ignore": [
       "sessions",
+      "sockets",
       "node_modules",
       "client",
       "baileys_store_multi.json",
