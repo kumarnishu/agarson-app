@@ -199,12 +199,17 @@ export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
 
 async function SendDocument(client: Client) {
     if (client) {
-        console.log("sending pdf from", process.env.WAPHONE)
+        console.log("sending visits pdf from", process.env.WAPHONE)
         let users = await User.find()
         for (let i = 0; i < users.length; i++) {
             let user = users[i]
-            if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${String(user.username)}_visits.pdf`)) {
-                await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/visit/${String(user.username)}_visits.pdf`), { caption: String(" ") })
+            try {
+                if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${String(user.username)}_visits.pdf`)) {
+                    await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/visit/${String(user.username)}_visits.pdf`), { caption: String(" ") })
+                }
+            }
+            catch (err) {
+                console.log(err)
             }
         }
     }
