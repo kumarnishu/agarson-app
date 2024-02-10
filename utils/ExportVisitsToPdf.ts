@@ -203,11 +203,12 @@ async function SendDocument(client: Client) {
     if (client) {
         console.log("sending pdf from", process.env.WAPHONE)
         let users = await User.find()
-        users.forEach(async (user) => {
+        for (let i = 0; i < users.length; i++) {
+            let user = users[i]
             if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
-                await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/visit/${user.username}_visits.pdf`), { caption: String(" ") })
+                await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/visit/${user.username}_visits.pdf`))
             }
-        })
+        }
     }
 }
 

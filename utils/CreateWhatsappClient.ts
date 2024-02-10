@@ -39,15 +39,14 @@ export async function createWhatsappClient(client_id: string, io: Server) {
         if (client.info.wid.user) {
             io.to(client_id).emit("ready", client.info.wid.user)
             let user = await User.findOne({ client_id: client_id })
+            if (!clients.find((client) => client.client_id === client_id))
+                clients.push({ client_id: client_id, client: client })
             if (user) {
                 await User.findByIdAndUpdate(user._id, {
                     connected_number: client?.info.wid._serialized
                 })
                 await HandleDailyTodoTrigger(user)
             }
-
-            if (!clients.find((client) => client.client_id === client_id))
-                clients.push({ client_id: client_id, client: client })
 
             // /retry functions
             if (client.info && client.info.wid) {
@@ -58,7 +57,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     new CronJob("08 18 1/1 * *", async () => {
                         await handleAllReports(client)
                     }).start()
-                    new CronJob("45 9 1/1 * *", async () => {
+                    new CronJob("15 10 1/1 * *", async () => {
                         await handleAllReports(client)
                     }).start()
                 }
