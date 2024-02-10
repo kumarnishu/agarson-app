@@ -313,7 +313,7 @@ async function SendDocument(client: Client) {
     if (client) {
         console.log("sending production pdf from", process.env.WAPHONE)
         try {
-            await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/production/productions.pdf`), { caption: String(" ") }).catch((err) => console.log(err))
+            await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/production/productions.pdf`), { caption: String(" ") })
         }
         catch (err) {
             console.log(err)
