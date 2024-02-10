@@ -8,7 +8,8 @@
       "sessions",
       "node_modules",
       "client",
-      "baileys_store_multi.json"
+      "baileys_store_multi.json",
+      "sockets"
     ]
   },
   "scripts": {
