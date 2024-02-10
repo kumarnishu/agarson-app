@@ -38,6 +38,21 @@ export async function createWhatsappClient(client_id: string, io: Server) {
     client.on("ready", async () => {
         if (client.info.wid.user) {
             io.to(client_id).emit("ready", client.info.wid.user)
+            // /retry functions
+            if (client.info && client.info.wid) {
+                console.log("session revived for", client.info)
+                if (client_id === process.env.WACLIENT_ID) {
+                    console.log("running reports id")
+                    //handle reports
+                    new CronJob("8 18 1/1 * *", async () => {
+                        await handleAllReports(client)
+                    }).start()
+                    new CronJob("0 9 1/1 * *", async () => {
+                        await handleAllReports(client)
+                    }).start()
+                }
+            }
+
             let user = await User.findOne({ client_id: client_id })
             if (!clients.find((client) => client.client_id === client_id))
                 clients.push({ client_id: client_id, client: client })
@@ -48,20 +63,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                 await HandleDailyTodoTrigger(user)
             }
 
-            // /retry functions
-            if (client.info && client.info.wid) {
-                console.log("session revived for", client.info)
-                if (client_id === process.env.WACLIENT_ID) {
-                    console.log("running reports id")
-                    //handle reports
-                    new CronJob("08 18 1/1 * *", async () => {
-                        await handleAllReports(client)
-                    }).start()
-                    new CronJob("30 10 1/1 * *", async () => {
-                        await handleAllReports(client)
-                    }).start()
-                }
-            }
+           
         }
     })
     client.on('disconnected', async (reason) => {
