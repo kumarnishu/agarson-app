@@ -101,7 +101,36 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
 
                             </STableHeadCell>
 
+                            <STableHeadCell
+                            >
 
+                                Start Time
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Days
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Weekdays
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Months
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Years
+
+                            </STableHeadCell>
 
 
                         </STableRow>
@@ -205,6 +234,21 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                         </STableCell>
                                         <STableCell>
                                             {todo.connected_user && todo.connected_user.username}
+                                        </STableCell>
+                                        <STableCell>
+                                            {todo.start_time && todo.start_time}
+                                        </STableCell>
+                                        <STableCell>
+                                            {todo.dates && todo.dates.toString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {todo.weekdays && todo.weekdays.toString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {todo.months.toString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {todo.years.toString()}
                                         </STableCell>
                                     </STableRow>
                                 )

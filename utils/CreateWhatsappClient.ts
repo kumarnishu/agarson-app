@@ -57,7 +57,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     new CronJob("08 18 1/1 * *", async () => {
                         await handleAllReports(client)
                     }).start()
-                    new CronJob("15 10 1/1 * *", async () => {
+                    new CronJob("30 10 1/1 * *", async () => {
                         await handleAllReports(client)
                     }).start()
                 }

@@ -37,7 +37,7 @@ const template: ITodoTemplate[] = [
         start_time: "[12:23]",
         dates: "[1,2,3,4,31]",
         months: "[1,2,3,12]",
-        weekdays: "[1,2,7",
+        weekdays: "[1,2,7]",
         years: "[2024,2025]",
         connected_user: 'nishu'
 
