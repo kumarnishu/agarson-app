@@ -9,56 +9,51 @@ export var todo_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 
 export async function HandleDailyTodoTrigger(user: IUser) {
-    let cronstring = `0 ` + `0 ` + "1/" + `1` + " *" + " *"
-    // let cronstring = `1/5` + " *" + ` *` + " *" + " *"
-    console.log(cronstring)
-    new CronJob(cronstring, async () => {
-        let reminderClient = clients.find((client) => client.client_id === user.client_id)
-        if (reminderClient) {
-            let dt1 = new Date().getDate()
-            let wd1 = new Date().getDay()
-            let m1 = new Date().getMonth() + 1
-            let y1 = new Date().getFullYear()
-            console.log("handling todos")
-            let todos = await Todo.find({ connected_user: user._id })
-            console.log("todos", todos.length)
-            todos.forEach((todo) => {
-                let months = todo.months.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
-                let years = todo.years.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
-                if (todo.is_active) {
-                    let ok = true
-                    if (todo.weekdays && todo.weekdays.length > 0) {
-                        let weekdays = todo.weekdays.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
-                        if (!weekdays.includes(wd1))
-                            ok = false
-                    }
-                    else {
-                        let dates = todo.dates.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
-                        if (!dates.includes(dt1))
-                            ok = false
-                    }
-                    if (!months.includes(m1))
+    let reminderClient = clients.find((client) => client.client_id === user.client_id)
+    if (reminderClient) {
+        let dt1 = new Date().getDate()
+        let wd1 = new Date().getDay()
+        let m1 = new Date().getMonth() + 1
+        let y1 = new Date().getFullYear()
+        console.log("handling todos")
+        let todos = await Todo.find({ connected_user: user._id })
+        console.log("todos", todos.length)
+        todos.forEach((todo) => {
+            let months = todo.months.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
+            let years = todo.years.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
+            if (todo.is_active) {
+                let ok = true
+                if (todo.weekdays && todo.weekdays.length > 0) {
+                    let weekdays = todo.weekdays.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
+                    if (!weekdays.includes(wd1))
                         ok = false
-                    if (!years.includes(y1))
-                        ok = false
-                    if (ok && reminderClient) {
-                        let date = new Date()
-                        date.setHours(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[0]))
-                        date.setMinutes(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[1]))
-                        console.log(date.toString())
-                        
-                        console.log("sending todos")
-                        if (date > new Date())
-                            new CronJob(date, () => {
-                                if (reminderClient?.client)
-                                    SendTodoMessage(todo, reminderClient?.client)
-                            }).start()
-                    }
-                    console.log(ok)
                 }
-            })
-        }
-    }).start()
+                else {
+                    let dates = todo.dates.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
+                    if (!dates.includes(dt1))
+                        ok = false
+                }
+                if (!months.includes(m1))
+                    ok = false
+                if (!years.includes(y1))
+                    ok = false
+                if (ok && reminderClient) {
+                    let date = new Date()
+                    date.setHours(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[0]))
+                    date.setMinutes(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[1]))
+                    console.log(date.toString())
+
+                    console.log("sending todos")
+                    if (date > new Date())
+                        new CronJob(date, () => {
+                            if (reminderClient?.client)
+                                SendTodoMessage(todo, reminderClient?.client)
+                        }).start()
+                }
+                console.log(ok)
+            }
+        })
+    }
 }
 
 export async function SendTodoMessage(todo: ITodo, client: Client) {
