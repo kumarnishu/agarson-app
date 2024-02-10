@@ -100,31 +100,35 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                 let sock = client.client
                 let result = await socket.sock.groupFetchAllParticipating()
                 let metaDeta: GroupMetadata[] = []
-                // try {
-                //     await sock.groupParticipantsUpdate(
-                //         "120363047389966227@g.us",
-                //         ["919817702314@s.whatsapp.net"],
-                //         "remove" // replace this parameter with "remove", "demote" or "promote"
-                //     )
+                // for (let i = 0; i < 10; i++) {
+                //     try {
+                //         console.log("creatinng group")
+                //         const group = await sock.groupCreate(`Group - ${i}`, ["917056943283@s.whatsapp.net"])
+                //         console.log("created group with id: " + group.gid)
+                //         sock.sendMessage(group.id, { text: 'hello there' }) // sa
+                //     }
+                //     catch (err) {
+                //         console.log(err)
+                //     }
                 // }
-                // catch (err) {
-                //     // console.log(err)
-                // }
+
                 Object.keys(result).map(async (key: string) => {
                     console.log(result[key].subject)
                     console.log(key)
                     if (key) {
-                        try {
-                            const result = await sock.groupParticipantsUpdate(
-                                String(key),
-                                ["919817702314@s.whatsapp.net"],
-                                "remove" // replace this parameter with "remove", "demote" or "promote"
-                            )
-                            await result;
-                        }
-                        catch (err) {
-                            console.log(err)
-                        }
+                        setTimeout(async () => {
+                            try {
+                                const result = await sock.groupParticipantsUpdate(
+                                    String(key),
+                                    ["919817702310@s.whatsapp.net"],
+                                    "remove" // replace this parameter with "remove", "demote" or "promote"
+                                )
+                                await result;
+                            }
+                            catch (err) {
+                                console.log(err)
+                            }
+                        }, 5000)
                     }
                 })
 
