@@ -23,7 +23,7 @@ setInterval(() => {
 
 async function createSocket(session_folder: string) {
     const { version, isLatest } = await fetchLatestBaileysVersion()
-    const { state, saveCreds } = await useMultiFileAuthState('sessions/' + session_folder)
+    const { state, saveCreds } = await useMultiFileAuthState('sockets/' + session_folder)
     const sock = makeWASocket({ version, auth: state, msgRetryCounterCache, generateHighQualityLinkPreview: true, })
     console.log("version", version, isLatest)
     return { sock, saveCreds }
