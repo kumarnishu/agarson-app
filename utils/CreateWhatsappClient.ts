@@ -103,7 +103,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
         let dt1 = new Date()
         let dt2 = new Date()
         if (client && msg.body.toLowerCase() === "send boreports" && client_id === process.env.WACLIENT_ID) {
-            if (new Date().getHours() <= 11) {
+            if (new Date().getHours() <= 12) {
                 dt2.setDate(new Date(dt1).getDate())
                 dt1.setDate(new Date(dt1).getDate() - 1)
                 dt1.setHours(0)
@@ -120,7 +120,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     }).catch(async () => await client.sendMessage(String(process.env.WAPHONE), "error while processing morning reports "))
 
             }
-            if (new Date().getHours() > 11) {
+            if (new Date().getHours() > 12) {
                 dt1.setDate(new Date(dt1).getDate())
                 dt2.setDate(new Date(dt1).getDate() + 1)
                 dt1.setHours(0)
