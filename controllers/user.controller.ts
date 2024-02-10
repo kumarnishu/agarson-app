@@ -985,8 +985,8 @@ export const SendPasswordResetMail = async (req: Request, res: Response, next: N
     const userEmail = String(email).toLowerCase().trim();
     if (!isEmail(userEmail))
         return res.status(400).json({ message: "provide a valid email" })
-    let users = await User.find({ email: userEmail }).populate('created_by')
-    let user = users.filter((user) => { return String(user._id) === String(user.created_by._id) })[0]
+    let user = await User.findOne({ email: userEmail }).populate('created_by')
+    
     if (user) {
         if (String(user._id) !== String(user.created_by._id))
             return res.status(403).json({ message: "not allowed this service" })
@@ -999,7 +999,7 @@ export const SendPasswordResetMail = async (req: Request, res: Response, next: N
     const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\n valid for 15 minutes only \n\n\n\nIf you have not requested this email then, please ignore it.`;
     const options = {
         to: user.email,
-        subject: `Crm Password Recovery`,
+        subject: `Bo Agarson Password Recovery`,
         message: message,
     };
     let response = await sendEmail(options);
@@ -1053,7 +1053,7 @@ export const SendVerifyEmail = async (req: Request, res: Response, next: NextFun
     const message = `Your email verification link is :- \n\n ${emailVerficationUrl} \n\n valid for 15 minutes only \n\nIf you have not requested this email then, please ignore it.`;
     const options = {
         to: user.email,
-        subject: `CRM Email Verification`,
+        subject: `Bo Agarson Email Verification`,
         message,
     };
 
