@@ -11,7 +11,7 @@ import { Client, MessageMedia } from "whatsapp-web.js"
 
 
 export async function HandleProductionReports(client: Client) {
-    console.log("generating pdf")
+    console.log("generating production pdf")
 
     var printer = new PdfPrinter({
         Roboto: {
@@ -313,8 +313,7 @@ async function SendDocument(client: Client) {
     if (client) {
         console.log("sending production pdf from", process.env.WAPHONE)
         try {
-           
-            await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/production/productions.pdf`), { caption: String(" ") })
+            await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/production/productions.pdf`), { caption: String(" ") }).catch((err) => console.log(err))
         }
         catch (err) {
             console.log(err)

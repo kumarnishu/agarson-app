@@ -11,7 +11,7 @@ import { Client, MessageMedia } from "whatsapp-web.js"
 
 export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
     let visits: IVisit[] = []
-    console.log("generating pdf")
+    console.log("generating visit pdf")
     visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate("visit_reports").populate('created_by')
     var printer = new PdfPrinter({
         Roboto: {
@@ -204,10 +204,10 @@ async function SendDocument(client: Client) {
         for (let i = 0; i < users.length; i++) {
             let user = users[i]
             try {
-                
+
                 if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${String(user.username)}_visits.pdf`)) {
                     console.log("sending visits pdf from", process.env.WAPHONE, user.username)
-                    await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/visit/${String(user.username)}_visits.pdf`), { caption: String(" ") })
+                    await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/visit/${String(user.username)}_visits.pdf`), { caption: String(" ") }).catch((err) => console.log(err))
                 }
             }
             catch (err) {
