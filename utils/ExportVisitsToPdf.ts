@@ -25,7 +25,7 @@ export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
     for (let i = 0; i < visits.length; i++) {
         if (visits[i] && visits[i].visit_reports.length > 0) {
             username = visits[i].created_by.username
-            Content.push({ text: `Daily Visit Reports : ${new Date(dt1).toLocaleDateString()}`, style: { 'alignment': 'center', fontSize: 24, bold: true } });
+            Content.push({ text: `Daily Visit Reports : ${new Date(dt1).toLocaleDateString()}`, style: { 'alignment': 'center', fontSize: 24 } });
 
             if (visits[i].start_day_credientials) {
                 let startday_photo = await imageUrlToBase64(visits[i].start_day_photo?.public_url || "").then((response) => {
@@ -35,7 +35,7 @@ export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
                     Content.push(
                         {
                             text: `${visits[i].created_by.username}\n\n`,
-                            style: { 'alignment': 'center', fontSize: 22, bold: true },
+                            style: { 'alignment': 'center', fontSize: 22 },
 
                         }
                     ),
@@ -52,13 +52,13 @@ export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
 
                                     {
                                         text: `${new Date(visits[i].start_day_credientials.timestamp).toLocaleTimeString()}`,
-                                        style: { 'alignment': 'center', fontSize: 14 },
+                                        style: { 'alignment': 'center', fontSize: 16 },
 
                                     },
 
                                     {
                                         text: `${visits[i].start_day_credientials.address}\n`,
-                                        style: { 'alignment': 'center', fontSize: 14 },
+                                        style: { 'alignment': 'center', fontSize: 16 },
 
                                     },
                                 ]
@@ -86,16 +86,16 @@ export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
                                     height: 500,
                                 },
                                 "\n",
-                                { text: `${report.party_name}\n\n`, style: { 'alignment': 'center', fontSize: 24, bold: true } },
+                                { text: `${report.party_name}\n\n`, style: { 'alignment': 'center', fontSize: 24 } },
                                 {
                                     text: `In : ${new Date(report.visit_in_credientials.timestamp).toLocaleTimeString()} ,  Out : ${new Date(report.visit_out_credentials.timestamp).toLocaleTimeString()}`,
-                                    style: { 'alignment': 'center', fontSize: 14 },
+                                    style: { 'alignment': 'center', fontSize: 16 },
 
                                 },
 
                                 {
                                     text: ` ${report.visit_in_credientials.address}`,
-                                    style: { 'alignment': 'center', fontSize: 14 },
+                                    style: { 'alignment': 'center', fontSize: 16 },
 
                                 }
                             ]
@@ -115,18 +115,18 @@ export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
                                     height: 500,
                                 },
                                 "\n",
-                                { text: `Summary\n\n`, style: { 'alignment': 'center', fontSize: 20, bold: true } }
+                                { text: `Summary\n\n`, style: { 'alignment': 'center', fontSize: 20 } }
                                 ,
 
                                 {
                                     text: `${report.visit_in_credientials.address}`,
-                                    style: { 'alignment': 'center', fontSize: 14 },
+                                    style: { 'alignment': 'center', fontSize: 16 },
 
                                 },
                                 "\n",
                                 {
                                     text: `${report.summary || ""}`,
-                                    style: { 'alignment': 'center', fontSize: 14 },
+                                    style: { 'alignment': 'center', fontSize: 16 },
 
                                 }
                             ]
@@ -153,13 +153,13 @@ export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
                                 },
                                 {
                                     text: `${new Date(visits[i].end_day_credentials.timestamp).toLocaleTimeString()}`,
-                                    style: { 'alignment': 'center', fontSize: 14 },
+                                    style: { 'alignment': 'center', fontSize: 16 },
 
                                 },
 
                                 {
                                     text: `${visits[i].end_day_credentials.address}`,
-                                    style: { 'alignment': 'center', fontSize: 14 },
+                                    style: { 'alignment': 'center', fontSize: 16 },
 
                                 },
                             ]
