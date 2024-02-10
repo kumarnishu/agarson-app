@@ -205,8 +205,8 @@ export async function createWhatsappClient(client_id: string, io: Server) {
 
 async function DeleteLocalSession(client_id: string) {
     try {
-        if (fs.existsSync(`./sessions/${client_id}`)) {
-            fs.rmdirSync(`./sessions/${client_id}`, { recursive: true })
+        if (fs.existsSync(`./sockets/${client_id}`)) {
+            fs.rmdirSync(`./sockets/${client_id}`, { recursive: true })
         }
         clients = clients.filter((client) => { return client.client_id !== client_id })
         let user = await User.findOne({ client_id: client_id })
