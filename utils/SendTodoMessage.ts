@@ -13,6 +13,8 @@ export async function HandleDailyTodoTrigger(user: IUser) {
     if (reminderClient) {
         let dt1 = new Date().getDate()
         let wd1 = new Date().getDay()
+        if (wd1 === 0)
+            wd1 = 7
         let m1 = new Date().getMonth() + 1
         let y1 = new Date().getFullYear()
         console.log("handling todos")

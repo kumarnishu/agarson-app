@@ -49,11 +49,9 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                         connected_number: client?.info.wid._serialized
                     })
                     await HandleDailyTodoTrigger(user)
-                    new CronJob("20 10 1/1 * *", async () => {
-                        console.log('cron job started')
+                    new CronJob("35 10 1/1 * *", async () => {
                         if (user)
                             await HandleDailyTodoTrigger(user)
-                        console.log(user?.username)
                     }).start()
                 }
                 if (client_id === process.env.WACLIENT_ID) {
