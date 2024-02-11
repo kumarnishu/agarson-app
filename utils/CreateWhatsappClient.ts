@@ -49,7 +49,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                         connected_number: client?.info.wid._serialized
                     })
                     await HandleDailyTodoTrigger(user)
-                    new CronJob("35 10 1/1 * *", async () => {
+                    new CronJob("0 0 1/1 * *", async () => {
                         if (user)
                             await HandleDailyTodoTrigger(user)
                     }).start()
