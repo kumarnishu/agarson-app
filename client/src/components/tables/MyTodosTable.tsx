@@ -61,19 +61,11 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                             <STableHeadCell
                             >
 
-                                Status
+                                Actions
 
                             </STableHeadCell>
 
-                           
-
-
-                            <STableHeadCell
-                            >
-
-                                Status
-
-                            </STableHeadCell>
+                        
                             <STableHeadCell
                             >
 

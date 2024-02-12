@@ -151,7 +151,7 @@ export default function PendingOrdersReportPage() {
             {isLoading && <TableSkeleton />}
             {!isLoading && <Box sx={{
                 overflow: "auto",
-                height: '70vh'
+                height: '78vh'
             }}>
                 <STable
                 >

@@ -132,7 +132,7 @@ export default function BillsAgingReportsPage() {
             {isLoading && <TableSkeleton />}
             {!isLoading && <Box sx={{
                 overflow: "auto",
-                height: '70vh'
+                height: '78vh'
             }}>
                 <STable
                 >
