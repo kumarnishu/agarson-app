@@ -12,7 +12,7 @@ function LoginPage() {
     return (
         <>
             <Stack sx={{ justifyContent: 'center', alignItems: 'center', height: '90vh', width: '100vw' }}>
-                <Paper elevation={2} sx={{ maxWidth: '350px', p: 2, px: 2, borderRadius: 10 }}>
+                <Paper elevation={2} sx={{ maxWidth: '350px', p: 2, px: 2, borderRadius: 10,border:2,borderColor:'blue' }}>
                     <Stack justifyContent={"center"} alignItems="center">
                         <a href="https://agarsonshoes.in/">
                             <AgarsonPngLogo width={130} height={130} title='Agarson Shoes' />
@@ -22,7 +22,7 @@ function LoginPage() {
                             alignItems="center"
                             justifyContent="center"
                             gap={1}
-                            pt={3}
+                            pt={2}
                             direction={"row"}
                         >
                             <Typography
@@ -47,10 +47,7 @@ function LoginPage() {
                     </Stack>
                 </Paper>
             </Stack>
-            <Stack flexDirection="column" sx={{ width: '100%', position: 'absolute', bottom: 1, alignText: 'center', justifyContent: 'center', p: 2 }}
-            >
-                <Typography component="h1" variant="button" sx={{ textAlign: "center", fontWeight: '600', fontSize: 12, pt: 4, color: 'grey' }}>Copyright &copy; Agarson Shoes Pvt Ltd </Typography>
-            </Stack>
+            <Typography component="h1" variant="button" sx={{ textAlign: "center", fontWeight: '600', fontSize: 12, color: 'grey' }}>Copyright 2024 &copy; Agarson Shoes Pvt Ltd </Typography>
             <SignUpDialog />
             <ResetPasswordSendMailDialog />
         </>
