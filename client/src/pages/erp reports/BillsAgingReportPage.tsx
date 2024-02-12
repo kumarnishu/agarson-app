@@ -19,7 +19,7 @@ import moment from 'moment'
 
 
 export default function BillsAgingReportsPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 500, page: 1, total: 1 });
+    const [paginationData, setPaginationData] = useState({ limit: 1000, page: 1, total: 1 });
     const [reports, setBillsAgingReports] = useState<IBillsAgingReport[]>([])
     const [filterCount, setFilterCount] = useState(0)
     const { user } = useContext(UserContext)
@@ -96,7 +96,7 @@ export default function BillsAgingReportsPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    Bills Aging
+                    Aging
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     {user?.erp_access_fields.is_editable && <>
@@ -194,7 +194,7 @@ export default function BillsAgingReportsPage() {
                                             {report.account && report.account.slice(0, 40)}
                                         </STableCell>
                                         <STableCell>
-                                            <b style={{ fontSize: 12,letterSpacing:'1px' }}> {Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120)}</b>
+                                            <b style={{ fontSize: 12, letterSpacing: '1px' }}> {Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120)}</b>
                                         </STableCell>
                                         <STableCell>
                                             {report.plu70 ? String(report.plu70) : ""}
@@ -220,22 +220,22 @@ export default function BillsAgingReportsPage() {
 
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> Total</b>
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> Total</b>
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()}</b>
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()}</b>
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()}</b>
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()}</b>
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12,letterSpacing:'1px' }}> {(reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0)).toFixed()
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {(reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0)).toFixed()
                                 }</b>
                             </STableCell>
                         </STableRow>
@@ -244,7 +244,7 @@ export default function BillsAgingReportsPage() {
                 </STable>
 
             </Box>}
-            <DBPagination filterCount={filterCount} paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
+            {window.screen.width > 500 && <DBPagination filterCount={filterCount} paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />}
         </>
 
     )
