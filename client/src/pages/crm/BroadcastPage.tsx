@@ -32,24 +32,20 @@ function BroadcastPage() {
               direction="column"
               gap={1}
             >
-              <Typography variant="h4" sx={{ textAlign: 'center', textTransform: 'uppercase', fontSize: 18, p: 2, fontWeight: 'bold', textDecoration: 'underline' }}>
-                Daily Leads Broadcast
+              <Typography variant="h4" sx={{ textAlign: 'center', textTransform: 'uppercase', fontSize: 18, p: 2, fontWeight: 'bold' }}>
+                [ Daily Leads Broadcast 9:30 am - 6:00 pm ]
               </Typography>
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                 Broadcast Name : {broadcast.name}
               </Typography>
-              <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                Daily Limit : {broadcast.daily_limit}
-              </Typography>
+
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                 Auto Refresh : {broadcast.autoRefresh ? "Yes" : "Not"}
               </Typography>
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                 Time Gap: {`${broadcast.time_gap} seconds `}
               </Typography>
-              <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
-                Next run date: {new Date(broadcast.next_run_date).toLocaleString()}
-              </Typography>
+
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                 Random Template : {broadcast.is_random_template ? "Yes" : "Not"}
               </Typography>
@@ -58,9 +54,7 @@ function BroadcastPage() {
               </Typography>
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                 Status :  {broadcast.is_active ?
-                  <>
-                    {broadcast.is_paused ? "Paused"
-                      : "Live"} </> :
+                  "Live" :
                   "stopped"
                 }
               </Typography>
@@ -70,7 +64,7 @@ function BroadcastPage() {
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                 Connected Users : {broadcast.connected_users.map((u) => {
                   if (u.connected_number)
-                    return `${u.username}:${String(u.connected_number).split(":")[0].replace("91", "")}`
+                    return `${u.username}:${String(u.connected_number).replace("@c.us", "").replace("91", "")}`
                 }).toString()}
               </Typography>
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
@@ -82,13 +76,12 @@ function BroadcastPage() {
               <Button fullWidth disabled={broadcast.is_active} variant="contained" color="error" onClick={() => {
                 setChoice({ type: LeadChoiceActions.update_broadcast })
               }} sx={{ p: 2, my: 2, fontWeight: 'bold', fontSize: 12 }}>Edit</Button>
-              {!broadcast.is_paused && broadcast.is_active ?
+              {broadcast.is_active ?
                 <Button fullWidth variant="outlined" color="error" onClick={() => {
                   setChoice({ type: LeadChoiceActions.stop_broadcast })
                 }} sx={{ p: 2, my: 2, fontWeight: 'bold', fontSize: 12 }}>Stop</Button>
                 :
                 <Button fullWidth variant="contained"
-                  disabled={broadcast.is_paused}
                   color="success" onClick={() => {
                     setChoice({ type: LeadChoiceActions.start_broadcast })
                   }} sx={{ p: 2, my: 2, fontWeight: 'bold', fontSize: 12 }}>Start</Button>

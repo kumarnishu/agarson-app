@@ -12,16 +12,6 @@ const BroadcastSchema = new mongoose.Schema<IBroadcast, mongoose.Model<IBroadcas
             ref: 'MessageTemplate'
         }
     ],
-   
-    next_run_date: {
-        type: Date,
-    },
-    cron_key: {
-        type: String,
-    },
-    cron_string: {
-        type: String,
-    },
     is_active: {
         type: Boolean,
         default: false,
@@ -32,10 +22,8 @@ const BroadcastSchema = new mongoose.Schema<IBroadcast, mongoose.Model<IBroadcas
         ref: 'User'
     }],
     counter: { type: Number, default: 0 },
-    daily_limit: { type: Number, default: 0 },
     time_gap: Number,
     is_random_template: { type: Boolean, default: false },
-    is_paused: { type: Boolean, default: false },
     autoRefresh: { type: Boolean, default: false },
     created_at: {
         type: Date,

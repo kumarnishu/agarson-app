@@ -3112,7 +3112,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                     }
                 }
             }
-           
+
             if (!lead._id || !isMongoId(String(lead._id))) {
                 if (mobile) {
                     let ld = await Lead.findOne({ $or: [{ mobile: mobile }, { alternate_mobile1: mobile }, { alternate_mobile2: mobile }] })
@@ -3665,8 +3665,6 @@ export const StartBroadcast = async (req: Request, res: Response, next: NextFunc
     }
     await Broadcast.findByIdAndUpdate(id, {
         is_active: true,
-        is_paused: false,
-        next_run_date: new Date(cron.sendAt(broadcast.cron_string)),
         counter: 0
     })
 
@@ -3680,11 +3678,10 @@ export const CreateBroadcast = async (req: Request, res: Response, next: NextFun
         connected_users,
         templates,
         is_random_template,
-        daily_limit,
         time_gap,
-        autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean, daily_limit: number, time_gap: number, autoRefresh: boolean }
+        autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean, time_gap: number, autoRefresh: boolean }
 
-    if (!name || !connected_users || !templates || !daily_limit || !time_gap)
+    if (!name || !connected_users || !templates || !time_gap)
         return res.status(500).json({ message: "please fill all required fields" })
     let broadcast = await Broadcast.findOne()
     if (broadcast) {
@@ -3695,7 +3692,6 @@ export const CreateBroadcast = async (req: Request, res: Response, next: NextFun
         connected_users,
         templates,
         is_random_template,
-        daily_limit,
         cron_string: GetDailyBroadcastCronString(),
         time_gap,
         autoRefresh,
@@ -3713,11 +3709,10 @@ export const UpdateBroadcast = async (req: Request, res: Response, next: NextFun
         connected_users,
         templates,
         is_random_template,
-        daily_limit,
         time_gap,
-        autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean, daily_limit: number, time_gap: number, autoRefresh: boolean }
+        autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean,  time_gap: number, autoRefresh: boolean }
 
-    if (!name || !connected_users || !templates || !daily_limit || !time_gap)
+    if (!name || !connected_users || !templates  || !time_gap)
         return res.status(500).json({ message: "please fill all required fields" })
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
@@ -3727,7 +3722,6 @@ export const UpdateBroadcast = async (req: Request, res: Response, next: NextFun
         connected_users,
         templates: templates,
         is_random_template,
-        daily_limit,
         time_gap,
         autoRefresh,
         updated_at: new Date(),

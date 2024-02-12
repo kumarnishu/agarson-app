@@ -12,6 +12,7 @@ import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
 import ConvertLeadToCustomerDialog from '../dialogs/crm/ConvertLeadToCustomerDialog'
 import ToogleUselessLead from '../dialogs/crm/ToogleUselessLeadDialog'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
+import NewRemarkDialog from '../dialogs/crm/NewRemarkDialog'
 
 
 
@@ -485,6 +486,7 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                         <ViewRemarksDialog lead={remark.lead} />
                         <ConvertLeadToCustomerDialog lead={remark.lead} />
                         <ToogleUselessLead lead={remark.lead} />
+                        <NewRemarkDialog lead={remark.lead} />
                     </>
                     : null
             }

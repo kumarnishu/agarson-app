@@ -119,12 +119,22 @@ app.use("/api/v1", TodoRoutes)
 
 
 ReConnectWhatsapp()
-setTimeout(() => {
-    new CronJob("30 9 1/1 * *", async () => {
-        let broadcast = await Broadcast.findOne()
-        if (broadcast)
-            handleBroadcast(broadcast, clients)
-    }).start()
+setTimeout(async () => {
+    let broadcast = await Broadcast.findOne()
+    if (broadcast) {
+        let clientids: string[] = broadcast.connected_users.map((user) => { return user.client_id })
+        let newclients = clients.filter((client) => {
+            if (clientids.includes(client.client_id))
+                return client
+        })
+        if (new Date().getHours() > 10 && new Date().getHours() < 6)
+            handleBroadcast(broadcast, newclients)
+        new CronJob("30 9 1/1 * *", async () => {
+            let broadcast = await Broadcast.findOne()
+            if (broadcast)
+                handleBroadcast(broadcast, newclients)
+        }).start()
+    }
 }, 30000)
 
 //react app handler

@@ -180,7 +180,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
 
                                         <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke", width: '100px' }}>
                                             <Tooltip title="View replies">
-                                                <IconButton
+                                                <IconButton 
                                                     onClick={() => {
                                                         setChoice({ type: TodoChoiceActions.view_replies })
                                                         setTodo(todo)
@@ -201,7 +201,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                                 </IconButton>
                                             </Tooltip>}
                                             <Tooltip title="View Contacts">
-                                                <IconButton 
+                                                <IconButton color="primary"
                                                     onClick={() => {
                                                         setChoice({ type: TodoChoiceActions.view_contacts })
                                                         setTodo(todo)
@@ -217,7 +217,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                         </STableCell>
 
 
-                                        <STableCell title={todo.title} style={{ cursor: 'pointer', textDecoration: todo.sheet_url ? 'underline' : 'bold', letterSpacing: '1px' }} onClick={() => {
+                                        <STableCell title={todo.title} style={{ cursor: 'pointer', textDecoration: todo.sheet_url ? 'underline' : 'bold' }} onClick={() => {
                                             if (todo.sheet_url)
                                                 window.open(todo.sheet_url, '_blank')
                                         }}>

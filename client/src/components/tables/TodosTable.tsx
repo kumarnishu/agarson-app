@@ -198,7 +198,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             null
                                         }
 
-                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke", width: '100px' }}>
+                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke", width: '70px' }}>
                                             <Tooltip title="View replies">
 
                                                 <RemoveRedEye color="success" sx={{ marginLeft: 1 }} onClick={() => {
@@ -221,7 +221,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             {todo.serial_no}
                                         </STableCell>
 
-                                        <STableCell title={todo.title} style={{ cursor: 'pointer', textDecoration: todo.sheet_url ? 'underline' : 'bold', letterSpacing: '1px' }} onClick={() => {
+                                        <STableCell title={todo.title} style={{ cursor: 'pointer', textDecoration: todo.sheet_url ? 'underline' : 'bold' }} onClick={() => {
                                             if (todo.sheet_url)
                                                 window.open(todo.sheet_url, '_blank')
                                         }}>

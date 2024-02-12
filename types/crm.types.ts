@@ -104,16 +104,11 @@ export type TLeadBody = Request['body'] & ILead;
 export type IBroadcast = {
     _id: string,
     name: string,
-    next_run_date: Date
-    cron_key: string,
-    cron_string:string,
     counter: number,
     is_active: boolean,
     connected_users: IUser[],
     templates: IMessageTemplate[]
     is_random_template: boolean
-    daily_limit: number,
-    is_paused: boolean,
     time_gap: number,
     autoRefresh: boolean,
     created_at: Date,

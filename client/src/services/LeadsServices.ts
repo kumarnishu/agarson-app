@@ -191,10 +191,10 @@ export const GetLeadFieldsUpdatable = async () => {
 export const GetBroadcast = async () => {
   return await apiClient.get(`broadcast`)
 }
-export const CreateBroadcast = async (body: { name: string, connected_users: string[], templates: string[], is_random_template: boolean, daily_limit: number, time_gap: number, autoRefresh: boolean }) => {
+export const CreateBroadcast = async (body: { name: string, connected_users: string[], templates: string[], is_random_template: boolean, time_gap: number, autoRefresh: boolean }) => {
   return await apiClient.post(`broadcast`, body)
 }
-export const UpdateBroadcast = async ({ body, id }: { id: string, body: { name: string, connected_users: string[], templates: string[], is_random_template: boolean, daily_limit: number, time_gap: number, autoRefresh: boolean } }) => {
+export const UpdateBroadcast = async ({ body, id }: { id: string, body: { name: string, connected_users: string[], templates: string[], is_random_template: boolean, time_gap: number, autoRefresh: boolean } }) => {
   return await apiClient.put(`broadcast/${id}`, body)
 }
 
