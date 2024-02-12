@@ -5,6 +5,7 @@ import { IBroadcast } from "../types/crm.types";
 import { IMessageTemplate } from "../types/template.types";
 import { getRandomTemplate } from "./getRandomTemplate";
 import cron from "cron"
+import { clients } from "./CreateWhatsappClient";
 export var timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 export async function handleBroadcast(broadcast: IBroadcast, clients: {
@@ -42,28 +43,44 @@ export async function handleReports(i: number, client: {
             if (latest_broadcast && latest_broadcast?.is_active) {
                 //report1
                 let mobile = "91" + String(tmpreports[j].mobile) + "@c.us"
-                console.log("Sending to", mobile, "from", client.client_id)
-                await sendTemplates(client.client, mobile, templates, is_random, broadcast)
-                tmpreports[j].last_whatsapp = new Date()
-                tmpreports[j].is_sent = true
-                await tmpreports[j].save()
-                if (tmpreports[j].alternate_mobile1) {
-                    let altmob = "91" + String(tmpreports[j].alternate_mobile1) + "@c.us"
-                    await sendTemplates(client.client, altmob, templates, is_random, broadcast)
+                if (await client.client.getNumberId(mobile)) {
+                    console.log("Sending to", mobile, "from", client.client_id)
+                    await sendTemplates(client.client, mobile, templates, is_random, broadcast)
+                    tmpreports[j].last_whatsapp = new Date()
+                    tmpreports[j].is_sent = true
                 }
+
+
+                if (tmpreports[j].alternate_mobile1) {
+                    let altmob1 = "91" + String(tmpreports[j].alternate_mobile1) + "@c.us"
+                    if (await client.client.getNumberId(altmob1)) {
+                        await sendTemplates(client.client, altmob1, templates, is_random, broadcast)
+                        tmpreports[j].is_sent = true
+                    }
+                }
+
                 if (tmpreports[j].alternate_mobile2) {
                     let altmob2 = "91" + String(tmpreports[j].alternate_mobile2) + "@c.us"
-                    await sendTemplates(client.client, altmob2, templates, is_random, broadcast)
+                    if (await client.client.getNumberId(altmob2)) {
+                        await sendTemplates(client.client, altmob2, templates, is_random, broadcast)
+                        tmpreports[j].is_sent = true
+                    }
                 }
+                await tmpreports[j].save()
                 latest_broadcast.updated_at = new Date()
                 await latest_broadcast.save()
             }
         }, Number(timeinsec));
         timeouts.push({ id: broadcast._id, timeout: timeout })
         timeinsec = timeinsec + Number(broadcast.time_gap) * 1000 + Math.ceil(Math.random() * 4) * 1000
-
         console.log(timeinsec)
     }
+    timeinsec = timeinsec + (1000 * 60 * 40)
+    let timeout2 = setTimeout(async () => {
+        console.log("setting timeout 40 min after");
+        await handleBroadcast(broadcast, clients);
+    }, timeinsec);
+    timeouts.push({ id: broadcast._id, timeout: timeout2 })
 }
 
 export async function sendTemplates(client: Client, mobile: string, templates: IMessageTemplate[], is_random: boolean, broadcast: IBroadcast) {

@@ -52,7 +52,7 @@ function UpdateBroadcastForm({ broadcast }: { broadcast: IBroadcast }) {
             templates: broadcast.templates.map((t) => { return t._id }),
             is_random_template: broadcast.is_random_template,
             autoRefresh: broadcast.autoRefresh,
-            daily_limit: broadcast.daily_limit
+            daily_limit: 70
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -208,6 +208,7 @@ function UpdateBroadcastForm({ broadcast }: { broadcast: IBroadcast }) {
                         error={
                             formik.touched.daily_limit && formik.errors.daily_limit ? true : false
                         }
+                        disabled
                         id="daily_limit"
                         label="Daily limit"
                         helperText={

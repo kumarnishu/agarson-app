@@ -52,7 +52,7 @@ function CreateBroadCastForm() {
             templates: [],
             is_random_template: true,
             autoRefresh: true,
-            daily_limit: 1000
+            daily_limit: 70
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -207,6 +207,7 @@ function CreateBroadCastForm() {
                         error={
                             formik.touched.daily_limit && formik.errors.daily_limit ? true : false
                         }
+                        disabled
                         id="daily_limit"
                         label="Daily limit"
                         helperText={
