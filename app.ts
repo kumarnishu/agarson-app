@@ -120,14 +120,15 @@ app.use("/api/v1", TodoRoutes)
 
 ReConnectWhatsapp()
 setTimeout(async () => {
-    let broadcast = await Broadcast.findOne()
-    if (broadcast) {
+    console.log("handling broadcast retrying....")
+    let broadcast = await Broadcast.findOne().populate('connected_users')
+    if (broadcast && broadcast.is_active) {
         let clientids: string[] = broadcast.connected_users.map((user) => { return user.client_id })
         let newclients = clients.filter((client) => {
             if (clientids.includes(client.client_id))
                 return client
         })
-        if (new Date().getHours() > 10 && new Date().getHours() < 6)
+        if (new Date().getHours() > 9 && new Date().getHours() < 18)
             handleBroadcast(broadcast, newclients)
         new CronJob("30 9 1/1 * *", async () => {
             let broadcast = await Broadcast.findOne()

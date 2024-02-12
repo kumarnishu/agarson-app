@@ -81,7 +81,7 @@ export async function handleReports(i: number, client: {
 }
 
 export async function sendTemplates(client: Client, mobile: string, templates: IMessageTemplate[], is_random: boolean, broadcast: IBroadcast) {
-    if (new Date().getHours() > 5) {
+    if (new Date().getHours() > 19 && new Date().getHours() < 9) {
         timeouts.forEach((item) => {
             if (String(item.id) === String(broadcast?._id)) {
                 clearTimeout(item.timeout)
