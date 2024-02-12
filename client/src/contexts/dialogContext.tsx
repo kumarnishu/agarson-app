@@ -6,7 +6,7 @@ type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" 
 
 type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting" | "bulk_start_greeting" | "close_greeting" | "bulk_stop_greeting" | "stop_greeting" | "start_greeting"
 
-type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_brijesh_input" | "add_ankit_input" | "view_comments" | "view_visit_photo" | "mark_attendence" | "upload_samples"
+type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_visit" | "view_visit" | "validate_visit" | "add_summary" | "edit_summary" | "add_ankit_input" | "view_comments" | "view_visit_photo" | "mark_attendence" | "upload_samples"
 
 
 type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk_stop_todo" | "add_reply" | "view_replies" | "view_contacts"
@@ -82,7 +82,6 @@ export enum VisitChoiceActions {
   validate_visit = "validate_visit",
   add_summary = "add_summary",
   edit_summary = "edit_summary",
-  add_brijesh_input = "add_brijesh_input",
   add_ankit_input = "add_ankit_input",
   view_comments = "view_comments"
 
@@ -288,7 +287,6 @@ function reducer(state: ChoiceState | null, action: Action) {
     case VisitChoiceActions.edit_summary: return type
     case VisitChoiceActions.add_summary: return type
     case VisitChoiceActions.add_ankit_input: return type
-    case VisitChoiceActions.add_brijesh_input: return type
     case VisitChoiceActions.view_comments: return type
     case VisitChoiceActions.validate_visit: return type
     case VisitChoiceActions.mark_attendence: return type
