@@ -48,7 +48,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                             >
 
 
-                                <Checkbox
+                                <Checkbox 
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -163,7 +163,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                                             <STableCell>
 
 
-                                                <Checkbox size="small"
+                                                <Checkbox  size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -175,7 +175,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
 
                                             <STableCell>
 
-                                                <Checkbox size="small"
+                                                <Checkbox  size="small"
                                                     onChange={(e) => {
                                                         setVisitingCard(card)
                                                         if (e.target.checked) {

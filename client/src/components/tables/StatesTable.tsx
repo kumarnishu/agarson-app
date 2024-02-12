@@ -42,7 +42,7 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                             >
 
 
-                                <Checkbox
+                                <Checkbox  sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -98,7 +98,7 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                                             <STableCell>
 
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -110,7 +110,7 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                                         {!selectAll ?
                                             <STableCell>
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setState(state)
                                                         if (e.target.checked) {

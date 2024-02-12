@@ -3,7 +3,7 @@ import { paths } from "../Routes"
 import { Link, Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext";
-import { BlueAgarsonLogo } from "../components/logo/Agarson";
+import AppsIcon from '@mui/icons-material/Apps';
 import { Feature } from "../types/access.types";
 
 function MainDashBoardPage() {
@@ -35,9 +35,9 @@ function MainDashBoardPage() {
           return (
             <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={feat.url} style={{ textDecoration: 'none' }}>
-                <Paper sx={{ p: 2, bgcolor: 'white', boxShadow: 2, border: 10, borderRadius: 3, borderColor: 'white' }}>
+                <Paper sx={{ p: 2, bgcolor: 'white', boxShadow: 2, border: 10, borderRadius: 1, borderColor: 'white' }}>
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                    <BlueAgarsonLogo width={35} height={35} title='users' />
+                    <AppsIcon fontSize={'large'} />
                     <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                       {feat.feature}
                     </Typography>

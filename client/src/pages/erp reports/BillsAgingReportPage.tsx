@@ -191,7 +191,7 @@ export default function BillsAgingReportsPage() {
                                             {report.report_owner && report.report_owner.state}
                                         </STableCell>
                                         <STableCell>
-                                            {report.account && report.account.slice(0, 20)}
+                                            {report.account && report.account.slice(0, 40)}
                                         </STableCell>
                                         <STableCell>
                                             <b style={{ fontSize: 12,letterSpacing:'1px' }}> {Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120)}</b>

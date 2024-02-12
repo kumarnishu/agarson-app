@@ -45,7 +45,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                         <STableRow>
                             <STableHeadCell
                             >
-                                <Checkbox
+                                <Checkbox  sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -165,7 +165,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                             <STableCell>
 
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -176,7 +176,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                         {!selectAll ?
                                             <STableCell>
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setShoeWeight(shoe_weight)
                                                         if (e.target.checked) {

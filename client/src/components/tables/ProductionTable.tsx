@@ -43,7 +43,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                         <STableRow>
                             <STableHeadCell
                             >
-                                <Checkbox
+                                <Checkbox  sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -159,7 +159,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                             <STableCell>
 
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -170,7 +170,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                         {!selectAll ?
                                             <STableCell>
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setProduction(production)
                                                         if (e.target.checked) {

@@ -43,7 +43,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                             >
 
 
-                                <Checkbox
+                                <Checkbox  sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -123,7 +123,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                             <STableCell>
 
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -135,7 +135,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                         {!selectAll ?
                                             <STableCell>
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setDye(dye)
                                                         if (e.target.checked) {

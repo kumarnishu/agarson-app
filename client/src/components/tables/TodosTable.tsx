@@ -1,5 +1,5 @@
 import { Person2, RemoveRedEye } from '@mui/icons-material'
-import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
+import { Box, Checkbox,  Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
@@ -42,7 +42,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                             <STableHeadCell
                             >
 
-                                <Checkbox
+                                <Checkbox sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -166,7 +166,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             <STableCell>
 
 
-                                                <Checkbox size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -179,7 +179,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                                             <STableCell>
 
-                                                <Checkbox size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setTodo(todo)
                                                         if (e.target.checked) {
@@ -200,26 +200,19 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                                         <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke", width: '100px' }}>
                                             <Tooltip title="View replies">
-                                                <IconButton
-                                                    onClick={() => {
-                                                        setChoice({ type: TodoChoiceActions.view_replies })
-                                                        setTodo(todo)
-                                                    }}
-                                                >
-                                                    <RemoveRedEye />
-                                                </IconButton>
+
+                                                <RemoveRedEye sx={{marginLeft:1}} onClick={() => {
+                                                    setChoice({ type: TodoChoiceActions.view_replies })
+                                                    setTodo(todo)
+                                                }} />
                                             </Tooltip>
 
 
-                                            <Tooltip title="View Contacts">
-                                                <IconButton
-                                                    onClick={() => {
-                                                        setChoice({ type: TodoChoiceActions.view_contacts })
-                                                        setTodo(todo)
-                                                    }}
-                                                >
-                                                    <Person2 />
-                                                </IconButton>
+                                            <Tooltip sx={{ marginLeft: 1 }} title="View Contacts">
+                                                <Person2 onClick={() => {
+                                                    setChoice({ type: TodoChoiceActions.view_contacts })
+                                                    setTodo(todo)
+                                                }} />
                                             </Tooltip>
 
                                         </STableCell>
@@ -228,7 +221,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             {todo.serial_no}
                                         </STableCell>
 
-                                        <STableCell title={todo.title} style={{ cursor: 'pointer', textDecoration: todo.sheet_url ? 'underline' : 'bold', fontSize: 12, letterSpacing: '1px' }} onClick={() => {
+                                        <STableCell title={todo.title} style={{ cursor: 'pointer', textDecoration: todo.sheet_url ? 'underline' : 'bold', letterSpacing: '1px' }} onClick={() => {
                                             if (todo.sheet_url)
                                                 window.open(todo.sheet_url, '_blank')
                                         }}>

@@ -54,7 +54,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                             >
 
 
-                                <Checkbox
+                                <Checkbox 
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -242,7 +242,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                             <STableCell>
 
 
-                                                <Checkbox size="small"
+                                                <Checkbox  size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -254,7 +254,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
 
                                             <STableCell>
 
-                                                <Checkbox size="small"
+                                                <Checkbox  size="small"
                                                     onChange={(e) => {
                                                         setVisit(visit)
                                                         if (e.target.checked) {

@@ -291,10 +291,10 @@ export default function PendingOrdersReportPage() {
                                             {report.report_owner && report.report_owner.state && report.report_owner.state}
                                         </STableCell>
                                         <STableCell>
-                                            {report.account && report.account.slice(0, 30)}
+                                            {report.account && report.account.slice(0, 60)}
                                         </STableCell>
                                         <STableCell>
-                                            {report.article && report.article.slice(0, 30)}
+                                            {report.article && report.article.slice(0, 60)}
                                         </STableCell>
                                         <STableCell>
                                             <b style={{ fontSize: 12,letterSpacing:'1px' }}>{

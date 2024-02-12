@@ -27,10 +27,10 @@ function AddTodoReplyForm({ todo }: { todo: ITodo }) {
     const { setChoice } = useContext(ChoiceContext)
 
     const formik = useFormik<{
-         reply: string
+        reply: string
     }>({
         initialValues: {
-           reply: todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply || ""
+            reply: ""
         },
         validationSchema: Yup.object({
             reply: Yup.string().required("required field"),

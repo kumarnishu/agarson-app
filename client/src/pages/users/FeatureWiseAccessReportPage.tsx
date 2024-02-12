@@ -1,8 +1,8 @@
 import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { Feature } from "../../types/access.types";
+import AppsIcon from '@mui/icons-material/Apps';
 import { paths } from "../../Routes";
-import { BlueAgarsonLogo } from "../../components/logo/Agarson";
 import ManageFeatureControlDialog from "../../components/dialogs/users/ManageFeatureControlDialog";
 
 function FeatureWiseAccessReportPage() {
@@ -35,7 +35,7 @@ function FeatureWiseAccessReportPage() {
                         <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
                             <Paper onClick={() => setFeature(feat.feature)} sx={{ p: 2, cursor: 'pointer', bgcolor: 'white', boxShadow: 2, border: 10, borderRadius: 3, borderColor: 'white' }}>
                                 <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                                    <BlueAgarsonLogo width={35} height={35} title='users' />
+                                    <AppsIcon fontSize={'large'} />
                                     <Typography variant="button" sx={{ fontSize: 16 }} component="div">
                                         {feat.feature}
                                     </Typography>

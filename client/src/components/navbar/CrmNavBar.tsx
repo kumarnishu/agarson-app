@@ -3,7 +3,8 @@ import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
 import { Box, Paper, Typography } from '@mui/material';
 import { paths } from '../../Routes';
-import AgarsonLogo, { BlueAgarsonLogo } from '../logo/Agarson';
+import AgarsonLogo from '../logo/Agarson';
+import AppsIcon from '@mui/icons-material/Apps';
 import ProfileLogo from '../logo/ProfileLogo';
 
 
@@ -46,7 +47,7 @@ export default function CrmNavBar() {
                             <Link to={paths.crm_dashboard} replace={true} style={{ textDecoration: 'none' }}>
                                 <Paper sx={{ bgcolor: 'white', boxShadow: 1, border: 10, borderRadius: 1, borderColor: 'white' }}>
                                     <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                                        <BlueAgarsonLogo width={20} height={20} title='users' />
+                                        <AppsIcon fontSize={'large'} />
                                         <Typography variant="button" sx={{ fontSize: 12 }} component="div">
                                             crm
                                         </Typography>

@@ -43,7 +43,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                             <STableHeadCell
                             >
 
-                                <Checkbox
+                                <Checkbox  sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -58,9 +58,14 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                     }} />
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                                Status
 
+                            </STableHeadCell>
 
+                           
 
 
                             <STableHeadCell
@@ -149,7 +154,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                             >
 
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -162,7 +167,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
 
                                             <STableCell style={{ width: '60px' }}>
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setTodo(todo)
                                                         if (e.target.checked) {
@@ -220,7 +225,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                         </STableCell>
 
 
-                                        <STableCell title={todo.title} style={{ cursor: 'pointer', textDecoration: todo.sheet_url ? 'underline' : 'bold', fontSize: 12, letterSpacing: '1px' }} onClick={() => {
+                                        <STableCell title={todo.title} style={{ cursor: 'pointer', textDecoration: todo.sheet_url ? 'underline' : 'bold', letterSpacing: '1px' }} onClick={() => {
                                             if (todo.sheet_url)
                                                 window.open(todo.sheet_url, '_blank')
                                         }}>

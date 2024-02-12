@@ -1,5 +1,5 @@
 import { Accessibility, Assignment, Block, DeviceHubOutlined, Edit, GroupAdd, GroupRemove, Key, RemoveCircle, Restore } from '@mui/icons-material'
-import { Avatar, Box, Checkbox, IconButton, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { IUser } from '../../types/user.types'
 import { useContext, useEffect, useState } from 'react'
@@ -54,7 +54,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                             >
 
 
-                                <Checkbox
+                                <Checkbox sx={{ width: 16, height: 16 }}
                                     size="small" onChange={(e) => {
                                         if (e.currentTarget.checked) {
                                             setSelectedUsers(users)
@@ -130,14 +130,14 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                 Last Login
 
                             </STableHeadCell>
-                           
+
                             <STableHeadCell
                             >
 
                                 Updated At
 
                             </STableHeadCell>
-                          
+
                             <STableHeadCell
                             >
 
@@ -159,7 +159,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                             <STableCell>
 
 
-                                                <Checkbox size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -171,7 +171,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                         {!selectAll ?
                                             <STableCell>
 
-                                                <Checkbox size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setUser(user)
                                                         if (e.target.checked) {
@@ -402,7 +402,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                         <STableCell>
                                             <Avatar
                                                 title="double click to download"
-                                                sx={{ width: 25, height: 25 }}
+                                                sx={{ width: 16, height: 16 }}
                                                 onDoubleClick={() => {
                                                     if (user.dp && user.dp?.public_url) {
                                                         DownloadFile(user.dp.public_url, user.dp.filename)
@@ -411,15 +411,10 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
 
                                                 alt="display picture" src={user.dp?.public_url} />
                                         </STableCell>
-                                        <STableCell>
+                                        <STableCell style={{ color: user.is_active ? "" : "red" }}>
                                             {
-                                                user.is_active ?
-                                                    <Typography sx={{
-                                                        color: "green",
-                                                    }}>active</Typography>
-                                                    : <Typography sx={{
-                                                        color: "red",
-                                                    }}>blocked</Typography>
+
+                                                user.is_active ? "active" : "blocked"
 
                                             }
                                         </STableCell>
@@ -427,10 +422,8 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                             {
                                                 user.is_admin ?
                                                     <>
-                                                        <Typography sx={{ fontWeight: 'bold' }}>
-                                                            {user.created_by._id === user?._id ?
-                                                                "owner" : "admin"}
-                                                        </Typography>
+                                                        {user.created_by._id === user?._id ?
+                                                            "owner" : "admin"}
                                                     </>
                                                     :
                                                     <>
@@ -444,8 +437,8 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                             {user.username}
                                         </STableCell>
                                         <STableCell>
-                                            <Typography >
-                                                {user.is_multi_login ? "allowed" : "not allowed"}</Typography>
+
+                                            {user.is_multi_login ? "allowed" : "not allowed"}
 
                                         </STableCell>
 
@@ -466,13 +459,13 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
 
 
                                         <STableCell>
-                                            <Typography variant="body1">{new Date(user.last_login).toLocaleString()}</Typography>
+                                            {new Date(user.last_login).toLocaleString()}
                                         </STableCell>
-                                      
+
                                         <STableCell>
                                             {new Date(user.updated_at).toLocaleDateString()}
                                         </STableCell>
-                                     
+
                                         <STableCell>
                                             {user.updated_by.username}
 

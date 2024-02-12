@@ -51,7 +51,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                             >
 
 
-                                <Checkbox
+                                <Checkbox  sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -156,7 +156,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                             <STableCell>
 
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -168,7 +168,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
 
                                             <STableCell>
 
-                                                <Checkbox size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setCheckList(checklist)
                                                         if (e.target.checked) {

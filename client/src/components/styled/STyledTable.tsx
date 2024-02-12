@@ -19,9 +19,10 @@ export const STableCell = styled.td`
   &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer };
   text-align: left;
   background-color: white;
-  padding:5px;
-  padding-top: 0px;
+  padding-left:3px;
+  padding-inline: 5px;
   border: 1px solid #ddd;
+  font-size: 11px;
   white-space: nowrap;
   text-transform: capitalize;
   overflow: hidden;
@@ -29,12 +30,13 @@ export const STableCell = styled.td`
 `
 export const STableHeadCell = styled.th`
   position:sticky;
-  top: -3px;
+  z-index: 1;
   font-size: 9px;
+  padding-left:3px;
+  padding-inline: 5px;
   text-align: left;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  padding-inline:5px;
-  padding-top: 0px;
   border: 1px solid #ddd;
   background-color: rgba(0,0,0,0.05);
   white-space: nowrap;

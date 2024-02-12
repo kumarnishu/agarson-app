@@ -56,7 +56,9 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 <Checkbox
                   indeterminate={selectAll ? true : false}
                   checked={Boolean(selectAll)}
-                  size="small" onChange={(e) => {
+                  size="small"
+                  sx={{ width: 10, height: 10 }}
+                  onChange={(e) => {
                     if (e.currentTarget.checked) {
                       setSelectedLeads(leads)
                       setSelectAll(true)
@@ -315,7 +317,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       <STableCell>
 
 
-                        <Checkbox size="small"
+                        <Checkbox sx={{ width: 10, height: 10 }} size="small"
                           checked={Boolean(selectAll)}
                         />
 
@@ -328,7 +330,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
                       <STableCell>
 
-                        <Checkbox size="small"
+                        <Checkbox sx={{ width: 10, height: 10 }} size="small"
                           onChange={(e) => {
                             setLead(lead)
                             if (e.target.checked) {
@@ -631,7 +633,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                           DownloadFile(lead.visiting_card.public_url, lead.visiting_card.filename)
                         }
                       }}>
-                      <img height="50" width="75" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" />
+                      {lead.visiting_card && lead.visiting_card.public_url ? < img height="50" width="75" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" /> : "na"}
                     </STableCell>
                   </STableRow>
                 )
