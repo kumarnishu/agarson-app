@@ -90,7 +90,6 @@ export async function sendTemplates(client: Client, mobile: string, templates: I
                 clearTimeout(item.timeout)
             }
         })
-        await Broadcast.findByIdAndUpdate(broadcast._id, { is_active: false })
         return;
     }
 
