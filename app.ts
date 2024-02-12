@@ -129,11 +129,11 @@ setTimeout(async () => {
                 return client
         })
         if (new Date().getHours() > 9 && new Date().getHours() < 18)
-            handleBroadcast(broadcast, newclients)
+           await handleBroadcast(broadcast, newclients)
         new CronJob("30 9 1/1 * *", async () => {
             let broadcast = await Broadcast.findOne()
             if (broadcast)
-                handleBroadcast(broadcast, newclients)
+                await handleBroadcast(broadcast, newclients)
         }).start()
     }
 }, 30000)
