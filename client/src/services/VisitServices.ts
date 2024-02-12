@@ -62,9 +62,6 @@ export const AddAnkitInput = async ({ id, body }: { id: string, body: { input: s
     return await apiClient.patch(`visit/ankit/input/${id}`, body)
 }
 
-export const AddBrijeshInput = async ({ id, body }: { id: string, body: { input: string } }) => {
-    return await apiClient.patch(`visit/brijesh/input/${id}`, body)
-}
 
 export const ValidateVisit = async (id: string) => {
     return await apiClient.patch(`visit/validate/${id}`)

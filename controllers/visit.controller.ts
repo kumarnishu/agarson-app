@@ -130,7 +130,7 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
         start_day_credientials: {
             latitude: start_day_credientials.latitude,
             longitude: start_day_credientials.longitude,
-            timestamp: start_day_credientials.timestamp,
+            timestamp: new Date(),
             address: String(address.display_name)
         },
     })
@@ -259,7 +259,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
     report.visit_in_credientials = {
         latitude: visit_in_credientials.latitude,
         longitude: visit_in_credientials.longitude,
-        timestamp: visit_in_credientials.timestamp,
+        timestamp: new Date(),
         address: String(address.display_name)
     }
     report.real_city = address.address.suburb || address.address.county || address.address.city || address.address.city_district || address.address.state_district || address.address.postcode
@@ -411,28 +411,7 @@ export const AddAnkitInput = async (req: Request, res: Response, next: NextFunct
 
 }
 
-export const AddBrijeshInput = async (req: Request, res: Response, next: NextFunction) => {
-    let { input } = req.body as IVisitReportBody & { input: string }
-    if (!input) {
-        return res.status(400).json({ message: "please fill all required fields" })
-    }
-    let id = req.params.id
-    let report = await VisitReport.findById(id)
-    if (!report)
-        return res.status(400).json({ message: "visit not exists" })
-    if (req.user) {
-        report.brijesh_input = {
-            input: input,
-            created_by: req.user,
-            timestamp: new Date()
-        }
-        report.updated_at = new Date()
-        report.updated_by = req.user
-    }
 
-    await report.save()
-    return res.status(200).json({ message: "added brijesh input" })
-}
 
 export const MakeVisitOut = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)

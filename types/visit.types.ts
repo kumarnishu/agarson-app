@@ -29,7 +29,6 @@ export type IVisitReport = {
     visit_in_photo: Asset,
     visit_samples_photo:Asset
     ankit_input: { input: string, created_by: IUser, timestamp: Date },
-    brijesh_input: { input: string, created_by: IUser, timestamp: Date },
     visit_validated: boolean,
     visit: IVisit,
     created_at: Date,

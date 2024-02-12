@@ -1,7 +1,7 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
-import { AddAnkitInput, AddBrijeshInput, AddVisitSummary, EditVisitSummary, EndMyDay, GetVisitsAttendence, MakeVisitIn, MakeVisitOut, StartMyDay, ToogleAttendence, UploadVisitSamplesPhoto,  ValidateVisit, getMyTodayVisit, getVisits } from "../controllers/visit.controller";
+import { AddAnkitInput,  AddVisitSummary, EditVisitSummary, EndMyDay, GetVisitsAttendence, MakeVisitIn, MakeVisitOut, StartMyDay, ToogleAttendence, UploadVisitSamplesPhoto,  ValidateVisit, getMyTodayVisit, getVisits } from "../controllers/visit.controller";
 
 const router = express.Router()
 
@@ -20,7 +20,6 @@ router.route("/visit/samples/upload/:id").patch(isAuthenticatedUser, upload.sing
 router.route("/visit/summary/:id").patch(isAuthenticatedUser, AddVisitSummary)
 router.route("/visit/summary/edit/:id").patch(isAuthenticatedUser, EditVisitSummary)
 router.route("/visit/ankit/input/:id").patch(isAuthenticatedUser, AddAnkitInput)
-router.route("/visit/brijesh/input/:id").patch(isAuthenticatedUser, AddBrijeshInput)
 router.route("/visit/validate/:id").patch(isAuthenticatedUser, ValidateVisit)
 router.route("/visit/toogle/:id").patch(isAuthenticatedUser, ToogleAttendence)
 

@@ -1,5 +1,5 @@
 import { Person2, RemoveRedEye } from '@mui/icons-material'
-import { Box, Checkbox,  Tooltip } from '@mui/material'
+import { Box, Checkbox, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
@@ -201,7 +201,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke", width: '100px' }}>
                                             <Tooltip title="View replies">
 
-                                                <RemoveRedEye sx={{marginLeft:1}} onClick={() => {
+                                                <RemoveRedEye color="success" sx={{ marginLeft: 1 }} onClick={() => {
                                                     setChoice({ type: TodoChoiceActions.view_replies })
                                                     setTodo(todo)
                                                 }} />
@@ -209,7 +209,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
 
                                             <Tooltip sx={{ marginLeft: 1 }} title="View Contacts">
-                                                <Person2 onClick={() => {
+                                                <Person2 color="primary" onClick={() => {
                                                     setChoice({ type: TodoChoiceActions.view_contacts })
                                                     setTodo(todo)
                                                 }} />

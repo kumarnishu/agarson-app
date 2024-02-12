@@ -56,14 +56,6 @@ const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisi
         },
         timestamp: Date
     },
-    brijesh_input: {
-        input: String,
-        created_by: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        },
-        timestamp: Date
-    },
     visit: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Visit'

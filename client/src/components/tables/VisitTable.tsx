@@ -9,7 +9,6 @@ import { IVisitReport } from '../../types/visit.types'
 import EditSummaryInDialog from '../dialogs/visit/EditSummaryDialog'
 import ValidateVisitDialog from '../dialogs/visit/ValidateVisitDialog'
 import AddAnkitInputDialog from '../dialogs/visit/AddAnkitInputDialog'
-import AddBrijeshInputDialog from '../dialogs/visit/AddBrjeshInputDialog'
 import ViewVisitDialog from '../dialogs/visit/ViewVisitDialog'
 import ViewCommentsDialog from '../dialogs/visit/ViewCommentsDialog'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
@@ -35,6 +34,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
     const { setChoice } = useContext(ChoiceContext)
     const [text, setText] = useState<string>()
     const { user } = useContext(UserContext)
+  
 
     useEffect(() => {
         setData(visits)
@@ -54,7 +54,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                             >
 
 
-                                <Checkbox 
+                                <Checkbox
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -173,12 +173,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                 Ankit Input
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
 
-                                Brijesh Input
-
-                            </STableHeadCell>
 
 
 
@@ -242,7 +237,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                             <STableCell>
 
 
-                                                <Checkbox  size="small"
+                                                <Checkbox size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -254,7 +249,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
 
                                             <STableCell>
 
-                                                <Checkbox  size="small"
+                                                <Checkbox size="small"
                                                     onChange={(e) => {
                                                         setVisit(visit)
                                                         if (e.target.checked) {
@@ -334,17 +329,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                                                                     <Comment />
                                                                                 </IconButton>
                                                                             </Tooltip>}
-                                                                        {user.is_admin && user?.visit_access_fields.is_editable &&
-                                                                            <Tooltip title="brijesh input">
-                                                                                <IconButton color="primary"
-                                                                                    onClick={() => {
-                                                                                        setChoice({ type: VisitChoiceActions.add_brijesh_input })
-                                                                                        setVisit(visit)
-                                                                                    }}
-                                                                                >
-                                                                                    <Comment />
-                                                                                </IconButton>
-                                                                            </Tooltip>}
+
                                                                     </>
                                                                 }
                                                             </>
@@ -435,13 +420,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
 
                                         </STableCell>
 
-                                        <STableCell onClick={() => {
-                                            if (visit.brijesh_input) {
-                                                setText(visit.brijesh_input.input)
-                                            }
-                                        }}>
-                                            {visit.brijesh_input && visit.brijesh_input.input.slice(0, 50) + "..."}
-                                        </STableCell>
+
 
                                         <STableCell>
                                             {visit.refs_given ? visit.refs_given : ""}
@@ -480,7 +459,6 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                         <ViewCommentsDialog visit={visit} />
                         <ValidateVisitDialog visit={visit} />
                         <EditSummaryInDialog visit={visit} />
-                        <AddBrijeshInputDialog visit={visit} />
                         <AddAnkitInputDialog visit={visit} />
                         <ViewVisitPhotoDialog visit={visit} />
 
