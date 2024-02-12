@@ -73,6 +73,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
 
         }
     })
+    
     client.on('disconnected', async (reason) => {
         console.log("reason", reason)
         if (reason === "NAVIGATION") {

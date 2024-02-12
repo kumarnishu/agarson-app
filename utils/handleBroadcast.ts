@@ -13,7 +13,7 @@ export async function handleBroadcast(broadcast: IBroadcast, clients: {
     client: Client;
 }[]) {
     let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')
-    if (latest_broadcast && latest_broadcast.connected_users) {
+    if (latest_broadcast && latest_broadcast.is_active && latest_broadcast.connected_users) {
         latest_broadcast.next_run_date = new Date(cron.sendAt(broadcast.cron_string))
         await latest_broadcast.save()
         console.log("no of clients", clients.length)
@@ -84,6 +84,16 @@ export async function handleReports(i: number, client: {
 }
 
 export async function sendTemplates(client: Client, mobile: string, templates: IMessageTemplate[], is_random: boolean, broadcast: IBroadcast) {
+    if (new Date().getHours() > 5) {
+        timeouts.forEach((item) => {
+            if (String(item.id) === String(broadcast?._id)) {
+                clearTimeout(item.timeout)
+            }
+        })
+        await Broadcast.findByIdAndUpdate(broadcast._id, { is_active: false })
+        return;
+    }
+
     let latest_broadcast = await Broadcast.findById(broadcast._id)
     let template = templates[0]
     let template1 = getRandomTemplate(templates)

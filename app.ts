@@ -20,8 +20,11 @@ import { Server } from "socket.io";
 import { getCurrentUser, userJoin, userLeave } from "./utils/handleSocketUsers";
 import { Storage } from '@google-cloud/storage';
 import morgan from 'morgan';
-import { createWhatsappClient } from './utils/CreateWhatsappClient';
+import { clients, createWhatsappClient } from './utils/CreateWhatsappClient';
 import { ReConnectWhatsapp } from './utils/RestartServices';
+import { Broadcast } from './models/leads/broadcast.model';
+import { handleBroadcast } from './utils/handleBroadcast';
+import { CronJob } from 'cron';
 
 const app = express()
 const server = createServer(app)
@@ -116,6 +119,14 @@ app.use("/api/v1", TodoRoutes)
 
 
 ReConnectWhatsapp()
+setTimeout(() => {
+    new CronJob("30 9 1/1 * *", async () => {
+        let broadcast = await Broadcast.findOne()
+        if (broadcast)
+            handleBroadcast(broadcast, clients)
+    }).start()
+}, 30000)
+
 //react app handler
 if (ENV === "production") {
     app.use(express.static(path.join(__dirname, "build")))
