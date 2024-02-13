@@ -1,4 +1,3 @@
-import { Asset } from "./asset.types"
 import { IUser } from "./user.types"
 
 export type IDye = {
@@ -38,31 +37,13 @@ export type IArticle = {
     name: string,
     active: boolean,
     display_name: string,
-    sizes: [{
-        size: string,
-        standard_weight: number,
-        upper_weight: number,
-    }
-    ],
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
     updated_by: IUser
 }
 
-export type IShoeWeight = {
-    _id: string,
-    machine: IMachine,
-    dye: IDye,
-    article: IArticle,
-    is_validated: boolean,
-    shoe_weight: number,
-    shoe_photo: Asset,
-    created_at: Date,
-    updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
-}
+
 
 export type IProduction = {
     _id: string,
@@ -75,28 +56,6 @@ export type IProduction = {
     small_repair: number,
     date: Date,
     production_hours: number,
-    created_at: Date,
-    updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
-}
-
-export type IRepairDyeReport = {
-    _id: string,
-    machine: IMachine,
-    dye: IDye,
-    problem: string,
-    created_at: Date,
-    updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
-}
-
-export type IRunningMouldReport = {
-    _id: string,
-    machine: IMachine,
-    dye: IDye,
-    article: IArticle,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

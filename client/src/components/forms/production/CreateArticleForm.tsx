@@ -1,7 +1,7 @@
 import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
 import {  ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
@@ -10,13 +10,11 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IArticle } from '../../../types/production.types';
 import { CreateArticle } from '../../../services/ProductionServices';
-import CreateSizeInput from './CreateSizeInput';
 
 function NewArticleForm() {
-    const [sizes, setSizes] = useState<{ size: string, standard_weight: number, upper_weight: number }[]>([])
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IArticle>, BackendError, {
-            name: string, display_name: string, sizes: { size: string, standard_weight: number, upper_weight: number }[]
+            name: string, display_name: string
         }>
         (CreateArticle, {
             onSuccess: () => {
@@ -30,7 +28,6 @@ function NewArticleForm() {
         initialValues: {
             name: "",
             display_name: "",
-            sizes: sizes
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -42,7 +39,6 @@ function NewArticleForm() {
             mutate({
                 name: values.name,
                 display_name: values.display_name,
-                sizes: sizes
             })
         }
     });
@@ -53,9 +49,7 @@ function NewArticleForm() {
         }
     }, [isSuccess, setChoice])
 
-    useEffect(() => {
-        setSizes(sizes)
-    }, [sizes])
+   
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -92,7 +86,6 @@ function NewArticleForm() {
                     {...formik.getFieldProps('display_name')}
                 />
 
-                <CreateSizeInput sizes={sizes} setSizes={setSizes} />
                 {
                     isError ? (
                         <AlertBar message={error?.response.data.message} color="error" />

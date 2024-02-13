@@ -51,9 +51,7 @@ const MachinesPage = React.lazy(() => import('./pages/production/MachinesPage.ts
 const DyesPage = React.lazy(() => import('./pages/production/DyesPage.tsx'))
 const ArticlesPage = React.lazy(() => import('./pages/production/ArticlesPage.tsx'))
 const ProductionHelpPage = React.lazy(() => import('./pages/production/ProductionHelpPage.tsx'))
-const ShoeWeightPage = React.lazy(() => import('./pages/production/ShoeWeightPage.tsx'))
 const MyProductionPage = React.lazy(() => import('./pages/production/MyProductionPage.tsx'))
-const MyShoeWeightPage = React.lazy(() => import('./pages/production/MyShoeWeightPage.tsx'))
 const VisitAttendencePage = React.lazy(() => import('./pages/visit/VisitAttendencePage.tsx'))
 const UpdateMachineCategoriesPage = React.lazy(() => import('./pages/production/UpdateMachineCategoriesPage.tsx'))
 
@@ -127,10 +125,6 @@ export enum paths {
   production = "production",
   machine_categories = "machine_categories",
   production_admin = "production_admin",
-  shoe_weight = "shoe_weight",
-
-  my_shoe_weight = "my_shoe_weight",
-
   machines = "machines",
   dyes = "dyes",
   articles = "articles",
@@ -237,22 +231,13 @@ function AppRoutes() {
                 }
               />
 
-              <Route
-                path={paths.shoe_weight} element={
-                  <Suspense fallback={<LinearProgress />}> <ShoeWeightPage /></Suspense>
-                }
-              />
+             
               <Route
                 path={paths.production} element={
                   <Suspense fallback={<LinearProgress />}> <MyProductionPage /></Suspense>
                 }
               />
 
-              <Route
-                path={paths.my_shoe_weight} element={
-                  <Suspense fallback={<LinearProgress />}> <MyShoeWeightPage /></Suspense>
-                }
-              />
               <Route
                 path={paths.machines} element={
                   <Suspense fallback={<LinearProgress />}> <MachinesPage /></Suspense>

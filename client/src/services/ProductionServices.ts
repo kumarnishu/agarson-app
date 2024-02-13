@@ -40,11 +40,11 @@ export const GetDyes = async (hidden?: string) => {
         return await apiClient.get(`dyes`);
 };
 
-export const CreateArticle = async (body: { name: string, display_name: string, sizes: { size: string, standard_weight: number, upper_weight: number }[] }) => {
+export const CreateArticle = async (body: { name: string, display_name: string }) => {
     return await apiClient.post(`articles`, body);
 };
 
-export const UpdateArticle = async ({ body, id }: { body: { name: string, display_name: string, sizes: { size: string, standard_weight: number, upper_weight: number }[] }, id: string }) => {
+export const UpdateArticle = async ({ body, id }: { body: { name: string, display_name: string}, id: string }) => {
     return await apiClient.put(`articles/${id}`, body);
 };
 
@@ -59,25 +59,7 @@ export const GetArticles = async (hidden?: string) => {
         return await apiClient.get(`articles`);
 };
 
-export const CreateShoeWeight = async ({ body }: { body: FormData }) => {
-    return await apiClient.post(`weights`, body);
-}
 
-export const UpdateShoeWeight = async ({ id, body }: { id: string, body: FormData }) => {
-    return await apiClient.put(`weights/${id}`, body);
-}
-export const ValidateShoeWeight = async (id: string) => {
-    return await apiClient.patch(`weights/validate/${id}`);
-}
-export const GetShoeWeights = async () => {
-    return await apiClient.get(`weights`);
-}
-export const GetMyShoeWeights = async (dye: string | undefined) => {
-    if (dye)
-        return await apiClient.get(`weights/me?dye=${dye}`);
-    else
-        return await apiClient.get(`weights/me`);
-}
 export const GetMyProductions = async ({ date, machine }: { date: string, machine?: string }) => {
     if (machine)
         return await apiClient.get(`productions/me/?date=${date}&machine=${machine}`);
@@ -127,35 +109,8 @@ export const GetProductions = async ({ limit, page, start_date, end_date, id }: 
         return await apiClient.get(`productions/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
 
 }
-export const UpdateRepairDyeReport = async ({ id, body }: {
-    id: string, body: {
-        machine: string,
-        dye: string,
-        problem: string
-    }
-}) => {
-    return await apiClient.put(`repair_dye_reports/${id}`, body);
-}
-
-export const GetRepairDyeReports = async () => {
-    return await apiClient.get(`repair_dye_reports`);
-}
-
-export const UpdateRunningMouldReport = async ({ id, body }: {
-    id: string,
-    body: {
-        machine: string,
-        dye: string,
-        article: string
-    }
-}) => {
-    return await apiClient.put(`running_mould_reports/${id}`, body);
-}
 
 
-export const GetRunningMouldReports = async () => {
-    return await apiClient.get(`running_mould_reports`);
-}
 
 export const BulkUploadMachines = async (body: FormData) => {
     return await apiClient.put(`machines/upload/bulk`, body);

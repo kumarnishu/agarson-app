@@ -18,13 +18,6 @@ const ArticleSchema = new mongoose.Schema<IArticle, mongoose.Model<IArticle, {},
         type: Boolean,
         default: true
     },
-    sizes: [
-        {
-            size: String,
-            standard_weight: Number,
-            upper_weight: Number
-        }
-    ],
     created_at: {
         type: Date,
         default: new Date(),

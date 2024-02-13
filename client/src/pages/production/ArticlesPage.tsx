@@ -22,7 +22,6 @@ import UploadArticlesFromExcelButton from '../../components/buttons/UploadArticl
 type SelectedData = {
   name?: string,
   display_name?: string,
-  sizes?: string
   is_active: boolean
   created_at?: string,
   updated_at?: string
@@ -31,7 +30,6 @@ let template: SelectedData[] = [
   {
     name: "power",
     is_active: true,
-    sizes: "6,7,8,9,10,11",
     display_name: "power"
   }
 ]
@@ -76,7 +74,6 @@ export default function ArticlePage() {
         name: article.name,
         display_name: article.display_name,
         is_active: article.active ? true : false,
-        sizes: article.sizes.map((size) => { return size }).toString(),
         created_at: new Date(article.created_at).toLocaleDateString(),
         updated_at: new Date(article.updated_at).toLocaleDateString()
       })

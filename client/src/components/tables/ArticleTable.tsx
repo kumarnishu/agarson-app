@@ -83,12 +83,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                 Status
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Sizes
-
-                            </STableHeadCell>
+                           
 
                             <STableHeadCell
                             >
@@ -204,9 +199,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                         <STableCell>
                                             {article.active ? "active" : "inactive"}
                                         </STableCell>
-                                        <STableCell>
-                                            {article.sizes.map((size) => { return size.size }).toString()}
-                                        </STableCell>
+                                      
                                         <STableCell>
                                             {article.created_at && new Date(article.created_at).toLocaleString()}
                                         </STableCell>
