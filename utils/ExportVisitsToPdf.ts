@@ -191,7 +191,7 @@ export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
         catch (err) {
             console.log(err)
         }
-    }, 30000)
+    }, 60000)
 
     setTimeout(async () => {
         await DeleteDocument()
