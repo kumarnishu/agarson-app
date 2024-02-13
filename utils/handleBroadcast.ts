@@ -4,7 +4,6 @@ import Lead from "../models/leads/lead.model";
 import { IBroadcast } from "../types/crm.types";
 import { IMessageTemplate } from "../types/template.types";
 import { getRandomTemplate } from "./getRandomTemplate";
-import { clients } from "./CreateWhatsappClient";
 export var timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 
 export async function handleBroadcast(broadcast: IBroadcast, clients: {
@@ -21,7 +20,7 @@ export async function handleBroadcast(broadcast: IBroadcast, clients: {
         let limit = (70 * clients.length - latest_broadcast.counter) / clients.length
         for (let i = 0; i < clients.length; i++) {
             let client = clients[i]
-            await handleReports(i, client, limit, latest_broadcast)
+            await handleReports(i, client, limit, latest_broadcast, clients)
         }
     }
 }
@@ -29,7 +28,10 @@ export async function handleBroadcast(broadcast: IBroadcast, clients: {
 export async function handleReports(i: number, client: {
     client_id: string;
     client: Client;
-}, limit: number, broadcast: IBroadcast) {
+}, limit: number, broadcast: IBroadcast, clients: {
+    client_id: string;
+    client: Client;
+}[]) {
     let is_random = broadcast.is_random_template
     let templates = broadcast.templates
     let timeinsec = 5000

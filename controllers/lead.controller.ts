@@ -3667,8 +3667,8 @@ export const StartBroadcast = async (req: Request, res: Response, next: NextFunc
         is_active: true,
         counter: 0
     })
-
-    await handleBroadcast(broadcast, newclients)
+    if (new Date().getHours() > 9 && new Date().getHours() < 18)
+        await handleBroadcast(broadcast, newclients)
     return res.status(200).json({ message: "started" })
 }
 
@@ -3710,9 +3710,9 @@ export const UpdateBroadcast = async (req: Request, res: Response, next: NextFun
         templates,
         is_random_template,
         time_gap,
-        autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean,  time_gap: number, autoRefresh: boolean }
+        autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean, time_gap: number, autoRefresh: boolean }
 
-    if (!name || !connected_users || !templates  || !time_gap)
+    if (!name || !connected_users || !templates || !time_gap)
         return res.status(500).json({ message: "please fill all required fields" })
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
