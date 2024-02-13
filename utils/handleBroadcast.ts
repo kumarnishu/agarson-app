@@ -47,7 +47,6 @@ export async function handleReports(i: number, client: {
                     console.log("Sending to", mobile, "from", client.client_id)
                     await sendTemplates(client.client, mobile, templates, is_random, broadcast)
                     tmpreports[j].last_whatsapp = new Date()
-                    tmpreports[j].is_sent = true
                 }
 
 
@@ -55,7 +54,7 @@ export async function handleReports(i: number, client: {
                     let altmob1 = "91" + String(tmpreports[j].alternate_mobile1) + "@c.us"
                     if (await client.client.getNumberId(altmob1)) {
                         await sendTemplates(client.client, altmob1, templates, is_random, broadcast)
-                        tmpreports[j].is_sent = true
+                        tmpreports[j].last_whatsapp = new Date()
                     }
                 }
 
@@ -63,9 +62,10 @@ export async function handleReports(i: number, client: {
                     let altmob2 = "91" + String(tmpreports[j].alternate_mobile2) + "@c.us"
                     if (await client.client.getNumberId(altmob2)) {
                         await sendTemplates(client.client, altmob2, templates, is_random, broadcast)
-                        tmpreports[j].is_sent = true
+                        tmpreports[j].last_whatsapp = new Date()
                     }
                 }
+                tmpreports[j].is_sent = true
                 await tmpreports[j].save()
                 latest_broadcast.updated_at = new Date()
                 await latest_broadcast.save()
@@ -87,7 +87,6 @@ export async function handleReports(i: number, client: {
     else {
         console.log("handling broadcast next time")
         let timeout2 = setTimeout(async () => {
-            console.log("setting timeout 40 min after");
             await handleBroadcast(broadcast, clients);
         }, timeinsec);
         timeouts.push({ id: broadcast._id, timeout: timeout2 })

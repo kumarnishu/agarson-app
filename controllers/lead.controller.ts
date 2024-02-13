@@ -3666,8 +3666,7 @@ export const StartBroadcast = async (req: Request, res: Response, next: NextFunc
     if (newclients.length !== clientids.length)
         return res.status(400).json({ message: "connect all whatsapps or update connected numbers" })
     await Broadcast.findByIdAndUpdate(id, {
-        is_active: true,
-        counter: 0
+        is_active: true
     })
     if (new Date().getHours() > 9 && new Date().getHours() < 18)
         await handleBroadcast(broadcast, newclients)
