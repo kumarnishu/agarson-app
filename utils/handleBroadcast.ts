@@ -36,6 +36,7 @@ export async function handleReports(i: number, client: {
     let templates = broadcast.templates
     let timeinsec = 5000
     let tmpreports = await Lead.find({ stage: { $ne: 'useless' }, is_sent: false }).sort('-created_at').skip((i + 1 - 1) * limit).limit(limit)
+    console.log("sending broadcast leads", tmpreports.length)
     for (let j = 0; j < tmpreports.length; j++) {
         let timeout = setTimeout(async () => {
             let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')

@@ -78,6 +78,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                         return client
                 })
                 if (clientids.length === newclients.length) {
+                    console.log("all broadcast users got...")
                     if (new Date().getHours() > 9 && new Date().getHours() < 18)
                         await handleBroadcast(broadcast, newclients)
                     new CronJob("30 9 1/1 * *", async () => {
