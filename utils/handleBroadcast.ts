@@ -76,22 +76,23 @@ export async function handleReports(i: number, client: {
         console.log(timeinsec)
     }
     timeinsec = timeinsec + (1000 * 60 * 40)
-    let timeout2 = setTimeout(async () => {
-        console.log("setting timeout 40 min after");
-        if (new Date().getHours() > 18 && new Date().getHours() < 9) {
-            console.log("clearing timeouts")
-            timeouts.forEach((item) => {
-                if (String(item.id) === String(broadcast?._id)) {
-                    clearTimeout(item.timeout)
-                }
-            })
-        }
-        else {
+    if (new Date().getHours() > 18 && new Date().getHours() < 9) {
+        console.log("clearing timeouts")
+        timeouts.forEach((item) => {
+            if (String(item.id) === String(broadcast?._id)) {
+                clearTimeout(item.timeout)
+            }
+        })
+    }
+    else {
+        console.log("handling broadcast next time")
+        let timeout2 = setTimeout(async () => {
+            console.log("setting timeout 40 min after");
             await handleBroadcast(broadcast, clients);
-        }
-
-    }, timeinsec);
-    timeouts.push({ id: broadcast._id, timeout: timeout2 })
+        }, timeinsec);
+        timeouts.push({ id: broadcast._id, timeout: timeout2 })
+    }
+    console.log(timeinsec)
 }
 
 export async function sendTemplates(client: Client, mobile: string, templates: IMessageTemplate[], is_random: boolean, broadcast: IBroadcast) {

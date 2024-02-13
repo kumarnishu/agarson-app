@@ -17,9 +17,9 @@ export async function HandleDailyTodoTrigger(user: IUser) {
             wd1 = 7
         let m1 = new Date().getMonth() + 1
         let y1 = new Date().getFullYear()
-        console.log("handling todos")
+        
         let todos = await Todo.find({ connected_user: user._id })
-        console.log("todos", todos.length)
+        
         todos.forEach((todo) => {
             let months = todo.months.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
             let years = todo.years.replace("[", "").replace("]", "").split(",").map((v) => { return Number(v.trim()) })
@@ -43,16 +43,16 @@ export async function HandleDailyTodoTrigger(user: IUser) {
                     let date = new Date()
                     date.setHours(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[0]))
                     date.setMinutes(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[1]))
-                    console.log(date.toString())
+                    
 
-                    console.log("sending todos")
+                    
                     if (date > new Date())
                         new CronJob(date, () => {
                             if (reminderClient?.client)
                                 SendTodoMessage(todo, reminderClient?.client)
                         }).start()
                 }
-                console.log(ok)
+                
             }
         })
     }
