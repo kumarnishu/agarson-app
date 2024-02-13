@@ -10,6 +10,7 @@ import { CronJob } from "cron";
 import { handleAllReports } from "./HandleReports";
 import { Broadcast } from "../models/leads/broadcast.model";
 import { handleBroadcast } from "./handleBroadcast";
+import { BroadcastManager } from "../app";
 
 export var clients: { client_id: string, client: Client }[] = []
 
@@ -77,15 +78,15 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     if (clientids.includes(client.client_id))
                         return client
                 })
+                console.log("length of clients", clientids.length, newclients.length)
                 if (clientids.length === newclients.length) {
                     console.log("all broadcast users got...")
-                    if (new Date().getHours() > 9 && new Date().getHours() < 18)
-                        await handleBroadcast(broadcast, newclients)
-                    new CronJob("30 9 1/1 * *", async () => {
-                        let broadcast = await Broadcast.findOne()
+                    BroadcastManager.add("dailybroadcast", "30 9 1/1 * *", async () => {
+                        let broadcast = await Broadcast.findOne().populate('connected_users')
                         if (broadcast)
                             await handleBroadcast(broadcast, newclients)
-                    }).start()
+                    })
+                    BroadcastManager.start("dailybroadcast");
                 }
             }
         }
