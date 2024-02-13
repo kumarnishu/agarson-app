@@ -42,6 +42,8 @@ export async function handleReports(i: number, client: {
             let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')
             console.log("sending broadcast leads", tmpreports[j].mobile)
             if (latest_broadcast && latest_broadcast?.is_active) {
+                //@ts-ignore
+                tmpreports[j].last_whatsapp = null
                 //report1
                 let mobile = "91" + String(tmpreports[j].mobile) + "@c.us"
                 if (await client.client.getNumberId(mobile)) {
