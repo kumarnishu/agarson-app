@@ -69,6 +69,9 @@ function BroadcastPage() {
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                 Connected templates : {broadcast.templates.length}
               </Typography>
+              <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
+                Updated At : {broadcast.updated_at && new Date(broadcast.updated_at).toLocaleString()}
+              </Typography>
 
             </Stack>
             <Stack flexDirection="row" gap={2}>

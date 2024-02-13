@@ -121,6 +121,7 @@ export async function sendTemplates(client: Client, mobile: string, templates: I
     }
     if (latest_broadcast) {
         latest_broadcast.counter = latest_broadcast.counter + 1
+        latest_broadcast.updated_at = new Date()
         await latest_broadcast.save()
     }
 }
