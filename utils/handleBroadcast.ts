@@ -43,7 +43,7 @@ export async function handleReports(i: number, client: {
             console.log("sending broadcast leads", tmpreports[j].mobile)
             if (latest_broadcast && latest_broadcast?.is_active) {
                 //@ts-ignore
-                tmpreports[j].last_whatsapp = null
+                tmpreports[j].last_whatsapp = undefined
                 //report1
                 let mobile = "91" + String(tmpreports[j].mobile) + "@c.us"
                 if (await client.client.getNumberId(mobile)) {
