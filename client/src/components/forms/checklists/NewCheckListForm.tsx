@@ -83,9 +83,7 @@ function NewCheckListForm({ users }: { users: IUser[] }) {
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: CheckListChoiceActions.close_checklist })
-            }, 1000)
+            setChoice({ type: CheckListChoiceActions.close_checklist })
         }
     }, [isSuccess, setChoice])
     return (

@@ -36,9 +36,7 @@ function BulkDeleteUselessLeadsDialog({ selectedLeads }: { selectedLeads: ILead[
 
     useEffect(() => {
         if (isSuccess)
-            setTimeout(() => {
-                setChoice({ type: LeadChoiceActions.close_lead })
-            }, 1000)
+            setChoice({ type: LeadChoiceActions.close_lead })
     }, [setChoice, isSuccess])
 
     return (

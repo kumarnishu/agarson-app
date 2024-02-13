@@ -22,9 +22,7 @@ function ToogleAttendenceDialog({ visit }: { visit: IVisit }) {
         })
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: VisitChoiceActions.close_visit })
-            }, 1000)
+            setChoice({ type: VisitChoiceActions.close_visit })
         }
     }, [isSuccess, setChoice])
     return (

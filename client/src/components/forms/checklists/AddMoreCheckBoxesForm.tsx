@@ -56,9 +56,7 @@ function AddMoreCheckBoxesForm({ checklist }: { checklist: IChecklist }) {
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: CheckListChoiceActions.close_checklist })
-            }, 1000)
+            setChoice({ type: CheckListChoiceActions.close_checklist })
         }
     }, [isSuccess, setChoice])
 

@@ -58,9 +58,7 @@ function AssignReferForm({ refer, users }: { refer: IReferredParty, users: IUser
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: LeadChoiceActions.close_lead })
-            }, 1000)
+            setChoice({ type: LeadChoiceActions.close_lead })
         }
     }, [isSuccess, setChoice])
     return (

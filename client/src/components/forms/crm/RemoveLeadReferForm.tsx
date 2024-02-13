@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
-import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
+import {  ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { RemoveLeadReferrals } from '../../../services/LeadsServices';
@@ -43,9 +43,7 @@ function RemoveLeadReferForm({ lead }: { lead: ILead }) {
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: UserChoiceActions.close_user })
-            }, 1000)
+            setChoice({ type: LeadChoiceActions.close_lead })
         }
     }, [isSuccess, setChoice])
 

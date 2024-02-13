@@ -61,10 +61,8 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: UserChoiceActions.close_user })
-                setUser(undefined)
-            }, 1000)
+            setChoice({ type: UserChoiceActions.close_user })
+            setUser(undefined)
         }
     }, [isSuccess, setChoice])
     return (

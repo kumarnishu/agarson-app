@@ -70,12 +70,11 @@ function UpdateRemarkForm({ remark, show, setShow }: { remark: IRemark, show: bo
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                if (show)
-                    setShow(false)
-                else
-                    setChoice({ type: LeadChoiceActions.close_lead })
-            }, 1000)
+            if (show)
+                setShow(false)
+            else
+                setChoice({ type: LeadChoiceActions.close_lead })
+
         }
     }, [isSuccess, setChoice])
     return (

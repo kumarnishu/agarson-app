@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import React, { useEffect, useContext, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
-import { ChoiceContext, TemplateChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
@@ -70,9 +70,7 @@ function CreateBroadCastForm() {
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: TemplateChoiceActions.close_template })
-            }, 1000)
+            setChoice({ type: LeadChoiceActions.close_lead })
         }
     }, [isSuccess, setChoice])
 

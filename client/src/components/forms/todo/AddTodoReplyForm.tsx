@@ -51,12 +51,10 @@ function AddTodoReplyForm({ todo }: { todo: ITodo }) {
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: TodoChoiceActions.close_todo })
-            }, 1000)
+            setChoice({ type: TodoChoiceActions.close_todo })
         }
     }, [isSuccess, setChoice])
-    console.log(formik.values)
+    
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack

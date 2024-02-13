@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
-import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
+import {  ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
@@ -58,9 +58,7 @@ function NewMachineForm() {
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: UserChoiceActions.close_user })
-            }, 1000)
+            setChoice({ type: ProductionChoiceActions.close_production })
         }
     }, [isSuccess, setChoice])
 

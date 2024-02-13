@@ -22,9 +22,7 @@ function ToogleMachineDialog({ machine }: { machine: IMachine }) {
 
     useEffect(() => {
         if (isSuccess)
-            setTimeout(() => {
-                setChoice({ type: ProductionChoiceActions.close_production })
-            }, 1000)
+            setChoice({ type: ProductionChoiceActions.close_production })
     }, [setChoice, isSuccess])
     return (
         <>

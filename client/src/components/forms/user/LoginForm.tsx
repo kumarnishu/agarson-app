@@ -61,10 +61,8 @@ function LoginForm() {
 
   useEffect(() => {
     if (isSuccess) {
-      setTimeout(() => {
-        setUser(data.data.user)
-        setChoice({ type: UserChoiceActions.close_user })
-      }, 400)
+      setUser(data.data.user)
+      setChoice({ type: UserChoiceActions.close_user })
     }
   }, [setUser, goto, setChoice, isSuccess, data])
 
@@ -98,7 +96,6 @@ function LoginForm() {
             variant="outlined"
             focused
             required
-
             error={
               formik.touched.password && formik.errors.password ? true : false
             }

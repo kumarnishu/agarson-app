@@ -79,9 +79,7 @@ function CreateShoeWeightForm() {
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: ProductionChoiceActions.close_production })
-            }, 1000)
+            setChoice({ type: ProductionChoiceActions.close_production })
         }
     }, [isSuccess, setChoice])
 

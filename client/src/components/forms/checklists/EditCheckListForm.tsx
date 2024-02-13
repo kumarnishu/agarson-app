@@ -68,9 +68,7 @@ function EditCheckListForm({ checklist, users }: { checklist: IChecklist, users:
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: CheckListChoiceActions.close_checklist })
-            }, 1000)
+            setChoice({ type: CheckListChoiceActions.close_checklist })
         }
     }, [isSuccess, setChoice])
     return (

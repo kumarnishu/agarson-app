@@ -12,7 +12,7 @@ function LoginPage() {
     return (
         <>
             <Stack sx={{ justifyContent: 'center', alignItems: 'center', height: '90vh', width: '100vw' }}>
-                <Paper elevation={2} sx={{ maxWidth: '350px', p: 2, px: 2, borderRadius: 10,border:2,borderColor:'blue' }}>
+                <Paper elevation={2} sx={{ maxWidth: '350px', p: 5  , px: 2, borderRadius: 10,border:4,borderColor:'whitesmoke' }}>
                     <Stack justifyContent={"center"} alignItems="center">
                         <a href="https://agarsonshoes.in/">
                             <AgarsonPngLogo width={130} height={130} title='Agarson Shoes' />

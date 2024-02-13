@@ -95,9 +95,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: TemplateChoiceActions.close_template })
-            }, 1000)
+            setChoice({ type: TemplateChoiceActions.close_template })
         }
     }, [isSuccess, setChoice])
     return (

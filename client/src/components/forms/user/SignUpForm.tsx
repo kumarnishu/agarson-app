@@ -106,11 +106,9 @@ function OwnerSignUpForm() {
 
   useEffect(() => {
     if (isSuccess) {
-      setTimeout(() => {
-        setUser(data.data.user)
-        setChoice({ type: UserChoiceActions.close_user })
-        goto(paths.dashboard)
-      }, 1000)
+      setUser(data.data.user)
+      setChoice({ type: UserChoiceActions.close_user })
+      goto(paths.dashboard)
     }
   }, [isSuccess, setUser, goto, data, setChoice])
 

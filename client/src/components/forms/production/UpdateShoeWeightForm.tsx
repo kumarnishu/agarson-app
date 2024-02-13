@@ -68,9 +68,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
 
     useEffect(() => {
         if (isSuccess) {
-            setTimeout(() => {
-                setChoice({ type: ProductionChoiceActions.close_production })
-            }, 1000)
+            setChoice({ type: ProductionChoiceActions.close_production })
         }
     }, [isSuccess, setChoice])
 

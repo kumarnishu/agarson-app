@@ -66,10 +66,8 @@ function ResetPasswordForm({ token }: { token: string }) {
 
   useEffect(() => {
     if (isSuccess) {
-      setTimeout(() => {
-        setChoice({ type: UserChoiceActions.close_user })
-        goto(paths.dashboard)
-      }, 1000)
+      setChoice({ type: UserChoiceActions.close_user })
+      goto(paths.dashboard)
     }
   }, [goto, setChoice, isSuccess])
 

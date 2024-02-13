@@ -22,9 +22,7 @@ function ResetMultiLoginDialog({ id }: { id: string }) {
 
     useEffect(() => {
         if (isSuccess)
-            setTimeout(() => {
-                setChoice({ type: UserChoiceActions.close_user })
-            }, 1000)
+            setChoice({ type: UserChoiceActions.close_user })
     }, [setChoice, isSuccess])
 
     return (

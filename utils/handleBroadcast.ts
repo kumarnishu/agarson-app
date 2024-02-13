@@ -13,7 +13,7 @@ export async function handleBroadcast(broadcast: IBroadcast, clients: {
     let latest_broadcast = await Broadcast.findById(broadcast._id).populate('templates').populate('connected_users')
     if (latest_broadcast && latest_broadcast.is_active && latest_broadcast.connected_users) {
         console.log("no of clients", clients.length)
-        let count = await Lead.find({ stage: { $ne: 'useless' }, is_sent: false }).limit(70 - latest_broadcast.counter).countDocuments()
+        let count = await Lead.find({ stage: { $ne: 'useless' }, is_sent: false }).countDocuments()
         if (count === 0 && latest_broadcast.autoRefresh) {
             await Lead.updateMany({ is_sent: true }, { is_sent: false })
         }
