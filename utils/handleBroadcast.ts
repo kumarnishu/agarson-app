@@ -78,47 +78,46 @@ export async function handleReports(i: number, client: {
     timeinsec = timeinsec + (1000 * 60 * 40)
     let timeout2 = setTimeout(async () => {
         console.log("setting timeout 40 min after");
-        await handleBroadcast(broadcast, clients);
+        if (new Date().getHours() > 18 && new Date().getHours() < 9) {
+            console.log("clearing timeouts")
+            timeouts.forEach((item) => {
+                if (String(item.id) === String(broadcast?._id)) {
+                    clearTimeout(item.timeout)
+                }
+            })
+        }
+        else {
+            await handleBroadcast(broadcast, clients);
+        }
+
     }, timeinsec);
     timeouts.push({ id: broadcast._id, timeout: timeout2 })
 }
 
 export async function sendTemplates(client: Client, mobile: string, templates: IMessageTemplate[], is_random: boolean, broadcast: IBroadcast) {
-    if (new Date().getHours() > 18 && new Date().getHours() < 9) {
-        console.log("clearing timeouts")
-        timeouts.forEach((item) => {
-            if (String(item.id) === String(broadcast?._id)) {
-                clearTimeout(item.timeout)
-            }
-        })
+    console.log("sending templates")
+    let latest_broadcast = await Broadcast.findById(broadcast._id)
+    let template = templates[0]
+    let template1 = getRandomTemplate(templates)
+    if (is_random && template1)
+        template = template1?.template
+    let url = template.media && template.media?.public_url
+    let caption = template.caption
+    let message = template.message
+    let filename = template.media && template.media?.filename
+    if (message) {
+        await client.sendMessage(mobile, message)
     }
-    else {
-        console.log("sending templates")
-        let latest_broadcast = await Broadcast.findById(broadcast._id)
-        let template = templates[0]
-        let template1 = getRandomTemplate(templates)
-        if (is_random && template1)
-            template = template1?.template
-        let url = template.media && template.media?.public_url
-        let caption = template.caption
-        let message = template.message
-        let filename = template.media && template.media?.filename
-        if (message) {
-            await client.sendMessage(mobile, message)
-        }
+    if (url && !caption) {
         if (url && !caption) {
-            if (url && !caption) {
-                await client.sendMessage(mobile, await MessageMedia.fromUrl(url, { filename: filename, unsafeMime: true }), { caption: "\n\ntype stop to unsubscribe" })
-            }
-        }
-        if (url && caption) {
-            await client.sendMessage(mobile, (await MessageMedia.fromUrl(url, { filename: filename, unsafeMime: true })), { caption: caption + "\n\ntype stop to unsubscribe" })
-        }
-        if (latest_broadcast) {
-            latest_broadcast.counter = latest_broadcast.counter + 1
-            await latest_broadcast.save()
+            await client.sendMessage(mobile, await MessageMedia.fromUrl(url, { filename: filename, unsafeMime: true }), { caption: "\n\ntype stop to unsubscribe" })
         }
     }
-
-
+    if (url && caption) {
+        await client.sendMessage(mobile, (await MessageMedia.fromUrl(url, { filename: filename, unsafeMime: true })), { caption: caption + "\n\ntype stop to unsubscribe" })
+    }
+    if (latest_broadcast) {
+        latest_broadcast.counter = latest_broadcast.counter + 1
+        await latest_broadcast.save()
+    }
 }
