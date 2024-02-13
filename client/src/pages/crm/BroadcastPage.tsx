@@ -63,8 +63,7 @@ function BroadcastPage() {
               </Typography>
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>
                 Connected Users : {broadcast.connected_users.map((u) => {
-                  if (u.connected_number)
-                    return `${u.username}:${String(u.connected_number).replace("@c.us", "").replace("91", "")}`
+                  return `${u.username}:${String(u.connected_number).replace("@c.us", "").replace("91", "")}`
                 }).toString()}
               </Typography>
               <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: 14 }}>

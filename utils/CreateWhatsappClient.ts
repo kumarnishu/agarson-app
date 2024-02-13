@@ -8,6 +8,8 @@ import { HandleProductionReports } from "./ExportProductionReports";
 import { Client, LocalAuth, Message } from "whatsapp-web.js";
 import { CronJob } from "cron";
 import { handleAllReports } from "./HandleReports";
+import { Broadcast } from "../models/leads/broadcast.model";
+import { handleBroadcast } from "./handleBroadcast";
 
 export var clients: { client_id: string, client: Client }[] = []
 
@@ -67,13 +69,27 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                 }
             }
 
+            let broadcast = await Broadcast.findOne().populate('connected_users')
+            if (broadcast && broadcast.is_active) {
+                let clientids: string[] = broadcast.connected_users.map((user) => { return user.client_id })
 
-
-
-
+                let newclients = clients.filter((client) => {
+                    if (clientids.includes(client.client_id))
+                        return client
+                })
+                if (clientids.length === newclients.length) {
+                    if (new Date().getHours() > 9 && new Date().getHours() < 18)
+                        await handleBroadcast(broadcast, newclients)
+                    new CronJob("30 9 1/1 * *", async () => {
+                        let broadcast = await Broadcast.findOne()
+                        if (broadcast)
+                            await handleBroadcast(broadcast, newclients)
+                    }).start()
+                }
+            }
         }
     })
-    
+
     client.on('disconnected', async (reason) => {
         console.log("reason", reason)
         if (reason === "NAVIGATION") {
