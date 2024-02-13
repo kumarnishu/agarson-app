@@ -17,7 +17,7 @@ export async function handleBroadcast(broadcast: IBroadcast, clients: {
         if (count === 0 && latest_broadcast.autoRefresh) {
             await Lead.updateMany({ is_sent: true }, { is_sent: false })
         }
-        let limit = (70 * clients.length - latest_broadcast.counter) / clients.length
+        let limit = (70 * clients.length) / clients.length
         for (let i = 0; i < clients.length; i++) {
             let client = clients[i]
             await handleReports(i, client, limit, latest_broadcast, clients)
