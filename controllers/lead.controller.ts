@@ -3739,7 +3739,6 @@ export const StopBroadcast = async (req: Request, res: Response, next: NextFunct
     if (!broadcast)
         return res.status(404).json({ message: "broadcast not found" })
     broadcast.is_active = false
-    broadcast.counter = 0
     timeouts.forEach((item) => {
         if (String(item.id) === String(broadcast?._id)) {
             clearTimeout(item.timeout)
