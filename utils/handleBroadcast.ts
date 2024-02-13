@@ -79,7 +79,7 @@ export async function handleReports(i: number, client: {
         console.log(timeinsec)
     }
     timeinsec = timeinsec + (1000 * 60 * 40)
-    if (new Date().getHours() > 18 && new Date().getHours() < 9) {
+    if (new Date().getHours() > 17 && new Date().getHours() < 9) {
         console.log("clearing timeouts")
         timeouts.forEach((item) => {
             if (String(item.id) === String(broadcast?._id)) {
