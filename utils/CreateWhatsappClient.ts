@@ -99,7 +99,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             if (client) {
                 let sock = client.client
                 let result = await socket.sock.groupFetchAllParticipating()
-                let metaDeta: GroupMetadata[] = []
+                // let metaDeta: GroupMetadata[] = []
                 // for (let i = 0; i < 10; i++) {
                 //     try {
                 //         console.log("creatinng group")
@@ -120,8 +120,8 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                             try {
                                 const result = await sock.groupParticipantsUpdate(
                                     String(key),
-                                    ["919817702310@s.whatsapp.net"],
-                                    "remove" // replace this parameter with "remove", "demote" or "promote"
+                                    ["919319284966@s.whatsapp.net", "919319284965@s.whatsapp.net"],
+                                    "add" // replace this parameter with "remove", "demote" or "promote"
                                 )
                                 await result;
                             }
