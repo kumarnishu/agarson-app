@@ -8,6 +8,7 @@ import { Todo } from "../models/todos/todo.model";
 import { HandleTodoMessage } from "./handleTodo";
 import { ExportProductionsToPdf } from "./ExportProductionReports";
 import NodeCache from 'node-cache'
+import { parties } from "./db"
 // import { parties } from "./db2"
 
 export var clients: { client_id: string, client: any }[] = []
@@ -97,84 +98,41 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             clients.push({ client_id: client_id, client: socket.sock })
             let client = clients.find((client) => client.client_id === process.env.WACLIENT_ID)
             if (client) {
+                console.log("hanling groups")
                 let sock = client.client
                 let result = await socket.sock.groupFetchAllParticipating()
-                // let metaDeta: GroupMetadata[] = []
-                // for (let i = 0; i < 10; i++) {
+                let metaDeta: GroupMetadata[] = []
+                let keys: string[] = []
+                Object.keys(result).map(async (key: string) => {
+                    metaDeta.push(result[key])
+                })
+                console.log("groups1", metaDeta.length)
+
+                metaDeta = metaDeta.filter((group) => {
+                    if (group.participants.find((part) => part.id !== "919319284965@s.whatsapp.net"))
+                        return group
+                })
+                console.log("groups2", metaDeta.length)
+
+                // for (let i = 0; i < metaDeta.length; i++) {
                 //     try {
-                //         console.log("creatinng group")
-                //         const group = await sock.groupCreate(`Group - ${i}`, ["917056943283@s.whatsapp.net"])
-                //         console.log("created group with id: " + group.gid)
-                //         sock.sendMessage(group.id, { text: 'hello there' }) // sa
+                //         const result = await sock.groupParticipantsUpdate(
+                //             metaDeta[i].id,
+                //             [`919319284966@s.whatsapp.net`, "919319284965@s.whatsapp.net"],
+                //             "add")
+                //         await result;
                 //     }
                 //     catch (err) {
+                //         // console.log(key)
+                //         // result[key].subject
                 //         console.log(err)
                 //     }
                 // }
 
-                Object.keys(result).map(async (key: string) => {
-                    console.log(result[key].subject)
-                    console.log(key)
-                    if (key) {
-                        setTimeout(async () => {
-                            try {
-                                const result = await sock.groupParticipantsUpdate(
-                                    String(key),
-                                    ["919319284966@s.whatsapp.net", "919319284965@s.whatsapp.net"],
-                                    "add" // replace this parameter with "remove", "demote" or "promote"
-                                )
-                                await result;
-                            }
-                            catch (err) {
-                                console.log(err)
-                            }
-                        }, 5000)
-                    }
-                })
-
-                // console.log(metaDeta)
-                // console.log(metaDeta.length)
-
-                // console.log(result)
-
-                // console.log(parties.length)
-                // for (let i = 0; i < parties.length; i++) {
-                //     let party = parties[i]
-                //     console.log(String(party.id) + "@g.us")
-                //     if (party && party.id) {
-                //         console.log(party.name)
-                //         try {
-                //             await sock.groupParticipantsUpdate(
-                //                 `${party.id}@g.us`,
-                //                 ["919817702306@s.whatsapp.net", "919319284966@s.whatsapp.net", "919319284965@s.whatsapp.net"],
-                //                 "remove" // replace this parameter with "remove", "demote" or "promote"
-                //             )
-                //         }
-                //         catch (err) {
-                //             console.log(err)
-                //         }
-                //     }
-                // }
-
-
-                // ExportVisitsToPdf(client.client)
-                // ExportProductionsToPdf(client.client)
 
             }
 
-            // let todos = await Todo.find().populate('connected_user')
 
-            // todos.forEach(async (todo) => {
-            //     if (todo.connected_user) {
-            //         let reminderClient = clients.find((client) => client.client_id === todo.connected_user.client_id)
-            //         if (reminderClient) {
-            //             console.log(clients.length)
-            //             if (todo.is_active) {
-            //                 await HandleTodoMessage(todo, reminderClient.client)
-            //             }
-            //         }
-            //     }
-            // })
         }
     })
 
@@ -184,8 +142,6 @@ export async function createWhatsappClient(client_id: string, io: Server) {
     })
 
     socket.sock.ev.on('messages.upsert', (data) => {
-
-
         data.messages.map(async (msg) => {
             // console.log(msg)
             if (msg.message && msg.message.conversation) {
