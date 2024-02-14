@@ -24,8 +24,7 @@ const VisitingCardSchema = new mongoose.Schema<IVisitingCard, mongoose.Model<IVi
         comment: String,
         created_by: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
+            ref: 'User'
         },
         timestamp: Date
     }],

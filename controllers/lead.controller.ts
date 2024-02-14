@@ -14,7 +14,6 @@ import { ILead, ILeadTemplate, IReferredParty, IRemark, TLeadBody, TLeadUpdatabl
 import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
 import { Broadcast } from "../models/leads/broadcast.model.js"
-import cron from "cron"
 import { GetDailyBroadcastCronString } from "../utils/GetDailyBroadcastCronString.js"
 import { handleBroadcast, timeouts } from "../utils/handleBroadcast.js"
 import { clients } from "../utils/CreateWhatsappClient.js"
@@ -3804,17 +3803,36 @@ export const GetVisitingCards = async (req: Request, res: Response, next: NextFu
 
 export const CreateVisitingCard = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { name, city, state, salesman } = body as {
-        name: string, city: string, state: string, salesman: string
+    let { name, city, state, salesman, comment } = body as {
+        name: string, city: string, comment: string, state: string, salesman: string
     }
+    console.log(body)
     let card = await VisitingCard.findOne({ name: name })
     if (card)
         return res.status(404).json({ message: "already exists this card" })
+
+    let cardd: Asset = undefined
+    if (req.file) {
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+        const storageLocation = `crm/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 10 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            cardd = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
     await new VisitingCard({
         name,
         city,
         state,
+        comments: [{ comment: comment, created_by: req.user, timestamp: new Date() }],
         salesman: salesman,
+        card: cardd,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -3822,34 +3840,70 @@ export const CreateVisitingCard = async (req: Request, res: Response, next: Next
     }).save()
     return res.status(200).json({ message: " Visiting Card Created successfully" })
 }
+
 export const UpdateVisitingCard = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { name, city, state, salesman } = body as {
-        name: string, city: string, state: string, salesman: string
+    let { name, city, state, salesman, comment } = body as {
+        name: string, city: string, comment: string, state: string, salesman: string
     }
     const id = req.params.id
     let card = await VisitingCard.findById(id)
     if (!card)
         return res.status(404).json({ message: "card not found" })
+    if (card.name !== name) {
+        if (await VisitingCard.findOne({ name: name }))
+            return res.status(404).json({ message: "already exists this card" })
+    }
+
+    let cardd: Asset = undefined
+    if (req.file) {
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+        const storageLocation = `crm/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 10 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            cardd = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    let comments = card.comments
+    if (req.user)
+        comments.push({ comment: comment, created_by: req.user, timestamp: new Date() })
     await VisitingCard.findByIdAndUpdate(card._id, {
         name,
         city,
         state,
+        comments: comments,
         salesman: salesman,
+        card: cardd,
+        created_at: new Date(),
         updated_at: new Date(),
+        created_by: req.user,
         updated_by: req.user
-
     })
-    return res.status(200).json({ message: " Visiting Card Created successfully" })
+    return res.status(200).json({ message: " Visiting Card Updated successfully" })
 }
+
 
 export const ToogleStatus = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
+    const { comment } = req.body as { comment: string }
     let card = await VisitingCard.findById(id)
+
     if (!card)
         return res.status(404).json({ message: "card not found" })
+
+    let comments = card.comments
+    if (req.user)
+        comments.push({ comment: comment, created_by: req.user, timestamp: new Date() })
+
     await VisitingCard.findByIdAndUpdate(card._id, {
         is_closed: !card.is_closed,
+        comments: comments,
         updated_at: new Date(),
         updated_by: req.user
     })
@@ -3858,7 +3912,7 @@ export const ToogleStatus = async (req: Request, res: Response, next: NextFuncti
 
 export const ReferVisitingCard = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
-    const { refer } = req.body as { refer: String }
+    const { refer, comment } = req.body as { refer: string, comment: string }
     let card = await VisitingCard.findById(id)
     if (!card)
         return res.status(404).json({ message: "card not found" })
@@ -3866,9 +3920,13 @@ export const ReferVisitingCard = async (req: Request, res: Response, next: NextF
     let ref = await ReferredParty.findById(refer)
     if (!ref)
         return res.status(404).json({ message: "refer party not found" })
+    let comments = card.comments
+    if (req.user)
+        comments.push({ comment: comment, created_by: req.user, timestamp: new Date() })
+
     await VisitingCard.findByIdAndUpdate(card._id, {
-        is_closed: !card.is_closed,
         refer: refer,
+        comments: comments,
         updated_at: new Date(),
         updated_by: req.user
     })

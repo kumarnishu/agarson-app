@@ -14,10 +14,10 @@ type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
 
-type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless"
-  | "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark" | "create_broadcast" | "update_broadcast" | "stop_broadcast" | "start_broadcast"
+type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless" |"view_card_comments"|
+   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark" | "create_broadcast" | "update_broadcast" | "stop_broadcast" | "start_broadcast" | "create_card" | "update_card" | "refer_card" | "toogle_card" | "add_card_comment"
 
-type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" |  "delete_production" |  "create_production" | "update_production"
+type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
 
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
 
@@ -106,6 +106,10 @@ export enum TemplateChoiceActions {
 
 
 export enum LeadChoiceActions {
+  create_card = "create_card",
+  update_card = "update_card",
+  view_card_comments ="view_card_comments",
+  refer_card = "refer_card",
   create_lead = "create_lead",
   update_lead = "update_lead",
   delete_lead = "delete_lead",
@@ -131,7 +135,9 @@ export enum LeadChoiceActions {
   create_broadcast = "create_broadcast",
   update_broadcast = "update_broadcast",
   stop_broadcast = "stop_broadcast",
-  start_broadcast = "start_broadcast"
+  start_broadcast = "start_broadcast",
+  toogle_card = "toogle_card",
+  add_card_comment = "add_card_comment"
 }
 
 export enum UserChoiceActions {
@@ -226,6 +232,12 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.update_broadcast: return type
     case LeadChoiceActions.stop_broadcast: return type
     case LeadChoiceActions.start_broadcast: return type
+    case LeadChoiceActions.create_card: return type
+    case LeadChoiceActions.update_card: return type
+    case LeadChoiceActions.refer_card: return type
+    case LeadChoiceActions.toogle_card: return type
+    case LeadChoiceActions.add_card_comment: return type
+    case LeadChoiceActions.view_card_comments: return type
 
     //production choice actios
     case ProductionChoiceActions.create_machine: return type

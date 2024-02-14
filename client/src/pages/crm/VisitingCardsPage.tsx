@@ -1,5 +1,5 @@
-import { Search } from '@mui/icons-material'
-import { Box, Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Comment, Delete, Edit, Search, Share, Visibility } from '@mui/icons-material'
+import { Box, Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -17,6 +17,12 @@ import sortBy from "sort-by"
 import { IVisitingCard } from '../../types/visiting_card.types'
 import { GetVisitingCards } from '../../services/LeadsServices'
 import VisitingCardTable from '../../components/tables/VisitingCardTable'
+import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
+import CreateVisitingCardDialog from '../../components/dialogs/cards/CreateVisitingCardDialog'
+import UpdateVisitingCardDialog from '../../components/dialogs/cards/UpdateVisitingCardDialog'
+import ReferVisitingCardDialog from '../../components/dialogs/cards/ReferVisitingCardDialog'
+import AddCommentVisitingCardDialog from '../../components/dialogs/cards/AddCommentVisitingCardDialog'
+import ViewCardCommentsDialog from '../../components/dialogs/cards/ViewCardCommentsDialog'
 
 export default function VisitingCardAdminPage() {
     const [sorted, setSorted] = useState(false)
@@ -54,6 +60,7 @@ export default function VisitingCardAdminPage() {
 
     const [sent, setSent] = useState(false)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const { setChoice } = useContext(ChoiceContext)
 
     function handleExcel() {
         setAnchorEl(null)
@@ -154,7 +161,7 @@ export default function VisitingCardAdminPage() {
             {
                 isLoading && <LinearProgress />
             }
-            
+
             {/*heading, search bar and table menu */}
 
             <Stack
@@ -178,7 +185,7 @@ export default function VisitingCardAdminPage() {
 
                         <TextField
                             fullWidth
-                            size="small"
+                            
                             onChange={(e) => {
                                 setFilter(e.currentTarget.value)
                                 setFilterCount(0)
@@ -202,7 +209,7 @@ export default function VisitingCardAdminPage() {
                         {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
 
-                        <IconButton size="small" color="primary"
+                        <IconButton size="large"  color="primary"
                             onClick={(e) => setAnchorEl(e.currentTarget)
                             }
                             sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
@@ -222,21 +229,25 @@ export default function VisitingCardAdminPage() {
                             sx={{ borderRadius: 2 }}
                         >
                             < MenuItem onClick={() => {
+                                setChoice({ type: LeadChoiceActions.create_card })
+                            }}
+                            >New Card</MenuItem>
+
+                            < MenuItem onClick={() => {
                                 handleExcel()
                             }}
                             >Export To Excel</MenuItem>
                         </Menu >
-
                     </>
                 </Stack >
             </Stack >
-
+            <CreateVisitingCardDialog />
             {/* filter dates and person */}
             <Stack direction="row" p={1} gap={2}>
-              
+
                 {user?.assigned_users && user?.assigned_users.length > 0 && < TextField
                     focused
-                    size="small"
+                    
                     select
                     SelectProps={{
                         native: true,
@@ -264,25 +275,144 @@ export default function VisitingCardAdminPage() {
                         })
                     }
                 </TextField>}
+                {user?.assigned_users && user?.assigned_users.length > 0 && < TextField
+                    focused
+                    
+                    select
+                    SelectProps={{
+                        native: true,
+                    }}
+                    onChange={(e) => {
+                        setUserId(e.target.value)
+                        ReftechVisitingCards()
+                    }}
+                    required
+                    id="refer party"
+                    label="Refer Party"
+                    fullWidth
+                >
+                    <option key={'00'} value={undefined}>
+
+                    </option>
+                    {
+                        users.map((user, index) => {
+                            if (!user.crm_access_fields.is_hidden)
+                                return (<option key={index} value={user._id}>
+                                    {user.username}
+                                </option>)
+                            else
+                                return null
+                        })
+                    }
+                </TextField>}
             </Stack>
 
             {/* table */}
             {isLoading && <TableSkeleton />}
-            {!isLoading &&
-                <Box sx={{ px: 1 }}>
-                    <VisitingCardTable
-                        card={card}
-                        sorted={sorted}
-                        setSorted={setSorted}
-                        setVisitingCard={setVisitingCard}
-                        selectAll={selectAll}
-                        selectedVisitingCards={selectedVisitingCards}
-                        setSelectedVisitingCards={setSelectedVisitingCards}
-                        setSelectAll={setSelectAll}
-                        cards={MemoData}
-                    />
-                </Box>}
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} filterCount={filterCount} setFilterCount={setFilterCount} />
+            {!isLoading && window.screen.width > 500 ?
+                <>
+                    <Box sx={{ px: 1 }}>
+                        <VisitingCardTable
+                            card={card}
+                            sorted={sorted}
+                            setSorted={setSorted}
+                            setVisitingCard={setVisitingCard}
+                            selectAll={selectAll}
+                            selectedVisitingCards={selectedVisitingCards}
+                            setSelectedVisitingCards={setSelectedVisitingCards}
+                            setSelectAll={setSelectAll}
+                            cards={MemoData}
+                        />
+                    </Box>
+                    <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} filterCount={filterCount} setFilterCount={setFilterCount} />
+                </>
+                :
+                <>
+                    {cards.map((card, index) => {
+                        return (
+                            <Stack key={index} padding={1} gap={1} sx={{ position: 'relative' }}>
+                                <img src={card.card?.public_url} alt={card.name} style={{ maxHeight: 400, borderRadius: 2 }} />
+                                <Stack
+                                    direction="row" spacing={1} justifyContent={'center'} sx={{ position: 'absolute', bottom: 7, backgroundColor: 'rgba(0,0,0,0.5)', width: '95%', borderRadius: 1 }}>
+                                    <Tooltip title="refer">
+                                        <IconButton size="large" color="primary"
+                                            onClick={() => {
+
+                                                setChoice({ type: LeadChoiceActions.refer_card })
+                                                setVisitingCard(card)
+
+                                            }}
+                                        >
+                                            <Share />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="edit">
+                                        <IconButton size="large" color="info"
+                                            onClick={() => {
+                                                setChoice({ type: LeadChoiceActions.update_card })
+                                                setVisitingCard(card)
+
+                                            }}
+                                        >
+                                            <Edit />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="view comments">
+                                        <IconButton size="large" color="primary"
+                                            onClick={() => {
+
+                                                setChoice({ type: LeadChoiceActions.view_card_comments })
+                                                setVisitingCard(card)
+
+
+                                            }}
+                                        >
+                                            <Visibility />
+                                        </IconButton>
+                                    </Tooltip>
+
+                                    <Tooltip title="Add Comment">
+                                        <IconButton size="large" color="info"
+                                            onClick={() => {
+
+                                                setChoice({ type: LeadChoiceActions.add_card_comment })
+                                                setVisitingCard(card)
+
+                                            }}
+                                        >
+                                            <Comment />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="delete">
+                                        <IconButton size="large" color="error"
+                                            onClick={() => {
+                                                setChoice({ type: LeadChoiceActions.delete_lead })
+                                                setVisitingCard(card)
+
+                                            }}
+                                        >
+                                            <Delete />
+                                        </IconButton>
+                                    </Tooltip>
+
+                                </Stack>
+                            </Stack>
+                        )
+                    })}
+                    {
+                        card ?
+                            <>
+                                <UpdateVisitingCardDialog card={card} />
+                                <ReferVisitingCardDialog card={card} />
+                                <AddCommentVisitingCardDialog card={card} />
+                                <ViewCardCommentsDialog card={card} />
+                            </>
+                            : null
+                    }
+                </>
+
+            }
+
         </>
 
     )

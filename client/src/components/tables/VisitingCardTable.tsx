@@ -1,14 +1,18 @@
-import { Box, Checkbox, IconButton } from '@mui/material'
+import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
-import {  useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import PopUp from '../popup/PopUp'
-// import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import moment from 'moment'
 import ViewTextDialog from '../dialogs/text/ViewTextDialog'
 import { IVisitingCard } from '../../types/visiting_card.types'
-import { Photo } from '@mui/icons-material'
-// import { ChoiceContext } from '../../contexts/dialogContext'
+import { Comment, Delete, Edit, Flip, Photo, Share, Visibility } from '@mui/icons-material'
+import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
+import UpdateVisitingCardDialog from '../dialogs/cards/UpdateVisitingCardDialog'
+import ReferVisitingCardDialog from '../dialogs/cards/ReferVisitingCardDialog'
+import AddCommentVisitingCardDialog from '../dialogs/cards/AddCommentVisitingCardDialog'
+import ViewCardCommentsDialog from '../dialogs/cards/ViewCardCommentsDialog'
+import ToogleStatusCardDialog from '../dialogs/cards/ToogleStatusCardDialog'
 
 
 type Props = {
@@ -23,16 +27,16 @@ type Props = {
     sorted: boolean
 }
 
-function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelectAll, selectedVisitingCards, setSelectedVisitingCards }: Props) {
+function VisitingCardTable({ card, cards, setVisitingCard, selectAll, setSelectAll, selectedVisitingCards, setSelectedVisitingCards }: Props) {
     const [data, setData] = useState<IVisitingCard[]>(cards)
-    // const { setChoice } = useContext(ChoiceContext)
+    const { setChoice } = useContext(ChoiceContext)
     const [text, setText] = useState<string>()
     // const { user } = useContext(UserContext)
 
     useEffect(() => {
         setData(cards)
     }, [cards])
-    
+
     return (
         <>
             <Box sx={{
@@ -48,7 +52,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                             >
 
 
-                                <Checkbox 
+                                <Checkbox
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -73,6 +77,12 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                             <STableHeadCell
                             >
 
+                                No
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Date
 
                             </STableHeadCell>
@@ -80,6 +90,12 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                             >
 
                                 Status
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Card
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -108,13 +124,13 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                                 Salesman
 
                             </STableHeadCell>
+
                             <STableHeadCell
                             >
 
-                                Visiting Card
+                                Refer
 
                             </STableHeadCell>
-
 
                             <STableHeadCell
                             >
@@ -123,28 +139,11 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                             </STableHeadCell>
 
 
-                            <STableHeadCell
-                            >
 
-                                Created at
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Updated at
-
-                            </STableHeadCell>
                             <STableHeadCell
                             >
 
                                 Created By
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Updated By
 
                             </STableHeadCell>
 
@@ -163,7 +162,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                                             <STableCell>
 
 
-                                                <Checkbox  size="small"
+                                                <Checkbox size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -175,7 +174,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
 
                                             <STableCell>
 
-                                                <Checkbox  size="small"
+                                                <Checkbox size="small"
                                                     onChange={(e) => {
                                                         setVisitingCard(card)
                                                         if (e.target.checked) {
@@ -197,19 +196,93 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                                                 element={
                                                     <Stack
                                                         direction="row" spacing={1}>
-                                                        {
 
-                                                        }
+                                                        <Tooltip title="refer">
+                                                            <IconButton color="primary"
+                                                                onClick={() => {
+
+                                                                    setChoice({ type: LeadChoiceActions.refer_card })
+                                                                    setVisitingCard(card)
+
+                                                                }}
+                                                            >
+                                                                <Share />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        <Tooltip title="edit">
+                                                            <IconButton color="info"
+                                                                onClick={() => {
+                                                                    setChoice({ type: LeadChoiceActions.update_card })
+                                                                    setVisitingCard(card)
+
+                                                                }}
+                                                            >
+                                                                <Edit />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        <Tooltip title="toogle">
+                                                            <IconButton color="info"
+                                                                onClick={() => {
+                                                                    setChoice({ type: LeadChoiceActions.toogle_card })
+                                                                    setVisitingCard(card)
+
+                                                                }}
+                                                            >
+                                                                <Flip />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        <Tooltip title="view comments">
+                                                            <IconButton color="primary"
+                                                                onClick={() => {
+
+                                                                    setChoice({ type: LeadChoiceActions.view_card_comments })
+                                                                    setVisitingCard(card)
+
+
+                                                                }}
+                                                            >
+                                                                <Visibility />
+                                                            </IconButton>
+                                                        </Tooltip>
+
+                                                        <Tooltip title="Add Comment">
+                                                            <IconButton
+                                                                onClick={() => {
+
+                                                                    setChoice({ type: LeadChoiceActions.add_card_comment })
+                                                                    setVisitingCard(card)
+
+                                                                }}
+                                                            >
+                                                                <Comment />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        <Tooltip title="delete">
+                                                            <IconButton color="error"
+                                                                onClick={() => {
+                                                                    setChoice({ type: LeadChoiceActions.delete_lead })
+                                                                    setVisitingCard(card)
+
+                                                                }}
+                                                            >
+                                                                <Delete />
+                                                            </IconButton>
+                                                        </Tooltip>
 
                                                     </Stack>
                                                 }
                                             />
                                         </STableCell>
-
-                                     
                                         <STableCell>
                                             {index + 1}
                                         </STableCell>
+                                        <STableCell>
+                                            {moment(new Date(card.created_at)).format("DD/MM/YYYY")}
+                                        </STableCell>
+                                        <STableCell>
+                                            {card.is_closed ? "Closed " : "Open"}
+                                        </STableCell>
+
                                         <STableCell>
 
                                             {card.card && <IconButton
@@ -221,20 +294,16 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                                             </IconButton>}
 
                                         </STableCell>
-                                        <STableCell>
-                                            {moment(new Date(card.created_at)).format('DD/MM/YYYY')}
-                                        </STableCell>
-
                                         <STableCell title={card.name} onClick={() => {
                                             if (card.name) {
                                                 setText(card.name)
                                             }
                                         }}>
-                                            {card.name && card.name.slice(0, 50) + "..."}
+                                            {card.name && card.name}
                                         </STableCell>
-                                        <STableCell>
-                                            {card.is_closed ? "Closed " : "Open"}
-                                        </STableCell>
+
+
+
                                         <STableCell>
                                             {card.city ? card.city : ""}
                                         </STableCell>
@@ -245,17 +314,17 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
                                             {card.salesman && card.salesman.username}
                                         </STableCell>
                                         <STableCell>
-                                            {new Date(card.created_at).toLocaleString()}
+                                            {card.refer && card.refer.name}
                                         </STableCell>
                                         <STableCell>
-                                            {new Date(card.updated_at).toLocaleString()}
+                                            {card.comments && card.comments.length > 0 && card.comments[card.comments.length - 1].comment || ""}
+
                                         </STableCell>
+
                                         <STableCell>
                                             {card.created_by.username}
                                         </STableCell>
-                                        <STableCell>
-                                            {card.updated_by.username}
-                                        </STableCell>
+
 
                                     </STableRow>
                                 )
@@ -268,7 +337,11 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll,  setSelect
             {
                 card ?
                     <>
-
+                        <UpdateVisitingCardDialog card={card} />
+                        <ReferVisitingCardDialog card={card} />
+                        <AddCommentVisitingCardDialog card={card} />
+                        <ViewCardCommentsDialog card={card} />
+                        <ToogleStatusCardDialog card={card}/>
                     </>
                     : null
             }
