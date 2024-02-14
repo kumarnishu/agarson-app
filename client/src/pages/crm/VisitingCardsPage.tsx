@@ -185,7 +185,7 @@ export default function VisitingCardAdminPage() {
 
                         <TextField
                             fullWidth
-                            
+                            size="small"
                             onChange={(e) => {
                                 setFilter(e.currentTarget.value)
                                 setFilterCount(0)
@@ -209,7 +209,7 @@ export default function VisitingCardAdminPage() {
                         {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
 
-                        <IconButton size="large"  color="primary"
+                        <IconButton size="small"  color="primary"
                             onClick={(e) => setAnchorEl(e.currentTarget)
                             }
                             sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
@@ -256,6 +256,7 @@ export default function VisitingCardAdminPage() {
                         setUserId(e.target.value)
                         ReftechVisitingCards()
                     }}
+                    size="small"
                     required
                     id="card_owner"
                     label="Person"
@@ -277,7 +278,7 @@ export default function VisitingCardAdminPage() {
                 </TextField>}
                 {user?.assigned_users && user?.assigned_users.length > 0 && < TextField
                     focused
-                    
+                    size="small"
                     select
                     SelectProps={{
                         native: true,
@@ -335,7 +336,7 @@ export default function VisitingCardAdminPage() {
                                 <Stack
                                     direction="row" spacing={1} justifyContent={'center'} sx={{ position: 'absolute', bottom: 7, backgroundColor: 'rgba(0,0,0,0.5)', width: '95%', borderRadius: 1 }}>
                                     <Tooltip title="refer">
-                                        <IconButton size="large" color="primary"
+                                        <IconButton size="small" color="primary"
                                             onClick={() => {
 
                                                 setChoice({ type: LeadChoiceActions.refer_card })
@@ -347,7 +348,7 @@ export default function VisitingCardAdminPage() {
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="edit">
-                                        <IconButton size="large" color="info"
+                                        <IconButton size="small" color="info"
                                             onClick={() => {
                                                 setChoice({ type: LeadChoiceActions.update_card })
                                                 setVisitingCard(card)
@@ -358,7 +359,7 @@ export default function VisitingCardAdminPage() {
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="view comments">
-                                        <IconButton size="large" color="primary"
+                                        <IconButton size="small" color="primary"
                                             onClick={() => {
 
                                                 setChoice({ type: LeadChoiceActions.view_card_comments })
@@ -372,7 +373,7 @@ export default function VisitingCardAdminPage() {
                                     </Tooltip>
 
                                     <Tooltip title="Add Comment">
-                                        <IconButton size="large" color="info"
+                                        <IconButton size="small" color="info"
                                             onClick={() => {
 
                                                 setChoice({ type: LeadChoiceActions.add_card_comment })
@@ -384,7 +385,7 @@ export default function VisitingCardAdminPage() {
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="delete">
-                                        <IconButton size="large" color="error"
+                                        <IconButton size="small" color="error"
                                             onClick={() => {
                                                 setChoice({ type: LeadChoiceActions.delete_lead })
                                                 setVisitingCard(card)

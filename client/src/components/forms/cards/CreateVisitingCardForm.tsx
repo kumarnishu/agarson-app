@@ -162,7 +162,7 @@ function CreateVisitingCardForm({ users }: { users: IUser[] }) {
                     }
                     {...formik.getFieldProps('state')}
                 >
-                    <option value="">
+                    <option value={undefined}>
 
                     </option>
                     {
