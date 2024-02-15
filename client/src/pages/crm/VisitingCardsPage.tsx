@@ -336,7 +336,7 @@ export default function VisitingCardAdminPage() {
                                 <Stack
                                     direction="row" spacing={1} justifyContent={'center'} sx={{ position: 'absolute', bottom: 7, backgroundColor: 'rgba(0,0,0,0.5)', width: '95%', borderRadius: 1 }}>
                                     <Tooltip title="refer">
-                                        <IconButton size="small" color="primary"
+                                        <IconButton size="large"  color="primary"
                                             onClick={() => {
 
                                                 setChoice({ type: LeadChoiceActions.refer_card })
@@ -348,7 +348,7 @@ export default function VisitingCardAdminPage() {
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="edit">
-                                        <IconButton size="small" color="info"
+                                        <IconButton size="large"  color="info"
                                             onClick={() => {
                                                 setChoice({ type: LeadChoiceActions.update_card })
                                                 setVisitingCard(card)
@@ -359,7 +359,7 @@ export default function VisitingCardAdminPage() {
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="view comments">
-                                        <IconButton size="small" color="primary"
+                                        <IconButton size="large"  color="primary"
                                             onClick={() => {
 
                                                 setChoice({ type: LeadChoiceActions.view_card_comments })
@@ -373,7 +373,7 @@ export default function VisitingCardAdminPage() {
                                     </Tooltip>
 
                                     <Tooltip title="Add Comment">
-                                        <IconButton size="small" color="info"
+                                        <IconButton size="large"  color="info"
                                             onClick={() => {
 
                                                 setChoice({ type: LeadChoiceActions.add_card_comment })
@@ -385,7 +385,7 @@ export default function VisitingCardAdminPage() {
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="delete">
-                                        <IconButton size="small" color="error"
+                                        <IconButton size="large"  color="error"
                                             onClick={() => {
                                                 setChoice({ type: LeadChoiceActions.delete_lead })
                                                 setVisitingCard(card)

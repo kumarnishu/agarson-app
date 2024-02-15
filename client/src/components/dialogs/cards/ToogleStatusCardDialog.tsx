@@ -34,21 +34,10 @@ function ToogleStatusCardDialog({ card }: { card: IVisitingCard }) {
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-                Togle status
+                Togle Card status
             </DialogTitle>
-            <TextField
-                autoFocus
-                required
-                fullWidth
-                multiline
-                minRows={4}
-                onChange={(e) => setComment(e.currentTarget.value)}
-                error={
-                    !comment ? true : false
-                }
-                id="comment"
-                label="Comments"
-            />
+            <br />
+
             {
                 isError ? (
                     <AlertBar message={error?.response.data.message} color="error" />
@@ -59,30 +48,38 @@ function ToogleStatusCardDialog({ card }: { card: IVisitingCard }) {
                     <AlertBar message="updated status" color="success" />
                 ) : null
             }
+            <Typography variant="body1" textAlign={'center'} color="error">
+                {`Warning ! This will update selected card status. ${card.name}`}
+            </Typography>
             <DialogContent>
-                <Typography variant="body1" color="error">
-                    {`Warning ! This will update selected card status. ${card.name}`}
-                </Typography>
-            </DialogContent>
-            <Stack
-                direction="column"
-                gap={2}
-                padding={2}
-                width="100%"
-            >
-                <Button fullWidth variant="outlined" color="error"
+                <TextField
+                    required
+                    fullWidth
+                    multiline
+                    minRows={4}
+                    onChange={(e) => setComment(e.currentTarget.value)}
+                    error={
+                        !comment ? true : false
+                    }
+                    id="comment"
+                    label="Comments"
+                    
+                />
+
+                <Button fullWidth variant="outlined" color="error" sx={{mt:2}}
+                    disabled={isLoading || !Boolean(comment)}
                     onClick={() => {
                         if (comment) {
                             mutate({ id: card._id, body: { comment: comment } })
                             setChoice({ type: LeadChoiceActions.close_lead })
                         }
                     }}
-                    disabled={isLoading}
                 >
                     {isLoading ? <CircularProgress /> :
                         "Toogle Status"}
                 </Button>
-            </Stack >
+            </DialogContent>
+
         </Dialog >
     )
 }
