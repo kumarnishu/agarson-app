@@ -106,33 +106,15 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                 Object.keys(result).map(async (key: string) => {
                     metaDeta.push(result[key])
                 })
-                console.log("groups1", metaDeta.length)
-
+                console.log("total groups", metaDeta.length)
                 metaDeta = metaDeta.filter((group) => {
-                    if (group.participants.find((part) => part.id !== "919319284965@s.whatsapp.net"))
+                    if (group.participants.find((part) => part.id === "919319284966@s.whatsapp.net"))
                         return group
                 })
-                console.log("groups2", metaDeta.length)
-
-                // for (let i = 0; i < metaDeta.length; i++) {
-                //     try {
-                //         const result = await sock.groupParticipantsUpdate(
-                //             metaDeta[i].id,
-                //             [`919319284966@s.whatsapp.net`, "919319284965@s.whatsapp.net"],
-                //             "add")
-                //         await result;
-                //     }
-                //     catch (err) {
-                //         // console.log(key)
-                //         // result[key].subject
-                //         console.log(err)
-                //     }
-                // }
-
-
+                console.log("already added in groups 919319284966@s.whatsapp.net", metaDeta.length)
+                // const res = await Add(metaDeta, socket.sock)
+                console.log("added in groups 919319284966@s.whatsapp.net", metaDeta.length)
             }
-
-
         }
     })
 
@@ -179,3 +161,20 @@ async function DeleteLocalSession(client_id: string) {
 }
 
 
+async function Add(metaDeta: GroupMetadata[], sock: any) {
+    for (let i = 0; i < metaDeta.length; i++) {
+        try {
+            const result = await sock.groupParticipantsUpdate(
+                metaDeta[i].id,
+                [`919319284966@s.whatsapp.net`],
+                "add")
+            await result;
+            console.log("index", i)
+        }
+        catch (err) {
+            // console.log(key)
+            // result[key].subject
+            console.log(err)
+        }
+    }
+}
