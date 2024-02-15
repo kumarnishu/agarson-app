@@ -8,7 +8,6 @@ import { Todo } from "../models/todos/todo.model";
 import { HandleTodoMessage } from "./handleTodo";
 import { ExportProductionsToPdf } from "./ExportProductionReports";
 import NodeCache from 'node-cache'
-import { parties } from "./db"
 // import { parties } from "./db2"
 
 export var clients: { client_id: string, client: any }[] = []
@@ -98,7 +97,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             clients.push({ client_id: client_id, client: socket.sock })
             let client = clients.find((client) => client.client_id === process.env.WACLIENT_ID)
             if (client) {
-                console.log("hanling groups")
+                console.log("handling groups")
                 let sock = client.client
                 let result = await socket.sock.groupFetchAllParticipating()
                 let metaDeta: GroupMetadata[] = []
@@ -107,10 +106,21 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     metaDeta.push(result[key])
                 })
                 console.log("total groups", metaDeta.length)
+                let groups: string[] = []
                 metaDeta = metaDeta.filter((group) => {
-                    if (group.participants.find((part) => part.id === "919319284966@s.whatsapp.net"))
+                    if (group.participants.find((part) => part.id === "919817702307@s.whatsapp.net"))
+                    // if (group.owner !== "919313940410@s.whatsapp.net")
+                    {
+
                         return group
+                    }
+                    else {
+                        groups.push(group.subject)
+                    }
                 })
+                console.log(metaDeta.length)
+                fs.writeFileSync("./notaddedInGroupName.txt", JSON.stringify(groups, null, 2), 'utf8')
+                console.log(metaDeta[2])
                 console.log("already added in groups 919319284966@s.whatsapp.net", metaDeta.length)
                 // const res = await Add(metaDeta, socket.sock)
                 console.log("added in groups 919319284966@s.whatsapp.net", metaDeta.length)
