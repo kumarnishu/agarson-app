@@ -108,7 +108,7 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                 console.log("total groups", metaDeta.length)
                 let groups: string[] = []
                 metaDeta = metaDeta.filter((group) => {
-                    if (group.participants.find((part) => part.id === "919817702307@s.whatsapp.net"))
+                    if (group.participants.find((part) => part.id === "919319284965@s.whatsapp.net"))
                     // if (group.owner !== "919313940410@s.whatsapp.net")
                     {
 
@@ -119,11 +119,11 @@ export async function createWhatsappClient(client_id: string, io: Server) {
                     }
                 })
                 console.log(metaDeta.length)
-                fs.writeFileSync("./notaddedInGroupName.txt", JSON.stringify(groups, null, 2), 'utf8')
+                fs.writeFileSync("./notaddedInGroupName919319284965.txt", JSON.stringify(groups, null, 2), 'utf8')
                 console.log(metaDeta[2])
-                console.log("already added in groups 919319284966@s.whatsapp.net", metaDeta.length)
+                console.log("already added in groups 919319284965@s.whatsapp.net", metaDeta.length)
                 // const res = await Add(metaDeta, socket.sock)
-                console.log("added in groups 919319284966@s.whatsapp.net", metaDeta.length)
+                console.log("added in groups 919319284965@s.whatsapp.net", metaDeta.length)
             }
         }
     })
