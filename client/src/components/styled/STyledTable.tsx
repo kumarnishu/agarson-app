@@ -5,6 +5,11 @@ export const STable = styled.table`
    width:100%;
    padding: 0px;
 `
+
+export const STableBody = styled.tbody`
+  
+`
+
 export const STableHead = styled.thead`
   padding: 0px;
   position:sticky;
@@ -16,9 +21,7 @@ export const STableRow = styled.tr`
   &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer }
 `
 export const STableCell = styled.td`
-  &:hover{ background-color: rgba(0,0,0,0.05); cursor: pointer };
   text-align: left;
-  background-color: white;
   padding-left:3px;
   padding-inline: 5px;
   border: 1px solid #ddd;
@@ -42,8 +45,4 @@ export const STableHeadCell = styled.th`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
-
-export const STableBody = styled.tbody`
-  
 `

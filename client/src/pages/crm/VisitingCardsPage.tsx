@@ -1,4 +1,4 @@
-import { Comment, Delete, Edit, Search, Share, Visibility } from '@mui/icons-material'
+import { Comment, Delete, Edit, Flip, Search, Share, Visibility } from '@mui/icons-material'
 import { Box, Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
@@ -209,7 +209,7 @@ export default function VisitingCardAdminPage() {
                         {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
 
-                        <IconButton size="small"  color="primary"
+                        <IconButton size="small" color="primary"
                             onClick={(e) => setAnchorEl(e.currentTarget)
                             }
                             sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
@@ -247,7 +247,7 @@ export default function VisitingCardAdminPage() {
 
                 {user?.assigned_users && user?.assigned_users.length > 0 && < TextField
                     focused
-                    
+
                     select
                     SelectProps={{
                         native: true,
@@ -331,12 +331,49 @@ export default function VisitingCardAdminPage() {
                 <>
                     {cards.map((card, index) => {
                         return (
-                            <Stack key={index} padding={1} gap={1} sx={{ position: 'relative' }}>
-                                <img src={card.card?.public_url} alt={card.name} style={{ maxHeight: 400, borderRadius: 2 }} />
-                                <Stack
-                                    direction="row" spacing={1} justifyContent={'center'} sx={{ position: 'absolute', bottom: 7, backgroundColor: 'rgba(0,0,0,0.5)', width: '95%', borderRadius: 1 }}>
+                            <Stack key={index} padding={1} sx={{ position: 'relative' }} >
+                                <img src={card.card?.public_url} alt={card.name} style={{ maxHeight: 400, borderTopLeftRadius: 5 }} />
+                                <Stack sx={{ position: 'abosolute', bottom: 0, justifyContent: "center", backgroundColor: 'black' }}
+                                    direction="row" spacing={1}>
+                                    {user?.crm_access_fields.is_editable && <>
+                                        <Tooltip title="edit">
+                                            <IconButton color="info"
+                                                onClick={() => {
+                                                    setChoice({ type: LeadChoiceActions.update_card })
+                                                    setVisitingCard(card)
+
+                                                }}
+                                            >
+                                                <Edit />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="toogle">
+                                            <IconButton color="info"
+                                                onClick={() => {
+                                                    setChoice({ type: LeadChoiceActions.toogle_card })
+                                                    setVisitingCard(card)
+
+                                                }}
+                                            >
+                                                <Flip />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </>}
+                                    {user?.crm_access_fields.is_deletion_allowed &&
+                                        <Tooltip title="delete">
+                                            <IconButton color="info"
+                                                onClick={() => {
+                                                    setChoice({ type: LeadChoiceActions.delete_lead })
+                                                    setVisitingCard(card)
+
+                                                }}
+                                            >
+                                                <Delete />
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
                                     <Tooltip title="refer">
-                                        <IconButton size="large"  color="primary"
+                                        <IconButton color="info"
                                             onClick={() => {
 
                                                 setChoice({ type: LeadChoiceActions.refer_card })
@@ -347,19 +384,9 @@ export default function VisitingCardAdminPage() {
                                             <Share />
                                         </IconButton>
                                     </Tooltip>
-                                    <Tooltip title="edit">
-                                        <IconButton size="large"  color="info"
-                                            onClick={() => {
-                                                setChoice({ type: LeadChoiceActions.update_card })
-                                                setVisitingCard(card)
 
-                                            }}
-                                        >
-                                            <Edit />
-                                        </IconButton>
-                                    </Tooltip>
                                     <Tooltip title="view comments">
-                                        <IconButton size="large"  color="primary"
+                                        <IconButton color="info"
                                             onClick={() => {
 
                                                 setChoice({ type: LeadChoiceActions.view_card_comments })
@@ -373,7 +400,7 @@ export default function VisitingCardAdminPage() {
                                     </Tooltip>
 
                                     <Tooltip title="Add Comment">
-                                        <IconButton size="large"  color="info"
+                                        <IconButton color="info"
                                             onClick={() => {
 
                                                 setChoice({ type: LeadChoiceActions.add_card_comment })
@@ -384,17 +411,7 @@ export default function VisitingCardAdminPage() {
                                             <Comment />
                                         </IconButton>
                                     </Tooltip>
-                                    <Tooltip title="delete">
-                                        <IconButton size="large"  color="error"
-                                            onClick={() => {
-                                                setChoice({ type: LeadChoiceActions.delete_lead })
-                                                setVisitingCard(card)
 
-                                            }}
-                                        >
-                                            <Delete />
-                                        </IconButton>
-                                    </Tooltip>
 
                                 </Stack>
                             </Stack>

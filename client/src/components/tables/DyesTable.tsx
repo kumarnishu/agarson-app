@@ -117,6 +117,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                             dyes && dyes.map((dye, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedDyes.length > 0 && selectedDyes.find((t) => t._id === dye._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?

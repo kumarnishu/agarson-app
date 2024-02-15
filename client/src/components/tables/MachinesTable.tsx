@@ -130,6 +130,7 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                             machines && machines.map((machine, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedMachines.length > 0 && selectedMachines.find((t) => t._id === machine._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?

@@ -159,7 +159,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
 
                             data && data.map((todo, index) => {
                                 return (
-                                    <STableRow
+                                    <STableRow style={{ backgroundColor: selectedTodos.length > 0 && selectedTodos.find((t) => t._id === todo._id) ? "lightgrey" : "white" }}
                                         key={index}>
                                         {selectAll ?
 
@@ -198,7 +198,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                             null
                                         }
 
-                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke", width: '70px' }}>
+                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "rgba(155, 214, 149, 0.8)" : "rgba(240, 164, 164, 0.8)", width: '70px' }}>
                                             <Tooltip title="View replies">
 
                                                 <RemoveRedEye color="success" sx={{ marginLeft: 1 }} onClick={() => {
@@ -287,7 +287,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
             {
                 todo ?
                     <>
-                        <ViewTodoContactsDialog todo={todo} />
+                        < ViewTodoContactsDialog todo={todo} />
                         <ViewTodoRepliesDialog todo={todo} />
                     </>
                     : null

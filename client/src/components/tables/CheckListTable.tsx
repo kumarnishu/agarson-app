@@ -149,6 +149,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                             data && data.map((checklist, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedCheckLists.length > 0 && selectedCheckLists.find((t) => t._id === checklist._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?

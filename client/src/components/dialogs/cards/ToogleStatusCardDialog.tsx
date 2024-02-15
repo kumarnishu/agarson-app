@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Button, Typography, Stack, CircularProgress, IconButton, TextField } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Button, Typography, CircularProgress, IconButton, TextField } from '@mui/material'
 import { AxiosResponse } from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
@@ -63,10 +63,10 @@ function ToogleStatusCardDialog({ card }: { card: IVisitingCard }) {
                     }
                     id="comment"
                     label="Comments"
-                    
+
                 />
 
-                <Button fullWidth variant="outlined" color="error" sx={{mt:2}}
+                <Button fullWidth variant="outlined" color="error" sx={{ mt: 2 }}
                     disabled={isLoading || !Boolean(comment)}
                     onClick={() => {
                         if (comment) {

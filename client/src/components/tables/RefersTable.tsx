@@ -155,6 +155,7 @@ function RefersSTable({ refer, selectAll, refers, setSelectAll, setRefer, select
                             data && data.map((refer, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedRefers.length > 0 && selectedRefers.find((t) => t.party._id === refer.party._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?

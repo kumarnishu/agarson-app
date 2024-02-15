@@ -255,6 +255,7 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                             data && data.map((remark, index) => {
                                 return (
                                     <STableRow
+                                       
                                         key={index}
                                     >
                                         <STableCell>

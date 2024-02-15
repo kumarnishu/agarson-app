@@ -92,6 +92,7 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                             states && states.map((state, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedStates.length > 0 && selectedStates.find((t) => t.state._id === state.state._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?

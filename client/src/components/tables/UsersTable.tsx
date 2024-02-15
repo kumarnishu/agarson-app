@@ -153,6 +153,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                             data && data.map((user, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedUsers.length > 0 && selectedUsers.find((t) => t._id === user._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?

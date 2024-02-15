@@ -311,6 +311,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               data && data.map((lead, index) => {
                 return (
                   <STableRow
+                    style={{ backgroundColor: selectedLeads.length > 0 && selectedLeads.find((t) => t._id === lead._id) ? "lightgrey" : "white" }}
                     key={index}>
                     {selectAll ?
 

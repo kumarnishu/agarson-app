@@ -230,6 +230,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                             data && data.map((visit, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedVisits.length > 0 && selectedVisits.find((t) => t._id === visit._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?

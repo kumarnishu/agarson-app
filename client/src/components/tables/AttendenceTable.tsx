@@ -123,6 +123,7 @@ function AttendenceTable({ attendences, attendence, selectedAttendeces, setSelec
                             data && data.map((attendence, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedAttendeces.length > 0 && selectedAttendeces.find((t) => t._id === attendence._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?

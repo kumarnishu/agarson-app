@@ -138,6 +138,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                             data && data.map((todo, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedTodos.length > 0 && selectedTodos.find((t) => t._id === todo._id) ? "lightgrey" : "white" }}
                                         key={index}>
                                         {selectAll ?
 
@@ -178,7 +179,7 @@ function MyTodosTable({ todos, todo, setTodo, selectAll, setSelectAll, selectedT
                                             null
                                         }
 
-                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "yellow" : "whitesmoke", width: '100px' }}>
+                                        <STableCell style={{ zIndex: -1, backgroundColor: todo.is_active ? "rgba(155, 214, 149, 0.8)" : "rgba(240, 164, 164, 0.8)", width: '100px' }}>
                                             <Tooltip title="View replies">
                                                 <IconButton 
                                                     onClick={() => {

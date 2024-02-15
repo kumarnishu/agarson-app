@@ -153,6 +153,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                             productions && productions.map((production, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedProductions.length > 0 && selectedProductions.find((t) => t._id === production._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?

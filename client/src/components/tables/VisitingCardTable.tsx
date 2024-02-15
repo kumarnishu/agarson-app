@@ -13,6 +13,7 @@ import ReferVisitingCardDialog from '../dialogs/cards/ReferVisitingCardDialog'
 import AddCommentVisitingCardDialog from '../dialogs/cards/AddCommentVisitingCardDialog'
 import ViewCardCommentsDialog from '../dialogs/cards/ViewCardCommentsDialog'
 import ToogleStatusCardDialog from '../dialogs/cards/ToogleStatusCardDialog'
+import { UserContext } from '../../contexts/userContext'
 
 
 type Props = {
@@ -31,7 +32,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll, setSelectA
     const [data, setData] = useState<IVisitingCard[]>(cards)
     const { setChoice } = useContext(ChoiceContext)
     const [text, setText] = useState<string>()
-    // const { user } = useContext(UserContext)
+    const { user } = useContext(UserContext)
 
     useEffect(() => {
         setData(cards)
@@ -155,6 +156,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll, setSelectA
                             data && data.map((card, index) => {
                                 return (
                                     <STableRow
+                                        style={{ backgroundColor: selectedVisitingCards.length > 0 && selectedVisitingCards.find((t) => t._id === card._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
@@ -196,7 +198,43 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll, setSelectA
                                                 element={
                                                     <Stack
                                                         direction="row" spacing={1}>
+                                                        {user?.crm_access_fields.is_editable && <>
+                                                            <Tooltip title="edit">
+                                                                <IconButton color="info"
+                                                                    onClick={() => {
+                                                                        setChoice({ type: LeadChoiceActions.update_card })
+                                                                        setVisitingCard(card)
 
+                                                                    }}
+                                                                >
+                                                                    <Edit />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                            <Tooltip title="toogle">
+                                                                <IconButton color="info"
+                                                                    onClick={() => {
+                                                                        setChoice({ type: LeadChoiceActions.toogle_card })
+                                                                        setVisitingCard(card)
+
+                                                                    }}
+                                                                >
+                                                                    <Flip />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </>}
+                                                        {user?.crm_access_fields.is_deletion_allowed &&
+                                                            <Tooltip title="delete">
+                                                                <IconButton color="error"
+                                                                    onClick={() => {
+                                                                        setChoice({ type: LeadChoiceActions.delete_lead })
+                                                                        setVisitingCard(card)
+
+                                                                    }}
+                                                                >
+                                                                    <Delete />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        }
                                                         <Tooltip title="refer">
                                                             <IconButton color="primary"
                                                                 onClick={() => {
@@ -209,28 +247,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll, setSelectA
                                                                 <Share />
                                                             </IconButton>
                                                         </Tooltip>
-                                                        <Tooltip title="edit">
-                                                            <IconButton color="info"
-                                                                onClick={() => {
-                                                                    setChoice({ type: LeadChoiceActions.update_card })
-                                                                    setVisitingCard(card)
 
-                                                                }}
-                                                            >
-                                                                <Edit />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        <Tooltip title="toogle">
-                                                            <IconButton color="info"
-                                                                onClick={() => {
-                                                                    setChoice({ type: LeadChoiceActions.toogle_card })
-                                                                    setVisitingCard(card)
-
-                                                                }}
-                                                            >
-                                                                <Flip />
-                                                            </IconButton>
-                                                        </Tooltip>
                                                         <Tooltip title="view comments">
                                                             <IconButton color="primary"
                                                                 onClick={() => {
@@ -257,17 +274,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll, setSelectA
                                                                 <Comment />
                                                             </IconButton>
                                                         </Tooltip>
-                                                        <Tooltip title="delete">
-                                                            <IconButton color="error"
-                                                                onClick={() => {
-                                                                    setChoice({ type: LeadChoiceActions.delete_lead })
-                                                                    setVisitingCard(card)
 
-                                                                }}
-                                                            >
-                                                                <Delete />
-                                                            </IconButton>
-                                                        </Tooltip>
 
                                                     </Stack>
                                                 }
@@ -341,7 +348,7 @@ function VisitingCardTable({ card, cards, setVisitingCard, selectAll, setSelectA
                         <ReferVisitingCardDialog card={card} />
                         <AddCommentVisitingCardDialog card={card} />
                         <ViewCardCommentsDialog card={card} />
-                        <ToogleStatusCardDialog card={card}/>
+                        <ToogleStatusCardDialog card={card} />
                     </>
                     : null
             }
