@@ -8,6 +8,7 @@ import { Todo } from "../models/todos/todo.model";
 import { HandleTodoMessage } from "./handleTodo";
 import { ExportProductionsToPdf } from "./ExportProductionReports";
 import NodeCache from 'node-cache'
+import { parties } from "../db";
 // import { parties } from "./db2"
 
 export var clients: { client_id: string, client: any }[] = []
@@ -99,31 +100,71 @@ export async function createWhatsappClient(client_id: string, io: Server) {
             if (client) {
                 console.log("handling groups")
                 let sock = client.client
-                let result = await socket.sock.groupFetchAllParticipating()
-                let metaDeta: GroupMetadata[] = []
-                let keys: string[] = []
-                Object.keys(result).map(async (key: string) => {
-                    metaDeta.push(result[key])
-                })
-                console.log("total groups", metaDeta.length)
-                let groups: string[] = []
-                metaDeta = metaDeta.filter((group) => {
-                    if (group.participants.find((part) => part.id === "919319284965@s.whatsapp.net"))
-                    // if (group.owner !== "919313940410@s.whatsapp.net")
-                    {
+                // let result = await socket.sock.groupFetchAllParticipating()
+                // let metaDeta: GroupMetadata[] = []
+                // let keys: string[] = []
+                // Object.keys(result).map(async (key: string) => {
+                //     metaDeta.push(result[key])
+                // })
+                // console.log("total groups", metaDeta.length)
+                // let groups: string[] = []
+                // metaDeta = metaDeta.filter((group) => {
+                //     if (group.participants.find((part) => part.id === "919319284965@s.whatsapp.net"))
+                //     // if (group.owner !== "919313940410@s.whatsapp.net")
+                //     {
 
-                        return group
+                //         return group
+                //     }
+                //     else {
+                //         groups.push(group.subject)
+                //     }
+                // })
+                // console.log(metaDeta.length)
+                // // fs.writeFileSync("./notaddedInGroupName919319284965.txt", JSON.stringify(groups, null, 2), 'utf8')
+                // console.log(metaDeta[2])
+                // console.log("already added in groups 919319284965@s.whatsapp.net", metaDeta.length)
+                // // const res = await Add(metaDeta, socket.sock)
+                // console.log("added in groups 919319284965@s.whatsapp.net", metaDeta.length)
+                let data: { name: string, numbers: string[] }[] = []
+                data = parties.map((part) => {
+                    let numbers: string[] = []
+                    if (part.NUMBER1 && String(part.NUMBER1).length === 10) {
+                        numbers.push("91" + String(part.NUMBER1)+"@s.whatsapp.net")
                     }
-                    else {
-                        groups.push(group.subject)
+                    if (part.NUMBER2 && String(part.NUMBER2).length === 10) {
+                        numbers.push("91" + String(part.NUMBER2) + "@s.whatsapp.net")
+                    }
+                    if (part.NUMBER3 && String(part.NUMBER3).length === 10) {
+                        numbers.push("91" + String(part.NUMBER3) + "@s.whatsapp.net")
+                    }
+                    if (part.NUMBER4 && String(part.NUMBER4).length === 10) {
+                        numbers.push("91" + String(part.NUMBER4) + "@s.whatsapp.net")
+                    }
+                    if (part.Column6 && String(part.Column6).length === 12) {
+                        numbers.push(String(part.Column6) + "@s.whatsapp.net")
+                    }
+                    if (part.NUMBER1 && String(part.NUMBER1).length === 12) {
+                        numbers.push(String(part.NUMBER1) + "@s.whatsapp.net")
+                    }
+                    if (part.NUMBER2 && String(part.NUMBER2).length === 12) {
+                        numbers.push(String(part.NUMBER2) + "@s.whatsapp.net")
+                    }
+                    if (part.NUMBER3 && String(part.NUMBER3).length === 12) {
+                        numbers.push(String(part.NUMBER3) + "@s.whatsapp.net")
+                    }
+                    if (part.NUMBER4 && String(part.NUMBER4).length === 12) {
+                        numbers.push(String(part.NUMBER4) + "@s.whatsapp.net")
+                    }
+                    if (part.Column6 && String(part.Column6).length === 12) {
+                        numbers.push(String(part.Column6) + "@s.whatsapp.net")
+                    }
+                    return {
+                        name: part.name,
+                        numbers: [...new Set(numbers)]
                     }
                 })
-                console.log(metaDeta.length)
-                fs.writeFileSync("./notaddedInGroupName919319284965.txt", JSON.stringify(groups, null, 2), 'utf8')
-                console.log(metaDeta[2])
-                console.log("already added in groups 919319284965@s.whatsapp.net", metaDeta.length)
-                // const res = await Add(metaDeta, socket.sock)
-                console.log("added in groups 919319284965@s.whatsapp.net", metaDeta.length)
+                const res = await Newgroup(data, sock)
+                console.log("finished process...")
             }
         }
     })
@@ -187,4 +228,29 @@ async function Add(metaDeta: GroupMetadata[], sock: any) {
             console.log(err)
         }
     }
+}
+
+async function Newgroup(data: { name: string, numbers: string[] }[], sock: any) {
+    let result: string[] = []
+
+    for (let i = 0; i < data.length; i++) {
+        try {
+            // const group = await sock.groupCreate(data[i].name, data[i].numbers)
+            // await group;
+            // result.push(String(group.id))
+            //     const result = await sock.groupParticipantsUpdate(
+            //         metaDeta[i].id,
+            //         [`919319284966@s.whatsapp.net`],
+            //         "add")
+            //     await result;
+            console.log("index", i)
+
+        }
+        catch (err) {
+            // console.log(key)
+            // result[key].subject
+            console.log(err)
+        }
+    }
+    fs.writeFileSync("./newGroups.txt", JSON.stringify(result, null, 2), 'utf8')
 }

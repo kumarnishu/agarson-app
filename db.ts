@@ -1,0 +1,1978 @@
+export const parties=[
+    {
+        "name": "AGARSON-TOOLS CO., ANGUL",
+        "NUMBER1": 6764220333,
+        "NUMBER2": 6764220333,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PRAGNYA SAFETY PRODUCTS & SERVICES, HUBLI",
+        "NUMBER1": 7019129984,
+        "NUMBER2": 7019129984,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VIKAS SALES CORPORATION, SINGRAULI",
+        "NUMBER2": 7229938195,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TVL KMS SHOE CARE, CHENNAI",
+        "NUMBER1": 7299980051,
+        "NUMBER2": 7299980051,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TESLA TRANSFORMERS (GLOBAL) PRIVATE LIMITED, BHOPAL",
+        "NUMBER1": 7471128053,
+        "NUMBER2": 7471128053,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-LOKESH TRADERS, JAIPUR",
+        "NUMBER1": 7597963752,
+        "NUMBER2": 7597963752,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DEEP INDUSTRIAL SAFETY AND TOOLS, VAPI",
+        "NUMBER1": 7600020995,
+        "NUMBER2": 7600020995,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SIDDHIVINAYAK ENTERPRISE, BULANDSHAHR (U.P)",
+        "NUMBER1": 7466018456,
+        "NUMBER2": 7709366188,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ANEJA CONSTRUCTIONS (INDIA) LTD., NTPC FARAKKA (WEST BENGAL)",
+        "NUMBER1": 7827912007,
+        "NUMBER2": 7827912007,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-X-MEN CORPORATE SOLUTIONS P.LTD.BGARH",
+        "NUMBER2": 7876590327,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ZOYA INDUSTRIAL PRODUCTS, BALLARI",
+        "NUMBER1": 7892361359,
+        "NUMBER2": 7892361359,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-WE3,HUBLI",
+        "NUMBER2": 7899633007,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAJ FOOTWEAR, PUNE",
+        "NUMBER1": 7977384159,
+        "NUMBER2": 7977384159,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-INDUSTRIAL TRADE WORLD,FATEHABAD",
+        "NUMBER2": 8000166661,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-MENETA AUTOMOTIVE COMPONENTS PRIVATE LIMITED, SONIPAT",
+        "NUMBER2": 8053912561,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAM LAL RAKESH KUMAR, RISHIKESH",
+        "NUMBER1": 8077039604,
+        "NUMBER2": 8077039604,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VENKAT SAI ENTERPRISES PRIVATE LIMITED, KARIMNAGAR (TELANGANA)",
+        "NUMBER1": 8096663704,
+        "NUMBER2": 8096663704,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SANJAY SAW MILL, RAIGARH",
+        "NUMBER1": 8109646068,
+        "NUMBER2": 8109646068,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NEW ASHISH FOOTWEAR, SAGAR",
+        "NUMBER1": 8109999665,
+        "NUMBER2": 8109999665,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DINAMIC OIL INDIA PVT.LTD. BAHADURGARH",
+        "NUMBER2": 8199936991,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BHARAT TRADERS, JAMSHEDPUR",
+        "NUMBER1": 8274867254,
+        "NUMBER2": 8274867254,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-R K BAG CO, PATHANKOT",
+        "NUMBER1": 8360258889,
+        "NUMBER2": 8360258889,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHREE RADHIKA PLAST LLP, BAHADURGARH",
+        "NUMBER2": 8383972814,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-POONAM ELECTRIC HARDWARE STORE, VASAI (MH)",
+        "NUMBER1": 8421427651,
+        "NUMBER2": 8421427651,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TBR INFRA PRIVATE LIMITED, ALAMPURAM",
+        "NUMBER1": 8431261005,
+        "NUMBER2": 8431261005,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-WELCOME ELECTRICALS & HARDWARE, BHUSAWAL",
+        "NUMBER1": 8454825257,
+        "NUMBER2": 8454825257,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PRO ALIGN SECURITY INDIA PVT. LTD., GURGAON",
+        "NUMBER1": 8527128937,
+        "NUMBER2": 8527128937,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-GALAXY TOOLS, CALICUT",
+        "NUMBER1": 8589080878,
+        "NUMBER2": 8589080878,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ALLIED SALES CORPORATION, MOHALI",
+        "NUMBER1": 8591433116,
+        "NUMBER2": 8591433116,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SAFETY EQUIPMENT CORPORATION, MUMBAI",
+        "NUMBER1": 8591652287,
+        "NUMBER2": 8591652287,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHARMA STORES, DURGAPUR",
+        "NUMBER1": 8617487350,
+        "NUMBER2": 8617487350,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TIRUPATI FOOTWEAR",
+        "NUMBER2": 8678922671,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-H.P ENTERPRISES, JABALPUR",
+        "NUMBER1": 8719810546,
+        "NUMBER2": 8719810546,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SRI SHYAM ENTERPRISES, BALLARI",
+        "NUMBER2": 8792214337,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-INDSAFE EQUIPMENT AND TOOLS, ARIYALUR(TAMILNADU)",
+        "NUMBER1": 7010623286,
+        "NUMBER2": 8807584286,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VEERA TECHNO TREC (P) LTD., SAMPLA",
+        "NUMBER2": 8814800184,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHUBHAM GARG, RAJPUR (C.G)",
+        "NUMBER2": 8853396444,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PAWAN SAFETY ELECTRIC AND HARDWARE, SARKHEJ",
+        "NUMBER1": 8866622410,
+        "NUMBER2": 8866622410,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHRI PABUJI ENTERPRISE, ETAH",
+        "NUMBER1": 8871733904,
+        "NUMBER2": 8871733904,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ADITYA ENTERPRISES, GOBINDGARH",
+        "NUMBER1": 8872780591,
+        "NUMBER2": 8872780591,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TURBO SAFETY SOLUTIONS. NAVI MUMBAI",
+        "NUMBER1": 8882224452,
+        "NUMBER2": 8882224452,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-WANASKAR SALES, SOLAPUR (M.H)",
+        "NUMBER1": 6376627421,
+        "NUMBER2": 8888808000,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SRI RAMA ENTERPRISES, MANUGURU (TELANGANA)",
+        "NUMBER2": 8897519681,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TECHNOCRATIC DYNAMOS PRIVATE LIMITED",
+        "NUMBER1": 8928379445,
+        "NUMBER2": 8928379445,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DELHI ENGINEERING SOLUTION, DELHI",
+        "NUMBER2": 8929225880,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SUSHANT SAFETY SERVICES, RANCHI",
+        "NUMBER1": 8986891439,
+        "NUMBER2": 8986891439,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-S A ENTERPRISES. INDORE",
+        "NUMBER1": 9009338555,
+        "NUMBER2": 9009338555,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PAWAN KUMAR VINOD KUMAR, JHUNJHUNU",
+        "NUMBER1": 9024717837,
+        "NUMBER2": 9024717837,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-B G MARKETING, HUBLI",
+        "NUMBER1": 9036469786,
+        "NUMBER2": 9036469786,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-A C ENTERPRISES, NASHIK",
+        "NUMBER1": 9078219977,
+        "NUMBER2": 9075219977,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-B M AGENCIES, RAIGARH, CHHATTISGARH",
+        "NUMBER1": 9098063370,
+        "NUMBER2": 9098063370,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAJDEEP ELECTRIC & HARDWARE STORE, TANDWA (JHARKHAND",
+        "NUMBER1": 8521710322,
+        "NUMBER2": 9098231562,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BHAGAWATI FOOT WEAR, TIRUPATI (A.P)",
+        "NUMBER2": 9153286825,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-B R TRADERS, KELWA (RAJASTHAN)",
+        "NUMBER1": 9166520004,
+        "NUMBER2": 9166520004,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-KIRAN HARDWARE AND PAINTS, AURANGABAD",
+        "NUMBER1": 9168687686,
+        "NUMBER2": 9168687686,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-HINDUSTAN CONSTRUCTION COMPANY LTD, VIKASPURI (DELHI)",
+        "NUMBER1": 9205009269,
+        "NUMBER2": 9205009269,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-A V M APPARELS, MUMBAI",
+        "NUMBER1": 9223355584,
+        "NUMBER2": 9223355584,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PODDER INDUSTRIES & SONS, KOLKATA",
+        "NUMBER1": 9230529824,
+        "NUMBER2": 9230529824,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-MAA DURGA NIWAR HOUSE, HANUMANGARH JN (RAJASTHAN)",
+        "NUMBER1": 9251415349,
+        "NUMBER2": 9251415349,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-HIPPOSTORES TECHNOLOGY PRIVATE LIMITED, DELHI",
+        "NUMBER2": 9311563769,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TIRUPATI BALAJI TRADERS GURGAON",
+        "NUMBER2": 9318070707,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SURAJ ENTERPRISES, MOUDA (MAHARASHTRA)",
+        "NUMBER1": 7003978149,
+        "NUMBER2": 9326767828,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-G S INDUSTRIAL CORPORATION, ROURKELA",
+        "NUMBER1": 9337348697,
+        "NUMBER2": 9337348697,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NIHAL TRADERS, NAGPUR",
+        "NUMBER1": 9370635464,
+        "NUMBER2": 9370635464,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-JANTA FOOTWEAR, NAGPUR",
+        "NUMBER1": 9372491138,
+        "NUMBER2": 9372491138,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHREE SAI SALES CORPORATION, AURANGABAD",
+        "NUMBER1": 8329424676,
+        "NUMBER2": 9373222208,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SREE RAMA MILL STORES, RAJAHMUNDRY (A.P )",
+        "NUMBER1": 9392255666,
+        "NUMBER2": 9392255666,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-STAR AGENCIES GOA",
+        "NUMBER1": 9823095628,
+        "NUMBER2": 9403177120,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NAHAR SALES CORPORATION, UDAIPUR",
+        "NUMBER1": 9214517309,
+        "NUMBER2": 9413318704,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BASANT BOOT HOUSE, BANSWARA (RAJ)",
+        "NUMBER1": 9413946276,
+        "NUMBER2": 9413946276,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DEEPAI FOOTWEAR, SOLAPUR",
+        "NUMBER1": 9421213064,
+        "NUMBER2": 9421213064,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PAWAN FOOTWEAR, AMRAVATI (MH)",
+        "NUMBER1": 9423357005,
+        "NUMBER2": 9423357005,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-MUKESH AGENCY, MADHAVNAGAR (MAHARASHTRA)",
+        "NUMBER1": 9423873048,
+        "NUMBER2": 9423873048,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SATYAM ENTERPRISES, BHOPAL",
+        "NUMBER1": 9425433412,
+        "NUMBER2": 9425433412,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TOOLS CO, BOKARO",
+        "NUMBER1": 9431127643,
+        "NUMBER2": 9431127643,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BINAYAK PPE MANUFACTURING, JAJPUR ROAD (ORISSA)",
+        "NUMBER1": 7008990632,
+        "NUMBER2": 9439747838,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ESS SQUARE ENTERPRISES, ERNAKULAM",
+        "NUMBER1": 9447053315,
+        "NUMBER2": 9447053315,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAMDEV BUILDING MATERIAL, BARMER",
+        "NUMBER1": 9460063154,
+        "NUMBER2": 9460063154,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PURNIMA TRADING, BOKARO (JHARKHAND)",
+        "NUMBER1": 9470383203,
+        "NUMBER2": 9470383203,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PAL TRADING CO., AGARTALA",
+        "NUMBER2": 9485421695,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAJESHWAR FOOT WEAR HOSUR",
+        "NUMBER1": 8524987193,
+        "NUMBER2": 9500313558,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-HARSHITA ENTERPRISES, JAIPUR",
+        "NUMBER1": 9521461007,
+        "NUMBER2": 9521461007,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VANYA ENTERPRISES, DELHI",
+        "NUMBER2": 9541263442,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SMI AMTEK CRANK SHAFT PVT. LTD., DHARUHERA",
+        "NUMBER2": 9541411411,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ASK AUTOMOTIVE, MANESAR",
+        "NUMBER2": 9568668668,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NIRMAL TRADERS,JAMMU",
+        "NUMBER1": 9419235075,
+        "NUMBER2": 9622722000,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DELTECH SAFETY PRIVATE LIMITED, PEERAGARHI(DELHI)",
+        "NUMBER2": 9625533055,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-V. K brothers, BADDI",
+        "NUMBER1": 9625666002,
+        "NUMBER2": 9625666002,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SURENDERA SPUN PIPES, NAJAFGARH",
+        "NUMBER1": 9650052096,
+        "NUMBER2": 9650052096,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-JAY BHAWANI ENTERPRISES, ANGUL",
+        "NUMBER1": 9668873925,
+        "NUMBER2": 9668873925,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHREE HARDWARE & SUPPLIERS, JAGDALPUR (C.G)",
+        "NUMBER1": 8109830313,
+        "NUMBER2": 9669195985,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SATYA ENTERPRISES DHAMNOD. INDORE",
+        "NUMBER1": 9696828176,
+        "NUMBER2": 9696828176,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PARAGON POLYMER PRODUCTS PRIVATE LIMITED, SONIPAT",
+        "NUMBER1": 9633801203,
+        "NUMBER2": 9729079032,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-AJMERI TRADERS, AURANGABAD",
+        "NUMBER1": 9762423159,
+        "NUMBER2": 9762423159,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-V M FOOTWARE, YAVATMAL",
+        "NUMBER1": 8179910132,
+        "NUMBER2": 9764411605,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHRI KARDHAR SHOE ZONE, KANKROLI",
+        "NUMBER1": 9783042878,
+        "NUMBER2": 9783042878,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-HINDUSTAN GLASS WORKS LIMITED. ALLAHABAD",
+        "NUMBER2": 9794852213,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SATYAM STATIONERY & GENERAL STORES, BADDI-SOLAN",
+        "NUMBER1": 9816617030,
+        "NUMBER2": 9805331410,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ONE AND ONLY,GURUGRAM",
+        "NUMBER2": 9810425422,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-OM BRIGHT SOLUTIONS. ROHTAK",
+        "NUMBER1": 9812393192,
+        "NUMBER2": 9812393192,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-MAHALAXMI HARDWARE AND PAINTS STORE, SOLAN",
+        "NUMBER1": 9816369301,
+        "NUMBER2": 9816369301,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VARADA MAN POWER SOLUTION,NOIDA",
+        "NUMBER2": 9818334279,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ISGEC HEAVY ENGINEERING LIMITED, NOIDA",
+        "NUMBER1": 9821293013,
+        "NUMBER2": 9821293013,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DNYANRAJ SALES CORP., JALNA",
+        "NUMBER2": 9823417111,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-LESHA ENGINEERS, BHOPAL",
+        "NUMBER1": 9826076454,
+        "NUMBER2": 9826076454,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ALERT ENGINEERING .ENTERPRISES, BHOPAL",
+        "NUMBER1": 9827325089,
+        "NUMBER2": 9827325089,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-KRISHNA SALES CORPORATION, GODDA (JHARKHAND)",
+        "NUMBER1": 9829147421,
+        "NUMBER2": 9829147421,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SARVAM SAFETY EQUIPMENT PVT LTD",
+        "NUMBER1": 9840179937,
+        "NUMBER2": 9840179937,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SANGAMAM AGENCIES, COIMBATORE",
+        "NUMBER1": 9842887365,
+        "NUMBER2": 9842887365,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHRESTA ENTERPRISES, HYDERABAD",
+        "NUMBER1": 9845344331,
+        "NUMBER2": 9845344331,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-YOUSUF ENTERPRISES",
+        "NUMBER1": 9849135667,
+        "NUMBER2": 9849135667,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-MUNNA ENTERPRISE, DURGAPUR",
+        "NUMBER1": 9851436258,
+        "NUMBER2": 9851436258,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-K G N TRADERS, AKOLA",
+        "NUMBER1": 9049087773,
+        "NUMBER2": 9860331118,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ANAND ENTERPRISES, NASHIK",
+        "NUMBER1": 9860992000,
+        "NUMBER2": 9860992000,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-B N ENTERPRISERS, BHUBANESHWAR",
+        "NUMBER1": 9439005652,
+        "NUMBER2": 9861120914,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-S S SAFETY CENTER, MANGALORE",
+        "NUMBER1": 8792385096,
+        "NUMBER2": 9880613715,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NAFE TRADERS, PUNE",
+        "NUMBER1": 9881124701,
+        "NUMBER2": 9881124701,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-KHALS FOOT WORLD, CHENNAI",
+        "NUMBER1": 9884081509,
+        "NUMBER2": 9884081509,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-KHALS SHOES, THIRUVALLLUR",
+        "NUMBER1": 9884081509,
+        "NUMBER2": 9884081509,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-V. M. PATEL & CO, DHULE",
+        "NUMBER1": 9890034352,
+        "NUMBER2": 9890034352,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-AMBICA SALES CORPORATION, SATARA",
+        "NUMBER1": 9423032164,
+        "NUMBER2": 9890612422,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-INDUSTRIAL TAPES & PACKERS",
+        "NUMBER1": 9891571002,
+        "NUMBER2": 9891571002,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NEERAJ ENTERPRISES. FARIDABAD",
+        "NUMBER1": 9891658364,
+        "NUMBER2": 9891658364,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SANDEEP AGGARWAL, BAHADURGARH (ECOM)",
+        "NUMBER2": 9899620410,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-GANESH TRADERS, FARIDABAD",
+        "NUMBER1": 9560705057,
+        "NUMBER2": 9899676517,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-M M HARDWARE & SUPPLIERS, BANGALURU",
+        "NUMBER1": 9901153770,
+        "NUMBER2": 9901153770,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAHITA ENTERPRISES, DELHI",
+        "NUMBER2": 9910720890,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-CHIRAG TRADERS SAFETY HOUSE, GURUGRAM",
+        "NUMBER1": 9911227272,
+        "NUMBER2": 9911227272,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-HARSANJOG INDUSTRIES, BAWANA-DELHI",
+        "NUMBER1": 9911512513,
+        "NUMBER2": 9911512513,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NULL",
+        "NUMBER1": 9033914467,
+        "NUMBER2": 9925138097,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BRIGHT BAGS EMPORIUM, KOTA, RAJASTHAN",
+        "NUMBER1": 9928714789,
+        "NUMBER2": 9928714789,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BRIGHT EMPORIUM, KOTA (RAJASTHAN)",
+        "NUMBER2": 9928714789,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHIV SHAKTI HARDWARE & ELECTRICALS, GOA",
+        "NUMBER1": 9930803909,
+        "NUMBER2": 9930803909,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-POPULAR AGENCIES, AMBALAMUGAL (KERALA)",
+        "NUMBER1": 9947286107,
+        "NUMBER2": 9947286107,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHREE INDIAN STORE, SARDARSHAHAR (raj)",
+        "NUMBER2": 9971252855,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SAFE ZONE, VADODARA",
+        "NUMBER1": 7016916734,
+        "NUMBER2": 9974606222,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SAI BALAJI TOOLSS, BANGALORE",
+        "NUMBER1": 8892841606,
+        "NUMBER2": 9986711934,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RITUPURN ENTERPRISES, BALASORE (ODISHA)",
+        "NUMBER1": 9986772907,
+        "NUMBER2": 9986772907,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-KUMAR UNIFORMS, Burail (CHANDIGARH)",
+        "NUMBER1": 9815946135,
+        "NUMBER2": 9988369135,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-KULDEEP HARDWARE, SONIPAT",
+        "NUMBER1": 9050314718,
+        "NUMBER2": 9991292660,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-INDER INDUSTRIAL SUPPLIERS, ROHTAK",
+        "NUMBER1": 9996529150,
+        "NUMBER2": 9996529150,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VENUS TRADING COMPNAY",
+        "NUMBER1": 9717487871,
+        "NUMBER2": 9999941382,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-AHLUWALIA CONTRACTS INDIA LIMITED, OKHLA (DELHI)",
+        "NUMBER2": 9999975244,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-LUCKY HARDWARE AND PAINTS, SATNA",
+        "NUMBER1": 7987880601,
+        "NUMBER2": 79878806011,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TRUE VALUE SHOES AND SAFETY",
+        "NUMBER1": 8220954285,
+        "NUMBER2": 918220954285,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TBR INFRA PRIVATE LIMITED, BANGARKKANGUD",
+        "NUMBER1": 8431261005,
+        "NUMBER2": 918431261005,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SURSEETA ENTERPRISES, KARNATAKA",
+        "NUMBER1": 8618832632,
+        "NUMBER2": 918618832632,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHREE ASHAPURA HARDWARE MART, BARMER",
+        "NUMBER2": 918696581760,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VINAYAKA ENTERPRISES, CHITTORGARH",
+        "NUMBER1": 9093161687,
+        "NUMBER2": 919093161687,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TEJAS ENTERPRISES, BHILAI",
+        "NUMBER1": 9301746789,
+        "NUMBER2": 919301746789,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-UNITED ENTERPRISES, JAMSHEDPUR",
+        "NUMBER1": 9334650707,
+        "NUMBER2": 919334650707,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-UMIYA ENTERPRISES, VADODARA",
+        "NUMBER1": 7069302551,
+        "NUMBER2": 919427424353,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VARDHMAN AGENCIES, NAVSARI",
+        "NUMBER1": 9429059160,
+        "NUMBER2": 919429059160,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TANISHKA ENTERPRISES, KEONJHAR",
+        "NUMBER1": 9438502741,
+        "NUMBER2": 919438502741,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-THAMBU SHOE CO., TRICHY",
+        "NUMBER1": 9443574615,
+        "NUMBER2": 919443574615,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TIP TOP SELECTION, ERODE",
+        "NUMBER1": 9543281000,
+        "NUMBER2": 919543281000,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VISHAL FOOTWEAR AURANGABAD",
+        "NUMBER1": 9765684242,
+        "NUMBER2": 919765684242,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TAHA FOOT LINES, OSMANABAD",
+        "NUMBER1": 9890210714,
+        "NUMBER2": 919890210714,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VETRI INDUSTRIAL SUPPLIERS, COIMBATORE",
+        "NUMBER1": 9976904589,
+        "NUMBER2": 919976904589,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ROYAL STEP GENERAL TRADING LLC, DUBAI",
+        "NUMBER2": 971503598545,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-MAHESH BOOT HOUSE,KOTA (RAJ)",
+        "NUMBER1": 6350665074,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-JAYSHREE SALES, SAMBHALPUR (ODISHA)",
+        "NUMBER1": 7008174774,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TRUE VALUE SHOES,SALEM (NEW)",
+        "NUMBER1": 7010662112,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-AETAS PACKAGING INC",
+        "NUMBER1": 7011195319,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DELHI STORES,JAIGAON (WEST BENGAL)",
+        "NUMBER1": 7076036717,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DELHI STORES, JAIGAON (W.B)",
+        "NUMBER1": 7076036717,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-GLOBE INDUSTRIES, KANPUR",
+        "NUMBER1": 7237862222,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TOOLS & SAFETY,JAIPUR (RAJ)",
+        "NUMBER1": 7339948717,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-POOJA ENTERPRISES, ANGUL",
+        "NUMBER1": 7389576247,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DHYAN VENTURES, BANGALORE",
+        "NUMBER1": 7494922272,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-G.R.SALES, KARNAL (HR)",
+        "NUMBER1": 7496030111,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SANTOSH TRADING CO, NASHIK (MH)",
+        "NUMBER1": 7588197998,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NATIONAL SHOE COMPANY,BIKANER",
+        "NUMBER1": 7742537408,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-YASH TRADERS,KOLAPUR (NEW)",
+        "NUMBER1": 7744033006,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TATA COMMERCIAL AGENCY,BEGUSARAI (BIHAR)",
+        "NUMBER1": 7766816877,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-R.V. CREATIONS",
+        "NUMBER1": 7838832527,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-FIRST STEP SAFETY SHOES, HOSUR (TAMILNADU)",
+        "NUMBER1": 7899084031,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAHUL PROFESSIONALS, JODHPUR (RAJ)",
+        "NUMBER1": 8058189888,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHOE TRACK, HYDERABAD",
+        "NUMBER1": 8074504177,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHREE HARI UDYOG, JAJPUR (ODISHA)",
+        "NUMBER1": 8093059441,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BALAJI ENTERPRISES,PUNE (MH)",
+        "NUMBER1": 8149424343,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SAFETY FIRST, RUDRAPUR",
+        "NUMBER1": 8279915477,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAJA ENTERPRISES, CHANDRAPUR (MH)",
+        "NUMBER1": 8484947777,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-D.K ENTERPRISES",
+        "NUMBER1": 8574733684,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-HAQUE SHOE HOUSE,TINSUKIA (ASSAM)",
+        "NUMBER1": 8638569421,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-HAQUE SHOE HOUSE. TINSUKIA (ASSAM",
+        "NUMBER1": 8638569421,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-B S SALES,AHMEDNAGAR(MH)",
+        "NUMBER1": 8669459920,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SPARK INDIA",
+        "NUMBER1": 8700847216,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHREE SHYAM POLYTECH",
+        "NUMBER1": 8745869799,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NATIONAL ENTERPRISES,HANUMANGARH (RAJASTHAN)",
+        "NUMBER1": 8829898217,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-GLOBE ENTERPRISES, HANUMANGARH (RAJASTHAN)",
+        "NUMBER1": 8829898217,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHUBHAM AGENCY, PUNE (MAHARASHTRA)",
+        "NUMBER1": 8830969099,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-JAMUNA DASS MANNA LALL, KODERMA (JHARKHAND)",
+        "NUMBER1": 9007750683,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PRATHI IRON AND HARDWARE, BERHAMPUR (ODISHA)",
+        "NUMBER1": 9040123600,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-UNIVERSAL ENTERPRISES,NELLORE",
+        "NUMBER1": 9100074046,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SRI PONDY FIRE AND SAFETY EQUIPMENTS PRIVATE LIMITED,PUDUCHERRY",
+        "NUMBER1": 9150010763,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SAFE SECURE SAFETY EQUIPMENT, CHENNAI",
+        "NUMBER1": 9150028127,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-HARYANA HARDWARE STORE, SONIPAT (HR)",
+        "NUMBER1": 9215570589,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SRI MAHALAKSHMI ENTERPRISES, VIJAYAWADA(A.P)",
+        "NUMBER1": 9246464919,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-UNITED ENTERPRISES",
+        "NUMBER1": 9250436489,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-UNIQUE SAFETY, ANKLESHWAR (GUJARAT)",
+        "NUMBER1": 9265914512,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NEW BADRI HARDWARE MART, MORBI (GUJARAT)",
+        "NUMBER1": 9277208635,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-INI INFOTECH PRIVATE LIMITED, DELHI",
+        "NUMBER1": 9311089868,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DARSHAN HARDWARE, JODHPUR (RAJ)",
+        "NUMBER1": 9314711609,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-OMICRON INDUSTRIAL SOLUTIONS PRIVATE LIMITED",
+        "NUMBER1": 9316108633,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NOBLE ENTERPRISES, KOLKATA (WEST BENGAL)",
+        "NUMBER1": 9330155152,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-KHUMUSHI SHOE STORES, CHANDRAPUR (MH)",
+        "NUMBER1": 9356443272,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAVI FOOTWEAR, AGRA (U.P)",
+        "NUMBER1": 9359144120,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-METRO THREAD WORKS",
+        "NUMBER1": 9415135673,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-AD ENTERPRISES, PANIPAT (HR)",
+        "NUMBER1": 9415245050,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-LAXMI SALES CORPORATION, SULTANPUR (U.P)",
+        "NUMBER1": 9415965715,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NULL",
+        "NUMBER1": 9416071476,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BHANDARI SALES CORPORATION,AMRITSAR (PUNJAB)",
+        "NUMBER1": 9417012009,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DINESH SHOE SHOP, HAMIRPUR (H.P)",
+        "NUMBER1": 9418022769,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-YASH PAL & SONS, JAMMU (J & K)",
+        "NUMBER1": 9419143865,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VISHAL SALES CORPORATION, JAMMU",
+        "NUMBER1": 9419267672,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAM BOOT HOUSE, SATNA(M.P)",
+        "NUMBER1": 9424764301,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TIRUPATI TRADING AGENCY, BEGUSARAI (BIHAR)",
+        "NUMBER1": 9430564300,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-AASTHA AGENCIES,RAMGARH (JHARKHAND)",
+        "NUMBER1": 9431146326,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-AIR AND INUSTRIAL EQUIPMENTS CO. GUWAHATI",
+        "NUMBER1": 9435041136,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BALARAM INDUSTRIES, BHUBANESWAR (ODISHA)",
+        "NUMBER1": 9437091414,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PATRA AGENCIES, DHENKANAL (ODISHA)",
+        "NUMBER1": 9437193550,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SAI ASSOCIATE & CO, CUTTACK (ODISHA)",
+        "NUMBER1": 9439122465,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-M\/S SEVEN HILLS SAFETY EQUIPMENTS AND SYSTEMS PVT LTD, TIRUPATI (AP)",
+        "NUMBER1": 9492068132,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-JAIN ARMY STORE, GANGANAGAR (RAJASTHAN)",
+        "NUMBER1": 9511520256,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SAFE FIRE INDUSTRY \/ SUBAM ENTERPRISES, TIRUPUR (TAMILNADU)",
+        "NUMBER1": 9585542559,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NEW SAMRAT BOOTHOUSE, NAGPUR",
+        "NUMBER1": 9623203327,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-VIHANYA INDUSTRIAL SOLUTIONS, PUNE (MH)",
+        "NUMBER1": 9623517445,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SWASTIK ENTERPRISES, RUDRAPUR",
+        "NUMBER1": 9634408614,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BINCO TOLSEN INTERNATIONAL, CHOTTANIKKARA (KERALA)",
+        "NUMBER1": 9656839023,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHREE RAM INDUSTRIAL SAFETY AND TOOLS, BHUBANESHWAR",
+        "NUMBER1": 9692859029,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-AJMERI TRADERS, AURANGABAD (MH)",
+        "NUMBER1": 9762423159,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-HAPPY SALES CORPORATION, BALLARI (KARNATAKA)",
+        "NUMBER1": 9765774605,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NATIONAL MEDITEK, DELHI",
+        "NUMBER1": 9810031062,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ASHOKA HIGH TECH.P.LTD., SONIPAT (HR)",
+        "NUMBER1": 9818272647,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SAFE COMBINES, PUNE (MH)",
+        "NUMBER1": 9822004847,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-TILOK CHAND NARSINGH LAL, ROORKEE (UTTRAKHAND)",
+        "NUMBER1": 9837848988,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RELIANCE SHOE CENTRE, VARANASI (U.P)",
+        "NUMBER1": 9838550510,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-S.S SAFETY PRODUCTS",
+        "NUMBER1": 9839086207,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-POWER TOOLS AND TACKLES, BANGALORE (NEW)",
+        "NUMBER1": 9844070404,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-HIND STORES, BANGALORE (KARNATAKA)",
+        "NUMBER1": 9845126575,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ASSAM INDUSTRIAL TOOLS, GUWAHATI (ASSAM)",
+        "NUMBER1": 9864077172,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BEST SHOE MART, VIJAYAWADA (AP)",
+        "NUMBER1": 9885250252,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ASHOK KUMAR & SONS, AMRITSAR (PUNJAB)",
+        "NUMBER1": 9888345100,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BLESS TOOLING SYSTEM, BAHADURGARH",
+        "NUMBER1": 9891880808,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-RAMSONS STAINLESS , HISAR",
+        "NUMBER1": 9891904177,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PATHERIA BROTHERS,RATLAM (M.P)",
+        "NUMBER1": 9893198652,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ANAND CANVAS STORE, DEHRADUN",
+        "NUMBER1": 9897273276,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-PADMAVATI MACHINE TOOLS, SURAT (GUJARAT)",
+        "NUMBER1": 9898590530,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-NIKIL SHOES, VIJAYAWADA (A.P)",
+        "NUMBER1": 9908687206,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SAFE PLUS PRODUCTS PRIVATE LIMITED, VAPI (GUJARAT)",
+        "NUMBER1": 9909956409,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-LAKSHYA INTERNATIONAL,FARIDABAD (HR)",
+        "NUMBER1": 9911229989,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SANT SINGH MANMOHAN SINGH, JALANDHAR (PUNJAB)",
+        "NUMBER1": 9914041010,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-FAMOUS FOOTWEARS,AMBIKAPUR (C.G)",
+        "NUMBER1": 9926173052,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-M\/S JATAV SHOE MAKER, JWALAPUR (UTTARAKHAND)",
+        "NUMBER1": 9927303986,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-DWARKESH ENGINEERING, BHILWARA (RAJ)",
+        "NUMBER1": 9929477711,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-C M TRADING COMPANY, VARANASI (U.P)",
+        "NUMBER1": 9935396010,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-ROYAL TRADING.CO,CUTTACK (ODISHA)",
+        "NUMBER1": 9938427768,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-MAHARAJA SPARES, TIRUPATI (A.P)",
+        "NUMBER1": 9959467033,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-BABA SUNDAR DAS ENTERPRISES, DHANBAD(JHARKHAND)",
+        "NUMBER1": 9973031131,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-MIRANI FOOTEWAR, KACHCHH (GUJ)",
+        "NUMBER1": 9979326650,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHREE KRISHNA TRADERS,KOTA",
+        "NUMBER1": 9983854821,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SHREE KRISHNA TRADERS, KOTA",
+        "NUMBER1": 9983854821,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    },
+    {
+        "name": "AGARSON-SRI BALAJI ENTERPRISES, DELHI",
+        "NUMBER1": 9999336810,
+        "NUMBER3": 9313940410,
+        "NUMBER4": 919319284965,
+        "Column6": 919319284966
+    }
+]
