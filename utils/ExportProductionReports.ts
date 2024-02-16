@@ -9,8 +9,11 @@ import moment from "moment"
 import { Machine } from "../models/production/machine.model"
 import { Client, MessageMedia } from "whatsapp-web.js"
 
-
 export async function HandleProductionReports(client: Client) {
+    await CreateReports(client)
+    await SendDocument(client)
+}
+async function CreateReports(client: Client) {
     console.log("generating production pdf")
 
     var printer = new PdfPrinter({
@@ -300,14 +303,8 @@ export async function HandleProductionReports(client: Client) {
     Content = []
     doc.end()
 
-    setTimeout(async () => {
-        try { await SendDocument(client) }
-        catch (err) {
-            console.log(err)
-        }
-    }, 20000)
-}
 
+}
 
 async function SendDocument(client: Client) {
     if (client) {

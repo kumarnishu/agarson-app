@@ -7,6 +7,7 @@ import { imageUrlToBase64 } from "./UrlToBase64"
 import fs from "fs"
 import { User } from "../models/users/user.model"
 import { Client, MessageMedia } from "whatsapp-web.js"
+
 export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
     await CreateReport(client, dt1, dt2)
     await SendDocument(client)
