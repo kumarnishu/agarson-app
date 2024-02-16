@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless, FuzzySearchRefers, GetRefers, GetPaginatedRefers, AssignRefer, BulkAssignLeads, BulkAssignRefer, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, CreateBroadcast, UpdateBroadcast, StopBroadcast, StartBroadcast, GetBroadcast, ToogleStatus, GetVisitingCards, GetMyVisitingCards, CreateVisitingCard, UpdateVisitingCard, ReferVisitingCard, AddCommentToCard } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, ConvertCustomer, CreateLead, DeleteLead, FuzzySearchCustomers, FuzzySearchLeads, GetCustomers, GetLeads, NewRemark, UpdateLead, GetUpdatableLeadFields, UpdateLeadFields, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferrals, FuzzySearchUseLessLeads, GetUselessLeads, BulkDeleteUselessLeads, ToogleUseless, FuzzySearchRefers, GetRefers, GetPaginatedRefers, AssignRefer, BulkAssignLeads, BulkAssignRefer, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, ToogleStatus, GetVisitingCards, CreateVisitingCard, UpdateVisitingCard, ReferVisitingCard, AddCommentToCard } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
@@ -41,11 +41,7 @@ router.route("/bulk/leads/delete").post(isAuthenticatedUser, BulkDeleteUselessLe
 router.route("/bulk/assign/leads").put(isAuthenticatedUser, BulkAssignLeads)
 router.route("/bulk/assign/refers").put(isAuthenticatedUser, BulkAssignRefer)
 router.route("/reminder/remarks").get(isAuthenticatedUser, GetReminderRemarks)
-router.route("/broadcast").get(isAuthenticatedUser, GetBroadcast)
-router.route("/broadcast").post(isAuthenticatedUser, CreateBroadcast)
-router.route("/broadcast/:id").put(isAuthenticatedUser, UpdateBroadcast)
-router.route("/broadcast/stop/:id").patch(isAuthenticatedUser, StopBroadcast)
-router.route("/broadcast/start/:id").patch(isAuthenticatedUser, StartBroadcast)
+
 router.route("/cards/:id").put(isAuthenticatedUser, upload.single('card'), UpdateVisitingCard)
 router.route("/cards").post(isAuthenticatedUser, upload.single('card'), CreateVisitingCard)
 router.route("/cards").get(isAuthenticatedUser, GetVisitingCards)

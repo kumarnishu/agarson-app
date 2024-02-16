@@ -15,7 +15,7 @@ type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_ch
 
 
 type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless" |"view_card_comments"|
-   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark" | "create_broadcast" | "update_broadcast" | "stop_broadcast" | "start_broadcast" | "create_card" | "update_card" | "refer_card" | "toogle_card" | "add_card_comment"
+   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark" | "create_card" | "update_card" | "refer_card" | "toogle_card" | "add_card_comment"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
 
@@ -132,10 +132,6 @@ export enum LeadChoiceActions {
   assign_refer = "assign_refer",
   bulk_assign_leads = "bulk_assign_leads",
   bulk_assign_refers = "bulk_assign_refers",
-  create_broadcast = "create_broadcast",
-  update_broadcast = "update_broadcast",
-  stop_broadcast = "stop_broadcast",
-  start_broadcast = "start_broadcast",
   toogle_card = "toogle_card",
   add_card_comment = "add_card_comment"
 }
@@ -228,10 +224,6 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.convert_useless: return type
     case LeadChoiceActions.bulk_assign_leads: return type
     case LeadChoiceActions.bulk_assign_refers: return type
-    case LeadChoiceActions.create_broadcast: return type
-    case LeadChoiceActions.update_broadcast: return type
-    case LeadChoiceActions.stop_broadcast: return type
-    case LeadChoiceActions.start_broadcast: return type
     case LeadChoiceActions.create_card: return type
     case LeadChoiceActions.update_card: return type
     case LeadChoiceActions.refer_card: return type

@@ -36,7 +36,6 @@ const BackupPage = React.lazy(() => import('./pages/backup/BackupPage'))
 const UseLessLeadsPage = React.lazy(() => import('./pages/crm/UseLessLeadsPage'))
 const TemplatesPage = React.lazy(() => import('./pages/templates/TemplatesPage'))
 const CrmHelpPage = React.lazy(() => import('./pages/crm/CrmHelpPage'))
-const BroadcastPage = React.lazy(() => import('./pages/crm/BroadcastPage'))
 const CrmReminderPage = React.lazy(() => import('./pages/crm/CrmReminderPage'))
 const CheckListPage = React.lazy(() => import('./pages/checklists/CheckListPage'))
 const CheckListAdminPage = React.lazy(() => import('./pages/checklists/CheckListAdminPage'))
@@ -114,7 +113,6 @@ export enum paths {
   crm_reminders = "crm_reminders",
   crm_activities = "crm_activities",
   visiting_cards ="visiting_cards",
-  broadcast = "broadcast",
   leads = "leads",
   customers = "customers",
   updateble_fields_lead = "updateble_fields_lead",
@@ -340,12 +338,7 @@ function AppRoutes() {
                   </Suspense>
                 }
               />
-              <Route
-                path={paths.broadcast} element={
-                  <Suspense fallback={<LinearProgress />}><BroadcastPage />
-                  </Suspense>
-                }
-              />
+             
               <Route
                 path={paths.crm_help_page} element={
                   <CrmHelpPage />

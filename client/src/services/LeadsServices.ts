@@ -6,12 +6,10 @@ export const GetLeads = async ({ limit, page, userId }: { limit: number | undefi
     return await apiClient.get(`leads/?limit=${limit}&page=${page}&id=${userId}`)
   else
     return await apiClient.get(`leads/?limit=${limit}&page=${page}`)
-
 }
 
 export const GetReminderRemarks = async () => {
   return await apiClient.get(`reminder/remarks`)
-
 }
 
 export const GetRefers = async () => {
@@ -186,24 +184,6 @@ export const UpdateLeadFieldsUpdatable = async ({ body }: {
 }
 export const GetLeadFieldsUpdatable = async () => {
   return await apiClient.get(`lead-updatable-fields`)
-}
-
-export const GetBroadcast = async () => {
-  return await apiClient.get(`broadcast`)
-}
-export const CreateBroadcast = async (body: { name: string, connected_users: string[], templates: string[], is_random_template: boolean, time_gap: number, autoRefresh: boolean }) => {
-  return await apiClient.post(`broadcast`, body)
-}
-export const UpdateBroadcast = async ({ body, id }: { id: string, body: { name: string, connected_users: string[], templates: string[], is_random_template: boolean, time_gap: number, autoRefresh: boolean } }) => {
-  return await apiClient.put(`broadcast/${id}`, body)
-}
-
-export const StartBroadcast = async (id: string) => {
-  return await apiClient.patch(`broadcast/start/${id}`)
-}
-
-export const StopBroadcast = async (id: string) => {
-  return await apiClient.patch(`broadcast/stop/${id}`)
 }
 
 

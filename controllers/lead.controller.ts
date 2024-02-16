@@ -13,10 +13,6 @@ import { ExportLeadMobiles, ExportLeads } from "../utils/CrmUtils.js"
 import { ILead, ILeadTemplate, IReferredParty, IRemark, TLeadBody, TLeadUpdatableFieldBody, TReferredPartyBody } from "../types/crm.types.js"
 import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
-import { Broadcast } from "../models/leads/broadcast.model.js"
-import { GetDailyBroadcastCronString } from "../utils/GetDailyBroadcastCronString.js"
-import { handleBroadcast, timeouts } from "../utils/handleBroadcast.js"
-import { clients } from "../utils/CreateWhatsappClient.js"
 import { VisitingCard } from "../models/leads/card.model.js"
 import { IVisitingCard } from "../types/visiting_card.types.js"
 
@@ -3642,109 +3638,7 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
     return res.status(200).json({ message: " remark deleted successfully" })
 }
 
-export const GetBroadcast = async (req: Request, res: Response, next: NextFunction) => {
-    let broadcast = await Broadcast.findOne().populate('templates').populate('connected_users').populate('updated_by').populate('created_by')
-    return res.status(200).json(broadcast)
-}
-export const StartBroadcast = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
 
-    let broadcast = await Broadcast.findById(id).populate('connected_users')
-    if (!broadcast) {
-        return res.status(404).json({ message: "broadcast not found" })
-    }
-    let clientids: string[] = broadcast.connected_users.map((user) => { return user.client_id })
-    let newclients = clients.filter((client) => {
-        if (clientids.includes(client.client_id))
-            return client
-    })
-    if (newclients.length === 0) {
-        return res.status(400).json({ message: "no whatsapp connected" })
-    }
-    if (newclients.length !== clientids.length)
-        return res.status(400).json({ message: "connect all whatsapps or update connected numbers" })
-    await Broadcast.findByIdAndUpdate(id, {
-        is_active: true
-    })
-    if (new Date().getHours() > 9 && new Date().getHours() < 18)
-        await handleBroadcast(broadcast, newclients)
-    return res.status(200).json({ message: "started" })
-}
-
-export const CreateBroadcast = async (req: Request, res: Response, next: NextFunction) => {
-    const {
-        name,
-        connected_users,
-        templates,
-        is_random_template,
-        time_gap,
-        autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean, time_gap: number, autoRefresh: boolean }
-
-    if (!name || !connected_users || !templates || !time_gap)
-        return res.status(500).json({ message: "please fill all required fields" })
-    let broadcast = await Broadcast.findOne()
-    if (broadcast) {
-        return res.status(404).json({ message: "broadcast already exists" })
-    }
-    await new Broadcast({
-        name,
-        connected_users,
-        templates,
-        is_random_template,
-        cron_string: GetDailyBroadcastCronString(),
-        time_gap,
-        autoRefresh,
-        created_at: new Date(),
-        updated_at: new Date(),
-        created_by: req.user,
-        updated_by: req.user
-    }).save()
-    return res.status(200).json(broadcast)
-}
-
-export const UpdateBroadcast = async (req: Request, res: Response, next: NextFunction) => {
-    const {
-        name,
-        connected_users,
-        templates,
-        is_random_template,
-        time_gap,
-        autoRefresh } = req.body as { name: string, connected_users: string[], templates: string[], is_random_template: boolean, time_gap: number, autoRefresh: boolean }
-
-    if (!name || !connected_users || !templates || !time_gap)
-        return res.status(500).json({ message: "please fill all required fields" })
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
-
-    await Broadcast.findByIdAndUpdate(id, {
-        name,
-        connected_users,
-        templates: templates,
-        is_random_template,
-        time_gap,
-        autoRefresh,
-        updated_at: new Date(),
-        updated_by: req.user
-    })
-    return res.status(200).json({ message: "updated broadcast" })
-}
-
-export const StopBroadcast = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(403).json({ message: "broadcast id not valid" })
-    let broadcast = await Broadcast.findById(id)
-    if (!broadcast)
-        return res.status(404).json({ message: "broadcast not found" })
-    broadcast.is_active = false
-    timeouts.forEach((item) => {
-        if (String(item.id) === String(broadcast?._id)) {
-            clearTimeout(item.timeout)
-        }
-    })
-    await broadcast.save()
-    return res.status(200).json({ message: " broadcast stopped successfully" })
-}
 
 export const GetMyVisitingCards = async (req: Request, res: Response, next: NextFunction) => {
     let cards = await VisitingCard.find({ is_closed: false }).populate('refer').populate('salesman').populate('updated_by').populate('created_by').populate({

@@ -1,5 +1,4 @@
 import { Asset } from "./asset.types"
-import { IMessageTemplate } from "./template.types"
 import { IUser } from "./user.types"
 
 export type ILeadTemplate = {
@@ -100,20 +99,3 @@ export type ILead = {
 export type TLeadBody = Request['body'] & ILead;
 
 
-
-export type IBroadcast = {
-    _id: string,
-    name: string,
-    counter: number,
-    is_active: boolean,
-    connected_users: IUser[],
-    templates: IMessageTemplate[]
-    is_random_template: boolean
-    time_gap: number,
-    autoRefresh: boolean,
-    created_at: Date,
-    updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
-}
-export type IBroadcastBody = Request['body'] & IBroadcast;

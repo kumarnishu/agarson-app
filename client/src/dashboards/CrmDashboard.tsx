@@ -20,7 +20,6 @@ function CrmDashboard() {
     tmpfeatures.push({ feature: 'activities', is_visible: true, url: paths.crm_activities })
     tmpfeatures.push({ feature: 'visitng cards', is_visible: true, url: paths.visiting_cards })
     user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'fields', is_visible: true, url: paths.updateble_fields_lead })
-    user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'Broadcast', is_visible: true, url: paths.broadcast })
     setFeatures(tmpfeatures)
   }, [])
 
