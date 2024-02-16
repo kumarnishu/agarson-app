@@ -7,9 +7,13 @@ import { imageUrlToBase64 } from "./UrlToBase64"
 import fs from "fs"
 import { User } from "../models/users/user.model"
 import { Client, MessageMedia } from "whatsapp-web.js"
-
-
 export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
+    await CreateReport(client, dt1, dt2)
+    await SendDocument(client)
+    await DeleteDocument()
+}
+
+async function CreateReport(client: Client, dt1: Date, dt2: Date) {
     let visits: IVisit[] = []
     console.log("generating visit pdf")
     visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate("visit_reports").populate('created_by')
@@ -186,16 +190,7 @@ export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
             doc.end()
         }
     } ''
-    setTimeout(async () => {
-        try { await SendDocument(client) }
-        catch (err) {
-            console.log(err)
-        }
-    }, 120000)
 
-    setTimeout(async () => {
-        await DeleteDocument()
-    }, 600000)
 }
 
 async function SendDocument(client: Client) {
