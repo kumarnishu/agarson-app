@@ -45,8 +45,6 @@ export async function HandleDailyTodoTrigger(user: IUser) {
                     date.setHours(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[0]))
                     date.setMinutes(Number(todo.start_time.replace("[", "").replace("]", "").split(":")[1]))
 
-
-
                     if (date > new Date())
                         new CronJob(date, () => {
                             if (reminderClient?.client)
