@@ -38,7 +38,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+                }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
                 count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: id }).countDocuments()
             }
             else {
@@ -54,7 +54,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+                }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
                 count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] } }).countDocuments()
             }
 
@@ -73,7 +73,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({ is_customer: false, stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user?._id] } }).countDocuments()
         }
 
@@ -109,7 +109,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+                }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
                 count = await Lead.find({ stage: 'useless', lead_owners: id }).countDocuments()
             }
             else {
@@ -125,7 +125,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+                }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
                 count = await Lead.find({ stage: 'useless' }).countDocuments()
             }
 
@@ -144,7 +144,7 @@ export const GetUselessLeads = async (req: Request, res: Response, next: NextFun
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({ stage: 'useless', lead_owners: { $in: [req.user?._id] } }).countDocuments()
         }
         leads = leads.slice((page - 1) * limit, limit * page)
@@ -180,7 +180,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+                }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
                 count = await Lead.find({ is_customer: true, lead_owners: id }).countDocuments()
             }
             else {
@@ -196,7 +196,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+                }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
                 count = await Lead.find({ is_customer: true }).countDocuments()
             }
         }
@@ -214,7 +214,7 @@ export const GetCustomers = async (req: Request, res: Response, next: NextFuncti
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({ is_customer: true, lead_owners: { $in: [req.user?._id] } }).countDocuments()
         }
 
@@ -371,7 +371,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                         ]
                     }
                 ]
-            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
         }
 
@@ -402,7 +402,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                         ]
                     }
                 ]
-            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
 
@@ -465,7 +465,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
             else {
                 leads = await Lead.find({
@@ -504,7 +504,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
         if (key.length == 2) {
@@ -574,7 +574,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
             else {
                 leads = await Lead.find({
@@ -641,7 +641,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
         if (key.length == 3) {
@@ -734,7 +734,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
             else {
                 leads = await Lead.find({
@@ -824,7 +824,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
         if (key.length == 4) {
@@ -940,7 +940,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
             else {
                 leads = await Lead.find({
@@ -1053,7 +1053,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
 
@@ -1129,7 +1129,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             } else {
                 leads = await Lead.find({
                     is_customer: true,
@@ -1168,7 +1168,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
         if (key.length == 2) {
@@ -1239,7 +1239,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
             else {
                 leads = await Lead.find({
@@ -1307,7 +1307,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
         if (key.length == 3) {
@@ -1401,7 +1401,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             } else {
                 leads = await Lead.find({
                     is_customer: true,
@@ -1491,7 +1491,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
         if (key.length == 4) {
@@ -1608,7 +1608,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             } else {
                 leads = await Lead.find({
                     is_customer: true,
@@ -1721,7 +1721,7 @@ export const FuzzySearchCustomers = async (req: Request, res: Response, next: Ne
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
 
@@ -1771,7 +1771,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         { mobile: { $regex: key[0], $options: 'i' } },
                         { state: { $regex: key[0], $options: 'i' } },
                     ]
-                }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+                }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
             }
             else {
                 parties = await ReferredParty.find({
@@ -1782,7 +1782,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         { mobile: { $regex: key[0], $options: 'i' } },
                         { state: { $regex: key[0], $options: 'i' } },
                     ]
-                }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+                }).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
             }
         }
         if (key.length == 2) {
@@ -1813,7 +1813,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     ,
 
                 }
-                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
             }
             else {
                 parties = await ReferredParty.find({
@@ -1841,7 +1841,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     ,
 
                 }
-                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
             }
         }
 
@@ -1882,7 +1882,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     ,
 
                 }
-                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
             } else {
                 parties = await ReferredParty.find({
                     is_customer: false,
@@ -1918,7 +1918,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     ,
 
                 }
-                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
             }
         }
         if (key.length == 4) {
@@ -1967,7 +1967,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     ,
 
                 }
-                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
             } else {
                 parties = await ReferredParty.find({
                     is_customer: false,
@@ -2012,7 +2012,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     ,
 
                 }
-                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-created_at')
+                ).populate('created_by').populate('updated_by').populate('lead_owners').sort('-updated_at')
             }
         }
         for (let i = 0; i < parties.length; i++) {
@@ -2028,7 +2028,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at')
+            }).sort('-updated_at')
             result.push({
                 party: parties[i],
                 leads: leads
@@ -2109,7 +2109,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             } else {
                 leads = await Lead.find({
                     stage: 'useless',
@@ -2148,7 +2148,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
         if (key.length == 2) {
@@ -2219,7 +2219,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             } else {
                 leads = await Lead.find({
                     stage: 'useless',
@@ -2286,7 +2286,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
         if (key.length == 3) {
@@ -2380,7 +2380,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             } else {
                 leads = await Lead.find({
                     stage: 'useless',
@@ -2470,7 +2470,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
         if (key.length == 4) {
@@ -2587,7 +2587,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             } else {
                 leads = await Lead.find({
                     stage: 'useless',
@@ -2700,7 +2700,7 @@ export const FuzzySearchUseLessLeads = async (req: Request, res: Response, next:
                             model: 'User'
                         }
                     ]
-                }).sort('-created_at')
+                }).sort('-updated_at')
             }
         }
 
@@ -3681,7 +3681,7 @@ export const GetVisitingCards = async (req: Request, res: Response, next: NextFu
                         model: 'User'
                     }
                 ]
-            }).sort('-created_at').skip((page - 1) * limit).limit(limit)
+            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await VisitingCard.find({ is_closed: false }).countDocuments()
         }
         return res.status(200).json({

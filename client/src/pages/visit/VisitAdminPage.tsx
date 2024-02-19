@@ -35,8 +35,8 @@ export default function VisitAdminPage() {
     const [selectedVisits, setSelectedVisits] = useState<IVisitReport[]>([])
     const [userId, setUserId] = useState<string>()
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-        start_date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
-        , end_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
+        start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
+        , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
     })
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
