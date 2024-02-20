@@ -34,7 +34,6 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
     "@types/file-saver": "^2.0.5",
     "@types/fuzzy-search": "^2.1.2",
     "@types/image-to-base64": "^2.1.2",

@@ -10,8 +10,13 @@ import { Client, MessageMedia } from "whatsapp-web.js"
 
 export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
     await CreateReport(client, dt1, dt2)
-    await SendDocument(client)
-    await DeleteDocument()
+    setTimeout(async()=>{
+        await SendDocument(client)
+    },300000)
+    
+    setTimeout(async() => {
+        await DeleteDocument()
+    }, 300000)
 }
 
 async function CreateReport(client: Client, dt1: Date, dt2: Date) {
@@ -196,7 +201,6 @@ async function CreateReport(client: Client, dt1: Date, dt2: Date) {
 
 async function SendDocument(client: Client) {
     if (client) {
-
         let users = await User.find()
         for (let i = 0; i < users.length; i++) {
             let user = users[i]
