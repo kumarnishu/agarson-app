@@ -12,6 +12,7 @@ function ErpReportsDashboard() {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     tmpfeatures.push({ feature: 'pending orders ', is_visible: true, url: paths.pending_orders })
     tmpfeatures.push({ feature: 'bills aging report ', is_visible: true, url: paths.bill_aging_report })
+    tmpfeatures.push({ feature: 'Client Sale report ', is_visible: true, url: paths.clients_sale })
     setFeatures(tmpfeatures)
   }, [])
 

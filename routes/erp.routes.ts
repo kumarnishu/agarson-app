@@ -1,6 +1,6 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
-import { BulkAssignStates, BulkCreateBillsAgingReportFromExcel, BulkCreateStateFromExcel, BulkPendingOrderReportFromExcel, CreateState, GetAllStates, GetBillsAgingReports, GetPendingOrderReports, UpdateState } from "../controllers/erp.controller";
+import { BulkAssignStates, BulkCreateBillsAgingReportFromExcel, BulkCreateClientSaleReportFromExcel, BulkCreateStateFromExcel, BulkPendingOrderReportFromExcel, CreateState, GetAllStates, GetBillsAgingReports, GetClientSaleReports, GetPendingOrderReports, UpdateState } from "../controllers/erp.controller";
 import { upload } from "./user.routes";
 
 const router = express.Router()
@@ -12,6 +12,8 @@ router.route("/reports/pending/orders").get(isAuthenticatedUser, GetPendingOrder
 router.route("/reports/pending/orders").put(isAuthenticatedUser, upload.single('file'), BulkPendingOrderReportFromExcel)
 router.route("/reports/bills/aging").get(isAuthenticatedUser, GetBillsAgingReports)
 router.route("/reports/bills/aging").put(isAuthenticatedUser, upload.single('file'), BulkCreateBillsAgingReportFromExcel)
+router.route("/reports/client/sale").get(isAuthenticatedUser, GetClientSaleReports)
+router.route("/reports/client/sale").put(isAuthenticatedUser, upload.single('file'), BulkCreateClientSaleReportFromExcel)
 router.route("/bulk/assign/states").patch(isAuthenticatedUser, BulkAssignStates)
 
 export default router

@@ -6,27 +6,27 @@ import { useQuery } from 'react-query'
 import DBPagination from '../../components/pagination/DBpagination';
 import { BackendError } from '../..'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { GetBillsAgingReports } from '../../services/ErpServices'
-import { IBillsAgingReport } from '../../types/erp_report.types'
+import { GetClientSaleReports } from '../../services/ErpServices'
+import { IClientSaleReport } from '../../types/erp_report.types'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../components/styled/STyledTable'
-import UploadBillsAgingFromExcelButton from '../../components/buttons/UploadBillsAgingButton'
 import { UserContext } from '../../contexts/userContext'
 import { Download, Search } from '@mui/icons-material'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import FuzzySearch from 'fuzzy-search'
 import moment from 'moment'
+import UploadClientSalesButton from '../../components/buttons/UploadClientSalesButton'
 
 
-export default function BillsAgingReportsPage() {
+export default function ClientSaleReportsPage() {
     const [paginationData, setPaginationData] = useState({ limit: 1000, page: 1, total: 1 });
-    const [reports, setBillsAgingReports] = useState<IBillsAgingReport[]>([])
+    const [reports, setClientSaleReports] = useState<IClientSaleReport[]>([])
     const [filterCount, setFilterCount] = useState(0)
     const { user } = useContext(UserContext)
-    const [filter, setFilter] = useState<string | undefined>()
-    const [preFilteredData, setPreFilteredData] = useState<IBillsAgingReport[]>([])
+    const [filter, setFilter] = useState<string>()
+    const [preFilteredData, setPreFilteredData] = useState<IClientSaleReport[]>([])
     const [sent, setSent] = useState(false)
-    const { data, isLoading } = useQuery<AxiosResponse<{ reports: IBillsAgingReport[], page: number, total: number, limit: number }>, BackendError>(["reports", paginationData], async () => GetBillsAgingReports({ limit: paginationData?.limit, page: paginationData?.page }))
+    const { data, isLoading } = useQuery<AxiosResponse<{ reports: IClientSaleReport[], page: number, total: number, limit: number }>, BackendError>(["reports", paginationData], async () => GetClientSaleReports({ limit: paginationData?.limit, page: paginationData?.page }))
 
 
     function handleExcel() {
@@ -35,13 +35,24 @@ export default function BillsAgingReportsPage() {
                 {
                     report_owner: "Goa",
                     account: "agarson safety",
-                    plu70: 2323,
-                    in70to90: 34334,
-                    in90to120: 343434,
-                    plus120: 343434344,
+                    article: "34",
+                    oldqty: "3434",
+                    newqty: "4343",
+                    apr: "23",
+                    may: "34",
+                    jun: "223",
+                    jul: "445",
+                    aug: "66",
+                    sep: "34",
+                    oct: "66",
+                    nov: "34",
+                    dec: "67",
+                    jan: "7",
+                    feb: "666",
+                    mar: "555",
                 }
             ]
-            ExportToExcel(data, "bills_aging_template")
+            ExportToExcel(data, "client_sale_template")
             setSent(true)
         }
         catch (err) {
@@ -51,20 +62,20 @@ export default function BillsAgingReportsPage() {
     }
     useEffect(() => {
         if (filter) {
-            const searcher = new FuzzySearch(reports, ["report_owner.state", "account"], {
+            const searcher = new FuzzySearch(reports, ["report_owner.state", "account", "article"], {
                 caseSensitive: false,
             });
             const result = searcher.search(filter);
-            setBillsAgingReports(result)
+            setClientSaleReports(result)
         }
         if (!filter)
-            setBillsAgingReports(preFilteredData)
+            setClientSaleReports(preFilteredData)
 
     }, [filter])
 
     useEffect(() => {
-        if (data&&!filter) {
-            setBillsAgingReports(data.data.reports)
+        if (data && !filter) {
+            setClientSaleReports(data.data.reports)
             setPaginationData({
                 ...paginationData,
                 page: data.data.page,
@@ -96,11 +107,11 @@ export default function BillsAgingReportsPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    Aging
+                    Client Sale 2023-24
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     {user?.erp_access_fields.is_editable && <>
-                        <UploadBillsAgingFromExcelButton disabled={!user?.erp_access_fields.is_editable} />
+                        <UploadClientSalesButton disabled={!user?.erp_access_fields.is_editable} />
                         <Button onClick={handleExcel}> <Download /> Template</Button>
                     </>}
                     <TextField
@@ -156,23 +167,64 @@ export default function BillsAgingReportsPage() {
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                Total
+                                Article
+                            </STableHeadCell>
+
+                            <STableHeadCell
+                            >
+                                Total Old Qty
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                {'<70'}
+                                Total New Qty
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                {'70-90'}
+                                APR
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                {'90-120'}
+                                MAY
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                                {'>120'}
+                                JUN
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                JUL
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                AUG
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                SEP
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                OCT
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                NOV
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                DEC
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                JAN
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                FEB
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                MAR
                             </STableHeadCell>
 
                         </STableRow>
@@ -193,53 +245,55 @@ export default function BillsAgingReportsPage() {
                                         <STableCell>
                                             {report.account && report.account.slice(0, 40)}
                                         </STableCell>
-                                        <STableCell>
-                                            <b style={{ fontSize: 12, letterSpacing: '1px' }}> {Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120)}</b>
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.plu70 ? String(report.plu70) : ""}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.in70to90 ? String(report.in70to90) : ""}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.in90to120 ? String(report.in90to120) : ""}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.plus120 ? String(report.plus120) : ""}
-                                        </STableCell>
 
+                                        <STableCell>
+                                            {report.article ? report.article : "Na"}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.oldqty ? report.oldqty : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.newqty ? report.newqty : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.apr ? report.apr : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.may ? report.may : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.jun ? report.jun : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.jul ? report.jul : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.aug ? report.aug : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.sep ? report.sep : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.oct ? report.oct : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.nov ? report.nov : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.dec ? report.dec : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.jan ? report.jan : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.feb ? report.feb : ""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {report.mar ? report.mar : ""}
+                                        </STableCell>
                                     </STableRow>
                                 )
                             })}
-                        <STableRow >
-                            <STableCell>
-
-                            </STableCell>
-                            <STableCell>
-
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> Total</b>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()}</b>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()}</b>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()}</b>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()}</b>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {(reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0)).toFixed()
-                                }</b>
-                            </STableCell>
-                        </STableRow>
-
                     </STableBody>
                 </STable>
 

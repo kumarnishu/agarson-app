@@ -15,6 +15,33 @@ export type IBillsAgingReport = {
     updated_by: IUser,
     status?: string
 }
+
+export type IClientSaleReport = {
+    _id: string,
+    report_owner: IState
+    account: string,
+    article: string,
+    oldqty: string,
+    newqty: string,
+    apr: string,
+    may: string,
+    jun: string,
+    jul: string,
+    aug: string,
+    sep: string,
+    oct: string,
+    nov: string,
+    dec: string,
+    jan: string,
+    feb: string,
+    mar: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser,
+    status?: string
+}
+
 export type IPendingOrdersReport = {
     _id: string,
     report_owner: IState
