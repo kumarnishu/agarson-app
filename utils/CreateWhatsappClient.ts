@@ -107,8 +107,10 @@ export async function createWhatsappClient(client_id: string, io: Server) {
         let dt2 = new Date()
         if (client && msg.body.toLowerCase() === "send boreports" && client_id === process.env.WACLIENT_ID) {
             if (new Date().getHours() <= 12) {
-                dt2.setDate(new Date(dt1).getDate())
-                dt1.setDate(new Date(dt1).getDate() - 1)
+                dt2.setDate(21)
+                dt1.setDate(20)
+                // dt2.setDate(new Date(dt1).getDate())
+                // dt1.setDate(new Date(dt1).getDate() - 1)
                 dt1.setHours(0)
                 dt1.setMinutes(0)
                 dt2.setHours(0)

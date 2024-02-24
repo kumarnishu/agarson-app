@@ -10,9 +10,9 @@ import { Machine } from "../models/production/machine.model"
 import { Client, MessageMedia } from "whatsapp-web.js"
 
 export async function HandleProductionReports(client: Client) {
-    await CreateReports(client)
-    await SendDocument(client)
+    await CreateReports(client).then(() => SendDocument(client))
 }
+
 async function CreateReports(client: Client) {
     console.log("generating production pdf")
 

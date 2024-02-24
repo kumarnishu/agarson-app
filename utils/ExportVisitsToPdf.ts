@@ -9,14 +9,7 @@ import { User } from "../models/users/user.model"
 import { Client, MessageMedia } from "whatsapp-web.js"
 
 export async function HandleVisitsReport(client: Client, dt1: Date, dt2: Date) {
-    await CreateReport(client, dt1, dt2)
-    setTimeout(async()=>{
-        await SendDocument(client)
-    },300000)
-    
-    setTimeout(async() => {
-        await DeleteDocument()
-    }, 300000)
+    await CreateReport(client, dt1, dt2).then(() => SendDocument(client).then(() => DeleteDocument()))
 }
 
 async function CreateReport(client: Client, dt1: Date, dt2: Date) {
