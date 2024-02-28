@@ -540,9 +540,12 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
 }
 
 export const Logout = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.cookies.accessToken)
-        return res.status(200).json({ message: "already logged out" })
-    await deleteToken(res, req.cookies.accessToken);
+    let token = undefined
+    token = req.cookies.accessToken
+    if (!token) {
+        token = req.headers.authorization && req.headers.authorization.split(" ")[1]
+    }
+    await deleteToken(res, token);
     res.status(200).json({ message: "logged out" })
 }
 
