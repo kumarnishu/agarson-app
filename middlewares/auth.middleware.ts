@@ -72,7 +72,7 @@ export const sendUserToken = (res: Response, accessToken: string) => {
         maxAge: Expiry * 60 * 1000,//1 minute by default
         httpOnly: true,
         secure: false,
-        sameSite: 'lax'
+        sameSite: 'none'
     });
 }
 
