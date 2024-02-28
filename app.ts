@@ -54,6 +54,15 @@ if (ENV === "development") {
     }))
 }
 
+if (ENV === "production") {
+    origin = "https://agarson-client.netlify.app/"
+    let origin2 = "https://agarson-client.onrender.com"
+    app.use(cors({
+        origin: [origin, origin2],
+        credentials: true
+    }))
+}
+
 
 let io: Server | undefined = undefined
 io = new Server(server, {
