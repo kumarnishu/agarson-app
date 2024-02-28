@@ -8,7 +8,9 @@ let UserTokens: string[] = []//for storing access tokens in memory
 export const isAuthenticatedUser = async (req: Request, res: Response, next: NextFunction) => {
     let token = undefined
     token = req.cookies.accessToken
-
+    if(!token){
+        token = req.headers.authorization && req.headers.authorization.split(" ")[1]
+    }
     if (!token)
         return res.status(403).json({ message: "please login to access this resource" })
     if (!UserTokens.includes(token))
@@ -34,6 +36,9 @@ export const isAuthenticatedUser = async (req: Request, res: Response, next: Nex
 export const isProfileAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
     let token = undefined
     token = req.cookies.accessToken
+    if (!token) {
+        token = req.headers.authorization && req.headers.authorization.split(" ")[1]
+    }
     if (!token)
         return res.status(403).json({ message: "login again" })
     if (!UserTokens.includes(token))
@@ -72,7 +77,7 @@ export const sendUserToken = (res: Response, accessToken: string) => {
         maxAge: Expiry * 60 * 1000,//1 minute by default
         httpOnly: true,
         secure: false,
-        sameSite: 'none'
+        sameSite: 'strict'
     });
 }
 
