@@ -462,3 +462,117 @@ export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Res
     }
     return res.status(200).json(result);
 }
+export const GetClientSaleReportsForLastYear = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let reports: IClientSaleReport[] = []
+    let count = 0
+    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
+
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        if (req.user?.is_admin) {
+            reports = await ClientSaleReport.find().populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
+            count = await ClientSaleReport.find().countDocuments()
+        }
+
+        else {
+            reports = await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
+            count = await ClientSaleReport.find({ report_owner: { $in: state_ids } }).countDocuments()
+        }
+
+        return res.status(200).json({
+            reports,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
+
+export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Request, res: Response, next: NextFunction) => {
+    let result: IClientSaleReport[] = []
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    await ClientSaleReport.deleteMany({})
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer);
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: IClientSaleReport[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        let statusText = ""
+
+        for (let i = 0; i < workbook_response.length; i++) {
+            let report = workbook_response[i]
+            let report_owner: string | null = String(report.report_owner)
+            let article: string | null = report.article
+            let account: string | null = report.account
+            let oldqty: string | null = report.oldqty
+            let newqty: string | null = report.newqty
+            let apr: string | null = report.apr
+            let may: string | null = report.may
+            let jun: string | null = report.jun
+            let jul: string | null = report.jul
+            let aug: string | null = report.aug
+            let sep: string | null = report.sep
+            let oct: string | null = report.oct
+            let nov: string | null = report.nov
+            let dec: string | null = report.dec
+            let jan: string | null = report.jan
+            let feb: string | null = report.feb
+            let mar: string | null = report.mar
+            let validated = true
+
+            if (!report_owner) {
+                validated = false
+                statusText = "report owner required"
+            }
+            if (!validated) {
+                result.push({
+                    ...report,
+                    status: statusText
+                })
+            }
+
+            if (validated) {
+                let owner = await State.findOne({ state: report.report_owner })
+                console.log("state", owner?.state, i)
+                if (owner) {
+                    await new ClientSaleReport({
+                        report_owner: owner,
+                        article: article,
+                        account: account,
+                        oldqty: oldqty,
+                        newqty: newqty,
+                        apr: apr,
+                        may: may,
+                        jun: jun,
+                        jul: jul,
+                        aug: aug,
+                        sep: sep,
+                        oct: oct,
+                        nov: nov,
+                        dec: dec,
+                        jan: jan,
+                        feb: feb,
+                        mar: mar,
+                        created_by: req.user,
+                        updated_by: req.user,
+                        created_at: new Date(),
+                        updated_at: new Date()
+                    }).save()
+                }
+            }
+        }
+    }
+    return res.status(200).json(result);
+}

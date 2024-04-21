@@ -40,6 +40,13 @@ export const GetClientSaleReports = async ({ limit, page }: { limit: number | un
 export const BulkClientSalereportFromExcel = async (body: FormData) => {
     return await apiClient.put(`reports/client/sale`, body)
 }
+export const GetClientSaleReportsForlastyear = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
+    return await apiClient.get(`reports/client/sale/lastyear/?limit=${limit}&page=${page}`)
+}
+
+export const BulkClientSalereportFromExcelforlastyear = async (body: FormData) => {
+    return await apiClient.put(`reports/client/sale/lastyear`, body)
+}
 
 
 export const AssignStates = async ({ body }: { body: { states: string[], ids: string[] } }) => {

@@ -25,6 +25,7 @@ import TodoDashboard from './dashboards/TodoDashboard.tsx'
 const StatesPage = React.lazy(() => import('./pages/users/StatesPage.tsx'))
 const PendingOrdersReportPage = React.lazy(() => import('./pages/erp reports/PendingOrdersReport.tsx'))
 const ClientSaleReportPage = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPage.tsx'))
+const ClientSaleReportsPageLastyear = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPageLastyear.tsx'))
 const BillsAgingReportsPage = React.lazy(() => import('./pages/erp reports/BillsAgingReportPage.tsx'))
 const TodoPage = React.lazy(() => import('./pages/todos/MyTodoPage.tsx'))
 const TodosAdminPage = React.lazy(() => import('./pages/todos/TodosAdminPage.tsx'))
@@ -102,7 +103,8 @@ export enum paths {
 
   //erp reports
   pending_orders = "pending_orders",
-  clients_sale ="clients_sale",
+  clients_sale = "clients_sale",
+  clients_sale_lastyear = "clients_sale_lastyear",
   bill_aging_report = "bill_aging_report",
 
   //checklists
@@ -454,6 +456,14 @@ function AppRoutes() {
                 <Suspense fallback={<LinearProgress />}>
                   < ClientSaleReportPage />
                 </Suspense>
+
+              }
+              />
+              <Route path={paths.clients_sale_lastyear} element={
+                <Suspense fallback={<LinearProgress />}>
+                  < ClientSaleReportsPageLastyear />
+                </Suspense>
+
               }
               />
               <Route path={paths.bill_aging_report} element={
