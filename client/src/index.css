@@ -6,7 +6,7 @@
   padding: 0;
   font-family: Roboto, sans-serif;
   box-sizing: border-box;
-  font-size: 9px;
+  font-size: 11px;
   overflow:'hidden';
 }
 
@@ -14,3 +14,4 @@ input[type=file]::file-selector-button {
   display: none;
   cursor: pointer;
 }
+

@@ -1,16 +1,13 @@
-import { Comment, DeleteOutline, Visibility } from '@mui/icons-material'
+import { Comment,  Visibility } from '@mui/icons-material'
 import { Box, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
-import AddTaskIcon from '@mui/icons-material/AddTask';
 import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
 import { IRemark } from '../../types/crm.types'
 import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
-import ConvertLeadToCustomerDialog from '../dialogs/crm/ConvertLeadToCustomerDialog'
-import ToogleUselessLead from '../dialogs/crm/ToogleUselessLeadDialog'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import NewRemarkDialog from '../dialogs/crm/NewRemarkDialog'
 
@@ -262,47 +259,9 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                                             <PopUp
                                                 element={
                                                     <Stack direction="row" spacing={1}>
-                                                        {!remark.lead.is_customer &&
-                                                            <Tooltip title="Convert to Customer">
-                                                                <IconButton color="secondary"
-                                                                    onClick={() => {
+                                                       
 
-                                                                        setChoice({ type: LeadChoiceActions.convert_customer })
-                                                                        setRemark(remark)
-                                                                    }}
-                                                                >
-                                                                    <AddTaskIcon />
-                                                                </IconButton>
-                                                            </Tooltip>}
-
-                                                        {
-                                                            user?.is_admin && remark.lead.stage === "useless" &&
-                                                            <Tooltip title="remove from useless">
-                                                                <IconButton color="success"
-                                                                    onClick={() => {
-
-                                                                        setChoice({ type: LeadChoiceActions.convert_useless })
-                                                                        setRemark(remark)
-                                                                    }}
-
-                                                                >
-                                                                    <DeleteOutline />
-                                                                </IconButton>
-                                                            </Tooltip>}
-                                                        {remark.lead.stage !== "useless" &&
-                                                            <Tooltip title="make useless">
-                                                                <IconButton color="warning"
-                                                                    onClick={() => {
-
-                                                                        setChoice({ type: LeadChoiceActions.convert_useless })
-                                                                        setRemark(remark)
-                                                                    }}
-
-                                                                >
-                                                                    <DeleteOutline />
-                                                                </IconButton>
-                                                            </Tooltip>}
-
+                                                       
 
                                                         <Tooltip title="view remarks">
                                                             <IconButton color="primary"
@@ -485,8 +444,6 @@ function RemarksSTable({ remark, remarks, setRemark }: Props) {
                 remark ?
                     <>
                         <ViewRemarksDialog lead={remark.lead} />
-                        <ConvertLeadToCustomerDialog lead={remark.lead} />
-                        <ToogleUselessLead lead={remark.lead} />
                         <NewRemarkDialog lead={remark.lead} />
                     </>
                     : null

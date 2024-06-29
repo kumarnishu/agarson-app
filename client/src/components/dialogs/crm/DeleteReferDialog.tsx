@@ -18,8 +18,6 @@ function DeleteReferDialog({ refer }: { refer: IReferredParty }) {
         (DeleteReferParty, {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')
-                queryClient.invalidateQueries('customers')
-                queryClient.invalidateQueries('uselessleads')
             }
         })
 

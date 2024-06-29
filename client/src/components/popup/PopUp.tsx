@@ -1,12 +1,13 @@
-import { AdsClickOutlined } from '@mui/icons-material';
 import { Popover } from '@mui/material';
 import { useState } from 'react'
 
-function PopUp({ element, color }: { element: JSX.Element, color?: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" }) {
+function PopUp({ element }: { element: JSX.Element }) {
     const [popup, setPopup] = useState<any | null>(null);
     return (
         <div>
-            <AdsClickOutlined color={color || "primary"} sx={{margin:1}} onClick={(e) => setPopup(e.currentTarget)} />
+            <span color="blue" onClick={(e) => setPopup(e.currentTarget)}>
+                🔁
+            </span>
             <Popover
                 open={Boolean(popup)}
                 anchorEl={popup}

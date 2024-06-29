@@ -35,13 +35,10 @@ const LoginPage = React.lazy(() => import('./pages/users/LoginPage'))
 const EmailVerifyPage = React.lazy(() => import('./pages/users/EmailVerifyPage'))
 const UsersPage = React.lazy(() => import('./pages/users/UsersPage'))
 const BackupPage = React.lazy(() => import('./pages/backup/BackupPage'))
-const UseLessLeadsPage = React.lazy(() => import('./pages/crm/UseLessLeadsPage'))
 const TemplatesPage = React.lazy(() => import('./pages/templates/TemplatesPage'))
-const CrmHelpPage = React.lazy(() => import('./pages/crm/CrmHelpPage'))
 const CrmReminderPage = React.lazy(() => import('./pages/crm/CrmReminderPage'))
 const CheckListPage = React.lazy(() => import('./pages/checklists/CheckListPage'))
 const CheckListAdminPage = React.lazy(() => import('./pages/checklists/CheckListAdminPage'))
-const VisitingCardsPage = React.lazy(() => import('./pages/crm/VisitingCardsPage'))
 const CheckListHelpPage = React.lazy(() => import('./pages/checklists/CheckListHelpPage'))
 const MyVisitPage = React.lazy(() => import('./pages/visit/MyVisitPage'))
 const VisitAdminPage = React.lazy(() => import('./pages/visit/VisitAdminPage'))
@@ -60,9 +57,7 @@ const UpdateMachineCategoriesPage = React.lazy(() => import('./pages/production/
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
-const CustomersPage = React.lazy(() => import('./pages/crm/CustomersPage'))
 const ReferralPartyPage = React.lazy(() => import('./pages/crm/ReferralPartyPage'))
-const UpdateLeadFieldsPage = React.lazy(() => import('./pages/crm/UpdateLeadFieldsPage'))
 const CrmActivitiesPage = React.lazy(() => import('./pages/crm/CrmActivitiesPage'))
 const LeadsPage = React.lazy(() => import('./pages/crm/LeadsPage'))
 
@@ -116,12 +111,8 @@ export enum paths {
   crm = "crm",
   crm_reminders = "crm_reminders",
   crm_activities = "crm_activities",
-  visiting_cards ="visiting_cards",
   leads = "leads",
-  customers = "customers",
-  updateble_fields_lead = "updateble_fields_lead",
   refers = "refers",
-  useless_leads = "useless_leads",
 
   //production
   production = "production",
@@ -314,40 +305,16 @@ function AppRoutes() {
                 <Suspense fallback={<LinearProgress />}><CrmReminderPage /></Suspense>
               }
               />
-              <Route path={paths.visiting_cards} element={
-                <Suspense fallback={<LinearProgress />}><VisitingCardsPage /></Suspense>
-              }
-              />
-              <Route
-                path={paths.customers} element={
-                  <Suspense fallback={<LinearProgress />}><CustomersPage /></Suspense>
-
-                }
-              />
+           
+             
               <Route
                 path={paths.refers} element={
                   <Suspense fallback={<LinearProgress />}><ReferralPartyPage /></Suspense>
 
                 }
               />
-              <Route
-                path={paths.updateble_fields_lead} element={
-                  <Suspense fallback={<LinearProgress />}><UpdateLeadFieldsPage />
-                  </Suspense>
-                }
-              />
-              <Route
-                path={paths.useless_leads} element={
-                  <Suspense fallback={<LinearProgress />}><UseLessLeadsPage />
-                  </Suspense>
-                }
-              />
-             
-              <Route
-                path={paths.crm_help_page} element={
-                  <CrmHelpPage />
-                }
-              />
+            
+            
             </Route>}
           {!user.templates_access_fields.is_hidden &&
             < Route path={paths.templates_dashboard} element={<TemplatesNavBar />

@@ -92,20 +92,9 @@ export const FuzzySearchRefers = async ({ searchString, limit, page, userId }: {
 
 }
 
-export const FuzzySearchCustomers = async ({ searchString, limit, page, userId }: { searchString?: string, limit: number | undefined, page: number | undefined, userId?: string }) => {
-  if (userId)
-    return await apiClient.get(`search/customers?key=${searchString}&limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`search/customers?key=${searchString}&limit=${limit}&page=${page}`)
 
-}
 
-export const GetCustomers = async ({ limit, page, userId }: { limit: number | undefined, page: number | undefined, userId?: string }) => {
-  if (userId)
-    return await apiClient.get(`customers?limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`customers?limit=${limit}&page=${page}`)
-}
+
 
 export const NewLead = async (body: FormData) => {
   return await apiClient.post("leads", body)
@@ -116,9 +105,7 @@ export const UpdateLead = async ({ id, body }: { id: string, body: FormData }) =
 export const DeleteLead = async ({ id }: { id: string }) => {
   return await apiClient.delete(`leads/${id}`)
 }
-export const ConvertCustomer = async ({ id, body }: { id: string, body: { remark: string } }) => {
-  return await apiClient.patch(`leads/${id}`, body)
-}
+
 export const ToogleUseless = async ({ id, body }: { id: string, body: { remark: string } }) => {
   return await apiClient.patch(`toogle/useless/${id}`, body)
 }

@@ -18,8 +18,6 @@ function DeleteLeadDialog({ lead }: { lead: ILead }) {
         (DeleteLead, {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')
-                queryClient.invalidateQueries('customers')
-                queryClient.invalidateQueries('uselessleads')
             }
         })
 

@@ -25,7 +25,6 @@ function AssignReferForm({ refer, users }: { refer: IReferredParty, users: IUser
                 queryClient.invalidateQueries('refers')
                 queryClient.invalidateQueries('paginatedrefers')
                 queryClient.invalidateQueries('customers')
-                queryClient.invalidateQueries('uselessrefers')
             }
         })
 

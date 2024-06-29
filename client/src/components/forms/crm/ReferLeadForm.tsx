@@ -22,7 +22,6 @@ function ReferLeadForm({ lead }: { lead: ILead }) {
                 queryClient.invalidateQueries('paginatedrefers')
                 queryClient.invalidateQueries('leads')
                 queryClient.invalidateQueries('customers')
-                queryClient.invalidateQueries('uselessleads')
             }
         })
     const { data, isSuccess: isReferSuccess } = useQuery<AxiosResponse<IReferredParty[]>, BackendError>("refers", GetRefers)

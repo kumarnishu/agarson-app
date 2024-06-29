@@ -27,7 +27,6 @@ function UpdateRemarkForm({ remark, show, setShow }: { remark: IRemark, show: bo
                 queryClient.invalidateQueries('remarks')
                 queryClient.invalidateQueries('leads')
                 queryClient.invalidateQueries('customers')
-                queryClient.invalidateQueries('uselessremarks')
             }
         })
 

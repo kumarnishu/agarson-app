@@ -14,7 +14,7 @@ type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
 
-type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless" |"view_card_comments"|
+type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead"  | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals"   |"view_card_comments"|
    "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark" | "create_card" | "update_card" | "refer_card" | "toogle_card" | "add_card_comment"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
@@ -117,7 +117,6 @@ export enum LeadChoiceActions {
   update_remark = "update_remark",
   view_remarks = "view_remarks",
   close_lead = "close_lead",
-  convert_customer = "convert_customer",
   display_filter = "display_filter",
   add_remark = "add_remark",
   lead_advance_filter = "lead_advance_filter",
@@ -127,8 +126,6 @@ export enum LeadChoiceActions {
   view_referrals = "view_referrals",
   refer_lead = "refer_lead",
   remove_referral = "remove_referral",
-  bulk_delete_useless_leads = "bulk_delete_useless_leads",
-  convert_useless = "convert_useless",
   assign_refer = "assign_refer",
   bulk_assign_leads = "bulk_assign_leads",
   bulk_assign_refers = "bulk_assign_refers",
@@ -208,7 +205,6 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.add_remark: return type
     case LeadChoiceActions.display_filter: return type
     case LeadChoiceActions.delete_lead: return type
-    case LeadChoiceActions.convert_customer: return type
     case LeadChoiceActions.lead_advance_filter: return type
     case LeadChoiceActions.close_lead: return type
     case LeadChoiceActions.create_refer: return type
@@ -217,11 +213,9 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.view_referrals: return type
     case LeadChoiceActions.refer_lead: return type
     case LeadChoiceActions.remove_referral: return type
-    case LeadChoiceActions.bulk_delete_useless_leads: return type
     case LeadChoiceActions.assign_refer: return type
     case LeadChoiceActions.delete_remark: return type
     case LeadChoiceActions.update_remark: return type
-    case LeadChoiceActions.convert_useless: return type
     case LeadChoiceActions.bulk_assign_leads: return type
     case LeadChoiceActions.bulk_assign_refers: return type
     case LeadChoiceActions.create_card: return type

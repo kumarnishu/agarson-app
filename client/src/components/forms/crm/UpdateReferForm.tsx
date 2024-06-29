@@ -29,7 +29,6 @@ function UpdateReferForm({ refer, users }: { refer: IReferredParty, users: IUser
                 queryClient.invalidateQueries('paginatedrefers')
                 queryClient.invalidateQueries('leads')
                 queryClient.invalidateQueries('customers')
-                queryClient.invalidateQueries('uselessleads')
             }
         })
 

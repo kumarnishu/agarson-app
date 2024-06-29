@@ -20,8 +20,6 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: IRemark, 
         queryClient.invalidateQueries('reminderremarks')
         queryClient.invalidateQueries('remarks')
         queryClient.invalidateQueries('leads')
-        queryClient.invalidateQueries('customers')
-        queryClient.invalidateQueries('uselessremarks')
       }
     })
 

@@ -1,13 +1,11 @@
-import { Comment, Delete, DeleteOutline, Edit, Share, Visibility } from '@mui/icons-material'
+import { Comment, Delete,  Edit, Share, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
-import AddTaskIcon from '@mui/icons-material/AddTask';
 import UpdateLeadDialog from '../dialogs/crm/UpdateLeadDialog'
 import DeleteLeadDialog from '../dialogs/crm/DeleteLeadDialog'
-import ConvertLeadToCustomerDialog from '../dialogs/crm/ConvertLeadToCustomerDialog'
 import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
 import NewRemarkDialog from '../dialogs/crm/NewRemarkDialog'
 import ReferLeadDialog from '../dialogs/crm/ReferLeadDialog'
@@ -15,7 +13,6 @@ import RemoveLeadReferralDialog from '../dialogs/crm/RemoveLeadReferralDialog'
 import BackHandIcon from '@mui/icons-material/BackHand';
 import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
-import ToogleUselessLead from '../dialogs/crm/ToogleUselessLeadDialog'
 import { ILead } from '../../types/crm.types'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 
@@ -43,7 +40,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
     <>
       <Box sx={{
         overflow: "auto",
-        height: '80vh'
+        height: '78vh'
       }}>
         <STable>
           <STableHead style={{
@@ -395,46 +392,9 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                 </IconButton>
                               </Tooltip>
                             }
-                            {!lead.is_customer &&
-                              <Tooltip title="Convert to Customer">
-                                <IconButton color="secondary"
-                                  onClick={() => {
+                           
 
-                                    setChoice({ type: LeadChoiceActions.convert_customer })
-                                    setLead(lead)
-                                  }}
-                                >
-                                  <AddTaskIcon />
-                                </IconButton>
-                              </Tooltip>}
-
-                            {
-                              lead.stage === "useless" &&
-                              <Tooltip title="remove from useless">
-                                <IconButton color="success"
-                                  onClick={() => {
-
-                                    setChoice({ type: LeadChoiceActions.convert_useless })
-                                    setLead(lead)
-                                  }}
-
-                                >
-                                  <DeleteOutline />
-                                </IconButton>
-                              </Tooltip>}
-                            {lead.stage !== "useless" &&
-                              <Tooltip title="make useless">
-                                <IconButton color="warning"
-                                  onClick={() => {
-
-                                    setChoice({ type: LeadChoiceActions.convert_useless })
-                                    setLead(lead)
-                                  }}
-
-                                >
-                                  <DeleteOutline />
-                                </IconButton>
-                              </Tooltip>}
+                            
 
                             {user?.crm_access_fields.is_editable &&
                               <Tooltip title="edit">
@@ -649,12 +609,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
           <>
             <UpdateLeadDialog lead={lead} />
             <DeleteLeadDialog lead={lead} />
-            <ConvertLeadToCustomerDialog lead={lead} />
             <ViewRemarksDialog lead={lead} />
             <NewRemarkDialog lead={lead} />
             <ReferLeadDialog lead={lead} />
             <RemoveLeadReferralDialog lead={lead} />
-            <ToogleUselessLead lead={lead} />
           </>
           : null
       }

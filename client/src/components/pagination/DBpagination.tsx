@@ -19,7 +19,7 @@ type Props = {
 function DBPagination({ paginationData, setFilterCount, setPaginationData }: Props) {
     return (
         <>
-            <Stack sx={{ position: 'fixed', bottom: 0, width: '100vw', bgcolor: 'whitesmoke', right: 0 }} direction={'row'} justifyContent={'space-evenly'} p={1}>
+            <Stack sx={{bottom: 0, width: '100vw', bgcolor: 'whitesmoke', right: 0 }} direction={'row'} justifyContent={'space-evenly'} p={1}>
                 <Stack direction={'row'}
                     spacing={2}
                     px={2}

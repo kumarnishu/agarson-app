@@ -47,7 +47,6 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
       onSuccess: () => {
         queryClient.invalidateQueries('leads')
         queryClient.invalidateQueries('customers')
-        queryClient.invalidateQueries('uselessleads')
       }
     })
   const { user } = useContext(UserContext)

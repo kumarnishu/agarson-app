@@ -1,25 +1,25 @@
 import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AppsIcon from '@mui/icons-material/Apps';
-import { UserContext } from "../contexts/userContext";
 
 function CrmDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
-  const { user } = useContext(UserContext)
   
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     tmpfeatures.push({ feature: 'leads ', is_visible: true, url: paths.leads })
-    tmpfeatures.push({ feature: 'customers', is_visible: true, url: paths.customers })
+
     tmpfeatures.push({ feature: 'refers', is_visible: true, url: paths.refers })
-    tmpfeatures.push({ feature: 'useless', is_visible: true, url: paths.useless_leads })
     tmpfeatures.push({ feature: 'reminders', is_visible: true, url: paths.crm_reminders })
     tmpfeatures.push({ feature: 'activities', is_visible: true, url: paths.crm_activities })
-    tmpfeatures.push({ feature: 'visitng cards', is_visible: true, url: paths.visiting_cards })
-    user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'fields', is_visible: true, url: paths.updateble_fields_lead })
+    tmpfeatures.push({ feature: 'states', is_visible: true, url: paths.crm_activities })
+    tmpfeatures.push({ feature: 'cities', is_visible: true, url: paths.crm_activities })
+    tmpfeatures.push({ feature: 'Lead Type', is_visible: true, url: paths.crm_activities })
+    tmpfeatures.push({ feature: 'Lead Source', is_visible: true, url: paths.crm_activities })
+    tmpfeatures.push({ feature: 'Lead Stage', is_visible: true, url: paths.crm_activities })
     setFeatures(tmpfeatures)
   }, [])
 
