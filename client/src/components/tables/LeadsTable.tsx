@@ -4,15 +4,15 @@ import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import { UserContext } from '../../contexts/userContext'
-import UpdateLeadDialog from '../dialogs/crm/UpdateLeadDialog'
 import DeleteLeadDialog from '../dialogs/crm/DeleteLeadDialog'
-import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
-import NewRemarkDialog from '../dialogs/crm/NewRemarkDialog'
 import BackHandIcon from '@mui/icons-material/BackHand';
 import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import { ILead } from '../../types/crm.types'
+import CreateOrEditLeadDialog from '../dialogs/crm/CreateOrEditLeadDialog'
+import CreateOrEditRemarkDialog from '../dialogs/crm/CreateOrEditRemarkDialog'
+import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
 
 
 type Props = {
@@ -400,7 +400,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                 <IconButton color="secondary"
                                   onClick={() => {
 
-                                    setChoice({ type: LeadChoiceActions.update_lead })
+                                    setChoice({ type: LeadChoiceActions.create_or_edit_lead })
                                     setLead(lead)
                                   }}
 
@@ -429,7 +429,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                 color="success"
                                 onClick={() => {
 
-                                  setChoice({ type: LeadChoiceActions.add_remark })
+                                  setChoice({ type: LeadChoiceActions.create_or_edt_remark })
                                   setLead(lead)
 
                                 }}
@@ -442,7 +442,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       />
                     </STableCell>
 
-                    <STableCell>
+                    <STableCell style={{ fontWeight: lead.visiting_card && lead.visiting_card.public_url && 'bold' }} title={lead.visiting_card && lead.visiting_card.public_url && 'This number has Visitng card Uploaded'}>
                       {lead.name}
                     </STableCell>
 
@@ -462,9 +462,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
 
                     <STableCell>
-
                       {lead.mobile}
-
                     </STableCell>
 
 
@@ -591,7 +589,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                           DownloadFile(lead.visiting_card.public_url, lead.visiting_card.filename)
                         }
                       }}>
-                      {lead.visiting_card && lead.visiting_card.public_url ? < img height="50" width="75" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" /> : "na"}
+                      {lead.visiting_card && lead.visiting_card.public_url ? < img height="20" width="55" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" /> : "na"}
                     </STableCell>
                   </STableRow>
                 )
@@ -601,13 +599,15 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
           </STableBody>
         </STable>
       </Box >
+      <CreateOrEditLeadDialog lead={lead} />
+      
       {
         lead ?
           <>
-            <UpdateLeadDialog lead={lead} />
+           <CreateOrEditRemarkDialog lead={lead} />
             <DeleteLeadDialog lead={lead} />
             <ViewRemarksDialog lead={lead} />
-            <NewRemarkDialog lead={lead} />
+            
           </>
           : null
       }

@@ -1,28 +1,69 @@
-import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material';
-import { useContext } from 'react';
-import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { ILead } from '../../../types/crm.types';
-import { Cancel } from '@mui/icons-material';
+import { Dialog, DialogContent, IconButton, DialogTitle, Stack } from '@mui/material'
+import { useContext, useState } from 'react'
+import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
+import { Cancel} from '@mui/icons-material'
+import { ILead, IRemark } from '../../../types/crm.types'
+import DeleteRemarkDialog from './DeleteRemarkDialog'
+import CreateOrEditRemarkDialog from './CreateOrEditRemarkDialog'
+import { UserContext } from '../../../contexts/userContext'
+
 
 function ViewRemarksDialog({ lead }: { lead: ILead }) {
-  const { choice, setChoice } = useContext(ChoiceContext)
-  return (
-    <>
-      <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === LeadChoiceActions.view_remarks ? true : false}
-        scroll="paper"
-        onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
-      >
-        <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
-          <Cancel fontSize='large' />
-        </IconButton>
-        <DialogTitle sx={{ minWidth: '300px' }} textAlign="center">Remarks History</DialogTitle>
-        <Typography sx={{ minWidth: '300px', textTransform: 'capitalize' }} textAlign="center">{lead.name}</Typography>
-        <Typography sx={{ minWidth: '300px' }} textAlign="center">{lead.mobile}</Typography>
-        <DialogContent>
-        </DialogContent>
-      </Dialog >
-    </>
-  )
+    const [display, setDisplay] = useState<boolean>(false)
+    const [display2, setDisplay2] = useState<boolean>(false)
+    const { choice, setChoice } = useContext(ChoiceContext)
+    const [remark, setRemark] = useState<IRemark>()
+    const { user } = useContext(UserContext)
+    let previous_date = new Date()
+    let day = previous_date.getDate() - 1
+    previous_date.setDate(day)
+
+    return (
+        <Dialog fullScreen={Boolean(window.screen.width < 500)}
+            open={choice === LeadChoiceActions.view_remarks ? true : false}
+        >
+            <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
+                <Cancel fontSize='large' />
+            </IconButton>
+            <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Remarks history</DialogTitle>
+            <DialogContent>
+                <Stack direction="column" gap={2} >
+                    {lead.remarks.reverse().map((item, index) => {
+                        return (
+
+                          <>
+                                <div key={index} style={{ borderRadius: '1px 10px', padding: '10px', background: 'whitesmoke', paddingLeft: '20px', border: '1px solid grey' }}>
+                                    <p>{item.created_by.username} : {item.remark} </p>
+                                    <br></br>
+                                    <p>{'Timestamp : ' + new Date(item.created_at).toLocaleString()}</p>
+                                    {
+                                        user && item.remark && user?.username === item.created_by.username && new Date(item.created_at) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
+                                            <IconButton size="small" color="error" onClick={() => {
+                                                setRemark(item)
+                                                setDisplay(true)
+                                            }}>
+                                                Delete</IconButton>
+                                            <IconButton size="small" color="success"
+                                                onClick={() => {
+                                                    setRemark(item)
+                                                    setDisplay2(true)
+                                                    
+                                                }}
+                                            >Edit</IconButton>
+                                        </Stack>
+                                    }
+                                </div>
+                               
+                          </>
+                        )
+                    })}
+                </Stack>
+                {remark && <DeleteRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
+                {remark && <CreateOrEditRemarkDialog remark={remark} display={display2} setDisplay={setDisplay2} />}
+            </DialogContent>
+
+        </Dialog>
+    )
 }
 
 export default ViewRemarksDialog

@@ -32,7 +32,7 @@ function DeleteLeadDialog({ lead }: { lead: ILead }) {
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
                 <Cancel fontSize='large' />
             </IconButton>
-            <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
+            <DialogTitle sx={{ minWidth: '350px',fontSize:'20px' }} textAlign="center">
                 Delete Lead
             </DialogTitle>
             {
@@ -46,13 +46,13 @@ function DeleteLeadDialog({ lead }: { lead: ILead }) {
                 ) : null
             }
             <DialogContent>
-                <Typography variant="body1" color="error">
-                    {`Warning ! This will delete selected lead permanently and associated remarks to it. ${lead.mobile}`}
+                <Typography variant="h4" color="error">
+                   Are you sure to permanently delete this lead ?
 
                 </Typography>
             </DialogContent>
             <Stack
-                direction="column"
+                direction="row"
                 gap={2}
                 padding={2}
                 width="100%"
@@ -66,6 +66,15 @@ function DeleteLeadDialog({ lead }: { lead: ILead }) {
                 >
                     {isLoading ? <CircularProgress /> :
                         "Delete"}
+                </Button>
+                <Button fullWidth variant="contained" color="info"
+                    onClick={() => {
+                        setChoice({ type: LeadChoiceActions.close_lead })
+                    }}
+                    disabled={isLoading}
+                >
+                    {isLoading ? <CircularProgress /> :
+                        "Cancel"}
                 </Button>
             </Stack >
         </Dialog >

@@ -173,7 +173,6 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
   }, [isSuccess, setChoice])
 
 
-  console.log(formik.values)
   return (
     <form onSubmit={formik.handleSubmit}>
       <Stack

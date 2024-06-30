@@ -15,7 +15,7 @@ type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_ch
 
 
 type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead"  | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals"   |"view_card_comments"|
-   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark" | "create_card" | "update_card" | "refer_card" | "toogle_card" | "add_card_comment"
+   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "update_card" | "refer_card" | "toogle_card" | "add_card_comment"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
 
@@ -106,7 +106,7 @@ export enum TemplateChoiceActions {
 
 
 export enum LeadChoiceActions {
-  create_card = "create_card",
+  create_or_edit_lead = "create_or_edit_lead",
   update_card = "update_card",
   view_card_comments ="view_card_comments",
   refer_card = "refer_card",
@@ -114,7 +114,7 @@ export enum LeadChoiceActions {
   update_lead = "update_lead",
   delete_lead = "delete_lead",
   delete_remark = "delete_remark",
-  update_remark = "update_remark",
+  create_or_edt_remark = "create_or_edt_remark",
   view_remarks = "view_remarks",
   close_lead = "close_lead",
   display_filter = "display_filter",
@@ -215,10 +215,10 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.remove_referral: return type
     case LeadChoiceActions.assign_refer: return type
     case LeadChoiceActions.delete_remark: return type
-    case LeadChoiceActions.update_remark: return type
+    case LeadChoiceActions.create_or_edt_remark: return type
     case LeadChoiceActions.bulk_assign_leads: return type
     case LeadChoiceActions.bulk_assign_refers: return type
-    case LeadChoiceActions.create_card: return type
+    case LeadChoiceActions.create_or_edit_lead: return type
     case LeadChoiceActions.update_card: return type
     case LeadChoiceActions.refer_card: return type
     case LeadChoiceActions.toogle_card: return type

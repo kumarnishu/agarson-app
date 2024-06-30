@@ -17,20 +17,16 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: IRemark, 
     <AxiosResponse<any>, BackendError, string>
     (DeleteRemark, {
       onSuccess: () => {
-        queryClient.invalidateQueries('reminderremarks')
-        queryClient.invalidateQueries('remarks')
         queryClient.invalidateQueries('leads')
       }
     })
 
   useEffect(() => {
-    if (isSuccess)
-      setTimeout(() => {
-        if (display)
-          setDisplay(false)
-        else
-          setChoice({ type: LeadChoiceActions.close_lead })
-      }, 1000)
+    if (isSuccess) {
+      setDisplay(false)
+      setChoice({ type: LeadChoiceActions.close_lead })
+    }
+
   }, [isSuccess])
 
   return (
@@ -58,25 +54,35 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: IRemark, 
         ) : null
       }
       <DialogContent>
-        <Typography variant="body1" color="error">
-          {`Warning ! This will delete selected remark permanently ${remark.remark}`}
+        <Typography variant="h4" color="error">
+          Are you sure to permanently delete this remark ?
 
         </Typography>
       </DialogContent>
       <Stack
-        direction="column"
+        direction="row"
         gap={2}
         padding={2}
         width="100%"
       >
         <Button fullWidth variant="outlined" color="error"
           onClick={() => {
+            setChoice({ type: LeadChoiceActions.delete_lead })
             mutate(remark._id)
           }}
           disabled={isLoading}
         >
           {isLoading ? <CircularProgress /> :
             "Delete"}
+        </Button>
+        <Button fullWidth variant="contained" color="info"
+          onClick={() => {
+            setDisplay(false)
+          }}
+          disabled={isLoading}
+        >
+          {isLoading ? <CircularProgress /> :
+            "Cancel"}
         </Button>
       </Stack >
     </Dialog >

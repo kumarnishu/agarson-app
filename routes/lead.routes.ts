@@ -19,8 +19,13 @@ router.route("/update/leads/bulk").put(isAuthenticatedUser, upload.single('file'
 router.route("/remarks/leads/:id").patch(isAuthenticatedUser, NewRemark)
 router.route("/remarks/:id").put(isAuthenticatedUser, UpdateRemark)
 router.route("/remarks/:id").delete(isAuthenticatedUser, DeleteRemark)
+
+
 router.route("/search/leads").get(isAuthenticatedUser, FuzzySearchLeads)
 router.route("/backup/leads").get(isAuthenticatedUser, BackUpAllLeads)
+
+
+
 router.route("/refers/leads/:id").post(isAuthenticatedUser, ReferLead)
 router.route("/refers/leads/:id").patch(isAuthenticatedUser, RemoveLeadReferral)
 router.route("/refers").get(isAuthenticatedUser, GetRefers)

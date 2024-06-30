@@ -13,13 +13,13 @@ import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
-import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { GetUsers } from '../../services/UserServices'
 import { IUser } from '../../types/user.types'
 import { ILeadTemplate } from '../../types/template.type'
 import { ILead } from '../../types/crm.types'
+import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
 
 let template: ILeadTemplate[] = [
   {
@@ -50,7 +50,6 @@ let template: ILeadTemplate[] = [
 export default function LeadsPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [users, setUsers] = useState<IUser[]>([])
-  const [userId, setUserId] = useState<string>()
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<ILead>()
@@ -61,11 +60,11 @@ export default function LeadsPage() {
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
-  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData, userId], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, userId }))
+  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page }))
 
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, userId }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
   })
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
@@ -100,6 +99,7 @@ export default function LeadsPage() {
           customer_name: lead.customer_name,
           customer_designation: lead.customer_designation,
           mobile: lead.mobile,
+          gst: lead.gst,
           email: lead.email,
           city: lead.city,
           state: lead.state,
@@ -114,7 +114,7 @@ export default function LeadsPage() {
           stage: lead.stage,
           lead_source: lead.lead_source,
           remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
-          gst: lead.gst,
+          
         })
     })
     if (data.length > 0)
@@ -260,25 +260,16 @@ export default function LeadsPage() {
             >
               <MenuItem
                 onClick={() => {
-                  setChoice({ type: LeadChoiceActions.create_lead })
+                  setChoice({ type: LeadChoiceActions.create_or_edit_lead })
+                  setLead(undefined);
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              <MenuItem
-                onClick={() => {
-                  if (selectedLeads.length === 0)
-                    alert("please select some leads")
-                  else
-                    setChoice({ type: LeadChoiceActions.bulk_assign_leads })
-                  setAnchorEl(null)
-                }}
-              > Assign Leads</MenuItem>
-
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
             </Menu >
-            <NewLeadDialog />
+            <CreateOrEditLeadDialog  lead={undefined}/>
           </>
         </Stack >
       </Stack >

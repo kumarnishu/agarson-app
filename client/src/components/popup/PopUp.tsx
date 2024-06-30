@@ -6,7 +6,7 @@ function PopUp({ element }: { element: JSX.Element }) {
     return (
         <div>
             <span color="blue" onClick={(e) => setPopup(e.currentTarget)}>
-                🔁
+                🔁 Actions
             </span>
             <Popover
                 open={Boolean(popup)}

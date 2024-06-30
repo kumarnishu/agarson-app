@@ -153,7 +153,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         let count = 0
         if (req.user?.crm_access_fields.is_editable) {
             if (id) {
-                leads = await Lead.find({ stage: { $nin: ["useless"] }, lead_owners: id }).populate('updated_by').populate('created_by').populate({
+                leads = await Lead.find({ stage: { $nin: ["useless"] } }).populate('updated_by').populate('created_by').populate({
                     path: 'remarks',
                     populate: [
                         {
@@ -166,7 +166,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                         }
                     ]
                 }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-                count = await Lead.find({ stage: { $nin: ["useless"] }, lead_owners: id }).countDocuments()
+                count = await Lead.find({ stage: { $nin: ["useless"] } }).countDocuments()
             }
             else {
                 leads = await Lead.find({ stage: { $nin: ["useless"] } }).populate('updated_by').populate('created_by').populate({
@@ -188,7 +188,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         }
 
         if (!req.user?.crm_access_fields.is_editable) {
-            leads = await Lead.find({ stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user?._id] } }).populate('updated_by').populate('created_by').populate({
+            leads = await Lead.find({ stage: { $nin: ["useless"] } }).populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
                     {
@@ -201,7 +201,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({ stage: { $nin: ["useless"] }, lead_owners: { $in: [req.user?._id] } }).countDocuments()
+            count = await Lead.find({ stage: { $nin: ["useless"] } }).countDocuments()
         }
 
         return res.status(200).json({
@@ -294,7 +294,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 1 || key.length > 4) {
             if (id) {
                 leads = await Lead.find({
-                    lead_owners: id,
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -377,7 +376,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 2) {
             if (id) {
                 leads = await Lead.find({
-                    lead_owners: id,
                     $and: [
                         {
                             $or: [
@@ -516,7 +514,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 3) {
             if (id) {
                 leads = await Lead.find({
-                    lead_owners: id,
+                    
                     $and: [
                         {
                             $or: [
@@ -701,7 +699,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 4) {
             if (id) {
                 leads = await Lead.find({
-                    lead_owners: id,
+                    
                     $and: [
                         {
                             $or: [
@@ -1178,7 +1176,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
         let checkednumbers: string[] = []
         for (let i = 0; i < workbook_response.length; i++) {
             let lead = workbook_response[i]
-            let new_lead_owners: IUser[] = []
+            let new_: IUser[] = []
             let mobile: string | null = lead.mobile
             let alternate_mobile1: string | null = lead.alternate_mobile1
             let alternate_mobile2: string | null = lead.alternate_mobile2
@@ -1319,7 +1317,6 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                             mobile: uniqueNumbers[0],
                             alternate_mobile1: uniqueNumbers[1] || null,
                             alternate_mobile2: uniqueNumbers[2] || null,
-                            lead_owners: new_lead_owners,
                             updated_by: req.user,
                             updated_at: new Date(Date.now())
                         })
@@ -1333,7 +1330,6 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                         mobile: uniqueNumbers[0] || null,
                         alternate_mobile1: uniqueNumbers[1] || null,
                         alternate_mobile2: uniqueNumbers[2] || null,
-                        lead_owners: new_lead_owners,
                         created_by: req.user,
                         updated_by: req.user,
                         updated_at: new Date(Date.now()),
@@ -1374,9 +1370,9 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
         refers = await ReferredParty.find().sort('name')
     }
     if (!req.user?.crm_access_fields.is_editable) {
-        refers = await ReferredParty.find({ lead_owners: { $in: [req.user?._id] } }).sort('name')
+        refers = await ReferredParty.find().sort('name')
     }
-    return res.status(200).json(refers)
+    return res.status(200).json(refers);
 }
 
 export const GetPaginatedRefers = async (req: Request, res: Response, next: NextFunction) => {
@@ -1386,7 +1382,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
     let parties: IReferredParty[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (id)
-            parties = await ReferredParty.find({ lead_owners: id }).populate('created_by').populate('updated_by').sort('name')
+            parties = await ReferredParty.find({  }).populate('created_by').populate('updated_by').sort('name')
         else
             parties = await ReferredParty.find().populate('created_by').populate('updated_by').sort('name')
         let result: {
@@ -1447,7 +1443,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 1 || key.length > 4) {
             if (id) {
                 parties = await ReferredParty.find({
-                    lead_owners: id,
+                    
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -1472,7 +1468,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 2) {
             if (id) {
                 parties = await ReferredParty.find({
-                    lead_owners: id,
+                    
                    
                     $and: [
                         {
@@ -1536,7 +1532,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 3) {
             if (id) {
                 parties = await ReferredParty.find({
-                    lead_owners: id,
+                    
                    
                     $and: [
                         {
@@ -1618,7 +1614,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 4) {
             if (id) {
                 parties = await ReferredParty.find({
-                    lead_owners: id,
+                    
                    
                     $and: [
                         {
@@ -1864,7 +1860,7 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
         path: 'lead',
         populate: [
             {
-                path: 'lead_owners',
+                path: '',
                 model: 'User'
             },
             {
@@ -1910,7 +1906,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                 path: 'lead',
                 populate: [
                     {
-                        path: 'lead_owners',
+                        path: '',
                         model: 'User'
                     },
                     {
@@ -1941,7 +1937,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                 path: 'lead',
                 populate: [
                     {
-                        path: 'lead_owners',
+                        path: '',
                         model: 'User'
                     },
                     {
@@ -1978,10 +1974,9 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
 }
 
 export const NewRemark = async (req: Request, res: Response, next: NextFunction) => {
-    const { remark, lead_owners, remind_date } = req.body as { remark: string, lead_owners: string[], remind_date: string }
+    const { remark,  remind_date } = req.body as { remark: string,  remind_date: string }
     if (!remark) return res.status(403).json({ message: "please fill required fields" })
-    if (lead_owners && lead_owners.length === 0)
-        return res.status(403).json({ message: "please select one lead owner" })
+    
     const user = await User.findById(req.user?._id)
     if (!user)
         return res.status(403).json({ message: "please login to access this resource" })
@@ -1992,13 +1987,7 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
     if (!lead) {
         return res.status(404).json({ message: "lead not found" })
     }
-    let new_lead_owners: IUser[] = []
-    let owners = lead_owners
-    for (let i = 0; i < owners.length; i++) {
-        let owner = await User.findById(owners[i])
-        if (owner)
-            new_lead_owners.push(owner)
-    }
+  
     let new_remark = new Remark({
         remark,
         lead: lead,
