@@ -19,7 +19,6 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
         <AxiosResponse<string>, BackendError, {
             id: string, body: {
                 remark: string,
-                lead_owners: string[],
                 remind_date?: string
             }
         }>
@@ -39,9 +38,6 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
     }>({
         initialValues: {
             remark: "",
-            lead_owners: lead.lead_owners.map((owner) => {
-                return owner._id
-            }),
             remind_date: undefined
         },
         validationSchema: Yup.object({
@@ -67,7 +63,6 @@ function NewRemarkForm({ lead, users }: { lead: ILead, users: IUser[] }) {
                 id: lead._id,
                 body: {
                     remark: values.remark,
-                    lead_owners: values.lead_owners || [],
                     remind_date: values.remind_date
                 }
             })

@@ -36,7 +36,6 @@ const EmailVerifyPage = React.lazy(() => import('./pages/users/EmailVerifyPage')
 const UsersPage = React.lazy(() => import('./pages/users/UsersPage'))
 const BackupPage = React.lazy(() => import('./pages/backup/BackupPage'))
 const TemplatesPage = React.lazy(() => import('./pages/templates/TemplatesPage'))
-const CrmReminderPage = React.lazy(() => import('./pages/crm/CrmReminderPage'))
 const CheckListPage = React.lazy(() => import('./pages/checklists/CheckListPage'))
 const CheckListAdminPage = React.lazy(() => import('./pages/checklists/CheckListAdminPage'))
 const CheckListHelpPage = React.lazy(() => import('./pages/checklists/CheckListHelpPage'))
@@ -57,8 +56,6 @@ const UpdateMachineCategoriesPage = React.lazy(() => import('./pages/production/
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
-const ReferralPartyPage = React.lazy(() => import('./pages/crm/ReferralPartyPage'))
-const CrmActivitiesPage = React.lazy(() => import('./pages/crm/CrmActivitiesPage'))
 const LeadsPage = React.lazy(() => import('./pages/crm/LeadsPage'))
 
 export enum paths {
@@ -182,11 +179,7 @@ function AppRoutes() {
                   <Suspense fallback={<LinearProgress />}><UsersPage /></Suspense>
                 }
               />
-              <Route
-                path={paths.states} element={
-                  <Suspense fallback={<LinearProgress />}><StatesPage /></Suspense>
-                }
-              />
+            
 
               <Route
                 path={paths.feature_reports} element={
@@ -297,23 +290,8 @@ function AppRoutes() {
                 <Suspense fallback={<LinearProgress />}><LeadsPage /></Suspense>
               }
               />
-              <Route path={paths.crm_activities} element={
-                <Suspense fallback={<LinearProgress />}><CrmActivitiesPage /></Suspense>
-              }
-              />
-              <Route path={paths.crm_reminders} element={
-                <Suspense fallback={<LinearProgress />}><CrmReminderPage /></Suspense>
-              }
-              />
-           
              
-              <Route
-                path={paths.refers} element={
-                  <Suspense fallback={<LinearProgress />}><ReferralPartyPage /></Suspense>
-
-                }
-              />
-            
+           
             
             </Route>}
           {!user.templates_access_fields.is_hidden &&
@@ -413,7 +391,11 @@ function AppRoutes() {
                 < ErpReportsDashboard />
               }
               />
-
+              <Route
+                path={paths.states} element={
+                  <Suspense fallback={<LinearProgress />}><StatesPage /></Suspense>
+                }
+              />
               <Route path={paths.pending_orders} element={
                 <Suspense fallback={<LinearProgress />}>
                   < PendingOrdersReportPage />

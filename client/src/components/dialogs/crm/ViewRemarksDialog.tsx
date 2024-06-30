@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material';
 import { useContext } from 'react';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import AllRemarksPage from '../../../pages/crm/AllRemarksPage';
 import { ILead } from '../../../types/crm.types';
 import { Cancel } from '@mui/icons-material';
 
@@ -20,7 +19,6 @@ function ViewRemarksDialog({ lead }: { lead: ILead }) {
         <Typography sx={{ minWidth: '300px', textTransform: 'capitalize' }} textAlign="center">{lead.name}</Typography>
         <Typography sx={{ minWidth: '300px' }} textAlign="center">{lead.mobile}</Typography>
         <DialogContent>
-          <AllRemarksPage lead={lead} />
         </DialogContent>
       </Dialog >
     </>

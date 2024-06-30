@@ -8,8 +8,6 @@ import UpdateLeadDialog from '../dialogs/crm/UpdateLeadDialog'
 import DeleteLeadDialog from '../dialogs/crm/DeleteLeadDialog'
 import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
 import NewRemarkDialog from '../dialogs/crm/NewRemarkDialog'
-import ReferLeadDialog from '../dialogs/crm/ReferLeadDialog'
-import RemoveLeadReferralDialog from '../dialogs/crm/RemoveLeadReferralDialog'
 import BackHandIcon from '@mui/icons-material/BackHand';
 import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
@@ -484,12 +482,6 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       {lead.lead_type}
                     </STableCell>
 
-
-                    <STableCell>
-                      {lead.lead_owners.map((owner) => { return owner.username }).toString()}
-                    </STableCell>
-
-
                     <STableCell>
                       {lead.turnover ? lead.turnover : 'na'}
                     </STableCell>
@@ -611,8 +603,6 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
             <DeleteLeadDialog lead={lead} />
             <ViewRemarksDialog lead={lead} />
             <NewRemarkDialog lead={lead} />
-            <ReferLeadDialog lead={lead} />
-            <RemoveLeadReferralDialog lead={lead} />
           </>
           : null
       }

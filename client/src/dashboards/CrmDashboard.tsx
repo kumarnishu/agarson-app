@@ -11,7 +11,6 @@ function CrmDashboard() {
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     tmpfeatures.push({ feature: 'leads ', is_visible: true, url: paths.leads })
-
     tmpfeatures.push({ feature: 'refers', is_visible: true, url: paths.refers })
     tmpfeatures.push({ feature: 'reminders', is_visible: true, url: paths.crm_reminders })
     tmpfeatures.push({ feature: 'activities', is_visible: true, url: paths.crm_activities })

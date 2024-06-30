@@ -16,7 +16,6 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { ILead, ILeadTemplate } from '../../types/crm.types'
-import BulkAssignLeadsDialog from '../../components/dialogs/crm/BulkAssignLeadsDialog'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { GetUsers } from '../../services/UserServices'
 import { IUser } from '../../types/user.types'
@@ -42,7 +41,6 @@ let template: ILeadTemplate[] = [
     stage: "useless",
     lead_source: "cold calling",
     remarks: "remarks",
-    lead_owners: "nishu,sandeep",
     is_customer: false
   }
 ]
@@ -116,7 +114,6 @@ export default function LeadsPage() {
           lead_source: lead.lead_source,
           remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
           is_customer: lead.is_customer,
-          lead_owners: lead.lead_owners.map((owner) => { return owner.username }).toString()
         })
     })
     if (data.length > 0)
@@ -310,7 +307,6 @@ export default function LeadsPage() {
 
             </Menu >
             <NewLeadDialog />
-            <BulkAssignLeadsDialog leads={selectedLeads} />
           </>
         </Stack >
       </Stack >

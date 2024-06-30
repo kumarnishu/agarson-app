@@ -1,18 +1,18 @@
 import { Button, Checkbox, CircularProgress, FormControlLabel, FormGroup, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
-import { useEffect, useContext, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useEffect, useContext } from 'react';
+import { useMutation } from 'react-query';
 import * as Yup from "yup"
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { GetLeadFieldsUpdatable, UpdateLead } from '../../../services/LeadsServices';
+import {  UpdateLead } from '../../../services/LeadsServices';
 import { Countries } from '../../../utils/countries';
 import { States } from '../../../utils/states';
 import { Cities } from '../../../utils/cities';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import { UserContext } from '../../../contexts/userContext';
-import { ILead, ILeadUpdatableField } from '../../../types/crm.types';
+import { ILead } from '../../../types/crm.types';
 import { IUser } from '../../../types/user.types';
 import AlertBar from '../../snacks/AlertBar';
 import { toTitleCase } from '../../../utils/TitleCase';
@@ -50,8 +50,6 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
       }
     })
   const { user } = useContext(UserContext)
-  const { data, isSuccess: isFieldsSuccess } = useQuery<AxiosResponse<ILeadUpdatableField>, BackendError>("updateble-lead-leads", GetLeadFieldsUpdatable)
-  const [fields, setFields] = useState<ILeadUpdatableField>()
 
   const { setChoice } = useContext(ChoiceContext)
   const formik = useFormik<TformData>({
@@ -74,9 +72,6 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
       alternate_mobile2: lead.alternate_mobile2 || "",
       alternate_email: lead.alternate_email || "",
       lead_source: lead.lead_source || "",
-      lead_owners: lead.lead_owners.map((owner) => {
-        return owner._id
-      }),
       is_customer: lead.is_customer,
       visiting_card: lead.visiting_card && lead.visiting_card.public_url || ""
     },
@@ -177,11 +172,6 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
     }
   }, [isSuccess, setChoice])
 
-  useEffect(() => {
-    if (isFieldsSuccess) {
-      setFields(data.data)
-    }
-  }, [isFieldsSuccess, data])
 
   console.log(formik.values)
   return (
@@ -426,115 +416,6 @@ function UpdateLeadForm({ lead, users }: { lead: ILead, users: IUser[] }) {
             })
           }
         </TextField>
-
-        < TextField
-          select
-          SelectProps={{
-            native: true
-          }}
-          focused
-          error={
-            formik.touched.stage && formik.errors.stage ? true : false
-          }
-          id="stage"
-          label="Stage"
-          fullWidth
-          helperText={
-            formik.touched.stage && formik.errors.stage ? formik.errors.stage : ""
-          }
-          {...formik.getFieldProps('stage')}
-        >
-          <option value="">
-
-          </option>
-          {
-
-            fields && fields.stages && fields.stages.map(stage => {
-              return (
-                <option key={stage} value={stage}>
-                  {stage}
-                </option>)
-            })
-          }
-        </TextField>
-
-        {/* lead type */}
-
-
-
-        < TextField
-
-
-
-          select
-          SelectProps={{
-            native: true
-          }}
-          focused
-          error={
-            formik.touched.lead_type && formik.errors.lead_type ? true : false
-          }
-
-          id="lead_type"
-          label="Lead Type"
-          fullWidth
-          helperText={
-            formik.touched.lead_type && formik.errors.lead_type ? formik.errors.lead_type : ""
-          }
-          {...formik.getFieldProps('lead_type')}
-        >
-          <option value="">
-
-          </option>
-          {
-
-            fields && fields.lead_types && fields.lead_types.map(type => {
-              return (
-                <option key={type} value={type}>
-                  {type}
-                </option>)
-            })
-          }
-
-        </TextField>
-
-
-        {/* lead_source */}
-
-
-        < TextField
-
-          select
-
-
-          SelectProps={{
-            native: true
-          }}
-          focused
-          error={
-            formik.touched.lead_source && formik.errors.lead_source ? true : false
-          }
-          id="lead_source"
-          label="Lead Source"
-          fullWidth
-          helperText={
-            formik.touched.lead_source && formik.errors.lead_source ? formik.errors.lead_source : ""
-          }
-          {...formik.getFieldProps('lead_source')}
-        >
-          <option value="">
-          </option>
-          {
-
-            fields && fields.lead_sources && fields.lead_sources.map(source => {
-              return (
-                <option key={source} value={source}>
-                  {source}
-                </option>)
-            })
-          }
-        </TextField>
-
         {/* country */}
 
 

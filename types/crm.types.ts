@@ -21,27 +21,15 @@ export type ILeadTemplate = {
     lead_type: string
     stage: string
     lead_source: string
-    lead_owners: string,
-    is_customer: boolean,
     status?: string
 }
-export type ILeadUpdatableField = {
-    _id: string,
-    stages: string[],
-    lead_types: string[],
-    lead_sources: string[],
-    updated_at: Date,
-    created_at: Date,
-    created_by: IUser,
-    updated_by: IUser
-}
-export type TLeadUpdatableFieldBody = Request['body'] & ILeadUpdatableField;
+
 export type IReferredParty = {
     _id: string,
     name: string,
     customer_name: string,
     mobile: string,
-    lead_owners: IUser[],
+    gst:string,
     city: string,
     state: string,
     created_at: Date,
@@ -82,7 +70,6 @@ export type ILead = {
     stage: string
     lead_source: string
     remarks: IRemark[]
-    lead_owners: IUser[],
     visiting_card: Asset,
     is_customer: boolean,
     last_whatsapp: Date,

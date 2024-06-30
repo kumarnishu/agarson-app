@@ -95,10 +95,6 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Remark'
     }],
-    lead_owners: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
     visiting_card: {
         _id: { type: String },
         filename: { type: String },
