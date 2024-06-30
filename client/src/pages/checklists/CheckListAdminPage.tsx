@@ -335,7 +335,7 @@ export default function CheckListAdminPage() {
           setSelectAll={setSelectAll}
           checklists={MemoData}
         />}
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
+      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />
     </>
 
   )

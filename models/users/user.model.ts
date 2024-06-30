@@ -138,6 +138,21 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
       default: []
     }
   ],
+  assigned_crm_states: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CRMState',
+      default: []
+    }
+  ],
+  assigned_crm_cities: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CRMCity',
+      default: []
+    }
+  ],
+ 
   last_login: {
     type: Date,
     default: new Date(),

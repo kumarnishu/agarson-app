@@ -11,8 +11,8 @@ import NewRemarkDialog from '../dialogs/crm/NewRemarkDialog'
 import BackHandIcon from '@mui/icons-material/BackHand';
 import { DownloadFile } from '../../utils/DownloadFile'
 import PopUp from '../popup/PopUp'
-import { ILead } from '../../types/crm.types'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
+import { ILead } from '../../types/crm.types'
 
 
 type Props = {
@@ -129,7 +129,12 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               </STableHeadCell>
 
 
+              <STableHeadCell
+              >
 
+                GST 
+
+              </STableHeadCell>
 
 
               <STableHeadCell
@@ -140,12 +145,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               </STableHeadCell>
 
 
-              <STableHeadCell
-              >
-
-                Lead Owners
-
-              </STableHeadCell>
+           
 
 
               <STableHeadCell
@@ -327,6 +327,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       <STableCell>
 
                         <Checkbox sx={{ width: 10, height: 10 }} size="small"
+                          checked={selectedLeads.length > 0 && selectedLeads.find((t) => t._id === lead._id) ? true : false}
                           onChange={(e) => {
                             setLead(lead)
                             if (e.target.checked) {
@@ -477,7 +478,11 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                     </STableCell>
 
 
+                    <STableCell>
 
+                      {lead.gst}
+
+                    </STableCell>
                     <STableCell>
                       {lead.lead_type}
                     </STableCell>

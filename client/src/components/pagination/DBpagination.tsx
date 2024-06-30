@@ -8,18 +8,16 @@ type Props = {
         page: number;
         total: number;
     },
-    filterCount?: number,
     setPaginationData: React.Dispatch<React.SetStateAction<{
         limit: number;
         page: number;
         total: number;
-    }>>,
-    setFilterCount: React.Dispatch<React.SetStateAction<number>>
+    }>>
 }
-function DBPagination({ paginationData, setFilterCount, setPaginationData }: Props) {
+function DBPagination({ paginationData, setPaginationData }: Props) {
     return (
         <>
-            <Stack sx={{bottom: 0, width: '100vw', bgcolor: 'whitesmoke', right: 0 }} direction={'row'} justifyContent={'space-evenly'} p={1}>
+            <Stack sx={{bottom: 0, width: '100vw', bgcolor: 'white', right: 0 }} direction={'row'} justifyContent={'space-evenly'} p={1}>
                 <Stack direction={'row'}
                     spacing={2}
                     px={2}
@@ -30,7 +28,6 @@ function DBPagination({ paginationData, setFilterCount, setPaginationData }: Pro
                         style={{ width: '55px' }}
                         value={paginationData.limit}
                         onChange={(e) => {
-                            setFilterCount(0)
                             setPaginationData({
                                 ...paginationData,
                                 limit: Number(e.target.value)

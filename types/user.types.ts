@@ -1,5 +1,6 @@
 import { FeatureAccess } from "./access.types"
 import { Asset } from "./asset.types"
+import { ICRMCity, ICRMState } from "./crm.types"
 
 export type IState = {
     _id: string,
@@ -36,6 +37,8 @@ export type IUser = {
     is_multi_login: boolean,
     assigned_users: IUser[]
     assigned_states: IState[]
+    assigned_crm_states: ICRMState[]
+    assigned_crm_cities: ICRMCity[]
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

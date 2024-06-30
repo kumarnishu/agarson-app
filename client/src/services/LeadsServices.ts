@@ -19,9 +19,13 @@ export const FuzzySearchLeads = async ({ searchString, limit, page, userId }: { 
 export const NewLead = async (body: FormData) => {
   return await apiClient.post("leads", body)
 }
+
+
 export const UpdateLead = async ({ id, body }: { id: string, body: FormData }) => {
   return await apiClient.put(`leads/${id}`, body)
 }
+
+
 export const DeleteLead = async ({ id }: { id: string }) => {
   return await apiClient.delete(`leads/${id}`)
 }
@@ -40,6 +44,8 @@ export const NewRemark = async ({ id, body }: {
 }) => {
   return await apiClient.patch(`remarks/leads/${id}`, body)
 }
+
+
 export const UpdateRemark = async ({ id, body }: {
   id: string, body: {
     remark: string,
@@ -48,6 +54,7 @@ export const UpdateRemark = async ({ id, body }: {
 }) => {
   return await apiClient.put(`remarks/${id}`, body)
 }
+
 
 export const DeleteRemark = async (id: string) => {
   return await apiClient.delete(`remarks/${id}`)

@@ -335,7 +335,7 @@ export default function VisitAdminPage() {
                         attendences={MemoData}
                     />
                 </Box>}
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
+            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />
         </>
 
     )

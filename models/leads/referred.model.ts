@@ -20,13 +20,14 @@ const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<I
         trim: true,
         index: true,
         lowercase: true,
+        required:true
     },
     mobile: {
         type: String,
         required: true,
         trim: true,
         index: true,
-        lowercase: true,
+        lowercase: true
     },
 
     city: {

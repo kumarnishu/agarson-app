@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -15,10 +15,11 @@ import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
-import { ILead, ILeadTemplate } from '../../types/crm.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { GetUsers } from '../../services/UserServices'
 import { IUser } from '../../types/user.types'
+import { ILeadTemplate } from '../../types/template.type'
+import { ILead } from '../../types/crm.types'
 
 let template: ILeadTemplate[] = [
   {
@@ -41,7 +42,7 @@ let template: ILeadTemplate[] = [
     stage: "useless",
     lead_source: "cold calling",
     remarks: "remarks",
-    is_customer: false
+    gst:""
   }
 ]
 
@@ -60,7 +61,7 @@ export default function LeadsPage() {
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
-  const { data, isLoading, refetch: refetchLeads } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData, userId], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, userId }))
+  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData, userId], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, userId }))
 
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
@@ -113,7 +114,7 @@ export default function LeadsPage() {
           stage: lead.stage,
           lead_source: lead.lead_source,
           remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
-          is_customer: lead.is_customer,
+          gst: lead.gst,
         })
     })
     if (data.length > 0)
@@ -196,71 +197,42 @@ export default function LeadsPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Leads
+          Leads {selectedLeads.length > 0 ? <span>(checked : {selectedLeads.length})</span>:''}
         </Typography>
-
+       
+        <TextField
+          sx={{width:'50vw'}}
+          size="small"
+          onChange={(e) => {
+            setFilter(e.currentTarget.value)
+            setFilterCount(0)
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                  <Search sx={{cursor:'pointer'}} onClick={() => {
+                    refetchFuzzy()
+                  }} />
+              </InputAdornment>
+            ),
+          }}
+          placeholder={`Search Keywords here like name,mobile,address,state,stage and press ENTER KEY`}
+          style={{
+            fontSize: '1.1rem',
+            border: '0',
+          }}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              refetchFuzzy()
+            }
+          }}
+        />
         <Stack
           direction="row"
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
             {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
-            {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 &&
-              < TextField
-                size='small'
-                select
-                SelectProps={{
-                  native: true,
-                }}
-                onChange={(e) => {
-                  setUserId(e.target.value)
-                  refetchLeads()
-                }}
-                required
-                id="todo_owner"
-                label="Filter Lead Owners"
-                fullWidth
-              >
-                <option key={'00'} value={undefined}>
-
-                </option>
-                {
-                  users.map((user, index) => {
-                    if (!user.crm_access_fields.is_hidden)
-                      return (<option key={index} value={user._id}>
-                        {user.username}
-                      </option>)
-                    else
-                      return null
-                  })
-                }
-              </TextField>}
-            <TextField
-              fullWidth
-              size="small"
-              onChange={(e) => {
-                setFilter(e.currentTarget.value)
-                setFilterCount(0)
-              }}
-              placeholder={`${MemoData?.length} records...`}
-              style={{
-                fontSize: '1.1rem',
-                border: '0',
-              }}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
-                  refetchFuzzy()
-                }
-              }}
-            />
-            <IconButton
-              sx={{ bgcolor: 'whitesmoke' }}
-              onClick={() => {
-                refetchFuzzy()
-              }}
-            >
-              <Search />
-            </IconButton>
           </Stack >
           <>
 
@@ -312,16 +284,20 @@ export default function LeadsPage() {
       </Stack >
       {/* table */}
       {isLoading && <TableSkeleton />}
-      {!isLoading && < LeadsTable
-        lead={lead}
-        setLead={setLead}
-        selectAll={selectAll}
-        selectedLeads={selectedLeads}
-        setSelectedLeads={setSelectedLeads}
-        setSelectAll={setSelectAll}
-        leads={MemoData}
-      />}
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
+      {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
+      {!isLoading && MemoData.length > 0 &&<>
+        < LeadsTable
+          lead={lead}
+          setLead={setLead}
+          selectAll={selectAll}
+          selectedLeads={selectedLeads}
+          setSelectedLeads={setSelectedLeads}
+          setSelectAll={setSelectAll}
+          leads={MemoData}
+        />
+        <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+      </>
+      }
     </>
 
   )

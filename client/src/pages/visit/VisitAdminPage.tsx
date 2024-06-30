@@ -420,7 +420,7 @@ export default function VisitAdminPage() {
                         visits={MemoData}
                     />
                 </Box>}
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
+            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />
         </>
 
     )

@@ -3,7 +3,7 @@ import xlsx from "xlsx";
 import { IState, IUser } from "../types/user.types";
 import { IBillsAgingReport, IClientSaleReport, IPendingOrdersReport } from "../types/erp_report.types";
 import { BillsAgingReport } from "../models/erp_reports/bills_aging_model";
-import { State } from "../models/users/state.model";
+import { State } from "../models/erp_reports/state.model";
 import { PendingOrdersReport } from "../models/erp_reports/pending_orders.model";
 import { User } from "../models/users/user.model";
 import { ClientSaleReport } from "../models/erp_reports/client_sale.model";

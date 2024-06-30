@@ -564,7 +564,7 @@ export default function PendingOrdersReportPage() {
                     </STableBody>
                 </STable>
             </Box >}
-            {window.screen.width > 500 && <DBPagination filterCount={filterCount} paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />}
+            {window.screen.width > 500 && <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />}
         </>
 
     )

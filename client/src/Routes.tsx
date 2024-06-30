@@ -22,6 +22,14 @@ import BackupDashboard from './dashboards/BackupDashboard.tsx'
 import ErpReportsDashboard from './dashboards/ErpReportsDashboard.tsx'
 import TodoNavBar from './components/navbar/TodoNavbar.tsx'
 import TodoDashboard from './dashboards/TodoDashboard.tsx'
+import ReferPage from './pages/crm/ReferPage.tsx'
+import ActivitiesPage from './pages/crm/ActivitiesPage.tsx'
+import RemindersPage from './pages/crm/RemindersPage.tsx'
+import CitiesPage from './pages/crm/CitiesPage.tsx'
+import LeadSourcePage from './pages/crm/LeadSourcePage.tsx'
+import StagesPage from './pages/crm/StagesPage.tsx'
+import CrmStatesPage from './pages/crm/CrmStatesPage.tsx'
+import LeadTypes from './pages/crm/LeadTypes.tsx'
 const StatesPage = React.lazy(() => import('./pages/users/StatesPage.tsx'))
 const PendingOrdersReportPage = React.lazy(() => import('./pages/erp reports/PendingOrdersReport.tsx'))
 const ClientSaleReportPage = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPage.tsx'))
@@ -108,6 +116,11 @@ export enum paths {
   crm = "crm",
   crm_reminders = "crm_reminders",
   crm_activities = "crm_activities",
+  crm_states = "crm_states",
+  crm_cities = "crm_cities",
+  crm_stages = "crm_stages",
+  crm_leadtypes = "crm_leadtypes",
+  crm_leadsources = "crm_leadsources",
   leads = "leads",
   refers = "refers",
 
@@ -290,9 +303,39 @@ function AppRoutes() {
                 <Suspense fallback={<LinearProgress />}><LeadsPage /></Suspense>
               }
               />
-             
-           
-            
+              <Route path={paths.refers} index element={
+                <Suspense fallback={<LinearProgress />}><ReferPage /></Suspense>
+              }
+              />
+              <Route path={paths.crm_activities} index element={
+                <Suspense fallback={<LinearProgress />}><ActivitiesPage/></Suspense>
+              }
+              />
+              <Route path={paths.crm_reminders} index element={
+                <Suspense fallback={<LinearProgress />}>< RemindersPage/></Suspense>
+              }
+              />
+              <Route path={paths.crm_cities} index element={
+                <Suspense fallback={<LinearProgress />}><CitiesPage /></Suspense>
+              }
+              />
+              <Route path={paths.crm_leadsources} index element={
+                <Suspense fallback={<LinearProgress />}><LeadSourcePage /></Suspense>
+              }
+              />
+              <Route path={paths.crm_stages} index element={
+                <Suspense fallback={<LinearProgress />}><StagesPage /></Suspense>
+              }
+              />
+              <Route path={paths.crm_states} index element={
+                <Suspense fallback={<LinearProgress />}><CrmStatesPage /></Suspense>
+              }
+              />
+              <Route path={paths.crm_leadtypes} index element={
+                <Suspense fallback={<LinearProgress />}><LeadTypes /></Suspense>
+              }
+              />
+                    
             </Route>}
           {!user.templates_access_fields.is_hidden &&
             < Route path={paths.templates_dashboard} element={<TemplatesNavBar />
