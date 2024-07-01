@@ -2,13 +2,14 @@ import { Delete, Edit, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import { UserContext } from '../../contexts/userContext'
-import PopUp from '../popup/PopUp'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import CreateOrEditReferDialog from '../dialogs/crm/CreateOrEditReferDialog'
-import DeleteReferDialog from '../dialogs/crm/DeleteReferDialog'
-import { ILead, IReferredParty } from '../../types/crm.types'
+import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
+import { UserContext } from '../../../contexts/userContext'
+import PopUp from '../../popup/PopUp'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import CreateOrEditReferDialog from '../../dialogs/crm/CreateOrEditReferDialog'
+import DeleteReferDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import { ILead, IReferredParty } from '../../../types/crm.types'
+import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 
 
 type Props = {
@@ -219,7 +220,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                               <Tooltip title="delete">
                                 <IconButton color="error"
                                   onClick={() => {
-                                    setChoice({ type: LeadChoiceActions.delete_refer })
+                                    setChoice({ type: LeadChoiceActions.delete_crm_item })
                                     setRefer(refer)
 
                                   }}
@@ -327,7 +328,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
         refer ?
           <>
 
-            <DeleteReferDialog refer={refer.party} />
+            <DeleteCrmItemDialog refer={refer.party} />
 
           </>
           : null

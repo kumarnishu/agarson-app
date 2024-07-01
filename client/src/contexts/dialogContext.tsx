@@ -14,7 +14,7 @@ type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
 
-type LeadChoices = "create_or_edit_refer" | "create_or_edit_source" | "delete_stage" | "view_remarks" | "close_lead" | "create_or_edit_leadtype" | "delete_lead"  | "delete_leadtype" | "create_refer" | "delete_source" | "delete_refer" | "view_referrals"   |"delete_crm_state"|
+type LeadChoices = "create_or_edit_refer" | "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_leadtype" | "delete_lead"  | "delete_leadtype" | "create_refer" | "delete_source" | "delete_refer" | "view_referrals"   |"delete_crm_state"|
    "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "add_card_comment"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
@@ -118,7 +118,7 @@ export enum LeadChoiceActions {
   view_remarks = "view_remarks",
   close_lead = "close_lead",
   create_or_edit_leadtype = "create_or_edit_leadtype",
-  delete_stage = "delete_stage",
+  delete_crm_item = "delete_crm_item",
   delete_leadtype = "delete_leadtype",
   create_refer = "create_refer",
   delete_source = "delete_source",
@@ -204,7 +204,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.create_or_edit_refer: return type
     case LeadChoiceActions.create_or_edit_source: return type
     case LeadChoiceActions.view_remarks: return type
-    case LeadChoiceActions.delete_stage: return type
+    case LeadChoiceActions.delete_crm_item: return type
     case LeadChoiceActions.create_or_edit_leadtype: return type
     case LeadChoiceActions.delete_lead: return type
     case LeadChoiceActions.delete_leadtype: return type

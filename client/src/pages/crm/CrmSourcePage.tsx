@@ -14,7 +14,7 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import CreateOrEditLeadSourceDialog from '../../components/dialogs/crm/CreateOrEditLeadSourceDialog'
 import { ILeadSource } from '../../types/crm.types'
 import { GetAllSources } from '../../services/LeadsServices'
-import LeadsLeadSourceTable from '../../components/tables/LeadsSourceTable'
+import LeadsLeadSourceTable from '../../components/tables/crm/LeadsSourceTable'
 
 type ITemplate = {
   _id: string,
@@ -111,7 +111,7 @@ export default function CrmLeadSourcesPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          LeadSources {selectedLeadSources.length > 0 ? <span>(checked : {selectedLeadSources.length})</span> : ''}
+          LeadSources {selectedLeadSources.length > 0 ? <span>(checked : {selectedLeadSources.length})</span> : `- ${sources.length}`}
         </Typography>
 
         <TextField

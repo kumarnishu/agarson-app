@@ -13,7 +13,7 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import CreateOrEditReferDialog from '../../components/dialogs/crm/CreateOrEditReferDialog'
-import RefersTable from '../../components/tables/RefersTable'
+import RefersTable from '../../components/tables/crm/RefersTable'
 import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServices'
 import { IReferTemplate } from '../../types/template.type'
 import UploadRefersExcelButton from '../../components/buttons/UploadRefersExcelButton'
@@ -187,7 +187,7 @@ export default function RefersPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Refers {selectedRefers.length > 0 ? <span>(checked : {selectedRefers.length})</span>:''}
+          Refers {selectedRefers.length > 0 ? <span>(checked : {selectedRefers.length})</span> : `- ${refers.length}`}
         </Typography>
        
         <TextField

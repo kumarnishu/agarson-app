@@ -13,7 +13,7 @@ import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import CreateOrEditLeadTypeDialog from '../../components/dialogs/crm/CreateOrEditLeadTypeDialog'
 import { ILeadType } from '../../types/crm.types'
-import LeadsTypeTable from '../../components/tables/LeadsTypesTable copy'
+import LeadsTypeTable from '../../components/tables/crm/LeadsTypesTable copy'
 import { GetAllLeadTypes } from '../../services/LeadsServices'
 
 type ITemplate = {

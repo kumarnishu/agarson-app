@@ -3,21 +3,34 @@ import { AxiosResponse } from 'axios';
 import { useContext, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import {  DeleteRefer } from '../../../services/LeadsServices';
-import { IReferredParty } from '../../../types/crm.types';
+import {  DeleteCrmItem } from '../../../services/LeadsServices';
+import { ICRMCity, ICRMState, ILead, ILeadSource, ILeadType, IReferredParty, IStage } from '../../../types/crm.types';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
 
 
-function DeleteReferDialog({ refer }: { refer: IReferredParty }) {
+function DeleteCrmItemDialog({ refer,lead,state,city,type,source,stage }: { refer?: IReferredParty,lead?:ILead,state?:ICRMState,city?:ICRMCity,type?:ILeadType,source?:ILeadSource,stage?:IStage }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
-        <AxiosResponse<any>, BackendError, { id: string }>
-        (DeleteRefer, {
+        < AxiosResponse<any>, BackendError, { refer?: IReferredParty, lead?: ILead, state?: ICRMState, city?: ICRMCity, type?: ILeadType, source?: ILeadSource, stage?: IStage }>
+        (DeleteCrmItem, {
             onSuccess: () => {
+                if(refer)
                 queryClient.invalidateQueries('refers')
+                if (state)
+                    queryClient.invalidateQueries('crm_states')
+                if (lead)
+                    queryClient.invalidateQueries('leads')
+                if (source)
+                    queryClient.invalidateQueries('crm_sources')
+                if (type)
+                    queryClient.invalidateQueries('crm_types')
+                if(city)
+                    queryClient.invalidateQueries('crm_cities')
+                if (stage)
+                    queryClient.invalidateQueries('crm_stages')
             }
         })
 
@@ -27,13 +40,20 @@ function DeleteReferDialog({ refer }: { refer: IReferredParty }) {
     }, [setChoice, isSuccess])
 
     return (
-        <Dialog   open={choice === LeadChoiceActions.delete_refer ? true : false}
+        <Dialog   open={choice === LeadChoiceActions.delete_crm_item ? true : false}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px',fontSize:'20px' }} textAlign="center">
-                Delete Refer
+
+                {refer&&'Delete Refer'}
+                {state && 'Delete State'}
+                {lead && 'Delete Lead'}
+                {type && 'Delete Lead Type'}
+                {source && 'Delete Lead Source'}
+                {city && 'Delete City'}
+                {stage && 'Delete Stage'}
             </DialogTitle>
             {
                 isError ? (
@@ -42,12 +62,12 @@ function DeleteReferDialog({ refer }: { refer: IReferredParty }) {
             }
             {
                 isSuccess ? (
-                    <AlertBar message="deleted lead" color="success" />
+                    <AlertBar message="deleted" color="success" />
                 ) : null
             }
             <DialogContent>
                 <Typography variant="h4" color="error">
-                   Are you sure to permanently delete this refer ?
+                   Are you sure to permanently delete this item ?
 
                 </Typography>
             </DialogContent>
@@ -60,7 +80,7 @@ function DeleteReferDialog({ refer }: { refer: IReferredParty }) {
                 <Button fullWidth variant="outlined" color="error"
                     onClick={() => {
                         setChoice({ type: LeadChoiceActions.delete_refer })
-                        mutate({ id: refer._id })
+                        mutate({ refer, lead, state, city, type, source, stage })
                     }}
                     disabled={isLoading}
                 >
@@ -81,4 +101,4 @@ function DeleteReferDialog({ refer }: { refer: IReferredParty }) {
     )
 }
 
-export default DeleteReferDialog
+export default DeleteCrmItemDialog

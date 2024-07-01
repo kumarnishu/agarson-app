@@ -2,19 +2,20 @@ import { Comment, Delete,  Edit, Share, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import { UserContext } from '../../contexts/userContext'
-import DeleteLeadDialog from '../dialogs/crm/DeleteLeadDialog'
+import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
+import { UserContext } from '../../../contexts/userContext'
 import BackHandIcon from '@mui/icons-material/BackHand';
-import { DownloadFile } from '../../utils/DownloadFile'
-import PopUp from '../popup/PopUp'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { ILead } from '../../types/crm.types'
-import CreateOrEditLeadDialog from '../dialogs/crm/CreateOrEditLeadDialog'
-import CreateOrEditRemarkDialog from '../dialogs/crm/CreateOrEditRemarkDialog'
-import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
-import ReferLeadDialog from '../dialogs/crm/ReferLeadDialog'
-import RemoveLeadReferralDialog from '../dialogs/crm/RemoveLeadReferralDialog'
+import { DownloadFile } from '../../../utils/DownloadFile'
+import PopUp from '../../popup/PopUp'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import { ILead } from '../../../types/crm.types'
+import CreateOrEditLeadDialog from '../../dialogs/crm/CreateOrEditLeadDialog'
+import CreateOrEditRemarkDialog from '../../dialogs/crm/CreateOrEditRemarkDialog'
+import ViewRemarksDialog from '../../dialogs/crm/ViewRemarksDialog'
+import ReferLeadDialog from '../../dialogs/crm/ReferLeadDialog'
+import RemoveLeadReferralDialog from '../../dialogs/crm/RemoveLeadReferralDialog'
+import { DeleteCrmItem } from '../../../services/LeadsServices'
+import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 
 
 type Props = {
@@ -384,7 +385,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                               <Tooltip title="delete">
                                 <IconButton color="error"
                                   onClick={() => {
-                                    setChoice({ type: LeadChoiceActions.delete_lead })
+                                    setChoice({ type: LeadChoiceActions.delete_crm_item })
                                     setLead(lead)
 
                                   }}
@@ -447,7 +448,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                     <STableCell style={{ fontWeight: lead.visiting_card && lead.visiting_card.public_url && 'bold' }} title={lead.visiting_card && lead.visiting_card.public_url && 'This number has Visitng card Uploaded'}>
                       {lead.name}
                     </STableCell>
-
+                  
 
                     <STableCell>
                       {lead.city}
@@ -555,6 +556,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       {lead.country}
 
                     </STableCell>
+                    
 
 
                     <STableCell>
@@ -607,7 +609,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
         lead ?
           <>
            <CreateOrEditRemarkDialog lead={lead} />
-            <DeleteLeadDialog lead={lead} />
+            <DeleteCrmItemDialog lead={lead} />
             <ViewRemarksDialog lead={lead} />
             <ReferLeadDialog lead={lead}/>
             <RemoveLeadReferralDialog lead={lead}/>

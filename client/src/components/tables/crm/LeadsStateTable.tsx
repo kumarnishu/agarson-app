@@ -1,32 +1,34 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import PopUp from '../popup/PopUp'
-import { Edit } from '@mui/icons-material'
-import { UserContext } from '../../contexts/userContext'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import CreateOrEditStageDialog from '../dialogs/crm/CreateOrEditStageDialog'
-import { IStage } from '../../types/crm.types'
+import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
+import PopUp from '../../popup/PopUp'
+import { Delete, Edit } from '@mui/icons-material'
+import { UserContext } from '../../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import CreateOrEditStateDialog from '../../dialogs/crm/CreateOrEditStateDialog'
+import { ICRMState } from '../../../types/crm.types'
+import { IUser } from '../../../types/user.types'
+import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 
 
 type Props = {
-    stage: IStage | undefined,
-    setStage: React.Dispatch<React.SetStateAction<IStage | undefined>>,
+    state: { state: ICRMState, users: IUser[] } | undefined,
+    setState: React.Dispatch<React.SetStateAction<{ state: ICRMState, users: IUser[] } | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    stages: IStage[],
-    selectedStages: IStage[]
-    setSelectedStages: React.Dispatch<React.SetStateAction<IStage[]>>,
+    states: { state: ICRMState, users: IUser[] }[],
+    selectedStates: { state: ICRMState, users: IUser[] }[]
+    setSelectedStates: React.Dispatch<React.SetStateAction<{ state: ICRMState, users: IUser[] }[]>>,
 }
-function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, selectedStages, setSelectedStages }: Props) {
-    const [data, setData] = useState<IStage[]>(stages)
+function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
+    const [data, setData] = useState<{ state: ICRMState, users: IUser[] }[]>(states)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
-            setData(stages)
-    }, [stages, data])
+            setData(states)
+    }, [states, data])
     return (
         <>
             <Box sx={{
@@ -42,16 +44,16 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                             >
 
 
-                                <Checkbox sx={{ width: 16, height: 16 }}
+                                <Checkbox  sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
                                         if (e.currentTarget.checked) {
-                                            setSelectedStages(stages)
+                                            setSelectedStates(states)
                                             setSelectAll(true)
                                         }
                                         if (!e.currentTarget.checked) {
-                                            setSelectedStages([])
+                                            setSelectedStates([])
                                             setSelectAll(false)
                                         }
                                     }} />
@@ -67,29 +69,34 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                             <STableHeadCell style={{ width: '200px' }}
                             >
 
-                                Stage
+                                State
 
                             </STableHeadCell>
-                         
+                            <STableHeadCell
+                            >
 
+                              Assigned Users
 
+                            </STableHeadCell>
 
+                          
+                          
 
                         </STableRow>
                     </STableHead>
                     <STableBody >
                         {
-                            stages && stages.map((stage, index) => {
+                            states && states.map((state, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedStages.length > 0 && selectedStages.find((t) => t._id === stage._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedStates.length > 0 && selectedStates.find((t) => t.state._id === state.state._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
                                             <STableCell style={{ width: '50px' }}>
 
 
-                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -101,17 +108,15 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                         {!selectAll ?
                                             <STableCell style={{ width: '50px' }}>
 
-                                                <Checkbox sx={{ width: 16, height: 16 }} 
-                                                size="small"
-                                                    checked={selectedStages.length > 0 && selectedStages.find((t) => t._id === stage._id) ? true : false}
+                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
-                                                        setStage(stage)
+                                                        setState(state)
                                                         if (e.target.checked) {
-                                                            setSelectedStages([...selectedStages, stage])
+                                                            setSelectedStates([...selectedStates, state])
                                                         }
                                                         if (!e.target.checked) {
-                                                            setSelectedStages((stages) => stages.filter((item) => {
-                                                                return item._id !== stage._id
+                                                            setSelectedStates((states) => states.filter((item) => {
+                                                                return item.state._id !== state.state._id
                                                             }))
                                                         }
                                                     }}
@@ -121,6 +126,8 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                             :
                                             null
                                         }
+
+                                      
                                         {/* actions */}
                                         {user?.user_access_fields.is_editable &&
                                             <STableCell style={{ width: '50' }}>
@@ -128,11 +135,25 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                                     element={
                                                         <Stack direction="row">
                                                             <>
+                                                                {user?.crm_access_fields.is_deletion_allowed &&
+                                                                    <Tooltip title="delete">
+                                                                        <IconButton color="error"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: LeadChoiceActions.delete_crm_item })
+                                                                                setState(state)
+
+                                                                            }}
+                                                                        >
+                                                                            <Delete />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                }
+
                                                                 <Tooltip title="edit">
                                                                     <IconButton
                                                                         onClick={() => {
-                                                                            setStage(stage)
-                                                                            setChoice({ type: LeadChoiceActions.create_or_edit_stage })
+                                                                            setState(state)
+                                                                            setChoice({ type: LeadChoiceActions.create_or_edit_state })
                                                                         }}
 
                                                                     >
@@ -146,20 +167,23 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                                 />
 
                                             </STableCell>}
-                                        <STableCell style={{ width: '200px' }}>
-                                            {stage.stage}
+                                        <STableCell style={{width:'200px'}}>
+                                            {state.state.state}
                                         </STableCell>
-                                       
-
+                                        <STableCell>
+                                            {state.users.map((u) => { return u.username }).toString()}
+                                        </STableCell>
+                                                                  
                                     </STableRow>
                                 )
                             })}
                     </STableBody>
                 </STable>
-                <CreateOrEditStageDialog stage={stage} />
+               <CreateOrEditStateDialog state={state?.state}/>
+               <DeleteCrmItemDialog state={state?.state}/>
             </Box>
         </>
     )
 }
 
-export default LeadsStageTable
+export default LeadsStateTable

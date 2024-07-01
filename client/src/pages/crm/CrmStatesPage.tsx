@@ -14,7 +14,7 @@ import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { IState, IUser } from '../../types/user.types'
 import { ICRMStateTemplate } from '../../types/template.type'
-import LeadsStateTable from '../../components/tables/LeadsStateTable'
+import LeadsStateTable from '../../components/tables/crm/LeadsStateTable'
 import { GetAllStates } from '../../services/LeadsServices'
 import CreateOrEditStateDialog from '../../components/dialogs/crm/CreateOrEditStateDialog'
 import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
@@ -115,7 +115,7 @@ export default function CrmStatesPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          States {selectedStates.length > 0 ? <span>(checked : {selectedStates.length})</span> : ''}
+          States {selectedStates.length > 0 ? <span>(checked : {selectedStates.length})</span> : `- ${states.length}`}
         </Typography>
 
         <TextField

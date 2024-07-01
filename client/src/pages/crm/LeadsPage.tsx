@@ -8,7 +8,7 @@ import { FuzzySearchLeads, GetAllStages, GetLeads } from '../../services/LeadsSe
 import { UserContext } from '../../contexts/userContext'
 import UploadLeadsExcelButton from '../../components/buttons/UploadLeadsExcelButton';
 import DBPagination from '../../components/pagination/DBpagination';
-import LeadsTable from '../../components/tables/LeadsTable';
+import LeadsTable from '../../components/tables/crm/LeadsTable';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
@@ -205,7 +205,7 @@ export default function LeadsPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Leads {selectedLeads.length > 0 ? <span>(checked : {selectedLeads.length})</span> : ''}
+          Leads {selectedLeads.length > 0 ? <span>(checked : {selectedLeads.length})</span> : `- ${leads.length}`}
         </Typography>
 
         <TextField

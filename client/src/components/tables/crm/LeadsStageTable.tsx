@@ -1,32 +1,33 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import PopUp from '../popup/PopUp'
-import { Edit } from '@mui/icons-material'
-import { UserContext } from '../../contexts/userContext'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { ILeadType } from '../../types/crm.types'
-import CreateOrEditLeadTypeDialog from '../dialogs/crm/CreateOrEditLeadTypeDialog'
+import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
+import PopUp from '../../popup/PopUp'
+import { Delete, Edit } from '@mui/icons-material'
+import { UserContext } from '../../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import CreateOrEditStageDialog from '../../dialogs/crm/CreateOrEditStageDialog'
+import { IStage } from '../../../types/crm.types'
+import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 
 
 type Props = {
-    type: ILeadType | undefined,
-    setType: React.Dispatch<React.SetStateAction<ILeadType | undefined>>,
+    stage: IStage | undefined,
+    setStage: React.Dispatch<React.SetStateAction<IStage | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    types: ILeadType[],
-    selectedTypes: ILeadType[]
-    setSelectedTypes: React.Dispatch<React.SetStateAction<ILeadType[]>>,
+    stages: IStage[],
+    selectedStages: IStage[]
+    setSelectedStages: React.Dispatch<React.SetStateAction<IStage[]>>,
 }
-function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selectedTypes, setSelectedTypes }: Props) {
-    const [data, setData] = useState<ILeadType[]>(types)
+function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, selectedStages, setSelectedStages }: Props) {
+    const [data, setData] = useState<IStage[]>(stages)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
-            setData(types)
-    }, [types, data])
+            setData(stages)
+    }, [stages, data])
     return (
         <>
             <Box sx={{
@@ -47,11 +48,11 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
                                         if (e.currentTarget.checked) {
-                                            setSelectedTypes(types)
+                                            setSelectedStages(stages)
                                             setSelectAll(true)
                                         }
                                         if (!e.currentTarget.checked) {
-                                            setSelectedTypes([])
+                                            setSelectedStages([])
                                             setSelectAll(false)
                                         }
                                     }} />
@@ -67,10 +68,10 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                             <STableHeadCell style={{ width: '200px' }}
                             >
 
-                                Type
+                                Stage
 
                             </STableHeadCell>
-                          
+                         
 
 
 
@@ -79,10 +80,10 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                     </STableHead>
                     <STableBody >
                         {
-                            types && types.map((type, index) => {
+                            stages && stages.map((stage, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedTypes.length > 0 && selectedTypes.find((t) => t._id === type._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedStages.length > 0 && selectedStages.find((t) => t._id === stage._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
@@ -103,15 +104,15 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
 
                                                 <Checkbox sx={{ width: 16, height: 16 }} 
                                                 size="small"
-                                                    checked={selectedTypes.length > 0 && selectedTypes.find((t) => t._id === type._id) ? true : false}
+                                                    checked={selectedStages.length > 0 && selectedStages.find((t) => t._id === stage._id) ? true : false}
                                                     onChange={(e) => {
-                                                        setType(type)
+                                                        setStage(stage)
                                                         if (e.target.checked) {
-                                                            setSelectedTypes([...selectedTypes, type])
+                                                            setSelectedStages([...selectedStages, stage])
                                                         }
                                                         if (!e.target.checked) {
-                                                            setSelectedTypes((types) => types.filter((item) => {
-                                                                return item._id !== type._id
+                                                            setSelectedStages((stages) => stages.filter((item) => {
+                                                                return item._id !== stage._id
                                                             }))
                                                         }
                                                     }}
@@ -121,18 +122,34 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                                             :
                                             null
                                         }
+
+
                                         {/* actions */}
-                                        {user?.user_access_fields.is_editable &&
+                                        {user?.crm_access_fields.is_editable &&
                                             <STableCell style={{ width: '50' }}>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row">
                                                             <>
+
+                                                                {user?.crm_access_fields.is_deletion_allowed &&
+                                                                    <Tooltip title="delete">
+                                                                        <IconButton color="error"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: LeadChoiceActions.delete_crm_item })
+                                                                                setStage(stage)
+
+                                                                            }}
+                                                                        >
+                                                                            <Delete />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                }
                                                                 <Tooltip title="edit">
                                                                     <IconButton
                                                                         onClick={() => {
-                                                                            setType(type)
-                                                                            setChoice({ type: LeadChoiceActions.create_or_edit_leadtype })
+                                                                            setStage(stage)
+                                                                            setChoice({ type: LeadChoiceActions.create_or_edit_stage })
                                                                         }}
 
                                                                     >
@@ -147,19 +164,20 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
 
                                             </STableCell>}
                                         <STableCell style={{ width: '200px' }}>
-                                            {type.type}
+                                            {stage.stage}
                                         </STableCell>
-                                     
+                                       
 
                                     </STableRow>
                                 )
                             })}
                     </STableBody>
                 </STable>
-                <CreateOrEditLeadTypeDialog type={type} />
+                <CreateOrEditStageDialog stage={stage} />
+                <DeleteCrmItemDialog stage={stage}/>
             </Box>
         </>
     )
 }
 
-export default LeadsTypeTable
+export default LeadsStageTable

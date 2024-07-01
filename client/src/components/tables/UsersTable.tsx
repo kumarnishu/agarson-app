@@ -323,7 +323,6 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                                            <Tooltip title="Manage Leads View">
                                                                 <IconButton
                                                                     color="success"
-                                                                    disabled={user?.created_by._id === user._id}
                                                                     size="medium"
                                                                     onClick={() => {
                                                                         setChoice({ type: UserChoiceActions.toogle_show_visitingcard })

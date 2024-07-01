@@ -11,7 +11,7 @@ import { ChoiceContext, LeadChoiceActions, } from '../../contexts/dialogContext'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import LeadsStageTable from '../../components/tables/LeadsStageTable'
+import LeadsStageTable from '../../components/tables/crm/LeadsStageTable'
 import { GetAllStages } from '../../services/LeadsServices'
 import CreateOrEditStageDialog from '../../components/dialogs/crm/CreateOrEditStageDialog'
 import { IStage } from '../../types/crm.types'
@@ -111,7 +111,7 @@ export default function CrmStagesPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Stages {selectedStages.length > 0 ? <span>(checked : {selectedStages.length})</span> : ''}
+          Stages {selectedStages.length > 0 ? <span>(checked : {selectedStages.length})</span> : `- ${stages.length}`}
         </Typography>
 
         <TextField

@@ -1,8 +1,8 @@
 import { Box } from '@mui/material'
 import {  useEffect, useState } from 'react'
-import { DownloadFile } from '../../utils/DownloadFile'
-import { IRemark } from '../../types/crm.types'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import { IRemark } from '../../../types/crm.types'
+import { DownloadFile } from '../../../utils/DownloadFile'
 
 
 
@@ -13,7 +13,7 @@ type Props = {
     remarks: IRemark[]
 }
 
-function RemarksSTable({  remarks }: Props) {
+function ActivitiesTable({  remarks }: Props) {
     const [data, setData] = useState<IRemark[]>(remarks)
 
     useEffect(() => {
@@ -48,7 +48,18 @@ function RemarksSTable({  remarks }: Props) {
                                 Stage
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                                Next Call
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Visiting Card Status
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -256,6 +267,12 @@ function RemarksSTable({  remarks }: Props) {
                                             {remark.lead.stage}
                                         </STableCell>
                                         <STableCell>
+                                            {remark.remind_date?new Date(remark.remind_date).toLocaleDateString():"na"}
+                                        </STableCell>
+                                        <STableCell>
+                                            {remark.lead.has_card ? 'Visiting card available' : "na"}
+                                        </STableCell>
+                                        <STableCell>
                                             {remark.lead.name}
                                         </STableCell>
 
@@ -398,4 +415,4 @@ function RemarksSTable({  remarks }: Props) {
     )
 }
 
-export default RemarksSTable
+export default ActivitiesTable

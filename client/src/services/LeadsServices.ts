@@ -1,7 +1,8 @@
+import { ICRMCity, ICRMState, ILead, ILeadSource, ILeadType, IReferredParty, IStage } from "../types/crm.types"
 import { apiClient } from "./utils/AxiosInterceptor"
 
 //leads
-export const GetLeads = async ({ limit, page, stage }: { limit: number | undefined, page: number | undefined, stage?: string}) => {
+export const GetLeads = async ({ limit, page, stage }: { limit: number | undefined, page: number | undefined, stage?: string }) => {
   return await apiClient.get(`leads/?limit=${limit}&page=${page}&stage=${stage}`)
 }
 
@@ -25,8 +26,21 @@ export const CreateOrUpdateLead = async ({ id, body }: { body: FormData, id?: st
 }
 
 
-export const DeleteLead = async ({ id }: { id: string }) => {
-  return await apiClient.delete(`leads/${id}`)
+export const DeleteCrmItem = async ({ refer, lead, state, city, type, source, stage }: { refer?: IReferredParty, lead?: ILead, state?: ICRMState, city?: ICRMCity, type?: ILeadType, source?: ILeadSource, stage?: IStage }) => {
+  if (refer)
+    return await apiClient.delete(`refers/${refer._id}`)
+  if (state)
+    return await apiClient.delete(`crm/states/${state._id}`)
+  if (lead)
+    return await apiClient.delete(`leads/${lead._id}`)
+  if (source)
+    return await apiClient.delete(`crm/sources/${source._id}`)
+  if (type)
+    return await apiClient.delete(`crm/leadtypes/${type._id}`)
+  if (city)
+    return await apiClient.delete(`crm/cities/${city._id}`)
+  return await apiClient.delete(`crm/stages/${stage ? stage._id : ""}`)
+
 }
 
 
@@ -38,7 +52,9 @@ export const BulkLeadUpdateFromExcel = async (body: FormData) => {
 export const CreateOrEditRemark = async ({ body, lead_id, remark_id }: {
   body: {
     remark: string,
-    remind_date?: string
+    remind_date?: string,
+    stage: string,
+    has_card: boolean
   },
   lead_id?: string,
   remark_id?: string
@@ -77,9 +93,6 @@ export const CreateOrUpdateRefer = async ({ id, body }: { body: FormData, id?: s
 }
 
 
-export const DeleteRefer = async ({ id }: { id: string }) => {
-  return await apiClient.delete(`refers/${id}`)
-}
 
 
 export const BulkReferUpdateFromExcel = async (body: FormData) => {
@@ -104,9 +117,6 @@ export const CreateOrEditState = async ({ body, id }: {
 }
 
 
-export const DeleteCrmState = async (id: string) => {
-  return await apiClient.delete(`crm/states/${id}`)
-}
 
 export const BulkStateUpdateFromExcel = async (body: FormData) => {
   return await apiClient.put(`crm/states/excel/createorupdate`, body)
@@ -130,9 +140,6 @@ export const CreateOrEditCity = async ({ body, id }: {
 }
 
 
-export const DeleteCity = async (id: string) => {
-  return await apiClient.delete(`crm/cities/${id}`)
-}
 
 export const BulkCityUpdateFromExcel = async (body: FormData) => {
   return await apiClient.put(`crm/cities/excel/createorupdate`, body)
@@ -156,10 +163,6 @@ export const CreateOrEditStage = async ({ body, id }: {
 }
 
 
-export const DeleteStage = async (id: string) => {
-  return await apiClient.delete(`crm/stages/${id}`)
-}
-
 //sources
 export const GetAllSources = async () => {
   return await apiClient.get(`crm/sources`)
@@ -177,9 +180,6 @@ export const CreateOrEditSource = async ({ body, id }: {
 }
 
 
-export const DeleteSource = async (id: string) => {
-  return await apiClient.delete(`crm/sources/${id}`)
-}
 
 //types
 export const GetAllLeadTypes = async () => {
@@ -197,10 +197,6 @@ export const CreateOrEditLeadType = async ({ body, id }: {
   return await apiClient.post(`crm/leadtypes`, body)
 }
 
-
-export const DeleteLeadType = async (id: string) => {
-  return await apiClient.delete(`crm/leadtypes/${id}`)
-}
 
 export const ReferLead = async ({ id, body }: { id: string, body: { party_id: string, remark: string } }) => {
   return await apiClient.post(`refers/leads/${id}`, body)

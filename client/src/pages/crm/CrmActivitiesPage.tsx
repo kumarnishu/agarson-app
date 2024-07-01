@@ -9,8 +9,8 @@ import { UserContext } from '../../contexts/userContext'
 import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
-import ActivitiesTable from '../../components/tables/ActivitiesTable'
 import DBPagination from '../../components/pagination/DBpagination'
+import ActivitiesTable from '../../components/tables/crm/ActivitiesTable'
 
 function CrmActivitiesPage() {
     const { user } = useContext(UserContext)

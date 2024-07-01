@@ -30,7 +30,6 @@ export type TformData = {
     work_description: string,
     turnover: string,
     lead_type: string,
-    stage: string,
     alternate_mobile1: string,
     alternate_mobile2: string,
     alternate_email: string,
@@ -40,7 +39,7 @@ export type TformData = {
 
 function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
     const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
-    const [stages, setStages] = useState<IStage[]>([])
+  
     const [types, setTypes] = useState < ILeadType[]>([])
     const [sources, setSources] = useState <ILeadSource[]>([])
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
@@ -50,8 +49,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                 queryClient.invalidateQueries('leads')
             }
         })
-    const { data:stagedata, isSuccess:stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
-
+   
     const { data:typesdata, isSuccess:isTypeSuccess } = useQuery<AxiosResponse<ILeadType[]>, BackendError>("crm_types", GetAllLeadTypes)
 
     const { data:sourcedata, isSuccess:isSourceSuccess } = useQuery<AxiosResponse<ILeadSource[]>, BackendError>("crm_sources", GetAllSources)
@@ -76,7 +74,6 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
             work_description: lead ? lead.work_description : "",
             turnover: lead ? lead.turnover : "",
             lead_type: lead ? lead.lead_type : "",
-            stage: lead ? lead.stage : "open",
             alternate_mobile1: lead ? lead.alternate_mobile1 : "",
             alternate_mobile2: lead ? lead.alternate_mobile2 : "",
             alternate_email: lead ? lead.alternate_email : "",
@@ -97,7 +94,6 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
             ,
             lead_type: Yup.string(),
             turnover: Yup.string(),
-            stage: Yup.string(),
             lead_source: Yup.string(),
             country: Yup.string(),
             work_description: Yup.string()
@@ -156,7 +152,6 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                 work_description: values.work_description,
                 turnover: values.turnover,
                 lead_type: values.lead_type,
-                stage: values.stage,
                 alternate_mobile1: values.alternate_mobile1,
                 alternate_mobile2: values.alternate_mobile2,
                 alternate_email: values.alternate_email,
@@ -177,12 +172,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
         }
     }, [isSuccess, states, data])
 
-    useEffect(() => {
-        if (stageSuccess) {
-            setStages(stagedata.data)
-        }
-    }, [isSuccess, stages, stagedata])
-
+  
     useEffect(() => {
         if (isSourceSuccess) {
             setSources(sourcedata?.data)
@@ -455,36 +445,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     }
                 </TextField>
 
-                {/* stage */}
-                < TextField
-                    select
-                    SelectProps={{
-                        native: true
-                    }}
-                    focused
-
-                    error={
-                        formik.touched.stage && formik.errors.stage ? true : false
-                    }
-                    id="stage"
-                    label="Stage"
-                    fullWidth
-                    helperText={
-                        formik.touched.stage && formik.errors.stage ? formik.errors.stage : ""
-                    }
-                    {...formik.getFieldProps('stage')}
-                >
-                    <option value="">
-
-                    </option>
-                    {
-                        stages.map(stage => {
-                            return (<option key={stage._id} value={stage.stage}>
-                                {toTitleCase(stage.stage)}
-                            </option>)
-                        })
-                    }
-                </TextField>
+               
 
                 {/* lead type */}
                 < TextField

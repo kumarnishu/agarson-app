@@ -1,13 +1,13 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import PopUp from '../popup/PopUp'
-import { Edit } from '@mui/icons-material'
-import { UserContext } from '../../contexts/userContext'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import CreateOrEditLeadSourceDialog from '../dialogs/crm/CreateOrEditLeadSourceDialog'
-import { ILeadSource } from '../../types/crm.types'
+import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
+import PopUp from '../../popup/PopUp'
+import { Delete, Edit } from '@mui/icons-material'
+import { UserContext } from '../../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import CreateOrEditLeadSourceDialog from '../../dialogs/crm/CreateOrEditLeadSourceDialog'
+import { ILeadSource } from '../../../types/crm.types'
 
 
 type Props = {
@@ -122,13 +122,27 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                             null
                                         }
                                         {/* actions */}
-                                        {user?.user_access_fields.is_editable &&
+                                      
                                             <STableCell style={{ width: '50' }}>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row">
                                                             <>
-                                                                <Tooltip title="edit">
+                                                                {user?.crm_access_fields.is_deletion_allowed &&
+                                                                    <Tooltip title="delete">
+                                                                        <IconButton color="error"
+                                                                            onClick={() => {
+                                                                                setChoice({ type: LeadChoiceActions.delete_crm_item })
+                                                                                setLeadSource(source)
+
+                                                                            }}
+                                                                        >
+                                                                            <Delete />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                }
+
+                                                            {user?.user_access_fields.is_editable && <Tooltip title="edit">
                                                                     <IconButton
                                                                         onClick={() => {
                                                                             setLeadSource(source)
@@ -138,14 +152,14 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                </Tooltip>}
 
                                                             </>
 
                                                         </Stack>}
                                                 />
 
-                                            </STableCell>}
+                                            </STableCell>
                                         <STableCell style={{ width: '200px' }}>
                                             {source.source}
                                         </STableCell>
