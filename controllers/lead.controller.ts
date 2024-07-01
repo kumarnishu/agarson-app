@@ -12,7 +12,7 @@ import { ICRMCity, ICRMState, ILead, ILeadType, IReferredParty, IRemark, TLeadBo
 import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
 import { CRMState } from "../models/leads/crm.state.model.js"
-import {  ICRMStateTemplate, ILeadTemplate, IReferTemplate } from "../types/template.type.js"
+import { ICRMStateTemplate, ILeadTemplate, IReferTemplate } from "../types/template.type.js"
 import { SaveLeadMobilesToExcel, SaveLeadsToExcel } from "../utils/ExportToExcel.js"
 import { CRMCity } from "../models/leads/crm.city.model.js"
 import { LeadType } from "../models/leads/crm.leadtype.model.js"
@@ -231,6 +231,46 @@ export const CreateCRMState = async (req: Request, res: Response, next: NextFunc
 
 }
 
+
+export const AssignCRMStatesToUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const { state_ids, user_ids, flag } = req.body as {
+        user_ids: string[],
+        state_ids: string[],
+        flag: number
+    }
+    if (state_ids && state_ids.length === 0)
+        return res.status(400).json({ message: "please select one state " })
+    if (user_ids && user_ids.length === 0)
+        return res.status(400).json({ message: "please select one state owner" })
+
+    let owners = user_ids
+
+    if (flag == 0) {
+        for (let i = 0; i < owners.length; i++) {
+            let owner = await User.findById(owners[i]).populate('assigned_crm_states');
+            if(owner){
+                let oldstates = owner.assigned_crm_states.map((item)=>{return item._id.valueOf()});
+                console.log(oldstates)
+                oldstates = oldstates.filter((item)=>{return !state_ids.includes(item)});
+                console.log(oldstates)
+                await User.findByIdAndUpdate(owner._id, {
+                    assigned_crm_states: oldstates
+                })
+            }
+        }
+    }
+    else {
+        for (let i = 0; i < owners.length; i++) {
+            await User.findByIdAndUpdate(owners[i], {
+                assigned_crm_states: state_ids
+            })
+        }
+    }
+
+    return res.status(200).json({ message: "successfull" })
+}
+
+
 export const UpdateCRMState = async (req: Request, res: Response, next: NextFunction) => {
     const { state } = req.body as {
         state: string
@@ -316,11 +356,11 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
                     else
                         statusText = "duplicate"
                 }
-    
+
             }
             else
                 statusText = "required state"
-            
+
             result.push({
                 ...item,
                 status: statusText
@@ -334,13 +374,13 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
 
 //cities
 export const GetAllCRMCities = async (req: Request, res: Response, next: NextFunction) => {
-    let result: { city:ICRMCity,state:ICRMState, users: IUser[] }[] = []
+    let result: { city: ICRMCity, state: ICRMState, users: IUser[] }[] = []
     return res.status(200).json(result)
 }
 
 
 export const CreateCRMCity = async (req: Request, res: Response, next: NextFunction) => {
-    const { state,city } = req.body as {
+    const { state, city } = req.body as {
         state: string,
         city: string
     }
@@ -351,7 +391,7 @@ export const CreateCRMCity = async (req: Request, res: Response, next: NextFunct
         return res.status(400).json({ message: "already exists this city" })
     let result = await new CRMCity({
         state: state,
-        city:city,
+        city: city,
         updated_at: new Date(),
         created_by: req.user,
         updated_by: req.user
@@ -465,13 +505,14 @@ export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Res
 export const GetLeads = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
+    let stage = req.query.stage
     const id = req.query.id
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
         let count = 0
         if (req.user?.crm_access_fields.is_editable) {
             if (id) {
-                leads = await Lead.find({ stage: { $nin: ["useless"] } }).populate('updated_by').populate('created_by').populate({
+                leads = await Lead.find({ stage: stage }).populate('updated_by').populate('created_by').populate({
                     path: 'remarks',
                     populate: [
                         {
@@ -484,10 +525,10 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                         }
                     ]
                 }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-                count = await Lead.find({ stage: { $nin: ["useless"] } }).countDocuments()
+                count = await Lead.find({ stage: stage  }).countDocuments()
             }
             else {
-                leads = await Lead.find({ stage: { $nin: ["useless"] } }).populate('updated_by').populate('created_by').populate({
+                leads = await Lead.find({ stage: stage  }).populate('updated_by').populate('created_by').populate({
                     path: 'remarks',
                     populate: [
                         {
@@ -500,13 +541,13 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                         }
                     ]
                 }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-                count = await Lead.find({ stage: { $nin: ["useless"] } }).countDocuments()
+                count = await Lead.find({ stage: stage  }).countDocuments()
             }
 
         }
 
         if (!req.user?.crm_access_fields.is_editable) {
-            leads = await Lead.find({ stage: { $nin: ["useless"] } }).populate('updated_by').populate('created_by').populate({
+            leads = await Lead.find({ stage: stage  }).populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
                     {
@@ -519,7 +560,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({ stage: { $nin: ["useless"] } }).countDocuments()
+            count = await Lead.find({ stage: stage  }).countDocuments()
         }
 
         return res.status(200).json({
@@ -533,7 +574,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         return res.status(400).json({ message: "bad request" })
 }
 export const ReferLead = async (req: Request, res: Response, next: NextFunction) => {
-    const { party_id, remark } = req.body
+    const { party_id, remark } = req.body as { party_id: string, remark: string }
     if (!party_id)
         return res.status(400).json({ message: "fill required field" })
     const id = req.params.id
@@ -605,6 +646,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
     let page = Number(req.query.page)
     const id = req.params.id
     let key = String(req.query.key).split(",")
+    let stage = String(req.query.stage)
     if (!key)
         return res.status(500).json({ message: "bad request" })
     let leads: ILead[] = []
@@ -612,6 +654,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 1 || key.length > 4) {
             if (id) {
                 leads = await Lead.find({
+                    stage:stage,
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -629,7 +672,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                         { alternate_email: { $regex: key[0], $options: 'i' } },
                         { lead_type: { $regex: key[0], $options: 'i' } },
-                        { stage: { $regex: key[0], $options: 'i' } },
                         { lead_source: { $regex: key[0], $options: 'i' } },
                         { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -652,6 +694,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             }
             else {
                 leads = await Lead.find({
+                    stage: stage,
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -669,7 +712,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                         { alternate_email: { $regex: key[0], $options: 'i' } },
                         { lead_type: { $regex: key[0], $options: 'i' } },
-                        { stage: { $regex: key[0], $options: 'i' } },
                         { lead_source: { $regex: key[0], $options: 'i' } },
                         { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -694,6 +736,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 2) {
             if (id) {
                 leads = await Lead.find({
+                    stage: stage,
                     $and: [
                         {
                             $or: [
@@ -713,7 +756,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -736,7 +778,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
+                                
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
 
@@ -762,6 +804,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             }
             else {
                 leads = await Lead.find({
+                    stage: stage,
                     $and: [
                         {
                             $or: [
@@ -781,7 +824,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -804,7 +846,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
+                                
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
 
@@ -832,7 +874,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 3) {
             if (id) {
                 leads = await Lead.find({
-
+                    stage: stage,
                     $and: [
                         {
                             $or: [
@@ -852,7 +894,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -875,7 +916,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
+                                
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
 
@@ -898,7 +939,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[2], $options: 'i' } },
                                 { alternate_email: { $regex: key[2], $options: 'i' } },
                                 { lead_type: { $regex: key[2], $options: 'i' } },
-                                { stage: { $regex: key[2], $options: 'i' } },
+                               
                                 { lead_source: { $regex: key[2], $options: 'i' } },
                                 { last_remark: { $regex: key[2], $options: 'i' } },
 
@@ -924,6 +965,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             }
             else {
                 leads = await Lead.find({
+                    stage: stage,
                     $and: [
                         {
                             $or: [
@@ -943,7 +985,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -966,7 +1007,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
+                               
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
 
@@ -989,7 +1030,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[2], $options: 'i' } },
                                 { alternate_email: { $regex: key[2], $options: 'i' } },
                                 { lead_type: { $regex: key[2], $options: 'i' } },
-                                { stage: { $regex: key[2], $options: 'i' } },
+                              
                                 { lead_source: { $regex: key[2], $options: 'i' } },
                                 { last_remark: { $regex: key[2], $options: 'i' } },
 
@@ -1017,7 +1058,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 4) {
             if (id) {
                 leads = await Lead.find({
-
+                    stage: stage,
                     $and: [
                         {
                             $or: [
@@ -1037,7 +1078,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -1060,7 +1100,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
+                              
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
 
@@ -1083,7 +1123,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[2], $options: 'i' } },
                                 { alternate_email: { $regex: key[2], $options: 'i' } },
                                 { lead_type: { $regex: key[2], $options: 'i' } },
-                                { stage: { $regex: key[2], $options: 'i' } },
+                               
                                 { lead_source: { $regex: key[2], $options: 'i' } },
                                 { last_remark: { $regex: key[2], $options: 'i' } },
 
@@ -1106,7 +1146,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[3], $options: 'i' } },
                                 { alternate_email: { $regex: key[3], $options: 'i' } },
                                 { lead_type: { $regex: key[3], $options: 'i' } },
-                                { stage: { $regex: key[3], $options: 'i' } },
+                              
                                 { lead_source: { $regex: key[3], $options: 'i' } },
                                 { last_remark: { $regex: key[3], $options: 'i' } },
 
@@ -1132,6 +1172,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             }
             else {
                 leads = await Lead.find({
+                    stage: stage,
                     $and: [
                         {
                             $or: [
@@ -1151,7 +1192,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -1174,7 +1214,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
+                              
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
 
@@ -1197,7 +1237,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[2], $options: 'i' } },
                                 { alternate_email: { $regex: key[2], $options: 'i' } },
                                 { lead_type: { $regex: key[2], $options: 'i' } },
-                                { stage: { $regex: key[2], $options: 'i' } },
+                               
                                 { lead_source: { $regex: key[2], $options: 'i' } },
                                 { last_remark: { $regex: key[2], $options: 'i' } },
 
@@ -1220,7 +1260,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[3], $options: 'i' } },
                                 { alternate_email: { $regex: key[3], $options: 'i' } },
                                 { lead_type: { $regex: key[3], $options: 'i' } },
-                                { stage: { $regex: key[3], $options: 'i' } },
+                              
                                 { lead_source: { $regex: key[3], $options: 'i' } },
                                 { last_remark: { $regex: key[3], $options: 'i' } },
 
@@ -2069,7 +2109,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
 
 export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state,gst, mobile } = body as TReferredPartyBody
+    const { name, customer_name, city, state, gst, mobile } = body as TReferredPartyBody
     if (!name || !city || !state || !mobile || !gst) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -2081,7 +2121,7 @@ export const CreateReferParty = async (req: Request, res: Response, next: NextFu
 
 
     let party = await new ReferredParty({
-        name, customer_name, city, state, mobile,gst,
+        name, customer_name, city, state, mobile, gst,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -2095,7 +2135,7 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
     if (!isMongoId(id))
         return res.status(400).json({ message: "bad mongo id" })
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state, mobile,gst } = body as TReferredPartyBody
+    const { name, customer_name, city, state, mobile, gst } = body as TReferredPartyBody
     if (!name || !city || !state || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -2112,7 +2152,7 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
     }
 
     await ReferredParty.findByIdAndUpdate(id, {
-        name, customer_name, city, state, mobile,gst,
+        name, customer_name, city, state, mobile, gst,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -2185,7 +2225,7 @@ export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next
                 validated = false
                 statusText = "required gst"
             }
-            if (gst && gst.length!==15) {
+            if (gst && gst.length !== 15) {
                 validated = false
                 statusText = "invalid gst"
             }

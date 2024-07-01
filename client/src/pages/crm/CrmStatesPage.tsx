@@ -18,6 +18,7 @@ import LeadsStateTable from '../../components/tables/LeadsStateTable'
 import { GetAllStates } from '../../services/LeadsServices'
 import CreateOrEditStateDialog from '../../components/dialogs/crm/CreateOrEditStateDialog'
 import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
+import AssignCrmStatesDialog from '../../components/dialogs/crm/AssignCrmStatesDialog'
 
 
 let template: ICRMStateTemplate[] = [
@@ -28,6 +29,7 @@ let template: ICRMStateTemplate[] = [
 ]
 
 export default function CrmStatesPage() {
+  const [flag, setFlag]=useState(1);
   const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
   const [state, setState] = useState<{ state: IState, users: IUser[] }>()
   const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
@@ -63,7 +65,7 @@ export default function CrmStatesPage() {
     let data: ICRMStateTemplate[] = []
     selectedStates.map((state) => {
       return data.push({
-        _id:state.state._id,
+        _id: state.state._id,
         state: state.state.state,
         users: state.users.map((u) => { return u.username }).toString()
       })
@@ -125,7 +127,7 @@ export default function CrmStatesPage() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <Search sx={{ cursor: 'pointer' }}/>
+                <Search sx={{ cursor: 'pointer' }} />
               </InputAdornment>
             ),
           }}
@@ -173,19 +175,45 @@ export default function CrmStatesPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              
+              <MenuItem
+                onClick={() => {
+                  if (selectedStates && selectedStates.length == 0) {
+                    alert("select some states")
+                  }
+                  else{
+                    setChoice({ type: LeadChoiceActions.bulk_assign_crm_states })
+                    setState(undefined)
+                    setFlag(1)
+                  }
+                  setAnchorEl(null)
+                }}
+              > Assign States</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  if (selectedStates && selectedStates.length == 0) {
+                    alert("select some states")
+                  }
+                  else {
+                    setChoice({ type: LeadChoiceActions.bulk_assign_crm_states })
+                    setState(undefined)
+                    setFlag(0)
+                  }
+                  setAnchorEl(null)
+                }}
+              > Remove States</MenuItem>
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
             </Menu >
-            <CreateOrEditStateDialog  />
+            <CreateOrEditStateDialog />
+            {<AssignCrmStatesDialog flag={flag} states={selectedStates.map((item) => { return item.state })} />}
           </>
         </Stack >
       </Stack >
       {/*  table */}
       {isLoading && <TableSkeleton />}
       {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && MemoData.length >0&&
+      {!isLoading && MemoData.length > 0 &&
         <LeadsStateTable
           state={state}
           selectAll={selectAll}
@@ -195,7 +223,7 @@ export default function CrmStatesPage() {
           states={MemoData}
           setState={setState}
         />}
-     
+
     </>
 
   )

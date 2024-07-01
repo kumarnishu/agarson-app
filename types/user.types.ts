@@ -31,6 +31,7 @@ export type IUser = {
     visit_access_fields: FeatureAccess,
     email_verified: Boolean,
     mobile_verified: Boolean,
+    show_only_visiting_card_leads:boolean,
     is_active: Boolean,
     last_login: Date,
     multi_login_token: string | null,

@@ -13,6 +13,8 @@ import { ILead } from '../../types/crm.types'
 import CreateOrEditLeadDialog from '../dialogs/crm/CreateOrEditLeadDialog'
 import CreateOrEditRemarkDialog from '../dialogs/crm/CreateOrEditRemarkDialog'
 import ViewRemarksDialog from '../dialogs/crm/ViewRemarksDialog'
+import ReferLeadDialog from '../dialogs/crm/ReferLeadDialog'
+import RemoveLeadReferralDialog from '../dialogs/crm/RemoveLeadReferralDialog'
 
 
 type Props = {
@@ -607,6 +609,8 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
            <CreateOrEditRemarkDialog lead={lead} />
             <DeleteLeadDialog lead={lead} />
             <ViewRemarksDialog lead={lead} />
+            <ReferLeadDialog lead={lead}/>
+            <RemoveLeadReferralDialog lead={lead}/>
             
           </>
           : null

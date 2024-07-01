@@ -1,18 +1,19 @@
 import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
-import { useEffect, useContext } from 'react';
-import { useMutation } from 'react-query';
+import { useEffect, useContext, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { CreateOrUpdateLead } from '../../../services/LeadsServices';
+import { CreateOrUpdateLead, GetAllLeadTypes, GetAllSources, GetAllStages, GetAllStates } from '../../../services/LeadsServices';
 import { Countries } from '../../../utils/countries';
-import { States } from '../../../utils/states';
 import { Cities } from '../../../utils/cities';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { ILead } from '../../../types/crm.types';
+import { ILead, ILeadSource, ILeadType, IStage } from '../../../types/crm.types';
+import { IState, IUser } from '../../../types/user.types';
+import { toTitleCase } from '../../../utils/TitleCase';
 
 export type TformData = {
     name: string,
@@ -38,6 +39,10 @@ export type TformData = {
 }
 
 function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
+    const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
+    const [stages, setStages] = useState<IStage[]>([])
+    const [types, setTypes] = useState < ILeadType[]>([])
+    const [sources, setSources] = useState <ILeadSource[]>([])
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<ILead>, BackendError, { body: FormData, id?: string }>
         (CreateOrUpdateLead, {
@@ -45,6 +50,14 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                 queryClient.invalidateQueries('leads')
             }
         })
+    const { data:stagedata, isSuccess:stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
+
+    const { data:typesdata, isSuccess:isTypeSuccess } = useQuery<AxiosResponse<ILeadType[]>, BackendError>("crm_types", GetAllLeadTypes)
+
+    const { data:sourcedata, isSuccess:isSourceSuccess } = useQuery<AxiosResponse<ILeadSource[]>, BackendError>("crm_sources", GetAllSources)
+
+    const { data, isSuccess:isStateSuccess } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
+
 
     const { setChoice } = useContext(ChoiceContext)
     const formik = useFormik<TformData>({
@@ -99,10 +112,10 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
             gst: Yup.string()
                 .min(15, 'Must be 15 characters')
                 .max(15, 'Must be 15 characters'),
-            alternate_mobile1: Yup.string()
+            alternate_mobile1: Yup.string().nullable()
                 .min(10, 'Must be 10 digits')
                 .max(10, 'Must be 10 digits'),
-            alternate_mobile2: Yup.string()
+            alternate_mobile2: Yup.string().nullable()
                 .min(10, 'Must be 10 digits')
                 .max(10, 'Must be 10 digits'),
             visiting_card: Yup.mixed<File>()
@@ -157,6 +170,31 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
             mutate({ id: lead?._id, body: formdata });
         }
     });
+
+    useEffect(() => {
+        if (isStateSuccess) {
+            setStates(data.data)
+        }
+    }, [isSuccess, states, data])
+
+    useEffect(() => {
+        if (stageSuccess) {
+            setStages(stagedata.data)
+        }
+    }, [isSuccess, stages, stagedata])
+
+    useEffect(() => {
+        if (isSourceSuccess) {
+            setSources(sourcedata?.data)
+        }
+    }, [isSuccess, sources, sourcedata])
+
+    useEffect(() => {
+        if (isTypeSuccess) {
+            setTypes(typesdata.data)
+        }
+    }, [isSuccess, types, typesdata])
+
     useEffect(() => {
         if (isSuccess) {
             setChoice({ type: LeadChoiceActions.close_lead })
@@ -377,7 +415,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     {
                         Cities.map((city, index) => {
                             return (<option key={index} value={city.toLowerCase()}>
-                                {city}
+                                {toTitleCase(city)}
                             </option>)
                         })
                     }
@@ -411,17 +449,107 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
 
                     </option>
                     {
-                        States.map(state => {
-                            return (<option key={state.code} value={state.state.toLowerCase()}>
-                                {state.state}
+                        states.map(state => {
+                            return (<option key={state.state._id} value={state.state.state}>
+                                {toTitleCase(state.state.state)}
                             </option>)
                         })
                     }
                 </TextField>
 
                 {/* stage */}
+                < TextField
+                    select
+                    SelectProps={{
+                        native: true
+                    }}
+                    focused
+
+                    error={
+                        formik.touched.stage && formik.errors.stage ? true : false
+                    }
+                    id="stage"
+                    label="Stage"
+                    fullWidth
+                    helperText={
+                        formik.touched.stage && formik.errors.stage ? formik.errors.stage : ""
+                    }
+                    {...formik.getFieldProps('stage')}
+                >
+                    <option value="">
+
+                    </option>
+                    {
+                        stages.map(stage => {
+                            return (<option key={stage._id} value={stage.stage}>
+                                {toTitleCase(stage.stage)}
+                            </option>)
+                        })
+                    }
+                </TextField>
 
                 {/* lead type */}
+                < TextField
+                    select
+                    SelectProps={{
+                        native: true
+                    }}
+                    focused
+
+                    error={
+                        formik.touched.lead_type && formik.errors.lead_type ? true : false
+                    }
+                    id="lead_type"
+                    label="Lead Type"
+                    fullWidth
+                    helperText={
+                        formik.touched.lead_type && formik.errors.lead_type ? formik.errors.lead_type : ""
+                    }
+                    {...formik.getFieldProps('lead_type')}
+                >
+                    <option value="">
+
+                    </option>
+                    {
+                        types.map(type => {
+                            return (<option key={type._id} value={type.type}>
+                                {toTitleCase(type.type)}
+                            </option>)
+                        })
+                    }
+                </TextField>
+
+            
+
+                < TextField
+                    select
+                    SelectProps={{
+                        native: true
+                    }}
+                    focused
+
+                    error={
+                        formik.touched.lead_source && formik.errors.lead_source ? true : false
+                    }
+                    id="lead_source"
+                    label="Source"
+                    fullWidth
+                    helperText={
+                        formik.touched.lead_source && formik.errors.lead_source ? formik.errors.lead_source : ""
+                    }
+                    {...formik.getFieldProps('lead_source')}
+                >
+                    <option value="">
+
+                    </option>
+                    {
+                        sources.map(source => {
+                            return (<option key={source._id} value={source.source}>
+                                {toTitleCase(source.source)}
+                            </option>)
+                        })
+                    }
+                </TextField>
 
                 {/* country */}
                 < TextField

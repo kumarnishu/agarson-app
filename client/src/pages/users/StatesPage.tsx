@@ -177,7 +177,7 @@ export default function StatePage() {
               }}
               >New State</MenuItem>}
               {LoggedInUser?.erp_access_fields.is_editable && <MenuItem onClick={() => {
-                setChoice({ type: UserChoiceActions.bulk_assign_states })
+                setChoice({ type: UserChoiceActions.bulk_assign_erp_states })
                 setAnchorEl(null)
               }}
               >Assign States</MenuItem>}

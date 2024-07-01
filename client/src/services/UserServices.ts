@@ -71,6 +71,11 @@ export const GetUser = async (id: string) => {
 export const BlockUser = async (id: string) => {
   return await apiClient.patch(`block/user/${id}`)
 }
+export const ToogleSHowVisitingCard = async (id: string) => {
+  return await apiClient.patch(`tooglevisitingcardleads/user/:id/${id}`)
+}
+
+
 export const ResetMultiLogin = async (id: string) => {
   return await apiClient.patch(`allow/multi_login/${id}`)
 }

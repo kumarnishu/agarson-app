@@ -4,7 +4,7 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { FuzzySearchLeads, GetLeads } from '../../services/LeadsServices'
+import { FuzzySearchLeads, GetAllStages, GetLeads } from '../../services/LeadsServices'
 import { UserContext } from '../../contexts/userContext'
 import UploadLeadsExcelButton from '../../components/buttons/UploadLeadsExcelButton';
 import DBPagination from '../../components/pagination/DBpagination';
@@ -16,8 +16,9 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { ILeadTemplate } from '../../types/template.type'
-import { ILead } from '../../types/crm.types'
+import { ILead, IStage } from '../../types/crm.types'
 import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
+import { toTitleCase } from '../../utils/TitleCase'
 
 let template: ILeadTemplate[] = [
   {
@@ -40,7 +41,7 @@ let template: ILeadTemplate[] = [
     stage: "useless",
     lead_source: "cold calling",
     remarks: "remarks",
-    gst:""
+    gst: ""
   }
 ]
 
@@ -57,10 +58,14 @@ export default function LeadsPage() {
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
+  const [stage, setStage] = useState<string | undefined>('open');
+  const [stages, setStages] = useState<IStage[]>([])
 
-  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page }))
+  const { data, isLoading, refetch } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
+  const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
+
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
     enabled: false
   })
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
@@ -83,6 +88,9 @@ export default function LeadsPage() {
     }
   }
 
+  useEffect(() => {
+    refetch();
+  }, [stage])
   // refine data
   useEffect(() => {
     let data: ILeadTemplate[] = []
@@ -110,13 +118,19 @@ export default function LeadsPage() {
           stage: lead.stage,
           lead_source: lead.lead_source,
           remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
-          
+
         })
     })
     if (data.length > 0)
       setSelectedData(data)
   }, [selectedLeads])
 
+
+  useEffect(() => {
+    if (stageSuccess) {
+      setStages(stagedata.data)
+    }
+  }, [stageSuccess, stages, stagedata])
 
   useEffect(() => {
     if (!filter) {
@@ -189,11 +203,11 @@ export default function LeadsPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Leads {selectedLeads.length > 0 ? <span>(checked : {selectedLeads.length})</span>:''}
+          Leads {selectedLeads.length > 0 ? <span>(checked : {selectedLeads.length})</span> : ''}
         </Typography>
-       
+
         <TextField
-          sx={{width:'50vw'}}
+          sx={{ width: '50vw' }}
           size="small"
           onChange={(e) => {
             setFilter(e.currentTarget.value)
@@ -202,9 +216,9 @@ export default function LeadsPage() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                  <Search sx={{cursor:'pointer'}} onClick={() => {
-                    refetchFuzzy()
-                  }} />
+                <Search sx={{ cursor: 'pointer' }} onClick={() => {
+                  refetchFuzzy()
+                }} />
               </InputAdornment>
             ),
           }}
@@ -223,12 +237,38 @@ export default function LeadsPage() {
           direction="row"
         >
           {/* search bar */}
-          < Stack direction="row" spacing={2}>
+          < Stack direction="row" spacing={2} >
+
+            < TextField
+              select
+              SelectProps={{
+                native: true
+              }}
+              id="stage"
+              size="small"
+              label="Select Stage"
+              sx={{ width: '200px' }}
+              value={stage}
+              onChange={(e) => setStage(e.target.value)}
+            >
+              <option key={0} value={undefined}>
+
+              </option>
+              {
+                stages.map(stage => {
+                  return (<option key={stage._id} value={stage.stage}>
+                    {toTitleCase(stage.stage)}
+                  </option>)
+                })
+              }
+            </TextField>
             {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
           </Stack >
           <>
 
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
+
+            {/* stage */}
 
 
             <IconButton size="small" color="primary"
@@ -261,14 +301,14 @@ export default function LeadsPage() {
               >Export To Excel</MenuItem>
 
             </Menu >
-            <CreateOrEditLeadDialog  lead={undefined}/>
+            <CreateOrEditLeadDialog lead={undefined} />
           </>
         </Stack >
       </Stack >
       {/* table */}
       {isLoading && <TableSkeleton />}
       {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && MemoData.length > 0 &&<>
+      {!isLoading && MemoData.length > 0 && <>
         < LeadsTable
           lead={lead}
           setLead={setLead}

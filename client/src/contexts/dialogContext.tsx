@@ -1,7 +1,7 @@
 import React, { useReducer } from "react"
 
 type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" | "create_state" | "update_state" | "delete_state" |
-  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users" | "bulk_assign_states"
+  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users" | "bulk_assign_erp_states"
 
 
 type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting" | "bulk_start_greeting" | "close_greeting" | "bulk_stop_greeting" | "stop_greeting" | "start_greeting"
@@ -15,7 +15,7 @@ type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_ch
 
 
 type LeadChoices = "create_or_edit_refer" | "create_or_edit_source" | "delete_stage" | "view_remarks" | "close_lead" | "create_or_edit_leadtype" | "delete_lead"  | "delete_leadtype" | "create_refer" | "delete_source" | "delete_refer" | "view_referrals"   |"delete_crm_state"|
-   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "toogle_card" | "add_card_comment"
+   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "add_card_comment"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
 
@@ -129,12 +129,12 @@ export enum LeadChoiceActions {
   assign_refer = "assign_refer",
   bulk_assign_leads = "bulk_assign_leads",
   bulk_assign_refers = "bulk_assign_refers",
-  toogle_card = "toogle_card",
+  bulk_assign_crm_states = "bulk_assign_crm_states",
   add_card_comment = "add_card_comment"
 }
 
 export enum UserChoiceActions {
-  bulk_assign_states = "bulk_assign_states",
+  bulk_assign_erp_states = "bulk_assign_erp_states",
   assign_users = "assign_users",
   signup = "signup",
   reset_password_mail = "reset_password_mail",
@@ -196,7 +196,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case UserChoiceActions.create_state: return type
     case UserChoiceActions.update_state: return type
     case UserChoiceActions.delete_state: return type
-    case UserChoiceActions.bulk_assign_states: return type
+    case UserChoiceActions.bulk_assign_erp_states: return type
 
     // lead dialog choices
     case LeadChoiceActions.create_or_edit_refer: return type
@@ -221,7 +221,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.create_or_edit_lead: return type
     case LeadChoiceActions.create_or_edit_state: return type
     case LeadChoiceActions.create_or_edit_stage: return type
-    case LeadChoiceActions.toogle_card: return type
+    case LeadChoiceActions.bulk_assign_crm_states: return type
     case LeadChoiceActions.add_card_comment: return type
     case LeadChoiceActions.delete_crm_state: return type
 

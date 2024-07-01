@@ -90,6 +90,7 @@ export type ILead = {
     alternate_email: string,
     lead_type: string
     stage: string
+    show_only_visiting_card_leads: boolean,
     lead_source: string
     remarks: IRemark[]
     visiting_card: Asset,

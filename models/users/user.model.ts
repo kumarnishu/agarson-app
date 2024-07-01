@@ -138,6 +138,10 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
       default: []
     }
   ],
+  show_only_visiting_card_leads: {
+    type: Boolean,
+    default: false
+  },
   assigned_crm_states: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -152,7 +156,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
       default: []
     }
   ],
- 
+
   last_login: {
     type: Date,
     default: new Date(),

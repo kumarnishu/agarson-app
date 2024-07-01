@@ -1,17 +1,17 @@
 import { apiClient } from "./utils/AxiosInterceptor"
 
 //leads
-export const GetLeads = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
-    return await apiClient.get(`leads/?limit=${limit}&page=${page}`)
+export const GetLeads = async ({ limit, page, stage }: { limit: number | undefined, page: number | undefined, stage?:string }) => {
+  return await apiClient.get(`leads/?limit=${limit}&page=${page}&stage=${stage}`)
 }
 
-export const FuzzySearchLeads = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
-    return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}`)
+export const FuzzySearchLeads = async ({ searchString, limit, page,stage }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
+  return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
 }
 
 
-export const CreateOrUpdateLead = async ({ id, body }: { body: FormData, id?: string}) => {
-  if(id){
+export const CreateOrUpdateLead = async ({ id, body }: { body: FormData, id?: string }) => {
+  if (id) {
     return await apiClient.put(`leads/${id}`, body)
   }
   return await apiClient.post("leads", body)
@@ -35,12 +35,12 @@ export const CreateOrEditRemark = async ({ body, lead_id, remark_id }: {
   },
   lead_id?: string,
   remark_id?: string
-  
+
 }) => {
-  if(lead_id){
+  if (lead_id) {
     return await apiClient.patch(`remarks/leads/${lead_id}`, body)
   }
-    return await apiClient.put(`remarks/${remark_id}`, body)
+  return await apiClient.put(`remarks/${remark_id}`, body)
 }
 
 
@@ -86,9 +86,9 @@ export const GetAllStates = async () => {
 }
 
 
-export const CreateOrEditState = async ({ body,id }: {
-    body:{ state: string }
-    id?: string
+export const CreateOrEditState = async ({ body, id }: {
+  body: { state: string }
+  id?: string
 }) => {
   if (id) {
     return await apiClient.put(`crm/states/${id}`, body)
@@ -112,7 +112,7 @@ export const GetAllCities = async () => {
 
 
 export const CreateOrEditCity = async ({ body, id }: {
-  body: { state: string,city:string }
+  body: { state: string, city: string }
   id?: string
 
 }) => {
@@ -193,4 +193,21 @@ export const CreateOrEditLeadType = async ({ body, id }: {
 
 export const DeleteLeadType = async (id: string) => {
   return await apiClient.delete(`crm/leadtypes/${id}`)
+}
+
+export const ReferLead = async ({ id, body }: { id: string, body: { party_id: string, remark: string } }) => {
+  return await apiClient.post(`refers/leads/${id}`, body)
+}
+export const RemoveReferLead = async ({ id, body }: { id: string, body: { remark: string } }) => {
+  return await apiClient.patch(`refers/leads/${id}`, body)
+}
+
+export const AssignCRMStatesToUsers = async ({ body }: {
+  body: {
+    user_ids: string[],
+    state_ids: string[],
+    flag: number
+  }
+}) => {
+  return await apiClient.patch(`crm/states/assign`, body)
 }

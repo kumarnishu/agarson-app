@@ -1,7 +1,7 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
+import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../popup/PopUp'
 import { Edit } from '@mui/icons-material'
 import { UserContext } from '../../contexts/userContext'
@@ -135,7 +135,7 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                                     <IconButton
                                                                         onClick={() => {
                                                                             setState(state)
-                                                                            setChoice({ type: UserChoiceActions.update_state })
+                                                                            setChoice({ type: LeadChoiceActions.create_or_edit_state })
                                                                         }}
 
                                                                     >
