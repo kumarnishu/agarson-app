@@ -381,7 +381,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                 </IconButton>
                               </Tooltip>}
 
-                            {user?.crm_access_fields.is_deletion_allowed && !lead.is_customer &&
+                            {user?.crm_access_fields.is_deletion_allowed  &&
                               <Tooltip title="delete">
                                 <IconButton color="error"
                                   onClick={() => {

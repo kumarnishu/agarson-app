@@ -129,7 +129,7 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
 
                                       
                                         {/* actions */}
-                                        {user?.user_access_fields.is_editable &&
+                                      
                                             <STableCell style={{ width: '50' }}>
                                                 <PopUp
                                                     element={
@@ -149,7 +149,7 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                                     </Tooltip>
                                                                 }
 
-                                                                <Tooltip title="edit">
+                                                                {user?.crm_access_fields.is_editable && <Tooltip title="edit">
                                                                     <IconButton
                                                                         onClick={() => {
                                                                             setState(state)
@@ -159,14 +159,14 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                </Tooltip>}
 
                                                             </>
 
                                                         </Stack>}
                                                 />
 
-                                            </STableCell>}
+                                            </STableCell>
                                         <STableCell style={{width:'200px'}}>
                                             {state.state.state}
                                         </STableCell>

@@ -142,7 +142,7 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                                                     </Tooltip>
                                                                 }
 
-                                                            {user?.user_access_fields.is_editable && <Tooltip title="edit">
+                                                            {user?.crm_access_fields.is_editable && <Tooltip title="edit">
                                                                     <IconButton
                                                                         onClick={() => {
                                                                             setLeadSource(source)

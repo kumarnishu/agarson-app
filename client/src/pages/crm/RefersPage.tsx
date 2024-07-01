@@ -255,8 +255,8 @@ export default function RefersPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              < MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>
+              {LoggedInUser?.is_admin &&< MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditReferDialog  refer={undefined}/>

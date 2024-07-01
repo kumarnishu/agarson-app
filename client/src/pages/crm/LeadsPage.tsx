@@ -299,8 +299,8 @@ export default function LeadsPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              < MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>
+              {LoggedInUser?.is_admin&&< MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditLeadDialog lead={undefined} />

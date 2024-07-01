@@ -126,7 +126,7 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                                       
 
                                         {/* actions */}
-                                        {user?.user_access_fields.is_editable &&
+                                        
                                             <STableCell style={{ width: '50' }}>
                                                 <PopUp
                                                     element={
@@ -145,7 +145,7 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                                                                         </IconButton>
                                                                     </Tooltip>
                                                                 }
-                                                                <Tooltip title="edit">
+                                                                {user?.crm_access_fields.is_editable &&<Tooltip title="edit">
                                                                     <IconButton
                                                                         onClick={() => {
                                                                             setType(type)
@@ -155,14 +155,14 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                </Tooltip>}
 
                                                             </>
 
                                                         </Stack>}
                                                 />
 
-                                            </STableCell>}
+                                            </STableCell>
                                         <STableCell style={{ width: '200px' }}>
                                             {type.type}
                                         </STableCell>

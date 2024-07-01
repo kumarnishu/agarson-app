@@ -125,7 +125,7 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
 
 
                                         {/* actions */}
-                                        {user?.crm_access_fields.is_editable &&
+                                     
                                             <STableCell style={{ width: '50' }}>
                                                 <PopUp
                                                     element={
@@ -145,7 +145,7 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                                                         </IconButton>
                                                                     </Tooltip>
                                                                 }
-                                                                <Tooltip title="edit">
+                                                                {user?.crm_access_fields.is_editable &&<Tooltip title="edit">
                                                                     <IconButton
                                                                         onClick={() => {
                                                                             setStage(stage)
@@ -155,14 +155,14 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                </Tooltip>}
 
                                                             </>
 
                                                         </Stack>}
                                                 />
 
-                                            </STableCell>}
+                                            </STableCell>
                                         <STableCell style={{ width: '200px' }}>
                                             {stage.stage}
                                         </STableCell>
