@@ -60,10 +60,13 @@ export const UpdateCRMLeadTypes = async (req: Request, res: Response, next: Next
     if (type !== oldtype.type)
         if (await LeadType.findOne({ type: type.toLowerCase() }))
             return res.status(400).json({ message: "already exists this type" })
+    let prevtype=oldtype.type
     oldtype.type = type
     oldtype.updated_at = new Date()
     if (req.user)
         oldtype.updated_by = req.user
+    await Lead.updateMany({ type: prevtype }, { type: type })
+    await ReferredParty.updateMany({ type: prevtype }, { type: type })
     await oldtype.save()
     return res.status(200).json(oldtype)
 
@@ -120,10 +123,13 @@ export const UpdateCRMLeadSource = async (req: Request, res: Response, next: Nex
     if (source !== oldsource.source)
         if (await LeadSource.findOne({ source: source.toLowerCase() }))
             return res.status(400).json({ message: "already exists this source" })
+    let prevsource=oldsource.source
     oldsource.source = source
     oldsource.updated_at = new Date()
     if (req.user)
         oldsource.updated_by = req.user
+    await Lead.updateMany({ source: prevsource }, { source: source })
+    await ReferredParty.updateMany({ source: prevsource }, { source: source })
     await oldsource.save()
     return res.status(200).json(oldsource)
 
@@ -180,10 +186,13 @@ export const UpdateCRMLeadStages = async (req: Request, res: Response, next: Nex
     if (stage !== oldstage.stage)
         if (await Stage.findOne({ stage: stage.toLowerCase() }))
             return res.status(400).json({ message: "already exists this stage" })
+    let prevstage=oldstage.stage
     oldstage.stage = stage
     oldstage.updated_at = new Date()
     if (req.user)
         oldstage.updated_by = req.user
+    await Lead.updateMany({ stage: prevstage }, { stage: stage })
+    await ReferredParty.updateMany({ stage: prevstage }, { stage: stage })
     await oldstage.save()
     return res.status(200).json(oldstage)
 
@@ -285,10 +294,15 @@ export const UpdateCRMState = async (req: Request, res: Response, next: NextFunc
     if (state !== oldstate.state)
         if (await CRMState.findOne({ state: state.toLowerCase() }))
             return res.status(400).json({ message: "already exists this state" })
+    let prevstate=oldstate.state
     oldstate.state = state
     oldstate.updated_at = new Date()
     if (req.user)
         oldstate.updated_by = req.user
+
+    await Lead.updateMany({ state: prevstate }, { state: state })
+    await ReferredParty.updateMany({ state: prevstate }, { state: state })
+
     await oldstate.save()
     return res.status(200).json(oldstate)
 

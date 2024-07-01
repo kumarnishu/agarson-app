@@ -7,7 +7,6 @@ import { UserContext } from '../../../contexts/userContext'
 import PopUp from '../../popup/PopUp'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import CreateOrEditReferDialog from '../../dialogs/crm/CreateOrEditReferDialog'
-import DeleteReferDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 import { ILead, IReferredParty } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 

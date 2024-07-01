@@ -14,7 +14,6 @@ import CreateOrEditRemarkDialog from '../../dialogs/crm/CreateOrEditRemarkDialog
 import ViewRemarksDialog from '../../dialogs/crm/ViewRemarksDialog'
 import ReferLeadDialog from '../../dialogs/crm/ReferLeadDialog'
 import RemoveLeadReferralDialog from '../../dialogs/crm/RemoveLeadReferralDialog'
-import { DeleteCrmItem } from '../../../services/LeadsServices'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 
 

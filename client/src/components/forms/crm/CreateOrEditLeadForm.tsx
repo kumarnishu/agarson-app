@@ -5,13 +5,13 @@ import { useEffect, useContext, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { CreateOrUpdateLead, GetAllLeadTypes, GetAllSources, GetAllStages, GetAllStates } from '../../../services/LeadsServices';
+import { CreateOrUpdateLead, GetAllLeadTypes, GetAllSources, GetAllStates } from '../../../services/LeadsServices';
 import { Countries } from '../../../utils/countries';
 import { Cities } from '../../../utils/cities';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { ILead, ILeadSource, ILeadType, IStage } from '../../../types/crm.types';
+import { ILead, ILeadSource, ILeadType } from '../../../types/crm.types';
 import { IState, IUser } from '../../../types/user.types';
 import { toTitleCase } from '../../../utils/TitleCase';
 
@@ -39,9 +39,9 @@ export type TformData = {
 
 function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
     const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
-  
-    const [types, setTypes] = useState < ILeadType[]>([])
-    const [sources, setSources] = useState <ILeadSource[]>([])
+
+    const [types, setTypes] = useState<ILeadType[]>([])
+    const [sources, setSources] = useState<ILeadSource[]>([])
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<ILead>, BackendError, { body: FormData, id?: string }>
         (CreateOrUpdateLead, {
@@ -49,12 +49,12 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                 queryClient.invalidateQueries('leads')
             }
         })
-   
-    const { data:typesdata, isSuccess:isTypeSuccess } = useQuery<AxiosResponse<ILeadType[]>, BackendError>("crm_types", GetAllLeadTypes)
 
-    const { data:sourcedata, isSuccess:isSourceSuccess } = useQuery<AxiosResponse<ILeadSource[]>, BackendError>("crm_sources", GetAllSources)
+    const { data: typesdata, isSuccess: isTypeSuccess } = useQuery<AxiosResponse<ILeadType[]>, BackendError>("crm_types", GetAllLeadTypes)
 
-    const { data, isSuccess:isStateSuccess } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
+    const { data: sourcedata, isSuccess: isSourceSuccess } = useQuery<AxiosResponse<ILeadSource[]>, BackendError>("crm_sources", GetAllSources)
+
+    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
 
 
     const { setChoice } = useContext(ChoiceContext)
@@ -172,7 +172,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
         }
     }, [isSuccess, states, data])
 
-  
+
     useEffect(() => {
         if (isSourceSuccess) {
             setSources(sourcedata?.data)
@@ -435,7 +435,9 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     }
                     {...formik.getFieldProps('state')}
                 >
-                   
+                    <option key={0} value={undefined}>
+                        Select State
+                    </option>
                     {
                         states.map(state => {
                             return (<option key={state.state._id} value={state.state.state}>
@@ -445,7 +447,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     }
                 </TextField>
 
-               
+
 
                 {/* lead type */}
                 < TextField
@@ -478,7 +480,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     }
                 </TextField>
 
-            
+
 
                 < TextField
                     select
@@ -637,7 +639,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
             {
                 isError ? (
                     <>
-                        { <AlertBar message={error?.response.data.message} color="error" />}
+                        {<AlertBar message={error?.response.data.message} color="error" />}
                     </>
                 ) : null
             }

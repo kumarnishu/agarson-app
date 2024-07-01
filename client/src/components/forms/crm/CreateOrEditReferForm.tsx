@@ -177,7 +177,8 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
                     }
                     {...formik.getFieldProps('city')}
                 >
-                    <option value="">
+                    <option key={0} value={undefined}>
+                        Select City
                     </option>
                     {
                         Cities.map((city, index) => {
@@ -212,8 +213,8 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
                     }
                     {...formik.getFieldProps('state')}
                 >
-                    <option value="">
-
+                    <option key={0} value={undefined}>
+                        Select State
                     </option>
                     {
                         States.map(state => {

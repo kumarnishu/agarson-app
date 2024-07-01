@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import {  useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import { IRemark } from '../../../types/crm.types'
 import { DownloadFile } from '../../../utils/DownloadFile'
@@ -13,7 +13,7 @@ type Props = {
     remarks: IRemark[]
 }
 
-function ActivitiesTable({  remarks }: Props) {
+function ActivitiesTable({ remarks }: Props) {
     const [data, setData] = useState<IRemark[]>(remarks)
 
     useEffect(() => {
@@ -70,7 +70,7 @@ function ActivitiesTable({  remarks }: Props) {
 
 
 
-                          
+
 
                             <STableHeadCell
                             >
@@ -264,10 +264,10 @@ function ActivitiesTable({  remarks }: Props) {
 
                                         </STableCell>
                                         <STableCell>
-                                            {remark.lead.stage}
+                                            {remark.lead && remark.lead.stage && remark.lead.stage}
                                         </STableCell>
                                         <STableCell>
-                                            {remark.remind_date?new Date(remark.remind_date).toLocaleDateString():"na"}
+                                            {remark.remind_date ? new Date(remark.remind_date).toLocaleDateString() : "na"}
                                         </STableCell>
                                         <STableCell>
                                             {remark.lead.has_card ? 'Visiting card available' : "na"}
@@ -277,7 +277,7 @@ function ActivitiesTable({  remarks }: Props) {
                                         </STableCell>
 
 
-                                       
+
 
 
                                         <STableCell>
