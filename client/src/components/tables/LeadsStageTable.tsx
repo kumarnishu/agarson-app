@@ -70,12 +70,7 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                 Stage
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Assigned Users
-
-                            </STableHeadCell>
+                         
 
 
 
