@@ -295,7 +295,7 @@ export default function LeadsPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              {/* <MenuItem
+              <MenuItem
                 onClick={() => {
                   if (selectedLeads.length === 0)
                     alert("please select some leads")
@@ -305,8 +305,8 @@ export default function LeadsPage() {
                 }}
               > Assign Leads</MenuItem>
 
-              < MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem> */}
+              {LoggedInUser?.is_admin &&< MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <NewLeadDialog />

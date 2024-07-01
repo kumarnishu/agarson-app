@@ -290,8 +290,8 @@ export default function ReferralPartyPage() {
                                     }}
                                 > Assign Refers</MenuItem>}
 
-                            {/* <MenuItem onClick={handleExcel}
-                            >Export To Excel</MenuItem> */}
+                            {LoggedInUser?.is_admin && <MenuItem onClick={handleExcel}
+                            >Export To Excel</MenuItem>}
 
                         </Menu>
                         <CreateReferDialog />
