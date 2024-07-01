@@ -310,8 +310,8 @@ export default function CustomersPage() {
                   }}
                 > Assign customers</MenuItem>}
 
-              < MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>
+              {/* < MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem> */}
 
             </Menu >
             <NewLeadDialog />

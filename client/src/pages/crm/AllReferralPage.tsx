@@ -65,11 +65,11 @@ function AllReferralPage({ leads }: { leads: ILead[] }) {
       {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
       <Box>
-        <Button fullWidth variant="outlined" color="success"
+        {/* <Button fullWidth variant="outlined" color="success"
           onClick={() => {
             handleExcel()
           }}
-        >Export To Excel</Button>
+        >Export To Excel</Button> */}
         <Box>
           {leads && leads.map((lead, index) => {
             return (

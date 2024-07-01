@@ -320,8 +320,8 @@ export default function UselessLeadsPage() {
                   }}
                 > Assign Useless</MenuItem>}
 
-              < MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>
+              {/* < MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem> */}
 
             </Menu >
             <NewLeadDialog />
