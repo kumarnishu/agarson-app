@@ -6,11 +6,13 @@ import { ILead, ILeadTemplate } from "../../types/crm.types"
 import NewRemarkDialog from "../../components/dialogs/crm/NewRemarkDialog"
 import ViewRemarksDialog from "../../components/dialogs/crm/ViewRemarksDialog"
 import { ChoiceContext, LeadChoiceActions } from "../../contexts/dialogContext"
+import { UserContext } from "../../contexts/userContext"
 
 function AllReferralPage({ leads }: { leads: ILead[] }) {
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>([])
   const [selectedlead, setSelectedLead] = useState<ILead>()
   const [sent, setSent] = useState(false)
+  const { user: LoggedInUser } = useContext(UserContext)
   const { setChoice } = useContext(ChoiceContext)
   function handleExcel() {
     try {
@@ -65,11 +67,11 @@ function AllReferralPage({ leads }: { leads: ILead[] }) {
       {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
       <Box>
-        {/* <Button fullWidth variant="outlined" color="success"
+        {LoggedInUser?.is_admin && <Button fullWidth variant="outlined" color="success"
           onClick={() => {
             handleExcel()
           }}
-        >Export To Excel</Button> */}
+        >Export To Excel</Button>}
         <Box>
           {leads && leads.map((lead, index) => {
             return (
