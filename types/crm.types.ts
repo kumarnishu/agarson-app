@@ -78,6 +78,7 @@ export type ILead = {
     customer_designation: string,
     mobile: string,
     gst: string,
+    has_card:boolean,
     email: string,
     city: string,
     state: string,

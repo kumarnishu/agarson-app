@@ -73,18 +73,23 @@ function AssignCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:num
 
     useEffect(() => {
         if (isSuccess) {
-            setChoice({ type: LeadChoiceActions.close_lead })
+            setChoice({ type: LeadChoiceActions.close_lead });
+            formik.setValues({ user_ids: [], state_ids: [] }) ;
         }
-    }, [isSuccess, setChoice])
+    }, [isSuccess])
     return (
         <Dialog
             fullWidth
             open={choice === LeadChoiceActions.bulk_assign_crm_states ? true : false}
             onClose={() => {
-                setChoice({ type: LeadChoiceActions.close_lead })
+                setChoice({ type: LeadChoiceActions.close_lead });
+                formik.setValues({ user_ids: [], state_ids: [] });
             }}
         >
-            <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
+            <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => {
+                setChoice({ type: LeadChoiceActions.close_lead });
+                formik.setValues({ user_ids: [], state_ids: [] });
+            }}>
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">

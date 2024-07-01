@@ -445,9 +445,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     }
                     {...formik.getFieldProps('state')}
                 >
-                    <option value="">
-
-                    </option>
+                   
                     {
                         states.map(state => {
                             return (<option key={state.state._id} value={state.state.state}>
@@ -570,6 +568,9 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     }
                     {...formik.getFieldProps('country')}
                 >
+                    <option value="india">
+                        India
+                    </option>
                     {
                         Countries.map(country => {
                             return (<option key={country.unicode} value={country.name}>

@@ -105,6 +105,7 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         default:"internet"
     },
     is_sent: { type: Boolean, default: false },
+    has_card: { type: Boolean, default: false },
     last_whatsapp: Date,
     remarks: [{
         type: mongoose.Schema.Types.ObjectId,

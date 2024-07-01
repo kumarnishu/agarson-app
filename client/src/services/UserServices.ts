@@ -72,7 +72,7 @@ export const BlockUser = async (id: string) => {
   return await apiClient.patch(`block/user/${id}`)
 }
 export const ToogleSHowVisitingCard = async (id: string) => {
-  return await apiClient.patch(`tooglevisitingcardleads/user/:id/${id}`)
+  return await apiClient.patch(`tooglevisitingcardleads/user/${id}`)
 }
 
 

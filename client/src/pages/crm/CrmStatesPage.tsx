@@ -79,7 +79,7 @@ export default function CrmStatesPage() {
       setStates(data.data)
       setPreFilteredData(data.data)
     }
-  }, [isSuccess, states, data])
+  }, [isSuccess, data])
 
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export default function CrmStatesPage() {
     if (!filter)
       setStates(preFilteredData)
 
-  }, [filter, states])
+  }, [filter])
   return (
     <>
       {

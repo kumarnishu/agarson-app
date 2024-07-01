@@ -94,6 +94,7 @@ export type ILead = {
     lead_source: string
     remarks: IRemark[]
     visiting_card: Asset,
+    has_card: boolean,
     is_customer: boolean,
     last_whatsapp: Date,
     is_sent:boolean,
