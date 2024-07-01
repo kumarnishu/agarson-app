@@ -1,32 +1,32 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
+import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../popup/PopUp'
 import { Edit } from '@mui/icons-material'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { IState, IUser } from '../../types/user.types'
-import CreateOrEditStateDialog from '../dialogs/crm/CreateOrEditStateDialog'
+import CreateOrEditLeadSourceDialog from '../dialogs/crm/CreateOrEditLeadSourceDialog'
+import { ILeadSource } from '../../types/crm.types'
 
 
 type Props = {
-    state: { state: IState, users: IUser[] } | undefined,
-    setState: React.Dispatch<React.SetStateAction<{ state: IState, users: IUser[] } | undefined>>,
+    source:ILeadSource | undefined,
+    setLeadSource: React.Dispatch<React.SetStateAction<ILeadSource | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    states: { state: IState, users: IUser[] }[],
-    selectedStates: { state: IState, users: IUser[] }[]
-    setSelectedStates: React.Dispatch<React.SetStateAction<{ state: IState, users: IUser[] }[]>>,
+    sources:ILeadSource[],
+    selectedLeadSources:ILeadSource[]
+    setSelectedLeadSources: React.Dispatch<React.SetStateAction<ILeadSource[]>>,
 }
-function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
-    const [data, setData] = useState<{ state: IState, users: IUser[] }[]>(states)
+function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLeadSource, selectedLeadSources, setSelectedLeadSources }: Props) {
+    const [data, setData] = useState<ILeadSource[]>(sources)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
-            setData(states)
-    }, [states, data])
+            setData(sources)
+    }, [sources, data])
     return (
         <>
             <Box sx={{
@@ -42,16 +42,16 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                             >
 
 
-                                <Checkbox  sx={{ width: 16, height: 16 }}
+                                <Checkbox sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
                                         if (e.currentTarget.checked) {
-                                            setSelectedStates(states)
+                                            setSelectedLeadSources(sources)
                                             setSelectAll(true)
                                         }
                                         if (!e.currentTarget.checked) {
-                                            setSelectedStates([])
+                                            setSelectedLeadSources([])
                                             setSelectAll(false)
                                         }
                                     }} />
@@ -67,34 +67,29 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                             <STableHeadCell style={{ width: '200px' }}
                             >
 
-                                State
+                                LeadSource
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                              Assigned Users
-
-                            </STableHeadCell>
-
                           
-                          
+
+
+
 
                         </STableRow>
                     </STableHead>
                     <STableBody >
                         {
-                            states && states.map((state, index) => {
+                            sources && sources.map((source, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedStates.length > 0 && selectedStates.find((t) => t.state._id === state.state._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedLeadSources.length > 0 && selectedLeadSources.find((t) => t._id === source._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
                                             <STableCell style={{ width: '50px' }}>
 
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -106,15 +101,17 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                         {!selectAll ?
                                             <STableCell style={{ width: '50px' }}>
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} 
+                                                size="small"
+                                                    checked={selectedLeadSources.length > 0 && selectedLeadSources.find((t) => t._id === source._id) ? true : false}
                                                     onChange={(e) => {
-                                                        setState(state)
+                                                        setLeadSource(source)
                                                         if (e.target.checked) {
-                                                            setSelectedStates([...selectedStates, state])
+                                                            setSelectedLeadSources([...selectedLeadSources, source])
                                                         }
                                                         if (!e.target.checked) {
-                                                            setSelectedStates((states) => states.filter((item) => {
-                                                                return item.state._id !== state.state._id
+                                                            setSelectedLeadSources((sources) => sources.filter((item) => {
+                                                                return item._id !== source._id
                                                             }))
                                                         }
                                                     }}
@@ -134,8 +131,8 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                                 <Tooltip title="edit">
                                                                     <IconButton
                                                                         onClick={() => {
-                                                                            setState(state)
-                                                                            setChoice({ type: UserChoiceActions.update_state })
+                                                                            setLeadSource(source)
+                                                                            setChoice({ type: LeadChoiceActions.create_or_edit_source })
                                                                         }}
 
                                                                     >
@@ -149,22 +146,20 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                 />
 
                                             </STableCell>}
-                                        <STableCell style={{width:'200px'}}>
-                                            {state.state.state}
+                                        <STableCell style={{ width: '200px' }}>
+                                            {source.source}
                                         </STableCell>
-                                        <STableCell>
-                                            {state.users.map((u) => { return u.username }).toString()}
-                                        </STableCell>
-                                                                  
+                                      
+
                                     </STableRow>
                                 )
                             })}
                     </STableBody>
                 </STable>
-               <CreateOrEditStateDialog state={state?.state}/>
+                <CreateOrEditLeadSourceDialog source={source} />
             </Box>
         </>
     )
 }
 
-export default LeadsStateTable
+export default LeadsLeadSourceTable

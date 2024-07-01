@@ -14,8 +14,8 @@ type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
 
-type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead"  | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals"   |"view_card_comments"|
-   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "update_card" | "refer_card" | "toogle_card" | "add_card_comment"
+type LeadChoices = "create_or_edit_refer" | "create_or_edit_source" | "delete_stage" | "view_remarks" | "close_lead" | "create_or_edit_leadtype" | "delete_lead"  | "delete_leadtype" | "create_refer" | "delete_source" | "delete_refer" | "view_referrals"   |"delete_crm_state"|
+   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "toogle_card" | "add_card_comment"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
 
@@ -107,21 +107,21 @@ export enum TemplateChoiceActions {
 
 export enum LeadChoiceActions {
   create_or_edit_lead = "create_or_edit_lead",
-  update_card = "update_card",
-  view_card_comments ="view_card_comments",
-  refer_card = "refer_card",
-  create_lead = "create_lead",
-  update_lead = "update_lead",
+  create_or_edit_state = "create_or_edit_state",
+  delete_crm_state ="delete_crm_state",
+  create_or_edit_stage = "create_or_edit_stage",
+  create_or_edit_refer = "create_or_edit_refer",
+  create_or_edit_source = "create_or_edit_source",
   delete_lead = "delete_lead",
   delete_remark = "delete_remark",
   create_or_edt_remark = "create_or_edt_remark",
   view_remarks = "view_remarks",
   close_lead = "close_lead",
-  display_filter = "display_filter",
-  add_remark = "add_remark",
-  lead_advance_filter = "lead_advance_filter",
+  create_or_edit_leadtype = "create_or_edit_leadtype",
+  delete_stage = "delete_stage",
+  delete_leadtype = "delete_leadtype",
   create_refer = "create_refer",
-  update_refer = "update_refer",
+  delete_source = "delete_source",
   delete_refer = "delete_refer",
   view_referrals = "view_referrals",
   refer_lead = "refer_lead",
@@ -199,16 +199,16 @@ function reducer(state: ChoiceState | null, action: Action) {
     case UserChoiceActions.bulk_assign_states: return type
 
     // lead dialog choices
-    case LeadChoiceActions.create_lead: return type
-    case LeadChoiceActions.update_lead: return type
+    case LeadChoiceActions.create_or_edit_refer: return type
+    case LeadChoiceActions.create_or_edit_source: return type
     case LeadChoiceActions.view_remarks: return type
-    case LeadChoiceActions.add_remark: return type
-    case LeadChoiceActions.display_filter: return type
+    case LeadChoiceActions.delete_stage: return type
+    case LeadChoiceActions.create_or_edit_leadtype: return type
     case LeadChoiceActions.delete_lead: return type
-    case LeadChoiceActions.lead_advance_filter: return type
+    case LeadChoiceActions.delete_leadtype: return type
     case LeadChoiceActions.close_lead: return type
     case LeadChoiceActions.create_refer: return type
-    case LeadChoiceActions.update_refer: return type
+    case LeadChoiceActions.delete_source: return type
     case LeadChoiceActions.delete_refer: return type
     case LeadChoiceActions.view_referrals: return type
     case LeadChoiceActions.refer_lead: return type
@@ -219,11 +219,11 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.bulk_assign_leads: return type
     case LeadChoiceActions.bulk_assign_refers: return type
     case LeadChoiceActions.create_or_edit_lead: return type
-    case LeadChoiceActions.update_card: return type
-    case LeadChoiceActions.refer_card: return type
+    case LeadChoiceActions.create_or_edit_state: return type
+    case LeadChoiceActions.create_or_edit_stage: return type
     case LeadChoiceActions.toogle_card: return type
     case LeadChoiceActions.add_card_comment: return type
-    case LeadChoiceActions.view_card_comments: return type
+    case LeadChoiceActions.delete_crm_state: return type
 
     //production choice actios
     case ProductionChoiceActions.create_machine: return type

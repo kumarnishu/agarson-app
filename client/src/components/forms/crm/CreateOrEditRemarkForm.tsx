@@ -120,7 +120,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: ILead, r
 
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
-                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Add Remark"}
+                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : !remark ? "Add Remark" : "Update Remark"}
                 </Button>
             </Stack>
 

@@ -10,47 +10,46 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import { ChoiceContext, LeadChoiceActions, } from '../../contexts/dialogContext'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
-import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { IState, IUser } from '../../types/user.types'
-import { ICRMStateTemplate } from '../../types/template.type'
-import LeadsStateTable from '../../components/tables/LeadsStateTable'
-import { GetAllStates } from '../../services/LeadsServices'
-import CreateOrEditStateDialog from '../../components/dialogs/crm/CreateOrEditStateDialog'
-import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
+import CreateOrEditLeadSourceDialog from '../../components/dialogs/crm/CreateOrEditLeadSourceDialog'
+import { ILeadSource } from '../../types/crm.types'
+import { GetAllSources } from '../../services/LeadsServices'
+import LeadsLeadSourceTable from '../../components/tables/LeadsSourceTable'
 
-
-let template: ICRMStateTemplate[] = [
+type ITemplate = {
+  _id: string,
+  source: string
+}
+let template: ITemplate[] = [
   {
-    _id: "",
-    state: "delhi"
+    _id: "qeqq6g54",
+    source: "internet"
   }
 ]
 
-export default function CrmStatesPage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
-  const [state, setState] = useState<{ state: IState, users: IUser[] }>()
-  const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
+export default function CrmLeadSourcesPage() {
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<ILeadSource[]>, BackendError>("crm_sources", GetAllSources)
+  const [source, setLeadSource] = useState<ILeadSource>()
+  const [sources, setLeadSources] = useState<ILeadSource[]>([])
   const [selectAll, setSelectAll] = useState(false)
-  const MemoData = React.useMemo(() => states, [states])
-  const [preFilteredData, setPreFilteredData] = useState<{ state: IState, users: IUser[] }[]>([])
-  const [selectedStates, setSelectedStates] = useState<{ state: IState, users: IUser[] }[]>([])
+  const MemoData = React.useMemo(() => sources, [sources])
+  const [preFilteredData, setPreFilteredData] = useState<ILeadSource[]>([])
+  const [selectedLeadSources, setSelectedLeadSources] = useState<ILeadSource[]>([])
   const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<ICRMStateTemplate[]>(template)
+  const [selectedData, setSelectedData] = useState<ITemplate[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { user: LoggedInUser } = useContext(UserContext)
 
 
   function handleExcel() {
     setAnchorEl(null)
     try {
-      ExportToExcel(selectedData, "crm_states_data")
+      ExportToExcel(selectedData, "crm_sources_data")
       setSent(true)
       setSelectAll(false)
       setSelectedData([])
-      setSelectedStates([])
+      setSelectedLeadSources([])
     }
     catch (err) {
       console.log(err)
@@ -60,40 +59,39 @@ export default function CrmStatesPage() {
 
   // refine data
   useEffect(() => {
-    let data: ICRMStateTemplate[] = []
-    selectedStates.map((state) => {
+    let data: ITemplate[] = []
+    selectedLeadSources.map((source) => {
       return data.push({
-        _id:state.state._id,
-        state: state.state.state,
-        users: state.users.map((u) => { return u.username }).toString()
+        _id: source._id,
+        source: source.source,
       })
     })
     if (data.length > 0)
       setSelectedData(data)
-  }, [selectedStates])
+  }, [selectedLeadSources])
 
   useEffect(() => {
     if (isSuccess) {
-      setStates(data.data)
+      setLeadSources(data.data)
       setPreFilteredData(data.data)
     }
-  }, [isSuccess, states, data])
+  }, [isSuccess, sources, data])
 
 
   useEffect(() => {
     if (filter) {
-      if (states) {
-        const searcher = new FuzzySearch(states, ["state.state", "users.username"], {
+      if (sources) {
+        const searcher = new FuzzySearch(sources, ["source", "users.username"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);
-        setStates(result)
+        setLeadSources(result)
       }
     }
     if (!filter)
-      setStates(preFilteredData)
+      setLeadSources(preFilteredData)
 
-  }, [filter, states])
+  }, [filter, sources])
   return (
     <>
       {
@@ -113,7 +111,7 @@ export default function CrmStatesPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          States {selectedStates.length > 0 ? <span>(checked : {selectedStates.length})</span> : ''}
+          LeadSources {selectedLeadSources.length > 0 ? <span>(checked : {selectedLeadSources.length})</span> : ''}
         </Typography>
 
         <TextField
@@ -125,11 +123,11 @@ export default function CrmStatesPage() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <Search sx={{ cursor: 'pointer' }}/>
+                <Search sx={{ cursor: 'pointer' }} />
               </InputAdornment>
             ),
           }}
-          placeholder={`Search States `}
+          placeholder={`Search LeadSources `}
           style={{
             fontSize: '1.1rem',
             border: '0',
@@ -140,7 +138,7 @@ export default function CrmStatesPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMStatesFromExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
+            {/* {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMLeadSourcesFromExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />} */}
           </Stack >
           <>
 
@@ -168,34 +166,34 @@ export default function CrmStatesPage() {
             >
               <MenuItem
                 onClick={() => {
-                  setChoice({ type: LeadChoiceActions.create_or_edit_state })
-                  setState(undefined)
+                  setChoice({ type: LeadChoiceActions.create_or_edit_source })
+                  setLeadSource(undefined)
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              
+
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
             </Menu >
-            <CreateOrEditStateDialog  />
+            <CreateOrEditLeadSourceDialog />
           </>
         </Stack >
       </Stack >
       {/*  table */}
       {isLoading && <TableSkeleton />}
       {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && MemoData.length >0&&
-        <LeadsStateTable
-          state={state}
+      {!isLoading && MemoData.length > 0 &&
+        <LeadsLeadSourceTable
+          source={source}
           selectAll={selectAll}
-          selectedStates={selectedStates}
-          setSelectedStates={setSelectedStates}
+          selectedLeadSources={selectedLeadSources}
+          setSelectedLeadSources={setSelectedLeadSources}
           setSelectAll={setSelectAll}
-          states={MemoData}
-          setState={setState}
+          sources={MemoData}
+          setLeadSource={setLeadSource}
         />}
-     
+
     </>
 
   )

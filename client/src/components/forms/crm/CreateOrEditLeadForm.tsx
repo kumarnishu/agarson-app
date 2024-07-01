@@ -105,7 +105,6 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
             alternate_mobile2: Yup.string()
                 .min(10, 'Must be 10 digits')
                 .max(10, 'Must be 10 digits'),
-            is_customer: Yup.boolean(),
             visiting_card: Yup.mixed<File>()
                 .test("size", "size is allowed only less than 10mb",
                     file => {

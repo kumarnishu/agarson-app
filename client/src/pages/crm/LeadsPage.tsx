@@ -15,8 +15,6 @@ import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { GetUsers } from '../../services/UserServices'
-import { IUser } from '../../types/user.types'
 import { ILeadTemplate } from '../../types/template.type'
 import { ILead } from '../../types/crm.types'
 import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
@@ -49,7 +47,6 @@ let template: ILeadTemplate[] = [
 
 export default function LeadsPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
-  const [users, setUsers] = useState<IUser[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<ILead>()
@@ -60,9 +57,8 @@ export default function LeadsPage() {
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
-  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page }))
 
-  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+  const { data, isLoading } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page }))
 
   const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
@@ -121,10 +117,6 @@ export default function LeadsPage() {
       setSelectedData(data)
   }, [selectedLeads])
 
-  useEffect(() => {
-    if (isUsersSuccess)
-      setUsers(usersData?.data)
-  }, [users, isUsersSuccess, usersData])
 
   useEffect(() => {
     if (!filter) {
@@ -216,7 +208,7 @@ export default function LeadsPage() {
               </InputAdornment>
             ),
           }}
-          placeholder={`Search Keywords here like name,mobile,address,state,stage and press ENTER KEY`}
+          placeholder={`Search Leads `}
           style={{
             fontSize: '1.1rem',
             border: '0',

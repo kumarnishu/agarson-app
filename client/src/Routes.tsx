@@ -22,14 +22,14 @@ import BackupDashboard from './dashboards/BackupDashboard.tsx'
 import ErpReportsDashboard from './dashboards/ErpReportsDashboard.tsx'
 import TodoNavBar from './components/navbar/TodoNavbar.tsx'
 import TodoDashboard from './dashboards/TodoDashboard.tsx'
-import ReferPage from './pages/crm/ReferPage.tsx'
 import ActivitiesPage from './pages/crm/ActivitiesPage.tsx'
 import RemindersPage from './pages/crm/RemindersPage.tsx'
 import CitiesPage from './pages/crm/CitiesPage.tsx'
-import LeadSourcePage from './pages/crm/LeadSourcePage.tsx'
-import StagesPage from './pages/crm/StagesPage.tsx'
 import CrmStatesPage from './pages/crm/CrmStatesPage.tsx'
-import LeadTypes from './pages/crm/LeadTypes.tsx'
+import RefersPage from './pages/crm/RefersPage.tsx'
+import CrmLeadSourcesPage from './pages/crm/CrmSourcePage.tsx'
+import CrmStagesPage from './pages/crm/CrmStagesPage.tsx'
+import CrmTypesPage from './pages/crm/CrmleadTypesPage.tsx'
 const StatesPage = React.lazy(() => import('./pages/users/StatesPage.tsx'))
 const PendingOrdersReportPage = React.lazy(() => import('./pages/erp reports/PendingOrdersReport.tsx'))
 const ClientSaleReportPage = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPage.tsx'))
@@ -304,7 +304,7 @@ function AppRoutes() {
               }
               />
               <Route path={paths.refers} index element={
-                <Suspense fallback={<LinearProgress />}><ReferPage /></Suspense>
+                <Suspense fallback={<LinearProgress />}><RefersPage /></Suspense>
               }
               />
               <Route path={paths.crm_activities} index element={
@@ -320,11 +320,11 @@ function AppRoutes() {
               }
               />
               <Route path={paths.crm_leadsources} index element={
-                <Suspense fallback={<LinearProgress />}><LeadSourcePage /></Suspense>
+                <Suspense fallback={<LinearProgress />}><CrmLeadSourcesPage /></Suspense>
               }
               />
               <Route path={paths.crm_stages} index element={
-                <Suspense fallback={<LinearProgress />}><StagesPage /></Suspense>
+                <Suspense fallback={<LinearProgress />}><CrmStagesPage /></Suspense>
               }
               />
               <Route path={paths.crm_states} index element={
@@ -332,7 +332,7 @@ function AppRoutes() {
               }
               />
               <Route path={paths.crm_leadtypes} index element={
-                <Suspense fallback={<LinearProgress />}><LeadTypes /></Suspense>
+                <Suspense fallback={<LinearProgress />}><CrmTypesPage /></Suspense>
               }
               />
                     

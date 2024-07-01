@@ -8,12 +8,197 @@ import { uploadFileToCloud } from "../utils/uploadFile.util.js"
 import { Types } from "mongoose"
 import { destroyFile } from "../utils/destroyFile.util.js"
 import { ReferredParty } from "../models/leads/referred.model.js"
-import { ICRMState, ILead, IReferredParty, IRemark, TLeadBody, TReferredPartyBody } from "../types/crm.types.js"
+import { ICRMCity, ICRMState, ILead, ILeadType, IReferredParty, IRemark, TLeadBody, TReferredPartyBody } from "../types/crm.types.js"
 import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
 import { CRMState } from "../models/leads/crm.state.model.js"
-import { ICRMCityTemplate, ICRMStateTemplate, ILeadTemplate } from "../types/template.type.js"
+import {  ICRMStateTemplate, ILeadTemplate, IReferTemplate } from "../types/template.type.js"
 import { SaveLeadMobilesToExcel, SaveLeadsToExcel } from "../utils/ExportToExcel.js"
+import { CRMCity } from "../models/leads/crm.city.model.js"
+import { LeadType } from "../models/leads/crm.leadtype.model.js"
+import { LeadSource } from "../models/leads/crm.source.model.js"
+import { Stage } from "../models/leads/crm.stage.model.js"
+
+
+//lead types
+export const GetAllCRMLeadTypes = async (req: Request, res: Response, next: NextFunction) => {
+    let types = await LeadType.find()
+    return res.status(200).json(types)
+}
+
+
+export const CreateCRMLeadTypes = async (req: Request, res: Response, next: NextFunction) => {
+    const { type } = req.body as {
+        type: string
+    }
+    if (!type) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    if (await LeadType.findOne({ type: type.toLowerCase() }))
+        return res.status(400).json({ message: "already exists this type" })
+    let result = await new LeadType({
+        type: type,
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save()
+    return res.status(201).json(result)
+
+}
+
+export const UpdateCRMLeadTypes = async (req: Request, res: Response, next: NextFunction) => {
+    const { type } = req.body as {
+        type: string
+    }
+    if (!type) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    const id = req.params.id
+    let oldtype = await LeadType.findById(id)
+    if (!oldtype)
+        return res.status(404).json({ message: "type not found" })
+    if (type !== oldtype.type)
+        if (await LeadType.findOne({ type: type.toLowerCase() }))
+            return res.status(400).json({ message: "already exists this type" })
+    oldtype.type = type
+    oldtype.updated_at = new Date()
+    if (req.user)
+        oldtype.updated_by = req.user
+    await oldtype.save()
+    return res.status(200).json(oldtype)
+
+}
+export const DeleteCRMLeadType = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "type id not valid" })
+    let type = await LeadType.findById(id);
+    if (!type) {
+        return res.status(404).json({ message: "type not found" })
+    }
+    await type.remove();
+    return res.status(200).json({ message: "lead type deleted successfully" })
+}
+
+
+//source types
+export const GetAllCRMLeadSources = async (req: Request, res: Response, next: NextFunction) => {
+    let sources = await LeadSource.find()
+    return res.status(200).json(sources)
+}
+
+
+export const CreateCRMLeadSource = async (req: Request, res: Response, next: NextFunction) => {
+    const { source } = req.body as {
+        source: string
+    }
+    if (!source) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    if (await LeadSource.findOne({ source: source.toLowerCase() }))
+        return res.status(400).json({ message: "already exists this source" })
+    let result = await new LeadSource({
+        source: source,
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save()
+    return res.status(201).json(result)
+
+}
+
+export const UpdateCRMLeadSource = async (req: Request, res: Response, next: NextFunction) => {
+    const { source } = req.body as {
+        source: string
+    }
+    if (!source) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    const id = req.params.id
+    let oldsource = await LeadSource.findById(id)
+    if (!oldsource)
+        return res.status(404).json({ message: "source not found" })
+    if (source !== oldsource.source)
+        if (await LeadSource.findOne({ source: source.toLowerCase() }))
+            return res.status(400).json({ message: "already exists this source" })
+    oldsource.source = source
+    oldsource.updated_at = new Date()
+    if (req.user)
+        oldsource.updated_by = req.user
+    await oldsource.save()
+    return res.status(200).json(oldsource)
+
+}
+export const DeleteCRMLeadSource = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "source id not valid" })
+    let source = await LeadSource.findById(id);
+    if (!source) {
+        return res.status(404).json({ message: "source not found" })
+    }
+    await source.remove();
+    return res.status(200).json({ message: "lead source deleted successfully" })
+}
+
+
+//lead stages
+export const GetAllCRMLeadStages = async (req: Request, res: Response, next: NextFunction) => {
+    let stages = await Stage.find()
+    return res.status(200).json(stages)
+}
+
+
+export const CreateCRMLeadStages = async (req: Request, res: Response, next: NextFunction) => {
+    const { stage } = req.body as {
+        stage: string
+    }
+    if (!stage) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    if (await Stage.findOne({ stage: stage.toLowerCase() }))
+        return res.status(400).json({ message: "already exists this stage" })
+    let result = await new Stage({
+        stage: stage,
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save()
+    return res.status(201).json(result)
+
+}
+
+export const UpdateCRMLeadStages = async (req: Request, res: Response, next: NextFunction) => {
+    const { stage } = req.body as {
+        stage: string
+    }
+    if (!stage) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    const id = req.params.id
+    let oldstage = await Stage.findById(id)
+    if (!oldstage)
+        return res.status(404).json({ message: "stage not found" })
+    if (stage !== oldstage.stage)
+        if (await Stage.findOne({ stage: stage.toLowerCase() }))
+            return res.status(400).json({ message: "already exists this stage" })
+    oldstage.stage = stage
+    oldstage.updated_at = new Date()
+    if (req.user)
+        oldstage.updated_by = req.user
+    await oldstage.save()
+    return res.status(200).json(oldstage)
+
+}
+export const DeleteCRMLeadStage = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "stage id not valid" })
+    let stage = await Stage.findById(id);
+    if (!stage) {
+        return res.status(404).json({ message: "stage not found" })
+    }
+    await stage.remove();
+    return res.status(200).json({ message: "lead stage deleted successfully" })
+}
+
 
 //states apis
 export const GetAllCRMStates = async (req: Request, res: Response, next: NextFunction) => {
@@ -25,6 +210,7 @@ export const GetAllCRMStates = async (req: Request, res: Response, next: NextFun
     }
     return res.status(200).json(result)
 }
+
 
 export const CreateCRMState = async (req: Request, res: Response, next: NextFunction) => {
     const { state } = req.body as {
@@ -111,8 +297,138 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
 
             if (state) {
                 if (item._id && isMongoId(String(item._id))) {
-                    await CRMState.findByIdAndUpdate(item._id, { state: item.state })
-                    statusText = "updated"                
+                    await CRMState.findByIdAndUpdate(item._id, { state: state.toLowerCase() })
+                    statusText = "updated"
+                }
+
+                if (!item._id || !isMongoId(String(item._id))) {
+                    let oldstate = await CRMState.findOne({ state: state.toLowerCase() })
+                    if (!oldstate) {
+                        await new CRMState({
+                            state: state,
+                            created_by: req.user,
+                            updated_by: req.user,
+                            created_at: new Date(),
+                            updated_at: new Date()
+                        }).save()
+                        statusText = "created"
+                    }
+                    else
+                        statusText = "duplicate"
+                }
+    
+            }
+            else
+                statusText = "required state"
+            
+            result.push({
+                ...item,
+                status: statusText
+            })
+        }
+
+
+    }
+    return res.status(200).json(result);
+}
+
+//cities
+export const GetAllCRMCities = async (req: Request, res: Response, next: NextFunction) => {
+    let result: { city:ICRMCity,state:ICRMState, users: IUser[] }[] = []
+    return res.status(200).json(result)
+}
+
+
+export const CreateCRMCity = async (req: Request, res: Response, next: NextFunction) => {
+    const { state,city } = req.body as {
+        state: string,
+        city: string
+    }
+    if (!state) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    if (await CRMCity.findOne({ state: state.toLowerCase() }))
+        return res.status(400).json({ message: "already exists this city" })
+    let result = await new CRMCity({
+        state: state,
+        city:city,
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save()
+    return res.status(201).json(result)
+
+}
+
+export const UpdateCRMCity = async (req: Request, res: Response, next: NextFunction) => {
+    const { state } = req.body as {
+        state: string,
+        city: string
+    }
+    if (!state) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    const id = req.params.id
+    let oldstate = await CRMState.findById(id)
+    if (!oldstate)
+        return res.status(404).json({ message: "state not found" })
+    if (state !== oldstate.state)
+        if (await CRMState.findOne({ state: state.toLowerCase() }))
+            return res.status(400).json({ message: "already exists this state" })
+    oldstate.state = state
+    oldstate.updated_at = new Date()
+    if (req.user)
+        oldstate.updated_by = req.user
+    await oldstate.save()
+    return res.status(200).json(oldstate)
+
+}
+export const DeleteCRMCity = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "state id not valid" })
+    let state = await CRMState.findById(id);
+    if (!state) {
+        return res.status(404).json({ message: "state not found" })
+    }
+    // let remarks = await Remark.find({ lead: lead._id })
+    // remarks.map(async (remark) => {
+    //     await remark.remove()
+    // })
+    await state.remove();
+    return res.status(200).json({ message: "state deleted successfully" })
+}
+export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Response, next: NextFunction) => {
+    let result: ICRMStateTemplate[] = []
+    let statusText: string = ""
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer);
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: ICRMState[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        console.log(workbook_response.length)
+        if (workbook_response.length > 300) {
+            return res.status(400).json({ message: "Maximum 300 records allowed at one time" })
+        }
+
+        for (let i = 0; i < workbook_response.length; i++) {
+            let item = workbook_response[i]
+            let state: string | null = String(item.state)
+            let users: string | null = String(item.state)
+
+            if (state) {
+                if (item._id && isMongoId(String(item._id))) {
+                    await CRMState.findByIdAndUpdate(item._id, { state: item.state.toLowerCase() })
+                    statusText = "updated"
                 }
 
                 if (!item._id || !isMongoId(String(item._id))) {
@@ -129,12 +445,14 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
                     }
                 }
 
-              
-                result.push({
-                    ...item,
-                    status: statusText
-                })
             }
+            else
+                statusText = "required state"
+
+            result.push({
+                ...item,
+                status: statusText
+            })
         }
 
 
@@ -339,7 +657,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { city: { $regex: key[0], $options: 'i' } },
                         { customer_name: { $regex: key[0], $options: 'i' } },
                         { customer_designation: { $regex: key[0], $options: 'i' } },
-                          { gst: { $regex: key[0], $options: 'i' } },
+                        { gst: { $regex: key[0], $options: 'i' } },
                         { mobile: { $regex: key[0], $options: 'i' } },
                         { email: { $regex: key[0], $options: 'i' } },
                         { state: { $regex: key[0], $options: 'i' } },
@@ -383,7 +701,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
-                                  { gst: { $regex: key[0], $options: 'i' } },
+                                { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
                                 { state: { $regex: key[0], $options: 'i' } },
@@ -451,7 +769,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
-                                  { gst: { $regex: key[0], $options: 'i' } },
+                                { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
                                 { state: { $regex: key[0], $options: 'i' } },
@@ -514,7 +832,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 3) {
             if (id) {
                 leads = await Lead.find({
-                    
+
                     $and: [
                         {
                             $or: [
@@ -522,7 +840,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
-                                  { gst: { $regex: key[0], $options: 'i' } },
+                                { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
                                 { state: { $regex: key[0], $options: 'i' } },
@@ -613,7 +931,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
-                                  { gst: { $regex: key[0], $options: 'i' } },
+                                { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
                                 { state: { $regex: key[0], $options: 'i' } },
@@ -699,7 +1017,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         if (key.length == 4) {
             if (id) {
                 leads = await Lead.find({
-                    
+
                     $and: [
                         {
                             $or: [
@@ -707,7 +1025,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
-                                  { gst: { $regex: key[0], $options: 'i' } },
+                                { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
                                 { state: { $regex: key[0], $options: 'i' } },
@@ -821,7 +1139,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
-                                  { gst: { $regex: key[0], $options: 'i' } },
+                                { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
                                 { state: { $regex: key[0], $options: 'i' } },
@@ -1040,7 +1358,7 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
 
 export const UpdateLead = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as TLeadBody & { remark: string}
+    const { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as TLeadBody & { remark: string }
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
     let lead = await Lead.findById(id);
@@ -1382,7 +1700,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
     let parties: IReferredParty[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (id)
-            parties = await ReferredParty.find({  }).populate('created_by').populate('updated_by').sort('name')
+            parties = await ReferredParty.find({}).populate('created_by').populate('updated_by').sort('name')
         else
             parties = await ReferredParty.find().populate('created_by').populate('updated_by').sort('name')
         let result: {
@@ -1422,8 +1740,6 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
     }
     else return res.status(400).json({ message: 'bad request' })
 
-
-
 }
 
 
@@ -1443,7 +1759,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 1 || key.length > 4) {
             if (id) {
                 parties = await ReferredParty.find({
-                    
+
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -1468,12 +1784,12 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 2) {
             if (id) {
                 parties = await ReferredParty.find({
-                    
-                   
+
+
                     $and: [
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1483,7 +1799,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1499,11 +1815,11 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
             }
             else {
                 parties = await ReferredParty.find({
-                   
+
                     $and: [
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1513,7 +1829,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1532,12 +1848,12 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 3) {
             if (id) {
                 parties = await ReferredParty.find({
-                    
-                   
+
+
                     $and: [
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1547,7 +1863,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1557,7 +1873,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1572,11 +1888,11 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 ).populate('created_by').populate('updated_by').sort('-updated_at')
             } else {
                 parties = await ReferredParty.find({
-                   
+
                     $and: [
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1586,7 +1902,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1596,7 +1912,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1614,12 +1930,12 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 4) {
             if (id) {
                 parties = await ReferredParty.find({
-                    
-                   
+
+
                     $and: [
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1629,7 +1945,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1639,7 +1955,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1649,7 +1965,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1664,7 +1980,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 ).populate('created_by').populate('updated_by').sort('-updated_at')
             } else {
                 parties = await ReferredParty.find({
-                   
+
                     $and: [
                         {
                             $or: [
@@ -1678,7 +1994,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1688,7 +2004,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1698,7 +2014,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                         },
                         {
                             $or: [
-                                 { name: { $regex: key[0], $options: 'i' } },
+                                { name: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
@@ -1752,19 +2068,20 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
 
 
 export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, customer_name, city, state, mobile } = req.body as TReferredPartyBody
-    if (!name || !city || !state || !mobile) {
+    let body = JSON.parse(req.body.body)
+    const { name, customer_name, city, state,gst, mobile } = body as TReferredPartyBody
+    if (!name || !city || !state || !mobile || !gst) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
 
-    let resultParty = await ReferredParty.findOne({ $or: [{ name: name }, { mobile: mobile }] })
+    let resultParty = await ReferredParty.findOne({ $or: [{ gst: String(gst).toLowerCase().trim() }, { mobile: String(mobile).toLowerCase().trim() }] })
     if (resultParty) {
-        return res.status(400).json({ message: "this party already exists,check phone or name" })
+        return res.status(400).json({ message: "already exists  gst or mobile number" })
     }
 
 
     let party = await new ReferredParty({
-        name, customer_name, city, state, mobile,
+        name, customer_name, city, state, mobile,gst,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -1777,8 +2094,8 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
     const id = req.params.id
     if (!isMongoId(id))
         return res.status(400).json({ message: "bad mongo id" })
-
-    const { name, customer_name, city, state, mobile } = req.body as TReferredPartyBody
+    let body = JSON.parse(req.body.body)
+    const { name, customer_name, city, state, mobile,gst } = body as TReferredPartyBody
     if (!name || !city || !state || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -1787,21 +2104,21 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
 
     if (!party)
         return res.status(404).json({ message: "party not found" })
-    if (name !== party.name || mobile !== party.mobile) {
-        let resultParty = await ReferredParty.findOne({ $or: [{ name: name }, { mobile: mobile }] })
+    if (gst !== party.gst || mobile !== party.mobile) {
+        let resultParty = await ReferredParty.findOne({ $or: [{ gst: gst }, { mobile: mobile }] })
         if (resultParty) {
-            return res.status(400).json({ message: "this party already exists,check phone or name" })
+            return res.status(400).json({ message: "already exists this phone or gst" })
         }
     }
 
-    party = await ReferredParty.findByIdAndUpdate(id, {
-        name, customer_name, city, state, mobile,
+    await ReferredParty.findByIdAndUpdate(id, {
+        name, customer_name, city, state, mobile,gst,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
         updated_by: req.user
     })
-    return res.status(200).json({ message: "party updated" })
+    return res.status(200).json({ message: "updated" })
 }
 
 
@@ -1816,7 +2133,134 @@ export const DeleteReferParty = async (req: Request, res: Response, next: NextFu
     return res.status(200).json({ message: "deleted" })
 }
 
+export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next: NextFunction) => {
+    let result: IReferTemplate[] = []
+    let statusText: string = ""
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer);
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: IReferTemplate[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        if (workbook_response.length > 300) {
+            return res.status(400).json({ message: "Maximum 300 records allowed at one time" })
+        }
+        for (let i = 0; i < workbook_response.length; i++) {
+            let refer = workbook_response[i]
+            let name: string | null = refer.name
+            let mobile: string | null = refer.mobile
+            let city: string | null = refer.city
+            let state: string | null = refer.state
+            let gst: string | null = refer.gst
 
+            let validated = true
+
+            //important
+            if (!mobile) {
+                validated = false
+                statusText = "required mobile"
+            }
+            if (!name) {
+                validated = false
+                statusText = "required name"
+            }
+            if (!city) {
+                validated = false
+                statusText = "required city"
+            }
+            if (!state) {
+                validated = false
+                statusText = "required state"
+            }
+            if (!gst) {
+                validated = false
+                statusText = "required gst"
+            }
+            if (gst && gst.length!==15) {
+                validated = false
+                statusText = "invalid gst"
+            }
+            if (mobile && Number.isNaN(Number(mobile))) {
+                validated = false
+                statusText = "invalid mobile"
+            }
+
+
+            if (mobile && String(mobile).length !== 10) {
+                validated = false
+                statusText = "invalid mobile"
+            }
+            //update and create new nead
+            if (validated) {
+                if (refer._id && isMongoId(String(refer._id))) {
+                    let targetLead = await ReferredParty.findById(refer._id)
+                    if (targetLead) {
+                        console.log("got it")
+                        if (targetLead.mobile != String(mobile).toLowerCase().trim() || targetLead.gst !== String(gst).toLowerCase().trim()) {
+                            let refertmp = await ReferredParty.findOne({ mobile: String(mobile).toLowerCase().trim() })
+                            let refertmp2 = await ReferredParty.findOne({ gst: String(gst).toLowerCase().trim() })
+
+                            if (refertmp) {
+                                validated = false
+                                statusText = "exists mobile"
+                            }
+                            if (refertmp2) {
+                                validated = false
+                                statusText = "exists  gst"
+                            }
+                            else {
+                                await ReferredParty.findByIdAndUpdate(refer._id, {
+                                    ...refer,
+                                    updated_by: req.user,
+                                    updated_at: new Date(Date.now())
+                                })
+                                statusText = "updated"
+                            }
+                        }
+                    }
+                }
+
+                if (!refer._id || !isMongoId(String(refer._id))) {
+                    let refertmp = await ReferredParty.findOne({ mobile: String(mobile).toLowerCase().trim(), gst: String(gst).toLowerCase().trim() })
+                    if (refertmp) {
+                        validated = false
+                        statusText = "duplicate mobile or gst"
+                    }
+                    else {
+                        let referParty = new ReferredParty({
+                            ...refer,
+                            _id: new Types.ObjectId(),
+                            mobile: refer.mobile,
+                            created_by: req.user,
+                            updated_by: req.user,
+                            updated_at: new Date(Date.now()),
+                            created_at: new Date(Date.now()),
+                            remarks: undefined
+                        })
+
+                        await referParty.save()
+                        statusText = "created"
+                    }
+
+                }
+            }
+            result.push({
+                ...refer,
+                status: statusText
+            })
+        }
+    }
+    return res.status(200).json(result);
+}
 
 
 //remarks apis
@@ -1974,9 +2418,9 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
 }
 
 export const NewRemark = async (req: Request, res: Response, next: NextFunction) => {
-    const { remark,  remind_date } = req.body as { remark: string,  remind_date: string }
+    const { remark, remind_date } = req.body as { remark: string, remind_date: string }
     if (!remark) return res.status(403).json({ message: "please fill required fields" })
-    
+
     const user = await User.findById(req.user?._id)
     if (!user)
         return res.status(403).json({ message: "please login to access this resource" })
@@ -1987,7 +2431,7 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
     if (!lead) {
         return res.status(404).json({ message: "lead not found" })
     }
-  
+
     let new_remark = new Remark({
         remark,
         lead: lead,

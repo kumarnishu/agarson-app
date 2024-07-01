@@ -1,32 +1,32 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
+import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../popup/PopUp'
 import { Edit } from '@mui/icons-material'
 import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { IState, IUser } from '../../types/user.types'
-import CreateOrEditStateDialog from '../dialogs/crm/CreateOrEditStateDialog'
+import { ILeadType } from '../../types/crm.types'
+import CreateOrEditLeadTypeDialog from '../dialogs/crm/CreateOrEditLeadTypeDialog'
 
 
 type Props = {
-    state: { state: IState, users: IUser[] } | undefined,
-    setState: React.Dispatch<React.SetStateAction<{ state: IState, users: IUser[] } | undefined>>,
+    type: ILeadType | undefined,
+    setType: React.Dispatch<React.SetStateAction<ILeadType | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    states: { state: IState, users: IUser[] }[],
-    selectedStates: { state: IState, users: IUser[] }[]
-    setSelectedStates: React.Dispatch<React.SetStateAction<{ state: IState, users: IUser[] }[]>>,
+    types: ILeadType[],
+    selectedTypes: ILeadType[]
+    setSelectedTypes: React.Dispatch<React.SetStateAction<ILeadType[]>>,
 }
-function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
-    const [data, setData] = useState<{ state: IState, users: IUser[] }[]>(states)
+function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selectedTypes, setSelectedTypes }: Props) {
+    const [data, setData] = useState<ILeadType[]>(types)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
-            setData(states)
-    }, [states, data])
+            setData(types)
+    }, [types, data])
     return (
         <>
             <Box sx={{
@@ -42,16 +42,16 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                             >
 
 
-                                <Checkbox  sx={{ width: 16, height: 16 }}
+                                <Checkbox sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
                                         if (e.currentTarget.checked) {
-                                            setSelectedStates(states)
+                                            setSelectedTypes(types)
                                             setSelectAll(true)
                                         }
                                         if (!e.currentTarget.checked) {
-                                            setSelectedStates([])
+                                            setSelectedTypes([])
                                             setSelectAll(false)
                                         }
                                     }} />
@@ -67,34 +67,29 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                             <STableHeadCell style={{ width: '200px' }}
                             >
 
-                                State
+                                Type
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                              Assigned Users
-
-                            </STableHeadCell>
-
                           
-                          
+
+
+
 
                         </STableRow>
                     </STableHead>
                     <STableBody >
                         {
-                            states && states.map((state, index) => {
+                            types && types.map((type, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedStates.length > 0 && selectedStates.find((t) => t.state._id === state.state._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedTypes.length > 0 && selectedTypes.find((t) => t._id === type._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
                                             <STableCell style={{ width: '50px' }}>
 
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -106,15 +101,17 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                         {!selectAll ?
                                             <STableCell style={{ width: '50px' }}>
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} 
+                                                size="small"
+                                                    checked={selectedTypes.length > 0 && selectedTypes.find((t) => t._id === type._id) ? true : false}
                                                     onChange={(e) => {
-                                                        setState(state)
+                                                        setType(type)
                                                         if (e.target.checked) {
-                                                            setSelectedStates([...selectedStates, state])
+                                                            setSelectedTypes([...selectedTypes, type])
                                                         }
                                                         if (!e.target.checked) {
-                                                            setSelectedStates((states) => states.filter((item) => {
-                                                                return item.state._id !== state.state._id
+                                                            setSelectedTypes((types) => types.filter((item) => {
+                                                                return item._id !== type._id
                                                             }))
                                                         }
                                                     }}
@@ -134,8 +131,8 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                                 <Tooltip title="edit">
                                                                     <IconButton
                                                                         onClick={() => {
-                                                                            setState(state)
-                                                                            setChoice({ type: UserChoiceActions.update_state })
+                                                                            setType(type)
+                                                                            setChoice({ type: LeadChoiceActions.create_or_edit_leadtype })
                                                                         }}
 
                                                                     >
@@ -149,22 +146,20 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                 />
 
                                             </STableCell>}
-                                        <STableCell style={{width:'200px'}}>
-                                            {state.state.state}
+                                        <STableCell style={{ width: '200px' }}>
+                                            {type.type}
                                         </STableCell>
-                                        <STableCell>
-                                            {state.users.map((u) => { return u.username }).toString()}
-                                        </STableCell>
-                                                                  
+                                     
+
                                     </STableRow>
                                 )
                             })}
                     </STableBody>
                 </STable>
-               <CreateOrEditStateDialog state={state?.state}/>
+                <CreateOrEditLeadTypeDialog type={type} />
             </Box>
         </>
     )
 }
 
-export default LeadsStateTable
+export default LeadsTypeTable

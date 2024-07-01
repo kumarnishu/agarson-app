@@ -4,25 +4,27 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
+import { UserContext } from '../../contexts/userContext'
+import DBPagination from '../../components/pagination/DBpagination';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { GetUsers } from '../../services/UserServices'
-import { IUser } from '../../types/user.types'
-import { UserContext } from '../../contexts/userContext'
-import { IReferredParty } from '../../types/crm.types'
+import CreateOrEditReferDialog from '../../components/dialogs/crm/CreateOrEditReferDialog'
+import RefersTable from '../../components/tables/RefersTable'
+import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServices'
 import { IReferTemplate } from '../../types/template.type'
-
+import UploadRefersExcelButton from '../../components/buttons/UploadRefersExcelButton'
+import { ILead, IReferredParty } from '../../types/crm.types'
 
 let template: IReferTemplate[] = [
   {
     _id: "",
     name: "",
+    gst:"",
     customer_name: "",
-    gst: "",
     mobile: "6787876765",
     city: "",
     state: ""
@@ -32,25 +34,46 @@ let template: IReferTemplate[] = [
 
 export default function RefersPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
-  const [users, setUsers] = useState<IUser[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
-  const [refer, setRefer] = useState<IReferredParty>()
-  const [refers, setRefers] = useState<IReferredParty[]>([])
+  const [refer, setRefer] = useState<{
+            party: IReferredParty,
+            leads: ILead[]
+        }>()
+  const [refers, setRefers] = useState<{
+            party: IReferredParty,
+            leads: ILead[]
+        }[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => refers, [refers])
-  const [preFilteredData, setPreFilteredData] = useState<IReferredParty[]>([])
+
+  const [preFilteredData, setPreFilteredData] = useState<{
+            party: IReferredParty,
+            leads: ILead[]
+        }[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
-  const [selectedRefers, setSelectedRefers] = useState<IReferredParty[]>([])
-  const { data, isLoading } = useQuery<AxiosResponse<{ refers: IReferredParty[], page: number, total: number, limit: number }>, BackendError>(["refers", paginationData], async () => GetRefers({ limit: paginationData?.limit, page: paginationData?.page }))
+  const [selectedRefers, setSelectedRefers] = useState<{
+            party: IReferredParty,
+            leads: ILead[]
+        }[]>([])
 
-  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+  const { data, isLoading } = useQuery<AxiosResponse<{ result: {
+            party: IReferredParty,
+            leads: ILead[]
+        }[], page: number, total: number, limit: number }>, BackendError>(["refers", paginationData], async () => GetPaginatedRefers({ limit: paginationData?.limit, page: paginationData?.page }))
 
-  const { data: fuzzyrefers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ refers: IReferredParty[], page: number, total: number, limit: number }>, BackendError>(["fuzzyrefers", filter], async () => FuzzySearchRefers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
+
+  const { data: fuzzyrefers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{
+    result: {
+            party: IReferredParty,
+            leads: ILead[]
+        }[], page: number, total: number, limit: number }>, BackendError>(["fuzzyrefers", filter], async () => FuzzySearchRefers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
   })
-  const [selectedData, setSelectedData] = useState<IReferredPartyTemplate[]>(template)
+
+
+  const [selectedData, setSelectedData] = useState<IReferTemplate[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -72,42 +95,24 @@ export default function RefersPage() {
 
   // refine data
   useEffect(() => {
-    let data: IReferredPartyTemplate[] = []
+    let data: IReferTemplate[] = []
     selectedRefers.map((refer) => {
       return data.push(
 
         {
-          _id: refer._id,
-          name: refer.name,
-          customer_name: refer.customer_name,
-          customer_designation: refer.customer_designation,
-          mobile: refer.mobile,
-          gst: refer.gst,
-          email: refer.email,
-          city: refer.city,
-          state: refer.state,
-          country: refer.country,
-          address: refer.address,
-          work_description: refer.work_description,
-          turnover: refer.turnover,
-          alternate_mobile1: refer.alternate_mobile1,
-          alternate_mobile2: refer.alternate_mobile2,
-          alternate_email: refer.alternate_email,
-          refer_type: refer.refer_type,
-          stage: refer.stage,
-          refer_source: refer.refer_source,
-          remarks: refer.remarks && refer.remarks.length > 0 && refer.remarks[refer.remarks.length - 1].remark || "",
-
+          _id: refer.party._id,
+          name: refer.party.name,
+          customer_name: refer.party.customer_name,
+          mobile: refer.party.mobile,
+          gst: refer.party.gst,
+          city: refer.party.city,
+          state: refer.party.state
         })
     })
     if (data.length > 0)
       setSelectedData(data)
   }, [selectedRefers])
 
-  useEffect(() => {
-    if (isUsersSuccess)
-      setUsers(usersData?.data)
-  }, [users, isUsersSuccess, usersData])
 
   useEffect(() => {
     if (!filter) {
@@ -124,8 +129,8 @@ export default function RefersPage() {
 
   useEffect(() => {
     if (data && !filter) {
-      setRefers(data.data.refers)
-      setPreFilteredData(data.data.refers)
+      setRefers(data.data.result)
+      setPreFilteredData(data.data.result)
       setPreFilteredPaginationData({
         ...paginationData,
         page: data.data.page,
@@ -143,7 +148,7 @@ export default function RefersPage() {
 
   useEffect(() => {
     if (fuzzyrefers && filter) {
-      setRefers(fuzzyrefers.data.refers)
+      setRefers(fuzzyrefers.data.result)
       let count = filterCount
       if (count === 0)
         setPaginationData({
@@ -156,6 +161,8 @@ export default function RefersPage() {
       setFilterCount(count)
     }
   }, [fuzzyrefers])
+
+
   return (
     <>
 
@@ -180,11 +187,11 @@ export default function RefersPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Refers {selectedRefers.length > 0 ? <span>(checked : {selectedRefers.length})</span> : ''}
+          Refers {selectedRefers.length > 0 ? <span>(checked : {selectedRefers.length})</span>:''}
         </Typography>
-
+       
         <TextField
-          sx={{ width: '50vw' }}
+          sx={{width:'50vw'}}
           size="small"
           onChange={(e) => {
             setFilter(e.currentTarget.value)
@@ -193,13 +200,13 @@ export default function RefersPage() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <Search sx={{ cursor: 'pointer' }} onClick={() => {
-                  refetchFuzzy()
-                }} />
+                  <Search sx={{cursor:'pointer'}} onClick={() => {
+                    refetchFuzzy()
+                  }} />
               </InputAdornment>
             ),
           }}
-          placeholder={`Search Keywords here like name,mobile,address,state,stage and press ENTER KEY`}
+          placeholder={`Search Refers`}
           style={{
             fontSize: '1.1rem',
             border: '0',
@@ -252,15 +259,15 @@ export default function RefersPage() {
               >Export To Excel</MenuItem>
 
             </Menu >
-            <CreateOrEditReferDialog refer={undefined} />
+            <CreateOrEditReferDialog  refer={undefined}/>
           </>
         </Stack >
       </Stack >
       {/* table */}
       {isLoading && <TableSkeleton />}
       {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && MemoData.length > 0 && <>
-        < RefersTable
+      {!isLoading &&MemoData.length > 0 &&<>
+        <RefersTable
           refer={refer}
           setRefer={setRefer}
           selectAll={selectAll}
