@@ -59,13 +59,14 @@ export default function LeadsPage() {
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
   const [stage, setStage] = useState<string | undefined>('open');
+  const [stageFilter, setStageFilter] = useState(false)
   const [stages, setStages] = useState<IStage[]>([])
 
   const { data, isLoading, refetch } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
 
   const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage, stageFilter: stageFilter }), {
     enabled: false
   })
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
@@ -89,8 +90,9 @@ export default function LeadsPage() {
   }
 
   useEffect(() => {
-    refetch();
-  }, [stage])
+    if (stageFilter)
+      refetch();
+  }, [stage, stageFilter])
   // refine data
   useEffect(() => {
     let data: ILeadTemplate[] = []
@@ -238,7 +240,7 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-
+            <input type='checkbox' checked={stageFilter} onChange={() => setStageFilter(!stageFilter)} />
             < TextField
               select
               SelectProps={{

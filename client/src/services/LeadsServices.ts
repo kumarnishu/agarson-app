@@ -1,12 +1,12 @@
 import { apiClient } from "./utils/AxiosInterceptor"
 
 //leads
-export const GetLeads = async ({ limit, page, stage }: { limit: number | undefined, page: number | undefined, stage?:string }) => {
+export const GetLeads = async ({ limit, page, stage }: { limit: number | undefined, page: number | undefined, stage?: string}) => {
   return await apiClient.get(`leads/?limit=${limit}&page=${page}&stage=${stage}`)
 }
 
-export const FuzzySearchLeads = async ({ searchString, limit, page,stage }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
-  return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
+export const FuzzySearchLeads = async ({ searchString, limit, page, stage, stageFilter }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string, stageFilter: boolean }) => {
+  return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}&stageFilter=${stageFilter}`)
 }
 
 
