@@ -10,8 +10,8 @@ export const GetReminderRemarks = async () => {
   return await apiClient.get(`reminder/remarks`)
 }
 
-export const FuzzySearchLeads = async ({ searchString, limit, page, stage, stageFilter }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string, stageFilter: boolean }) => {
-  return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}&stageFilter=${stageFilter}`)
+export const FuzzySearchLeads = async ({ searchString, limit, page, stage }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
+  return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
 }
 
 export const GetRemarks = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {

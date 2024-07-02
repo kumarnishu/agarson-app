@@ -58,15 +58,14 @@ export default function LeadsPage() {
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
-  const [stage, setStage] = useState<string | undefined>('open');
-  const [stageFilter, setStageFilter] = useState(false)
+  const [stage, setStage] = useState<string>();
   const [stages, setStages] = useState<IStage[]>([])
 
   const { data, isLoading, refetch } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
 
   const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage, stageFilter: stageFilter }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
     enabled: false
   })
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
@@ -89,10 +88,7 @@ export default function LeadsPage() {
     }
   }
 
-  useEffect(() => {
-    if (stageFilter)
-      refetch();
-  }, [stage, stageFilter])
+
   // refine data
   useEffect(() => {
     let data: ILeadTemplate[] = []
@@ -135,11 +131,19 @@ export default function LeadsPage() {
   }, [stageSuccess, stages, stagedata])
 
   useEffect(() => {
+
     if (!filter) {
       setLeads(preFilteredData)
       setPaginationData(preFilteredPaginationData)
     }
-  }, [filter])
+    if (stage && !filter) {
+      refetch();
+    }
+
+
+  }, [filter, stage])
+
+
 
   useEffect(() => {
     if (filter) {
@@ -214,6 +218,7 @@ export default function LeadsPage() {
           onChange={(e) => {
             setFilter(e.currentTarget.value)
             setFilterCount(0)
+          
           }}
           InputProps={{
             endAdornment: (
@@ -240,7 +245,6 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            <input type='checkbox' checked={stageFilter} onChange={() => setStageFilter(!stageFilter)} />
             < TextField
               select
               SelectProps={{
@@ -251,10 +255,13 @@ export default function LeadsPage() {
               label="Select Stage"
               sx={{ width: '200px' }}
               value={stage}
-              onChange={(e) => setStage(e.target.value)}
+              onChange={(e) => {
+                setStage(e.target.value);
+              }
+              }
             >
-              <option key={0} value={undefined}>
-
+              <option key={0} value={'undefined'}>
+              All
               </option>
               {
                 stages.map(stage => {
@@ -299,7 +306,7 @@ export default function LeadsPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              {LoggedInUser?.is_admin&&< MenuItem onClick={handleExcel}
+              {LoggedInUser?.is_admin && < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>}
 
             </Menu >

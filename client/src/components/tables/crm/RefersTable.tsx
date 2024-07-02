@@ -9,6 +9,7 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import CreateOrEditReferDialog from '../../dialogs/crm/CreateOrEditReferDialog'
 import { ILead, IReferredParty } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import AllReferralPageDialog from '../../dialogs/crm/AllReferralPageDialog'
 
 
 type Props = {
@@ -250,11 +251,8 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                             <Tooltip title="view all refer refers">
                               <IconButton color="primary"
                                 onClick={() => {
-
-                                  setChoice({ type: LeadChoiceActions.view_remarks })
+                                  setChoice({ type: LeadChoiceActions.view_referrals })
                                   setRefer(refer)
-
-
                                 }}
                               >
                                 <Visibility />
@@ -328,6 +326,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
           <>
 
             <DeleteCrmItemDialog refer={refer.party} />
+            <AllReferralPageDialog leads={refer.leads} />
 
           </>
           : null

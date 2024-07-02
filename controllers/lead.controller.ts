@@ -60,7 +60,7 @@ export const UpdateCRMLeadTypes = async (req: Request, res: Response, next: Next
     if (type !== oldtype.type)
         if (await LeadType.findOne({ type: type.toLowerCase() }))
             return res.status(400).json({ message: "already exists this type" })
-    let prevtype=oldtype.type
+    let prevtype = oldtype.type
     oldtype.type = type
     oldtype.updated_at = new Date()
     if (req.user)
@@ -123,7 +123,7 @@ export const UpdateCRMLeadSource = async (req: Request, res: Response, next: Nex
     if (source !== oldsource.source)
         if (await LeadSource.findOne({ source: source.toLowerCase() }))
             return res.status(400).json({ message: "already exists this source" })
-    let prevsource=oldsource.source
+    let prevsource = oldsource.source
     oldsource.source = source
     oldsource.updated_at = new Date()
     if (req.user)
@@ -186,7 +186,7 @@ export const UpdateCRMLeadStages = async (req: Request, res: Response, next: Nex
     if (stage !== oldstage.stage)
         if (await Stage.findOne({ stage: stage.toLowerCase() }))
             return res.status(400).json({ message: "already exists this stage" })
-    let prevstage=oldstage.stage
+    let prevstage = oldstage.stage
     oldstage.stage = stage
     oldstage.updated_at = new Date()
     if (req.user)
@@ -294,7 +294,7 @@ export const UpdateCRMState = async (req: Request, res: Response, next: NextFunc
     if (state !== oldstate.state)
         if (await CRMState.findOne({ state: state.toLowerCase() }))
             return res.status(400).json({ message: "already exists this state" })
-    let prevstate=oldstate.state
+    let prevstate = oldstate.state
     oldstate.state = state
     oldstate.updated_at = new Date()
     if (req.user)
@@ -522,15 +522,14 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     let stage = req.query.stage
     let user = await User.findById(req.user).populate('assigned_crm_states');
     let showonlycardleads = Boolean(user?.show_only_visiting_card_leads)
-
+    
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
         let count = 0
-
-        if (showonlycardleads) {
+        if (stage!="undefined") {
             leads = await Lead.find({
-                has_card: showonlycardleads, stage: stage, state: { $in: states }
+                stage: stage, state: { $in: states }
             }).populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
@@ -545,12 +544,32 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
-                has_card: showonlycardleads, stage: stage, state: { $in: states }
+                stage: stage, state: { $in: states }
+            }).countDocuments()
+        }
+        else if (showonlycardleads) {
+            leads = await Lead.find({
+                has_card: showonlycardleads, state: { $in: states }
+            }).populate('updated_by').populate('created_by').populate({
+                path: 'remarks',
+                populate: [
+                    {
+                        path: 'created_by',
+                        model: 'User'
+                    },
+                    {
+                        path: 'updated_by',
+                        model: 'User'
+                    }
+                ]
+            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            count = await Lead.find({
+                has_card: showonlycardleads,  state: { $in: states }
             }).countDocuments()
         }
         else {
             leads = await Lead.find({
-                stage: stage, state: { $in: states }
+                stage: 'open', state: { $in: states }
             }).populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
@@ -565,7 +584,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
-                stage: stage, state: { $in: states }
+                stage: 'open', state: { $in: states }
             }).countDocuments()
         }
 
@@ -650,19 +669,18 @@ export const RemoveLeadReferral = async (req: Request, res: Response, next: Next
 export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
-    let stageFilter = req.query.stageFilter
 
     let user = await User.findById(req.user).populate('assigned_crm_states');
     let showonlycardleads = Boolean(user?.show_only_visiting_card_leads)
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let key = String(req.query.key).split(",")
-    let stage = String(req.query.stage)
+    let stage = req.query.stage
     if (!key)
         return res.status(500).json({ message: "bad request" })
     let leads: ILead[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
 
-        if (stageFilter == "true") {
+        if (stage!="undefined") {
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
@@ -984,17 +1002,16 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
 
             }
         }
-        if (showonlycardleads) {
+        else if (showonlycardleads){
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, stage: stage, state: { $in: states },
+                    has_card:showonlycardleads,state: { $in: states },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
                         { customer_name: { $regex: key[0], $options: 'i' } },
                         { customer_designation: { $regex: key[0], $options: 'i' } },
-                        { gst: { $regex: key[0], $options: 'i' } },
                         { mobile: { $regex: key[0], $options: 'i' } },
                         { email: { $regex: key[0], $options: 'i' } },
                         { state: { $regex: key[0], $options: 'i' } },
@@ -1006,6 +1023,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                         { alternate_email: { $regex: key[0], $options: 'i' } },
                         { lead_type: { $regex: key[0], $options: 'i' } },
+                        { stage: { $regex: key[0], $options: 'i' } },
                         { lead_source: { $regex: key[0], $options: 'i' } },
                         { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -1025,11 +1043,12 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         }
                     ]
                 }).sort('-updated_at')
+
             }
             if (key.length == 2) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, stage: stage, state: { $in: states },
+                    has_card: showonlycardleads, state: { $in: states },
                     $and: [
                         {
                             $or: [
@@ -1037,7 +1056,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
-                                { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
                                 { state: { $regex: key[0], $options: 'i' } },
@@ -1049,6 +1067,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
+                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -1071,7 +1090,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-
+                                { stage: { $regex: key[1], $options: 'i' } },
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
 
@@ -1099,7 +1118,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 3) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, stage: stage, state: { $in: states },
+                    has_card: showonlycardleads, state: { $in: states },
                     $and: [
                         {
                             $or: [
@@ -1107,7 +1126,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
-                                { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
                                 { state: { $regex: key[0], $options: 'i' } },
@@ -1119,6 +1137,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
+                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -1141,7 +1160,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-
+                                { stage: { $regex: key[1], $options: 'i' } },
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
 
@@ -1164,7 +1183,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[2], $options: 'i' } },
                                 { alternate_email: { $regex: key[2], $options: 'i' } },
                                 { lead_type: { $regex: key[2], $options: 'i' } },
-
+                                { stage: { $regex: key[2], $options: 'i' } },
                                 { lead_source: { $regex: key[2], $options: 'i' } },
                                 { last_remark: { $regex: key[2], $options: 'i' } },
 
@@ -1192,7 +1211,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 4) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, stage: stage, state: { $in: states },
+                    has_card: showonlycardleads, state: { $in: states },
                     $and: [
                         {
                             $or: [
@@ -1200,7 +1219,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
-                                { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
                                 { state: { $regex: key[0], $options: 'i' } },
@@ -1212,6 +1230,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
+                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
 
@@ -1234,7 +1253,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-
+                                { stage: { $regex: key[1], $options: 'i' } },
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
 
@@ -1257,7 +1276,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[2], $options: 'i' } },
                                 { alternate_email: { $regex: key[2], $options: 'i' } },
                                 { lead_type: { $regex: key[2], $options: 'i' } },
-
+                                { stage: { $regex: key[2], $options: 'i' } },
                                 { lead_source: { $regex: key[2], $options: 'i' } },
                                 { last_remark: { $regex: key[2], $options: 'i' } },
 
@@ -1280,7 +1299,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[3], $options: 'i' } },
                                 { alternate_email: { $regex: key[3], $options: 'i' } },
                                 { lead_type: { $regex: key[3], $options: 'i' } },
-
+                                { stage: { $regex: key[3], $options: 'i' } },
                                 { lead_source: { $regex: key[3], $options: 'i' } },
                                 { last_remark: { $regex: key[3], $options: 'i' } },
 
@@ -2553,7 +2572,7 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
     let day = previous_date.getDate() - 7
     previous_date.setDate(day)
 
-    let reminders = await Remark.find({ remind_date: { $lte: new Date(), $gt: previous_date },created_by:req.user?._id }).populate('created_by').populate('updated_by').populate({
+    let reminders = await Remark.find({ remind_date: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
         path: 'lead',
         populate: [
             {
@@ -2583,11 +2602,11 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
             }
         ]
     }).sort('-remind_date')
-    
-    reminders=reminders.filter((reminder)=>{
+
+    reminders = reminders.filter((reminder) => {
         let all_remarks = reminder.lead && reminder.lead.remarks;
-        let last_remark = all_remarks&&all_remarks.length>0&&all_remarks[all_remarks.length-1];
-        if (last_remark && last_remark.remind_date){
+        let last_remark = all_remarks && all_remarks.length > 0 && all_remarks[all_remarks.length - 1];
+        if (last_remark && last_remark.remind_date) {
             return reminder;
         }
     })
