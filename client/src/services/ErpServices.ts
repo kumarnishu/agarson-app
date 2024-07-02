@@ -1,3 +1,4 @@
+import { IState } from "../types/user.types";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
@@ -8,13 +9,11 @@ export const GetStates = async () => {
 export const BulkCreateStateFromExcel = async (body: FormData) => {
     return await apiClient.put(`states`, body)
 }
-export const CreateState = async (body: { state: string }) => {
+export const CreateOreditErpState = async ({ state, body }: { state?: IState, body: { state: string } }) => {
+    if (state)
+        return await apiClient.put(`states/${state._id}`, body);
     return await apiClient.post(`states`, body);
-};
 
-
-export const UpdateState = async ({ body, id }: { body: { state: string }, id: string }) => {
-    return await apiClient.put(`states/${id}`, body);
 };
 
 export const GetPendingOrdersReports = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
@@ -49,6 +48,13 @@ export const BulkClientSalereportFromExcelforlastyear = async (body: FormData) =
 }
 
 
-export const AssignStates = async ({ body }: { body: { states: string[], ids: string[] } }) => {
+
+export const AssignErpStatesToUsers = async ({ body }: {
+    body: {
+        user_ids: string[],
+        state_ids: string[],
+        flag: number
+    }
+}) => {
     return await apiClient.patch(`bulk/assign/states`, body)
 }

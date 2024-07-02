@@ -30,7 +30,7 @@ import CrmLeadSourcesPage from './pages/crm/CrmSourcePage.tsx'
 import CrmStagesPage from './pages/crm/CrmStagesPage.tsx'
 import CrmTypesPage from './pages/crm/CrmleadTypesPage.tsx'
 import CrmActivitiesPage from './pages/crm/CrmActivitiesPage.tsx'
-const StatesPage = React.lazy(() => import('./pages/users/StatesPage.tsx'))
+const StatesPage = React.lazy(() => import('./pages/erp reports/StatesPage.tsx'))
 const PendingOrdersReportPage = React.lazy(() => import('./pages/erp reports/PendingOrdersReport.tsx'))
 const ClientSaleReportPage = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPage.tsx'))
 const ClientSaleReportsPageLastyear = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPageLastyear.tsx'))

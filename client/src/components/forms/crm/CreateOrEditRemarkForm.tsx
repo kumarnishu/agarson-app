@@ -15,7 +15,7 @@ import { toTitleCase } from '../../../utils/TitleCase';
 
 function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: ILead, remark?: IRemark, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [display, setDisplay] = useState(false)
-    const [card, setCard] = useState(false)
+    const [card, setCard] = useState(Boolean(lead?.has_card))
     const [stages, setStages] = useState<IStage[]>([])
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {

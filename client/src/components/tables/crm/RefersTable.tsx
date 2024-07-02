@@ -216,7 +216,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                         element={
                           <Stack direction="row" spacing={1}>
 
-                            {user?.crm_access_fields.is_deletion_allowed &&
+                            {user?.is_admin && user?.crm_access_fields.is_deletion_allowed &&
                               <Tooltip title="delete">
                                 <IconButton color="error"
                                   onClick={() => {
@@ -233,7 +233,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
 
 
 
-                            {user?.crm_access_fields.is_editable &&
+                            {user?.is_admin && user?.crm_access_fields.is_editable &&
                               <Tooltip title="edit">
                                 <IconButton color="secondary"
                                   onClick={() => {

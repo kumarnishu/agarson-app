@@ -23,7 +23,7 @@ let template: IReferTemplate[] = [
   {
     _id: "",
     name: "",
-    gst:"",
+    gst: "",
     customer_name: "",
     mobile: "6787876765",
     city: "",
@@ -37,38 +37,41 @@ export default function RefersPage() {
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [refer, setRefer] = useState<{
-            party: IReferredParty,
-            leads: ILead[]
-        }>()
+    party: IReferredParty,
+    leads: ILead[]
+  }>()
   const [refers, setRefers] = useState<{
-            party: IReferredParty,
-            leads: ILead[]
-        }[]>([])
+    party: IReferredParty,
+    leads: ILead[]
+  }[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => refers, [refers])
 
   const [preFilteredData, setPreFilteredData] = useState<{
-            party: IReferredParty,
-            leads: ILead[]
-        }[]>([])
+    party: IReferredParty,
+    leads: ILead[]
+  }[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedRefers, setSelectedRefers] = useState<{
-            party: IReferredParty,
-            leads: ILead[]
-        }[]>([])
+    party: IReferredParty,
+    leads: ILead[]
+  }[]>([])
 
-  const { data, isLoading } = useQuery<AxiosResponse<{ result: {
-            party: IReferredParty,
-            leads: ILead[]
-        }[], page: number, total: number, limit: number }>, BackendError>(["refers", paginationData], async () => GetPaginatedRefers({ limit: paginationData?.limit, page: paginationData?.page }))
+  const { data, isLoading } = useQuery<AxiosResponse<{
+    result: {
+      party: IReferredParty,
+      leads: ILead[]
+    }[], page: number, total: number, limit: number
+  }>, BackendError>(["refers", paginationData], async () => GetPaginatedRefers({ limit: paginationData?.limit, page: paginationData?.page }))
 
 
   const { data: fuzzyrefers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{
     result: {
-            party: IReferredParty,
-            leads: ILead[]
-        }[], page: number, total: number, limit: number }>, BackendError>(["fuzzyrefers", filter], async () => FuzzySearchRefers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
+      party: IReferredParty,
+      leads: ILead[]
+    }[], page: number, total: number, limit: number
+  }>, BackendError>(["fuzzyrefers", filter], async () => FuzzySearchRefers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
   })
 
@@ -189,9 +192,9 @@ export default function RefersPage() {
         >
           Refers {selectedRefers.length > 0 ? <span>(checked : {selectedRefers.length})</span> : `- ${refers.length}`}
         </Typography>
-       
+
         <TextField
-          sx={{width:'50vw'}}
+          sx={{ width: '50vw' }}
           size="small"
           onChange={(e) => {
             setFilter(e.currentTarget.value)
@@ -200,9 +203,9 @@ export default function RefersPage() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                  <Search sx={{cursor:'pointer'}} onClick={() => {
-                    refetchFuzzy()
-                  }} />
+                <Search sx={{ cursor: 'pointer' }} onClick={() => {
+                  refetchFuzzy()
+                }} />
               </InputAdornment>
             ),
           }}
@@ -222,7 +225,7 @@ export default function RefersPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadRefersExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
+            {LoggedInUser?.is_admin && <UploadRefersExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
           </Stack >
           <>
 
@@ -249,24 +252,25 @@ export default function RefersPage() {
               sx={{ borderRadius: 2 }}
             >
               <MenuItem
+                disabled={LoggedInUser?.is_admin ? false : true}
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_refer })
                   setRefer(undefined);
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              {LoggedInUser?.is_admin &&< MenuItem onClick={handleExcel}
+              {LoggedInUser?.is_admin && < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>}
 
             </Menu >
-            <CreateOrEditReferDialog  refer={undefined}/>
+            <CreateOrEditReferDialog refer={undefined} />
           </>
         </Stack >
       </Stack >
       {/* table */}
       {isLoading && <TableSkeleton />}
       {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading &&MemoData.length > 0 &&<>
+      {!isLoading && MemoData.length > 0 && <>
         <RefersTable
           refer={refer}
           setRefer={setRefer}

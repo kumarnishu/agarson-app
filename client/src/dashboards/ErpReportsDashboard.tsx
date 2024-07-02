@@ -1,11 +1,13 @@
 import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppsIcon from '@mui/icons-material/Apps';
+import { UserContext } from "../contexts/userContext";
 
 function ErpReportsDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
+  const { user } = useContext(UserContext)
 
   //process feature and access
   useEffect(() => {
@@ -13,8 +15,8 @@ function ErpReportsDashboard() {
     tmpfeatures.push({ feature: 'pending orders ', is_visible: true, url: paths.pending_orders })
     tmpfeatures.push({ feature: 'bills aging report ', is_visible: true, url: paths.bill_aging_report })
     tmpfeatures.push({ feature: 'Client Sale report ', is_visible: true, url: paths.clients_sale }),
-    tmpfeatures.push({ feature: 'Client Sale Last Year ', is_visible: true, url: paths.clients_sale_lastyear }),
-    tmpfeatures.push({ feature: 'states', is_visible: true, url: paths.states })
+      tmpfeatures.push({ feature: 'Client Sale Last Year ', is_visible: true, url: paths.clients_sale_lastyear }),
+      user?.is_admin && tmpfeatures.push({ feature: 'states', is_visible: true, url: paths.states })
     setFeatures(tmpfeatures)
   }, [])
 

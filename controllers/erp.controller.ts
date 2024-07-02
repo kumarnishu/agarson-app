@@ -330,23 +330,43 @@ export const BulkPendingOrderReportFromExcel = async (req: Request, res: Respons
     return res.status(200).json(result);
 }
 
-export const BulkAssignStates = async (req: Request, res: Response, next: NextFunction) => {
-    const { states, ids } = req.body as { states: string[], ids: string[] }
-    if (states && states.length === 0)
-        return res.status(403).json({ message: "please select one state " })
-    if (ids && ids.length === 0)
-        return res.status(403).json({ message: "please select one state owner" })
 
-    let owners = ids
-    for (let i = 0; i < owners.length; i++) {
-        await User.findByIdAndUpdate(owners[i], {
-            assigned_states: states
-        })
+export const AssignErpStatesToUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const { state_ids, user_ids, flag } = req.body as {
+        user_ids: string[],
+        state_ids: string[],
+        flag: number
     }
-    return res.status(200).json({ message: "assigned successfully" })
+    if (state_ids && state_ids.length === 0)
+        return res.status(400).json({ message: "please select one state " })
+    if (user_ids && user_ids.length === 0)
+        return res.status(400).json({ message: "please select one state owner" })
+
+    let owners = user_ids
+
+    if (flag == 0) {
+        for (let i = 0; i < owners.length; i++) {
+            let owner = await User.findById(owners[i]).populate('assigned_states');
+            if (owner) {
+                let oldstates = owner.assigned_states.map((item) => { return item._id.valueOf() });
+                oldstates = oldstates.filter((item) => { return !state_ids.includes(item) });
+                console.log(oldstates)
+                await User.findByIdAndUpdate(owner._id, {
+                    assigned_states: oldstates
+                })
+            }
+        }
+    }
+    else {
+        for (let i = 0; i < owners.length; i++) {
+            await User.findByIdAndUpdate(owners[i], {
+                assigned_states: state_ids
+            })
+        }
+    }
+
+    return res.status(200).json({ message: "successfull" })
 }
-
-
 
 export const GetClientSaleReports = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)

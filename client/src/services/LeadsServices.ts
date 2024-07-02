@@ -14,6 +14,10 @@ export const FuzzySearchLeads = async ({ searchString, limit, page, stage }: { s
   return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
 }
 
+export const ConvertLeadToRefer = async ({ id }: { id: string}) => {
+  return await apiClient.patch(`leads/torefer/${id}`)
+}
+
 export const GetRemarks = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
   if (id)
     return await apiClient.get(`remarks/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)

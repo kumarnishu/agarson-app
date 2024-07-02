@@ -271,7 +271,7 @@ export default function LeadsPage() {
                 })
               }
             </TextField>
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
+            {LoggedInUser?.is_admin && <UploadLeadsExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
           </Stack >
           <>
 

@@ -1,13 +1,14 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../popup/PopUp'
 import { Edit } from '@mui/icons-material'
-import { UserContext } from '../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import UpdateStateDialog from '../dialogs/states/UpdateStateDialog'
 import { IState, IUser } from '../../types/user.types'
+import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
+import { UserContext } from '../../contexts/userContext'
+import CreateOrEditErpStateDialog from '../dialogs/erp/CreateOrEditErpStateDialog'
+
 
 
 type Props = {
@@ -19,7 +20,7 @@ type Props = {
     selectedStates: { state: IState, users: IUser[] }[]
     setSelectedStates: React.Dispatch<React.SetStateAction<{ state: IState, users: IUser[] }[]>>,
 }
-function StatesTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
+function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
     const [data, setData] = useState<{ state: IState, users: IUser[] }[]>(states)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
@@ -38,11 +39,11 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                     <STableHead
                     >
                         <STableRow>
-                            <STableHeadCell
+                            <STableHeadCell style={{ width: '50px' }}
                             >
 
 
-                                <Checkbox  sx={{ width: 16, height: 16 }}
+                                <Checkbox sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -58,13 +59,13 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
 
                             </STableHeadCell>
                             {user?.productions_access_fields.is_editable &&
-                                <STableHeadCell
+                                <STableHeadCell style={{ width: '50px' }}
                                 >
 
                                     Actions
 
                                 </STableHeadCell>}
-                            <STableHeadCell
+                            <STableHeadCell style={{ width: '200px' }}
                             >
 
                                 State
@@ -73,17 +74,12 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                             <STableHeadCell
                             >
 
-                               Users
+                                Assigned Users
 
                             </STableHeadCell>
 
-                            <STableHeadCell
-                            >
 
-                                Timestamp
 
-                            </STableHeadCell>
-                          
 
                         </STableRow>
                     </STableHead>
@@ -96,10 +92,10 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                                         key={index}
                                     >
                                         {selectAll ?
-                                            <STableCell>
+                                            <STableCell style={{ width: '50px' }}>
 
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -109,9 +105,9 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                                             null
                                         }
                                         {!selectAll ?
-                                            <STableCell>
+                                            <STableCell style={{ width: '50px' }}>
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setState(state)
                                                         if (e.target.checked) {
@@ -129,55 +125,63 @@ function StatesTable({ state, selectAll, states, setSelectAll, setState, selecte
                                             :
                                             null
                                         }
-                                        {/* actions */}
-                                        {user?.user_access_fields.is_editable &&
-                                            <STableCell>
-                                                <PopUp
-                                                    element={
-                                                        <Stack direction="row">
-                                                            <>
-                                                                <Tooltip title="edit">
-                                                                    <IconButton
-                                                                        onClick={() => {
-                                                                            setState(state)
-                                                                            setChoice({ type: UserChoiceActions.update_state })
-                                                                        }}
 
+
+                                        {/* actions */}
+
+                                        <STableCell style={{ width: '50' }}>
+                                            <PopUp
+                                                element={
+                                                    <Stack direction="row">
+                                                        <>
+                                                            {/* {user?.crm_access_fields.is_deletion_allowed &&
+                                                                <Tooltip title="delete">
+                                                                    <IconButton color="error"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: UserChoiceActions.delete_crm_item })
+                                                                            setState(state)
+
+                                                                        }}
                                                                     >
-                                                                        <Edit />
+                                                                        <Delete />
                                                                     </IconButton>
                                                                 </Tooltip>
+                                                            } */}
 
-                                                            </>
+                                                            {user?.erp_access_fields.is_editable && <Tooltip title="edit">
+                                                                <IconButton
+                                                                    onClick={() => {
+                                                                        setState(state)
+                                                                        setChoice({ type: UserChoiceActions.create_or_edit_erpstate })
+                                                                    }}
 
-                                                        </Stack>}
-                                                />
+                                                                >
+                                                                    <Edit />
+                                                                </IconButton>
+                                                            </Tooltip>}
 
-                                            </STableCell>}
-                                        <STableCell>
+                                                        </>
+
+                                                    </Stack>}
+                                            />
+
+                                        </STableCell>
+                                        <STableCell style={{ width: '200px' }}>
                                             {state.state.state}
                                         </STableCell>
                                         <STableCell>
                                             {state.users.map((u) => { return u.username }).toString()}
                                         </STableCell>
-                                        <STableCell>
-                                            {state.state.updated_at && new Date(state.state.updated_at).toLocaleString()}
-                                        </STableCell>
-                                
+
                                     </STableRow>
                                 )
                             })}
                     </STableBody>
                 </STable>
-                {
-                    state ?
-                        <>
-                            <UpdateStateDialog state={state} />
-                        </> : null
-                }
+                <CreateOrEditErpStateDialog state={state?.state} />
             </Box>
         </>
     )
 }
 
-export default StatesTable
+export default ErpStateTable

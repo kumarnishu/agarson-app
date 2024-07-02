@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 import { CreateArticle } from "../controllers/production.controller";
@@ -43,7 +43,7 @@ router.route("/remarks/:id").put(isAuthenticatedUser, UpdateRemark)
 router.route("/remarks/:id").delete(isAuthenticatedUser, DeleteRemark)
 router.route("/search/leads").get(isAuthenticatedUser, FuzzySearchLeads)
 router.route("/backup/leads").get(isAuthenticatedUser, BackUpAllLeads)
-
+router.patch("/leads/torefer/:id", isAuthenticatedUser, ConvertLeadToRefer)
 //refers
 router.route("/refers/leads/:id").post(isAuthenticatedUser, ReferLead)
 router.route("/refers/leads/:id").patch(isAuthenticatedUser, RemoveLeadReferral)

@@ -666,6 +666,35 @@ export const RemoveLeadReferral = async (req: Request, res: Response, next: Next
     await lead.save()
     return res.status(200).json({ message: "referrals removed successfully" })
 }
+
+
+export const ConvertLeadToRefer = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
+    let lead = await Lead.findById(id);
+    if (!lead) {
+        return res.status(404).json({ message: "lead not found" })
+    }
+    
+    let resultParty = await ReferredParty.findOne({ mobile: lead.mobile });
+    if (resultParty) {
+        return res.status(400).json({ message: "already exists this mobile number in refers" })
+    }
+
+    await new ReferredParty({
+        name:lead.name, customer_name:lead.customer_name, city:lead.city, state:lead.state, mobile:lead.mobile, gst:"erertyujhtyuiop",
+        created_at: new Date(),
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save();
+
+    await Remark.deleteMany({ lead: lead._id });
+    await Lead.findByIdAndDelete(lead._id);
+    return res.status(200).json({ message: "new refer created" })
+}
+
+
 export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)

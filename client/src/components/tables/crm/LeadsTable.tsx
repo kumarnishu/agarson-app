@@ -1,4 +1,4 @@
-import { Comment, Delete,  Edit, Share, Visibility } from '@mui/icons-material'
+import { BuildOutlined, Comment, Delete, Edit, Share, Visibility } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
@@ -15,6 +15,7 @@ import ViewRemarksDialog from '../../dialogs/crm/ViewRemarksDialog'
 import ReferLeadDialog from '../../dialogs/crm/ReferLeadDialog'
 import RemoveLeadReferralDialog from '../../dialogs/crm/RemoveLeadReferralDialog'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import ConvertLeadToReferDialog from '../../dialogs/crm/ConvertLeadToReferDialog'
 
 
 type Props = {
@@ -134,7 +135,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               <STableHeadCell
               >
 
-                GST 
+                GST
 
               </STableHeadCell>
 
@@ -147,7 +148,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               </STableHeadCell>
 
 
-           
+
 
 
               <STableHeadCell
@@ -380,7 +381,21 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                 </IconButton>
                               </Tooltip>}
 
-                            {user?.crm_access_fields.is_deletion_allowed  &&
+                            {!lead.referred_party &&
+                              <Tooltip title="convert to refer">
+                                <IconButton color="primary"
+                                  onClick={() => {
+
+                                    setChoice({ type: LeadChoiceActions.convert_lead_to_refer })
+                                    setLead(lead)
+
+                                  }}
+                                >
+                                  <BuildOutlined />
+                                </IconButton>
+                              </Tooltip>}
+
+                            {user?.crm_access_fields.is_deletion_allowed &&
                               <Tooltip title="delete">
                                 <IconButton color="error"
                                   onClick={() => {
@@ -393,9 +408,9 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                 </IconButton>
                               </Tooltip>
                             }
-                           
 
-                            
+
+
 
                             {user?.crm_access_fields.is_editable &&
                               <Tooltip title="edit">
@@ -447,7 +462,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                     <STableCell style={{ fontWeight: lead.visiting_card && lead.visiting_card.public_url && 'bold' }} title={lead.visiting_card && lead.visiting_card.public_url && 'This number has Visitng card Uploaded'}>
                       {lead.name}
                     </STableCell>
-                  
+
 
                     <STableCell>
                       {lead.city}
@@ -555,7 +570,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       {lead.country}
 
                     </STableCell>
-                    
+
 
 
                     <STableCell>
@@ -603,16 +618,16 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
         </STable>
       </Box >
       <CreateOrEditLeadDialog lead={lead} />
-      
+
       {
         lead ?
           <>
-           <CreateOrEditRemarkDialog lead={lead} />
+            <CreateOrEditRemarkDialog lead={lead} />
             <DeleteCrmItemDialog lead={lead} />
             <ViewRemarksDialog lead={lead} />
-            <ReferLeadDialog lead={lead}/>
-            <RemoveLeadReferralDialog lead={lead}/>
-            
+            <ReferLeadDialog lead={lead} />
+            <RemoveLeadReferralDialog lead={lead} />
+            <ConvertLeadToReferDialog lead={lead} />
           </>
           : null
       }
