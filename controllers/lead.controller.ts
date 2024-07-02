@@ -2553,7 +2553,7 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
     let day = previous_date.getDate() - 7
     previous_date.setDate(day)
 
-    let reminders = await Remark.find({ remind_date: { $lte: new Date(), $gt: previous_date } }).populate('created_by').populate('updated_by').populate({
+    let reminders = await Remark.find({ remind_date: { $lte: new Date(), $gt: previous_date },created_by:req.user?._id }).populate('created_by').populate('updated_by').populate({
         path: 'lead',
         populate: [
             {
@@ -2583,9 +2583,7 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
             }
         ]
     }).sort('-remind_date')
-    reminders = reminders.filter((reminder) => {
-        return reminder.created_by.username === req.user?.username
-    })
+
     return res.status(200).json(reminders)
 }
 

@@ -19,7 +19,6 @@ function ActivitiesTable({ remarks }: Props) {
     useEffect(() => {
         setData(remarks)
     }, [remarks])
-    console.log(remarks)
     return (
         <>
             <Box sx={{
@@ -270,16 +269,11 @@ function ActivitiesTable({ remarks }: Props) {
                                             {remark.remind_date ? new Date(remark.remind_date).toLocaleDateString() : "na"}
                                         </STableCell>
                                         <STableCell>
-                                            {remark.lead.has_card ? 'Visiting card available' : "na"}
+                                            {remark.lead && remark.lead.has_card ? 'Visiting card available' : "na"}
                                         </STableCell>
                                         <STableCell>
                                             {remark.lead.name}
                                         </STableCell>
-
-
-
-
-
                                         <STableCell>
                                             {remark.lead.mobile}
 
