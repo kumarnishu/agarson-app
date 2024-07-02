@@ -119,66 +119,70 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: ILead, r
                     }
                     {...formik.getFieldProps('remark')}
                 />
-                <FormGroup>
-                    <FormControlLabel control={<Checkbox
-                        checked={Boolean(display)}
-                        onChange={() => setDisplay(!display)}
-                    />} label="Make Reminder" />
-                </FormGroup>
-                {display && < TextField
-                    type="date"
-                    error={
-                        formik.touched.remind_date && formik.errors.remind_date ? true : false
-                    }
-                    focused
-                    id="remind_date"
-                    label="Remind Date"
-                    fullWidth
-                    helperText={
-                        formik.touched.remind_date && formik.errors.remind_date ? formik.errors.remind_date : ""
-                    }
-                    {...formik.getFieldProps('remind_date')}
-                />}
-                <FormGroup>
-                    <FormControlLabel control={<Checkbox
-                        checked={Boolean(card)}
-                        onChange={() => setCard(!card)}
-                    />} label="Have a Visiting Card ?" />
-                </FormGroup>
+                {lead && <>
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox
+                            checked={Boolean(display)}
+                            onChange={() => setDisplay(!display)}
+                        />} label="Make Reminder" />
+                    </FormGroup>
+                    {display && < TextField
+                        type="date"
+                        error={
+                            formik.touched.remind_date && formik.errors.remind_date ? true : false
+                        }
+                        focused
+                        id="remind_date"
+                        label="Remind Date"
+                        fullWidth
+                        helperText={
+                            formik.touched.remind_date && formik.errors.remind_date ? formik.errors.remind_date : ""
+                        }
+                        {...formik.getFieldProps('remind_date')}
+                    />}
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox
+                            checked={Boolean(card)}
+                            onChange={() => setCard(!card)}
+                        />} label="Have a Visiting Card ?" />
+                    </FormGroup>
 
-                {/* stage */}
-                < TextField
-                    select
-                    SelectProps={{
-                        native: true
-                    }}
-                    focused
+                    {/* stage */}
+                    < TextField
+                        select
+                        SelectProps={{
+                            native: true
+                        }}
+                        focused
 
-                    error={
-                        formik.touched.stage && formik.errors.stage ? true : false
-                    }
-                    id="stage"
-                    label="Stage"
-                    fullWidth
-                    helperText={
-                        formik.touched.stage && formik.errors.stage ? formik.errors.stage : ""
-                    }
-                    {...formik.getFieldProps('stage')}
-                >
-                    <option value="">
+                        error={
+                            formik.touched.stage && formik.errors.stage ? true : false
+                        }
+                        id="stage"
+                        label="Stage"
+                        fullWidth
+                        helperText={
+                            formik.touched.stage && formik.errors.stage ? formik.errors.stage : ""
+                        }
+                        {...formik.getFieldProps('stage')}
+                    >
+                        <option value="">
 
-                    </option>
-                    {
-                        stages.map(stage => {
-                            if (stage.stage === "refer")
-                                return null
-                            else
-                                return (<option key={stage._id} value={stage.stage}>
-                                    {toTitleCase(stage.stage)}
-                                </option>)
-                        })
-                    }
-                </TextField>
+                        </option>
+                        {
+                            stages.map(stage => {
+                                if (stage.stage === "refer")
+                                    return null
+                                else
+                                    return (<option key={stage._id} value={stage.stage}>
+                                        {toTitleCase(stage.stage)}
+                                    </option>)
+                            })
+                        }
+                    </TextField>
+                </>}
+
+
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : !remark ? "Add Remark" : "Update Remark"}

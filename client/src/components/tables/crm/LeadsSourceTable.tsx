@@ -8,15 +8,16 @@ import { UserContext } from '../../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import CreateOrEditLeadSourceDialog from '../../dialogs/crm/CreateOrEditLeadSourceDialog'
 import { ILeadSource } from '../../../types/crm.types'
+import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 
 
 type Props = {
-    source:ILeadSource | undefined,
+    source: ILeadSource | undefined,
     setLeadSource: React.Dispatch<React.SetStateAction<ILeadSource | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    sources:ILeadSource[],
-    selectedLeadSources:ILeadSource[]
+    sources: ILeadSource[],
+    selectedLeadSources: ILeadSource[]
     setSelectedLeadSources: React.Dispatch<React.SetStateAction<ILeadSource[]>>,
 }
 function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLeadSource, selectedLeadSources, setSelectedLeadSources }: Props) {
@@ -70,7 +71,7 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                 LeadSource
 
                             </STableHeadCell>
-                          
+
 
 
 
@@ -101,8 +102,8 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                         {!selectAll ?
                                             <STableCell style={{ width: '50px' }}>
 
-                                                <Checkbox sx={{ width: 16, height: 16 }} 
-                                                size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }}
+                                                    size="small"
                                                     checked={selectedLeadSources.length > 0 && selectedLeadSources.find((t) => t._id === source._id) ? true : false}
                                                     onChange={(e) => {
                                                         setLeadSource(source)
@@ -122,48 +123,48 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                             null
                                         }
                                         {/* actions */}
-                                      
-                                            <STableCell style={{ width: '50' }}>
-                                                <PopUp
-                                                    element={
-                                                        <Stack direction="row">
-                                                            <>
-                                                                {user?.crm_access_fields.is_deletion_allowed &&
-                                                                    <Tooltip title="delete">
-                                                                        <IconButton color="error"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: LeadChoiceActions.delete_crm_item })
-                                                                                setLeadSource(source)
 
-                                                                            }}
-                                                                        >
-                                                                            <Delete />
-                                                                        </IconButton>
-                                                                    </Tooltip>
-                                                                }
+                                        <STableCell style={{ width: '50' }}>
+                                            <PopUp
+                                                element={
+                                                    <Stack direction="row">
+                                                        <>
+                                                            {user?.crm_access_fields.is_deletion_allowed &&
+                                                                <Tooltip title="delete">
+                                                                    <IconButton color="error"
+                                                                        onClick={() => {
+                                                                            setChoice({ type: LeadChoiceActions.delete_crm_item })
+                                                                            setLeadSource(source)
+
+                                                                        }}
+                                                                    >
+                                                                        <Delete />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            }
 
                                                             {user?.crm_access_fields.is_editable && <Tooltip title="edit">
-                                                                    <IconButton
-                                                                        onClick={() => {
-                                                                            setLeadSource(source)
-                                                                            setChoice({ type: LeadChoiceActions.create_or_edit_source })
-                                                                        }}
+                                                                <IconButton
+                                                                    onClick={() => {
+                                                                        setLeadSource(source)
+                                                                        setChoice({ type: LeadChoiceActions.create_or_edit_source })
+                                                                    }}
 
-                                                                    >
-                                                                        <Edit />
-                                                                    </IconButton>
-                                                                </Tooltip>}
+                                                                >
+                                                                    <Edit />
+                                                                </IconButton>
+                                                            </Tooltip>}
 
-                                                            </>
+                                                        </>
 
-                                                        </Stack>}
-                                                />
+                                                    </Stack>}
+                                            />
 
-                                            </STableCell>
+                                        </STableCell>
                                         <STableCell style={{ width: '200px' }}>
                                             {source.source}
                                         </STableCell>
-                                      
+
 
                                     </STableRow>
                                 )
@@ -171,6 +172,7 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                     </STableBody>
                 </STable>
                 <CreateOrEditLeadSourceDialog source={source} />
+                <DeleteCrmItemDialog source={source} />
             </Box>
         </>
     )

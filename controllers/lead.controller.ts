@@ -347,7 +347,7 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
         for (let i = 0; i < workbook_response.length; i++) {
             let item = workbook_response[i]
             let state: string | null = String(item.state)
-            let users: string | null = String(item.state)
+           
 
             if (state) {
                 if (item._id && isMongoId(String(item._id))) {
@@ -522,12 +522,12 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     let stage = req.query.stage
     let user = await User.findById(req.user).populate('assigned_crm_states');
     let showonlycardleads = Boolean(user?.show_only_visiting_card_leads)
-    
+
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
         let count = 0
-        if (stage!="undefined") {
+        if (stage != "undefined") {
             leads = await Lead.find({
                 stage: stage, state: { $in: states }
             }).populate('updated_by').populate('created_by').populate({
@@ -564,7 +564,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
-                has_card: showonlycardleads,  state: { $in: states }
+                has_card: showonlycardleads, state: { $in: states }
             }).countDocuments()
         }
         else {
@@ -675,14 +675,14 @@ export const ConvertLeadToRefer = async (req: Request, res: Response, next: Next
     if (!lead) {
         return res.status(404).json({ message: "lead not found" })
     }
-    
+
     let resultParty = await ReferredParty.findOne({ mobile: lead.mobile });
     if (resultParty) {
         return res.status(400).json({ message: "already exists this mobile number in refers" })
     }
 
     await new ReferredParty({
-        name:lead.name, customer_name:lead.customer_name, city:lead.city, state:lead.state, mobile:lead.mobile, gst:"erertyujhtyuiop",
+        name: lead.name, customer_name: lead.customer_name, city: lead.city, state: lead.state, mobile: lead.mobile, gst: "erertyujhtyuiop",
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -709,7 +709,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
     let leads: ILead[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
 
-        if (stage!="undefined") {
+        if (stage != "undefined") {
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
@@ -1031,11 +1031,11 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
 
             }
         }
-        else if (showonlycardleads){
+        else if (showonlycardleads) {
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
-                    has_card:showonlycardleads,state: { $in: states },
+                    has_card: showonlycardleads, state: { $in: states },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -1931,6 +1931,11 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             let lead = workbook_response[i]
             let new_: IUser[] = []
             let mobile: string | null = lead.mobile
+            let stage: string | null = lead.stage
+            let leadtype: string | null = lead.lead_type
+            let source: string | null = lead.lead_source
+            let city: string | null = lead.city
+            let state: string | null = lead.state
             let alternate_mobile1: string | null = lead.alternate_mobile1
             let alternate_mobile2: string | null = lead.alternate_mobile2
             let uniqueNumbers: string[] = []
@@ -1987,7 +1992,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                             checkednumbers.push(mobile)
                         }
                     }
-
+                    
                     if (alternate_mobile1 && alternate_mobile1 !== targetLead?.alternate_mobile1) {
                         let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile1 }, { alternate_mobile1: alternate_mobile1 }, { alternate_mobile2: alternate_mobile1 }] })
                         if (!ld && !checkednumbers.includes(alternate_mobile1)) {
@@ -2066,6 +2071,11 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
 
                         await Lead.findByIdAndUpdate(lead._id, {
                             ...lead,
+                            stage:stage? stage: "unknown",
+                            lead_type: leadtype ? leadtype : "unknown",
+                            lead_source: source ? source : "unknown",
+                            city: city ? city : "unknown",
+                            state: state ? state : "unknown",
                             remarks: targetLead.remarks,
                             mobile: uniqueNumbers[0],
                             alternate_mobile1: uniqueNumbers[1] || null,
@@ -2080,6 +2090,11 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                     let newlead = new Lead({
                         ...lead,
                         _id: new Types.ObjectId(),
+                        stage: stage ? stage : "unknown",
+                        state: state ? state : "unknown",
+                        lead_type: leadtype ? leadtype : "unknown",
+                        lead_source: source ? source : "unknown",
+                        city: city ? city : "unknown",
                         mobile: uniqueNumbers[0] || null,
                         alternate_mobile1: uniqueNumbers[1] || null,
                         alternate_mobile2: uniqueNumbers[2] || null,
@@ -2434,6 +2449,23 @@ export const DeleteReferParty = async (req: Request, res: Response, next: NextFu
     return res.status(200).json({ message: "deleted" })
 }
 
+export const BulkDeleteUselessLeads = async (req: Request, res: Response, next: NextFunction) => {
+    const { leads_ids } = req.body as { leads_ids: string[] }
+    for (let i = 0; i <= leads_ids.length; i++) {
+        let lead = await Lead.findById(leads_ids[i])
+        if (lead && lead.stage == 'useless') {
+            let remarks = await Remark.find({ lead: lead._id })
+            remarks.map(async (remark) => {
+                await remark.remove()
+            })
+            await lead.remove()
+            if (lead.visiting_card && lead.visiting_card._id)
+                await destroyFile(lead.visiting_card?._id)
+        }
+    }
+    return res.status(200).json({ message: "lead and related remarks are deleted" })
+}
+
 export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next: NextFunction) => {
     let result: IReferTemplate[] = []
     let statusText: string = ""
@@ -2521,6 +2553,8 @@ export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next
                             else {
                                 await ReferredParty.findByIdAndUpdate(refer._id, {
                                     ...refer,
+                                    city: city ? city : "unknown",
+                                    state: state ? state : "unknown",
                                     updated_by: req.user,
                                     updated_at: new Date(Date.now())
                                 })
@@ -2540,6 +2574,8 @@ export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next
                         let referParty = new ReferredParty({
                             ...refer,
                             _id: new Types.ObjectId(),
+                            city: city ? city : "unknown",
+                            state: state ? state : "unknown",
                             mobile: refer.mobile,
                             created_by: req.user,
                             updated_by: req.user,
@@ -2767,6 +2803,7 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
         lead.has_card = true
     else
         lead.has_card = false
+    lead.stage = stage
     if (req.user) {
         lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
@@ -2775,3 +2812,6 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
     return res.status(200).json({ message: "new remark added successfully" })
 }
 
+export const ResetCrmFieldItems = async (req: Request, res: Response, next: NextFunction) => {
+    return res.status(200).json({ message: "lead fields reset successfully" })
+}
