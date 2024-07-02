@@ -2583,7 +2583,14 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
             }
         ]
     }).sort('-remind_date')
-
+    
+    reminders=reminders.filter((reminder)=>{
+        let all_remarks = reminder.lead && reminder.lead.remarks;
+        let last_remark = all_remarks&&all_remarks.length>0&&all_remarks[all_remarks.length-1];
+        if (last_remark && last_remark.remind_date){
+            return reminder;
+        }
+    })
     return res.status(200).json(reminders)
 }
 

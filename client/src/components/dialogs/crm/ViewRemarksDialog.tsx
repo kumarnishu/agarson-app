@@ -6,6 +6,7 @@ import { ILead, IRemark } from '../../../types/crm.types'
 import DeleteRemarkDialog from './DeleteRemarkDialog'
 import CreateOrEditRemarkDialog from './CreateOrEditRemarkDialog'
 import { UserContext } from '../../../contexts/userContext'
+import { toTitleCase } from '../../../utils/TitleCase'
 
 
 function ViewRemarksDialog({ lead }: { lead: ILead }) {
@@ -33,9 +34,10 @@ function ViewRemarksDialog({ lead }: { lead: ILead }) {
 
                           <>
                                 <div key={index} style={{ borderRadius: '1px 10px', padding: '10px', background: 'whitesmoke', paddingLeft: '20px', border: '1px solid grey' }}>
-                                    <p>{item.created_by.username} : {item.remark} </p>
+                                    <p>{toTitleCase(item.created_by.username)} : {item.remark} </p>
+                                    <p>{item.remind_date && `Remind Date : ${new Date(item.remind_date).toLocaleDateString() }`} </p>
                                     <br></br>
-                                    <p>{'Timestamp : ' + new Date(item.created_at).toLocaleString()}</p>
+                                    <p>{new Date(item.created_at).toLocaleString()}</p>
                                     {
                                         user && item.remark && user?.username === item.created_by.username && new Date(item.created_at) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
                                             <IconButton size="small" color="error" onClick={() => {
