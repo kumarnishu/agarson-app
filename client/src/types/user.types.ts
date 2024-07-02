@@ -19,6 +19,7 @@ export type IUser = {
     client_id: string,
     connected_number?: string,
     is_admin: Boolean,
+    show_only_visiting_card_leads: boolean,
     user_access_fields: FeatureAccess,
     crm_access_fields: FeatureAccess,
     productions_access_fields: FeatureAccess,

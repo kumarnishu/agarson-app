@@ -157,7 +157,6 @@ export const AddMoreCheckBoxes = async (req: Request, res: Response, next: NextF
     let boxes: IChecklist['boxes'] = checklist.boxes
     if (upto_date) {
         if (boxes.length > 0) {
-            console.log("entered")
             let current_date = new Date(boxes[boxes.length - 1].desired_date)
             current_date.setDate(new Date(current_date).getDate() + 1)
             while (current_date <= new Date(upto_date)) {

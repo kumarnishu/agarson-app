@@ -1,25 +1,24 @@
 import { Search } from '@mui/icons-material'
-import { Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { FuzzySearchLeads, GetLeads } from '../../services/LeadsServices'
+import { FuzzySearchLeads, GetAllStages, GetLeads } from '../../services/LeadsServices'
 import { UserContext } from '../../contexts/userContext'
 import UploadLeadsExcelButton from '../../components/buttons/UploadLeadsExcelButton';
 import DBPagination from '../../components/pagination/DBpagination';
-import LeadsTable from '../../components/tables/LeadsTable';
+import LeadsTable from '../../components/tables/crm/LeadsTable';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
-import NewLeadDialog from '../../components/dialogs/crm/NewLeadDialog'
 import AlertBar from '../../components/snacks/AlertBar'
-import { ILead, ILeadTemplate } from '../../types/crm.types'
-import BulkAssignLeadsDialog from '../../components/dialogs/crm/BulkAssignLeadsDialog'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { GetUsers } from '../../services/UserServices'
-import { IUser } from '../../types/user.types'
+import { ILeadTemplate } from '../../types/template.type'
+import { ILead, IStage } from '../../types/crm.types'
+import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
+import { toTitleCase } from '../../utils/TitleCase'
 
 let template: ILeadTemplate[] = [
   {
@@ -42,16 +41,13 @@ let template: ILeadTemplate[] = [
     stage: "useless",
     lead_source: "cold calling",
     remarks: "remarks",
-    lead_owners: "nishu,sandeep",
-    is_customer: false
+    gst: ""
   }
 ]
 
 
 export default function LeadsPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
-  const [users, setUsers] = useState<IUser[]>([])
-  const [userId, setUserId] = useState<string>()
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<ILead>()
@@ -62,11 +58,14 @@ export default function LeadsPage() {
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
-  const { data, isLoading, refetch: refetchLeads } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData, userId], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, userId }))
+  const [stage, setStage] = useState<string>();
+  const [stages, setStages] = useState<IStage[]>([])
 
-  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+  const { data, isLoading, refetch } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, userId }), {
+  const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
+
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
     enabled: false
   })
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
@@ -89,6 +88,7 @@ export default function LeadsPage() {
     }
   }
 
+
   // refine data
   useEffect(() => {
     let data: ILeadTemplate[] = []
@@ -101,6 +101,7 @@ export default function LeadsPage() {
           customer_name: lead.customer_name,
           customer_designation: lead.customer_designation,
           mobile: lead.mobile,
+          gst: lead.gst,
           email: lead.email,
           city: lead.city,
           state: lead.state,
@@ -115,25 +116,34 @@ export default function LeadsPage() {
           stage: lead.stage,
           lead_source: lead.lead_source,
           remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
-          is_customer: lead.is_customer,
-          lead_owners: lead.lead_owners.map((owner) => { return owner.username }).toString()
+
         })
     })
     if (data.length > 0)
       setSelectedData(data)
   }, [selectedLeads])
 
-  useEffect(() => {
-    if (isUsersSuccess)
-      setUsers(usersData?.data)
-  }, [users, isUsersSuccess, usersData])
 
   useEffect(() => {
+    if (stageSuccess) {
+      setStages(stagedata.data)
+    }
+  }, [stageSuccess, stages, stagedata])
+
+  useEffect(() => {
+
     if (!filter) {
       setLeads(preFilteredData)
       setPaginationData(preFilteredPaginationData)
     }
-  }, [filter])
+    if (stage && !filter) {
+      refetch();
+    }
+
+
+  }, [filter, stage])
+
+
 
   useEffect(() => {
     if (filter) {
@@ -199,75 +209,75 @@ export default function LeadsPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Leads
+          Leads {selectedLeads.length > 0 ? <span>(checked : {selectedLeads.length})</span> : `- ${leads.length}`}
         </Typography>
 
+        <TextField
+          sx={{ width: '50vw' }}
+          size="small"
+          onChange={(e) => {
+            setFilter(e.currentTarget.value)
+            setFilterCount(0)
+          
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Search sx={{ cursor: 'pointer' }} onClick={() => {
+                  refetchFuzzy()
+                }} />
+              </InputAdornment>
+            ),
+          }}
+          placeholder={`Search Leads `}
+          style={{
+            fontSize: '1.1rem',
+            border: '0',
+          }}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              refetchFuzzy()
+            }
+          }}
+        />
         <Stack
           direction="row"
         >
           {/* search bar */}
-          < Stack direction="row" spacing={2}>
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadLeadsExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
-            {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 &&
-              < TextField
-                size='small'
-                select
-                SelectProps={{
-                  native: true,
-                }}
-                onChange={(e) => {
-                  setUserId(e.target.value)
-                  refetchLeads()
-                }}
-                required
-                id="todo_owner"
-                label="Filter Lead Owners"
-                fullWidth
-              >
-                <option key={'00'} value={undefined}>
-
-                </option>
-                {
-                  users.map((user, index) => {
-                    if (!user.crm_access_fields.is_hidden)
-                      return (<option key={index} value={user._id}>
-                        {user.username}
-                      </option>)
-                    else
-                      return null
-                  })
-                }
-              </TextField>}
-            <TextField
-              fullWidth
+          < Stack direction="row" spacing={2} >
+            < TextField
+              select
+              SelectProps={{
+                native: true
+              }}
+              id="stage"
               size="small"
+              label="Select Stage"
+              sx={{ width: '200px' }}
+              value={stage}
               onChange={(e) => {
-                setFilter(e.currentTarget.value)
-                setFilterCount(0)
-              }}
-              placeholder={`${MemoData?.length} records...`}
-              style={{
-                fontSize: '1.1rem',
-                border: '0',
-              }}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
-                  refetchFuzzy()
-                }
-              }}
-            />
-            <IconButton
-              sx={{ bgcolor: 'whitesmoke' }}
-              onClick={() => {
-                refetchFuzzy()
-              }}
+                setStage(e.target.value);
+              }
+              }
             >
-              <Search />
-            </IconButton>
+              <option key={0} value={'undefined'}>
+              All
+              </option>
+              {
+                stages.map(stage => {
+                  return (<option key={stage._id} value={stage.stage}>
+                    {toTitleCase(stage.stage)}
+                  </option>)
+                })
+              }
+            </TextField>
+            {LoggedInUser?.is_admin && <UploadLeadsExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
           </Stack >
           <>
 
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
+
+            {/* stage */}
 
 
             <IconButton size="small" color="primary"
@@ -291,41 +301,35 @@ export default function LeadsPage() {
             >
               <MenuItem
                 onClick={() => {
-                  setChoice({ type: LeadChoiceActions.create_lead })
+                  setChoice({ type: LeadChoiceActions.create_or_edit_lead })
+                  setLead(undefined);
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              <MenuItem
-                onClick={() => {
-                  if (selectedLeads.length === 0)
-                    alert("please select some leads")
-                  else
-                    setChoice({ type: LeadChoiceActions.bulk_assign_leads })
-                  setAnchorEl(null)
-                }}
-              > Assign Leads</MenuItem>
-
-              {LoggedInUser?.is_admin &&< MenuItem onClick={handleExcel}
+              {LoggedInUser?.is_admin && < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>}
 
             </Menu >
-            <NewLeadDialog />
-            <BulkAssignLeadsDialog leads={selectedLeads} />
+            <CreateOrEditLeadDialog lead={undefined} />
           </>
         </Stack >
       </Stack >
       {/* table */}
       {isLoading && <TableSkeleton />}
-      {!isLoading && < LeadsTable
-        lead={lead}
-        setLead={setLead}
-        selectAll={selectAll}
-        selectedLeads={selectedLeads}
-        setSelectedLeads={setSelectedLeads}
-        setSelectAll={setSelectAll}
-        leads={MemoData}
-      />}
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
+      {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
+      {!isLoading && MemoData.length > 0 && <>
+        < LeadsTable
+          lead={lead}
+          setLead={setLead}
+          selectAll={selectAll}
+          selectedLeads={selectedLeads}
+          setSelectedLeads={setSelectedLeads}
+          setSelectAll={setSelectAll}
+          leads={MemoData}
+        />
+        <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+      </>
+      }
     </>
 
   )

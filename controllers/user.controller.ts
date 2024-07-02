@@ -866,6 +866,20 @@ export const MakeAdmin = async (req: Request, res: Response, next: NextFunction)
     res.status(200).json({ message: "admin role provided successfully" });
 }
 
+export const ToogleShowvisitingcard = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
+    let user = await User.findById(id)
+    if (!user) {
+        return res.status(404).json({ message: "user not found" })
+    }
+    user.show_only_visiting_card_leads = !user.show_only_visiting_card_leads
+    if (req.user) {
+        user.updated_by = user
+    }
+    await user.save();
+    res.status(200).json({ message: "changed successfully" });
+}
 
 
 export const AssignUserstoManager = async (req: Request, res: Response, next: NextFunction) => {

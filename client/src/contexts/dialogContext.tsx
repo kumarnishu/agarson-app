@@ -1,7 +1,7 @@
 import React, { useReducer } from "react"
 
-type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" | "create_state" | "update_state" | "delete_state" |
-  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users" | "bulk_assign_states"
+type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" | "create_or_edit_erpstate" | "update_state" | "delete_state" |
+  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users" | "bulk_assign_erp_states" | "toogle_show_visitingcard"
 
 
 type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting" | "bulk_start_greeting" | "close_greeting" | "bulk_stop_greeting" | "stop_greeting" | "start_greeting"
@@ -14,8 +14,8 @@ type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
 
-type LeadChoices = "create_lead" | "update_lead" | "add_remark" | "view_remarks" | "close_lead" | "display_filter" | "delete_lead" | "convert_customer" | "lead_advance_filter" | "create_refer" | "update_refer" | "delete_refer" | "view_referrals" | "bulk_delete_useless_leads" | "convert_useless" |"view_card_comments"|
-   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "update_remark" | "create_card" | "update_card" | "refer_card" | "toogle_card" | "add_card_comment"
+type LeadChoices = "create_or_edit_refer" | "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_leadtype" | "delete_lead"  | "delete_leadtype" | "create_refer" | "convert_lead_to_refer" | "delete_refer" | "view_referrals"   |"delete_crm_state"|
+   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "add_card_comment"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
 
@@ -106,40 +106,38 @@ export enum TemplateChoiceActions {
 
 
 export enum LeadChoiceActions {
-  create_card = "create_card",
-  update_card = "update_card",
-  view_card_comments ="view_card_comments",
-  refer_card = "refer_card",
-  create_lead = "create_lead",
-  update_lead = "update_lead",
+  create_or_edit_lead = "create_or_edit_lead",
+  create_or_edit_state = "create_or_edit_state",
+  delete_crm_state ="delete_crm_state",
+  create_or_edit_stage = "create_or_edit_stage",
+  create_or_edit_refer = "create_or_edit_refer",
+  create_or_edit_source = "create_or_edit_source",
   delete_lead = "delete_lead",
   delete_remark = "delete_remark",
-  update_remark = "update_remark",
+  create_or_edt_remark = "create_or_edt_remark",
   view_remarks = "view_remarks",
   close_lead = "close_lead",
-  convert_customer = "convert_customer",
-  display_filter = "display_filter",
-  add_remark = "add_remark",
-  lead_advance_filter = "lead_advance_filter",
+  create_or_edit_leadtype = "create_or_edit_leadtype",
+  delete_crm_item = "delete_crm_item",
+  delete_leadtype = "delete_leadtype",
   create_refer = "create_refer",
-  update_refer = "update_refer",
+  convert_lead_to_refer = "convert_lead_to_refer",
   delete_refer = "delete_refer",
   view_referrals = "view_referrals",
   refer_lead = "refer_lead",
   remove_referral = "remove_referral",
-  bulk_delete_useless_leads = "bulk_delete_useless_leads",
-  convert_useless = "convert_useless",
   assign_refer = "assign_refer",
   bulk_assign_leads = "bulk_assign_leads",
   bulk_assign_refers = "bulk_assign_refers",
-  toogle_card = "toogle_card",
+  bulk_assign_crm_states = "bulk_assign_crm_states",
   add_card_comment = "add_card_comment"
 }
 
 export enum UserChoiceActions {
-  bulk_assign_states = "bulk_assign_states",
+  bulk_assign_erp_states = "bulk_assign_erp_states",
   assign_users = "assign_users",
   signup = "signup",
+  toogle_show_visitingcard ="toogle_show_visitingcard",
   reset_password_mail = "reset_password_mail",
   close_user = "close_user",
   new_user = "new_user",
@@ -159,7 +157,7 @@ export enum UserChoiceActions {
   update_user_password = "update_user_password",
   block_multi_login = "block_multi_login",
   reset_multi_login = "reset_multi_login",
-  create_state = "create_state",
+  create_or_edit_erpstate = "create_or_edit_erpstate",
   update_state = "update_state",
   delete_state = "delete_state"
 
@@ -196,40 +194,38 @@ function reducer(state: ChoiceState | null, action: Action) {
     case UserChoiceActions.reset_multi_login: return type
     case UserChoiceActions.assign_users: return type
     case UserChoiceActions.block_multi_login: return type
-    case UserChoiceActions.create_state: return type
+    case UserChoiceActions.create_or_edit_erpstate: return type
     case UserChoiceActions.update_state: return type
     case UserChoiceActions.delete_state: return type
-    case UserChoiceActions.bulk_assign_states: return type
+    case UserChoiceActions.bulk_assign_erp_states: return type
+    case UserChoiceActions.toogle_show_visitingcard: return type
 
     // lead dialog choices
-    case LeadChoiceActions.create_lead: return type
-    case LeadChoiceActions.update_lead: return type
+    case LeadChoiceActions.create_or_edit_refer: return type
+    case LeadChoiceActions.create_or_edit_source: return type
     case LeadChoiceActions.view_remarks: return type
-    case LeadChoiceActions.add_remark: return type
-    case LeadChoiceActions.display_filter: return type
+    case LeadChoiceActions.delete_crm_item: return type
+    case LeadChoiceActions.create_or_edit_leadtype: return type
     case LeadChoiceActions.delete_lead: return type
-    case LeadChoiceActions.convert_customer: return type
-    case LeadChoiceActions.lead_advance_filter: return type
+    case LeadChoiceActions.delete_leadtype: return type
     case LeadChoiceActions.close_lead: return type
     case LeadChoiceActions.create_refer: return type
-    case LeadChoiceActions.update_refer: return type
+    case LeadChoiceActions.convert_lead_to_refer: return type
     case LeadChoiceActions.delete_refer: return type
     case LeadChoiceActions.view_referrals: return type
     case LeadChoiceActions.refer_lead: return type
     case LeadChoiceActions.remove_referral: return type
-    case LeadChoiceActions.bulk_delete_useless_leads: return type
     case LeadChoiceActions.assign_refer: return type
     case LeadChoiceActions.delete_remark: return type
-    case LeadChoiceActions.update_remark: return type
-    case LeadChoiceActions.convert_useless: return type
+    case LeadChoiceActions.create_or_edt_remark: return type
     case LeadChoiceActions.bulk_assign_leads: return type
     case LeadChoiceActions.bulk_assign_refers: return type
-    case LeadChoiceActions.create_card: return type
-    case LeadChoiceActions.update_card: return type
-    case LeadChoiceActions.refer_card: return type
-    case LeadChoiceActions.toogle_card: return type
+    case LeadChoiceActions.create_or_edit_lead: return type
+    case LeadChoiceActions.create_or_edit_state: return type
+    case LeadChoiceActions.create_or_edit_stage: return type
+    case LeadChoiceActions.bulk_assign_crm_states: return type
     case LeadChoiceActions.add_card_comment: return type
-    case LeadChoiceActions.view_card_comments: return type
+    case LeadChoiceActions.delete_crm_state: return type
 
     //production choice actios
     case ProductionChoiceActions.create_machine: return type

@@ -1,4 +1,4 @@
-import { Accessibility, Assignment, Block, DeviceHubOutlined, Edit, GroupAdd, GroupRemove, Key, RemoveCircle, Restore } from '@mui/icons-material'
+import { Accessibility, Assignment, Block, DeviceHubOutlined, Edit, GroupAdd, GroupRemove, Key, RemoveCircle, RemoveRedEye, Restore } from '@mui/icons-material'
 import { Avatar, Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { IUser } from '../../types/user.types'
@@ -19,6 +19,7 @@ import ResetMultiLoginDialog from '../dialogs/users/ResetMultiLogin'
 import BlockMultiLoginDialog from '../dialogs/users/BlockMultiLoginDialog'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
 import AssignUsersDialog from '../dialogs/users/AssignUsersDialog'
+import ToogleVisitingcardShowDialog from '../dialogs/users/ToogleVisitingcardShowDialog'
 
 type Props = {
     user: IUser | undefined,
@@ -42,7 +43,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
         <>
             <Box sx={{
                 overflow: "auto",
-                height: '80vh'
+                height: '78vh'
             }}>
                 <STable
 
@@ -99,7 +100,12 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                 User Name
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                                Show ALl Leads
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -314,6 +320,21 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                                                     }
                                                                 </>
                                                             }
+                                                           <Tooltip title="Manage Leads View">
+                                                                <IconButton
+                                                                    color="success"
+                                                                    size="medium"
+                                                                    onClick={() => {
+                                                                        setChoice({ type: UserChoiceActions.toogle_show_visitingcard })
+                                                                        setUser(user)
+
+                                                                    }}
+                                                                >
+                                                                    <RemoveRedEye />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                                
+                                                        
                                                             {/*  block login */}
                                                             {LoggedInUser?.created_by._id === user._id ?
                                                                 null :
@@ -438,6 +459,9 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                             {user.username}
                                         </STableCell>
                                         <STableCell>
+                                            {user.show_only_visiting_card_leads?"only lead with cards":"all Leads"}
+                                        </STableCell>
+                                        <STableCell>
 
                                             {user.is_multi_login ? "allowed" : "not allowed"}
 
@@ -492,6 +516,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                         <RemoveAdminDialog id={user._id} />
                         <UpdateUsePasswordDialog user={user} />
                         <AssignUsersDialog user={user} setUser={setUser} />
+                        <ToogleVisitingcardShowDialog user={user}/>
                     </>
                     : null
             }

@@ -8,18 +8,18 @@ import { UserContext } from "../contexts/userContext";
 function CrmDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
   const { user } = useContext(UserContext)
-  
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     tmpfeatures.push({ feature: 'leads ', is_visible: true, url: paths.leads })
-    tmpfeatures.push({ feature: 'customers', is_visible: true, url: paths.customers })
     tmpfeatures.push({ feature: 'refers', is_visible: true, url: paths.refers })
-    tmpfeatures.push({ feature: 'useless', is_visible: true, url: paths.useless_leads })
     tmpfeatures.push({ feature: 'reminders', is_visible: true, url: paths.crm_reminders })
     tmpfeatures.push({ feature: 'activities', is_visible: true, url: paths.crm_activities })
-    tmpfeatures.push({ feature: 'visitng cards', is_visible: true, url: paths.visiting_cards })
-    user?.crm_access_fields.is_editable && tmpfeatures.push({ feature: 'fields', is_visible: true, url: paths.updateble_fields_lead })
+    user?.is_admin && tmpfeatures.push({ feature: 'states', is_visible: true, url: paths.crm_states })
+    user?.is_admin && tmpfeatures.push({ feature: 'cities', is_visible: true, url: paths.crm_cities })
+    user?.is_admin && tmpfeatures.push({ feature: 'Lead Type', is_visible: true, url: paths.crm_leadtypes })
+    user?.is_admin && tmpfeatures.push({ feature: 'Lead Source', is_visible: true, url: paths.crm_leadsources })
+    user?.is_admin && tmpfeatures.push({ feature: 'Lead Stage', is_visible: true, url: paths.crm_stages })
     setFeatures(tmpfeatures)
   }, [])
 

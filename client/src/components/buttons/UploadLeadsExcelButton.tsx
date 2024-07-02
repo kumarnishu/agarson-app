@@ -4,10 +4,10 @@ import { useMutation } from "react-query"
 import { styled } from "styled-components"
 import { BackendError } from "../.."
 import { BulkLeadUpdateFromExcel } from "../../services/LeadsServices"
-import { Button, CircularProgress, Snackbar } from "@mui/material"
+import { Button, Snackbar, Tooltip } from "@mui/material"
 import ExportToExcel from "../../utils/ExportToExcel"
 import { Upload } from "@mui/icons-material"
-import { ILeadTemplate } from "../../types/crm.types"
+import { ILeadTemplate } from "../../types/template.type"
 
 const FileInput = styled.input`
 background:none;
@@ -44,7 +44,7 @@ function UploadLeadsExcelButton({ disabled }: { disabled: boolean }) {
   React.useEffect(() => {
     if (isSuccess) {
       if (data.data.length > 0)
-        ExportToExcel(data.data, "errors_leads_data")
+        ExportToExcel(data.data, "upload_output")
     }
   }, [isSuccess])
   return (
@@ -67,7 +67,7 @@ function UploadLeadsExcelButton({ disabled }: { disabled: boolean }) {
       />
       {
         isLoading ?
-          <CircularProgress color="success" size={"small"} />
+         <p style={{color:'blue',paddingTop:'10px'}}>processing...</p>
           :
           <>
             <Button
@@ -75,7 +75,9 @@ function UploadLeadsExcelButton({ disabled }: { disabled: boolean }) {
               disabled={Boolean(disabled)}
               component="label"
             >
-              <Upload />
+              <Tooltip title="upload excel template">
+                <Upload />
+              </Tooltip>
               <FileInput
                 id="upload_input"
                 hidden

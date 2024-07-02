@@ -1,75 +1,22 @@
+import { ICRMCity, ICRMState, ILead, ILeadSource, ILeadType, IReferredParty, IStage } from "../types/crm.types"
 import { apiClient } from "./utils/AxiosInterceptor"
 
-
-export const GetLeads = async ({ limit, page, userId }: { limit: number | undefined, userId?: string, page: number | undefined }) => {
-  if (userId)
-    return await apiClient.get(`leads/?limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`leads/?limit=${limit}&page=${page}`)
+//leads
+export const GetLeads = async ({ limit, page, stage }: { limit: number | undefined, page: number | undefined, stage?: string }) => {
+  return await apiClient.get(`leads/?limit=${limit}&page=${page}&stage=${stage}`)
 }
 
 export const GetReminderRemarks = async () => {
   return await apiClient.get(`reminder/remarks`)
 }
 
-export const GetRefers = async () => {
-  return await apiClient.get("refers")
+export const FuzzySearchLeads = async ({ searchString, limit, page, stage }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
+  return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
 }
 
-export const GetUselessLeads = async ({ limit, page, userId }: { limit: number | undefined, page: number | undefined, userId?: string }) => {
-  if (userId)
-    return await apiClient.get(`useless/leads/?limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`useless/leads/?limit=${limit}&page=${page}`)
-
+export const ConvertLeadToRefer = async ({ id }: { id: string}) => {
+  return await apiClient.patch(`leads/torefer/${id}`)
 }
-export const FuzzySearchUselessLeads = async ({ searchString, limit, page, userId }: { searchString?: string, limit: number | undefined, page: number | undefined, userId?: string }) => {
-  if (userId)
-    return await apiClient.get(`search/leads/useless?key=${searchString}&limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`search/leads/useless?key=${searchString}&limit=${limit}&page=${page}`)
-}
-
-
-export const GetPaginatedRefers = async ({ limit, page, userId }: { limit: number | undefined, page: number | undefined, userId?: string }) => {
-  if (userId)
-    return await apiClient.get(`refers/paginated?limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`refers/paginated?limit=${limit}&page=${page}`)
-
-}
-
-export const NewReferParty = async (body: {
-  name: string, customer_name?: string, city: string, state: string, mobile: string, lead_owners: string,
-}) => {
-  return await apiClient.post("refers", body)
-}
-
-export const UpdateReferParty = async ({ id, body }: {
-  id: string,
-  body: {
-    name: string, customer_name?: string, city: string, state: string, mobile: string, lead_owners: string,
-  }
-}) => {
-  return await apiClient.put(`refers/${id}`, body)
-}
-
-export const DeleteReferParty = async ({ id }: { id: string }) => {
-  return await apiClient.delete(`refers/${id}`)
-}
-
-export const ReferLead = async ({ id, body }: {
-  id: string, body: {
-    party_id: string,
-    remark: string
-  }
-}) => {
-  return await apiClient.post(`refers/leads/${id}`, body)
-}
-export const RemoveLeadReferrals = async ({ id, body }: { id: string, body: { remark: string } }) => {
-  return await apiClient.patch(`refers/leads/${id}`, body)
-}
-
 
 export const GetRemarks = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
   if (id)
@@ -78,142 +25,200 @@ export const GetRemarks = async ({ limit, page, start_date, end_date, id }: { li
     return await apiClient.get(`remarks/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
 }
 
-export const FuzzySearchLeads = async ({ searchString, limit, page, userId }: { searchString?: string, limit: number | undefined, page: number | undefined, userId?: string }) => {
-  if (userId)
-    return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}`)
-}
-export const FuzzySearchRefers = async ({ searchString, limit, page, userId }: { searchString?: string, limit: number | undefined, page: number | undefined, userId?: string }) => {
-  if (userId)
-    return await apiClient.get(`search/refers?key=${searchString}&limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`search/refers?key=${searchString}&limit=${limit}&page=${page}`)
 
-}
-
-export const FuzzySearchCustomers = async ({ searchString, limit, page, userId }: { searchString?: string, limit: number | undefined, page: number | undefined, userId?: string }) => {
-  if (userId)
-    return await apiClient.get(`search/customers?key=${searchString}&limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`search/customers?key=${searchString}&limit=${limit}&page=${page}`)
-
-}
-
-export const GetCustomers = async ({ limit, page, userId }: { limit: number | undefined, page: number | undefined, userId?: string }) => {
-  if (userId)
-    return await apiClient.get(`customers?limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`customers?limit=${limit}&page=${page}`)
-}
-
-export const NewLead = async (body: FormData) => {
+export const CreateOrUpdateLead = async ({ id, body }: { body: FormData, id?: string }) => {
+  if (id) {
+    return await apiClient.put(`leads/${id}`, body)
+  }
   return await apiClient.post("leads", body)
 }
-export const UpdateLead = async ({ id, body }: { id: string, body: FormData }) => {
-  return await apiClient.put(`leads/${id}`, body)
+
+
+export const DeleteCrmItem = async ({ refer, lead, state, city, type, source, stage }: { refer?: IReferredParty, lead?: ILead, state?: ICRMState, city?: ICRMCity, type?: ILeadType, source?: ILeadSource, stage?: IStage }) => {
+  if (refer)
+    return await apiClient.delete(`refers/${refer._id}`)
+  if (state)
+    return await apiClient.delete(`crm/states/${state._id}`)
+  if (lead)
+    return await apiClient.delete(`leads/${lead._id}`)
+  if (source)
+    return await apiClient.delete(`crm/sources/${source._id}`)
+  if (type)
+    return await apiClient.delete(`crm/leadtypes/${type._id}`)
+  if (city)
+    return await apiClient.delete(`crm/cities/${city._id}`)
+  return await apiClient.delete(`crm/stages/${stage ? stage._id : ""}`)
+
 }
-export const DeleteLead = async ({ id }: { id: string }) => {
-  return await apiClient.delete(`leads/${id}`)
-}
-export const ConvertCustomer = async ({ id, body }: { id: string, body: { remark: string } }) => {
-  return await apiClient.patch(`leads/${id}`, body)
-}
-export const ToogleUseless = async ({ id, body }: { id: string, body: { remark: string } }) => {
-  return await apiClient.patch(`toogle/useless/${id}`, body)
-}
+
+
 export const BulkLeadUpdateFromExcel = async (body: FormData) => {
   return await apiClient.put(`update/leads/bulk`, body)
 }
-export const BulkDeleteUselessLeads = async (body: { leads_ids: string[] }) => {
-  return await apiClient.post(`bulk/leads/delete`, body)
-}
-export const NewRemark = async ({ id, body }: {
-  id: string, body: {
+
+//remarks
+export const CreateOrEditRemark = async ({ body, lead_id, remark_id }: {
+  body: {
     remark: string,
-    lead_owners: string[],
-    remind_date?: string
-  }
+    remind_date?: string,
+    stage: string,
+    has_card: boolean
+  },
+  lead_id?: string,
+  remark_id?: string
+
 }) => {
-  return await apiClient.patch(`remarks/leads/${id}`, body)
-}
-export const UpdateRemark = async ({ id, body }: {
-  id: string, body: {
-    remark: string,
-    remind_date?: string
+  if (lead_id) {
+    return await apiClient.patch(`remarks/leads/${lead_id}`, body)
   }
-}) => {
-  return await apiClient.put(`remarks/${id}`, body)
+  return await apiClient.put(`remarks/${remark_id}`, body)
 }
+
+
 export const DeleteRemark = async (id: string) => {
   return await apiClient.delete(`remarks/${id}`)
 }
-export const AssignRefer = async ({ id, body }: {
-  id: string, body: {
-    lead_owners: string[]
-  }
-}) => {
-  return await apiClient.patch(`assign/refer/${id}`, body)
+
+
+//refers
+export const GetPaginatedRefers = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
+  return await apiClient.get(`refers/paginated/?limit=${limit}&page=${page}`)
+}
+export const GetRefers = async () => {
+  return await apiClient.get(`refers`)
 }
 
-export const BulkAssignRefers = async ({ body }: {
+export const FuzzySearchRefers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
+  return await apiClient.get(`search/refers?key=${searchString}&limit=${limit}&page=${page}`)
+}
+
+
+export const CreateOrUpdateRefer = async ({ id, body }: { body: FormData, id?: string }) => {
+  if (id) {
+    return await apiClient.put(`refers/${id}`, body)
+  }
+  return await apiClient.post("refers", body)
+}
+
+
+
+
+export const BulkReferUpdateFromExcel = async (body: FormData) => {
+  return await apiClient.put(`update/refers/bulk`, body)
+}
+
+//states
+
+export const GetAllStates = async () => {
+  return await apiClient.get(`crm/states`)
+}
+
+
+export const CreateOrEditState = async ({ body, id }: {
+  body: { state: string }
+  id?: string
+}) => {
+  if (id) {
+    return await apiClient.put(`crm/states/${id}`, body)
+  }
+  return await apiClient.post(`crm/states`, body)
+}
+
+
+
+export const BulkStateUpdateFromExcel = async (body: FormData) => {
+  return await apiClient.put(`crm/states/excel/createorupdate`, body)
+}
+
+//cities
+export const GetAllCities = async () => {
+  return await apiClient.get(`crm/cities`)
+}
+
+
+export const CreateOrEditCity = async ({ body, id }: {
+  body: { state: string, city: string }
+  id?: string
+
+}) => {
+  if (id) {
+    return await apiClient.put(`crm/cities/${id}`, body)
+  }
+  return await apiClient.post(`crm/cities`, body)
+}
+
+
+
+export const BulkCityUpdateFromExcel = async (body: FormData) => {
+  return await apiClient.put(`crm/cities/excel/createorupdate`, body)
+}
+
+
+//stages
+export const GetAllStages = async () => {
+  return await apiClient.get(`crm/stages`)
+}
+
+
+export const CreateOrEditStage = async ({ body, id }: {
+  body: { stage: string }
+  id?: string
+}) => {
+  if (id) {
+    return await apiClient.put(`crm/stages/${id}`, body)
+  }
+  return await apiClient.post(`crm/stages`, body)
+}
+
+
+//sources
+export const GetAllSources = async () => {
+  return await apiClient.get(`crm/sources`)
+}
+
+
+export const CreateOrEditSource = async ({ body, id }: {
+  body: { source: string }
+  id?: string
+}) => {
+  if (id) {
+    return await apiClient.put(`crm/sources/${id}`, body)
+  }
+  return await apiClient.post(`crm/sources`, body)
+}
+
+
+
+//types
+export const GetAllLeadTypes = async () => {
+  return await apiClient.get(`crm/leadtypes`)
+}
+
+
+export const CreateOrEditLeadType = async ({ body, id }: {
+  body: { type: string }
+  id?: string
+}) => {
+  if (id) {
+    return await apiClient.put(`crm/leadtypes/${id}`, body)
+  }
+  return await apiClient.post(`crm/leadtypes`, body)
+}
+
+
+export const ReferLead = async ({ id, body }: { id: string, body: { party_id: string, remark: string } }) => {
+  return await apiClient.post(`refers/leads/${id}`, body)
+}
+export const RemoveReferLead = async ({ id, body }: { id: string, body: { remark: string } }) => {
+  return await apiClient.patch(`refers/leads/${id}`, body)
+}
+
+export const AssignCRMStatesToUsers = async ({ body }: {
   body: {
-    lead_owners: string[],
-    refers: string[],
+    user_ids: string[],
+    state_ids: string[],
+    flag: number
   }
 }) => {
-  return await apiClient.put(`bulk/assign/refers`, body)
-}
-export const BulkAssignLeads = async ({ body }: {
-  body: {
-    lead_owners: string[],
-    leads: string[]
-  }
-}) => {
-  return await apiClient.put(`bulk/assign/leads`, body)
-}
-
-export const UpdateLeadFieldsUpdatable = async ({ body }: {
-  body?: {
-    stages: string[],
-    lead_types: string[],
-    lead_sources: string[],
-  }
-}) => {
-  return await apiClient.put(`fields/lead/update`, body)
-}
-export const GetLeadFieldsUpdatable = async () => {
-  return await apiClient.get(`lead-updatable-fields`)
-}
-
-
-export const GetMyVisitingCards = async () => {
-  return await apiClient.patch(`cards/me`)
-}
-
-export const GetVisitingCards = async ({ limit, page, userId }: { limit: number | undefined, userId?: string, page: number | undefined }) => {
-  if (userId)
-    return await apiClient.get(`cards/?limit=${limit}&page=${page}&id=${userId}`)
-  else
-    return await apiClient.get(`cards/?limit=${limit}&page=${page}`)
-}
-
-export const CreateVisitingCard = async (body: FormData) => {
-  return await apiClient.post(`cards`, body)
-}
-
-export const UpdateVisitingCard = async ({ body, id }: { id: string, body: FormData }) => {
-  return await apiClient.put(`cards/${id}`, body)
-}
-
-export const ReferVisitingCard = async ({ body, id }: { id: string, body: { refer: string, comment: string } }) => {
-  return await apiClient.patch(`cards/refer/${id}`, body)
-}
-
-export const ToogleStatusVisitingCard = async ({ body, id }: { id: string, body: {  comment: string } }) => {
-  return await apiClient.patch(`cards/status/toogle/${id}`, body)
-}
-
-export const AddCommentsToVisitingCard = async ({ body, id }: { id: string, body: { comment: string } }) => {
-  return await apiClient.patch(`cards/comment/${id}`, body)
+  return await apiClient.patch(`crm/states/assign`, body)
 }

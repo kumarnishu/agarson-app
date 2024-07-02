@@ -9,8 +9,8 @@ import { UserContext } from '../../contexts/userContext'
 import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
-import RemarksTable from '../../components/tables/RemarksTable'
 import DBPagination from '../../components/pagination/DBpagination'
+import ActivitiesTable from '../../components/tables/crm/ActivitiesTable'
 
 function CrmActivitiesPage() {
     const { user } = useContext(UserContext)
@@ -19,7 +19,6 @@ function CrmActivitiesPage() {
     const [remark, setRemark] = useState<IRemark>()
     const [remarks, setRemarks] = useState<IRemark[]>([])
     const [userId, setUserId] = useState<string>()
-    const [filterCount, setFilterCount] = useState(0)
     const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
         start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
         , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
@@ -47,7 +46,6 @@ function CrmActivitiesPage() {
             })
         }
     }, [data])
-    console.log(filterCount)
     return (
         <>
             <DialogTitle sx={{ textAlign: 'center' }}> Activities : {remarks.length}</DialogTitle>
@@ -121,10 +119,10 @@ function CrmActivitiesPage() {
             <>
                 {isLoading && <LinearProgress />}
                 {!isLoading &&
-                    <Box sx={{ px: 2 }}> <RemarksTable remark={remark} remarks={remarks} setRemark={setRemark} /></Box>
+                    <Box sx={{ px: 2 }}> <ActivitiesTable remark={remark} remarks={remarks} setRemark={setRemark} /></Box>
                 }
             </>
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
+            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />
         </>
     )
 }

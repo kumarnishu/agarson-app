@@ -21,7 +21,6 @@ import UploadClientSalesButton from '../../components/buttons/UploadClientSalesB
 export default function ClientSaleReportsPageLastyear() {
     const [paginationData, setPaginationData] = useState({ limit: 1000, page: 1, total: 1 });
     const [reports, setClientSaleReports] = useState<IClientSaleReport[]>([])
-    const [filterCount, setFilterCount] = useState(0)
     const { user } = useContext(UserContext)
     const [filter, setFilter] = useState<string>()
     const [preFilteredData, setPreFilteredData] = useState<IClientSaleReport[]>([])
@@ -298,7 +297,7 @@ export default function ClientSaleReportsPageLastyear() {
                 </STable>
 
             </Box>}
-            {window.screen.width > 500 && <DBPagination filterCount={filterCount} paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />}
+            {window.screen.width > 500 && <DBPagination  paginationData={paginationData} setPaginationData={setPaginationData}  />}
         </>
 
     )

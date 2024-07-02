@@ -11,6 +11,7 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
     customer_name: {
         type: String,
         trim: true,
+        index: true,
         lowercase: true,
     },
     customer_designation: {
@@ -33,11 +34,13 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
     city: {
         type: String,
         trim: true,
+        index: true,
         lowercase: true,
     },
     state: {
         type: String,
         trim: true,
+        index: true,
         lowercase: true,
     },
     country: {
@@ -48,12 +51,14 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
     address: {
         type: String,
         trim: true,
-        lowercase: true
+        index: true,
+        lowercase: true,
     },
     work_description: {
         type: String,
         trim: true,
-        lowercase: true
+        index: true,
+        lowercase: true,
     },
     turnover: {
         type: String,
@@ -76,28 +81,35 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
     lead_type: {
         type: String,
         trim: true,
-        lowercase: true
+        index: true,
+        lowercase: true,
+    },
+    gst: {
+        type: String,
+        trim: true,
+        index: true,
+        lowercase: true,
     },
     stage: {
         type: String,
         trim: true,
+        index: true,
         lowercase: true,
         default: "open"
     },
     lead_source: {
         type: String,
         trim: true,
+        index: true,
         lowercase: true,
+        default:"internet"
     },
     is_sent: { type: Boolean, default: false },
+    has_card: { type: Boolean, default: false },
     last_whatsapp: Date,
     remarks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Remark'
-    }],
-    lead_owners: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
     }],
     visiting_card: {
         _id: { type: String },

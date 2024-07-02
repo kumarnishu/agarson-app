@@ -15,12 +15,19 @@ const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<I
         index: true,
         lowercase: true,
     },
+    gst: {
+        type: String,
+        trim: true,
+        index: true,
+        lowercase: true,
+        required:true
+    },
     mobile: {
         type: String,
         required: true,
         trim: true,
         index: true,
-        lowercase: true,
+        lowercase: true
     },
 
     city: {
@@ -48,11 +55,6 @@ const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<I
         ref: 'User',
         required: true
     },
-    lead_owners: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    }],
     updated_at: {
         type: Date,
         default: new Date(),

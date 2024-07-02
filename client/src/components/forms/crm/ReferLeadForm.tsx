@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
-import {  ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { GetRefers, ReferLead } from '../../../services/LeadsServices';
@@ -19,10 +19,7 @@ function ReferLeadForm({ lead }: { lead: ILead }) {
         (ReferLead, {
             onSuccess: () => {
                 queryClient.invalidateQueries('refers')
-                queryClient.invalidateQueries('paginatedrefers')
                 queryClient.invalidateQueries('leads')
-                queryClient.invalidateQueries('customers')
-                queryClient.invalidateQueries('uselessleads')
             }
         })
     const { data, isSuccess: isReferSuccess } = useQuery<AxiosResponse<IReferredParty[]>, BackendError>("refers", GetRefers)

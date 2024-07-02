@@ -22,7 +22,15 @@ import BackupDashboard from './dashboards/BackupDashboard.tsx'
 import ErpReportsDashboard from './dashboards/ErpReportsDashboard.tsx'
 import TodoNavBar from './components/navbar/TodoNavbar.tsx'
 import TodoDashboard from './dashboards/TodoDashboard.tsx'
-const StatesPage = React.lazy(() => import('./pages/users/StatesPage.tsx'))
+import RemindersPage from './pages/crm/CrmRemindersPage.tsx'
+import CitiesPage from './pages/crm/CitiesPage.tsx'
+import CrmStatesPage from './pages/crm/CrmStatesPage.tsx'
+import RefersPage from './pages/crm/RefersPage.tsx'
+import CrmLeadSourcesPage from './pages/crm/CrmSourcePage.tsx'
+import CrmStagesPage from './pages/crm/CrmStagesPage.tsx'
+import CrmTypesPage from './pages/crm/CrmleadTypesPage.tsx'
+import CrmActivitiesPage from './pages/crm/CrmActivitiesPage.tsx'
+const StatesPage = React.lazy(() => import('./pages/erp reports/StatesPage.tsx'))
 const PendingOrdersReportPage = React.lazy(() => import('./pages/erp reports/PendingOrdersReport.tsx'))
 const ClientSaleReportPage = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPage.tsx'))
 const ClientSaleReportsPageLastyear = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPageLastyear.tsx'))
@@ -35,13 +43,9 @@ const LoginPage = React.lazy(() => import('./pages/users/LoginPage'))
 const EmailVerifyPage = React.lazy(() => import('./pages/users/EmailVerifyPage'))
 const UsersPage = React.lazy(() => import('./pages/users/UsersPage'))
 const BackupPage = React.lazy(() => import('./pages/backup/BackupPage'))
-const UseLessLeadsPage = React.lazy(() => import('./pages/crm/UseLessLeadsPage'))
 const TemplatesPage = React.lazy(() => import('./pages/templates/TemplatesPage'))
-const CrmHelpPage = React.lazy(() => import('./pages/crm/CrmHelpPage'))
-const CrmReminderPage = React.lazy(() => import('./pages/crm/CrmReminderPage'))
 const CheckListPage = React.lazy(() => import('./pages/checklists/CheckListPage'))
 const CheckListAdminPage = React.lazy(() => import('./pages/checklists/CheckListAdminPage'))
-const VisitingCardsPage = React.lazy(() => import('./pages/crm/VisitingCardsPage'))
 const CheckListHelpPage = React.lazy(() => import('./pages/checklists/CheckListHelpPage'))
 const MyVisitPage = React.lazy(() => import('./pages/visit/MyVisitPage'))
 const VisitAdminPage = React.lazy(() => import('./pages/visit/VisitAdminPage'))
@@ -60,10 +64,6 @@ const UpdateMachineCategoriesPage = React.lazy(() => import('./pages/production/
 
 // lazy loding
 const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
-const CustomersPage = React.lazy(() => import('./pages/crm/CustomersPage'))
-const ReferralPartyPage = React.lazy(() => import('./pages/crm/ReferralPartyPage'))
-const UpdateLeadFieldsPage = React.lazy(() => import('./pages/crm/UpdateLeadFieldsPage'))
-const CrmActivitiesPage = React.lazy(() => import('./pages/crm/CrmActivitiesPage'))
 const LeadsPage = React.lazy(() => import('./pages/crm/LeadsPage'))
 
 export enum paths {
@@ -116,12 +116,13 @@ export enum paths {
   crm = "crm",
   crm_reminders = "crm_reminders",
   crm_activities = "crm_activities",
-  visiting_cards ="visiting_cards",
+  crm_states = "crm_states",
+  crm_cities = "crm_cities",
+  crm_stages = "crm_stages",
+  crm_leadtypes = "crm_leadtypes",
+  crm_leadsources = "crm_leadsources",
   leads = "leads",
-  customers = "customers",
-  updateble_fields_lead = "updateble_fields_lead",
   refers = "refers",
-  useless_leads = "useless_leads",
 
   //production
   production = "production",
@@ -191,11 +192,7 @@ function AppRoutes() {
                   <Suspense fallback={<LinearProgress />}><UsersPage /></Suspense>
                 }
               />
-              <Route
-                path={paths.states} element={
-                  <Suspense fallback={<LinearProgress />}><StatesPage /></Suspense>
-                }
-              />
+            
 
               <Route
                 path={paths.feature_reports} element={
@@ -306,48 +303,39 @@ function AppRoutes() {
                 <Suspense fallback={<LinearProgress />}><LeadsPage /></Suspense>
               }
               />
-              <Route path={paths.crm_activities} element={
-                <Suspense fallback={<LinearProgress />}><CrmActivitiesPage /></Suspense>
+              <Route path={paths.refers} index element={
+                <Suspense fallback={<LinearProgress />}><RefersPage /></Suspense>
               }
               />
-              <Route path={paths.crm_reminders} element={
-                <Suspense fallback={<LinearProgress />}><CrmReminderPage /></Suspense>
+              <Route path={paths.crm_activities} index element={
+                <Suspense fallback={<LinearProgress />}><CrmActivitiesPage/></Suspense>
               }
               />
-              <Route path={paths.visiting_cards} element={
-                <Suspense fallback={<LinearProgress />}><VisitingCardsPage /></Suspense>
+              <Route path={paths.crm_reminders} index element={
+                <Suspense fallback={<LinearProgress />}>< RemindersPage/></Suspense>
               }
               />
-              <Route
-                path={paths.customers} element={
-                  <Suspense fallback={<LinearProgress />}><CustomersPage /></Suspense>
-
-                }
+              <Route path={paths.crm_cities} index element={
+                <Suspense fallback={<LinearProgress />}><CitiesPage /></Suspense>
+              }
               />
-              <Route
-                path={paths.refers} element={
-                  <Suspense fallback={<LinearProgress />}><ReferralPartyPage /></Suspense>
-
-                }
+              <Route path={paths.crm_leadsources} index element={
+                <Suspense fallback={<LinearProgress />}><CrmLeadSourcesPage /></Suspense>
+              }
               />
-              <Route
-                path={paths.updateble_fields_lead} element={
-                  <Suspense fallback={<LinearProgress />}><UpdateLeadFieldsPage />
-                  </Suspense>
-                }
+              <Route path={paths.crm_stages} index element={
+                <Suspense fallback={<LinearProgress />}><CrmStagesPage /></Suspense>
+              }
               />
-              <Route
-                path={paths.useless_leads} element={
-                  <Suspense fallback={<LinearProgress />}><UseLessLeadsPage />
-                  </Suspense>
-                }
+              <Route path={paths.crm_states} index element={
+                <Suspense fallback={<LinearProgress />}><CrmStatesPage /></Suspense>
+              }
               />
-             
-              <Route
-                path={paths.crm_help_page} element={
-                  <CrmHelpPage />
-                }
+              <Route path={paths.crm_leadtypes} index element={
+                <Suspense fallback={<LinearProgress />}><CrmTypesPage /></Suspense>
+              }
               />
+                    
             </Route>}
           {!user.templates_access_fields.is_hidden &&
             < Route path={paths.templates_dashboard} element={<TemplatesNavBar />
@@ -446,7 +434,11 @@ function AppRoutes() {
                 < ErpReportsDashboard />
               }
               />
-
+              <Route
+                path={paths.states} element={
+                  <Suspense fallback={<LinearProgress />}><StatesPage /></Suspense>
+                }
+              />
               <Route path={paths.pending_orders} element={
                 <Suspense fallback={<LinearProgress />}>
                   < PendingOrdersReportPage />

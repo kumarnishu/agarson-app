@@ -7,15 +7,15 @@ import * as Yup from "yup"
 import {  ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
-import { RemoveLeadReferrals } from '../../../services/LeadsServices';
 import AlertBar from '../../snacks/AlertBar';
 import { ILead, IReferredParty } from '../../../types/crm.types';
+import { RemoveReferLead } from '../../../services/LeadsServices';
 
 
 function RemoveLeadReferForm({ lead }: { lead: ILead }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IReferredParty>, BackendError, { id: string, body: { remark: string } }>
-        (RemoveLeadReferrals, {
+        (RemoveReferLead, {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')
             }

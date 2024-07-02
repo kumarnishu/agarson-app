@@ -362,7 +362,7 @@ export default function ProductionAdminPage() {
             productions={MemoData}
           />
         </Box>}
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} setFilterCount={setFilterCount} />
+      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />
     </>
 
   )
