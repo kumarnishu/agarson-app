@@ -6,7 +6,7 @@ dist
 build
 .env*
 visit_reports.pdf
-
+.vs
 # vite gitignore files
 *.log
 npm-debug.log*
