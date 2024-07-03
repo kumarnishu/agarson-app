@@ -377,8 +377,8 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
             workbook.Sheets[workbook_sheet[0]]
         );
         console.log(workbook_response.length)
-        if (workbook_response.length > 300) {
-            return res.status(400).json({ message: "Maximum 300 records allowed at one time" })
+        if (workbook_response.length >3000) {
+            return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
 
         for (let i = 0; i < workbook_response.length; i++) {
@@ -522,8 +522,8 @@ export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Res
         if (!state || !await CRMState.findOne({ state: state }))
             return res.status(400).json({ message: "provide a state first" })
         console.log(workbook_response.length)
-        if (workbook_response.length > 300) {
-            return res.status(400).json({ message: "Maximum 300 records allowed at one time" })
+        if (workbook_response.length >3000) {
+            return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
 
         for (let i = 0; i < workbook_response.length; i++) {
@@ -1992,8 +1992,8 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
         let workbook_response: ILeadTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
-        if (workbook_response.length > 300) {
-            return res.status(400).json({ message: "Maximum 300 records allowed at one time" })
+        if (workbook_response.length >3000) {
+            return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
         let checkednumbers: string[] = []
         for (let i = 0; i < workbook_response.length; i++) {
@@ -2555,8 +2555,8 @@ export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next
         let workbook_response: IReferTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
-        if (workbook_response.length > 300) {
-            return res.status(400).json({ message: "Maximum 300 records allowed at one time" })
+        if (workbook_response.length >3000) {
+            return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
         for (let i = 0; i < workbook_response.length; i++) {
             let refer = workbook_response[i]
