@@ -58,7 +58,7 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
+                            {user?.crm_access_fields.is_editable &&
                                 <STableHeadCell style={{ width: '50px' }}
                                 >
 

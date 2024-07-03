@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button} from '@mui/material'
+import { Dialog, DialogContent, DialogTitle,  IconButton, Stack, Button} from '@mui/material'
 import { useContext, useEffect } from 'react';
 import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
@@ -7,16 +7,16 @@ import { useMutation } from 'react-query';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import {  FindUnknownCrmSates } from '../../../services/LeadsServices';
+import {  FindUnknownCrmStages } from '../../../services/LeadsServices';
 
 
-function FindUknownCrmStatesDialog() {
+function FindUknownCrmStagesDialog() {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate,  isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError>
-        (FindUnknownCrmSates, {
+        (FindUnknownCrmStages, {
             onSuccess: () => {
-                queryClient.invalidateQueries('crm_states')
+                queryClient.invalidateQueries('crm_stages')
             }
         })
    
@@ -29,7 +29,7 @@ function FindUknownCrmStatesDialog() {
     return (
         <Dialog
             fullWidth
-            open={choice === LeadChoiceActions.find_unknown_states ? true : false}
+            open={choice === LeadChoiceActions.find_unknown_stages ? true : false}
             onClose={() => {
                 setChoice({ type: LeadChoiceActions.close_lead });
                
@@ -42,16 +42,13 @@ function FindUknownCrmStatesDialog() {
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-               Find Unknown States
+               Find Unknown Stages
             </DialogTitle>
             <DialogContent>
                 <Stack
                     gap={2}
                 >
-                    <Typography variant="body1" color="error">
-
-                      Donot forgot to assign unknown state to the users ?
-                    </Typography>
+                
                     <Button variant='outlined' color='error' onClick={() => mutate()}>Submit</Button>
                    
                 </Stack>
@@ -70,4 +67,4 @@ function FindUknownCrmStatesDialog() {
     )
 }
 
-export default FindUknownCrmStatesDialog
+export default FindUknownCrmStagesDialog

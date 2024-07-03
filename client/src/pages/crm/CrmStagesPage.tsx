@@ -12,9 +12,10 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import LeadsStageTable from '../../components/tables/crm/LeadsStageTable'
-import { GetAllStages } from '../../services/LeadsServices'
+import {  GetAllStages } from '../../services/LeadsServices'
 import CreateOrEditStageDialog from '../../components/dialogs/crm/CreateOrEditStageDialog'
 import { IStage } from '../../types/crm.types'
+import FindUknownCrmStagesDialog from '../../components/dialogs/crm/FindUknownCrmStagesDialog'
 
 type ITemplate = {
   _id: string,
@@ -172,11 +173,22 @@ export default function CrmStagesPage() {
                 }}
               > Add New</MenuItem>
 
+              <MenuItem
+              sx={{color:'red'}}
+                onClick={() => {
+                  setChoice({ type: LeadChoiceActions.find_unknown_stages })
+                  setStage(undefined)
+                  setAnchorEl(null)
+                }}
+              >Find Unknown Stages</MenuItem>
+
+
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
             </Menu >
             <CreateOrEditStageDialog />
+            <FindUknownCrmStagesDialog />
           </>
         </Stack >
       </Stack >

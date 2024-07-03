@@ -2812,7 +2812,7 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
     return res.status(200).json({ message: "new remark added successfully" })
 }
 
-export const ResetCrmFieldItems = async (req: Request, res: Response, next: NextFunction) => {
+export const FindUnknownCrmSates = async (req: Request, res: Response, next: NextFunction) => {
     await Lead.updateMany({ state: 'unknown' }, { state: 'updating' });
     await ReferredParty.updateMany({ state: 'unknown' }, { state: 'updating' });
     await CRMState.findOneAndDelete({ state: 'unknown' })
@@ -2821,5 +2821,14 @@ export const ResetCrmFieldItems = async (req: Request, res: Response, next: Next
     await Lead.updateMany({ state: { $nin: statevalues } }, { state: 'unknown' });
     await ReferredParty.updateMany({ state: { $nin: statevalues } }, { state: 'unknown' });
     await new CRMState({ state: 'unknown', created_by: req.user, updated_by: req.user }).save();
-    return res.status(200).json({ message: "lead fields reset successfully" })
+    return res.status(200).json({ message: "successfull" })
+}
+export const FindUnknownCrmStages = async (req: Request, res: Response, next: NextFunction) => {
+    await Lead.updateMany({ stage: 'unknown' }, { stage: 'updating' });
+    await Stage.findOneAndDelete({ stage: 'unknown' })
+    let stages = await Stage.find();
+    let stagevalues = stages.map(i => { return i.stage });
+    await Lead.updateMany({ stage: { $nin: stagevalues } }, { stage: 'unknown' });
+    await new Stage({ stage: 'unknown', created_by: req.user, updated_by: req.user }).save();
+    return res.status(200).json({ message: "successfull" })
 }

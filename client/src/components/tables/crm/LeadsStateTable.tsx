@@ -59,7 +59,7 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
+                            {user?.crm_access_fields.is_editable &&
                                 <STableHeadCell style={{ width: '50px' }}
                                 >
 

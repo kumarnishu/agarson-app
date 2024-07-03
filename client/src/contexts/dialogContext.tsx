@@ -14,7 +14,7 @@ type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
 
-type LeadChoices = "create_or_edit_refer" | "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_leadtype" | "delete_lead"  | "delete_leadtype" | "create_refer" | "convert_lead_to_refer" | "delete_refer" | "view_referrals"   |"delete_crm_state"|
+type LeadChoices = "create_or_edit_refer" | "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_leadtype" | "delete_lead"  | "find_unknown_stages" | "delete_refer" | "convert_lead_to_refer" | "bulk_delete_useless_leads" | "view_referrals"   |"delete_crm_state"|
    "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "find_unknown_states"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
@@ -119,10 +119,10 @@ export enum LeadChoiceActions {
   close_lead = "close_lead",
   create_or_edit_leadtype = "create_or_edit_leadtype",
   delete_crm_item = "delete_crm_item",
-  delete_leadtype = "delete_leadtype",
-  create_refer = "create_refer",
-  convert_lead_to_refer = "convert_lead_to_refer",
+  find_unknown_stages = "find_unknown_stages",
   delete_refer = "delete_refer",
+  convert_lead_to_refer = "convert_lead_to_refer",
+  bulk_delete_useless_leads = "bulk_delete_useless_leads",
   view_referrals = "view_referrals",
   refer_lead = "refer_lead",
   remove_referral = "remove_referral",
@@ -207,11 +207,11 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.delete_crm_item: return type
     case LeadChoiceActions.create_or_edit_leadtype: return type
     case LeadChoiceActions.delete_lead: return type
-    case LeadChoiceActions.delete_leadtype: return type
+    case LeadChoiceActions.find_unknown_stages: return type
     case LeadChoiceActions.close_lead: return type
-    case LeadChoiceActions.create_refer: return type
-    case LeadChoiceActions.convert_lead_to_refer: return type
     case LeadChoiceActions.delete_refer: return type
+    case LeadChoiceActions.convert_lead_to_refer: return type
+    case LeadChoiceActions.bulk_delete_useless_leads: return type
     case LeadChoiceActions.view_referrals: return type
     case LeadChoiceActions.refer_lead: return type
     case LeadChoiceActions.remove_referral: return type

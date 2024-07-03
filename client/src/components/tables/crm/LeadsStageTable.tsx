@@ -58,7 +58,7 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
+                            {user?.crm_access_fields.is_editable &&
                                 <STableHeadCell style={{ width: '50px' }}
                                 >
 

@@ -10,8 +10,17 @@ export const GetReminderRemarks = async () => {
   return await apiClient.get(`reminder/remarks`)
 }
 
-export const ResetStates = async () => {
-  return await apiClient.post(`reset/crm/fields`)
+export const BulkDeleteUselessLeads = async (body: { leads_ids: string[] }) => {
+  return await apiClient.post(`bulk/leads/delete/useless`, body)
+}
+
+
+export const FindUnknownCrmSates = async () => {
+  return await apiClient.post(`find/crm/states/unknown`)
+}
+
+export const FindUnknownCrmStages = async () => {
+  return await apiClient.post(`find/crm/stages/unknown`)
 }
 
 export const FuzzySearchLeads = async ({ searchString, limit, page, stage }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {

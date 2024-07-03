@@ -1,5 +1,5 @@
-import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Delete, Search } from '@mui/icons-material'
+import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -19,6 +19,7 @@ import { ILeadTemplate } from '../../types/template.type'
 import { ILead, IStage } from '../../types/crm.types'
 import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
 import { toTitleCase } from '../../utils/TitleCase'
+import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
 
 let template: ILeadTemplate[] = [
   {
@@ -218,7 +219,7 @@ export default function LeadsPage() {
           onChange={(e) => {
             setFilter(e.currentTarget.value)
             setFilterCount(0)
-          
+
           }}
           InputProps={{
             endAdornment: (
@@ -245,6 +246,20 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
+            {LoggedInUser?.created_by._id === LoggedInUser?._id && <Tooltip title="Delete Selected Leads">
+              <IconButton color="error"
+                disabled={!LoggedInUser?.crm_access_fields.is_deletion_allowed}
+                onClick={() => {
+                  if (selectedLeads.length == 0)
+                    alert("select some useless leads")
+                  else
+                    setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })
+                }}
+              >
+                <Delete />
+              </IconButton>
+            </Tooltip>}
+
             < TextField
               select
               SelectProps={{
@@ -261,7 +276,7 @@ export default function LeadsPage() {
               }
             >
               <option key={0} value={'undefined'}>
-              All
+                All
               </option>
               {
                 stages.map(stage => {
@@ -311,6 +326,7 @@ export default function LeadsPage() {
 
             </Menu >
             <CreateOrEditLeadDialog lead={undefined} />
+            <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />
           </>
         </Stack >
       </Stack >

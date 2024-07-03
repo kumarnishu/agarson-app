@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, ResetCrmFieldItems } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 import { CreateArticle } from "../controllers/production.controller";
@@ -44,8 +44,11 @@ router.route("/remarks/:id").delete(isAuthenticatedUser, DeleteRemark)
 router.route("/search/leads").get(isAuthenticatedUser, FuzzySearchLeads)
 router.route("/backup/leads").get(isAuthenticatedUser, BackUpAllLeads)
 router.patch("/leads/torefer/:id", isAuthenticatedUser, ConvertLeadToRefer)
-router.patch("/leads/bulk/delete", isAuthenticatedUser, BulkDeleteUselessLeads)
-router.route("/reset/crm/fields").post(isAuthenticatedUser, ResetCrmFieldItems);
+router.post("/bulk/leads/delete/useless", isAuthenticatedUser, BulkDeleteUselessLeads)
+router.route("/find/crm/states/unknown").post(isAuthenticatedUser, FindUnknownCrmSates);
+router.route("/find/crm/stages/unknown").post(isAuthenticatedUser, FindUnknownCrmStages);
+
+
 //refers
 router.route("/refers/leads/:id").post(isAuthenticatedUser, ReferLead)
 router.route("/refers/leads/:id").patch(isAuthenticatedUser, RemoveLeadReferral)
