@@ -2215,9 +2215,10 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
     let page = Number(req.query.page)
     let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let states = user?.assigned_crm_states.map((item) => { return item.state })
+    let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     let parties: IReferredParty[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        parties = await ReferredParty.find({ state: { $in: states } }).populate('created_by').populate('updated_by').sort('name')
+        parties = await ReferredParty.find({ state: { $in: states }, city: { $in: cities } }).populate('created_by').populate('updated_by').sort('name')
         let result: {
             party: IReferredParty,
             leads: ILead[]
