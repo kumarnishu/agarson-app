@@ -28,8 +28,7 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag: num
             body: {
                 user_ids: string[],
                 city_ids: string[],
-                flag: number,
-                state: string
+                flag: number
             }
         }>
         (AssignCRMCitiesToUsers, {
@@ -59,8 +58,7 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag: num
                 body: {
                     user_ids: values.user_ids,
                     city_ids: cities.map((item) => { return item._id }),
-                    flag: flag,
-                    state: cities[0] && cities[0].state
+                    flag: flag
                 }
             })
 
