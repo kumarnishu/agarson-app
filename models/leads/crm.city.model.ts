@@ -9,6 +9,13 @@ const CRMCitySchema = new mongoose.Schema<ICRMCity, mongoose.Model<ICRMCity, {},
         lowercase: true,
         required: true
     },
+    state: {
+        type: String,
+        trim: true,
+        index: true,
+        lowercase: true,
+        required: true
+    },
     created_at: {
         type: Date,
         default: new Date(),

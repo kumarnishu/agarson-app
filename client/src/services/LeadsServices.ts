@@ -23,11 +23,16 @@ export const FindUnknownCrmStages = async () => {
   return await apiClient.post(`find/crm/stages/unknown`)
 }
 
+export const FindUnknownCrmCities = async () => {
+  return await apiClient.post(`find/crm/cities/unknown`)
+}
+
+
 export const FuzzySearchLeads = async ({ searchString, limit, page, stage }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
   return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
 }
 
-export const ConvertLeadToRefer = async ({ id }: { id: string}) => {
+export const ConvertLeadToRefer = async ({ id }: { id: string }) => {
   return await apiClient.patch(`leads/torefer/${id}`)
 }
 
@@ -144,7 +149,9 @@ export const BulkStateUpdateFromExcel = async (body: FormData) => {
 }
 
 //cities
-export const GetAllCities = async () => {
+export const GetAllCities = async ({ state }: { state?: string }) => {
+  if (state)
+    return await apiClient.get(`crm/cities/?state=${state}`)
   return await apiClient.get(`crm/cities`)
 }
 
@@ -162,8 +169,8 @@ export const CreateOrEditCity = async ({ body, id }: {
 
 
 
-export const BulkCityUpdateFromExcel = async (body: FormData) => {
-  return await apiClient.put(`crm/cities/excel/createorupdate`, body)
+export const BulkCityUpdateFromExcel = async ({ state, body }: { state: string, body: FormData }) => {
+  return await apiClient.put(`crm/cities/excel/createorupdate/${state}`, body)
 }
 
 
@@ -234,4 +241,13 @@ export const AssignCRMStatesToUsers = async ({ body }: {
   }
 }) => {
   return await apiClient.patch(`crm/states/assign`, body)
+}
+export const AssignCRMCitiesToUsers = async ({ body }: {
+  body: {
+    user_ids: string[],
+    city_ids: string[],
+    flag: number
+  }
+}) => {
+  return await apiClient.patch(`crm/cities/assign`, body)
 }

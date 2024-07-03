@@ -8,11 +8,11 @@ import { uploadFileToCloud } from "../utils/uploadFile.util.js"
 import { Types } from "mongoose"
 import { destroyFile } from "../utils/destroyFile.util.js"
 import { ReferredParty } from "../models/leads/referred.model.js"
-import { ICRMCity, ICRMState, ILead, ILeadType, IReferredParty, IRemark, TLeadBody, TReferredPartyBody } from "../types/crm.types.js"
+import { ICRMCity, ICRMState, ILead, IReferredParty, IRemark, TLeadBody, TReferredPartyBody } from "../types/crm.types.js"
 import { IUser } from "../types/user.types.js"
 import { Asset } from "../types/asset.types.js"
 import { CRMState } from "../models/leads/crm.state.model.js"
-import { ICRMStateTemplate, ILeadTemplate, IReferTemplate } from "../types/template.type.js"
+import { ICRMCityTemplate, ICRMStateTemplate, ILeadTemplate, IReferTemplate } from "../types/template.type.js"
 import { SaveLeadMobilesToExcel, SaveLeadsToExcel } from "../utils/ExportToExcel.js"
 import { CRMCity } from "../models/leads/crm.city.model.js"
 import { LeadType } from "../models/leads/crm.leadtype.model.js"
@@ -240,7 +240,44 @@ export const CreateCRMState = async (req: Request, res: Response, next: NextFunc
 
 }
 
+export const AssignCRMCitiesToUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const { city_ids, user_ids, flag } = req.body as {
+        user_ids: string[],
+        city_ids: string[],
+        flag: number
+    }
+    if (city_ids && city_ids.length === 0)
+        return res.status(400).json({ message: "please select one city " })
+    if (user_ids && user_ids.length === 0)
+        return res.status(400).json({ message: "please select one city owner" })
 
+    let owners = user_ids
+
+    if (flag == 0) {
+        for (let i = 0; i < owners.length; i++) {
+            let owner = await User.findById(owners[i]).populate('assigned_crm_cities');
+            if (owner) {
+                let oldcities = owner.assigned_crm_cities.map((item) => { return item._id.valueOf() });
+                console.log(oldcities)
+                oldcities = oldcities.filter((item) => { return !city_ids.includes(item) });
+                console.log(oldcities)
+
+                await User.findByIdAndUpdate(owner._id, {
+                    assigned_crm_cities: oldcities
+                })
+            }
+        }
+    }
+    else {
+        for (let i = 0; i < owners.length; i++) {
+            await User.findByIdAndUpdate(owners[i], {
+                assigned_crm_cities: city_ids
+            })
+        }
+    }
+
+    return res.status(200).json({ message: "successfull" })
+}
 export const AssignCRMStatesToUsers = async (req: Request, res: Response, next: NextFunction) => {
     const { state_ids, user_ids, flag } = req.body as {
         user_ids: string[],
@@ -388,7 +425,13 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
 
 //cities
 export const GetAllCRMCities = async (req: Request, res: Response, next: NextFunction) => {
-    let result: { city: ICRMCity, state: ICRMState, users: IUser[] }[] = []
+    let result: { city: ICRMCity, users: IUser[] }[] = []
+    let state = req.query.state;
+    let cities = await CRMCity.find({ state: state })
+    for (let i = 0; i < cities.length; i++) {
+        let users = await User.find({ assigned_crm_cities: cities[i]._id })
+        result.push({ city: cities[i], users: users })
+    }
     return res.status(200).json(result)
 }
 
@@ -398,10 +441,13 @@ export const CreateCRMCity = async (req: Request, res: Response, next: NextFunct
         state: string,
         city: string
     }
-    if (!state) {
-        return res.status(400).json({ message: "please fill all reqired fields" })
+    if (!state || !city) {
+        return res.status(400).json({ message: "please provide required fields" })
     }
-    if (await CRMCity.findOne({ state: state.toLowerCase() }))
+    if (!await CRMState.findOne({ state: state })) {
+        return res.status(400).json({ message: "state not exits" })
+    }
+    if (await CRMCity.findOne({ city: city.toLowerCase(), state: state }))
         return res.status(400).json({ message: "already exists this city" })
     let result = await new CRMCity({
         state: state,
@@ -415,50 +461,54 @@ export const CreateCRMCity = async (req: Request, res: Response, next: NextFunct
 }
 
 export const UpdateCRMCity = async (req: Request, res: Response, next: NextFunction) => {
-    const { state } = req.body as {
+    const { state, city } = req.body as {
         state: string,
         city: string
     }
-    if (!state) {
+    if (!state || !city) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
+    if (!await CRMState.findOne({ state: state })) {
+        return res.status(400).json({ message: "state not exits" })
+    }
     const id = req.params.id
-    let oldstate = await CRMState.findById(id)
-    if (!oldstate)
-        return res.status(404).json({ message: "state not found" })
-    if (state !== oldstate.state)
-        if (await CRMState.findOne({ state: state.toLowerCase() }))
-            return res.status(400).json({ message: "already exists this state" })
-    oldstate.state = state
-    oldstate.updated_at = new Date()
+    let oldcity = await CRMCity.findById(id)
+    if (!oldcity)
+        return res.status(404).json({ message: "city not found" })
+    if (city !== oldcity.city)
+        if (await CRMCity.findOne({ city: city.toLowerCase(), state: state }))
+            return res.status(400).json({ message: "already exists this city" })
+    let prevcity = oldcity.city
+    oldcity.city = city
+    oldcity.state = state
+    oldcity.updated_at = new Date()
     if (req.user)
-        oldstate.updated_by = req.user
-    await oldstate.save()
-    return res.status(200).json(oldstate)
+        oldcity.updated_by = req.user
+    await oldcity.save()
+    await Lead.updateMany({ city: prevcity }, { city: city })
+    await ReferredParty.updateMany({ city: prevcity }, { city: city })
+    return res.status(200).json(oldcity)
 
 }
 export const DeleteCRMCity = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    if (!isMongoId(id)) return res.status(403).json({ message: "state id not valid" })
-    let state = await CRMState.findById(id);
-    if (!state) {
-        return res.status(404).json({ message: "state not found" })
+    if (!isMongoId(id)) return res.status(403).json({ message: "city id not valid" })
+    let city = await CRMCity.findById(id);
+    if (!city) {
+        return res.status(404).json({ message: "city not found" })
     }
-    // let remarks = await Remark.find({ lead: lead._id })
-    // remarks.map(async (remark) => {
-    //     await remark.remove()
-    // })
-    await state.remove();
-    return res.status(200).json({ message: "state deleted successfully" })
+    await city.remove();
+    return res.status(200).json({ message: "city deleted successfully" })
 }
 export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Response, next: NextFunction) => {
-    let result: ICRMStateTemplate[] = []
+    let state = req.params.state
+    let result: ICRMCityTemplate[] = []
     let statusText: string = ""
     if (!req.file)
         return res.status(400).json({
             message: "please provide an Excel file",
         });
-    if (req.file) {
+    if (state && req.file) {
         const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
         if (!allowedFiles.includes(req.file.mimetype))
             return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
@@ -466,9 +516,11 @@ export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Res
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: ICRMState[] = xlsx.utils.sheet_to_json(
+        let workbook_response: ICRMCityTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
+        if (!state || !await CRMState.findOne({ state: state }))
+            return res.status(400).json({ message: "provide a state first" })
         console.log(workbook_response.length)
         if (workbook_response.length > 300) {
             return res.status(400).json({ message: "Maximum 300 records allowed at one time" })
@@ -476,19 +528,32 @@ export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Res
 
         for (let i = 0; i < workbook_response.length; i++) {
             let item = workbook_response[i]
-            let state: string | null = String(item.state)
-            let users: string | null = String(item.state)
+            let city: string | null = String(item.city)
 
-            if (state) {
+
+            if (city) {
                 if (item._id && isMongoId(String(item._id))) {
-                    await CRMState.findByIdAndUpdate(item._id, { state: item.state.toLowerCase() })
-                    statusText = "updated"
+                    let oldcity = await CRMCity.findById(item._id)
+                    if (oldcity) {
+                        if (city !== oldcity.city)
+                            if (!await CRMCity.findOne({ city: city.toLowerCase(), state: state })) {
+                                oldcity.city = city
+                                oldcity.state = state
+                                oldcity.updated_at = new Date()
+                                if (req.user)
+                                    oldcity.updated_by = req.user
+                                await oldcity.save()
+                                statusText = "updated"
+
+                            }
+                    }
                 }
 
                 if (!item._id || !isMongoId(String(item._id))) {
-                    let oldstate = await CRMState.findOne({ state: state.toLowerCase() })
-                    if (!oldstate) {
-                        await new CRMState({
+                    let oldcity = await CRMCity.findOne({ city: city.toLowerCase(), state: state })
+                    if (!oldcity) {
+                        await new CRMCity({
+                            city: city,
                             state: state,
                             created_by: req.user,
                             updated_by: req.user,
@@ -497,11 +562,13 @@ export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Res
                         }).save()
                         statusText = "created"
                     }
+                    else
+                        statusText = "duplicate"
                 }
 
             }
             else
-                statusText = "required state"
+                statusText = "required city"
 
             result.push({
                 ...item,
@@ -520,16 +587,17 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let stage = req.query.stage
-    let user = await User.findById(req.user).populate('assigned_crm_states');
+    let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let showonlycardleads = Boolean(user?.show_only_visiting_card_leads)
 
     let states = user?.assigned_crm_states.map((item) => { return item.state })
+    let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
         let count = 0
         if (stage != "undefined") {
             leads = await Lead.find({
-                stage: stage, state: { $in: states }
+                stage: stage, state: { $in: states }, city: { $in: cities }
             }).populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
@@ -549,7 +617,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         }
         else if (showonlycardleads) {
             leads = await Lead.find({
-                has_card: showonlycardleads, state: { $in: states }
+                has_card: showonlycardleads, state: { $in: states }, city: { $in: cities }
             }).populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
@@ -569,7 +637,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         }
         else {
             leads = await Lead.find({
-                stage: 'open', state: { $in: states }
+                stage: 'open', state: { $in: states }, city: { $in: cities }
             }).populate('updated_by').populate('created_by').populate({
                 path: 'remarks',
                 populate: [
@@ -584,7 +652,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
-                stage: 'open', state: { $in: states }
+                stage: 'open', state: { $in: states }, city: { $in: cities }
             }).countDocuments()
         }
 
@@ -699,9 +767,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
 
-    let user = await User.findById(req.user).populate('assigned_crm_states');
+    let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let showonlycardleads = Boolean(user?.show_only_visiting_card_leads)
     let states = user?.assigned_crm_states.map((item) => { return item.state })
+    let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     let key = String(req.query.key).split(",")
     let stage = req.query.stage
     if (!key)
@@ -713,7 +782,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
-                    stage: stage, state: { $in: states },
+                    stage: stage, state: { $in: states }, city: { $in: cities },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -754,7 +823,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 2) {
 
                 leads = await Lead.find({
-                    stage: stage, state: { $in: states },
+                    stage: stage, state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -824,7 +893,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 3) {
 
                 leads = await Lead.find({
-                    stage: stage, state: { $in: states },
+                    stage: stage, state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -917,7 +986,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 4) {
 
                 leads = await Lead.find({
-                    stage: stage, state: { $in: states },
+                    stage: stage, state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -1035,7 +1104,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, state: { $in: states },
+                    has_card: showonlycardleads, state: { $in: states }, city: { $in: cities },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -1077,7 +1146,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 2) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, state: { $in: states },
+                    has_card: showonlycardleads, state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -1147,7 +1216,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 3) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, state: { $in: states },
+                    has_card: showonlycardleads, state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -1240,7 +1309,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 4) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, state: { $in: states },
+                    has_card: showonlycardleads, state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -1358,7 +1427,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
-                    state: { $in: states },
+                    state: { $in: states }, city: { $in: cities },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -1400,7 +1469,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 2) {
 
                 leads = await Lead.find({
-                    state: { $in: states },
+                    state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -1470,7 +1539,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 3) {
 
                 leads = await Lead.find({
-                    state: { $in: states },
+                    state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -1563,7 +1632,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 4) {
 
                 leads = await Lead.find({
-                    state: { $in: states },
+                    state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -2134,16 +2203,17 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
 //refer apis
 export const GetRefers = async (req: Request, res: Response, next: NextFunction) => {
     let refers: IReferredParty[] = []
-    let user = await User.findById(req.user).populate('assigned_crm_states');
+    let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let states = user?.assigned_crm_states.map((item) => { return item.state })
-    refers = await ReferredParty.find({ state: { $in: states } }).sort('name')
+    let cities = user?.assigned_crm_cities.map((item) => { return item.city })
+    refers = await ReferredParty.find({ state: { $in: states }, city: { $in: cities } }).sort('name')
     return res.status(200).json(refers);
 }
 
 export const GetPaginatedRefers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
-    let user = await User.findById(req.user).populate('assigned_crm_states');
+    let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let parties: IReferredParty[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
@@ -2194,6 +2264,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
     let key = String(req.query.key).split(",")
     let user = await User.findById(req.user).populate('assigned_crm_states');
     let states = user?.assigned_crm_states.map((item) => { return item.state })
+    let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     if (!key)
         return res.status(500).json({ message: "bad request" })
     let result: {
@@ -2205,7 +2276,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 1 || key.length > 4) {
 
             parties = await ReferredParty.find({
-                state: { $in: states },
+                state: { $in: states }, city: { $in: cities },
                 $or: [
                     { name: { $regex: key[0], $options: 'i' } },
                     { city: { $regex: key[0], $options: 'i' } },
@@ -2219,7 +2290,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 2) {
 
             parties = await ReferredParty.find({
-                state: { $in: states },
+                state: { $in: states }, city: { $in: cities },
 
                 $and: [
                     {
@@ -2253,7 +2324,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 3) {
 
             parties = await ReferredParty.find({
-                state: { $in: states },
+                state: { $in: states }, city: { $in: cities },
 
                 $and: [
                     {
@@ -2296,7 +2367,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         if (key.length == 4) {
 
             parties = await ReferredParty.find({
-                state: { $in: states },
+                state: { $in: states }, city: { $in: cities },
                 $and: [
                     {
                         $or: [
@@ -2830,5 +2901,17 @@ export const FindUnknownCrmStages = async (req: Request, res: Response, next: Ne
     let stagevalues = stages.map(i => { return i.stage });
     await Lead.updateMany({ stage: { $nin: stagevalues } }, { stage: 'unknown' });
     await new Stage({ stage: 'unknown', created_by: req.user, updated_by: req.user }).save();
+    return res.status(200).json({ message: "successfull" })
+}
+
+export const FindUnknownCrmCities = async (req: Request, res: Response, next: NextFunction) => {
+
+    let cities = await CRMCity.find();
+    let cityvalues = cities.map(i => { return i.city });
+
+    await CRMCity.updateMany({ city: { $nin: cityvalues } }, { city: 'unknown', state: 'unknown' });
+
+    await Lead.updateMany({ city: 'unknown' }, { city: 'unknown', state: 'unknown' });
+    await Stage.updateMany({ city: 'unknown' }, { city: 'unknown', state: 'unknown' });
     return res.status(200).json({ message: "successfull" })
 }

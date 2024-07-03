@@ -12,6 +12,7 @@ export type ICRMState = {
 export type ICRMCity = {
     _id: string,
     city: string,
+    state: string,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

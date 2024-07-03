@@ -42,6 +42,7 @@ export type ICRMStateTemplate = {
 export type ICRMCityTemplate = {
     _id: string,
     city: string,
+    state?: string,
     users?: string,
     status?: string
 }
