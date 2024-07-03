@@ -15,7 +15,7 @@ import { GetUsers } from '../../../services/UserServices';
 import { AssignErpStatesToUsers } from '../../../services/ErpServices';
 
 
-function AssignErpCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:number }) {
+function AssignErpCrmStatesDialog({ states, flag }: { states: ICRMState[], flag: number }) {
 
     const [users, setUsers] = useState<IUser[]>([])
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
@@ -28,7 +28,7 @@ function AssignErpCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:
             body: {
                 user_ids: string[],
                 state_ids: string[],
-                flag:number
+                flag: number
             }
         }>
         (AssignErpStatesToUsers, {
@@ -58,10 +58,10 @@ function AssignErpCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:
                 body: {
                     user_ids: values.user_ids,
                     state_ids: states.map((item) => { return item._id }),
-                    flag:flag
+                    flag: flag
                 }
             })
-            
+
         }
     });
 
@@ -74,7 +74,7 @@ function AssignErpCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:
     useEffect(() => {
         if (isSuccess) {
             setChoice({ type: UserChoiceActions.close_user });
-            formik.setValues({ user_ids: [], state_ids: [] }) ;
+            formik.setValues({ user_ids: [], state_ids: [] });
         }
     }, [isSuccess])
     return (
@@ -93,7 +93,7 @@ function AssignErpCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-                {flag === 0 ?'Remove States':'Assign States'}
+                {flag === 0 ? 'Remove States' : 'Assign States'}
             </DialogTitle>
             <DialogContent>
                 <Stack
@@ -101,11 +101,11 @@ function AssignErpCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:
                 >
                     <Typography variant="body1" color="error">
 
-                        {flag === 1&&`Warning ! This will assign ${states.length} States to the ${formik.values.user_ids.length} Users.`}
-                        {flag === 0&&`Warning ! This will remove  ${states.length} States from  ${formik.values.user_ids.length} Users.`}
+                        {flag === 1 && `Warning ! This will assign ${states.length} States to the ${formik.values.user_ids.length} Users.`}
+                        {flag === 0 && `Warning ! This will remove  ${states.length} States from  ${formik.values.user_ids.length} Users.`}
 
                     </Typography>
-                    <Button onClick={() => formik.setValues({ user_ids: [], state_ids: states.map((item) => { return item._id }) })}>Remove All</Button>
+                    <Button onClick={() => formik.setValues({ user_ids: [], state_ids: states.map((item) => { return item._id }) })}>Remove Selection</Button>
                     <form onSubmit={formik.handleSubmit}>
                         < TextField
                             select
@@ -121,9 +121,10 @@ function AssignErpCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:
                         >
                             {
                                 users.map(user => {
-                                    return (<option key={user._id} value={user._id}>
-                                        {user.username}
-                                    </option>)
+                                    if (user.is_active)
+                                        return (<option key={user._id} value={user._id}>
+                                            {user.username}
+                                        </option>)
                                 })
                             }
                         </TextField>

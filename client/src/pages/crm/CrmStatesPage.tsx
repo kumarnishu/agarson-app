@@ -19,6 +19,7 @@ import { GetAllStates } from '../../services/LeadsServices'
 import CreateOrEditStateDialog from '../../components/dialogs/crm/CreateOrEditStateDialog'
 import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
 import AssignCrmStatesDialog from '../../components/dialogs/crm/AssignCrmStatesDialog'
+import FindUknownCrmStatesDialog from '../../components/dialogs/crm/FindUknownCrmStatesDialog'
 
 
 let template: ICRMStateTemplate[] = [
@@ -29,7 +30,7 @@ let template: ICRMStateTemplate[] = [
 ]
 
 export default function CrmStatesPage() {
-  const [flag, setFlag]=useState(1);
+  const [flag, setFlag] = useState(1);
   const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
   const [state, setState] = useState<{ state: IState, users: IUser[] }>()
   const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
@@ -180,7 +181,7 @@ export default function CrmStatesPage() {
                   if (selectedStates && selectedStates.length == 0) {
                     alert("select some states")
                   }
-                  else{
+                  else {
                     setChoice({ type: LeadChoiceActions.bulk_assign_crm_states })
                     setState(undefined)
                     setFlag(1)
@@ -201,11 +202,21 @@ export default function CrmStatesPage() {
                   setAnchorEl(null)
                 }}
               > Remove States</MenuItem>
+              <MenuItem
+                sx={{ color: 'red' }}
+                onClick={() => {
+                    setChoice({ type: LeadChoiceActions.find_unknown_states })
+                    setState(undefined)
+                  setAnchorEl(null)
+                }}
+              > Find Unknown States</MenuItem>
+
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
             </Menu >
             <CreateOrEditStateDialog />
+            {LoggedInUser?.is_admin && <FindUknownCrmStatesDialog />}
             {<AssignCrmStatesDialog flag={flag} states={selectedStates.map((item) => { return item.state })} />}
           </>
         </Stack >

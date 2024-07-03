@@ -15,7 +15,7 @@ type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_ch
 
 
 type LeadChoices = "create_or_edit_refer" | "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_leadtype" | "delete_lead"  | "delete_leadtype" | "create_refer" | "convert_lead_to_refer" | "delete_refer" | "view_referrals"   |"delete_crm_state"|
-   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "add_card_comment"
+   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "find_unknown_states"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
 
@@ -130,7 +130,7 @@ export enum LeadChoiceActions {
   bulk_assign_leads = "bulk_assign_leads",
   bulk_assign_refers = "bulk_assign_refers",
   bulk_assign_crm_states = "bulk_assign_crm_states",
-  add_card_comment = "add_card_comment"
+  find_unknown_states = "find_unknown_states"
 }
 
 export enum UserChoiceActions {
@@ -224,7 +224,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.create_or_edit_state: return type
     case LeadChoiceActions.create_or_edit_stage: return type
     case LeadChoiceActions.bulk_assign_crm_states: return type
-    case LeadChoiceActions.add_card_comment: return type
+    case LeadChoiceActions.find_unknown_states: return type
     case LeadChoiceActions.delete_crm_state: return type
 
     //production choice actios

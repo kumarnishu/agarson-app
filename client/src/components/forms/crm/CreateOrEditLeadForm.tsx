@@ -90,7 +90,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
             customer_designation: Yup.string(),
             city: Yup.string()
             ,
-            state: Yup.string()
+            state: Yup.string().required()
             ,
             lead_type: Yup.string(),
             turnover: Yup.string(),

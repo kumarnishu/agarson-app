@@ -88,7 +88,7 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                         {`Warning ! This will assign ${formik.values.ids.length} users to the selected user.`}
 
                     </Typography>
-                    <Button onClick={() => formik.setValues({ ids: [] })}>Remove All</Button>
+                    <Button onClick={() => formik.setValues({ ids: [] })}>Remove Selection</Button>
                     <form onSubmit={formik.handleSubmit}>
                         < TextField
                             select
@@ -104,9 +104,10 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                         >
                             {
                                 users.map(user => {
-                                    return (<option key={user._id} value={user._id}>
-                                        {user.username}
-                                    </option>)
+                                    if (user.is_active)
+                                        return (<option key={user._id} value={user._id}>
+                                            {user.username}
+                                        </option>)
                                 })
                             }
                         </TextField>

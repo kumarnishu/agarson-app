@@ -347,7 +347,7 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
         for (let i = 0; i < workbook_response.length; i++) {
             let item = workbook_response[i]
             let state: string | null = String(item.state)
-           
+
 
             if (state) {
                 if (item._id && isMongoId(String(item._id))) {
@@ -1992,7 +1992,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                             checkednumbers.push(mobile)
                         }
                     }
-                    
+
                     if (alternate_mobile1 && alternate_mobile1 !== targetLead?.alternate_mobile1) {
                         let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile1 }, { alternate_mobile1: alternate_mobile1 }, { alternate_mobile2: alternate_mobile1 }] })
                         if (!ld && !checkednumbers.includes(alternate_mobile1)) {
@@ -2071,7 +2071,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
 
                         await Lead.findByIdAndUpdate(lead._id, {
                             ...lead,
-                            stage:stage? stage: "unknown",
+                            stage: stage ? stage : "unknown",
                             lead_type: leadtype ? leadtype : "unknown",
                             lead_source: source ? source : "unknown",
                             city: city ? city : "unknown",
@@ -2813,5 +2813,13 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
 }
 
 export const ResetCrmFieldItems = async (req: Request, res: Response, next: NextFunction) => {
+    await Lead.updateMany({ state: 'unknown' }, { state: 'updating' });
+    await ReferredParty.updateMany({ state: 'unknown' }, { state: 'updating' });
+    await CRMState.findOneAndDelete({ state: 'unknown' })
+    let states = await CRMState.find();
+    let statevalues = states.map(i => { return i.state });
+    await Lead.updateMany({ state: { $nin: statevalues } }, { state: 'unknown' });
+    await ReferredParty.updateMany({ state: { $nin: statevalues } }, { state: 'unknown' });
+    await new CRMState({ state: 'unknown', created_by: req.user, updated_by: req.user }).save();
     return res.status(200).json({ message: "lead fields reset successfully" })
 }

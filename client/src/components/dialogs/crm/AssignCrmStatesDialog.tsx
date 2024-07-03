@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress, TextField } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button,  TextField } from '@mui/material'
 import { useContext, useEffect, useState } from 'react';
 import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
@@ -105,7 +105,7 @@ function AssignCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:num
                         {flag === 0&&`Warning ! This will remove  ${states.length} States from  ${formik.values.user_ids.length} Users.`}
 
                     </Typography>
-                    <Button onClick={() => formik.setValues({ user_ids: [], state_ids: states.map((item) => { return item._id }) })}>Remove All</Button>
+                    <Button onClick={() => formik.setValues({ user_ids: [], state_ids: states.map((item) => { return item._id }) })}>Remove Selection</Button>
                     <form onSubmit={formik.handleSubmit}>
                         < TextField
                             select
@@ -121,15 +121,17 @@ function AssignCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:num
                         >
                             {
                                 users.map(user => {
-                                    return (<option key={user._id} value={user._id}>
-                                        {user.username}
-                                    </option>)
+                                   if(user.is_active)
+                                       return (<option key={user._id} value={user._id}>
+                                           {user.username}
+                                       </option>)
                                 })
                             }
                         </TextField>
-                        <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color="primary" type="submit"
+                        <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color={flag != 0 ? "primary":"error"} type="submit"
                             disabled={Boolean(isLoading)}
-                            fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Assign"}
+                            fullWidth>
+                            {flag==0 ? 'Remove ' : "Assign"}
                         </Button>
                     </form>
 

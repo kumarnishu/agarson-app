@@ -10,6 +10,10 @@ export const GetReminderRemarks = async () => {
   return await apiClient.get(`reminder/remarks`)
 }
 
+export const ResetStates = async () => {
+  return await apiClient.post(`reset/crm/fields`)
+}
+
 export const FuzzySearchLeads = async ({ searchString, limit, page, stage }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
   return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
 }

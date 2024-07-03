@@ -75,7 +75,6 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
             setChoice({ type: LeadChoiceActions.close_lead })
         }
     }, [isSuccess, setChoice])
-
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack
