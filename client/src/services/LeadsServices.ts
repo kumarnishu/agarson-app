@@ -246,6 +246,7 @@ export const AssignCRMCitiesToUsers = async ({ body }: {
   body: {
     user_ids: string[],
     city_ids: string[],
+    state:string,
     flag: number
   }
 }) => {

@@ -175,6 +175,8 @@ export default function CrmCitiesPage() {
               value={state}
               onChange={(e) => {
                 setState(e.target.value);
+                setSelectAll(false)
+                setSelectedCities([])
               }
               }
             >
@@ -260,7 +262,7 @@ export default function CrmCitiesPage() {
 
             </Menu >
             <CreateOrEditCityDialog />
-            {<AssignCrmCitiesDialog flag={flag} cities={selectedCities.map((item) => { return item.city })} />}
+            {<AssignCrmCitiesDialog  flag={flag} cities={selectedCities.map((item) => { return item.city })} />}
           </>
         </Stack >
       </Stack >

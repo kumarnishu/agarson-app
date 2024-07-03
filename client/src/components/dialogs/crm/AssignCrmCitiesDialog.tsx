@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button,  TextField } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, TextField } from '@mui/material'
 import { useContext, useEffect, useState } from 'react';
 import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
@@ -15,7 +15,7 @@ import { GetUsers } from '../../../services/UserServices';
 import { AssignCRMCitiesToUsers } from '../../../services/LeadsServices';
 
 
-function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag:number }) {
+function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag: number }) {
 
     const [users, setUsers] = useState<IUser[]>([])
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
@@ -28,7 +28,8 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag:numb
             body: {
                 user_ids: string[],
                 city_ids: string[],
-                flag:number
+                flag: number,
+                state: string
             }
         }>
         (AssignCRMCitiesToUsers, {
@@ -58,10 +59,11 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag:numb
                 body: {
                     user_ids: values.user_ids,
                     city_ids: cities.map((item) => { return item._id }),
-                    flag:flag
+                    flag: flag,
+                    state: cities[0] && cities[0].state
                 }
             })
-            
+
         }
     });
 
@@ -74,7 +76,7 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag:numb
     useEffect(() => {
         if (isSuccess) {
             setChoice({ type: LeadChoiceActions.close_lead });
-            formik.setValues({ user_ids: [], city_ids: [] }) ;
+            formik.setValues({ user_ids: [], city_ids: [] });
         }
     }, [isSuccess])
     return (
@@ -93,7 +95,7 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag:numb
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-                {flag === 0 ?'Remove States':'Assign States'}
+                {flag === 0 ? 'Remove States' : 'Assign States'}
             </DialogTitle>
             <DialogContent>
                 <Stack
@@ -101,8 +103,8 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag:numb
                 >
                     <Typography variant="body1" color="error">
 
-                        {flag === 1&&`Warning ! This will assign ${cities.length} States to the ${formik.values.user_ids.length} Users.`}
-                        {flag === 0&&`Warning ! This will remove  ${cities.length} States from  ${formik.values.user_ids.length} Users.`}
+                        {flag === 1 && `Warning ! This will assign ${cities.length} States to the ${formik.values.user_ids.length} Users.`}
+                        {flag === 0 && `Warning ! This will remove  ${cities.length} States from  ${formik.values.user_ids.length} Users.`}
 
                     </Typography>
                     <Button onClick={() => formik.setValues({ user_ids: [], city_ids: cities.map((item) => { return item._id }) })}>Remove Selection</Button>
@@ -121,17 +123,17 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag:numb
                         >
                             {
                                 users.map(user => {
-                                   if(user.is_active)
-                                       return (<option key={user._id} value={user._id}>
-                                           {user.username}
-                                       </option>)
+                                    if (user.is_active)
+                                        return (<option key={user._id} value={user._id}>
+                                            {user.username}
+                                        </option>)
                                 })
                             }
                         </TextField>
-                        <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color={flag != 0 ? "primary":"error"} type="submit"
+                        <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color={flag != 0 ? "primary" : "error"} type="submit"
                             disabled={Boolean(isLoading)}
                             fullWidth>
-                            {flag==0 ? 'Remove ' : "Assign"}
+                            {flag == 0 ? 'Remove ' : "Assign"}
                         </Button>
                     </form>
 

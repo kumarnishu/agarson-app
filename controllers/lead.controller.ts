@@ -241,10 +241,17 @@ export const CreateCRMState = async (req: Request, res: Response, next: NextFunc
 }
 
 export const AssignCRMCitiesToUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const { city_ids, user_ids, flag } = req.body as {
+    const { city_ids, user_ids, flag, state } = req.body as {
         user_ids: string[],
         city_ids: string[],
+        state: string,
         flag: number
+    }
+    if (!state) {
+        return res.status(400).json({ message: "please provide state" })
+    }
+    if (!await CRMState.findOne({ state: state })) {
+        return res.status(400).json({ message: "state not exits" })
     }
     if (city_ids && city_ids.length === 0)
         return res.status(400).json({ message: "please select one city " })
@@ -257,22 +264,33 @@ export const AssignCRMCitiesToUsers = async (req: Request, res: Response, next: 
         for (let i = 0; i < owners.length; i++) {
             let owner = await User.findById(owners[i]).populate('assigned_crm_cities');
             if (owner) {
-                let oldcities = owner.assigned_crm_cities.map((item) => { return item._id.valueOf() });
-                console.log(oldcities)
-                oldcities = oldcities.filter((item) => { return !city_ids.includes(item) });
-                console.log(oldcities)
+                let oldcities = owner.assigned_crm_cities.filter((item) => {
+                    if (item.state == state)
+                        return item._id.valueOf();
+                });
+                let oldcitiesids=oldcities.map((item)=>{return item._id.valueOf()});
+                oldcitiesids = oldcitiesids.filter((item) => { return !city_ids.includes(item) });
 
+                let newassignedids=owner.assigned_crm_cities.concat(oldcitiesids);
                 await User.findByIdAndUpdate(owner._id, {
-                    assigned_crm_cities: oldcities
+                    assigned_crm_cities: newassignedids
                 })
             }
         }
     }
     else {
         for (let i = 0; i < owners.length; i++) {
-            await User.findByIdAndUpdate(owners[i], {
-                assigned_crm_cities: city_ids
-            })
+
+            let owner = await User.findById(owners[i]).populate('assigned_crm_cities');
+            if (owner) {
+                let oldcitiesids = owner.assigned_crm_cities.map((item) => { return item._id.valueOf() });
+
+               const result= oldcitiesids.concat(city_ids)
+
+                await User.findByIdAndUpdate(owner._id, {
+                    assigned_crm_cities: result
+                })
+            }
         }
     }
 
@@ -377,7 +395,7 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
             workbook.Sheets[workbook_sheet[0]]
         );
         console.log(workbook_response.length)
-        if (workbook_response.length >3000) {
+        if (workbook_response.length > 3000) {
             return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
 
@@ -522,7 +540,7 @@ export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Res
         if (!state || !await CRMState.findOne({ state: state }))
             return res.status(400).json({ message: "provide a state first" })
         console.log(workbook_response.length)
-        if (workbook_response.length >3000) {
+        if (workbook_response.length > 3000) {
             return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
 
@@ -1992,7 +2010,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
         let workbook_response: ILeadTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
-        if (workbook_response.length >3000) {
+        if (workbook_response.length > 3000) {
             return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
         let checkednumbers: string[] = []
@@ -2556,7 +2574,7 @@ export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next
         let workbook_response: IReferTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
-        if (workbook_response.length >3000) {
+        if (workbook_response.length > 3000) {
             return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
         for (let i = 0; i < workbook_response.length; i++) {
