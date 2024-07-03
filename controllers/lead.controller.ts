@@ -460,7 +460,11 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
 export const GetAllCRMCities = async (req: Request, res: Response, next: NextFunction) => {
     let result: { city: ICRMCity, users: IUser[] }[] = []
     let state = req.query.state;
-    let cities = await CRMCity.find({ state: state })
+    let cities: ICRMCity[] = []
+    if (state)
+        cities = await CRMCity.find({ state: state })
+    else
+        cities = await CRMCity.find()
     for (let i = 0; i < cities.length; i++) {
         let users = await User.find({ assigned_crm_cities: cities[i]._id })
         result.push({ city: cities[i], users: users })

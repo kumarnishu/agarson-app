@@ -1,18 +1,18 @@
 import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
-import { useEffect, useContext } from 'react';
-import { useMutation } from 'react-query';
+import { useEffect, useContext, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { CreateOrUpdateRefer } from '../../../services/LeadsServices';
-import { States } from '../../../utils/states';
-import { Cities } from '../../../utils/cities';
+import { CreateOrUpdateRefer, GetAllCities, GetAllStates } from '../../../services/LeadsServices';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IReferredParty } from '../../../types/crm.types';
+import { ICRMCity, IReferredParty } from '../../../types/crm.types';
 import { UserContext } from '../../../contexts/userContext';
+import { toTitleCase } from '../../../utils/TitleCase';
+import { IState, IUser } from '../../../types/user.types';
 
 export type TformData = {
     name: string,
@@ -25,6 +25,13 @@ export type TformData = {
 
 function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
     const { user } = useContext(UserContext);
+    const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
+    const [cities, setCities] = useState<{ city: ICRMCity, users: IUser[] }[]>([])
+    const [state, setState] = useState<string>();
+
+    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
+    const { data: citydata, isSuccess: isCitySuccess } = useQuery<AxiosResponse<{ city: ICRMCity, users: IUser[] }[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
+
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IReferredParty>, BackendError, { body: FormData, id?: string }>
         (CreateOrUpdateRefer, {
@@ -72,6 +79,23 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
             mutate({ id: refer?._id, body: formdata });
         }
     });
+
+    useEffect(() => {
+        if (isStateSuccess) {
+            setStates(data.data)
+        }
+    }, [isSuccess, states, data])
+
+    useEffect(() => {
+        if (isCitySuccess) {
+            setCities(citydata.data)
+        }
+    }, [isSuccess, states, citydata])
+
+    useEffect(() => {
+        setState(formik.values.state)
+    }, [formik.values.state])
+
     useEffect(() => {
         if (isSuccess) {
             setChoice({ type: LeadChoiceActions.close_lead })
@@ -158,38 +182,7 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
                 />
 
 
-                < TextField
-
-                    select
-
-                    SelectProps={{
-                        native: true
-                    }}
-                    focused
-
-                    error={
-                        formik.touched.city && formik.errors.city ? true : false
-                    }
-                    id="city"
-                    label="City"
-                    fullWidth
-                    helperText={
-                        formik.touched.city && formik.errors.city ? formik.errors.city : ""
-                    }
-                    {...formik.getFieldProps('city')}
-                >
-                    <option key={0} value={undefined}>
-                        Select City
-                    </option>
-                    {
-                        Cities.map((city, index) => {
-                            return (<option key={index} value={city.toLowerCase()}>
-                                {city}
-                            </option>)
-                        })
-                    }
-                </TextField>
-
+          
                 {/* state */}
 
 
@@ -218,13 +211,44 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
                         Select State
                     </option>
                     {
-                        States.map(state => {
-                            return (<option key={state.code} value={state.state.toLowerCase()}>
-                                {state.state}
+                        states.map(state => {
+                            return (<option key={state.state._id} value={state.state.state}>
+                                {toTitleCase(state.state.state)}
                             </option>)
                         })
                     }
                 </TextField>
+                < TextField
+
+                    select
+
+                    SelectProps={{
+                        native: true
+                    }}
+                    focused
+
+                    error={
+                        formik.touched.city && formik.errors.city ? true : false
+                    }
+                    id="city"
+                    label="City"
+                    fullWidth
+                    helperText={
+                        formik.touched.city && formik.errors.city ? formik.errors.city : ""
+                    }
+                    {...formik.getFieldProps('city')}
+                >
+                    <option value="">
+                    </option>
+                    {
+                        cities.map((city, index) => {
+                            return (<option key={index} value={city.city.city.toLowerCase()}>
+                                {toTitleCase(city.city.city)}
+                            </option>)
+                        })
+                    }
+                </TextField>
+
                 <Button variant="contained" color="primary" type="submit"
                     disabled={isLoading}
                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : <>

@@ -34,7 +34,7 @@ let template: ICRMCityTemplate[] = [
 
 export default function CrmCitiesPage() {
   const [flag, setFlag] = useState(1);
-  const [state, setState] = useState<string | undefined>('delhi');
+  const [state, setState] = useState<string | undefined>();
   const [states, setStates] = useState<{ state: ICRMState, users: IUser[] }[]>([])
 
   const { data: citiesdata, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<{ city: ICRMCity, users: IUser[] }[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))

@@ -5,13 +5,12 @@ import { useEffect, useContext, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { CreateOrUpdateLead, GetAllLeadTypes, GetAllSources, GetAllStates } from '../../../services/LeadsServices';
+import { CreateOrUpdateLead, GetAllCities, GetAllLeadTypes, GetAllSources, GetAllStates } from '../../../services/LeadsServices';
 import { Countries } from '../../../utils/countries';
-import { Cities } from '../../../utils/cities';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { ILead, ILeadSource, ILeadType } from '../../../types/crm.types';
+import { ICRMCity, ILead, ILeadSource, ILeadType } from '../../../types/crm.types';
 import { IState, IUser } from '../../../types/user.types';
 import { toTitleCase } from '../../../utils/TitleCase';
 
@@ -39,7 +38,8 @@ export type TformData = {
 
 function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
     const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
-
+    const [cities, setCities] = useState<{ city: ICRMCity, users: IUser[] }[]>([])
+    const [state, setState] = useState<string>();
     const [types, setTypes] = useState<ILeadType[]>([])
     const [sources, setSources] = useState<ILeadSource[]>([])
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
@@ -55,6 +55,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
     const { data: sourcedata, isSuccess: isSourceSuccess } = useQuery<AxiosResponse<ILeadSource[]>, BackendError>("crm_sources", GetAllSources)
 
     const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
+    const { data: citydata, isSuccess: isCitySuccess } = useQuery<AxiosResponse<{ city: ICRMCity, users: IUser[] }[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
 
 
     const { setChoice } = useContext(ChoiceContext)
@@ -172,6 +173,15 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
         }
     }, [isSuccess, states, data])
 
+    useEffect(() => {
+        if (isCitySuccess) {
+            setCities(citydata.data)
+        }
+    }, [isSuccess, states, citydata])
+
+    useEffect(() => {
+        setState(formik.values.state)
+    }, [formik.values.state])
 
     useEffect(() => {
         if (isSourceSuccess) {
@@ -376,41 +386,6 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     }
                     {...formik.getFieldProps('alternate_email')}
                 />
-
-                {/* city */}
-
-
-                < TextField
-
-                    select
-
-                    SelectProps={{
-                        native: true
-                    }}
-                    focused
-
-                    error={
-                        formik.touched.city && formik.errors.city ? true : false
-                    }
-                    id="city"
-                    label="City"
-                    fullWidth
-                    helperText={
-                        formik.touched.city && formik.errors.city ? formik.errors.city : ""
-                    }
-                    {...formik.getFieldProps('city')}
-                >
-                    <option value="">
-                    </option>
-                    {
-                        Cities.map((city, index) => {
-                            return (<option key={index} value={city.toLowerCase()}>
-                                {toTitleCase(city)}
-                            </option>)
-                        })
-                    }
-                </TextField>
-
                 {/* state */}
 
 
@@ -446,6 +421,41 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                         })
                     }
                 </TextField>
+                {/* city */}
+
+
+                < TextField
+
+                    select
+
+                    SelectProps={{
+                        native: true
+                    }}
+                    focused
+
+                    error={
+                        formik.touched.city && formik.errors.city ? true : false
+                    }
+                    id="city"
+                    label="City"
+                    fullWidth
+                    helperText={
+                        formik.touched.city && formik.errors.city ? formik.errors.city : ""
+                    }
+                    {...formik.getFieldProps('city')}
+                >
+                    <option value="">
+                    </option>
+                    {
+                        cities.map((city, index) => {
+                            return (<option key={index} value={city.city.city.toLowerCase()}>
+                                {toTitleCase(city.city.city)}
+                            </option>)
+                        })
+                    }
+                </TextField>
+
+                
 
 
 
