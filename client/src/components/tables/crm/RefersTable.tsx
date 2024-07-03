@@ -233,7 +233,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
 
 
 
-                            {user?.is_admin && user?.crm_access_fields.is_editable &&
+                            {user?.crm_access_fields.is_editable &&
                               <Tooltip title="edit">
                                 <IconButton color="secondary"
                                   onClick={() => {

@@ -12,6 +12,7 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IReferredParty } from '../../../types/crm.types';
+import { UserContext } from '../../../contexts/userContext';
 
 export type TformData = {
     name: string,
@@ -23,6 +24,7 @@ export type TformData = {
 }
 
 function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
+    const { user } = useContext(UserContext);
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IReferredParty>, BackendError, { body: FormData, id?: string }>
         (CreateOrUpdateRefer, {
@@ -44,7 +46,7 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
         validationSchema: Yup.object({
             name: Yup.string().required("required field"),
             customer_name: Yup.string(),
-         
+
             city: Yup.string().required("required field")
             ,
             state: Yup.string().required("required field")
@@ -87,7 +89,7 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
                     autoFocus
 
                     fullWidth
-
+                    disabled={!user?.is_admin && refer ? true : false}
 
                     error={
                         formik.touched.name && formik.errors.name ? true : false
@@ -101,7 +103,7 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
                 />
 
 
-              
+
                 < TextField
 
                     fullWidth
@@ -134,7 +136,7 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
                 {/* customer designiation */}
 
 
-             
+
 
                 {/* mobile */}
 
@@ -155,7 +157,7 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
                     {...formik.getFieldProps('mobile')}
                 />
 
-              
+
                 < TextField
 
                     select
