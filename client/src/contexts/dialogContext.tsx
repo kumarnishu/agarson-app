@@ -14,7 +14,7 @@ type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk
 type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
 
 
-type LeadChoices = "create_or_edit_refer" | "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_city" | "bulk_assign_crm_cities" | "find_unknown_stages" | "delete_refer" | "convert_lead_to_refer" | "bulk_delete_useless_leads" | "view_referrals" | "delete_crm_state" |"find_unknown_cities"|
+type LeadChoices = "create_or_edit_refer" |"create_or_edit_leadtype"| "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_city" | "bulk_assign_crm_cities" | "find_unknown_stages" | "delete_refer" | "convert_lead_to_refer" | "bulk_delete_useless_leads" | "view_referrals" | "delete_crm_state" |"find_unknown_cities"|
    "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "find_unknown_states"
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "toogle_machine" | "toogle_article" | "toogle_dye" | "delete_production" | "create_production" | "update_production"
@@ -122,6 +122,7 @@ export enum LeadChoiceActions {
   find_unknown_stages = "find_unknown_stages",
   find_unknown_cities = "find_unknown_cities",
   delete_refer = "delete_refer",
+  create_or_edit_leadtype ="create_or_edit_leadtype",
   convert_lead_to_refer = "convert_lead_to_refer",
   bulk_delete_useless_leads = "bulk_delete_useless_leads",
   view_referrals = "view_referrals",
@@ -214,6 +215,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.find_unknown_cities:return type
     case LeadChoiceActions.convert_lead_to_refer: return type
     case LeadChoiceActions.bulk_delete_useless_leads: return type
+    case LeadChoiceActions.create_or_edit_leadtype: return type
     case LeadChoiceActions.view_referrals: return type
     case LeadChoiceActions.refer_lead: return type
     case LeadChoiceActions.remove_referral: return type

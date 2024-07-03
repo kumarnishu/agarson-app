@@ -67,7 +67,6 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: IRemark, 
       >
         <Button fullWidth variant="outlined" color="error"
           onClick={() => {
-            setChoice({ type: LeadChoiceActions.delete_lead })
             mutate(remark._id)
           }}
           disabled={isLoading}
