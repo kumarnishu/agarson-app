@@ -30,6 +30,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
   useEffect(() => {
     setData(refers)
   }, [refers])
+
   return (
     <>
       <Box sx={{

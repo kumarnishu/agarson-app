@@ -21,7 +21,7 @@ function AllReferralPageDialog({ refer }: { refer: IReferredParty }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const [leads, setLeads] = useState<ILead[]>([])
 
-    const { data, isLoading, isSuccess, refetch } = useQuery<AxiosResponse<ILead[]>, BackendError>(["assigned_leads", refer], async () => GetAllReferrals({ refer: refer }), { enabled: false })
+    const { data, isLoading, isSuccess, refetch } = useQuery<AxiosResponse<ILead[]>, BackendError>(["assigned_leads", refer], async () => GetAllReferrals({ refer: refer }))
 
 
     function handleExcel() {
@@ -37,14 +37,14 @@ function AllReferralPageDialog({ refer }: { refer: IReferredParty }) {
     }
 
     useEffect(() => {
+        refetch()
+    }, [refer])
+
+    useEffect(() => {
         if (isSuccess && data) {
             setLeads(data.data)
         }
     }, [isSuccess, data])
-    useEffect(() => {
-        if (refer)
-            refetch()
-    }, [refer])
 
 
     useEffect(() => {
@@ -79,7 +79,7 @@ function AllReferralPageDialog({ refer }: { refer: IReferredParty }) {
         setSelectedData(tmpdata)
     }, [])
 
-
+    console.log(refer)
 
     return (
         <Dialog fullScreen

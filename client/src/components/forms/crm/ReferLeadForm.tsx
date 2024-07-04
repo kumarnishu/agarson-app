@@ -107,7 +107,7 @@ function ReferLeadForm({ lead }: { lead: ILead }) {
                     {
                         refers && refers.map(refer => {
                             return (<option key={refer._id} value={refer._id}>
-                                {refer.name}
+                                {refer.name}--{refer.city}/{refer.state}
                             </option>)
                         })
                     }

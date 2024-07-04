@@ -641,6 +641,7 @@ export const AssignedReferrals = async (req: Request, res: Response, next: NextF
             }
         ]
     }).sort('-updated_at')
+    return res.status(200).json(leads);
 }
 
 // leads apis
