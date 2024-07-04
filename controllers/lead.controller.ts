@@ -2849,34 +2849,25 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
 }
 
 export const FindUnknownCrmSates = async (req: Request, res: Response, next: NextFunction) => {
-    await Lead.updateMany({ state: 'unknown' }, { state: 'updating' });
-    await ReferredParty.updateMany({ state: 'unknown' }, { state: 'updating' });
-    await CRMState.findOneAndDelete({ state: 'unknown' })
-    let states = await CRMState.find();
+    let states = await CRMState.find({state:{$ne:""}});
     let statevalues = states.map(i => { return i.state });
     await Lead.updateMany({ state: { $nin: statevalues } }, { state: 'unknown' });
     await ReferredParty.updateMany({ state: { $nin: statevalues } }, { state: 'unknown' });
-    await new CRMState({ state: 'unknown', created_by: req.user, updated_by: req.user }).save();
     return res.status(200).json({ message: "successfull" })
 }
 export const FindUnknownCrmStages = async (req: Request, res: Response, next: NextFunction) => {
-    await Lead.updateMany({ stage: 'unknown' }, { stage: 'updating' });
-    await Stage.findOneAndDelete({ stage: 'unknown' })
-    let stages = await Stage.find();
+    let stages = await Stage.find({ stage: { $ne: "" } });
     let stagevalues = stages.map(i => { return i.stage });
     await Lead.updateMany({ stage: { $nin: stagevalues } }, { stage: 'unknown' });
-    await new Stage({ stage: 'unknown', created_by: req.user, updated_by: req.user }).save();
     return res.status(200).json({ message: "successfull" })
 }
 
 export const FindUnknownCrmCities = async (req: Request, res: Response, next: NextFunction) => {
-
-    let cities = await CRMCity.find();
+    let cities = await CRMCity.find({ city: { $ne: "" } });
     let cityvalues = cities.map(i => { return i.city });
-
+   
     await CRMCity.updateMany({ city: { $nin: cityvalues } }, { city: 'unknown', state: 'unknown' });
-
-    await Lead.updateMany({ city: 'unknown' }, { city: 'unknown', state: 'unknown' });
-    await Stage.updateMany({ city: 'unknown' }, { city: 'unknown', state: 'unknown' });
+    await Lead.updateMany({ city: { $nin: cityvalues } }, { city: 'unknown', state: 'unknown' });
+    await ReferredParty.updateMany({ city: { $nin: cityvalues } }, { city: 'unknown', state: 'unknown' });
     return res.status(200).json({ message: "successfull" })
 }
