@@ -12,7 +12,6 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { IState, IUser } from '../../types/user.types'
 import { ICRMStateTemplate } from '../../types/template.type'
 import LeadsStateTable from '../../components/tables/crm/LeadsStateTable'
 import { GetAllStates } from '../../services/LeadsServices'
@@ -20,6 +19,7 @@ import CreateOrEditStateDialog from '../../components/dialogs/crm/CreateOrEditSt
 import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
 import AssignCrmStatesDialog from '../../components/dialogs/crm/AssignCrmStatesDialog'
 import FindUknownCrmStatesDialog from '../../components/dialogs/crm/FindUknownCrmStatesDialog'
+import { ICRMState } from '../../types/crm.types'
 
 
 let template: ICRMStateTemplate[] = [
@@ -31,13 +31,13 @@ let template: ICRMStateTemplate[] = [
 
 export default function CrmStatesPage() {
   const [flag, setFlag] = useState(1);
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
-  const [state, setState] = useState<{ state: IState, users: IUser[] }>()
-  const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: ICRMState, users: { _id: string, username: string }[] }[]>, BackendError>("crm_states", GetAllStates)
+  const [state, setState] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }>()
+  const [states, setStates] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => states, [states])
-  const [preFilteredData, setPreFilteredData] = useState<{ state: IState, users: IUser[] }[]>([])
-  const [selectedStates, setSelectedStates] = useState<{ state: IState, users: IUser[] }[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }[]>([])
+  const [selectedStates, setSelectedStates] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const [selectedData, setSelectedData] = useState<ICRMStateTemplate[]>(template)
   const [sent, setSent] = useState(false)
@@ -205,8 +205,8 @@ export default function CrmStatesPage() {
               <MenuItem
                 sx={{ color: 'red' }}
                 onClick={() => {
-                    setChoice({ type: LeadChoiceActions.find_unknown_states })
-                    setState(undefined)
+                  setChoice({ type: LeadChoiceActions.find_unknown_states })
+                  setState(undefined)
                   setAnchorEl(null)
                 }}
               > Find Unknown States</MenuItem>

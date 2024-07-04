@@ -2,7 +2,7 @@ import { Delete, Search } from '@mui/icons-material'
 import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchLeads, GetAllStages, GetLeads } from '../../services/LeadsServices'
 import { UserContext } from '../../contexts/userContext'
@@ -54,7 +54,6 @@ export default function LeadsPage() {
   const [lead, setLead] = useState<ILead>()
   const [leads, setLeads] = useState<ILead[]>([])
   const [selectAll, setSelectAll] = useState(false)
-  const MemoData = React.useMemo(() => leads, [leads])
   const [preFilteredData, setPreFilteredData] = useState<ILead[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
@@ -332,8 +331,8 @@ export default function LeadsPage() {
       </Stack >
       {/* table */}
       {isLoading && <TableSkeleton />}
-      {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && MemoData.length > 0 && <>
+      {leads && leads.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
+      {!isLoading && leads.length > 0 && <>
         < LeadsTable
           lead={lead}
           setLead={setLead}
@@ -341,11 +340,11 @@ export default function LeadsPage() {
           selectedLeads={selectedLeads}
           setSelectedLeads={setSelectedLeads}
           setSelectAll={setSelectAll}
-          leads={MemoData}
+          leads={leads}
         />
-        <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
       </>
       }
+      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
     </>
 
   )

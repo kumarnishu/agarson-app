@@ -155,6 +155,10 @@ export const GetAllCities = async ({ state }: { state?: string }) => {
   return await apiClient.get(`crm/cities`)
 }
 
+export const GetAllReferrals = async ({ refer }: { refer: IReferredParty }) => {
+  return await apiClient.get(`assigned/referrals/${refer._id}`)
+}
+
 
 export const CreateOrEditCity = async ({ body, id }: {
   body: { state: string, city: string }

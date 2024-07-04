@@ -8,21 +8,20 @@ import { UserContext } from '../../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import CreateOrEditStateDialog from '../../dialogs/crm/CreateOrEditStateDialog'
 import { ICRMState } from '../../../types/crm.types'
-import { IUser } from '../../../types/user.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 
 
 type Props = {
-    state: { state: ICRMState, users: IUser[] } | undefined,
-    setState: React.Dispatch<React.SetStateAction<{ state: ICRMState, users: IUser[] } | undefined>>,
+    state: { state: ICRMState, users: { _id: string, username: string }[] } | undefined,
+    setState: React.Dispatch<React.SetStateAction<{ state: ICRMState, users: { _id: string, username: string }[] } | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    states: { state: ICRMState, users: IUser[] }[],
-    selectedStates: { state: ICRMState, users: IUser[] }[]
-    setSelectedStates: React.Dispatch<React.SetStateAction<{ state: ICRMState, users: IUser[] }[]>>,
+    states: { state: ICRMState, users: { _id: string, username: string }[] }[],
+    selectedStates: { state: ICRMState, users: { _id: string, username: string }[] }[]
+    setSelectedStates: React.Dispatch<React.SetStateAction<{ state: ICRMState, users: { _id: string, username: string }[] }[]>>,
 }
 function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
-    const [data, setData] = useState<{ state: ICRMState, users: IUser[] }[]>(states)
+    const [data, setData] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }[]>(states)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {

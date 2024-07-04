@@ -211,10 +211,11 @@ export const DeleteCRMLeadStage = async (req: Request, res: Response, next: Next
 
 //states apis
 export const GetAllCRMStates = async (req: Request, res: Response, next: NextFunction) => {
-    let result: { state: ICRMState, users: IUser[] }[] = []
+    let result: { state: ICRMState, users: { _id: string, username: string }[] }[] = []
     let states = await CRMState.find()
+
     for (let i = 0; i < states.length; i++) {
-        let users = await User.find({ assigned_crm_states: states[i]._id })
+        let users = await (await User.find({ assigned_crm_states: states[i]._id })).map((i) => { return { _id: i._id.valueOf(), username: i.username } })
         result.push({ state: states[i], users: users })
     }
     return res.status(200).json(result)
@@ -458,7 +459,7 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
 
 //cities
 export const GetAllCRMCities = async (req: Request, res: Response, next: NextFunction) => {
-    let result: { city: ICRMCity, users: IUser[] }[] = []
+    let result: { city: ICRMCity, users: { _id: string, username: string }[] }[] = []
     let state = req.query.state;
     let cities: ICRMCity[] = []
     if (state)
@@ -466,7 +467,7 @@ export const GetAllCRMCities = async (req: Request, res: Response, next: NextFun
     else
         cities = await CRMCity.find()
     for (let i = 0; i < cities.length; i++) {
-        let users = await User.find({ assigned_crm_cities: cities[i]._id })
+        let users = await (await User.find({ assigned_crm_cities: cities[i]._id })).map((i) => { return { _id: i._id.valueOf(), username: i.username } })
         result.push({ city: cities[i], users: users })
     }
     return res.status(200).json(result)
@@ -618,6 +619,29 @@ export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Res
     return res.status(200).json(result);
 }
 
+export const AssignedReferrals = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    if (!isMongoId(id))
+        return res.status(400).json({ message: "bad mongo id" })
+    let party = await ReferredParty.findById(id)
+
+    if (!party)
+        return res.status(404).json({ message: "party not found" })
+    let leads: ILead[]
+    leads = await Lead.find({ referred_party: party._id }).populate('updated_by').populate('created_by').populate({
+        path: 'remarks',
+        populate: [
+            {
+                path: 'created_by',
+                model: 'User'
+            },
+            {
+                path: 'updated_by',
+                model: 'User'
+            }
+        ]
+    }).sort('-updated_at')
+}
 
 // leads apis
 export const GetLeads = async (req: Request, res: Response, next: NextFunction) => {
@@ -649,7 +673,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
-                stage: stage, state: { $in: states }
+                stage: stage, state: { $in: states }, city: { $in: cities }
             }).countDocuments()
         }
         else if (showonlycardleads) {
@@ -822,13 +846,11 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     stage: stage, state: { $in: states }, city: { $in: cities },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
-                        { city: { $regex: key[0], $options: 'i' } },
                         { customer_name: { $regex: key[0], $options: 'i' } },
                         { customer_designation: { $regex: key[0], $options: 'i' } },
                         { gst: { $regex: key[0], $options: 'i' } },
                         { mobile: { $regex: key[0], $options: 'i' } },
                         { email: { $regex: key[0], $options: 'i' } },
-                        { state: { $regex: key[0], $options: 'i' } },
                         { country: { $regex: key[0], $options: 'i' } },
                         { address: { $regex: key[0], $options: 'i' } },
                         { work_description: { $regex: key[0], $options: 'i' } },
@@ -865,13 +887,11 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[0], $options: 'i' } },
-                                { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
-                                { state: { $regex: key[0], $options: 'i' } },
                                 { country: { $regex: key[0], $options: 'i' } },
                                 { address: { $regex: key[0], $options: 'i' } },
                                 { work_description: { $regex: key[0], $options: 'i' } },
@@ -888,12 +908,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[1], $options: 'i' } },
-                                { city: { $regex: key[1], $options: 'i' } },
                                 { customer_name: { $regex: key[1], $options: 'i' } },
                                 { customer_designation: { $regex: key[1], $options: 'i' } },
                                 { mobile: { $regex: key[1], $options: 'i' } },
                                 { email: { $regex: key[1], $options: 'i' } },
-                                { state: { $regex: key[1], $options: 'i' } },
                                 { country: { $regex: key[1], $options: 'i' } },
                                 { address: { $regex: key[1], $options: 'i' } },
                                 { work_description: { $regex: key[1], $options: 'i' } },
@@ -935,13 +953,11 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[0], $options: 'i' } },
-                                { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
-                                { state: { $regex: key[0], $options: 'i' } },
                                 { country: { $regex: key[0], $options: 'i' } },
                                 { address: { $regex: key[0], $options: 'i' } },
                                 { work_description: { $regex: key[0], $options: 'i' } },
@@ -958,12 +974,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[1], $options: 'i' } },
-                                { city: { $regex: key[1], $options: 'i' } },
                                 { customer_name: { $regex: key[1], $options: 'i' } },
                                 { customer_designation: { $regex: key[1], $options: 'i' } },
                                 { mobile: { $regex: key[1], $options: 'i' } },
                                 { email: { $regex: key[1], $options: 'i' } },
-                                { state: { $regex: key[1], $options: 'i' } },
                                 { country: { $regex: key[1], $options: 'i' } },
                                 { address: { $regex: key[1], $options: 'i' } },
                                 { work_description: { $regex: key[1], $options: 'i' } },
@@ -981,12 +995,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[2], $options: 'i' } },
-                                { city: { $regex: key[2], $options: 'i' } },
                                 { customer_name: { $regex: key[2], $options: 'i' } },
                                 { customer_designation: { $regex: key[2], $options: 'i' } },
                                 { mobile: { $regex: key[2], $options: 'i' } },
                                 { email: { $regex: key[2], $options: 'i' } },
-                                { state: { $regex: key[2], $options: 'i' } },
                                 { country: { $regex: key[2], $options: 'i' } },
                                 { address: { $regex: key[2], $options: 'i' } },
                                 { work_description: { $regex: key[2], $options: 'i' } },
@@ -1028,13 +1040,11 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[0], $options: 'i' } },
-                                { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
                                 { gst: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
-                                { state: { $regex: key[0], $options: 'i' } },
                                 { country: { $regex: key[0], $options: 'i' } },
                                 { address: { $regex: key[0], $options: 'i' } },
                                 { work_description: { $regex: key[0], $options: 'i' } },
@@ -1051,12 +1061,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[1], $options: 'i' } },
-                                { city: { $regex: key[1], $options: 'i' } },
                                 { customer_name: { $regex: key[1], $options: 'i' } },
                                 { customer_designation: { $regex: key[1], $options: 'i' } },
                                 { mobile: { $regex: key[1], $options: 'i' } },
                                 { email: { $regex: key[1], $options: 'i' } },
-                                { state: { $regex: key[1], $options: 'i' } },
                                 { country: { $regex: key[1], $options: 'i' } },
                                 { address: { $regex: key[1], $options: 'i' } },
                                 { work_description: { $regex: key[1], $options: 'i' } },
@@ -1074,12 +1082,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[2], $options: 'i' } },
-                                { city: { $regex: key[2], $options: 'i' } },
                                 { customer_name: { $regex: key[2], $options: 'i' } },
                                 { customer_designation: { $regex: key[2], $options: 'i' } },
                                 { mobile: { $regex: key[2], $options: 'i' } },
                                 { email: { $regex: key[2], $options: 'i' } },
-                                { state: { $regex: key[2], $options: 'i' } },
                                 { country: { $regex: key[2], $options: 'i' } },
                                 { address: { $regex: key[2], $options: 'i' } },
                                 { work_description: { $regex: key[2], $options: 'i' } },
@@ -1097,12 +1103,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[3], $options: 'i' } },
-                                { city: { $regex: key[3], $options: 'i' } },
                                 { customer_name: { $regex: key[3], $options: 'i' } },
                                 { customer_designation: { $regex: key[3], $options: 'i' } },
                                 { mobile: { $regex: key[3], $options: 'i' } },
                                 { email: { $regex: key[3], $options: 'i' } },
-                                { state: { $regex: key[3], $options: 'i' } },
                                 { country: { $regex: key[3], $options: 'i' } },
                                 { address: { $regex: key[3], $options: 'i' } },
                                 { work_description: { $regex: key[3], $options: 'i' } },
@@ -1144,12 +1148,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     has_card: showonlycardleads, state: { $in: states }, city: { $in: cities },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
-                        { city: { $regex: key[0], $options: 'i' } },
                         { customer_name: { $regex: key[0], $options: 'i' } },
                         { customer_designation: { $regex: key[0], $options: 'i' } },
                         { mobile: { $regex: key[0], $options: 'i' } },
                         { email: { $regex: key[0], $options: 'i' } },
-                        { state: { $regex: key[0], $options: 'i' } },
                         { country: { $regex: key[0], $options: 'i' } },
                         { address: { $regex: key[0], $options: 'i' } },
                         { work_description: { $regex: key[0], $options: 'i' } },
@@ -1188,12 +1190,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[0], $options: 'i' } },
-                                { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
-                                { state: { $regex: key[0], $options: 'i' } },
                                 { country: { $regex: key[0], $options: 'i' } },
                                 { address: { $regex: key[0], $options: 'i' } },
                                 { work_description: { $regex: key[0], $options: 'i' } },
@@ -1211,12 +1211,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[1], $options: 'i' } },
-                                { city: { $regex: key[1], $options: 'i' } },
                                 { customer_name: { $regex: key[1], $options: 'i' } },
                                 { customer_designation: { $regex: key[1], $options: 'i' } },
                                 { mobile: { $regex: key[1], $options: 'i' } },
                                 { email: { $regex: key[1], $options: 'i' } },
-                                { state: { $regex: key[1], $options: 'i' } },
                                 { country: { $regex: key[1], $options: 'i' } },
                                 { address: { $regex: key[1], $options: 'i' } },
                                 { work_description: { $regex: key[1], $options: 'i' } },
@@ -1258,12 +1256,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[0], $options: 'i' } },
-                                { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
-                                { state: { $regex: key[0], $options: 'i' } },
                                 { country: { $regex: key[0], $options: 'i' } },
                                 { address: { $regex: key[0], $options: 'i' } },
                                 { work_description: { $regex: key[0], $options: 'i' } },
@@ -1281,12 +1277,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[1], $options: 'i' } },
-                                { city: { $regex: key[1], $options: 'i' } },
                                 { customer_name: { $regex: key[1], $options: 'i' } },
                                 { customer_designation: { $regex: key[1], $options: 'i' } },
                                 { mobile: { $regex: key[1], $options: 'i' } },
                                 { email: { $regex: key[1], $options: 'i' } },
-                                { state: { $regex: key[1], $options: 'i' } },
                                 { country: { $regex: key[1], $options: 'i' } },
                                 { address: { $regex: key[1], $options: 'i' } },
                                 { work_description: { $regex: key[1], $options: 'i' } },
@@ -1304,12 +1298,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[2], $options: 'i' } },
-                                { city: { $regex: key[2], $options: 'i' } },
                                 { customer_name: { $regex: key[2], $options: 'i' } },
                                 { customer_designation: { $regex: key[2], $options: 'i' } },
                                 { mobile: { $regex: key[2], $options: 'i' } },
                                 { email: { $regex: key[2], $options: 'i' } },
-                                { state: { $regex: key[2], $options: 'i' } },
                                 { country: { $regex: key[2], $options: 'i' } },
                                 { address: { $regex: key[2], $options: 'i' } },
                                 { work_description: { $regex: key[2], $options: 'i' } },
@@ -1351,12 +1343,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[0], $options: 'i' } },
-                                { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
-                                { state: { $regex: key[0], $options: 'i' } },
                                 { country: { $regex: key[0], $options: 'i' } },
                                 { address: { $regex: key[0], $options: 'i' } },
                                 { work_description: { $regex: key[0], $options: 'i' } },
@@ -1374,12 +1364,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[1], $options: 'i' } },
-                                { city: { $regex: key[1], $options: 'i' } },
                                 { customer_name: { $regex: key[1], $options: 'i' } },
                                 { customer_designation: { $regex: key[1], $options: 'i' } },
                                 { mobile: { $regex: key[1], $options: 'i' } },
                                 { email: { $regex: key[1], $options: 'i' } },
-                                { state: { $regex: key[1], $options: 'i' } },
                                 { country: { $regex: key[1], $options: 'i' } },
                                 { address: { $regex: key[1], $options: 'i' } },
                                 { work_description: { $regex: key[1], $options: 'i' } },
@@ -1397,12 +1385,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[2], $options: 'i' } },
-                                { city: { $regex: key[2], $options: 'i' } },
                                 { customer_name: { $regex: key[2], $options: 'i' } },
                                 { customer_designation: { $regex: key[2], $options: 'i' } },
                                 { mobile: { $regex: key[2], $options: 'i' } },
                                 { email: { $regex: key[2], $options: 'i' } },
-                                { state: { $regex: key[2], $options: 'i' } },
                                 { country: { $regex: key[2], $options: 'i' } },
                                 { address: { $regex: key[2], $options: 'i' } },
                                 { work_description: { $regex: key[2], $options: 'i' } },
@@ -1420,12 +1406,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[3], $options: 'i' } },
-                                { city: { $regex: key[3], $options: 'i' } },
                                 { customer_name: { $regex: key[3], $options: 'i' } },
                                 { customer_designation: { $regex: key[3], $options: 'i' } },
                                 { mobile: { $regex: key[3], $options: 'i' } },
                                 { email: { $regex: key[3], $options: 'i' } },
-                                { state: { $regex: key[3], $options: 'i' } },
                                 { country: { $regex: key[3], $options: 'i' } },
                                 { address: { $regex: key[3], $options: 'i' } },
                                 { work_description: { $regex: key[3], $options: 'i' } },
@@ -1467,12 +1451,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     state: { $in: states }, city: { $in: cities },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
-                        { city: { $regex: key[0], $options: 'i' } },
                         { customer_name: { $regex: key[0], $options: 'i' } },
                         { customer_designation: { $regex: key[0], $options: 'i' } },
                         { mobile: { $regex: key[0], $options: 'i' } },
                         { email: { $regex: key[0], $options: 'i' } },
-                        { state: { $regex: key[0], $options: 'i' } },
                         { country: { $regex: key[0], $options: 'i' } },
                         { address: { $regex: key[0], $options: 'i' } },
                         { work_description: { $regex: key[0], $options: 'i' } },
@@ -1511,12 +1493,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[0], $options: 'i' } },
-                                { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
-                                { state: { $regex: key[0], $options: 'i' } },
                                 { country: { $regex: key[0], $options: 'i' } },
                                 { address: { $regex: key[0], $options: 'i' } },
                                 { work_description: { $regex: key[0], $options: 'i' } },
@@ -1534,12 +1514,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[1], $options: 'i' } },
-                                { city: { $regex: key[1], $options: 'i' } },
                                 { customer_name: { $regex: key[1], $options: 'i' } },
                                 { customer_designation: { $regex: key[1], $options: 'i' } },
                                 { mobile: { $regex: key[1], $options: 'i' } },
                                 { email: { $regex: key[1], $options: 'i' } },
-                                { state: { $regex: key[1], $options: 'i' } },
                                 { country: { $regex: key[1], $options: 'i' } },
                                 { address: { $regex: key[1], $options: 'i' } },
                                 { work_description: { $regex: key[1], $options: 'i' } },
@@ -1581,12 +1559,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[0], $options: 'i' } },
-                                { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
-                                { state: { $regex: key[0], $options: 'i' } },
                                 { country: { $regex: key[0], $options: 'i' } },
                                 { address: { $regex: key[0], $options: 'i' } },
                                 { work_description: { $regex: key[0], $options: 'i' } },
@@ -1604,12 +1580,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[1], $options: 'i' } },
-                                { city: { $regex: key[1], $options: 'i' } },
                                 { customer_name: { $regex: key[1], $options: 'i' } },
                                 { customer_designation: { $regex: key[1], $options: 'i' } },
                                 { mobile: { $regex: key[1], $options: 'i' } },
                                 { email: { $regex: key[1], $options: 'i' } },
-                                { state: { $regex: key[1], $options: 'i' } },
                                 { country: { $regex: key[1], $options: 'i' } },
                                 { address: { $regex: key[1], $options: 'i' } },
                                 { work_description: { $regex: key[1], $options: 'i' } },
@@ -1627,12 +1601,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[2], $options: 'i' } },
-                                { city: { $regex: key[2], $options: 'i' } },
                                 { customer_name: { $regex: key[2], $options: 'i' } },
                                 { customer_designation: { $regex: key[2], $options: 'i' } },
                                 { mobile: { $regex: key[2], $options: 'i' } },
                                 { email: { $regex: key[2], $options: 'i' } },
-                                { state: { $regex: key[2], $options: 'i' } },
                                 { country: { $regex: key[2], $options: 'i' } },
                                 { address: { $regex: key[2], $options: 'i' } },
                                 { work_description: { $regex: key[2], $options: 'i' } },
@@ -1674,12 +1646,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[0], $options: 'i' } },
-                                { city: { $regex: key[0], $options: 'i' } },
                                 { customer_name: { $regex: key[0], $options: 'i' } },
                                 { customer_designation: { $regex: key[0], $options: 'i' } },
                                 { mobile: { $regex: key[0], $options: 'i' } },
                                 { email: { $regex: key[0], $options: 'i' } },
-                                { state: { $regex: key[0], $options: 'i' } },
                                 { country: { $regex: key[0], $options: 'i' } },
                                 { address: { $regex: key[0], $options: 'i' } },
                                 { work_description: { $regex: key[0], $options: 'i' } },
@@ -1697,12 +1667,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[1], $options: 'i' } },
-                                { city: { $regex: key[1], $options: 'i' } },
                                 { customer_name: { $regex: key[1], $options: 'i' } },
                                 { customer_designation: { $regex: key[1], $options: 'i' } },
                                 { mobile: { $regex: key[1], $options: 'i' } },
                                 { email: { $regex: key[1], $options: 'i' } },
-                                { state: { $regex: key[1], $options: 'i' } },
                                 { country: { $regex: key[1], $options: 'i' } },
                                 { address: { $regex: key[1], $options: 'i' } },
                                 { work_description: { $regex: key[1], $options: 'i' } },
@@ -1720,12 +1688,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[2], $options: 'i' } },
-                                { city: { $regex: key[2], $options: 'i' } },
                                 { customer_name: { $regex: key[2], $options: 'i' } },
                                 { customer_designation: { $regex: key[2], $options: 'i' } },
                                 { mobile: { $regex: key[2], $options: 'i' } },
                                 { email: { $regex: key[2], $options: 'i' } },
-                                { state: { $regex: key[2], $options: 'i' } },
                                 { country: { $regex: key[2], $options: 'i' } },
                                 { address: { $regex: key[2], $options: 'i' } },
                                 { work_description: { $regex: key[2], $options: 'i' } },
@@ -1743,12 +1709,10 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         {
                             $or: [
                                 { name: { $regex: key[3], $options: 'i' } },
-                                { city: { $regex: key[3], $options: 'i' } },
                                 { customer_name: { $regex: key[3], $options: 'i' } },
                                 { customer_designation: { $regex: key[3], $options: 'i' } },
                                 { mobile: { $regex: key[3], $options: 'i' } },
                                 { email: { $regex: key[3], $options: 'i' } },
-                                { state: { $regex: key[3], $options: 'i' } },
                                 { country: { $regex: key[3], $options: 'i' } },
                                 { address: { $regex: key[3], $options: 'i' } },
                                 { work_description: { $regex: key[3], $options: 'i' } },
@@ -2247,6 +2211,32 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
     return res.status(200).json(refers);
 }
 
+export const GetAllReferralsById = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    if (!isMongoId(id))
+        return res.status(400).json({ message: "bad mongo id" })
+    let party = await ReferredParty.findById(id)
+
+    if (!party)
+        return res.status(404).json({ message: "party not found" })
+
+    let leads: ILead[] = []
+    leads = await Lead.find({ referred_party: party._id }).populate('updated_by').populate('created_by').populate({
+        path: 'remarks',
+        populate: [
+            {
+                path: 'created_by',
+                model: 'User'
+            },
+            {
+                path: 'updated_by',
+                model: 'User'
+            }
+        ]
+    }).sort('name')
+    return res.status(200).json(leads);
+}
+
 export const GetPaginatedRefers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
@@ -2256,36 +2246,11 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
     let parties: IReferredParty[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         parties = await ReferredParty.find({ state: { $in: states }, city: { $in: cities } }).populate('created_by').populate('updated_by').sort('name')
-        let result: {
-            party: IReferredParty,
-            leads: ILead[]
-        }[] = []
-        for (let i = 0; i < parties.length; i++) {
-            let leads = await Lead.find({ referred_party: parties[i] }).populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }).sort('name')
-            result.push({
-                party: parties[i],
-                leads: leads
-            })
-        }
-
-
-        let count = result.length
-        result = result.slice((page - 1) * limit, limit * page)
+        let count = parties.length
+        parties = parties.slice((page - 1) * limit, limit * page)
 
         return res.status(200).json({
-            result,
+            result: parties,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
@@ -2305,10 +2270,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     if (!key)
         return res.status(500).json({ message: "bad request" })
-    let result: {
-        party: IReferredParty,
-        leads: ILead[]
-    }[] = []
+    let result: IReferredParty[] = []
     let parties: IReferredParty[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (key.length == 1 || key.length > 4) {
@@ -2317,10 +2279,8 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 state: { $in: states }, city: { $in: cities },
                 $or: [
                     { name: { $regex: key[0], $options: 'i' } },
-                    { city: { $regex: key[0], $options: 'i' } },
                     { customer_name: { $regex: key[0], $options: 'i' } },
                     { mobile: { $regex: key[0], $options: 'i' } },
-                    { state: { $regex: key[0], $options: 'i' } },
                 ]
             }).populate('created_by').populate('updated_by').sort('-updated_at')
 
@@ -2334,21 +2294,17 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     {
                         $or: [
                             { name: { $regex: key[0], $options: 'i' } },
-                            { city: { $regex: key[0], $options: 'i' } },
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
                             { mobile: { $regex: key[0], $options: 'i' } },
-                            { state: { $regex: key[0], $options: 'i' } },
                         ]
                     },
                     {
                         $or: [
                             { name: { $regex: key[0], $options: 'i' } },
-                            { city: { $regex: key[0], $options: 'i' } },
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
                             { mobile: { $regex: key[0], $options: 'i' } },
-                            { state: { $regex: key[0], $options: 'i' } },
                         ]
                     }
                 ]
@@ -2368,31 +2324,25 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     {
                         $or: [
                             { name: { $regex: key[0], $options: 'i' } },
-                            { city: { $regex: key[0], $options: 'i' } },
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
                             { mobile: { $regex: key[0], $options: 'i' } },
-                            { state: { $regex: key[0], $options: 'i' } },
                         ]
                     },
                     {
                         $or: [
                             { name: { $regex: key[0], $options: 'i' } },
-                            { city: { $regex: key[0], $options: 'i' } },
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
                             { mobile: { $regex: key[0], $options: 'i' } },
-                            { state: { $regex: key[0], $options: 'i' } },
                         ]
                     },
                     {
                         $or: [
                             { name: { $regex: key[0], $options: 'i' } },
-                            { city: { $regex: key[0], $options: 'i' } },
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
                             { mobile: { $regex: key[0], $options: 'i' } },
-                            { state: { $regex: key[0], $options: 'i' } },
                         ]
                     }
                 ]
@@ -2410,41 +2360,33 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                     {
                         $or: [
                             { name: { $regex: key[0], $options: 'i' } },
-                            { city: { $regex: key[0], $options: 'i' } },
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
                             { mobile: { $regex: key[0], $options: 'i' } },
-                            { state: { $regex: key[0], $options: 'i' } },
                         ]
                     },
                     {
                         $or: [
                             { name: { $regex: key[0], $options: 'i' } },
-                            { city: { $regex: key[0], $options: 'i' } },
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
                             { mobile: { $regex: key[0], $options: 'i' } },
-                            { state: { $regex: key[0], $options: 'i' } },
                         ]
                     },
                     {
                         $or: [
                             { name: { $regex: key[0], $options: 'i' } },
-                            { city: { $regex: key[0], $options: 'i' } },
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
                             { mobile: { $regex: key[0], $options: 'i' } },
-                            { state: { $regex: key[0], $options: 'i' } },
                         ]
                     },
                     {
                         $or: [
                             { name: { $regex: key[0], $options: 'i' } },
-                            { city: { $regex: key[0], $options: 'i' } },
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
                             { mobile: { $regex: key[0], $options: 'i' } },
-                            { state: { $regex: key[0], $options: 'i' } },
                         ]
                     }
                 ]
@@ -2454,29 +2396,9 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
             ).populate('created_by').populate('updated_by').sort('-updated_at')
 
         }
-        for (let i = 0; i < parties.length; i++) {
-            let leads = await Lead.find({ referred_party: parties[i] }).populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }).sort('-updated_at')
-            result.push({
-                party: parties[i],
-                leads: leads
-            })
-        }
 
-
-        let count = result.length
-        result = result.slice((page - 1) * limit, limit * page)
+        let count = parties.length
+        result = parties.slice((page - 1) * limit, limit * page)
 
         return res.status(200).json({
             result,
@@ -2524,7 +2446,6 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
     if (!name || !city || !state || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
-
     let party = await ReferredParty.findById(id)
 
     if (!party)
@@ -2674,7 +2595,12 @@ export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next
                 }
 
                 if (!refer._id || !isMongoId(String(refer._id))) {
-                    let refertmp = await ReferredParty.findOne({ mobile: String(mobile).toLowerCase().trim(), gst: String(gst).toLowerCase().trim() })
+                    let refertmp = await ReferredParty.findOne({
+                        $or: [
+                            { mobile: String(mobile).toLowerCase().trim() },
+                            { gst: String(gst).toLowerCase().trim() }
+                        ]
+                    })
                     if (refertmp) {
                         validated = false
                         statusText = "duplicate mobile or gst"

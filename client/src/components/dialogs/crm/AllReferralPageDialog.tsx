@@ -1,7 +1,7 @@
-import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton} from '@mui/material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, LinearProgress } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { ILead } from '../../../types/crm.types'
+import { ILead, IReferredParty } from '../../../types/crm.types'
 import { ILeadTemplate } from '../../../types/template.type'
 import { UserContext } from '../../../contexts/userContext'
 import AlertBar from '../../snacks/AlertBar'
@@ -9,12 +9,20 @@ import ExportToExcel from '../../../utils/ExportToExcel'
 import { Cancel } from '@mui/icons-material'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import { DownloadFile } from '../../../utils/DownloadFile'
+import { GetAllReferrals } from '../../../services/LeadsServices'
+import { AxiosResponse } from 'axios'
+import { useQuery } from 'react-query'
+import { BackendError } from '../../..'
 
-function AllReferralPageDialog({ leads }: { leads: ILead[] }) {
+function AllReferralPageDialog({ refer }: { refer: IReferredParty }) {
     const [selectedData, setSelectedData] = useState<ILeadTemplate[]>([])
     const { user: LoggedInUser } = useContext(UserContext)
     const [sent, setSent] = useState(false)
     const { choice, setChoice } = useContext(ChoiceContext)
+    const [leads, setLeads] = useState<ILead[]>([])
+
+    const { data, isLoading, isSuccess, refetch } = useQuery<AxiosResponse<ILead[]>, BackendError>(["assigned_leads", refer], async () => GetAllReferrals({ refer: refer }), { enabled: false })
+
 
     function handleExcel() {
         try {
@@ -27,6 +35,18 @@ function AllReferralPageDialog({ leads }: { leads: ILead[] }) {
             setSent(false)
         }
     }
+
+    useEffect(() => {
+        if (isSuccess && data) {
+            setLeads(data.data)
+        }
+    }, [isSuccess, data])
+    useEffect(() => {
+        if (refer)
+            refetch()
+    }, [refer])
+
+
     useEffect(() => {
         let tmpdata: ILeadTemplate[] = []
         tmpdata = leads.map((lead) => {
@@ -66,6 +86,7 @@ function AllReferralPageDialog({ leads }: { leads: ILead[] }) {
             open={choice === LeadChoiceActions.view_referrals ? true : false}
             onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
         >
+            {isLoading && <LinearProgress />}
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => {
                 setChoice({ type: LeadChoiceActions.close_lead })
             }}>
@@ -114,7 +135,7 @@ function AllReferralPageDialog({ leads }: { leads: ILead[] }) {
                                     Stage
 
                                 </STableHeadCell>
-                             
+
                                 <STableHeadCell
                                 >
 
@@ -185,7 +206,7 @@ function AllReferralPageDialog({ leads }: { leads: ILead[] }) {
                                 </STableHeadCell>
 
 
-                             
+
 
                                 <STableHeadCell
                                 >
@@ -349,7 +370,7 @@ function AllReferralPageDialog({ leads }: { leads: ILead[] }) {
                                                 {lead.stage}
                                             </STableCell>
                                             <STableCell>
-                                                {lead.has_card?"Has visiting card":"na"}
+                                                {lead.has_card ? "Has visiting card" : "na"}
                                             </STableCell>
 
                                             <STableCell style={{ fontWeight: lead.visiting_card && lead.visiting_card.public_url && 'bold' }} title={lead.visiting_card && lead.visiting_card.public_url && 'This number has Visitng card Uploaded'}>
@@ -357,9 +378,9 @@ function AllReferralPageDialog({ leads }: { leads: ILead[] }) {
                                             </STableCell>
 
 
-                                          
 
-                                      
+
+
 
 
                                             <STableCell>

@@ -8,21 +8,20 @@ import { UserContext } from '../../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import CreateOrEditCityDialog from '../../dialogs/crm/CreateOrEditCityDialog'
 import { ICRMCity } from '../../../types/crm.types'
-import { IUser } from '../../../types/user.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 
 
 type Props = {
-    city: { city: ICRMCity, users: IUser[] } | undefined,
-    setCity: React.Dispatch<React.SetStateAction<{ city: ICRMCity, users: IUser[] } | undefined>>,
+    city: { city: ICRMCity, users: { _id: string, username: string }[] } | undefined,
+    setCity: React.Dispatch<React.SetStateAction<{ city: ICRMCity, users: { _id: string, username: string }[] } | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    cities: { city: ICRMCity, users: IUser[] }[],
-    selectedCities: { city: ICRMCity, users: IUser[] }[]
-    setSelectedCities: React.Dispatch<React.SetStateAction<{ city: ICRMCity, users: IUser[] }[]>>,
+    cities: { city: ICRMCity, users: { _id: string, username: string }[] }[],
+    selectedCities: { city: ICRMCity, users: { _id: string, username: string }[] }[]
+    setSelectedCities: React.Dispatch<React.SetStateAction<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>>,
 }
 function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, selectedCities, setSelectedCities }: Props) {
-    const [data, setData] = useState<{ city: ICRMCity, users: IUser[] }[]>(cities)
+    const [data, setData] = useState<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>(cities)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {

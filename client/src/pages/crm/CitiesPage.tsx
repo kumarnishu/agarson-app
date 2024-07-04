@@ -13,7 +13,6 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { IUser } from '../../types/user.types'
 import { ICRMCityTemplate } from '../../types/template.type'
 import LeadsCityTable from '../../components/tables/crm/LeadsCityTable'
 import { GetAllCities, GetAllStates } from '../../services/LeadsServices'
@@ -35,15 +34,15 @@ let template: ICRMCityTemplate[] = [
 export default function CrmCitiesPage() {
   const [flag, setFlag] = useState(1);
   const [state, setState] = useState<string | undefined>();
-  const [states, setStates] = useState<{ state: ICRMState, users: IUser[] }[]>([])
+  const [states, setStates] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }[]>([])
 
-  const { data: citiesdata, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<{ city: ICRMCity, users: IUser[] }[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
-  const [city, setCity] = useState<{ city: ICRMCity, users: IUser[] }>()
-  const [cities, setCities] = useState<{ city: ICRMCity, users: IUser[] }[]>([])
+  const { data: citiesdata, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
+  const [city, setCity] = useState<{ city: ICRMCity, users: { _id: string, username: string }[] }>()
+  const [cities, setCities] = useState<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => cities, [cities])
-  const [preFilteredData, setPreFilteredData] = useState<{ city: ICRMCity, users: IUser[] }[]>([])
-  const [selectedCities, setSelectedCities] = useState<{ city: ICRMCity, users: IUser[] }[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>([])
+  const [selectedCities, setSelectedCities] = useState<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const [selectedData, setSelectedData] = useState<ICRMCityTemplate[]>(template)
   const [sent, setSent] = useState(false)
@@ -51,7 +50,7 @@ export default function CrmCitiesPage() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const { user: LoggedInUser } = useContext(UserContext)
 
-  const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: ICRMState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
+  const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: ICRMState, users: { _id: string, username: string }[] }[]>, BackendError>("crm_states", GetAllStates)
 
   function handleExcel() {
     setAnchorEl(null)

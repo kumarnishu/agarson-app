@@ -17,7 +17,7 @@ import RefersTable from '../../components/tables/crm/RefersTable'
 import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServices'
 import { IReferTemplate } from '../../types/template.type'
 import UploadRefersExcelButton from '../../components/buttons/UploadRefersExcelButton'
-import { ILead, IReferredParty } from '../../types/crm.types'
+import { IReferredParty } from '../../types/crm.types'
 
 let template: IReferTemplate[] = [
   {
@@ -36,41 +36,22 @@ export default function RefersPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
-  const [refer, setRefer] = useState<{
-    party: IReferredParty,
-    leads: ILead[]
-  }>()
-  const [refers, setRefers] = useState<{
-    party: IReferredParty,
-    leads: ILead[]
-  }[]>([])
+  const [refer, setRefer] = useState<IReferredParty>()
+  const [refers, setRefers] = useState<IReferredParty[]>([])
   const [selectAll, setSelectAll] = useState(false)
-  const MemoData = React.useMemo(() => refers, [refers])
 
-  const [preFilteredData, setPreFilteredData] = useState<{
-    party: IReferredParty,
-    leads: ILead[]
-  }[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<IReferredParty[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
-  const [selectedRefers, setSelectedRefers] = useState<{
-    party: IReferredParty,
-    leads: ILead[]
-  }[]>([])
+  const [selectedRefers, setSelectedRefers] = useState<IReferredParty[]>([])
 
   const { data, isLoading } = useQuery<AxiosResponse<{
-    result: {
-      party: IReferredParty,
-      leads: ILead[]
-    }[], page: number, total: number, limit: number
+    result: IReferredParty[], page: number, total: number, limit: number
   }>, BackendError>(["refers", paginationData], async () => GetPaginatedRefers({ limit: paginationData?.limit, page: paginationData?.page }))
 
 
   const { data: fuzzyrefers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{
-    result: {
-      party: IReferredParty,
-      leads: ILead[]
-    }[], page: number, total: number, limit: number
+    result: IReferredParty[], page: number, total: number, limit: number
   }>, BackendError>(["fuzzyrefers", filter], async () => FuzzySearchRefers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
   })
@@ -103,13 +84,13 @@ export default function RefersPage() {
       return data.push(
 
         {
-          _id: refer.party._id,
-          name: refer.party.name,
-          customer_name: refer.party.customer_name,
-          mobile: refer.party.mobile,
-          gst: refer.party.gst,
-          city: refer.party.city,
-          state: refer.party.state
+          _id: refer._id,
+          name: refer.name,
+          customer_name: refer.customer_name,
+          mobile: refer.mobile,
+          gst: refer.gst,
+          city: refer.city,
+          state: refer.state
         })
     })
     if (data.length > 0)
@@ -269,8 +250,8 @@ export default function RefersPage() {
       </Stack >
       {/* table */}
       {isLoading && <TableSkeleton />}
-      {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && MemoData.length > 0 && <>
+      {refers && refers.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
+      {!isLoading && refers.length > 0 && <>
         <RefersTable
           refer={refer}
           setRefer={setRefer}
@@ -278,11 +259,11 @@ export default function RefersPage() {
           selectedRefers={selectedRefers}
           setSelectedRefers={setSelectedRefers}
           setSelectAll={setSelectAll}
-          refers={MemoData}
+          refers={refers}
         />
-        <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
       </>
       }
+      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
     </>
 
   )

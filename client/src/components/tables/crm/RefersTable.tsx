@@ -7,43 +7,25 @@ import { UserContext } from '../../../contexts/userContext'
 import PopUp from '../../popup/PopUp'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import CreateOrEditReferDialog from '../../dialogs/crm/CreateOrEditReferDialog'
-import { ILead, IReferredParty } from '../../../types/crm.types'
+import { IReferredParty } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 import AllReferralPageDialog from '../../dialogs/crm/AllReferralPageDialog'
 
 
 type Props = {
-  refer: {
-    party: IReferredParty,
-    leads: ILead[]
-  } | undefined
-  setRefer: React.Dispatch<React.SetStateAction<{
-    party: IReferredParty,
-    leads: ILead[]
-  } | undefined>>,
-  refers: {
-    party: IReferredParty,
-    leads: ILead[]
-  }[],
+  refer: IReferredParty | undefined
+  setRefer: React.Dispatch<React.SetStateAction<IReferredParty | undefined>>,
+  refers: IReferredParty[],
   selectAll: boolean,
   setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-  selectedRefers: {
-    party: IReferredParty,
-    leads: ILead[]
-  }[]
-  setSelectedRefers: React.Dispatch<React.SetStateAction<{
-    party: IReferredParty,
-    leads: ILead[]
-  }[]>>,
+  selectedRefers: IReferredParty[]
+  setSelectedRefers: React.Dispatch<React.SetStateAction<IReferredParty[]>>,
 }
 
 function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selectedRefers, setSelectedRefers }: Props) {
   const { setChoice } = useContext(ChoiceContext)
   const { user } = useContext(UserContext)
-  const [data, setData] = useState<{
-    party: IReferredParty,
-    leads: ILead[]
-  }[]>(refers)
+  const [data, setData] = useState<IReferredParty[]>(refers)
 
   useEffect(() => {
     setData(refers)
@@ -171,7 +153,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
               data && data.map((refer, index) => {
                 return (
                   <STableRow
-                    style={{ backgroundColor: selectedRefers.length > 0 && selectedRefers.find((t) => t.party._id === refer.party._id) ? "lightgrey" : "white" }}
+                    style={{ backgroundColor: selectedRefers.length > 0 && selectedRefers.find((t) => t._id === refer._id) ? "lightgrey" : "white" }}
                     key={index}>
                     {selectAll ?
 
@@ -192,7 +174,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                       <STableCell>
 
                         <Checkbox sx={{ width: 10, height: 10 }} size="small"
-                          checked={selectedRefers.length > 0 && selectedRefers.find((t) => t.party._id === refer.party._id) ? true : false}
+                          checked={selectedRefers.length > 0 && selectedRefers.find((t) => t._id === refer._id) ? true : false}
                           onChange={(e) => {
                             setRefer(refer)
                             if (e.target.checked) {
@@ -200,7 +182,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                             }
                             if (!e.target.checked) {
                               setSelectedRefers((refers) => refers.filter((item) => {
-                                return item.party._id !== refer.party._id
+                                return item._id !== refer._id
                               }))
                             }
                           }}
@@ -263,51 +245,51 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                       />
                     </STableCell>
                     <STableCell >
-                      {refer.party.name}
+                      {refer.name}
                     </STableCell>
 
                     <STableCell>
-                      {refer.party.customer_name}
+                      {refer.customer_name}
                     </STableCell>
 
                     <STableCell>
-                      {refer.party.city}
+                      {refer.city}
                     </STableCell>
                     <STableCell>
-                      {refer.party.state}
-                    </STableCell>
-
-                    <STableCell>
-                      {refer.party.mobile}
-                    </STableCell>
-
-
-
-                    <STableCell>
-
-                      {refer.party.gst}
-
+                      {refer.state}
                     </STableCell>
 
                     <STableCell>
-                      {new Date(refer.party.created_at).toLocaleString()}
-
+                      {refer.mobile}
                     </STableCell>
 
 
+
                     <STableCell>
-                      {new Date(refer.party.updated_at).toLocaleString()}
+
+                      {refer.gst}
+
+                    </STableCell>
+
+                    <STableCell>
+                      {new Date(refer.created_at).toLocaleString()}
 
                     </STableCell>
 
 
                     <STableCell>
-                      {refer.party.created_by.username}
+                      {new Date(refer.updated_at).toLocaleString()}
+
                     </STableCell>
 
 
                     <STableCell>
-                      {refer.party.updated_by.username}
+                      {refer.created_by.username}
+                    </STableCell>
+
+
+                    <STableCell>
+                      {refer.updated_by.username}
 
                     </STableCell>
 
@@ -319,14 +301,14 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
           </STableBody>
         </STable>
       </Box >
-      <CreateOrEditReferDialog refer={refer?.party} />
+      <CreateOrEditReferDialog refer={refer} />
 
       {
         refer ?
           <>
 
-            <DeleteCrmItemDialog refer={refer.party} />
-            <AllReferralPageDialog leads={refer.leads} />
+            <DeleteCrmItemDialog refer={refer} />
+            <AllReferralPageDialog refer={refer} />
 
           </>
           : null
