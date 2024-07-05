@@ -2403,7 +2403,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         parties = parties.slice((page - 1) * limit, limit * page)
 
         return res.status(200).json({
-            result:parties,
+            result: parties,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
@@ -2452,13 +2452,18 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
 
     if (!party)
         return res.status(404).json({ message: "party not found" })
-    if (gst !== party.gst || mobile !== party.mobile) {
-        let resultParty = await ReferredParty.findOne({ $or: [{ gst: gst }, { mobile: mobile }] })
+    if (gst !== party.gst) {
+        let resultParty = await ReferredParty.findOne({ gst: gst });
         if (resultParty) {
-            return res.status(400).json({ message: "already exists this phone or gst" })
+            return res.status(400).json({ message: "already exists this  gst" })
+        }
+        if (mobile !== party.mobile) {
+            let resultParty = await ReferredParty.findOne({ mobile: mobile });
+            if (resultParty) {
+                return res.status(400).json({ message: "already exists this  mobile" })
+            }
         }
     }
-
     await ReferredParty.findByIdAndUpdate(id, {
         name, customer_name, city, state, mobile, gst,
         created_at: new Date(),
@@ -2850,7 +2855,7 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
 }
 
 export const FindUnknownCrmSates = async (req: Request, res: Response, next: NextFunction) => {
-    let states = await CRMState.find({state:{$ne:""}});
+    let states = await CRMState.find({ state: { $ne: "" } });
     let statevalues = states.map(i => { return i.state });
     await Lead.updateMany({ state: { $nin: statevalues } }, { state: 'unknown' });
     await ReferredParty.updateMany({ state: { $nin: statevalues } }, { state: 'unknown' });
@@ -2866,7 +2871,7 @@ export const FindUnknownCrmStages = async (req: Request, res: Response, next: Ne
 export const FindUnknownCrmCities = async (req: Request, res: Response, next: NextFunction) => {
     let cities = await CRMCity.find({ city: { $ne: "" } });
     let cityvalues = cities.map(i => { return i.city });
-   
+
     await CRMCity.updateMany({ city: { $nin: cityvalues } }, { city: 'unknown', state: 'unknown' });
     await Lead.updateMany({ city: { $nin: cityvalues } }, { city: 'unknown', state: 'unknown' });
     await ReferredParty.updateMany({ city: { $nin: cityvalues } }, { city: 'unknown', state: 'unknown' });
