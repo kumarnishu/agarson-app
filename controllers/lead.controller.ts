@@ -2266,7 +2266,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let key = String(req.query.key).split(",")
-    let user = await User.findById(req.user).populate('assigned_crm_states');
+    let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     if (!key)
@@ -2280,6 +2280,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 state: { $in: states }, city: { $in: cities },
                 $or: [
                     { name: { $regex: key[0], $options: 'i' } },
+                    { gst: { $regex: key[0], $options: 'i' } },
                     { customer_name: { $regex: key[0], $options: 'i' } },
                     { mobile: { $regex: key[0], $options: 'i' } },
                 ]
@@ -2399,10 +2400,10 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
         }
 
         let count = parties.length
-        result = parties.slice((page - 1) * limit, limit * page)
+        parties = parties.slice((page - 1) * limit, limit * page)
 
         return res.status(200).json({
-            result,
+            result:parties,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
