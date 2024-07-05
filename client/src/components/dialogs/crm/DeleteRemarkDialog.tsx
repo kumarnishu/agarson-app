@@ -18,6 +18,7 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: IRemark, 
     (DeleteRemark, {
       onSuccess: () => {
         queryClient.invalidateQueries('leads')
+        queryClient.invalidateQueries('remarks')
       }
     })
 
