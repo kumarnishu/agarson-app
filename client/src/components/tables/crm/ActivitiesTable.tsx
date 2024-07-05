@@ -1,8 +1,12 @@
-import { Box } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { Box, IconButton, Stack, TableCell, Tooltip } from '@mui/material'
+import { useContext, useEffect, useState } from 'react'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
-import { IRemark } from '../../../types/crm.types'
+import { ILead, IRemark } from '../../../types/crm.types'
 import { DownloadFile } from '../../../utils/DownloadFile'
+import ViewRemarksDialog from '../../dialogs/crm/ViewRemarksDialog'
+import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
+import { Comment, Visibility } from '@mui/icons-material'
+import CreateOrEditRemarkDialog from '../../dialogs/crm/CreateOrEditRemarkDialog'
 
 
 
@@ -15,6 +19,8 @@ type Props = {
 
 function ActivitiesTable({ remarks }: Props) {
     const [data, setData] = useState<IRemark[]>(remarks)
+    const [lead,setLead]=useState<ILead>();
+    const { setChoice } = useContext(ChoiceContext)
 
     useEffect(() => {
         setData(remarks)
@@ -30,6 +36,12 @@ function ActivitiesTable({ remarks }: Props) {
                     <STableHead
                     >
                         <STableRow>
+                            <STableHeadCell
+                            >
+
+                               Actions
+
+                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -253,7 +265,38 @@ function ActivitiesTable({ remarks }: Props) {
 
                                         key={index}
                                     >
+                                       
+                                       <TableCell style={{padding:'0px'}}>
+                                            
+                                            <Stack direction="row" gap={1} px={1}>
+                                            <Tooltip title="view remarks">
+                                                <IconButton  size="small" color="primary"
+                                                    onClick={() => {
 
+                                                        setChoice({ type: LeadChoiceActions.view_remarks })
+                                                        setLead(remark.lead)
+
+
+                                                    }}
+                                                >
+                                                    <Visibility />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Add Remark">
+                                                <IconButton size="small" 
+                                                    color="success"
+                                                    onClick={() => {
+
+                                                        setChoice({ type: LeadChoiceActions.create_or_edt_remark })
+                                                        setLead(remark.lead)
+
+                                                    }}
+                                                >
+                                                    <Comment />
+                                                </IconButton>
+                                            </Tooltip>
+                                            </Stack>
+                                       </TableCell>
                                         <STableCell title={remark.remark}>
                                             {remark.remark.slice(0, 50)}
 
@@ -404,7 +447,8 @@ function ActivitiesTable({ remarks }: Props) {
                     </STableBody>
                 </STable>
             </Box >
-
+            {lead && <ViewRemarksDialog lead={lead} />}
+            {lead && <CreateOrEditRemarkDialog lead={lead} />}
         </>
     )
 }

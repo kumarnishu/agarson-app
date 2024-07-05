@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { GetRemarks } from '../../services/LeadsServices'
 import { BackendError } from '../..'
-import { Box,  DialogTitle,  LinearProgress,  Stack, TextField } from '@mui/material'
+import { Box, DialogTitle, LinearProgress, Stack, TextField } from '@mui/material'
 import { UserContext } from '../../contexts/userContext'
 import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
@@ -84,7 +84,7 @@ function CrmActivitiesPage() {
                         }
                     }}
                 />
-                {user?.assigned_users && user?.assigned_users.length > 0 && 
+                {user?.assigned_users && user?.assigned_users.length > 0 &&
                     < TextField
                         select
 
@@ -118,11 +118,13 @@ function CrmActivitiesPage() {
             </Stack>
             <>
                 {isLoading && <LinearProgress />}
-                {!isLoading &&
+                
+                {!isLoading && remarks.length >0&&
                     <Box sx={{ px: 2 }}> <ActivitiesTable remark={remark} remarks={remarks} setRemark={setRemark} /></Box>
                 }
+                {!isLoading && remarks.length == 0 && <p style={{textAlign:'center'}}>No Activity Found</p>}
             </>
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />
+            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
         </>
     )
 }
