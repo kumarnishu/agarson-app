@@ -25,50 +25,50 @@ export default function PartyTargetReportsPage() {
     const [filter, setFilter] = useState<string | undefined>()
     const [preFilteredData, setPreFilteredData] = useState<IPartyTargetReport[]>([])
     const [sent, setSent] = useState(false)
-    const { data, isLoading } = useQuery<AxiosResponse<{ reports: IPartyTargetReport[], page:0, total:0, limit:0 }>, BackendError>(["reports", paginationData], async () => GetPartyTargetReports({ limit: paginationData?.limit, page: paginationData?.page }))
+    const { data, isLoading } = useQuery<AxiosResponse<{ reports: IPartyTargetReport[], page: 0, total: 0, limit: 0 }>, BackendError>(["reports", paginationData], async () => GetPartyTargetReports({ limit: paginationData?.limit, page: paginationData?.page }))
 
 
     function handleExcel() {
         try {
             let data = [
                 {
-                    slno:"640",
-                    PARTY:"LUCKY MACHINERY & TOOLS, PATNA",
-                    Create_Date:"14-01-2022",
-                    STATION:"PATNA",
-                    SALES_OWNER:"BIHAR",
+                    slno: "640",
+                    PARTY: "LUCKY MACHINERY & TOOLS, PATNA",
+                    Create_Date: "14-01-2022",
+                    STATION: "PATNA",
+                    SALES_OWNER: "BIHAR",
                     report_owner: "Goa",
-                    All_TARGET:"10/2 - 15/3",
+                    All_TARGET: "10/2 - 15/3",
                     TARGET: 1000000,
                     PROJECTION: 338975.96,
-                    GROWTH:"0.9",
-                    TARGET_ACHIEVE:"0.34",
-                    TOTAL_SALE_OLD:0,
-                    TOTAL_SALE_NEW:0,
-                    Last_Apr:0,
-                    Cur_Apr:0,
-                    Last_May:0,
-                    Cur_May:0,
-                    Last_Jun:0,
-                    Cur_Jun:0,
-                    Last_Jul:0,
-                    Cur_Jul:0,
-                    Last_Aug:0,
-                    Cur_Aug:0,
-                    Last_Sep:0,
-                    Cur_Sep:0,
-                    Last_Oct:0,
-                    Cur_Oct:0,
-                    Last_Nov:0,
-                    Cur_Nov:0,
-                    Last_Dec:0,
-                    Cur_Dec:0,
-                    Last_Jan:0,
-                    Cur_Jan:0,
-                    Last_Feb:0,
-                    Cur_Feb:0,
-                    Last_Mar:0,
-                    Cur_Mar:0,
+                    GROWTH: "0.9",
+                    TARGET_ACHIEVE: "0.34",
+                    TOTAL_SALE_OLD: 0,
+                    TOTAL_SALE_NEW: 0,
+                    Last_Apr: 0,
+                    Cur_Apr: 0,
+                    Last_May: 0,
+                    Cur_May: 0,
+                    Last_Jun: 0,
+                    Cur_Jun: 0,
+                    Last_Jul: 0,
+                    Cur_Jul: 0,
+                    Last_Aug: 0,
+                    Cur_Aug: 0,
+                    Last_Sep: 0,
+                    Cur_Sep: 0,
+                    Last_Oct: 0,
+                    Cur_Oct: 0,
+                    Last_Nov: 0,
+                    Cur_Nov: 0,
+                    Last_Dec: 0,
+                    Cur_Dec: 0,
+                    Last_Jan: 0,
+                    Cur_Jan: 0,
+                    Last_Feb: 0,
+                    Cur_Feb: 0,
+                    Last_Mar: 0,
+                    Cur_Mar: 0,
                 }
             ]
             ExportToExcel(data, "party_target_template")
@@ -93,7 +93,7 @@ export default function PartyTargetReportsPage() {
     }, [filter])
 
     useEffect(() => {
-        if (data&&!filter) {
+        if (data && !filter) {
             setPartyTargetReports(data.data.reports)
             setPaginationData({
                 ...paginationData,
@@ -172,7 +172,7 @@ export default function PartyTargetReportsPage() {
 
                             <STableHeadCell style={{ padding: '8px' }}
                             >
-                               Upload Date
+                                Upload Date
                             </STableHeadCell>
                             <STableHeadCell
                             >
@@ -189,7 +189,7 @@ export default function PartyTargetReportsPage() {
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                               Station
+                                Station
                             </STableHeadCell>
                             <STableHeadCell
                             >
@@ -197,11 +197,15 @@ export default function PartyTargetReportsPage() {
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                               All Target
+                                State
                             </STableHeadCell>
                             <STableHeadCell
                             >
-                               Target
+                                All Target
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+                                Target
                             </STableHeadCell>
                             <STableHeadCell
                             >
@@ -332,13 +336,13 @@ export default function PartyTargetReportsPage() {
                                         <STableCell style={{ padding: '10px' }}>
                                             {report.created_at && moment(new Date(report.created_at)).format('DD/MM/YY')}
                                         </STableCell>
-                                     
+
                                         <STableCell
                                         >
-                                           {report.slno||""}
+                                            {report.slno || ""}
                                         </STableCell>
 
-                                        <STableCell 
+                                        <STableCell
                                         >
                                             {report.PARTY || ""}
                                         </STableCell>
@@ -353,6 +357,10 @@ export default function PartyTargetReportsPage() {
                                         <STableCell
                                         >
                                             {report.SALES_OWNER || ""}
+                                        </STableCell>
+                                        <STableCell
+                                        >
+                                            {report.report_owner && report.report_owner.state || ""}
                                         </STableCell>
                                         <STableCell
                                         >
@@ -485,7 +493,7 @@ export default function PartyTargetReportsPage() {
                 </STable>
 
             </Box>}
-            {window.screen.width > 500 && <DBPagination  paginationData={paginationData} setPaginationData={setPaginationData} />}
+            {window.screen.width > 500 && <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />}
         </>
 
     )
