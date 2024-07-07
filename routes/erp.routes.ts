@@ -12,7 +12,7 @@ router.route("/states").put(isAuthenticatedUser, upload.single('file'), BulkCrea
 router.route("/reports/pending/orders").get(isAuthenticatedUser, GetPendingOrderReports)
 router.route("/reports/pending/orders").put(isAuthenticatedUser, upload.single('file'), BulkPendingOrderReportFromExcel)
 router.route("/reports/partytarget").get(isAuthenticatedUser, GetPartyTargetReports)
-router.route("/reports/saleanalysis").get(isAuthenticatedUser, GetSaleAnalysisReport)
+router.route("/reports/saleanalysis/:month").get(isAuthenticatedUser, GetSaleAnalysisReport)
 router.route("/reports/partytarget").put(isAuthenticatedUser, upload.single('file'), BulkCreatePartyTargetReportFromExcel)
 router.route("/reports/bills/aging").get(isAuthenticatedUser, GetBillsAgingReports)
 router.route("/reports/bills/aging").put(isAuthenticatedUser, upload.single('file'), BulkCreateBillsAgingReportFromExcel)

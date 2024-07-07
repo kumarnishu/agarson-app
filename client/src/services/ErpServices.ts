@@ -10,7 +10,7 @@ export const GetStates = async () => {
 export const BulkCreateStateFromExcel = async (body: FormData) => {
     return await apiClient.put(`states`, body)
 }
-export const CreateOreditErpState = async ({ state, body }: { state?: IState, body:IErpStateTemplate }) => {
+export const CreateOreditErpState = async ({ state, body }: { state?: IState, body: IErpStateTemplate }) => {
     if (state)
         return await apiClient.put(`states/${state._id}`, body);
     return await apiClient.post(`states`, body);
@@ -26,8 +26,8 @@ export const BulkPendingOrderFromExcel = async (body: FormData) => {
 }
 
 
-export const GetSaleAnalysisReports = async () => {
-    return await apiClient.get(`reports/saleanalysis`)
+export const GetSaleAnalysisReports = async (month: number) => {
+    return await apiClient.get(`reports/saleanalysis/${month}`)
 }
 
 

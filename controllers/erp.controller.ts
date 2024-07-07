@@ -11,7 +11,7 @@ import { PartyTargetReport } from "../models/erp_reports/partytarget.model";
 import { IErpStateTemplate, ISaleAnalysisReport } from "../types/template.type";
 import isMongoId from "validator/lib/isMongoId";
 import mongoose from "mongoose";
-import { GetLastYearlyachievementBystate, GetMonthlyachievementBystate, GetYearlyachievementBystate } from "../utils/ErpUtils";
+import { GetLastYearlyachievementBystate, GetMonthlyachievementBystate, GetMonthlytargetBystate, GetYearlyachievementBystate } from "../utils/ErpUtils";
 
 //get
 
@@ -26,6 +26,7 @@ export const GetAllStates = async (req: Request, res: Response, next: NextFuncti
 }
 
 export const GetSaleAnalysisReport = async (req: Request, res: Response, next: NextFunction) => {
+    let month = Number(req.params.month)
     if (req.user) {
         let result: ISaleAnalysisReport[] = []
         let user = await User.findById(req.user._id).populate('assigned_states');
@@ -38,9 +39,9 @@ export const GetSaleAnalysisReport = async (req: Request, res: Response, next: N
                 if (reports && reports.length > 0)
                     result.push({
                         state: states[i],
-                        monthly_target: states[i].jul,
-                        monthly_achivement: GetMonthlyachievementBystate(reports, 6),
-                        monthly_percentage: Math.round((GetMonthlyachievementBystate(reports, 6) / states[i].jul)*10000)/100,
+                        monthly_target: GetMonthlytargetBystate(states[i],month),
+                        monthly_achivement: GetMonthlyachievementBystate(reports, month),
+                        monthly_percentage: Math.round((GetMonthlyachievementBystate(reports, 6) / GetMonthlytargetBystate(states[i], month))*10000)/100,
                         annual_target: antarget,
                         annual_achivement: GetYearlyachievementBystate(reports),
                         annual_percentage: Math.round((GetYearlyachievementBystate(reports) / antarget) * 10000) / 100,
@@ -458,12 +459,22 @@ export const AssignErpStatesToUsers = async (req: Request, res: Response, next: 
             }
         }
     }
-    else {
-        for (let i = 0; i < owners.length; i++) {
-            await User.findByIdAndUpdate(owners[i], {
-                assigned_states: state_ids
-            })
+    else for (let k = 0; k < owners.length; k++) {
+        const user = await User.findById(owners[k]).populate('assigned_states')
+        if (user) {
+            let assigned_states = user.assigned_states;
+            for (let i = 0; i <= state_ids.length; i++) {
+                if (!assigned_states.map(i => { return i._id.valueOf() }).includes(state_ids[i])) {
+                    let state = await State.findById(state_ids[i]);
+                    if (state)
+                        assigned_states.push(state)
+                }
+            }
+
+            user.assigned_crm_states = assigned_states
+            await user.save();
         }
+
     }
 
     return res.status(200).json({ message: "successfull" })

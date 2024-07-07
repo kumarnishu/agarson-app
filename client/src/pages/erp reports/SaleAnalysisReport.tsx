@@ -10,12 +10,14 @@ import { Search } from '@mui/icons-material'
 import FuzzySearch from 'fuzzy-search'
 import { ISaleAnalysisReport } from '../../types/template.type'
 import { GetSaleAnalysisReports } from '../../services/ErpServices'
+import { months } from '../../utils/months'
 
 export default function SaleAnalysisReport() {
+  const [month,setMonth]=useState(new Date().getMonth())
   const [reports, setSaleAnalysissReport] = useState<ISaleAnalysisReport[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const [preFilteredData, setPreFilteredData] = useState<ISaleAnalysisReport[]>([])
-  const { data, isLoading } = useQuery<AxiosResponse<ISaleAnalysisReport[]>, BackendError>(["sale_analysisreports"], GetSaleAnalysisReports)
+  const { data, isLoading } = useQuery<AxiosResponse<ISaleAnalysisReport[]>, BackendError>(["sale_analysisreports",month],async()=> GetSaleAnalysisReports(month))
 
 
   useEffect(() => {
@@ -58,6 +60,29 @@ export default function SaleAnalysisReport() {
         >
           Sale Analysis Report
         </Typography>
+        < TextField
+          select
+          SelectProps={{
+            native: true
+          }}
+          id="stage"
+          size="small"
+          label="Selected Month"
+          sx={{ width: '200px' }}
+          value={month}
+          onChange={(e) => {
+            setMonth(Number(e.target.value));
+          }
+          }
+        >
+          {
+            months.map(month => {
+              return (<option key={month.month} value={month.month}>
+                {month.label}
+              </option>)
+            })
+          }
+        </TextField>
         <Stack direction={'row'} gap={2} alignItems={'center'}>
           <TextField
             fullWidth
