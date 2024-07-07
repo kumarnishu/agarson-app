@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
 import { Box, Paper, Typography } from '@mui/material';
@@ -15,6 +15,7 @@ export const StyledLink = styled(Link)`
 `
 export default function CheckListNavBar() {
     const { user } = useContext(UserContext)
+    const navigate = useNavigate()
     return (
         <>
             <Box sx={{ bgcolor: 'rgba(0,0,255,0.7)', width: '100%', p: 0.6 }}>
@@ -46,7 +47,7 @@ export default function CheckListNavBar() {
                                     alignItems="center"
                                     gap={2}
                                 >
-                                    <Link to={paths.checklist_dashboard} replace={true} style={{ textDecoration: 'none' }}>
+                                    <Link to={paths.checklist_dashboard} onDoubleClick={() => navigate(paths.dashboard)} replace={true} style={{ textDecoration: 'none' }}>
                                         <Paper sx={{ bgcolor: 'white', boxShadow: 1, border: 10, borderRadius: 1, borderColor: 'white' }}>
                                             <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                                                 <AppsIcon fontSize={'large'} />
