@@ -3,8 +3,8 @@ import isMongoId from "validator/lib/isMongoId"
 import { MessageTemplate } from "../models/watemplates/watemplate.model"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { destroyFile } from "../utils/destroyFile.util"
-import { IMessageTemplate, IMessageTemplateBody } from "../types/template.types"
 import { TemplateCategoryField } from "../models/watemplates/categories.model"
+import { IMessageTemplate, IMessageTemplateBody } from "../types/template.type"
 
 export const GetMessagetemplatesCategories = async (req: Request, res: Response, next: NextFunction) => {
     let categoryObj = await TemplateCategoryField.findOne()

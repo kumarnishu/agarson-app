@@ -5,17 +5,16 @@ import { styled } from "styled-components"
 import { BackendError } from "../.."
 import { Button, CircularProgress, Snackbar } from "@mui/material"
 import { Upload } from "@mui/icons-material"
-import { BulkCrmStateUpdateFromExcel } from "../../services/LeadsServices"
-import ExportToExcel from "../../utils/ExportToExcel"
+import {  BulkPartyTargetFromExcel } from "../../services/ErpServices"
 
 const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadCRMStatesFromExcelButton({ disabled }: { disabled: boolean }) {
-    const {data, mutate, isLoading, isSuccess, isError, error } = useMutation
+function UploadPartyTargetButton({ disabled }: { disabled: boolean }) {
+    const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any[]>, BackendError, FormData>
-        (BulkCrmStateUpdateFromExcel)
+        (BulkPartyTargetFromExcel)
     const [file, setFile] = React.useState<File | null>(null)
 
 
@@ -32,12 +31,6 @@ function UploadCRMStatesFromExcelButton({ disabled }: { disabled: boolean }) {
         }
     }, [file])
 
-    React.useEffect(() => {
-        if (isSuccess) {
-            if (data.data.length > 0)
-                ExportToExcel(data.data, "upload_output")
-        }
-    }, [isSuccess])
 
     return (
         <>
@@ -84,4 +77,4 @@ function UploadCRMStatesFromExcelButton({ disabled }: { disabled: boolean }) {
     )
 }
 
-export default UploadCRMStatesFromExcelButton
+export default UploadPartyTargetButton

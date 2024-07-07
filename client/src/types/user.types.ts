@@ -1,14 +1,7 @@
 import { FeatureAccess } from "./access.types"
 import { Asset } from "./asset.types"
+import { IState } from "./erp_report.types"
 
-export type IState = {
-    _id: string,
-    state: string,
-    created_at: Date,
-    updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
-}
 export type IUser = {
     _id: string,
     username: string,

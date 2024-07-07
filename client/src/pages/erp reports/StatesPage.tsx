@@ -7,24 +7,37 @@ import { useQuery } from 'react-query'
 import { BackendError } from '../..'
 import FuzzySearch from "fuzzy-search";
 import ExportToExcel from '../../utils/ExportToExcel'
-import { ChoiceContext,  UserChoiceActions, } from '../../contexts/dialogContext'
+import { ChoiceContext, UserChoiceActions, } from '../../contexts/dialogContext'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { IState, IUser } from '../../types/user.types'
-import { ICRMStateTemplate } from '../../types/template.type'
-import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
+import { IUser } from '../../types/user.types'
+import { IErpStateTemplate } from '../../types/template.type'
 import { GetStates } from '../../services/ErpServices'
 import CreateOrEditErpStateDialog from '../../components/dialogs/erp/CreateOrEditErpStateDialog'
 import AssignErpCrmStatesDialog from '../../components/dialogs/erp/AssignErpStatesDialog'
 import ErpStateTable from '../../components/tables/ErpStateTable'
+import UploadStatesFromExcelButton from '../../components/buttons/UploadStatesButton'
+import { IState } from '../../types/erp_report.types'
 
 
-let template: ICRMStateTemplate[] = [
+let template: IErpStateTemplate[] = [
   {
     _id: "",
-    state: "delhi"
+    state: "delhi",
+    apr: 0,
+    may: 0,
+    jun: 0,
+    jul: 0,
+    aug: 0,
+    sep: 0,
+    oct: 0,
+    nov: 0,
+    dec: 0,
+    jan: 0,
+    feb: 0,
+    mar: 0,
   }
 ]
 
@@ -38,7 +51,7 @@ export default function CrmStatesPage() {
   const [preFilteredData, setPreFilteredData] = useState<{ state: IState, users: IUser[] }[]>([])
   const [selectedStates, setSelectedStates] = useState<{ state: IState, users: IUser[] }[]>([])
   const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<ICRMStateTemplate[]>(template)
+  const [selectedData, setSelectedData] = useState<IErpStateTemplate[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -62,12 +75,23 @@ export default function CrmStatesPage() {
 
   // refine data
   useEffect(() => {
-    let data: ICRMStateTemplate[] = []
+    let data: IErpStateTemplate[] = []
     selectedStates.map((state) => {
       return data.push({
         _id: state.state._id,
         state: state.state.state,
-        users: state.users.map((u) => { return u.username }).toString()
+        apr: state ? state.state.apr : 0,
+        may: state ? state.state.may : 0,
+        jun: state ? state.state.jun : 0,
+        jul: state ? state.state.jul : 0,
+        aug: state ? state.state.aug : 0,
+        sep: state ? state.state.sep : 0,
+        oct: state ? state.state.oct : 0,
+        nov: state ? state.state.nov : 0,
+        dec: state ? state.state.dec : 0,
+        jan: state ? state.state.jan : 0,
+        feb: state ? state.state.feb : 0,
+        mar: state ? state.state.mar : 0,
       })
     })
     if (data.length > 0)
@@ -113,9 +137,8 @@ export default function CrmStatesPage() {
         <Typography
           variant={'h6'}
           component={'h1'}
-          sx={{ pl: 1 }}
         >
-          States {selectedStates.length > 0 ? <span>(checked : {selectedStates.length})</span> : `- ${states.length}`}
+          Erp States {selectedStates.length > 0 ? <span>(checked : {selectedStates.length})</span> : `- ${states.length}`}
         </Typography>
 
         <TextField
@@ -142,7 +165,7 @@ export default function CrmStatesPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMStatesFromExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
+            {LoggedInUser?.crm_access_fields.is_editable && <UploadStatesFromExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
           </Stack >
           <>
 

@@ -16,6 +16,7 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import FuzzySearch from 'fuzzy-search'
 import moment from 'moment'
+import { ConvertRupeesFormat } from '../../utils/ConverRupees'
 
 
 export default function BillsAgingReportsPage() {
@@ -142,7 +143,7 @@ export default function BillsAgingReportsPage() {
 
                             <STableHeadCell style={{ padding: '8px' }}
                             >
-                                Date
+                                Upload Date
                             </STableHeadCell>
                             <STableHeadCell
                             >
@@ -193,7 +194,7 @@ export default function BillsAgingReportsPage() {
                                             {report.account && report.account.slice(0, 40)}
                                         </STableCell>
                                         <STableCell>
-                                            <b style={{ fontSize: 12, letterSpacing: '1px' }}> {Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120)}</b>
+                                            <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120))}</b>
                                         </STableCell>
                                         <STableCell>
                                             {report.plu70 ? String(report.plu70) : ""}
@@ -222,19 +223,19 @@ export default function BillsAgingReportsPage() {
                                 <b style={{ fontSize: 12, letterSpacing: '1px' }}> Total</b>
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number(reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()))}</b>
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number(reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()))}</b>
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number(reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()))}</b>
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()}</b>
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number(reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()))}</b>
                             </STableCell>
                             <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {(reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0)).toFixed()
+                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number((reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0)).toFixed()))
                                 }</b>
                             </STableCell>
                         </STableRow>

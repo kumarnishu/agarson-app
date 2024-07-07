@@ -16,10 +16,10 @@ import { ICRMStateTemplate } from '../../types/template.type'
 import LeadsStateTable from '../../components/tables/crm/LeadsStateTable'
 import { GetAllStates } from '../../services/LeadsServices'
 import CreateOrEditStateDialog from '../../components/dialogs/crm/CreateOrEditStateDialog'
-import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
 import AssignCrmStatesDialog from '../../components/dialogs/crm/AssignCrmStatesDialog'
 import FindUknownCrmStatesDialog from '../../components/dialogs/crm/FindUknownCrmStatesDialog'
 import { ICRMState } from '../../types/crm.types'
+import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
 
 
 let template: ICRMStateTemplate[] = [

@@ -145,9 +145,12 @@ export const CreateOrEditState = async ({ body, id }: {
 
 
 export const BulkStateUpdateFromExcel = async (body: FormData) => {
-  return await apiClient.put(`crm/states/excel/createorupdate`, body)
+  return await apiClient.put(`/states`, body)
 }
 
+export const BulkCrmStateUpdateFromExcel = async (body: FormData) => {
+  return await apiClient.put(`crm/states/excel/createorupdate`, body)
+}
 //cities
 export const GetAllCities = async ({ state }: { state?: string }) => {
   if (state)

@@ -1800,7 +1800,6 @@ export const BackUpAllLeads = async (req: Request, res: Response, next: NextFunc
     const value = String(req.query.value)
     console.log(value)
     let fileName = "blank.xlsx"
-    SaveLeadsToExcel([])
     let leads = await Lead.find().populate('created_by').populate('updated_by')
     if (value === "leads" || value === "mobiles") {
         if (leads.length > 0) {

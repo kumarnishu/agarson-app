@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { ITemplateCategoryField } from "../../types/template.types"
+import { ITemplateCategoryField } from "../../types/template.type"
 
 const TemplateCategoryFieldSchema = new mongoose.Schema<ITemplateCategoryField, mongoose.Model<ITemplateCategoryField, {}, {}>, {}>({
     categories: [{

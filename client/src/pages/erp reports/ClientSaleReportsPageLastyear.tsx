@@ -153,7 +153,7 @@ export default function ClientSaleReportsPageLastyear() {
 
                             <STableHeadCell style={{ padding: '8px' }}
                             >
-                                Date
+                                Upload Date
                             </STableHeadCell>
                             <STableHeadCell
                             >

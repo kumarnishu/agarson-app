@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { IMessageTemplate } from "../../types/template.types"
+import { IMessageTemplate } from "../../types/template.type"
 
 const MessageTemplateSchema = new mongoose.Schema<IMessageTemplate, mongoose.Model<IMessageTemplate, {}, {}>, {}>({
     name: {

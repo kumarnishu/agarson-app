@@ -1,15 +1,18 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
-import { AssignErpStatesToUsers, BulkCreateBillsAgingReportFromExcel, BulkCreateClientSaleReportFromExcel, BulkCreateClientSaleReportFromExcelForLastYear, BulkCreateStateFromExcel, BulkPendingOrderReportFromExcel, CreateState, GetAllStates, GetBillsAgingReports, GetClientSaleReports, GetClientSaleReportsForLastYear, GetPendingOrderReports, UpdateState } from "../controllers/erp.controller";
+import { AssignErpStatesToUsers, BulkCreateAndUpdateErpStatesFromExcel, BulkCreateBillsAgingReportFromExcel, BulkCreateClientSaleReportFromExcel, BulkCreateClientSaleReportFromExcelForLastYear, BulkCreatePartyTargetReportFromExcel,  BulkPendingOrderReportFromExcel, CreateState, DeleteErpState, GetAllStates, GetBillsAgingReports, GetClientSaleReports, GetClientSaleReportsForLastYear, GetPartyTargetReports, GetPendingOrderReports, UpdateState } from "../controllers/erp.controller";
 import { upload } from "./user.routes";
 
 const router = express.Router()
 router.route("/states").get(isAuthenticatedUser, GetAllStates)
 router.route("/states").post(isAuthenticatedUser, CreateState)
 router.route("/states/:id").put(isAuthenticatedUser, UpdateState)
-router.route("/states").put(isAuthenticatedUser, upload.single('file'), BulkCreateStateFromExcel)
+    .delete(isAuthenticatedUser, DeleteErpState)
+router.route("/states").put(isAuthenticatedUser, upload.single('file'), BulkCreateAndUpdateErpStatesFromExcel)
 router.route("/reports/pending/orders").get(isAuthenticatedUser, GetPendingOrderReports)
 router.route("/reports/pending/orders").put(isAuthenticatedUser, upload.single('file'), BulkPendingOrderReportFromExcel)
+router.route("/reports/partytarget").get(isAuthenticatedUser, GetPartyTargetReports)
+router.route("/reports/partytarget").put(isAuthenticatedUser, upload.single('file'), BulkCreatePartyTargetReportFromExcel)
 router.route("/reports/bills/aging").get(isAuthenticatedUser, GetBillsAgingReports)
 router.route("/reports/bills/aging").put(isAuthenticatedUser, upload.single('file'), BulkCreateBillsAgingReportFromExcel)
 router.route("/reports/client/sale").get(isAuthenticatedUser, GetClientSaleReports)

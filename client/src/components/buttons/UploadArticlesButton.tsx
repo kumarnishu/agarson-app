@@ -23,6 +23,7 @@ function UploadArticlesFromExcelButton({ disabled }: { disabled: boolean }) {
             let formdata = new FormData()
             formdata.append('file', file)
             mutate(formdata)
+           
         }
     }
     React.useEffect(() => {

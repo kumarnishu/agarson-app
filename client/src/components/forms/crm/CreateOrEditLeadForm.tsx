@@ -11,8 +11,9 @@ import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { ICRMCity, ILead, ILeadSource, ILeadType } from '../../../types/crm.types';
-import { IState, IUser } from '../../../types/user.types';
+import {  IUser } from '../../../types/user.types';
 import { toTitleCase } from '../../../utils/TitleCase';
+import { IState } from '../../../types/erp_report.types';
 
 export type TformData = {
     name: string,

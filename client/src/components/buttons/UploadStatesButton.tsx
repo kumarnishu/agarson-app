@@ -6,13 +6,14 @@ import { BackendError } from "../.."
 import { Button, CircularProgress, Snackbar } from "@mui/material"
 import { Upload } from "@mui/icons-material"
 import { BulkCreateStateFromExcel } from "../../services/ErpServices"
+import ExportToExcel from "../../utils/ExportToExcel"
 
 const FileInput = styled.input`
 background:none;
 color:blue;
 `
 function UploadStatesFromExcelButton({ disabled }: { disabled: boolean }) {
-    const { mutate, isLoading, isSuccess, isError, error } = useMutation
+    const { data,mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any[]>, BackendError, FormData>
         (BulkCreateStateFromExcel)
     const [file, setFile] = React.useState<File | null>(null)
@@ -30,7 +31,12 @@ function UploadStatesFromExcelButton({ disabled }: { disabled: boolean }) {
             handleFile()
         }
     }, [file])
-
+    React.useEffect(() => {
+        if (isSuccess) {
+            if (data.data.length > 0)
+                ExportToExcel(data.data, "upload_output")
+        }
+    }, [isSuccess])
     return (
         <>
 

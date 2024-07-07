@@ -159,7 +159,7 @@ export default function PendingOrdersReportPage() {
                         <STableRow>
                             <STableHeadCell style={{ padding: '8px' }}
                             >
-                                Date
+                                Upload Date
                             </STableHeadCell>
                             <STableHeadCell
                             >

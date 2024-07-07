@@ -1,14 +1,19 @@
 import { NextFunction, Request, Response } from "express"
 import xlsx from "xlsx";
-import { IState, IUser } from "../types/user.types";
-import { IBillsAgingReport, IClientSaleReport, IPendingOrdersReport } from "../types/erp_report.types";
+import { IUser } from "../types/user.types";
+import { IBillsAgingReport, IClientSaleReport, IPartyTargetReport, IPendingOrdersReport, IState } from "../types/erp_report.types";
 import { BillsAgingReport } from "../models/erp_reports/bills_aging_model";
 import { State } from "../models/erp_reports/state.model";
 import { PendingOrdersReport } from "../models/erp_reports/pending_orders.model";
 import { User } from "../models/users/user.model";
 import { ClientSaleReport } from "../models/erp_reports/client_sale.model";
+import { PartyTargetReport } from "../models/erp_reports/partytarget.model";
+import { IErpStateTemplate } from "../types/template.type";
+import isMongoId from "validator/lib/isMongoId";
+import mongoose from "mongoose";
 
 //get
+
 export const GetAllStates = async (req: Request, res: Response, next: NextFunction) => {
     let result: { state: IState, users: IUser[] }[] = []
     let states = await State.find()
@@ -20,16 +25,15 @@ export const GetAllStates = async (req: Request, res: Response, next: NextFuncti
 }
 
 export const CreateState = async (req: Request, res: Response, next: NextFunction) => {
-    const { state } = req.body as {
-        state: string
-    }
-    if (!state) {
+    const body = req.body as IErpStateTemplate;
+    if (!body.state) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
-    if (await State.findOne({ state: state }))
+    if (await State.findOne({ state: body.state }))
         return res.status(400).json({ message: "already exists this state" })
     let result = await new State({
-        state: state,
+        ...body,
+        _id: new mongoose.Types.ObjectId(),
         updated_at: new Date(),
         created_by: req.user,
         updated_by: req.user
@@ -39,29 +43,36 @@ export const CreateState = async (req: Request, res: Response, next: NextFunctio
 }
 
 export const UpdateState = async (req: Request, res: Response, next: NextFunction) => {
-    const { state } = req.body as {
-        state: string
-    }
-    if (!state) {
+    const body = req.body as IErpStateTemplate;
+    if (!body.state) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     const id = req.params.id
     let oldstate = await State.findById(id)
     if (!oldstate)
         return res.status(404).json({ message: "state not found" })
-    if (state !== oldstate.state)
-        if (await State.findOne({ state: state }))
+    if (body.state !== oldstate.state)
+        if (await State.findOne({ state: body.state }))
             return res.status(400).json({ message: "already exists this state" })
-    oldstate.state = state
-    oldstate.updated_at = new Date()
-    if (req.user)
-        oldstate.updated_by = req.user
-    await oldstate.save()
+    await State.findByIdAndUpdate(oldstate._id, { ...body, updated_by: req.user, updated_at: new Date() })
     return res.status(200).json(oldstate)
 
 }
-export const BulkCreateStateFromExcel = async (req: Request, res: Response, next: NextFunction) => {
-    let result: IBillsAgingReport[] = []
+
+export const DeleteErpState = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "state id not valid" })
+    let state = await State.findById(id);
+    if (!state) {
+        return res.status(404).json({ message: "state not found" })
+    }
+    await state.remove();
+    return res.status(200).json({ message: "state deleted successfully" })
+}
+
+export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: Response, next: NextFunction) => {
+    let result: IErpStateTemplate[] = []
+    let statusText: string = ""
     if (!req.file)
         return res.status(400).json({
             message: "please provide an Excel file",
@@ -77,26 +88,83 @@ export const BulkCreateStateFromExcel = async (req: Request, res: Response, next
         let workbook_response: IState[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
+        console.log(workbook_response.length)
+        if (workbook_response.length > 3000) {
+            return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
+        }
 
         for (let i = 0; i < workbook_response.length; i++) {
             let item = workbook_response[i]
             let state: string | null = String(item.state)
+            let apr: number | null = Number(item.apr)
+            let may: number | null = Number(item.may)
+            let jun: number | null = Number(item.jun)
+            let jul: number | null = Number(item.jul)
+            let aug: number | null = Number(item.aug)
+            let sep: number | null = Number(item.sep)
+            let oct: number | null = Number(item.oct)
+            let nov: number | null = Number(item.nov)
+            let dec: number | null = Number(item.dec)
+            let jan: number | null = Number(item.jan)
+            let feb: number | null = Number(item.feb)
+            let mar: number | null = Number(item.mar)
+
             if (state) {
-                let oldstate = await State.findOne({ state: state })
-                if (!oldstate) {
-                    await new State({
+                if (item._id && isMongoId(String(item._id))) {
+                    await State.findByIdAndUpdate(item._id, { 
                         state: state,
+                        apr: apr || 0,
+                        may: may || 0,
+                        jun: jun || 0,
+                        jul: jul || 0,
+                        aug: aug || 0,
+                        sep: sep || 0,
+                        oct: oct || 0,
+                        nov: nov || 0,
+                        dec: dec || 0,
+                        jan: jan || 0,
+                        feb: feb || 0,
+                        mar: mar || 0,
                         created_by: req.user,
                         updated_by: req.user,
                         created_at: new Date(),
                         updated_at: new Date()
-                    }).save()
+                         })
+                    statusText = "updated"
                 }
+
+                if (!item._id || !isMongoId(String(item._id))) {
+                    let oldstate = await State.findOne({ state: state })
+                    if (!oldstate) {
+                        await new State({
+                            ...item,
+                            _id:new mongoose.Types.ObjectId(),
+                            created_by: req.user,
+                            updated_by: req.user,
+                            created_at: new Date(),
+                            updated_at: new Date()
+                        }).save()
+                        statusText = "created"
+                    }
+                    else
+                        statusText = "duplicate"
+                }
+
             }
+            else
+                statusText = "required state"
+
+            result.push({
+                ...item,
+                status: statusText
+            })
         }
+
+
     }
     return res.status(200).json(result);
 }
+
 
 export const GetBillsAgingReports = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
@@ -457,8 +525,8 @@ export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Res
                         report_owner: owner,
                         article: article,
                         account: account,
-                        oldqty: oldqty,
-                        newqty: newqty,
+                        oldqty: Math.floor(Number(oldqty)),
+                        newqty: Math.floor(Number(newqty)),
                         apr: apr,
                         may: may,
                         jun: jun,
@@ -585,6 +653,156 @@ export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Reques
                         jan: jan,
                         feb: feb,
                         mar: mar,
+                        created_by: req.user,
+                        updated_by: req.user,
+                        created_at: new Date(),
+                        updated_at: new Date()
+                    }).save()
+                }
+            }
+        }
+    }
+    return res.status(200).json(result);
+}
+
+export const GetPartyTargetReports = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let reports: IPartyTargetReport[] = []
+    let count = 0
+    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
+
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+
+        reports = await PartyTargetReport.find({ report_owner: { $in: state_ids } }).populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
+        count = await PartyTargetReport.find({ report_owner: { $in: state_ids } }).countDocuments()
+
+        return res.status(200).json({
+            reports,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
+}
+
+export const BulkCreatePartyTargetReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {
+    let result: IPartyTargetReport[] = []
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    await PartyTargetReport.deleteMany({})
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer, { raw: true });
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: IPartyTargetReport[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        let statusText = ""
+
+        for (let i = 0; i < workbook_response.length; i++) {
+            let report = workbook_response[i]
+            console.log(report)
+            let slno: string | null = String(report.slno)
+            let PARTY: string | null = String(report.PARTY)
+            let Create_Date: string | null = report.Create_Date
+            let STATION: string | null = String(report.STATION)
+            let SALES_OWNER: string | null = String(report.SALES_OWNER)
+            let report_owner: string | null = String(report.report_owner)
+            let All_TARGET: string | null = report.All_TARGET
+            let TARGET: number | null = Number(report.TARGET)
+            let PROJECTION: number | null = Number(report.PROJECTION)
+            let GROWTH: number | null = Number(report.GROWTH)
+            let TARGET_ACHIEVE: number | null = Number(report.TARGET_ACHIEVE)
+            let TOTAL_SALE_OLD: number | null = Number(report.TOTAL_SALE_OLD) || null
+            let TOTAL_SALE_NEW: number | null = Number(report.TOTAL_SALE_NEW) || null
+            let Last_Apr: number | null = Number(report.Last_Apr) || null
+            let Cur_Apr: number | null = Number(report.Cur_Apr) || null
+            let Last_May: number | null = Number(report.Last_May) || null
+            let Cur_May: number | null = Number(report.Cur_May) || null
+            let Last_Jun: number | null = Number(report.Last_Jun) || null
+            let Cur_Jun: number | null = Number(report.Cur_Jun) || null
+            let Last_Jul: number | null = Number(report.Last_Jul) || null
+            let Cur_Jul: number | null = Number(report.Cur_Jul) || null
+            let Last_Aug: number | null = Number(report.Last_Aug) || null
+            let Cur_Aug: number | null = Number(report.Cur_Aug) || null
+            let Last_Sep: number | null = Number(report.Last_Sep) || null
+            let Cur_Sep: number | null = Number(report.Cur_Sep) || null
+            let Last_Oct: number | null = Number(report.Last_Oct) || null
+            let Cur_Oct: number | null = Number(report.Cur_Oct) || null
+            let Last_Nov: number | null = Number(report.Last_Nov) || null
+            let Cur_Nov: number | null = Number(report.Cur_Nov) || null
+            let Last_Dec: number | null = Number(report.Last_Dec) || null
+            let Cur_Dec: number | null = Number(report.Cur_Dec) || null
+            let Last_Jan: number | null = Number(report.Last_Jan) || null
+            let Cur_Jan: number | null = Number(report.Cur_Jan) || null
+            let Last_Feb: number | null = Number(report.Last_Feb) || null
+            let Cur_Feb: number | null = Number(report.Cur_Feb) || null
+            let Last_Mar: number | null = Number(report.Last_Mar) || null
+            let Cur_Mar: number | null = Number(report.Cur_Mar) || null
+            let validated = true
+
+            if (!report_owner) {
+                validated = false
+                statusText = "report owner required"
+            }
+            if (!validated) {
+                result.push({
+                    ...report,
+                    status: statusText
+                })
+            }
+
+            if (validated) {
+                let owner = await State.findOne({ state: report.report_owner })
+                console.log("state", owner?.state, i)
+                if (owner) {
+                    await new PartyTargetReport({
+                        report_owner: owner,
+                        slno: slno,
+                        PARTY: PARTY,
+                        Create_Date: Create_Date,
+                        STATION: STATION,
+                        SALES_OWNER: SALES_OWNER,
+                        All_TARGET: All_TARGET || "",
+                        TARGET: TARGET || 0,
+                        PROJECTION: PROJECTION || 0,
+                        GROWTH: GROWTH || 0,
+                        TARGET_ACHIEVE: TARGET_ACHIEVE || 0,
+                        TOTAL_SALE_OLD: TOTAL_SALE_OLD || 0,
+                        TOTAL_SALE_NEW: TOTAL_SALE_NEW || 0,
+                        Last_Apr: Last_Apr || 0,
+                        Cur_Apr: Cur_Apr || 0,
+                        Last_May: Last_May || 0,
+                        Cur_May: Cur_May || 0,
+                        Last_Jun: Last_Jun || 0,
+                        Cur_Jun: Cur_Jun || 0,
+                        Last_Jul: Last_Jul || 0,
+                        Cur_Jul: Cur_Jul || 0,
+                        Last_Aug: Last_Aug || 0,
+                        Cur_Aug: Cur_Aug || 0,
+                        Last_Sep: Last_Sep || 0,
+                        Cur_Sep: Cur_Sep || 0,
+                        Last_Oct: Last_Oct || 0,
+                        Cur_Oct: Cur_Oct || 0,
+                        Last_Nov: Last_Nov || 0,
+                        Cur_Nov: Cur_Nov || 0,
+                        Last_Dec: Last_Dec || 0,
+                        Cur_Dec: Cur_Dec || 0,
+                        Last_Jan: Last_Jan || 0,
+                        Cur_Jan: Cur_Jan || 0,
+                        Last_Feb: Last_Feb || 0,
+                        Cur_Feb: Cur_Feb || 0,
+                        Last_Mar: Last_Mar || 0,
+                        Cur_Mar: Cur_Mar || 0,
                         created_by: req.user,
                         updated_by: req.user,
                         created_at: new Date(),

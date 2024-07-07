@@ -1,4 +1,5 @@
-import { IState } from "../types/user.types";
+import { IState } from "../types/erp_report.types";
+import { IErpStateTemplate } from "../types/template.type";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
@@ -9,7 +10,7 @@ export const GetStates = async () => {
 export const BulkCreateStateFromExcel = async (body: FormData) => {
     return await apiClient.put(`states`, body)
 }
-export const CreateOreditErpState = async ({ state, body }: { state?: IState, body: { state: string } }) => {
+export const CreateOreditErpState = async ({ state, body }: { state?: IState, body:IErpStateTemplate }) => {
     if (state)
         return await apiClient.put(`states/${state._id}`, body);
     return await apiClient.post(`states`, body);
@@ -47,6 +48,13 @@ export const BulkClientSalereportFromExcelforlastyear = async (body: FormData) =
     return await apiClient.put(`reports/client/sale/lastyear`, body)
 }
 
+export const GetPartyTargetReports = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
+    return await apiClient.get(`reports/partytarget/?limit=${limit}&page=${page}`)
+}
+
+export const BulkPartyTargetFromExcel = async (body: FormData) => {
+    return await apiClient.put(`reports/partytarget`, body)
+}
 
 
 export const AssignErpStatesToUsers = async ({ body }: {
@@ -57,4 +65,9 @@ export const AssignErpStatesToUsers = async ({ body }: {
     }
 }) => {
     return await apiClient.patch(`bulk/assign/states`, body)
+}
+
+
+export const DeleteErpState = async ({ state }: { state: IState }) => {
+    return await apiClient.delete(`states/${state._id}`)
 }

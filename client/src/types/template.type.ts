@@ -1,3 +1,6 @@
+import { Asset } from "./asset.types"
+import { IUser } from "./user.types"
+
 export type ILeadTemplate = {
     _id: string,
     name: string,
@@ -33,16 +36,32 @@ export type IReferTemplate = {
     status?: string
 }
 
+export type IErpStateTemplate = {
+    _id?:string,
+    state: string,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number,
+    status?: any
+}
 export type ICRMStateTemplate = {
     _id: string,
     state: string,
-    users?:string,
-    status?: string  
+    users?: string,
+    status?: string
 }
 export type ICRMCityTemplate = {
     _id: string,
     city: string,
-    state?: string,
     users?: string,
     status?: string
 }
@@ -64,3 +83,28 @@ export type ILeadSourceTemplate = {
     source: string,
     status?: string
 }
+
+
+export type ITemplateCategoryField = {
+    _id: string,
+    categories: string[],
+    updated_at: Date,
+    created_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
+
+export type IMessageTemplate = {
+    _id: string,
+    name: string,
+    message?: string,
+    caption?: string,
+    media?: Asset,
+    category: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
+
+export type IMessageTemplateBody = Request['body'] & IMessageTemplate;

@@ -30,6 +30,8 @@ import CrmLeadSourcesPage from './pages/crm/CrmSourcePage.tsx'
 import CrmStagesPage from './pages/crm/CrmStagesPage.tsx'
 import CrmTypesPage from './pages/crm/CrmleadTypesPage.tsx'
 import CrmActivitiesPage from './pages/crm/CrmActivitiesPage.tsx'
+import PartyTargetReportsPage from './pages/erp reports/PartyTargetReportPage.tsx'
+import SaleAnalysisReport from './pages/erp reports/SaleAnalysisReport.tsx'
 const StatesPage = React.lazy(() => import('./pages/erp reports/StatesPage.tsx'))
 const PendingOrdersReportPage = React.lazy(() => import('./pages/erp reports/PendingOrdersReport.tsx'))
 const ClientSaleReportPage = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPage.tsx'))
@@ -106,6 +108,8 @@ export enum paths {
   clients_sale = "clients_sale",
   clients_sale_lastyear = "clients_sale_lastyear",
   bill_aging_report = "bill_aging_report",
+  sale_analysis ="sale_analysis",
+  party_target ="party_target",
 
   //checklists
   checklists = "checklists",
@@ -461,6 +465,20 @@ function AppRoutes() {
               <Route path={paths.bill_aging_report} element={
                 <Suspense fallback={<LinearProgress />}>
                   < BillsAgingReportsPage />
+                </Suspense>
+
+              }
+              />
+              <Route path={paths.party_target} element={
+                <Suspense fallback={<LinearProgress />}>
+                  < PartyTargetReportsPage />
+                </Suspense>
+
+              }
+              />
+              <Route path={paths.sale_analysis} element={
+                <Suspense fallback={<LinearProgress />}>
+                  < SaleAnalysisReport />
                 </Suspense>
 
               }

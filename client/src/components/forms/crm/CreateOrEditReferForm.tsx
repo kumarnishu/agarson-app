@@ -9,10 +9,10 @@ import { CreateOrUpdateRefer, GetAllCities, GetAllStates } from '../../../servic
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { ICRMCity, IReferredParty } from '../../../types/crm.types';
+import { ICRMCity, ICRMState, IReferredParty } from '../../../types/crm.types';
 import { UserContext } from '../../../contexts/userContext';
 import { toTitleCase } from '../../../utils/TitleCase';
-import { IState, IUser } from '../../../types/user.types';
+import {  IUser } from '../../../types/user.types';
 
 export type TformData = {
     name: string,
@@ -25,11 +25,11 @@ export type TformData = {
 
 function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
     const { user } = useContext(UserContext);
-    const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
+    const [states, setStates] = useState<{ state: ICRMState, users: IUser[] }[]>([])
     const [cities, setCities] = useState<{ city: ICRMCity, users: IUser[] }[]>([])
     const [state, setState] = useState<string>();
 
-    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
+    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: ICRMState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
     const { data: citydata, isSuccess: isCitySuccess } = useQuery<AxiosResponse<{ city: ICRMCity, users: IUser[] }[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
 
     const { mutate, isLoading, isSuccess, isError, error } = useMutation

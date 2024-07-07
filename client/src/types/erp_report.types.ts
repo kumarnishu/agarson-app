@@ -1,5 +1,46 @@
-import { IState, IUser } from "./user.types"
+import { IUser } from "./user.types"
 
+
+export type IState = {
+    _id: string,
+    state: string,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
+export type StateTarget = {
+    state: IState,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+
+}
 
 export type IBillsAgingReport = {
     _id: string,
@@ -72,6 +113,53 @@ export type IPendingOrdersReport = {
     size11close: number,
     size11to13: number,
     size3to8: number,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser,
+    status?: string
+}
+
+
+export type IPartyTargetReport = {
+    _id: string,
+    slno: string,
+    PARTY: string,
+    Create_Date: string,
+    STATION: string,
+    SALES_OWNER: string,
+    report_owner: IState
+    All_TARGET: string,
+    TARGET: number,
+    PROJECTION: number,
+    GROWTH: string,
+    TARGET_ACHIEVE: string,
+    TOTAL_SALE_OLD: number,
+    TOTAL_SALE_NEW: number,
+    Last_Apr: number,
+    Cur_Apr: number,
+    Last_May: number,
+    Cur_May: number,
+    Last_Jun: number,
+    Cur_Jun: number,
+    Last_Jul: number,
+    Cur_Jul: number,
+    Last_Aug: number,
+    Cur_Aug: number,
+    Last_Sep: number,
+    Cur_Sep: number,
+    Last_Oct: number,
+    Cur_Oct: number,
+    Last_Nov: number,
+    Cur_Nov: number,
+    Last_Dec: number,
+    Cur_Dec: number,
+    Last_Jan: number,
+    Cur_Jan: number,
+    Last_Feb: number,
+    Cur_Feb: number,
+    Last_Mar: number,
+    Cur_Mar: number,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

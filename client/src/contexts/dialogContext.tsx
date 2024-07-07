@@ -1,6 +1,6 @@
 import React, { useReducer } from "react"
 
-type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" | "create_or_edit_erpstate" | "update_state" | "delete_state" |
+type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" | "create_or_edit_erpstate" | "update_state" | "delete_erp_state" |
   "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users" | "bulk_assign_erp_states" | "toogle_show_visitingcard"
 
 
@@ -161,7 +161,7 @@ export enum UserChoiceActions {
   reset_multi_login = "reset_multi_login",
   create_or_edit_erpstate = "create_or_edit_erpstate",
   update_state = "update_state",
-  delete_state = "delete_state"
+  delete_erp_state = "delete_erp_state"
 
 }
 
@@ -198,7 +198,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case UserChoiceActions.block_multi_login: return type
     case UserChoiceActions.create_or_edit_erpstate: return type
     case UserChoiceActions.update_state: return type
-    case UserChoiceActions.delete_state: return type
+    case UserChoiceActions.delete_erp_state: return type
     case UserChoiceActions.bulk_assign_erp_states: return type
     case UserChoiceActions.toogle_show_visitingcard: return type
 
