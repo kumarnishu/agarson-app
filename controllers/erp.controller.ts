@@ -8,9 +8,10 @@ import { PendingOrdersReport } from "../models/erp_reports/pending_orders.model"
 import { User } from "../models/users/user.model";
 import { ClientSaleReport } from "../models/erp_reports/client_sale.model";
 import { PartyTargetReport } from "../models/erp_reports/partytarget.model";
-import { IErpStateTemplate } from "../types/template.type";
+import { IErpStateTemplate, ISaleAnalysisReport } from "../types/template.type";
 import isMongoId from "validator/lib/isMongoId";
 import mongoose from "mongoose";
+import { GetLastYearlyachievementBystate, GetMonthlyachievementBystate, GetYearlyachievementBystate } from "../utils/ErpUtils";
 
 //get
 
@@ -23,6 +24,38 @@ export const GetAllStates = async (req: Request, res: Response, next: NextFuncti
     }
     return res.status(200).json(result)
 }
+
+export const GetSaleAnalysisReport = async (req: Request, res: Response, next: NextFunction) => {
+    if (req.user) {
+        let result: ISaleAnalysisReport[] = []
+        let user = await User.findById(req.user._id).populate('assigned_states');
+        if (user) {
+            let states = user.assigned_states;
+            for (let i = 0; i < states.length; i++) {
+                let reports = await PartyTargetReport.find({ report_owner: states[i]._id })
+                let antarget = states[i].apr + states[i].may + states[i].jun + states[i].jul + states[i].aug + states[i].sep + states[i].oct + states[i].nov + states[i].dec + states[i].jan + states[i].feb + states[i].mar;
+
+                if (reports && reports.length > 0)
+                    result.push({
+                        state: states[i],
+                        monthly_target: states[i].jul,
+                        monthly_achivement: GetMonthlyachievementBystate(reports, 6),
+                        monthly_percentage: Math.round((GetMonthlyachievementBystate(reports, 6) / states[i].jul)*10000)/100,
+                        annual_target: antarget,
+                        annual_achivement: GetYearlyachievementBystate(reports),
+                        annual_percentage: Math.round((GetYearlyachievementBystate(reports) / antarget) * 10000) / 100,
+                        last_year_sale: GetLastYearlyachievementBystate(reports),
+                        last_year_sale_percentage_comparison: Math.round((GetLastYearlyachievementBystate(reports) / antarget) * 10000) / 100
+                    })
+            }
+        }
+        return res.status(200).json(result)
+    }
+    else
+        return res.status(403).json({ message: "not authorized" })
+
+}
+
 
 export const CreateState = async (req: Request, res: Response, next: NextFunction) => {
     const body = req.body as IErpStateTemplate;
@@ -111,7 +144,7 @@ export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: R
 
             if (state) {
                 if (item._id && isMongoId(String(item._id))) {
-                    await State.findByIdAndUpdate(item._id, { 
+                    await State.findByIdAndUpdate(item._id, {
                         state: state,
                         apr: apr || 0,
                         may: may || 0,
@@ -129,7 +162,7 @@ export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: R
                         updated_by: req.user,
                         created_at: new Date(),
                         updated_at: new Date()
-                         })
+                    })
                     statusText = "updated"
                 }
 
@@ -138,7 +171,7 @@ export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: R
                     if (!oldstate) {
                         await new State({
                             ...item,
-                            _id:new mongoose.Types.ObjectId(),
+                            _id: new mongoose.Types.ObjectId(),
                             created_by: req.user,
                             updated_by: req.user,
                             created_at: new Date(),

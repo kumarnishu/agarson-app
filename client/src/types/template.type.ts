@@ -1,4 +1,5 @@
 import { Asset } from "./asset.types"
+import { IState } from "./erp_report.types"
 import { IUser } from "./user.types"
 
 export type ILeadTemplate = {
@@ -52,6 +53,17 @@ export type IErpStateTemplate = {
     feb: number,
     mar: number,
     status?: any
+}
+export type ISaleAnalysisReport = {
+    state: IState,
+    monthly_target: number,
+    monthly_achivement: number,
+    monthly_percentage: number,
+    annual_target: number,
+    annual_achivement: number,
+    annual_percentage: number,
+    last_year_sale: number,
+    last_year_sale_percentage_comparison: number
 }
 export type ICRMStateTemplate = {
     _id: string,

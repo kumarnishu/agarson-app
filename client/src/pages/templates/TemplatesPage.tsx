@@ -10,13 +10,13 @@ import { GetCategories, GetTemplates } from '../../services/TemplateServices'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, TemplateChoiceActions } from '../../contexts/dialogContext'
 import NewTemplateDialog from '../../components/dialogs/templates/NewTemplateDialog'
-import { IMessageTemplate, ITemplateCategoryField } from '../../types/template.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { DownloadFile } from '../../utils/DownloadFile'
 import { UserContext } from '../../contexts/userContext'
 import UpdateTemplateDialog from '../../components/dialogs/templates/UpdateTemplateDialog'
 import ViewTemplateDialog from '../../components/dialogs/templates/ViewTemplateDialog'
 import DeleteTemplateDialog from '../../components/dialogs/templates/DeleteTemplateDialog'
+import { IMessageTemplate, ITemplateCategoryField } from '../../types/template.type'
 
 
 export default function TemplatesPage() {

@@ -6,8 +6,8 @@ import { Delete } from '@mui/icons-material'
 import { BackendError } from '../..'
 import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
-import { ITemplateCategoryField } from '../../types/template.types'
 import { GetCategories, UpdateCategories } from '../../services/TemplateServices'
+import { ITemplateCategoryField } from '../../types/template.type'
 
 
 function UpdateTemplateCategoriesPage() {

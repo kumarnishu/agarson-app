@@ -9,8 +9,8 @@ import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import { GetCategories, UpdateTemplate } from '../../../services/TemplateServices';
 import AlertBar from '../../snacks/AlertBar';
-import { IMessageTemplate, ITemplateCategoryField } from '../../../types/template.types';
 import { IUser } from '../../../types/user.types';
+import { IMessageTemplate, ITemplateCategoryField } from '../../../types/template.type';
 
 
 type TformData = {

@@ -15,7 +15,6 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import FuzzySearch from 'fuzzy-search'
 import moment from 'moment'
-import { ConvertRupeesFormat } from '../../utils/ConverRupees'
 import UploadPartyTargetButton from '../../components/buttons/UploadPartyTargetButton'
 
 
@@ -125,7 +124,6 @@ export default function PartyTargetReportsPage() {
                 <Typography
                     variant={'h6'}
                     component={'h1'}
-                    sx={{ pl: 1 }}
                 >
                     Party target
                 </Typography>

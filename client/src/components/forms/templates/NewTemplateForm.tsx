@@ -10,7 +10,7 @@ import { queryClient } from '../../../main';
 import { CreateTemplate, GetCategories } from '../../../services/TemplateServices';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
-import { ITemplateCategoryField } from '../../../types/template.types';
+import { ITemplateCategoryField } from '../../../types/template.type';
 
 
 type TformData = {

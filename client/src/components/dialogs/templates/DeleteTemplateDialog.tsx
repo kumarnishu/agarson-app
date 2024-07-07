@@ -8,7 +8,7 @@ import { BackendError } from '../../..';
 import { useMutation } from 'react-query';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
-import { IMessageTemplate } from '../../../types/template.types';
+import { IMessageTemplate } from '../../../types/template.type';
 
 function DeleteTemplateDialog({ template }: { template: IMessageTemplate }) {
     const { choice, setChoice } = useContext(ChoiceContext)
