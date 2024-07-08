@@ -18,6 +18,8 @@ import { CRMCity } from "../models/leads/crm.city.model.js"
 import { LeadType } from "../models/leads/crm.leadtype.model.js"
 import { LeadSource } from "../models/leads/crm.source.model.js"
 import { Stage } from "../models/leads/crm.stage.model.js"
+import { HandleCRMCitiesAssignment } from "../utils/AssignCitiesToUsers.js"
+import { State } from "../models/erp_reports/state.model.js"
 
 
 //lead types
@@ -248,47 +250,14 @@ export const AssignCRMCitiesToUsers = async (req: Request, res: Response, next: 
         flag: number
     }
 
-
     if (city_ids && city_ids.length === 0)
         return res.status(400).json({ message: "please select one city " })
     if (user_ids && user_ids.length === 0)
         return res.status(400).json({ message: "please select one city owner" })
-
-    let owners = user_ids
-
-    if (flag == 0) {
-        for (let i = 0; i < owners.length; i++) {
-            let owner = await User.findById(owners[i]).populate('assigned_crm_cities');
-            if (owner) {
-                let oldcitiesids = owner.assigned_crm_cities.map((item) => { return item._id.valueOf() });
-                oldcitiesids = oldcitiesids.filter((item) => { return !city_ids.includes(item) });
-
-                await User.findByIdAndUpdate(owner._id, {
-                    assigned_crm_cities: oldcitiesids
-                })
-            }
-        }
-    }
-    else {
-        for (let k = 0; k < owners.length; k++) {
-
-            let owner = await User.findById(owners[k]).populate('assigned_crm_cities');
-            if (owner) {
-                let oldcitiesids = owner.assigned_crm_cities.map((item) => { return item._id.valueOf() });
-                for (let i = 0; i < city_ids.length; i++) {
-                    if (!oldcitiesids.includes(city_ids[i]))
-                        oldcitiesids.push(city_ids[i]);
-                }
-
-                await User.findByIdAndUpdate(owner._id, {
-                    assigned_crm_cities: oldcitiesids
-                })
-            }
-        }
-    }
-
+    await HandleCRMCitiesAssignment(user_ids, city_ids, flag);
     return res.status(200).json({ message: "successfull" })
 }
+
 export const AssignCRMStatesToUsers = async (req: Request, res: Response, next: NextFunction) => {
     const { state_ids, user_ids, flag } = req.body as {
         user_ids: string[],
@@ -482,7 +451,8 @@ export const CreateCRMCity = async (req: Request, res: Response, next: NextFunct
     if (!state || !city) {
         return res.status(400).json({ message: "please provide required fields" })
     }
-    if (!await CRMState.findOne({ state: state })) {
+    let STate = await CRMState.findOne({ state: state })
+    if (!STate) {
         return res.status(400).json({ message: "state not exits" })
     }
     if (await CRMCity.findOne({ city: city.toLowerCase(), state: state }))
@@ -494,6 +464,9 @@ export const CreateCRMCity = async (req: Request, res: Response, next: NextFunct
         created_by: req.user,
         updated_by: req.user
     }).save()
+    let users = await User.find({ assigned_crm_states:STate });
+    console.log(users.length)
+    await HandleCRMCitiesAssignment(users.map((i) => { return i._id.valueOf() }), [result._id.valueOf()], 1);
     return res.status(201).json(result)
 
 }
@@ -534,6 +507,13 @@ export const DeleteCRMCity = async (req: Request, res: Response, next: NextFunct
     let city = await CRMCity.findById(id);
     if (!city) {
         return res.status(404).json({ message: "city not found" })
+    }
+
+    let STate = await CRMState.findOne({ state: city.state });
+    if (STate) {
+        let users = await User.find({ assigned_crm_states: STate });
+        console.log(users.length)
+        await HandleCRMCitiesAssignment(users.map((i) => { return i._id.valueOf() }), [city._id.valueOf()], 1);
     }
     await city.remove();
     return res.status(200).json({ message: "city deleted successfully" })
@@ -2237,9 +2217,7 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
     let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
-    let query = []
-    query.push({ 'state': { $in: states }, 'city': { $in: cities } })
-    refers = await ReferredParty.find(query).sort('name')
+    refers = await ReferredParty.find({ 'state': { $in: states }, 'city': { $in: cities } }).sort('name')
     return res.status(200).json(refers);
 }
 
@@ -2366,7 +2344,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
                             { mobile: { $regex: key[0], $options: 'i' } },
-                             { city: { $regex: key[0], $options: 'i' } },
+                            { city: { $regex: key[0], $options: 'i' } },
                             { state: { $regex: key[0], $options: 'i' } },
                         ]
                     },
@@ -2375,7 +2353,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                             { name: { $regex: key[0], $options: 'i' } },
                             { customer_name: { $regex: key[0], $options: 'i' } },
                             { gst: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } }, 
+                            { mobile: { $regex: key[0], $options: 'i' } },
                             { city: { $regex: key[0], $options: 'i' } },
                             { state: { $regex: key[0], $options: 'i' } },
                         ]
