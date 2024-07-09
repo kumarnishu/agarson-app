@@ -19,7 +19,6 @@ import { LeadType } from "../models/leads/crm.leadtype.model.js"
 import { LeadSource } from "../models/leads/crm.source.model.js"
 import { Stage } from "../models/leads/crm.stage.model.js"
 import { HandleCRMCitiesAssignment } from "../utils/AssignCitiesToUsers.js"
-import { State } from "../models/erp_reports/state.model.js"
 
 
 //lead types
@@ -1806,6 +1805,8 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
     if (!mobile)
         return res.status(400).json({ message: "provide primary mobile number" });
 
+    if(await ReferredParty.findOne({mobile:mobile}))
+        return res.status(400).json({ message: "our refer party exists with this mobile" });
     let uniqueNumbers = []
     if (mobile)
         uniqueNumbers.push(mobile)
