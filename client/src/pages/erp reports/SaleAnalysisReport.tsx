@@ -204,6 +204,51 @@ export default function SaleAnalysisReport() {
                   </STableRow>
                 )
               })}
+            <STableRow
+              key={'dfd'}
+              style={{background:'lightgrey'}}
+            >
+
+             
+              <STableCell
+              >
+               Total 
+              </STableCell>
+              <STableCell
+              >
+                {reports.reduce((a, b) => { return Number(a) + Number(b.monthly_target) }, 0).toFixed()}
+              </STableCell>
+              <STableCell
+              >
+                {reports.reduce((a, b) => { return Number(a) + Number(b.monthly_achivement) }, 0).toFixed()}
+              </STableCell>
+              <STableCell
+              >
+                {reports.reduce((a, b) => { return Number(a) + Number(b.monthly_percentage) }, 0).toFixed()}
+             
+              </STableCell>
+              <STableCell
+              >
+                {reports.reduce((a, b) => { return Number(a) + Number(b.annual_target) }, 0).toFixed()}
+              </STableCell>
+              <STableCell
+              >
+                {reports.reduce((a, b) => { return Number(a) + Number(b.annual_achivement) }, 0).toFixed()}
+              </STableCell>
+              <STableCell
+              >
+                {reports.reduce((a, b) => { return Number(a) + Number(b.annual_percentage) }, 0).toFixed()}
+              </STableCell>
+              <STableCell
+              >
+                {reports.reduce((a, b) => { return Number(a) + Number(b.last_year_sale) }, 0).toFixed()}
+              </STableCell>
+              <STableCell
+              >
+                {reports.reduce((a, b) => { return Number(a) + Number(b.last_year_sale_percentage_comparison) }, 0).toFixed()}
+              </STableCell>
+            </STableRow>
+
           </STableBody>
         </STable>
       </Box >}

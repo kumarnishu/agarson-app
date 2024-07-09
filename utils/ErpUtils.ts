@@ -13,7 +13,7 @@ export function GetMonthlyachievementBystate(reports: IPartyTargetReport[], mont
     else if (mont == 4)
         result = Number(reports.reduce((a, b) => { return Number(a) + Number(b.Cur_May) }, 0).toFixed())
     else if (mont == 5)
-        result = Number(reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jul) }, 0).toFixed())
+        result = Number(reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jun) }, 0).toFixed())
     else if (mont == 6)
         result = Number(reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jul) }, 0).toFixed())
     else if (mont == 7)
