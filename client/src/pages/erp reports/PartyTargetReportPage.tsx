@@ -19,7 +19,7 @@ import UploadPartyTargetButton from '../../components/buttons/UploadPartyTargetB
 
 
 export default function PartyTargetReportsPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 1000, page: 1, total: 1 });
+    const [paginationData, setPaginationData] = useState({ limit: 2000, page: 1, total: 1 });
     const [reports, setPartyTargetReports] = useState<IPartyTargetReport[]>([])
     const { user } = useContext(UserContext)
     const [filter, setFilter] = useState<string | undefined>()
@@ -488,7 +488,139 @@ export default function PartyTargetReportsPage() {
                                     </STableRow>
                                 )
                             })}
+                        <STableRow
+                            key={'dfd'}
+                            style={{ background: 'lightgrey' }}
+                        >
 
+                            <STableCell style={{ padding: '10px' }}>
+                                Total
+                            </STableCell>
+
+                            <STableCell
+                            >
+                                
+                            </STableCell>
+
+                            <STableCell
+                            >
+                               
+                            </STableCell>
+                            <STableCell
+                            >
+                               
+                            </STableCell>
+                            <STableCell
+                            >
+                               
+                            </STableCell>
+                            <STableCell
+                            >
+                            </STableCell>
+                            <STableCell
+                            >
+                              
+                            </STableCell>
+                            <STableCell
+                            >
+                               
+                            </STableCell>
+                            <STableCell
+                            >
+                                {reports.reduce((a, b) => { return Number(a) + Number(b.TARGET) }, 0).toFixed()}
+
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.PROJECTION) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.GROWTH) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.TARGET_ACHIEVE) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.TOTAL_SALE_OLD) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.TOTAL_SALE_NEW) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Apr) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Apr) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_May) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_May) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Jun) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jun) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Jul) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jul) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Aug) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Aug) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Sep) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Sep) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Oct) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Oct) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Nov) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Nov) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Dec) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Dec) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Jan) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jan) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Feb) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Feb) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Mar) }, 0).toFixed()}
+                            </STableCell>
+                            <STableCell
+                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Mar) }, 0).toFixed()}
+                            </STableCell>
+
+
+                         
+                        </STableRow>
                     </STableBody>
                 </STable>
 

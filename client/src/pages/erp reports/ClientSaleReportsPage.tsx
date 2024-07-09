@@ -19,7 +19,7 @@ import UploadClientSalesButton from '../../components/buttons/UploadClientSalesB
 
 
 export default function ClientSaleReportsPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 1000, page: 1, total: 1 });
+    const [paginationData, setPaginationData] = useState({ limit: 2000, page: 1, total: 1 });
     const [reports, setClientSaleReports] = useState<IClientSaleReport[]>([])
     const { user } = useContext(UserContext)
     const [filter, setFilter] = useState<string>()

@@ -18,7 +18,7 @@ import FuzzySearch from 'fuzzy-search'
 import moment from 'moment'
 
 export default function PendingOrdersReportPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 1000, page: 1, total: 1 });
+    const [paginationData, setPaginationData] = useState({ limit: 2000, page: 1, total: 1 });
     const [reports, setPendingOrdersReport] = useState<IPendingOrdersReport[]>([])
     const { user } = useContext(UserContext)
     const [sent, setSent] = useState(false)

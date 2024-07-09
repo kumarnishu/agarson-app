@@ -20,7 +20,7 @@ import { ConvertRupeesFormat } from '../../utils/ConverRupees'
 
 
 export default function BillsAgingReportsPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 1000, page: 1, total: 1 });
+    const [paginationData, setPaginationData] = useState({ limit: 2000, page: 1, total: 1 });
     const [reports, setBillsAgingReports] = useState<IBillsAgingReport[]>([])
     const { user } = useContext(UserContext)
     const [filter, setFilter] = useState<string | undefined>()
