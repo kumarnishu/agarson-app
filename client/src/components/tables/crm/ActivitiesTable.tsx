@@ -29,7 +29,7 @@ function ActivitiesTable({ remarks }: Props) {
         <>
             <Box sx={{
                 overflow: "auto",
-                height: '70vh'
+                height: '65vh'
             }}>
                 <STable
                 >
