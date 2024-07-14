@@ -1,6 +1,18 @@
 import mongoose from "mongoose"
-import { IMessageTemplate } from "../../types/template.type"
+import { Asset, IUser } from "../users/user.model"
 
+export type IMessageTemplate = {
+    _id: string,
+    name: string,
+    message?: string,
+    caption?: string,
+    media?: Asset,
+    category: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 const MessageTemplateSchema = new mongoose.Schema<IMessageTemplate, mongoose.Model<IMessageTemplate, {}, {}>, {}>({
     name: {
         type: String,

@@ -1,5 +1,24 @@
 import mongoose from "mongoose"
-import { IProduction } from "../../types/production.types"
+import { IMachine } from "./machine.model"
+import { IUser } from "../users/user.model"
+import { IArticle } from "./article.model"
+
+export type IProduction = {
+    _id: string,
+    machine: IMachine,
+    thekedar: IUser,
+    articles: IArticle[],
+    manpower: number,
+    production: number,
+    big_repair: number,
+    small_repair: number,
+    date: Date,
+    production_hours: number,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 
 
 const ProductionSchema = new mongoose.Schema<IProduction, mongoose.Model<IProduction, {}, {}>, {}>({

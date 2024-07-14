@@ -1,7 +1,3 @@
-import { Asset } from "./asset.types"
-import { IState } from "./erp_report.types"
-import { IUser } from "./user.types"
-
 export type ILeadTemplate = {
     _id: string,
     name: string,
@@ -40,31 +36,54 @@ export type IReferTemplate = {
 export type IErpStateTemplate = {
     _id?: string,
     state: string,
-    apr: number,
-    may: number,
-    jun: number,
-    jul: number,
-    aug: number,
-    sep: number,
-    oct: number,
-    nov: number,
-    dec: number,
-    jan: number,
-    feb: number,
-    mar: number,
+    apr: string,
+    may: string,
+    jun: string,
+    jul: string,
+    aug: string,
+    sep: string,
+    oct: string,
+    nov: string,
+    dec: string,
+    jan: string,
+    feb: string,
+    mar: string,
     status?: any
 }
-export type ISaleAnalysisReport = {
-    state: IState,
-    monthly_target: number,
-    monthly_achivement: number,
-    monthly_percentage: number,
-    annual_target: number,
-    annual_achivement: number,
-    annual_percentage: number,
-    last_year_sale: number,
-    last_year_sale_percentage_comparison: number
+export type ISaleAnalysisReportTemplate = {
+    state: string,
+    monthly_target: string,
+    monthly_achivement: string,
+    monthly_percentage: string,
+    annual_target: string,
+    annual_achivement: string,
+    annual_percentage: string,
+    last_year_sale: string,
+    last_year_sale_percentage_comparison: string
 }
+
+export type ClientSaleReportTemplate = {
+    report_owner: string,
+    account: string,
+    article: string,
+    oldqty: string,
+    newqty: string,
+    apr: string,
+    may: string,
+    jun: string,
+    jul: string,
+    aug: string,
+    sep: string,
+    oct: string,
+    nov: string,
+    dec: string,
+    jan: string,
+    feb: string,
+    mar: string,
+    status?: string
+}
+
+
 export type ICRMStateTemplate = {
     _id: string,
     state: string,
@@ -99,24 +118,6 @@ export type ILeadSourceTemplate = {
 
 export type ITemplateCategoryField = {
     _id: string,
-    categories: string[],
-    updated_at: Date,
-    created_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    categories: string[]
 }
 
-export type IMessageTemplate = {
-    _id: string,
-    name: string,
-    message?: string,
-    caption?: string,
-    media?: Asset,
-    category: string,
-    created_at: Date,
-    updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
-}
-
-export type IMessageTemplateBody = Request['body'] & IMessageTemplate;

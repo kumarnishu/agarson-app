@@ -1,5 +1,16 @@
 import mongoose from "mongoose"
-import { IDye } from "../../types/production.types"
+import { IUser } from "../users/user.model"
+
+export type IDye = {
+    _id: string,
+    active: boolean,
+    dye_number: number,
+    size: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 
 
 const DyeSchema = new mongoose.Schema<IDye, mongoose.Model<IDye, {}, {}>, {}>({

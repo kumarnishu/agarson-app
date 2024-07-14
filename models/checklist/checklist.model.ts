@@ -1,6 +1,21 @@
-import mongoose from "mongoose"
-import { IChecklist } from "../../types/checklist.types"
+import mongoose from "mongoose";
+import { IUser } from "../users/user.model";
 
+export type IChecklist = {
+    _id: string,
+    title: string,
+    sheet_url: string,
+    serial_no: number,
+    boxes: {
+        desired_date: Date,
+        actual_date?: Date,
+    }[],
+    owner: IUser,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 const ChecklistSchema = new mongoose.Schema<IChecklist, mongoose.Model<IChecklist, {}, {}>, {}>({
     title: {
         type: String,

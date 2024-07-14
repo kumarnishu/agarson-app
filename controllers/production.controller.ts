@@ -1,13 +1,11 @@
 import { NextFunction, Request, Response } from "express"
-import { Machine } from "../models/production/machine.model"
-import { Article } from "../models/production/article.model"
-import { Dye } from "../models/production/dye.types"
+import { IMachine, Machine } from "../models/production/machine.model"
+import { Article, IArticle } from "../models/production/article.model"
+import { Dye, IDye } from "../models/production/dye.types"
 import xlsx from "xlsx"
-import { Production } from "../models/production/production.model"
-import { User } from "../models/users/user.model"
-import { IArticle, IDye, IMachine, IProduction } from "../types/production.types"
+import { IProduction, Production } from "../models/production/production.model"
+import { IUser, User } from "../models/users/user.model"
 import { MachineCategory } from "../models/production/category.machine.model"
-import { IUser } from "../types/user.types"
 
 //get
 export const GetMachineCategories = async (req: Request, res: Response, next: NextFunction) => {

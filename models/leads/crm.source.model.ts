@@ -1,6 +1,13 @@
 import mongoose from "mongoose"
-import { ILeadSource } from "../../types/crm.types"
-
+import { IUser } from "../users/user.model"
+export type ILeadSource = {
+    _id: string,
+    source: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 const LeadSourceSchema = new mongoose.Schema<ILeadSource, mongoose.Model<ILeadSource, {}, {}>, {}>({
     source: {
         type: String,

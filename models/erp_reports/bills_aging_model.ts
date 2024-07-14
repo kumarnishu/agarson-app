@@ -1,6 +1,21 @@
 import mongoose from "mongoose"
-import { IBillsAgingReport } from "../../types/erp_report.types"
+import { IState } from "./state.model"
+import { IUser } from "../users/user.model"
 
+export type IBillsAgingReport = {
+    _id: string,
+    report_owner: IState
+    account: string,
+    plu70: Number,
+    in70to90: Number,
+    in90to120: Number,
+    plus120: Number
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser,
+    status?: string
+}
 const BillsAgingReportSchema = new mongoose.Schema<IBillsAgingReport, mongoose.Model<IBillsAgingReport, {}, {}>, {}>({
     report_owner: {
         type: mongoose.Schema.Types.ObjectId,

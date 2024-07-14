@@ -1,6 +1,42 @@
 import mongoose from "mongoose"
-import { IVisitReport } from "../../types/visit.types"
+import { Asset, IUser } from "../users/user.model"
+import { IVisit } from "./visit.model"
 
+export type IVisitReport = {
+    _id: string,
+    visit_in_credientials: {
+        latitude: string,
+        longitude: string,
+        timestamp: Date,
+        address: string
+    },
+    visit_out_credentials: {
+        latitude: string,
+        longitude: string,
+        timestamp: Date,
+        address: string
+    },
+    person: IUser,
+    party_name: string,
+    mobile: string,
+    city: string,
+    summary: string,
+    is_old_party: boolean,
+    dealer_of: string,
+    refs_given: string,
+    real_city: string
+    reviews_taken: number,
+    turnover: string,
+    visit_in_photo: Asset,
+    visit_samples_photo: Asset
+    ankit_input: { input: string, created_by: IUser, timestamp: Date },
+    visit_validated: boolean,
+    visit: IVisit,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 
 const VisitReportSchema = new mongoose.Schema<IVisitReport, mongoose.Model<IVisitReport, {}, {}>, {}>({
     visit_in_credientials: {

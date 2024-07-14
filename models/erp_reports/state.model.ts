@@ -1,6 +1,28 @@
 import mongoose from "mongoose"
-import { IState } from "../../types/erp_report.types"
+import { IUser } from "../users/user.model"
 
+
+
+export type IState = {
+    _id: string,
+    state: string,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 const StateSchema = new mongoose.Schema<IState, mongoose.Model<IState, {}, {}>, {}>({
     state: {
         type: String,

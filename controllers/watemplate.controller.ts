@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express"
 import isMongoId from "validator/lib/isMongoId"
-import { MessageTemplate } from "../models/watemplates/watemplate.model"
+import { IMessageTemplate, MessageTemplate } from "../models/watemplates/watemplate.model"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { destroyFile } from "../utils/destroyFile.util"
 import { TemplateCategoryField } from "../models/watemplates/categories.model"
-import { IMessageTemplate, IMessageTemplateBody } from "../types/template.type"
+
 
 export const GetMessagetemplatesCategories = async (req: Request, res: Response, next: NextFunction) => {
     let categoryObj = await TemplateCategoryField.findOne()
@@ -43,7 +43,7 @@ export const GetMessagetemplates = async (req: Request, res: Response, next: Nex
 
 export const CreateMessagetemplate = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { name, message, caption, category } = body as IMessageTemplateBody
+    let { name, message, caption, category } = body as Request['body'] & IMessageTemplate
     if (!name) {
         return res.status(400).json({ message: "template name required" })
     }
@@ -88,7 +88,7 @@ export const UpdateMessagetemplate = async (req: Request, res: Response, next: N
         return res.status(400).json({ message: "please provide correct template id" })
     }
     let body = JSON.parse(req.body.body)
-    let { name, message, category, caption } = body as IMessageTemplateBody
+    let { name, message, category, caption } = body as Request['body'] & IMessageTemplate
     if (!name) {
         return res.status(400).json({ message: "template name required" })
     }

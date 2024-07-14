@@ -1,9 +1,8 @@
 import { Client } from "whatsapp-web.js"
-import { Todo } from "../models/todos/todo.model"
-import { ITodo } from "../types/todo.types"
+import { ITodo, Todo } from "../models/todos/todo.model"
 import { CronJob } from "cron"
-import { IUser } from "../types/user.types"
 import { clients } from "./CreateWhatsappClient"
+import { IUser } from "../models/users/user.model"
 
 export var todo_timeouts: { id: string, timeout: NodeJS.Timeout }[] = []
 

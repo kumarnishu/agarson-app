@@ -1,19 +1,18 @@
 import { NextFunction, Request, Response } from "express"
 import xlsx from "xlsx";
-import { IUser } from "../types/user.types";
-import { IBillsAgingReport, IClientSaleReport, IPartyTargetReport, IPendingOrdersReport, IState } from "../types/erp_report.types";
-import { BillsAgingReport } from "../models/erp_reports/bills_aging_model";
-import { State } from "../models/erp_reports/state.model";
-import { PendingOrdersReport } from "../models/erp_reports/pending_orders.model";
-import { User } from "../models/users/user.model";
+import { BillsAgingReport, IBillsAgingReport } from "../models/erp_reports/bills_aging_model";
+import { IState, State } from "../models/erp_reports/state.model";
+import { IPendingOrdersReport, PendingOrdersReport } from "../models/erp_reports/pending_orders.model";
+import { IUser, User } from "../models/users/user.model";
 import { ClientSaleReport } from "../models/erp_reports/client_sale.model";
-import { PartyTargetReport } from "../models/erp_reports/partytarget.model";
-import { IErpStateTemplate, ISaleAnalysisReport } from "../types/template.type";
+import { IPartyTargetReport, PartyTargetReport } from "../models/erp_reports/partytarget.model";
+import { ClientSaleReportTemplate, IErpStateTemplate, ISaleAnalysisReportTemplate } from "../types/template.type";
 import isMongoId from "validator/lib/isMongoId";
 import mongoose from "mongoose";
 import { GetLastYearlyachievementBystate, GetMonthlyachievementBystate, GetMonthlytargetBystate, GetYearlyachievementBystate } from "../utils/ErpUtils";
 
 //get
+
 
 export const GetAllStates = async (req: Request, res: Response, next: NextFunction) => {
     let result: { state: IState, users: IUser[] }[] = []
@@ -28,7 +27,7 @@ export const GetAllStates = async (req: Request, res: Response, next: NextFuncti
 export const GetSaleAnalysisReport = async (req: Request, res: Response, next: NextFunction) => {
     let month = Number(req.params.month)
     if (req.user) {
-        let result: ISaleAnalysisReport[] = []
+        let result: ISaleAnalysisReportTemplate[] = []
         let user = await User.findById(req.user._id).populate('assigned_states');
         if (user) {
             let states = user.assigned_states;
@@ -38,15 +37,15 @@ export const GetSaleAnalysisReport = async (req: Request, res: Response, next: N
 
                 if (reports && reports.length > 0)
                     result.push({
-                        state: states[i],
-                        monthly_target: GetMonthlytargetBystate(states[i],month),
-                        monthly_achivement: GetMonthlyachievementBystate(reports, month),
-                        monthly_percentage: Math.round((GetMonthlyachievementBystate(reports, 6) / GetMonthlytargetBystate(states[i], month))*10000)/100,
-                        annual_target: antarget,
-                        annual_achivement: GetYearlyachievementBystate(reports),
-                        annual_percentage: Math.round((GetYearlyachievementBystate(reports) / antarget) * 10000) / 100,
-                        last_year_sale: GetLastYearlyachievementBystate(reports),
-                        last_year_sale_percentage_comparison: Math.round((GetLastYearlyachievementBystate(reports) / antarget) * 10000) / 100
+                        state: states[i].toString(),
+                        monthly_target: GetMonthlytargetBystate(states[i], month).toString(),
+                        monthly_achivement: GetMonthlyachievementBystate(reports, month).toString(),
+                        monthly_percentage: (Math.round((GetMonthlyachievementBystate(reports, 6) / GetMonthlytargetBystate(states[i], month)) * 10000) / 100).toString(),
+                        annual_target: antarget.toString(),
+                        annual_achivement: GetYearlyachievementBystate(reports).toString(),
+                        annual_percentage: (Math.round((GetYearlyachievementBystate(reports) / antarget) * 10000) / 100).toString(),
+                        last_year_sale: GetLastYearlyachievementBystate(reports).toString(),
+                        last_year_sale_percentage_comparison: (Math.round((GetLastYearlyachievementBystate(reports) / antarget) * 10000) / 100).toString()
                     })
             }
         }
@@ -119,7 +118,7 @@ export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: R
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: IState[] = xlsx.utils.sheet_to_json(
+        let workbook_response: IErpStateTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         console.log(workbook_response.length)
@@ -481,36 +480,34 @@ export const AssignErpStatesToUsers = async (req: Request, res: Response, next: 
 }
 
 export const GetClientSaleReports = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let reports: IClientSaleReport[] = []
-    let count = 0
     let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        if (req.user?.is_admin) {
-            reports = await ClientSaleReport.find().populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
-            count = await ClientSaleReport.find().countDocuments()
+    let data = (await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
+        console.log(i)
+        return {
+            report_owner: i.report_owner.state,
+            account: i.account,
+            article: i.article,
+            oldqty: i.oldqty,
+            newqty: i.newqty,
+            apr: i.apr,
+            may: i.may,
+            jun: i.jun,
+            jul: i.jul,
+            aug: i.aug,
+            sep: i.sep,
+            oct: i.oct,
+            nov: i.nov,
+            dec: i.dec,
+            jan: i.jan,
+            feb: i.feb,
+            mar: i.mar
         }
-
-        else {
-            reports = await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
-            count = await ClientSaleReport.find({ report_owner: { $in: state_ids } }).countDocuments()
-        }
-
-        return res.status(200).json({
-            reports,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
+    });
+    return res.status(200).json(data)
 }
 
 export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {
-    let result: IClientSaleReport[] = []
+    let result: ClientSaleReportTemplate[] = []
     if (!req.file)
         return res.status(400).json({
             message: "please provide an Excel file",
@@ -524,7 +521,7 @@ export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Res
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: IClientSaleReport[] = xlsx.utils.sheet_to_json(
+        let workbook_response: ClientSaleReportTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         let statusText = ""
@@ -595,36 +592,13 @@ export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Res
     return res.status(200).json(result);
 }
 export const GetClientSaleReportsForLastYear = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let reports: IClientSaleReport[] = []
-    let count = 0
     let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        if (req.user?.is_admin) {
-            reports = await ClientSaleReport.find().populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
-            count = await ClientSaleReport.find().countDocuments()
-        }
-
-        else {
-            reports = await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
-            count = await ClientSaleReport.find({ report_owner: { $in: state_ids } }).countDocuments()
-        }
-
-        return res.status(200).json({
-            reports,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
+    let data = await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner');
+    return res.status(200).json(data)
 }
 
 export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Request, res: Response, next: NextFunction) => {
-    let result: IClientSaleReport[] = []
+    let result: ClientSaleReportTemplate[] = []
     if (!req.file)
         return res.status(400).json({
             message: "please provide an Excel file",
@@ -638,7 +612,7 @@ export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Reques
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: IClientSaleReport[] = xlsx.utils.sheet_to_json(
+        let workbook_response: ClientSaleReportTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         let statusText = ""
@@ -677,7 +651,6 @@ export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Reques
 
             if (validated) {
                 let owner = await State.findOne({ state: report.report_owner })
-                console.log("state", owner?.state, i)
                 if (owner) {
                     await new ClientSaleReport({
                         report_owner: owner,

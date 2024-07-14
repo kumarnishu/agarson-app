@@ -1,7 +1,16 @@
 import mongoose from "mongoose"
-import { IArticle } from "../../types/production.types"
+import { IUser } from "../users/user.model"
 
-
+export type IArticle = {
+    _id: string,
+    name: string,
+    active: boolean,
+    display_name: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 const ArticleSchema = new mongoose.Schema<IArticle, mongoose.Model<IArticle, {}, {}>, {}>({
     name: {
         type: String,

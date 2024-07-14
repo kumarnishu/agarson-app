@@ -1,6 +1,32 @@
 import mongoose from "mongoose"
-import { IVisit } from "../../types/visit.types"
+import { Asset, IUser } from "../users/user.model"
+import { IVisitReport } from "./visit.report.model"
 
+
+export type IVisit = {
+    _id: string,
+    start_day_photo: Asset,
+    end_day_photo: Asset,
+    is_present: boolean
+    real_city: string,
+    start_day_credientials: {
+        latitude: string,
+        longitude: string,
+        timestamp: Date,
+        address: string
+    },
+    end_day_credentials: {
+        latitude: string,
+        longitude: string,
+        timestamp: Date,
+        address: string
+    },
+    visit_reports: IVisitReport[]
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 
 const VisitSchema = new mongoose.Schema<IVisit, mongoose.Model<IVisit, {}, {}>, {}>({
     start_day_credientials: {

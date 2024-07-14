@@ -1,5 +1,22 @@
 import mongoose from "mongoose"
-import { IReferredParty } from "../../types/crm.types"
+import { IUser } from "../users/user.model"
+
+
+export type IReferredParty = {
+    _id: string,
+    name: string,
+    customer_name: string,
+    mobile: string,
+    gst: string,
+    city: string,
+    state: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
+
+
 
 const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<IReferredParty, {}, {}>, {}>({
     name: {

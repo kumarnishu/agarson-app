@@ -197,7 +197,7 @@ export default function LeadsPage() {
       {/*heading, search bar and table menu */}
 
       <Stack
-        spacing={2}
+        spacing={1}
         padding={1}
         direction="row"
         justifyContent="space-between"
@@ -213,7 +213,7 @@ export default function LeadsPage() {
         </Typography>
 
         <TextField
-          sx={{ width: '50vw' }}
+          sx={{ width: '40vw' }}
           size="small"
           onChange={(e) => {
             setFilter(e.currentTarget.value)

@@ -1,5 +1,18 @@
 import mongoose from "mongoose"
-import { IRemark } from "../../types/crm.types"
+import { IUser } from "../users/user.model"
+import { ILead } from "./lead.model"
+
+    
+export type IRemark = {
+    _id: string,
+    remark: string,
+    lead: ILead,
+    created_at: Date,
+    remind_date: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 
 const RemarkSchema = new mongoose.Schema<IRemark, mongoose.Model<IRemark, {}, {}>, {}>({
     remark: {

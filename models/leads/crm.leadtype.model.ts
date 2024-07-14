@@ -1,6 +1,13 @@
 import mongoose from "mongoose"
-import { ILeadType } from "../../types/crm.types"
-
+import { IUser } from "../users/user.model"
+export type ILeadType = {
+    _id: string,
+    type: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 const LeadTypeSchema = new mongoose.Schema<ILeadType, mongoose.Model<ILeadType, {}, {}>, {}>({
     type: {
         type: String,

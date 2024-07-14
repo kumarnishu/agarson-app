@@ -1,6 +1,13 @@
 import mongoose from "mongoose"
-import { IStage } from "../../types/crm.types"
-
+import { IUser } from "../users/user.model"
+export type IStage = {
+    _id: string,
+    stage: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 const StageSchema = new mongoose.Schema<IStage, mongoose.Model<IStage, {}, {}>, {}>({
     stage: {
         type: String,

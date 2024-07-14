@@ -1,5 +1,13 @@
 import mongoose from "mongoose"
-import { IMachineCategory } from "../../types/production.types"
+import { IUser } from "../users/user.model"
+export type IMachineCategory = {
+    _id: string,
+    categories: string[],
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 
 
 const MachineCategorySchema = new mongoose.Schema<IMachineCategory, mongoose.Model<IMachineCategory, {}, {}>, {}>({

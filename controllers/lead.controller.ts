@@ -1,20 +1,17 @@
 import { NextFunction, Request, Response } from "express"
 import isMongoId from "validator/lib/isMongoId"
 import xlsx from "xlsx"
-import Lead from "../models/leads/lead.model.js"
-import { User } from "../models/users/user.model.js"
-import { Remark } from "../models/leads/remark.model.js"
+import Lead, { ILead } from "../models/leads/lead.model.js"
+import { Asset, IUser, User } from "../models/users/user.model.js"
+import { IRemark, Remark } from "../models/leads/remark.model.js"
 import { uploadFileToCloud } from "../utils/uploadFile.util.js"
 import { Types } from "mongoose"
 import { destroyFile } from "../utils/destroyFile.util.js"
-import { ReferredParty } from "../models/leads/referred.model.js"
-import { ICRMCity, ICRMState, ILead, IReferredParty, IRemark, TLeadBody, TReferredPartyBody } from "../types/crm.types.js"
-import { IUser } from "../types/user.types.js"
-import { Asset } from "../types/asset.types.js"
-import { CRMState } from "../models/leads/crm.state.model.js"
+import { IReferredParty, ReferredParty } from "../models/leads/referred.model.js"
+import { CRMState, ICRMState } from "../models/leads/crm.state.model.js"
 import { ICRMCityTemplate, ICRMStateTemplate, ILeadTemplate, IReferTemplate } from "../types/template.type.js"
 import { SaveLeadMobilesToExcel, SaveLeadsToExcel } from "../utils/ExportToExcel.js"
-import { CRMCity } from "../models/leads/crm.city.model.js"
+import { CRMCity, ICRMCity } from "../models/leads/crm.city.model.js"
 import { LeadType } from "../models/leads/crm.leadtype.model.js"
 import { LeadSource } from "../models/leads/crm.source.model.js"
 import { Stage } from "../models/leads/crm.stage.model.js"
@@ -1799,7 +1796,7 @@ export const BackUpAllLeads = async (req: Request, res: Response, next: NextFunc
 
 export const CreateLead = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as TLeadBody & { remark: string }
+    let { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as Request['body'] &ILead& { remark: string }
 
     // validations
     if (!mobile)
@@ -1874,7 +1871,7 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
 
 export const UpdateLead = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as TLeadBody & { remark: string }
+    const { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as Request['body'] &ILead& { remark: string }
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
     let lead = await Lead.findById(id);
@@ -2448,7 +2445,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
 
 export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state, gst, mobile } = body as TReferredPartyBody
+    const { name, customer_name, city, state, gst, mobile } = body as Request['body']&&ReferredParty
     if (!name || !city || !state || !mobile || !gst) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -2474,7 +2471,7 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
     if (!isMongoId(id))
         return res.status(400).json({ message: "bad mongo id" })
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state, mobile, gst } = body as TReferredPartyBody
+    const { name, customer_name, city, state, mobile, gst } = body as Request['body'] && ReferredParty
     if (!name || !city || !state || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }

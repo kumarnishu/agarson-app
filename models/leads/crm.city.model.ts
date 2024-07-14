@@ -1,6 +1,15 @@
 import mongoose from "mongoose"
-import { ICRMCity } from "../../types/crm.types"
+import { IUser } from "../users/user.model"
 
+export type ICRMCity = {
+    _id: string,
+    city: string,
+    state: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 const CRMCitySchema = new mongoose.Schema<ICRMCity, mongoose.Model<ICRMCity, {}, {}>, {}>({
     city: {
         type: String,

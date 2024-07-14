@@ -1,5 +1,14 @@
 import mongoose from "mongoose"
-import { ITemplateCategoryField } from "../../types/template.type"
+import { IUser } from "../users/user.model"
+
+export type ITemplateCategoryField = {
+    _id: string,
+    categories: string[],
+    updated_at: Date,
+    created_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 
 const TemplateCategoryFieldSchema = new mongoose.Schema<ITemplateCategoryField, mongoose.Model<ITemplateCategoryField, {}, {}>, {}>({
     categories: [{

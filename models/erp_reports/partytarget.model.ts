@@ -1,5 +1,52 @@
 import mongoose from "mongoose"
-import { IPartyTargetReport } from "../../types/erp_report.types"
+import { IState } from "./state.model"
+import { IUser } from "../users/user.model"
+
+export type IPartyTargetReport = {
+    _id: string,
+    slno: string,
+    PARTY: string,
+    Create_Date: string,
+    STATION: string,
+    SALES_OWNER: string,
+    report_owner: IState
+    All_TARGET: string,
+    TARGET: number,
+    PROJECTION: number,
+    GROWTH: string,
+    TARGET_ACHIEVE: string,
+    TOTAL_SALE_OLD: number,
+    TOTAL_SALE_NEW: number,
+    Last_Apr: number,
+    Cur_Apr: number,
+    Last_May: number,
+    Cur_May: number,
+    Last_Jun: number,
+    Cur_Jun: number,
+    Last_Jul: number,
+    Cur_Jul: number,
+    Last_Aug: number,
+    Cur_Aug: number,
+    Last_Sep: number,
+    Cur_Sep: number,
+    Last_Oct: number,
+    Cur_Oct: number,
+    Last_Nov: number,
+    Cur_Nov: number,
+    Last_Dec: number,
+    Cur_Dec: number,
+    Last_Jan: number,
+    Cur_Jan: number,
+    Last_Feb: number,
+    Cur_Feb: number,
+    Last_Mar: number,
+    Cur_Mar: number,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser,
+    status?: string
+}
 
 const PartyTargetReportSchema = new mongoose.Schema<IPartyTargetReport, mongoose.Model<IPartyTargetReport, {}, {}>, {}>({
     report_owner: {

@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response } from "express"
 import isMongoId from "validator/lib/isMongoId"
-import { User } from "../models/users/user.model"
-import { ITodo, ITodoTemplate } from "../types/todo.types"
-import { Todo } from "../models/todos/todo.model"
+import { IUser, User } from "../models/users/user.model"
+import { ITodo, ITodoTemplate, Todo } from "../models/todos/todo.model"
 import xlsx from "xlsx"
-import { IUser } from "../types/user.types"
 
 //get
 export const GetMyTodos = async (req: Request, res: Response, next: NextFunction) => {

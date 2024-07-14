@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response, response } from "express"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
-import { IVisit, IVisitBody, IVisitReport, IVisitReportBody } from "../types/visit.types"
-import { Visit } from "../models/visit/visit.model"
-import { VisitReport } from "../models/visit/visit.report.model"
-import { IUser } from "../types/user.types"
+import { IVisit, Visit } from "../models/visit/visit.model"
+import { IVisitReport, VisitReport } from "../models/visit/visit.report.model"
+import { IUser } from "../models/users/user.model"
 
 // get attendence reports
 export const GetVisitsAttendence = async (req: Request, res: Response, next: NextFunction) => {
@@ -109,7 +108,7 @@ export const getMyTodayVisit = async (req: Request, res: Response, next: NextFun
 //post/put/delte/patch
 export const StartMyDay = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { start_day_credientials } = body as IVisitBody
+    let { start_day_credientials } = body as Request['body'] & IVisit
     if (!start_day_credientials) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -167,7 +166,7 @@ export const StartMyDay = async (req: Request, res: Response, next: NextFunction
 
 export const EndMyDay = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { end_day_credentials } = body as IVisitBody
+    let { end_day_credentials } = body as Request['body'] & IVisit
 
     if (!end_day_credentials) {
         return res.status(400).json({ message: "please fill all required fields" })
@@ -230,7 +229,7 @@ export const MakeVisitIn = async (req: Request, res: Response, next: NextFunctio
     let body = JSON.parse(req.body.body)
     let { visit_in_credientials,
         party_name,
-        city, is_old_party, mobile } = body as IVisitReportBody
+        city, is_old_party, mobile } = body as Request['body']&IVisitReport
 
     if (!visit_in_credientials || !party_name || !city || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
@@ -294,7 +293,7 @@ export const AddVisitSummary = async (req: Request, res: Response, next: NextFun
         is_old_party,
         dealer_of,
         refs_given,
-        reviews_taken, turnover } = req.body as IVisitReportBody
+        reviews_taken, turnover } = req.body as Request['body']&IVisitReport
     if (!summary || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -322,7 +321,7 @@ export const EditVisitSummary = async (req: Request, res: Response, next: NextFu
         dealer_of,
         refs_given,
         mobile,
-        reviews_taken, turnover } = req.body as IVisitReportBody
+        reviews_taken, turnover } = req.body as Request['body']&IVisitReport
     if (!summary || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -389,7 +388,7 @@ export const UploadVisitSamplesPhoto = async (req: Request, res: Response, next:
 }
 
 export const AddAnkitInput = async (req: Request, res: Response, next: NextFunction) => {
-    let { input } = req.body as IVisitReportBody & { input: string }
+    let { input } = req.body as Request['body']&IVisitReport & { input: string }
     if (!input) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -415,7 +414,7 @@ export const AddAnkitInput = async (req: Request, res: Response, next: NextFunct
 
 export const MakeVisitOut = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { visit_out_credentials } = body as IVisitReportBody
+    let { visit_out_credentials } = body as Request['body']&IVisitReport
     if (!visit_out_credentials) {
         return res.status(400).json({ message: "please fill all required fields" })
     }

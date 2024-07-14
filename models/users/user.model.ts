@@ -2,7 +2,82 @@ import mongoose from "mongoose"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { IUser, IUserMethods } from "../../types/user.types";
+import { ICRMCity } from "../leads/crm.city.model";
+import { IState } from "../erp_reports/state.model";
+import { ICRMState } from "../leads/crm.state.model";
+
+export type Asset = {
+  _id: string,
+  filename: string,
+  public_url: string,
+  content_type: string,
+  size: string,
+  bucket: string,
+  created_at: Date
+} | undefined
+
+export type FeatureAccess = {
+  is_editable: boolean,
+  is_hidden: boolean,
+  is_deletion_allowed: boolean
+}
+export enum Feature {
+  users = "users",
+  crm = "crm",
+  checklists = "checklists",
+  productions = "productions",
+  visit = "visit",
+  todos = "todos",
+  backup = "backup",
+  templates = "templates",
+  erp_reports = "erp reports",
+}
+
+export type IUser = {
+  _id: string,
+  username: string,
+  password: string,
+  email: string,
+  mobile: string,
+  dp: Asset,
+  client_id: string,
+  connected_number: string,
+  is_admin: Boolean,
+  user_access_fields: FeatureAccess,
+  crm_access_fields: FeatureAccess,
+  productions_access_fields: FeatureAccess,
+  templates_access_fields: FeatureAccess,
+  erp_access_fields: FeatureAccess,
+  backup_access_fields: FeatureAccess,
+  todos_access_fields: FeatureAccess,
+  checklists_access_fields: FeatureAccess,
+  visit_access_fields: FeatureAccess,
+  email_verified: Boolean,
+  mobile_verified: Boolean,
+  show_only_visiting_card_leads: boolean,
+  is_active: Boolean,
+  last_login: Date,
+  multi_login_token: string | null,
+  is_multi_login: boolean,
+  assigned_users: IUser[]
+  assigned_states: IState[]
+  assigned_crm_states: ICRMState[]
+  assigned_crm_cities: ICRMCity[]
+  created_at: Date,
+  updated_at: Date,
+  created_by: IUser,
+  updated_by: IUser
+  resetPasswordToken: string | null,
+  resetPasswordExpire: Date | null,
+  emailVerifyToken: string | null,
+  emailVerifyExpire: Date | null
+}
+export type IUserMethods = {
+  getAccessToken: () => string,
+  comparePassword: (password: string) => boolean,
+  getResetPasswordToken: () => string,
+  getEmailVerifyToken: () => string
+}
 
 const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMethods>, IUserMethods>({
   username: {

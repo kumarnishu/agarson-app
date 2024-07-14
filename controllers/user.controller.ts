@@ -2,13 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import isEmail from "validator/lib/isEmail";
 import { uploadFileToCloud } from '../utils/uploadFile.util';
 import { deleteToken, sendUserToken } from '../middlewares/auth.middleware';
-import { User } from '../models/users/user.model';
+import { Asset, Feature, FeatureAccess, IUser, User } from '../models/users/user.model';
 import isMongoId from "validator/lib/isMongoId";
 import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
-import { IUser, TUserBody } from '../types/user.types';
-import { Asset } from '../types/asset.types';
-import { Feature, FeatureAccess } from '../types/access.types';
 
 
 export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
@@ -283,7 +280,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
     if (users.length > 0)
         return res.status(400).json({ message: "not allowed" })
 
-    let { username, email, password, mobile } = req.body as TUserBody
+    let { username, email, password, mobile } = req.body as Request['body']&IUser
     // validations
     if (!username || !email || !password || !mobile)
         return res.status(400).json({ message: "fill all the required fields" });
@@ -388,7 +385,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
 }
 
 export const NewUser = async (req: Request, res: Response, next: NextFunction) => {
-    let { username, email, password, mobile } = req.body as TUserBody
+    let { username, email, password, mobile } = req.body as Request['body']&IUser
     // validations
     if (!username || !email || !password || !mobile)
         return res.status(400).json({ message: "fill all the required fields" });
@@ -494,7 +491,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
 
 
 export const Login = async (req: Request, res: Response, next: NextFunction) => {
-    const { username, password, multi_login_token } = req.body as TUserBody
+    const { username, password, multi_login_token } = req.body as Request['body']&IUser
     if (!username)
         return res.status(400).json({ message: "please enter username or email" })
     if (!password)
@@ -582,7 +579,7 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
         erp_access_fields,
         productions_access_fields
 
-    } = req.body as TUserBody
+    } = req.body as Request['body']&IUser
 
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
@@ -692,7 +689,7 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
     if (!user) {
         return res.status(404).json({ message: "user not found" })
     }
-    let { email, username, mobile } = req.body as TUserBody;
+    let { email, username, mobile } = req.body as Request['body']&IUser;
     if (!username || !email || !mobile)
         return res.status(400).json({ message: "fill all the required fields" });
     //check username
@@ -755,7 +752,7 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
     if (!user) {
         return res.status(404).json({ message: "user not found" })
     }
-    let { email, mobile } = req.body as TUserBody;
+    let { email, mobile } = req.body as Request['body']&IUser;
     if (!email || !mobile) {
         return res.status(400).json({ message: "please fill required fields" })
     }
@@ -809,7 +806,7 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
 }
 
 export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
-    const { oldPassword, newPassword, confirmPassword } = req.body as TUserBody & { oldPassword: string, newPassword: string, confirmPassword: string };
+    const { oldPassword, newPassword, confirmPassword } = req.body as Request['body']&IUser & { oldPassword: string, newPassword: string, confirmPassword: string };
     if (!oldPassword || !newPassword || !confirmPassword)
         return res.status(400).json({ message: "please fill required fields" })
     if (confirmPassword == oldPassword)
@@ -830,7 +827,7 @@ export const updatePassword = async (req: Request, res: Response, next: NextFunc
 }
 
 export const resetUserPassword = async (req: Request, res: Response, next: NextFunction) => {
-    const { newPassword, confirmPassword } = req.body as TUserBody & { oldPassword: string, newPassword: string, confirmPassword: string };
+    const { newPassword, confirmPassword } = req.body as Request['body']&IUser & { oldPassword: string, newPassword: string, confirmPassword: string };
     if (!newPassword || !confirmPassword)
         return res.status(400).json({ message: "please fill required fields" })
     if (newPassword !== confirmPassword)

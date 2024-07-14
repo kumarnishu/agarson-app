@@ -41,8 +41,8 @@ export const BulkBillsAgingreportFromExcel = async (body: FormData) => {
     return await apiClient.put(`reports/bills/aging`, body)
 }
 
-export const GetClientSaleReports = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
-    return await apiClient.get(`reports/client/sale/?limit=${limit}&page=${page}`)
+export const GetClientSaleReports = async () => {
+    return await apiClient.get(`reports/client/sale`);
 }
 
 export const BulkClientSalereportFromExcel = async (body: FormData) => {

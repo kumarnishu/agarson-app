@@ -1,5 +1,4 @@
-import { IVisit } from "../types/visit.types"
-import { Visit } from "../models/visit/visit.model"
+import { IVisit, Visit } from "../models/visit/visit.model"
 import PdfPrinter from "pdfmake"
 import path from "path"
 import { Content } from "pdfmake/interfaces"

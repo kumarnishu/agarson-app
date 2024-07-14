@@ -1,6 +1,13 @@
 import mongoose from "mongoose"
-import { ICRMState } from "../../types/crm.types"
-
+import { IUser } from "../users/user.model"
+export type ICRMState = {
+    _id: string,
+    state: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 const CRMStateSchema = new mongoose.Schema<ICRMState, mongoose.Model<ICRMState, {}, {}>, {}>({
     state: {
         type: String,

@@ -1,6 +1,6 @@
 import { utils, writeFileXLSX } from "xlsx";
-import { ILead } from "../types/crm.types";
 import { ILeadTemplate } from "../types/template.type";
+import { ILead } from "../models/leads/lead.model";
 
 export function SaveToExcel(data: any[]) {
     const ws = utils.json_to_sheet(data);

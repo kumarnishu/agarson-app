@@ -57,6 +57,7 @@ function UploadClientSalesButton({ disabled }: { disabled: boolean }) {
                         <Button
                             component="label"
                             disabled={Boolean(disabled)}
+                            variant="contained"
                         >
                             <Upload />
                             <FileInput

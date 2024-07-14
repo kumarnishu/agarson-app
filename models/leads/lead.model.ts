@@ -1,6 +1,45 @@
 import mongoose from "mongoose";
-import { ILead } from "../../types/crm.types";
+import { IRemark } from "./remark.model";
+import { Asset, IUser } from "../users/user.model";
+import { IReferredParty } from "./referred.model";
 
+
+
+export type ILead = {
+    _id: string,
+    name: string,
+    customer_name: string,
+    customer_designation: string,
+    mobile: string,
+    gst: string,
+    has_card: boolean,
+    email: string,
+    city: string,
+    state: string,
+    country: string,
+    address: string,
+    work_description: string,
+    turnover: string,
+    alternate_mobile1: string,
+    alternate_mobile2: string,
+    alternate_email: string,
+    lead_type: string
+    stage: string
+    lead_source: string
+    remarks: IRemark[]
+    visiting_card: Asset,
+    is_customer: boolean,
+    last_whatsapp: Date,
+    is_sent: boolean,
+    referred_party?: IReferredParty,
+    referred_party_name?: string,
+    referred_party_mobile?: string,
+    referred_date?: Date,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
     name: {
         type: String,

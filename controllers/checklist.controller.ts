@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express"
-import { IChecklist, IChecklistBody } from "../types/checklist.types";
 import { User } from "../models/users/user.model";
 import isMongoId from "validator/lib/isMongoId";
 import { isvalidDate } from "../utils/isValidDate";
-import { Checklist } from "../models/checklist/checklist.model";
+import { Checklist, IChecklist } from "../models/checklist/checklist.model";
 
 //get
 export const GetCheckLists = async (req: Request, res: Response, next: NextFunction) => {
@@ -75,7 +74,7 @@ export const GetMyCheckLists = async (req: Request, res: Response, next: NextFun
 
 //post/put/delete/patch
 export const CreateChecklist = async (req: Request, res: Response, next: NextFunction) => {
-    const { title, sheet_url, upto_date, start_date } = req.body as IChecklistBody & { upto_date: string, start_date: string }
+    const { title, sheet_url, upto_date, start_date } = req.body as Request['body'] & IChecklist & { upto_date: string, start_date: string }
 
     let id = req.params.id
     if (!title || !sheet_url || !id || !upto_date)
@@ -116,7 +115,7 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
 }
 
 export const EditChecklist = async (req: Request, res: Response, next: NextFunction) => {
-    const { title, sheet_url, user_id, serial_no } = req.body as IChecklistBody & { user_id: string }
+    const { title, sheet_url, user_id, serial_no } = req.body as Request['body']&IChecklist & { user_id: string }
 
     let id = req.params.id
     if (!title || !sheet_url || !serial_no)
@@ -142,7 +141,7 @@ export const EditChecklist = async (req: Request, res: Response, next: NextFunct
 
 
 export const AddMoreCheckBoxes = async (req: Request, res: Response, next: NextFunction) => {
-    const { upto_date } = req.body as IChecklistBody & { upto_date: string }
+    const { upto_date } = req.body as Request['body'] &IChecklist & { upto_date: string }
     let id = req.params.id
     if (!id || !upto_date)
         return res.status(400).json({ message: "please provide all required fields" })
