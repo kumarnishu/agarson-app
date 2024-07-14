@@ -1,44 +1,223 @@
-import { Box, InputAdornment, LinearProgress, TextField, Typography } from '@mui/material'
+import { Box, Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../components/styled/STyledTable'
-import { Search } from '@mui/icons-material'
-import FuzzySearch from 'fuzzy-search'
-import { ISaleAnalysisReport } from '../../types/template.type'
-import { GetSaleAnalysisReports } from '../../services/ErpServices'
-import { months } from '../../utils/months'
+import { GetClientSaleReports } from '../../services/ErpServices'
+import { UserContext } from '../../contexts/userContext'
+import { Download } from '@mui/icons-material'
+import ExportToExcel from '../../utils/ExportToExcel'
+import AlertBar from '../../components/snacks/AlertBar'
+import UploadClientSalesButton from '../../components/buttons/UploadClientSalesButton'
+import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 
+
+export type ClientSaleReportTemplate = {
+  report_owner: string,
+  account: string,
+  article: string,
+  oldqty: number,
+  newqty: number,
+  apr: number,
+  may: number,
+  jun: number,
+  jul: number,
+  aug: number,
+  sep: number,
+  oct: number,
+  nov: number,
+  dec: number,
+  jan: number,
+  feb: number,
+  mar: number
+}
 export default function SaleAnalysisReport() {
-  const [month,setMonth]=useState(new Date().getMonth())
-  const [reports, setSaleAnalysissReport] = useState<ISaleAnalysisReport[]>([])
-  const [filter, setFilter] = useState<string | undefined>()
-  const [preFilteredData, setPreFilteredData] = useState<ISaleAnalysisReport[]>([])
-  const { data, isLoading } = useQuery<AxiosResponse<ISaleAnalysisReport[]>, BackendError>(["sale_analysisreports",month],async()=> GetSaleAnalysisReports(month))
+  const [reports, setClientSaleReports] = useState<ClientSaleReportTemplate[]>([])
+  const { user } = useContext(UserContext)
+  const [sent, setSent] = useState(false)
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ClientSaleReportTemplate[]>, BackendError>("reports", GetClientSaleReports)
+  const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
+  const columns = useMemo<MRT_ColumnDef<ClientSaleReportTemplate>[]>(
+    //column definitions...
+    () => [
+      {
+        accessorKey: 'report_owner',
+        header: 'State',
+        width: '50'
+      },
+      {
+        accessorKey: 'account',
+        header: 'Account',
+        size: 200
+      },
+      {
+        accessorKey: 'article',
+        header: 'Article',
+        Footer: <b>Total</b>,
+        size: 150
+      },
+      {
+        accessorKey: 'oldqty',
+        header: 'Old Qty',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oldqty) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'newqty',
+        header: 'New Qty',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.newqty) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'apr',
+        header: 'APR',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.apr) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'may',
+        header: 'MAY',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.may) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'jun',
+        header: 'JUN',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jun) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'jul',
+        header: 'JUL',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jul) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'aug',
+        header: 'AUG',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.aug) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'sep',
+        header: 'SEP',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.sep) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'oct',
+        header: 'OCT',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oct) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'nov',
+        header: 'NOV',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.nov) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'dec',
+        header: 'DEC',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.dec) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'jan',
+        header: 'JAN',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jan) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'feb',
+        header: 'FEB',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.feb) }, 0).toFixed()}</b>
+      },
+      {
+        accessorKey: 'mar',
+        header: 'MAR',
+        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.mar) }, 0).toFixed()}</b>
+      }
+    ],
+    [reports],
+    //end
+  );
+
+
+  function handleExcel() {
+    try {
+      let data: ClientSaleReportTemplate[] = [
+        {
+          report_owner: "Goa",
+          account: "agarson safety",
+          article: "34",
+          oldqty: 3434,
+          newqty: 4343,
+          apr: 23,
+          may: 34,
+          jun: 223,
+          jul: 445,
+          aug: 66,
+          sep: 34,
+          oct: 66,
+          nov: 34,
+          dec: 67,
+          jan: 7,
+          feb: 666,
+          mar: 555,
+        }
+      ]
+      ExportToExcel(data, "client_sale_template")
+      setSent(true)
+    }
+    catch (err) {
+      console.log(err)
+      setSent(false)
+    }
+  }
 
   useEffect(() => {
-    if (filter) {
-      const searcher = new FuzzySearch(reports, ["state.state"], {
-        caseSensitive: false,
-      });
-      const result = searcher.search(filter);
-      setSaleAnalysissReport(result)
+    if (typeof window !== 'undefined' && isSuccess) {
+      setClientSaleReports(data.data);
     }
-    if (!filter)
-      setSaleAnalysissReport(preFilteredData)
-
-  }, [filter])
+  }, [isSuccess]);
 
   useEffect(() => {
-    if (data && !filter) {
-      setSaleAnalysissReport(data.data)
-      setPreFilteredData(data.data)
+    //scroll to the top of the table when the sorting changes
+    try {
+      rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
+    } catch (error) {
+      console.error(error);
     }
-  }, [data])
+  }, [sorting]);
+
+  const table = useMaterialReactTable({
+    columns,
+    data: reports, //10,000 rows
+    defaultDisplayColumn: { enableResizing: true },
+    enableBottomToolbar: false,
+    enableColumnResizing: true,
+    enableColumnVirtualization: true,
+    muiTableHeadRowProps: () => ({
+      sx: {
+        backgroundColor: 'yellow',
+        color: 'white'
+      },
+    }),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        fontSize: '13px',
+        border: '1px solid #ddd;'
+      },
+    }),
+    enableRowSelection: true,
+    enableGlobalFilterModes: true,
+    enablePagination: false,
+    enableColumnPinning: true,
+    enableTableFooter: true,
+    enableRowNumbers: true,
+    enableRowVirtualization: true,
+    muiTableContainerProps: { sx: { maxHeight: '600px' } },
+    onSortingChange: setSorting,
+    state: { isLoading, sorting },
+    rowVirtualizerInstanceRef, //optional
+    rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
+    columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+  });
+
+
+
 
   return (
     <>
@@ -46,6 +225,8 @@ export default function SaleAnalysisReport() {
       {
         isLoading && <LinearProgress />
       }
+
+      {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
       <Stack
         spacing={2}
@@ -57,201 +238,28 @@ export default function SaleAnalysisReport() {
         <Typography
           variant={'h6'}
           component={'h1'}
+          sx={{ pl: 1 }}
         >
-          Sale Analysis Report
+         Sales Analysis {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
         </Typography>
-        < TextField
-          select
-          SelectProps={{
-            native: true
-          }}
-          id="stage"
-          size="small"
-          label="Selected Month"
-          sx={{ width: '200px' }}
-          value={month}
-          onChange={(e) => {
-            setMonth(Number(e.target.value));
-          }
-          }
-        >
-          {
-            months.map(month => {
-              return (<option key={month.month} value={month.month}>
-                {month.label}
-              </option>)
-            })
-          }
-        </TextField>
         <Stack direction={'row'} gap={2} alignItems={'center'}>
-          <TextField
-            fullWidth
-            size="small"
-            onChange={(e) => {
-              setFilter(e.currentTarget.value)
-            }}
-            placeholder={`${reports?.length} records...`}
-            style={{
-              fontSize: '1.1rem',
-              border: '0',
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-          />
+          {user?.erp_access_fields.is_editable && <>
+            <UploadClientSalesButton disabled={!user?.erp_access_fields.is_editable} />
+            <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
+          </>}
         </Stack>
 
 
       </Stack >
-
-      {/* table */}
-      {isLoading && <TableSkeleton />}
-      {!isLoading && <Box sx={{
+      <Box sx={{
         overflow: "auto",
-        height: '78vh'
-      }}>
-        <STable
-        >
-          <STableHead
-          >
-            <STableRow>
-              <STableHeadCell
-              >
-                State
-              </STableHeadCell>
-              <STableHeadCell
-              >
-                Monthly Target
-              </STableHeadCell>
-              <STableHeadCell
-              >
-                Monthly Achievement
-              </STableHeadCell>
-              <STableHeadCell
-              >
-                Monthly Percentage(%)
-              </STableHeadCell>
-              <STableHeadCell
-              >
-                Annual Target
-              </STableHeadCell>
-              <STableHeadCell
-              >
-                Annual Achievement
-              </STableHeadCell>
-              <STableHeadCell
-              >
-                Annual Percentage(%)
-              </STableHeadCell>
-              <STableHeadCell
-              >
-                Annual Old Sale
-              </STableHeadCell>
-              <STableHeadCell
-              >
-                Comparison Last Year(%)
-              </STableHeadCell>
-            </STableRow>
-          </STableHead>
-          <STableBody >
-            {
-              reports && reports.map((report, index) => {
-                return (
-                  <STableRow
-                    key={index}
-                  >
-
-                    <STableCell
-                    >
-                      {report.state&&report.state.state}
-                    </STableCell>
-                    <STableCell
-                    >
-                      {report.monthly_target && report.monthly_target}
-                    </STableCell>
-                    <STableCell
-                    >
-                      {report.monthly_achivement && report.monthly_achivement}
-                    </STableCell>
-                    <STableCell
-                    >
-                      {report.monthly_percentage && report.monthly_percentage}
-                    </STableCell>
-                    <STableCell
-                    >
-                      {report.annual_target && report.annual_target}
-                    </STableCell>
-                    <STableCell
-                    >
-                      {report.annual_achivement && report.annual_achivement}
-                    </STableCell>
-                    <STableCell
-                    >
-                      {report.annual_percentage && report.annual_percentage}
-                    </STableCell>
-                    <STableCell
-                    >
-                      {report.last_year_sale && report.last_year_sale}
-                    </STableCell>
-                    <STableCell
-                    >
-                      {report.last_year_sale_percentage_comparison && report.last_year_sale_percentage_comparison}
-                    </STableCell>
-                  </STableRow>
-                )
-              })}
-            <STableRow
-              key={'dfd'}
-              style={{background:'lightgrey'}}
-            >
-
-             
-              <STableCell
-              >
-               Total 
-              </STableCell>
-              <STableCell
-              >
-                {reports.reduce((a, b) => { return Number(a) + Number(b.monthly_target) }, 0).toFixed()}
-              </STableCell>
-              <STableCell
-              >
-                {reports.reduce((a, b) => { return Number(a) + Number(b.monthly_achivement) }, 0).toFixed()}
-              </STableCell>
-              <STableCell
-              >
-                {reports.reduce((a, b) => { return Number(a) + Number(b.monthly_percentage) }, 0).toFixed()}
-             
-              </STableCell>
-              <STableCell
-              >
-                {reports.reduce((a, b) => { return Number(a) + Number(b.annual_target) }, 0).toFixed()}
-              </STableCell>
-              <STableCell
-              >
-                {reports.reduce((a, b) => { return Number(a) + Number(b.annual_achivement) }, 0).toFixed()}
-              </STableCell>
-              <STableCell
-              >
-                {reports.reduce((a, b) => { return Number(a) + Number(b.annual_percentage) }, 0).toFixed()}
-              </STableCell>
-              <STableCell
-              >
-                {reports.reduce((a, b) => { return Number(a) + Number(b.last_year_sale) }, 0).toFixed()}
-              </STableCell>
-              <STableCell
-              >
-                {reports.reduce((a, b) => { return Number(a) + Number(b.last_year_sale_percentage_comparison) }, 0).toFixed()}
-              </STableCell>
-            </STableRow>
-
-          </STableBody>
-        </STable>
-      </Box >}
+        height: '80vh'
+      }}
+        className='hideme'
+      >
+        {/* table */}
+        {!isLoading && data && <MaterialReactTable table={table} />}
+      </Box>
     </>
 
   )

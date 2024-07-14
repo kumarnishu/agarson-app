@@ -2,25 +2,25 @@ import mongoose from "mongoose"
 import { IState } from "./state.model"
 import { IUser } from "../users/user.model"
 
-export type ILastYearClientSaleReport = {
+export type IClientSaleLastYearReport = {
     _id: string,
     report_owner: IState
     account: string,
     article: string,
-    oldqty: string,
-    newqty: string,
-    apr: string,
-    may: string,
-    jun: string,
-    jul: string,
-    aug: string,
-    sep: string,
-    oct: string,
-    nov: string,
-    dec: string,
-    jan: string,
-    feb: string,
-    mar: string,
+    oldqty: number,
+    newqty: number,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
@@ -32,29 +32,26 @@ export type IClientSaleReport = {
     report_owner: IState
     account: string,
     article: string,
-    oldqty: string,
-    newqty: string,
-    apr: string,
-    may: string,
-    jun: string,
-    jul: string,
-    aug: string,
-    sep: string,
-    oct: string,
-    nov: string,
-    dec: string,
-    jan: string,
-    feb: string,
-    mar: string,
+    oldqty: number,
+    newqty: number,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
     updated_by: IUser,
     status?: string
 }
-
-
-
 
 const ClientSaleReportSchema = new mongoose.Schema<IClientSaleReport, mongoose.Model<IClientSaleReport, {}, {}>, {}>({
     report_owner: {
@@ -63,20 +60,20 @@ const ClientSaleReportSchema = new mongoose.Schema<IClientSaleReport, mongoose.M
     },
     account: String,
     article: String,
-    oldqty: String,
-    newqty: String,
-    apr: String,
-    may: String,
-    jun: String,
-    jul: String,
-    aug: String,
-    sep: String,
-    oct: String,
-    nov: String,
-    dec: String,
-    jan: String,
-    feb: String,
-    mar: String,
+    oldqty: {type:Number,default:0},
+    newqty: {type:Number,default:0},
+    apr: {type:Number,default:0},
+    may: {type:Number,default:0},
+    jun: {type:Number,default:0},
+    jul: {type:Number,default:0},
+    aug: {type:Number,default:0},
+    sep: {type:Number,default:0},
+    oct: {type:Number,default:0},
+    nov: {type:Number,default:0},
+    dec: {type:Number,default:0},
+    jan: {type:Number,default:0},
+    feb: {type:Number,default:0},
+    mar: {type:Number,default:0},
     created_at: {
         type: Date,
         default: new Date(),
@@ -101,28 +98,27 @@ const ClientSaleReportSchema = new mongoose.Schema<IClientSaleReport, mongoose.M
     }
 })
 
-
-const LastYearClientSaleReportSchema = new mongoose.Schema<ILastYearClientSaleReport, mongoose.Model<ILastYearClientSaleReport, {}, {}>, {}>({
+const ClientSaleLastYearReportSchema = new mongoose.Schema<IClientSaleLastYearReport, mongoose.Model<IClientSaleLastYearReport, {}, {}>, {}>({
     report_owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'State'
     },
     account: String,
     article: String,
-    oldqty: String,
-    newqty: String,
-    apr: String,
-    may: String,
-    jun: String,
-    jul: String,
-    aug: String,
-    sep: String,
-    oct: String,
-    nov: String,
-    dec: String,
-    jan: String,
-    feb: String,
-    mar: String,
+    oldqty: { type: Number, default: 0 },
+    newqty: { type: Number, default: 0 },
+    apr: { type: Number, default: 0 },
+    may: { type: Number, default: 0 },
+    jun: { type: Number, default: 0 },
+    jul: { type: Number, default: 0 },
+    aug: { type: Number, default: 0 },
+    sep: { type: Number, default: 0 },
+    oct: { type: Number, default: 0 },
+    nov: { type: Number, default: 0 },
+    dec: { type: Number, default: 0 },
+    jan: { type: Number, default: 0 },
+    feb: { type: Number, default: 0 },
+    mar: { type: Number, default: 0 },
     created_at: {
         type: Date,
         default: new Date(),
@@ -147,6 +143,6 @@ const LastYearClientSaleReportSchema = new mongoose.Schema<ILastYearClientSaleRe
     }
 })
 
-export const LastYearClientSaleReport = mongoose.model<ILastYearClientSaleReport, mongoose.Model<ILastYearClientSaleReport, {}, {}>>("LastYearClientSaleReport", LastYearClientSaleReportSchema)
+export const ClientSaleLastYearReport = mongoose.model<IClientSaleLastYearReport, mongoose.Model<IClientSaleLastYearReport, {}, {}>>("ClientSaleLastYearReport", ClientSaleLastYearReportSchema)
 
 export const ClientSaleReport = mongoose.model<IClientSaleReport, mongoose.Model<IClientSaleReport, {}, {}>>("ClientSaleReport", ClientSaleReportSchema)

@@ -1,66 +1,164 @@
-import { Box, Button, InputAdornment, LinearProgress, TextField, Typography } from '@mui/material'
+import { Box, Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
-import DBPagination from '../../components/pagination/DBpagination';
 import { BackendError } from '../..'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { IPendingOrdersReport } from '../../types/erp_report.types'
-import { GetPendingOrdersReports } from '../../services/ErpServices'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../components/styled/STyledTable'
-import UploadPendingOrdersButton from '../../components/buttons/UploadPendingOrdersButton'
+import { GetClientSaleReports } from '../../services/ErpServices'
 import { UserContext } from '../../contexts/userContext'
-import { Download, Search } from '@mui/icons-material'
+import { Download } from '@mui/icons-material'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import FuzzySearch from 'fuzzy-search'
-import moment from 'moment'
+import UploadClientSalesButton from '../../components/buttons/UploadClientSalesButton'
+import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 
-export default function PendingOrdersReportPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 2000, page: 1, total: 1 });
-    const [reports, setPendingOrdersReport] = useState<IPendingOrdersReport[]>([])
+
+export type ClientSaleReportTemplate = {
+    report_owner: string,
+    account: string,
+    article: string,
+    oldqty: number,
+    newqty: number,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number
+}
+export default function PendingOrdersReport() {
+    const [reports, setClientSaleReports] = useState<ClientSaleReportTemplate[]>([])
     const { user } = useContext(UserContext)
     const [sent, setSent] = useState(false)
-    const [filter, setFilter] = useState<string | undefined>()
-    const [preFilteredData, setPreFilteredData] = useState<IPendingOrdersReport[]>([])
-    const { data, isLoading } = useQuery<AxiosResponse<{ reports: IPendingOrdersReport[], page: number, total: number, limit: number }>, BackendError>(["reports", paginationData], async () => GetPendingOrdersReports({ limit: paginationData?.limit, page: paginationData?.page }))
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ClientSaleReportTemplate[]>, BackendError>("reports", GetClientSaleReports)
+    const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+    const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
+    const columns = useMemo<MRT_ColumnDef<ClientSaleReportTemplate>[]>(
+        //column definitions...
+        () => [
+            {
+                accessorKey: 'report_owner',
+                header: 'State',
+                width: '50'
+            },
+            {
+                accessorKey: 'account',
+                header: 'Account',
+                size: 200
+            },
+            {
+                accessorKey: 'article',
+                header: 'Article',
+                Footer: <b>Total</b>,
+                size: 150
+            },
+            {
+                accessorKey: 'oldqty',
+                header: 'Old Qty',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oldqty) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'newqty',
+                header: 'New Qty',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.newqty) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'apr',
+                header: 'APR',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.apr) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'may',
+                header: 'MAY',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.may) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'jun',
+                header: 'JUN',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jun) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'jul',
+                header: 'JUL',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jul) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'aug',
+                header: 'AUG',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.aug) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'sep',
+                header: 'SEP',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.sep) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'oct',
+                header: 'OCT',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oct) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'nov',
+                header: 'NOV',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.nov) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'dec',
+                header: 'DEC',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.dec) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'jan',
+                header: 'JAN',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jan) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'feb',
+                header: 'FEB',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.feb) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'mar',
+                header: 'MAR',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.mar) }, 0).toFixed()}</b>
+            }
+        ],
+        [reports],
+        //end
+    );
+
 
     function handleExcel() {
         try {
-            let data = [
+            let data: ClientSaleReportTemplate[] = [
                 {
                     report_owner: "Goa",
                     account: "agarson safety",
-                    product_family: "REXIN SD-CTN",
-                    article: "PV0705GP-BLACK/ORANGE",
-                    size5: 0,
-                    size6: 0,
-                    size7: 0,
-                    size8: 0,
-                    size9: 0,
-                    size10: 0,
-                    size11: 0,
-                    size12_24pairs: 0,
-                    size13: 0,
-                    size11x12: 0,
-                    size3: 0,
-                    size4: 0,
-                    size6to10: 0,
-                    size7to10: 0,
-                    size8to10: 0,
-                    size4to8: 0,
-                    size6to9: 0,
-                    size5to8: 0,
-                    size6to10A: 0,
-                    size7to10B: 0,
-                    size6to9A: 0,
-                    size11close: 0,
-                    size11to13: 0,
-                    size3to8: 0,
+                    article: "34",
+                    oldqty: 3434,
+                    newqty: 4343,
+                    apr: 23,
+                    may: 34,
+                    jun: 223,
+                    jul: 445,
+                    aug: 66,
+                    sep: 34,
+                    oct: 66,
+                    nov: 34,
+                    dec: 67,
+                    jan: 7,
+                    feb: 666,
+                    mar: 555,
                 }
             ]
-            ExportToExcel(data, "pending_orders_template")
+            ExportToExcel(data, "client_sale_template")
             setSent(true)
         }
         catch (err) {
@@ -68,31 +166,58 @@ export default function PendingOrdersReportPage() {
             setSent(false)
         }
     }
-    useEffect(() => {
-        if (filter) {
-            const searcher = new FuzzySearch(reports, ["report_owner.state", "account", "article"], {
-                caseSensitive: false,
-            });
-            const result = searcher.search(filter);
-            setPendingOrdersReport(result)
-        }
-        if (!filter)
-            setPendingOrdersReport(preFilteredData)
-
-    }, [filter])
 
     useEffect(() => {
-        if (data && !filter) {
-            setPendingOrdersReport(data.data.reports)
-            setPaginationData({
-                ...paginationData,
-                page: data.data.page,
-                limit: data.data.limit,
-                total: data.data.total
-            })
-            setPreFilteredData(data.data.reports)
+        if (typeof window !== 'undefined' && isSuccess) {
+            setClientSaleReports(data.data);
         }
-    }, [data])
+    }, [isSuccess]);
+
+    useEffect(() => {
+        //scroll to the top of the table when the sorting changes
+        try {
+            rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
+        } catch (error) {
+            console.error(error);
+        }
+    }, [sorting]);
+
+    const table = useMaterialReactTable({
+        columns,
+        data: reports, //10,000 rows
+        defaultDisplayColumn: { enableResizing: true },
+        enableBottomToolbar: false,
+        enableColumnResizing: true,
+        enableColumnVirtualization: true,
+        muiTableHeadRowProps: () => ({
+            sx: {
+                backgroundColor: 'yellow',
+                color: 'white'
+            },
+        }),
+        muiTableBodyCellProps: () => ({
+            sx: {
+                fontSize: '13px',
+                border: '1px solid #ddd;'
+            },
+        }),
+        enableRowSelection: true,
+        enableGlobalFilterModes: true,
+        enablePagination: false,
+        enableColumnPinning: true,
+        enableTableFooter: true,
+        enableRowNumbers: true,
+        enableRowVirtualization: true,
+        muiTableContainerProps: { sx: { maxHeight: '600px' } },
+        onSortingChange: setSorting,
+        state: { isLoading, sorting },
+        rowVirtualizerInstanceRef, //optional
+        rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
+        columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+    });
+
+
+
 
     return (
         <>
@@ -102,6 +227,7 @@ export default function PendingOrdersReportPage() {
             }
 
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
+
             <Stack
                 spacing={2}
                 padding={1}
@@ -114,456 +240,26 @@ export default function PendingOrdersReportPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    Pending orders
+                    Client Sale {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     {user?.erp_access_fields.is_editable && <>
-                        <UploadPendingOrdersButton disabled={!user?.erp_access_fields.is_editable} />
-                        <Button onClick={handleExcel}> <Download /> Template</Button>
-
+                        <UploadClientSalesButton disabled={!user?.erp_access_fields.is_editable} />
+                        <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
                     </>}
-                    <TextField
-                        fullWidth
-                        size="small"
-                        onChange={(e) => {
-                            setFilter(e.currentTarget.value)
-                        }}
-                        placeholder={`${reports?.length} records...`}
-                        style={{
-                            fontSize: '1.1rem',
-                            border: '0',
-                        }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Search />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
                 </Stack>
 
 
             </Stack >
-
-            {/* table */}
-            {isLoading && <TableSkeleton />}
-            {!isLoading && <Box sx={{
+            <Box sx={{
                 overflow: "auto",
-                height: '78vh'
-            }}>
-                <STable
-                >
-                    <STableHead
-                    >
-                        <STableRow>
-                            <STableHeadCell style={{ padding: '8px' }}
-                            >
-                                Upload Date
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                State
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Account
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Article
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Total
-                            </STableHeadCell>
-                            {reports.find((r) => r.size5 > 0) && <STableHeadCell
-                            >
-                                5
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size6 > 0) && <STableHeadCell
-                            >
-                                6
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size7 > 0) && <STableHeadCell
-                            >
-                                7
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size8 > 0) && <STableHeadCell
-                            >
-                                8
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size9 > 0) && <STableHeadCell
-                            >
-                                9
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size10 > 0) && <STableHeadCell
-                            >
-                                10
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size11 > 0) && <STableHeadCell
-                            >
-                                11
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size12_24pairs > 0) && <STableHeadCell
-                            >
-                                12(24PS)
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size13 > 0) && <STableHeadCell
-                            >
-                                13
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size11x12 > 0) && <STableHeadCell
-                            >
-                                11x12
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size3 > 0) && <STableHeadCell
-                            >
-                                3
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size4 > 0) && <STableHeadCell
-                            >
-                                4
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size6to10 > 0) && <STableHeadCell
-                            >
-                                6x10
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size7to10 > 0) && <STableHeadCell
-                            >
-                                7x10
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size8to10 > 0) && <STableHeadCell
-                            >
-                                8x10
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size4to8 > 0) && <STableHeadCell
-                            >
-                                4x8
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size6to9 > 0) && <STableHeadCell
-                            >
-                                6x9
-                            </STableHeadCell>}
-
-                            {reports.find((r) => r.size5to8 > 0) && <STableHeadCell
-                            >
-                                5x8
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size6to10A > 0) && <STableHeadCell
-                            >
-                                6x10A
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size7to10B > 0) && <STableHeadCell
-                            >
-                                7x10B
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size6to9A > 0) && <STableHeadCell
-                            >
-                                6x9A
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size11close > 0) && <STableHeadCell
-                            >
-                                11Close
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size11to13 > 0) && <STableHeadCell
-                            >
-                                11x13
-                            </STableHeadCell>}
-                            {reports.find((r) => r.size3to8 > 0) && <STableHeadCell
-                            >
-                                3x8
-                            </STableHeadCell>}
-                        </STableRow>
-                    </STableHead>
-                    <STableBody >
-                        {
-                            reports && reports.map((report, index) => {
-                                return (
-                                    <STableRow
-                                        key={index}
-                                    >
-                                        <STableCell style={{ padding: '10px' }}>
-                                            {report.created_at && moment(new Date(report.created_at)).format('DD/MM/YY')}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.report_owner && report.report_owner.state && report.report_owner.state}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.account && report.account.slice(0, 60)}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.article && report.article.slice(0, 60)}
-                                        </STableCell>
-                                        <STableCell>
-                                            <b style={{ fontSize: 12, letterSpacing: '1px' }}>{
-                                                Number(report.size5) +
-                                                Number(report.size6) +
-                                                Number(report.size7) +
-                                                Number(report.size8) +
-                                                Number(report.size9) +
-                                                Number(report.size10) +
-                                                Number(report.size11) +
-                                                Number(report.size12_24pairs) +
-                                                Number(report.size13) +
-                                                Number(report.size11x12) +
-                                                Number(report.size3) +
-                                                Number(report.size4) +
-                                                Number(report.size6to10) +
-                                                Number(report.size7to10) +
-                                                Number(report.size4to8) +
-                                                Number(report.size6to9) +
-                                                Number(report.size5to8) +
-                                                Number(report.size6to10A) +
-                                                Number(report.size7to10B) +
-                                                Number(report.size6to9A) +
-                                                Number(report.size11close) +
-                                                Number(report.size11to13) +
-                                                Number(report.size3to8)
-                                            }</b>
-                                        </STableCell>
-                                        {reports.find((r) => r.size5 > 0) && <STableCell
-                                        >
-                                            {report.size5 ? report.size5 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size6 > 0) && <STableCell
-                                        >
-                                            {report.size6 ? report.size6 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size7 > 0) && <STableCell
-                                        >
-                                            {report.size7 ? report.size7 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size8 > 0) && <STableCell
-                                        >
-                                            {report.size8 ? report.size8 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size9 > 0) && <STableCell
-                                        >
-                                            {report.size9 ? report.size9 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size10 > 0) && <STableCell
-                                        >
-                                            {report.size10 ? report.size10 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size11 > 0) && <STableCell
-                                        >
-                                            {report.size11 ? report.size11 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size12_24pairs > 0) && <STableCell
-                                        >
-                                            {report.size12_24pairs ? report.size12_24pairs : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size13 > 0) && <STableCell
-                                        >
-                                            {report.size13 ? report.size13 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size11x12 > 0) && <STableCell
-                                        >
-                                            {report.size11x12 ? report.size11x12 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size3 > 0) && <STableCell
-                                        >
-                                            {report.size3 ? report.size3 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size4 > 0) && <STableCell
-                                        >
-                                            {report.size4 ? report.size4 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size6to10 > 0) && <STableCell
-                                        >
-                                            {report.size6to10 ? report.size6to10 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size7to10 > 0) && <STableCell
-                                        >
-                                            {report.size7to10 ? report.size7to10 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size8to10 > 0) && <STableCell
-                                        >
-                                            {report.size8to10 ? report.size8to10 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size4to8 > 0) && <STableCell
-                                        >
-                                            {report.size4to8 ? report.size4to8 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size6to9 > 0) && <STableCell
-                                        >
-                                            {report.size6to9 ? report.size6to9 : ""}
-                                        </STableCell>}
-
-                                        {reports.find((r) => r.size5to8 > 0) && <STableCell
-                                        >
-                                            {report.size5to8 ? report.size5to8 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size6to10A > 0) && <STableCell
-                                        >
-                                            {report.size6to10A ? report.size6to10A : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size7to10B > 0) && <STableCell
-                                        >
-                                            {report.size7to10B ? report.size7to10B : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size6to9A > 0) && <STableCell
-                                        >
-                                            {report.size6to9A ? report.size6to9A : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size11close > 0) && <STableCell
-                                        >
-                                            {report.size11close ? report.size11close : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size11to13 > 0) && <STableCell
-                                        >
-                                            {report.size11to13 ? report.size11to13 : ""}
-                                        </STableCell>}
-                                        {reports.find((r) => r.size3to8 > 0) && <STableCell
-                                        >
-                                            {report.size3to8 ? report.size3to8 : ""}
-                                        </STableCell>}
-                                    </STableRow>
-                                )
-                            })}
-                        <STableRow>
-                            <STableCell>
-
-                            </STableCell>
-                            <STableCell>
-
-                            </STableCell>
-                            <STableCell>
-
-                            </STableCell>
-                            <STableCell>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size5) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size7) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size8) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size9) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size10) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size11) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size12_24pairs) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size13) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size11x12) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size3) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size4) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6to10) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size7to10) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size8to10) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size4to8) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6to9) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size5to8) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6to10A) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size7to10B) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size6to9A) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size11close) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size11to13) }, 0).toFixed()) +
-                                    Number(reports.reduce((a, b) => { return Number(a) + Number(b.size3to8) }, 0).toFixed())
-                                }</b>
-                            </STableCell>
-                            {reports.find((r) => r.size5 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size5) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size6 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size6) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size7 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size7) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size8 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size8) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size9 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size9) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size10 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size10) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size11 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size11) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size12_24pairs > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size12_24pairs) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size13 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size13) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size11x12 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size11x12) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size3 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size3) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size4 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size4) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size6to10 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to10) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size7to10 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size8to10 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size8to10) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size4to8 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size4to8) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size6to9 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to9) }, 0).toFixed()}</b>
-                            </STableCell>}
-
-                            {reports.find((r) => r.size5to8 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size5to8) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size6to10A > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to10A) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size7to10B > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10B) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size6to9A > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to9A) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size11close > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size11close) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size11to13 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size11to13) }, 0).toFixed()}</b>
-                            </STableCell>}
-                            {reports.find((r) => r.size3to8 > 0) && <STableCell
-                            >
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}>{reports.reduce((a, b) => { return Number(a) + Number(b.size3to8) }, 0).toFixed()}</b>
-                            </STableCell>}
-                        </STableRow>
-                    </STableBody>
-                </STable>
-            </Box >}
-            {window.screen.width > 500 && <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />}
+                height: '80vh'
+            }}
+                className='hideme'
+            >
+                {/* table */}
+                {!isLoading && data && <MaterialReactTable table={table} />}
+            </Box>
         </>
 
     )

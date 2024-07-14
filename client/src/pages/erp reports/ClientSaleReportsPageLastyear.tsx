@@ -17,28 +17,27 @@ export type ClientSaleReportTemplate = {
     report_owner: string,
     account: string,
     article: string,
-    oldqty: string,
-    newqty: string,
-    apr: string,
-    may: string,
-    jun: string,
-    jul: string,
-    aug: string,
-    sep: string,
-    oct: string,
-    nov: string,
-    dec: string,
-    jan: string,
-    feb: string,
-    mar: string
+    oldqty: number,
+    newqty: number,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number
 }
 export default function ClientSaleLastYearReportsPage() {
     const [reports, setClientSaleReports] = useState<ClientSaleReportTemplate[]>([])
     const { user } = useContext(UserContext)
     const [sent, setSent] = useState(false)
-    const { data, isSuccess } = useQuery<AxiosResponse<ClientSaleReportTemplate[]>, BackendError>("reports", GetClientSaleReports)
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ClientSaleReportTemplate[]>, BackendError>("reports", GetClientSaleReports)
     const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
-    const [isLoading, setIsLoading] = useState(true);
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
     const columns = useMemo<MRT_ColumnDef<ClientSaleReportTemplate>[]>(
@@ -47,15 +46,18 @@ export default function ClientSaleLastYearReportsPage() {
             {
                 accessorKey: 'report_owner',
                 header: 'State',
+                width: '50'
             },
             {
                 accessorKey: 'account',
                 header: 'Account',
+                size: 200
             },
             {
                 accessorKey: 'article',
                 header: 'Article',
-                Footer: <b>Total</b>
+                Footer: <b>Total</b>,
+                size: 150
             },
             {
                 accessorKey: 'oldqty',
@@ -128,7 +130,7 @@ export default function ClientSaleLastYearReportsPage() {
                 Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.mar) }, 0).toFixed()}</b>
             }
         ],
-        [],
+        [reports],
         //end
     );
 
@@ -140,20 +142,20 @@ export default function ClientSaleLastYearReportsPage() {
                     report_owner: "Goa",
                     account: "agarson safety",
                     article: "34",
-                    oldqty: "3434",
-                    newqty: "4343",
-                    apr: "23",
-                    may: "34",
-                    jun: "223",
-                    jul: "445",
-                    aug: "66",
-                    sep: "34",
-                    oct: "66",
-                    nov: "34",
-                    dec: "67",
-                    jan: "7",
-                    feb: "666",
-                    mar: "555",
+                    oldqty: 3434,
+                    newqty: 4343,
+                    apr: 23,
+                    may: 34,
+                    jun: 223,
+                    jul: 445,
+                    aug: 66,
+                    sep: 34,
+                    oct: 66,
+                    nov: 34,
+                    dec: 67,
+                    jan: 7,
+                    feb: 666,
+                    mar: 555,
                 }
             ]
             ExportToExcel(data, "client_sale_template")
@@ -168,7 +170,6 @@ export default function ClientSaleLastYearReportsPage() {
     useEffect(() => {
         if (typeof window !== 'undefined' && isSuccess) {
             setClientSaleReports(data.data);
-            setIsLoading(false);
         }
     }, [isSuccess]);
 
@@ -188,6 +189,18 @@ export default function ClientSaleLastYearReportsPage() {
         enableBottomToolbar: false,
         enableColumnResizing: true,
         enableColumnVirtualization: true,
+        muiTableHeadRowProps: () => ({
+            sx: {
+                backgroundColor: 'yellow',
+                color: 'white'
+            },
+        }),
+        muiTableBodyCellProps: () => ({
+            sx: {
+                fontSize: '13px',
+                border: '1px solid #ddd;'
+            },
+        }),
         enableRowSelection: true,
         enableGlobalFilterModes: true,
         enablePagination: false,
@@ -240,12 +253,12 @@ export default function ClientSaleLastYearReportsPage() {
             </Stack >
             <Box sx={{
                 overflow: "auto",
-                height: '70vh'
+                height: '80vh'
             }}
                 className='hideme'
             >
                 {/* table */}
-                {!isLoading && <MaterialReactTable table={table} />}
+                {!isLoading && data && <MaterialReactTable table={table} />}
             </Box>
         </>
 

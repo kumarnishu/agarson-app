@@ -4,7 +4,7 @@ import { BillsAgingReport, IBillsAgingReport } from "../models/erp_reports/bills
 import { IState, State } from "../models/erp_reports/state.model";
 import { IPendingOrdersReport, PendingOrdersReport } from "../models/erp_reports/pending_orders.model";
 import { IUser, User } from "../models/users/user.model";
-import { ClientSaleReport } from "../models/erp_reports/client_sale.model";
+import { ClientSaleLastYearReport, ClientSaleReport } from "../models/erp_reports/client_sale.model";
 import { IPartyTargetReport, PartyTargetReport } from "../models/erp_reports/partytarget.model";
 import { ClientSaleReportTemplate, IErpStateTemplate, ISaleAnalysisReportTemplate } from "../types/template.type";
 import isMongoId from "validator/lib/isMongoId";
@@ -24,37 +24,6 @@ export const GetAllStates = async (req: Request, res: Response, next: NextFuncti
     return res.status(200).json(result)
 }
 
-export const GetSaleAnalysisReport = async (req: Request, res: Response, next: NextFunction) => {
-    let month = Number(req.params.month)
-    if (req.user) {
-        let result: ISaleAnalysisReportTemplate[] = []
-        let user = await User.findById(req.user._id).populate('assigned_states');
-        if (user) {
-            let states = user.assigned_states;
-            for (let i = 0; i < states.length; i++) {
-                let reports = await PartyTargetReport.find({ report_owner: states[i]._id })
-                let antarget = states[i].apr + states[i].may + states[i].jun + states[i].jul + states[i].aug + states[i].sep + states[i].oct + states[i].nov + states[i].dec + states[i].jan + states[i].feb + states[i].mar;
-
-                if (reports && reports.length > 0)
-                    result.push({
-                        state: states[i].toString(),
-                        monthly_target: GetMonthlytargetBystate(states[i], month).toString(),
-                        monthly_achivement: GetMonthlyachievementBystate(reports, month).toString(),
-                        monthly_percentage: (Math.round((GetMonthlyachievementBystate(reports, 6) / GetMonthlytargetBystate(states[i], month)) * 10000) / 100).toString(),
-                        annual_target: antarget.toString(),
-                        annual_achivement: GetYearlyachievementBystate(reports).toString(),
-                        annual_percentage: (Math.round((GetYearlyachievementBystate(reports) / antarget) * 10000) / 100).toString(),
-                        last_year_sale: GetLastYearlyachievementBystate(reports).toString(),
-                        last_year_sale_percentage_comparison: (Math.round((GetLastYearlyachievementBystate(reports) / antarget) * 10000) / 100).toString()
-                    })
-            }
-        }
-        return res.status(200).json(result)
-    }
-    else
-        return res.status(403).json({ message: "not authorized" })
-
-}
 
 
 export const CreateState = async (req: Request, res: Response, next: NextFunction) => {
@@ -200,32 +169,9 @@ export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: R
 
 
 export const GetBillsAgingReports = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let reports: IBillsAgingReport[] = []
-    let count = 0
     let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        if (req.user?.is_admin) {
-            reports = await BillsAgingReport.find().populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
-            count = await BillsAgingReport.find().countDocuments()
-        }
-
-        else {
-            reports = await BillsAgingReport.find({ report_owner: { $in: state_ids } }).populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
-            count = await BillsAgingReport.find({ report_owner: { $in: state_ids } }).countDocuments()
-        }
-
-        return res.status(200).json({
-            reports,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
+    let reports = (await BillsAgingReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => { return { ...i, report_owner: i.report_owner.state } })
+    return res.status(200).json(reports);
 }
 
 export const BulkCreateBillsAgingReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {
@@ -293,32 +239,9 @@ export const BulkCreateBillsAgingReportFromExcel = async (req: Request, res: Res
 }
 
 export const GetPendingOrderReports = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let reports: IPendingOrdersReport[] = []
-    let count = 0
     let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        if (req.user?.is_admin) {
-            reports = await PendingOrdersReport.find().populate("report_owner").populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
-            count = await PendingOrdersReport.find().countDocuments()
-        }
-
-        else {
-            reports = await PendingOrdersReport.find({ report_owner: { $in: state_ids } }).populate('updated_by').populate("report_owner").populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
-            count = await PendingOrdersReport.find({ report_owner: { $in: state_ids } }).countDocuments()
-        }
-
-        return res.status(200).json({
-            reports,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
+    let reports = (await PendingOrdersReport.find({ report_owner: { $in: state_ids } }).populate("report_owner")).map((i) => { return { ...i, report_owner: i.report_owner.state } })
+    return res.status(200).json(reports);
 }
 
 export const BulkPendingOrderReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {
@@ -484,23 +407,8 @@ export const GetClientSaleReports = async (req: Request, res: Response, next: Ne
     let data = (await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
         console.log(i)
         return {
+            ...i,
             report_owner: i.report_owner.state,
-            account: i.account,
-            article: i.article,
-            oldqty: i.oldqty,
-            newqty: i.newqty,
-            apr: i.apr,
-            may: i.may,
-            jun: i.jun,
-            jul: i.jul,
-            aug: i.aug,
-            sep: i.sep,
-            oct: i.oct,
-            nov: i.nov,
-            dec: i.dec,
-            jan: i.jan,
-            feb: i.feb,
-            mar: i.mar
         }
     });
     return res.status(200).json(data)
@@ -531,20 +439,20 @@ export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Res
             let report_owner: string | null = String(report.report_owner)
             let article: string | null = report.article
             let account: string | null = report.account
-            let oldqty: string | null = report.oldqty
-            let newqty: string | null = report.newqty
-            let apr: string | null = report.apr
-            let may: string | null = report.may
-            let jun: string | null = report.jun
-            let jul: string | null = report.jul
-            let aug: string | null = report.aug
-            let sep: string | null = report.sep
-            let oct: string | null = report.oct
-            let nov: string | null = report.nov
-            let dec: string | null = report.dec
-            let jan: string | null = report.jan
-            let feb: string | null = report.feb
-            let mar: string | null = report.mar
+            let oldqty: number | null = report.oldqty
+            let newqty: number | null = report.newqty
+            let apr: number | null = report.apr
+            let may: number | null = report.may
+            let jun: number | null = report.jun
+            let jul: number | null = report.jul
+            let aug: number | null = report.aug
+            let sep: number | null = report.sep
+            let oct: number | null = report.oct
+            let nov: number | null = report.nov
+            let dec: number | null = report.dec
+            let jan: number | null = report.jan
+            let feb: number | null = report.feb
+            let mar: number | null = report.mar
             let validated = true
 
             if (!report_owner) {
@@ -566,8 +474,8 @@ export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Res
                         report_owner: owner,
                         article: article,
                         account: account,
-                        oldqty: Math.floor(Number(oldqty)),
-                        newqty: Math.floor(Number(newqty)),
+                        oldqty: oldqty,
+                        newqty: newqty,
                         apr: apr,
                         may: may,
                         jun: jun,
@@ -593,7 +501,7 @@ export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Res
 }
 export const GetClientSaleReportsForLastYear = async (req: Request, res: Response, next: NextFunction) => {
     let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-    let data = await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner');
+    let data = await ClientSaleLastYearReport.find({ report_owner: { $in: state_ids } }).populate('report_owner');
     return res.status(200).json(data)
 }
 
@@ -622,20 +530,20 @@ export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Reques
             let report_owner: string | null = String(report.report_owner)
             let article: string | null = report.article
             let account: string | null = report.account
-            let oldqty: string | null = report.oldqty
-            let newqty: string | null = report.newqty
-            let apr: string | null = report.apr
-            let may: string | null = report.may
-            let jun: string | null = report.jun
-            let jul: string | null = report.jul
-            let aug: string | null = report.aug
-            let sep: string | null = report.sep
-            let oct: string | null = report.oct
-            let nov: string | null = report.nov
-            let dec: string | null = report.dec
-            let jan: string | null = report.jan
-            let feb: string | null = report.feb
-            let mar: string | null = report.mar
+            let oldqty: number | null = report.oldqty
+            let newqty: number | null = report.newqty
+            let apr: number | null = report.apr
+            let may: number | null = report.may
+            let jun: number | null = report.jun
+            let jul: number | null = report.jul
+            let aug: number | null = report.aug
+            let sep: number | null = report.sep
+            let oct: number | null = report.oct
+            let nov: number | null = report.nov
+            let dec: number | null = report.dec
+            let jan: number | null = report.jan
+            let feb: number | null = report.feb
+            let mar: number | null = report.mar
             let validated = true
 
             if (!report_owner) {
@@ -830,4 +738,36 @@ export const BulkCreatePartyTargetReportFromExcel = async (req: Request, res: Re
         }
     }
     return res.status(200).json(result);
+}
+
+export const GetSaleAnalysisReport = async (req: Request, res: Response, next: NextFunction) => {
+    let month = Number(req.params.month)
+    if (req.user) {
+        let result: ISaleAnalysisReportTemplate[] = []
+        let user = await User.findById(req.user._id).populate('assigned_states');
+        if (user) {
+            let states = user.assigned_states;
+            for (let i = 0; i < states.length; i++) {
+                let reports = await PartyTargetReport.find({ report_owner: states[i]._id })
+                let antarget = states[i].apr + states[i].may + states[i].jun + states[i].jul + states[i].aug + states[i].sep + states[i].oct + states[i].nov + states[i].dec + states[i].jan + states[i].feb + states[i].mar;
+
+                if (reports && reports.length > 0)
+                    result.push({
+                        state: states[i].toString(),
+                        monthly_target: GetMonthlytargetBystate(states[i], month).toString(),
+                        monthly_achivement: GetMonthlyachievementBystate(reports, month).toString(),
+                        monthly_percentage: (Math.round((GetMonthlyachievementBystate(reports, 6) / GetMonthlytargetBystate(states[i], month)) * 10000) / 100).toString(),
+                        annual_target: antarget.toString(),
+                        annual_achivement: GetYearlyachievementBystate(reports).toString(),
+                        annual_percentage: (Math.round((GetYearlyachievementBystate(reports) / antarget) * 10000) / 100).toString(),
+                        last_year_sale: GetLastYearlyachievementBystate(reports).toString(),
+                        last_year_sale_percentage_comparison: (Math.round((GetLastYearlyachievementBystate(reports) / antarget) * 10000) / 100).toString()
+                    })
+            }
+        }
+        return res.status(200).json(result)
+    }
+    else
+        return res.status(403).json({ message: "not authorized" })
+
 }

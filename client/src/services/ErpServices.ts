@@ -17,8 +17,8 @@ export const CreateOreditErpState = async ({ state, body }: { state?: IState, bo
 
 };
 
-export const GetPendingOrdersReports = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
-    return await apiClient.get(`reports/pending/orders/?limit=${limit}&page=${page}`)
+export const GetPendingOrdersReports = async () => {
+    return await apiClient.get(`reports/pending/orders`)
 }
 
 export const BulkPendingOrderFromExcel = async (body: FormData) => {
@@ -33,8 +33,8 @@ export const GetSaleAnalysisReports = async (month: number) => {
 
 
 
-export const GetBillsAgingReports = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
-    return await apiClient.get(`reports/bills/aging/?limit=${limit}&page=${page}`)
+export const GetBillsAgingReports = async () => {
+    return await apiClient.get(`reports/bills/aging`)
 }
 
 export const BulkBillsAgingreportFromExcel = async (body: FormData) => {
@@ -48,16 +48,16 @@ export const GetClientSaleReports = async () => {
 export const BulkClientSalereportFromExcel = async (body: FormData) => {
     return await apiClient.put(`reports/client/sale`, body)
 }
-export const GetClientSaleReportsForlastyear = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
-    return await apiClient.get(`reports/client/sale/lastyear/?limit=${limit}&page=${page}`)
+export const GetClientSaleReportsForlastyear = async () => {
+    return await apiClient.get(`reports/client/sale/lastyear`)
 }
 
 export const BulkClientSalereportFromExcelforlastyear = async (body: FormData) => {
     return await apiClient.put(`reports/client/sale/lastyear`, body)
 }
 
-export const GetPartyTargetReports = async ({ limit, page }: { limit: number | undefined, page: number | undefined }) => {
-    return await apiClient.get(`reports/partytarget/?limit=${limit}&page=${page}`)
+export const GetPartyTargetReports = async () => {
+    return await apiClient.get(`reports/partytarget`)
 }
 
 export const BulkPartyTargetFromExcel = async (body: FormData) => {

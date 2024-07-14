@@ -1,47 +1,164 @@
-import { Box, Button, InputAdornment, LinearProgress, TextField, Typography } from '@mui/material'
+import { Box, Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
-import DBPagination from '../../components/pagination/DBpagination';
 import { BackendError } from '../..'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { GetBillsAgingReports } from '../../services/ErpServices'
-import { IBillsAgingReport } from '../../types/erp_report.types'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../components/styled/STyledTable'
-import UploadBillsAgingFromExcelButton from '../../components/buttons/UploadBillsAgingButton'
+import { GetClientSaleReports } from '../../services/ErpServices'
 import { UserContext } from '../../contexts/userContext'
-import { Download, Search } from '@mui/icons-material'
+import { Download } from '@mui/icons-material'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import FuzzySearch from 'fuzzy-search'
-import moment from 'moment'
-import { ConvertRupeesFormat } from '../../utils/ConverRupees'
+import UploadClientSalesButton from '../../components/buttons/UploadClientSalesButton'
+import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 
 
-export default function BillsAgingReportsPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 2000, page: 1, total: 1 });
-    const [reports, setBillsAgingReports] = useState<IBillsAgingReport[]>([])
+export type ClientSaleReportTemplate = {
+    report_owner: string,
+    account: string,
+    article: string,
+    oldqty: number,
+    newqty: number,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number
+}
+export default function BillsAgingReportPage() {
+    const [reports, setClientSaleReports] = useState<ClientSaleReportTemplate[]>([])
     const { user } = useContext(UserContext)
-    const [filter, setFilter] = useState<string | undefined>()
-    const [preFilteredData, setPreFilteredData] = useState<IBillsAgingReport[]>([])
     const [sent, setSent] = useState(false)
-    const { data, isLoading } = useQuery<AxiosResponse<{ reports: IBillsAgingReport[], page: number, total: number, limit: number }>, BackendError>(["reports", paginationData], async () => GetBillsAgingReports({ limit: paginationData?.limit, page: paginationData?.page }))
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ClientSaleReportTemplate[]>, BackendError>("reports", GetClientSaleReports)
+    const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+    const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
+    const columns = useMemo<MRT_ColumnDef<ClientSaleReportTemplate>[]>(
+        //column definitions...
+        () => [
+            {
+                accessorKey: 'report_owner',
+                header: 'State',
+                width: '50'
+            },
+            {
+                accessorKey: 'account',
+                header: 'Account',
+                size: 200
+            },
+            {
+                accessorKey: 'article',
+                header: 'Article',
+                Footer: <b>Total</b>,
+                size: 150
+            },
+            {
+                accessorKey: 'oldqty',
+                header: 'Old Qty',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oldqty) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'newqty',
+                header: 'New Qty',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.newqty) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'apr',
+                header: 'APR',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.apr) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'may',
+                header: 'MAY',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.may) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'jun',
+                header: 'JUN',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jun) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'jul',
+                header: 'JUL',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jul) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'aug',
+                header: 'AUG',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.aug) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'sep',
+                header: 'SEP',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.sep) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'oct',
+                header: 'OCT',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oct) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'nov',
+                header: 'NOV',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.nov) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'dec',
+                header: 'DEC',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.dec) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'jan',
+                header: 'JAN',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jan) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'feb',
+                header: 'FEB',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.feb) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'mar',
+                header: 'MAR',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.mar) }, 0).toFixed()}</b>
+            }
+        ],
+        [reports],
+        //end
+    );
 
 
     function handleExcel() {
         try {
-            let data = [
+            let data: ClientSaleReportTemplate[] = [
                 {
                     report_owner: "Goa",
                     account: "agarson safety",
-                    plu70: 2323,
-                    in70to90: 34334,
-                    in90to120: 343434,
-                    plus120: 343434344,
+                    article: "34",
+                    oldqty: 3434,
+                    newqty: 4343,
+                    apr: 23,
+                    may: 34,
+                    jun: 223,
+                    jul: 445,
+                    aug: 66,
+                    sep: 34,
+                    oct: 66,
+                    nov: 34,
+                    dec: 67,
+                    jan: 7,
+                    feb: 666,
+                    mar: 555,
                 }
             ]
-            ExportToExcel(data, "bills_aging_template")
+            ExportToExcel(data, "client_sale_template")
             setSent(true)
         }
         catch (err) {
@@ -49,31 +166,58 @@ export default function BillsAgingReportsPage() {
             setSent(false)
         }
     }
-    useEffect(() => {
-        if (filter) {
-            const searcher = new FuzzySearch(reports, ["report_owner.state", "account"], {
-                caseSensitive: false,
-            });
-            const result = searcher.search(filter);
-            setBillsAgingReports(result)
-        }
-        if (!filter)
-            setBillsAgingReports(preFilteredData)
-
-    }, [filter])
 
     useEffect(() => {
-        if (data&&!filter) {
-            setBillsAgingReports(data.data.reports)
-            setPaginationData({
-                ...paginationData,
-                page: data.data.page,
-                limit: data.data.limit,
-                total: data.data.total
-            })
-            setPreFilteredData(data.data.reports)
+        if (typeof window !== 'undefined' && isSuccess) {
+            setClientSaleReports(data.data);
         }
-    }, [data])
+    }, [isSuccess]);
+
+    useEffect(() => {
+        //scroll to the top of the table when the sorting changes
+        try {
+            rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
+        } catch (error) {
+            console.error(error);
+        }
+    }, [sorting]);
+
+    const table = useMaterialReactTable({
+        columns,
+        data: reports, //10,000 rows
+        defaultDisplayColumn: { enableResizing: true },
+        enableBottomToolbar: false,
+        enableColumnResizing: true,
+        enableColumnVirtualization: true,
+        muiTableHeadRowProps: () => ({
+            sx: {
+                backgroundColor: 'yellow',
+                color: 'white'
+            },
+        }),
+        muiTableBodyCellProps: () => ({
+            sx: {
+                fontSize: '13px',
+                border: '1px solid #ddd;'
+            },
+        }),
+        enableRowSelection: true,
+        enableGlobalFilterModes: true,
+        enablePagination: false,
+        enableColumnPinning: true,
+        enableTableFooter: true,
+        enableRowNumbers: true,
+        enableRowVirtualization: true,
+        muiTableContainerProps: { sx: { maxHeight: '600px' } },
+        onSortingChange: setSorting,
+        state: { isLoading, sorting },
+        rowVirtualizerInstanceRef, //optional
+        rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
+        columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+    });
+
+
+
 
     return (
         <>
@@ -96,155 +240,26 @@ export default function BillsAgingReportsPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    Aging
+                    Client Sale {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     {user?.erp_access_fields.is_editable && <>
-                        <UploadBillsAgingFromExcelButton disabled={!user?.erp_access_fields.is_editable} />
-                        <Button onClick={handleExcel}> <Download /> Template</Button>
+                        <UploadClientSalesButton disabled={!user?.erp_access_fields.is_editable} />
+                        <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
                     </>}
-                    <TextField
-                        fullWidth
-                        size="small"
-                        onChange={(e) => {
-                            setFilter(e.currentTarget.value)
-                        }}
-                        placeholder={`${reports?.length} records...`}
-                        style={{
-                            fontSize: '1.1rem',
-                            border: '0',
-                        }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Search />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
                 </Stack>
 
 
             </Stack >
-
-
-            {/* table */}
-            {isLoading && <TableSkeleton />}
-            {!isLoading && <Box sx={{
+            <Box sx={{
                 overflow: "auto",
-                height: '78vh'
-            }}>
-                <STable
-                >
-                    <STableHead
-
-                    >
-                        <STableRow >
-
-                            <STableHeadCell style={{ padding: '8px' }}
-                            >
-                                Upload Date
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                State
-                            </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-                                Account
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Total
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                {'<70'}
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                {'70-90'}
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                {'90-120'}
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                {'>120'}
-                            </STableHeadCell>
-
-                        </STableRow>
-                    </STableHead>
-                    <STableBody >
-                        {
-                            reports && reports.map((report, index) => {
-                                return (
-                                    <STableRow
-                                        key={index}
-                                    >
-                                        <STableCell style={{ padding: '10px' }}>
-                                            {report.created_at && moment(new Date(report.created_at)).format('DD/MM/YY')}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.report_owner && report.report_owner.state}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.account && report.account.slice(0, 40)}
-                                        </STableCell>
-                                        <STableCell>
-                                            <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number(report.plu70) + Number(report.in70to90) + Number(report.in90to120) + Number(report.plus120))}</b>
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.plu70 ? String(report.plu70) : ""}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.in70to90 ? String(report.in70to90) : ""}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.in90to120 ? String(report.in90to120) : ""}
-                                        </STableCell>
-                                        <STableCell>
-                                            {report.plus120 ? String(report.plus120) : ""}
-                                        </STableCell>
-
-                                    </STableRow>
-                                )
-                            })}
-                        <STableRow >
-                            <STableCell>
-
-                            </STableCell>
-                            <STableCell>
-
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> Total</b>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number(reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()))}</b>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number(reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()))}</b>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number(reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()))}</b>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number(reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()))}</b>
-                            </STableCell>
-                            <STableCell>
-                                <b style={{ fontSize: 12, letterSpacing: '1px' }}> {ConvertRupeesFormat(Number((reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0) + reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0)).toFixed()))
-                                }</b>
-                            </STableCell>
-                        </STableRow>
-
-                    </STableBody>
-                </STable>
-
-            </Box>}
-            {window.screen.width > 500 && <DBPagination  paginationData={paginationData} setPaginationData={setPaginationData} />}
+                height: '80vh'
+            }}
+                className='hideme'
+            >
+                {/* table */}
+                {!isLoading && data && <MaterialReactTable table={table} />}
+            </Box>
         </>
 
     )

@@ -1,77 +1,164 @@
-import { Box, Button, InputAdornment, LinearProgress, TextField, Typography } from '@mui/material'
+import { Box, Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
-import DBPagination from '../../components/pagination/DBpagination';
 import { BackendError } from '../..'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { GetPartyTargetReports } from '../../services/ErpServices'
-import { IPartyTargetReport } from '../../types/erp_report.types'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../components/styled/STyledTable'
+import { GetClientSaleReports } from '../../services/ErpServices'
 import { UserContext } from '../../contexts/userContext'
-import { Download, Search } from '@mui/icons-material'
+import { Download } from '@mui/icons-material'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import FuzzySearch from 'fuzzy-search'
-import moment from 'moment'
-import UploadPartyTargetButton from '../../components/buttons/UploadPartyTargetButton'
+import UploadClientSalesButton from '../../components/buttons/UploadClientSalesButton'
+import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 
 
-export default function PartyTargetReportsPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 2000, page: 1, total: 1 });
-    const [reports, setPartyTargetReports] = useState<IPartyTargetReport[]>([])
+export type ClientSaleReportTemplate = {
+    report_owner: string,
+    account: string,
+    article: string,
+    oldqty: number,
+    newqty: number,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number
+}
+export default function PartyTargetReportPage() {
+    const [reports, setClientSaleReports] = useState<ClientSaleReportTemplate[]>([])
     const { user } = useContext(UserContext)
-    const [filter, setFilter] = useState<string | undefined>()
-    const [preFilteredData, setPreFilteredData] = useState<IPartyTargetReport[]>([])
     const [sent, setSent] = useState(false)
-    const { data, isLoading } = useQuery<AxiosResponse<{ reports: IPartyTargetReport[], page: 0, total: 0, limit: 0 }>, BackendError>(["reports", paginationData], async () => GetPartyTargetReports({ limit: paginationData?.limit, page: paginationData?.page }))
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ClientSaleReportTemplate[]>, BackendError>("reports", GetClientSaleReports)
+    const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+    const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
+    const columns = useMemo<MRT_ColumnDef<ClientSaleReportTemplate>[]>(
+        //column definitions...
+        () => [
+            {
+                accessorKey: 'report_owner',
+                header: 'State',
+                width: '50'
+            },
+            {
+                accessorKey: 'account',
+                header: 'Account',
+                size: 200
+            },
+            {
+                accessorKey: 'article',
+                header: 'Article',
+                Footer: <b>Total</b>,
+                size: 150
+            },
+            {
+                accessorKey: 'oldqty',
+                header: 'Old Qty',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oldqty) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'newqty',
+                header: 'New Qty',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.newqty) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'apr',
+                header: 'APR',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.apr) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'may',
+                header: 'MAY',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.may) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'jun',
+                header: 'JUN',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jun) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'jul',
+                header: 'JUL',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jul) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'aug',
+                header: 'AUG',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.aug) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'sep',
+                header: 'SEP',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.sep) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'oct',
+                header: 'OCT',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oct) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'nov',
+                header: 'NOV',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.nov) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'dec',
+                header: 'DEC',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.dec) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'jan',
+                header: 'JAN',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jan) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'feb',
+                header: 'FEB',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.feb) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'mar',
+                header: 'MAR',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.mar) }, 0).toFixed()}</b>
+            }
+        ],
+        [reports],
+        //end
+    );
 
 
     function handleExcel() {
         try {
-            let data = [
+            let data: ClientSaleReportTemplate[] = [
                 {
-                    slno: "640",
-                    PARTY: "LUCKY MACHINERY & TOOLS, PATNA",
-                    Create_Date: "14-01-2022",
-                    STATION: "PATNA",
-                    SALES_OWNER: "BIHAR",
                     report_owner: "Goa",
-                    All_TARGET: "10/2 - 15/3",
-                    TARGET: 1000000,
-                    PROJECTION: 338975.96,
-                    GROWTH: "0.9",
-                    TARGET_ACHIEVE: "0.34",
-                    TOTAL_SALE_OLD: 0,
-                    TOTAL_SALE_NEW: 0,
-                    Last_Apr: 0,
-                    Cur_Apr: 0,
-                    Last_May: 0,
-                    Cur_May: 0,
-                    Last_Jun: 0,
-                    Cur_Jun: 0,
-                    Last_Jul: 0,
-                    Cur_Jul: 0,
-                    Last_Aug: 0,
-                    Cur_Aug: 0,
-                    Last_Sep: 0,
-                    Cur_Sep: 0,
-                    Last_Oct: 0,
-                    Cur_Oct: 0,
-                    Last_Nov: 0,
-                    Cur_Nov: 0,
-                    Last_Dec: 0,
-                    Cur_Dec: 0,
-                    Last_Jan: 0,
-                    Cur_Jan: 0,
-                    Last_Feb: 0,
-                    Cur_Feb: 0,
-                    Last_Mar: 0,
-                    Cur_Mar: 0,
+                    account: "agarson safety",
+                    article: "34",
+                    oldqty: 3434,
+                    newqty: 4343,
+                    apr: 23,
+                    may: 34,
+                    jun: 223,
+                    jul: 445,
+                    aug: 66,
+                    sep: 34,
+                    oct: 66,
+                    nov: 34,
+                    dec: 67,
+                    jan: 7,
+                    feb: 666,
+                    mar: 555,
                 }
             ]
-            ExportToExcel(data, "party_target_template")
+            ExportToExcel(data, "client_sale_template")
             setSent(true)
         }
         catch (err) {
@@ -79,31 +166,58 @@ export default function PartyTargetReportsPage() {
             setSent(false)
         }
     }
-    useEffect(() => {
-        if (filter) {
-            const searcher = new FuzzySearch(reports, ["report_owner.state", "account"], {
-                caseSensitive: false,
-            });
-            const result = searcher.search(filter);
-            setPartyTargetReports(result)
-        }
-        if (!filter)
-            setPartyTargetReports(preFilteredData)
-
-    }, [filter])
 
     useEffect(() => {
-        if (data && !filter) {
-            setPartyTargetReports(data.data.reports)
-            setPaginationData({
-                ...paginationData,
-                page: data.data.page,
-                limit: data.data.limit,
-                total: data.data.total
-            })
-            setPreFilteredData(data.data.reports)
+        if (typeof window !== 'undefined' && isSuccess) {
+            setClientSaleReports(data.data);
         }
-    }, [data])
+    }, [isSuccess]);
+
+    useEffect(() => {
+        //scroll to the top of the table when the sorting changes
+        try {
+            rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
+        } catch (error) {
+            console.error(error);
+        }
+    }, [sorting]);
+
+    const table = useMaterialReactTable({
+        columns,
+        data: reports, //10,000 rows
+        defaultDisplayColumn: { enableResizing: true },
+        enableBottomToolbar: false,
+        enableColumnResizing: true,
+        enableColumnVirtualization: true,
+        muiTableHeadRowProps: () => ({
+            sx: {
+                backgroundColor: 'yellow',
+                color: 'white'
+            },
+        }),
+        muiTableBodyCellProps: () => ({
+            sx: {
+                fontSize: '13px',
+                border: '1px solid #ddd;'
+            },
+        }),
+        enableRowSelection: true,
+        enableGlobalFilterModes: true,
+        enablePagination: false,
+        enableColumnPinning: true,
+        enableTableFooter: true,
+        enableRowNumbers: true,
+        enableRowVirtualization: true,
+        muiTableContainerProps: { sx: { maxHeight: '600px' } },
+        onSortingChange: setSorting,
+        state: { isLoading, sorting },
+        rowVirtualizerInstanceRef, //optional
+        rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
+        columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+    });
+
+
+
 
     return (
         <>
@@ -124,508 +238,28 @@ export default function PartyTargetReportsPage() {
                 <Typography
                     variant={'h6'}
                     component={'h1'}
+                    sx={{ pl: 1 }}
                 >
-                    Party target
+                    Client Sale {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     {user?.erp_access_fields.is_editable && <>
-                        <UploadPartyTargetButton disabled={!user?.erp_access_fields.is_editable} />
-                        <Button onClick={handleExcel}> <Download /> Template</Button>
+                        <UploadClientSalesButton disabled={!user?.erp_access_fields.is_editable} />
+                        <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
                     </>}
-                    <TextField
-                        fullWidth
-                        size="small"
-                        onChange={(e) => {
-                            setFilter(e.currentTarget.value)
-                        }}
-                        placeholder={`${reports?.length} records...`}
-                        style={{
-                            fontSize: '1.1rem',
-                            border: '0',
-                        }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Search />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
                 </Stack>
 
 
             </Stack >
-
-
-            {/* table */}
-            {isLoading && <TableSkeleton />}
-            {!isLoading && <Box sx={{
+            <Box sx={{
                 overflow: "auto",
-                height: '78vh'
-            }}>
-                <STable
-                >
-                    <STableHead
-
-                    >
-                        <STableRow >
-
-                            <STableHeadCell style={{ padding: '8px' }}
-                            >
-                                Upload Date
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Sl.No
-                            </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-                                Party
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Create Date
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Station
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Sales Owner
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                State
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                All Target
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Target
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Projection
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Growth
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Target Achieved
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Total sale Old
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                Total sale New
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Apr
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Apr
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-May
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-May
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Jun
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Jun
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Jul
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Jul
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Aug
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Aug
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Sep
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Sep
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Oct
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Oct
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Nov
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Nov
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Dec
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Dec
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Jan
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Jan
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Feb
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Feb
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                L-Mar
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-                                C-Mar
-                            </STableHeadCell>
-
-                        </STableRow>
-                    </STableHead>
-                    <STableBody >
-                        {
-                            reports && reports.map((report, index) => {
-                                return (
-                                    <STableRow
-                                        key={index}
-                                    >
-                                        <STableCell style={{ padding: '10px' }}>
-                                            {report.created_at && moment(new Date(report.created_at)).format('DD/MM/YY')}
-                                        </STableCell>
-
-                                        <STableCell
-                                        >
-                                            {report.slno || ""}
-                                        </STableCell>
-
-                                        <STableCell
-                                        >
-                                            {report.PARTY || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Create_Date || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.STATION || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.SALES_OWNER || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.report_owner && report.report_owner.state || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.All_TARGET || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.TARGET || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.PROJECTION || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.GROWTH || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.TARGET_ACHIEVE || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.TOTAL_SALE_OLD || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.TOTAL_SALE_NEW || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_Apr || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Apr || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_May || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_May || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_Jun || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Jun || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_Jul || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Jul || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_Aug || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Aug || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_Sep || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Sep || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_Oct || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Oct || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >{report.Last_Nov || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Nov || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_Dec || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Dec || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_Jan || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Jan || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_Feb || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Feb || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Last_Mar || ""}
-                                        </STableCell>
-                                        <STableCell
-                                        >
-                                            {report.Cur_Mar || ""}
-                                        </STableCell>
-                                    </STableRow>
-                                )
-                            })}
-                        <STableRow
-                            key={'dfd'}
-                            style={{ background: 'lightgrey' }}
-                        >
-
-                            <STableCell style={{ padding: '10px' }}>
-                                Total
-                            </STableCell>
-
-                            <STableCell
-                            >
-                                
-                            </STableCell>
-
-                            <STableCell
-                            >
-                               
-                            </STableCell>
-                            <STableCell
-                            >
-                               
-                            </STableCell>
-                            <STableCell
-                            >
-                               
-                            </STableCell>
-                            <STableCell
-                            >
-                            </STableCell>
-                            <STableCell
-                            >
-                              
-                            </STableCell>
-                            <STableCell
-                            >
-                               
-                            </STableCell>
-                            <STableCell
-                            >
-                                {reports.reduce((a, b) => { return Number(a) + Number(b.TARGET) }, 0).toFixed()}
-
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.PROJECTION) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.GROWTH) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.TARGET_ACHIEVE) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.TOTAL_SALE_OLD) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.TOTAL_SALE_NEW) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Apr) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Apr) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_May) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_May) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Jun) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jun) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Jul) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jul) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Aug) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Aug) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Sep) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Sep) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Oct) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Oct) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Nov) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Nov) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Dec) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Dec) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Jan) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jan) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Feb) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Feb) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Last_Mar) }, 0).toFixed()}
-                            </STableCell>
-                            <STableCell
-                            > {reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Mar) }, 0).toFixed()}
-                            </STableCell>
-
-
-                         
-                        </STableRow>
-                    </STableBody>
-                </STable>
-
-            </Box>}
-            {window.screen.width > 500 && <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />}
+                height: '80vh'
+            }}
+                className='hideme'
+            >
+                {/* table */}
+                {!isLoading && data && <MaterialReactTable table={table} />}
+            </Box>
         </>
 
     )
