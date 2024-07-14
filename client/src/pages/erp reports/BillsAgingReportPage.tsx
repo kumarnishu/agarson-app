@@ -11,6 +11,7 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import UploadClientSalesButton from '../../components/buttons/UploadClientSalesButton'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { onlyUnique } from '../../utils/UniqueArray'
 
 
 export type ClientSaleReportTemplate = {
@@ -46,12 +47,15 @@ export default function BillsAgingReportPage() {
             {
                 accessorKey: 'report_owner',
                 header: 'State',
-                width: '50'
+                width: '50',
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.report_owner }).filter(onlyUnique)
             },
             {
                 accessorKey: 'account',
                 header: 'Account',
                 size: 200
+
             },
             {
                 accessorKey: 'article',
@@ -127,10 +131,12 @@ export default function BillsAgingReportPage() {
             {
                 accessorKey: 'mar',
                 header: 'MAR',
+                aggregationFn: 'sum', //calc total points for each team by adding up all the points for each player on the team
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.mar) }, 0).toFixed()}</b>
             }
         ],
-        [reports],
+        [reports,],
         //end
     );
 
@@ -201,6 +207,7 @@ export default function BillsAgingReportPage() {
                 border: '1px solid #ddd;'
             },
         }),
+        enableGrouping: true,
         enableRowSelection: true,
         enableGlobalFilterModes: true,
         enablePagination: false,
@@ -208,15 +215,13 @@ export default function BillsAgingReportPage() {
         enableTableFooter: true,
         enableRowNumbers: true,
         enableRowVirtualization: true,
-        muiTableContainerProps: { sx: { maxHeight: '600px' } },
+        muiTableContainerProps: { sx: { maxHeight: '450px' } },
         onSortingChange: setSorting,
         state: { isLoading, sorting },
         rowVirtualizerInstanceRef, //optional
         rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
         columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
     });
-
-
 
 
     return (
