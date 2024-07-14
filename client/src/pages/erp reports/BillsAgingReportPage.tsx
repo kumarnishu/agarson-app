@@ -197,7 +197,7 @@ export default function BillsAgingReportPage() {
         enableColumnVirtualization: true,
         muiTableHeadRowProps: () => ({
             sx: {
-                backgroundColor: 'yellow',
+                backgroundColor: 'whitesmoke',
                 color: 'white'
             },
         }),
@@ -260,7 +260,6 @@ export default function BillsAgingReportPage() {
                 overflow: "auto",
                 height: '80vh'
             }}
-                className='hideme'
             >
                 {/* table */}
                 {!isLoading && data && <MaterialReactTable table={table} />}

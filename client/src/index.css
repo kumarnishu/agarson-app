@@ -14,9 +14,3 @@ input[type=file]::file-selector-button {
   display: none;
   cursor: pointer;
 }
-
-.hideme::-webkit-scrollbar {
-  width: 0 !important;
-  background-color: transparent;
-  /* optional */
-}

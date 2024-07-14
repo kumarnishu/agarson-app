@@ -47,91 +47,127 @@ export default function ClientSaleReportsPage() {
             {
                 accessorKey: 'report_owner',
                 header: 'State',
-                width:'50',
+                width: '50',
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 filterVariant: 'multi-select',
                 filterSelectOptions: reports.map((i) => { return i.report_owner }).filter(onlyUnique)
             },
             {
                 accessorKey: 'account',
                 header: 'Account',
-                size:200
-                
+                size: 300,
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.account }).filter(onlyUnique)
+
             },
             {
                 accessorKey: 'article',
                 header: 'Article',
                 Footer: <b>Total</b>,
-                size:150
+                size: 300,
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.article }).filter(onlyUnique)
             },
             {
                 accessorKey: 'oldqty',
                 header: 'Old Qty',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oldqty) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oldqty) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'newqty',
                 header: 'New Qty',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.newqty) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.newqty) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'apr',
                 header: 'APR',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.apr) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.apr) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'may',
                 header: 'MAY',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.may) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.may) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'jun',
                 header: 'JUN',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jun) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jun) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'jul',
                 header: 'JUL',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jul) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jul) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'aug',
                 header: 'AUG',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.aug) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.aug) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'sep',
                 header: 'SEP',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.sep) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.sep) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'oct',
                 header: 'OCT',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oct) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oct) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'nov',
                 header: 'NOV',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.nov) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.nov) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'dec',
                 header: 'DEC',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.dec) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.dec) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'jan',
                 header: 'JAN',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jan) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jan) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'feb',
                 header: 'FEB',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.feb) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.feb) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'mar',
                 header: 'MAR',
-                aggregationFn: 'sum', //calc total points for each team by adding up all the points for each player on the team
+                aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.mar) }, 0).toFixed()}</b>
             }
@@ -197,13 +233,13 @@ export default function ClientSaleReportsPage() {
         enableColumnVirtualization: true,
         muiTableHeadRowProps: () => ({
             sx: {
-               backgroundColor:'yellow',
-               color:'white'
+                backgroundColor: 'whitesmoke',
+                color: 'white'
             },
         }),
         muiTableBodyCellProps: () => ({
             sx: {
-                fontSize:'13px',
+                fontSize: '13px',
                 border: '1px solid #ddd;'
             },
         }),
@@ -260,7 +296,6 @@ export default function ClientSaleReportsPage() {
                 overflow: "auto",
                 height: '80vh'
             }}
-                className='hideme'
             >
                 {/* table */}
                 {!isLoading && data && <MaterialReactTable table={table} />}

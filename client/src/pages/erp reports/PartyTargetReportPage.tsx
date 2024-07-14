@@ -4,137 +4,331 @@ import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import { GetClientSaleReports } from '../../services/ErpServices'
+import {  GetPartyTargetReports } from '../../services/ErpServices'
 import { UserContext } from '../../contexts/userContext'
 import { Download } from '@mui/icons-material'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import UploadClientSalesButton from '../../components/buttons/UploadClientSalesButton'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
+import UploadPartyTargetButton from '../../components/buttons/UploadPartyTargetButton'
 
 
-export type ClientSaleReportTemplate = {
-    report_owner: string,
-    account: string,
-    article: string,
-    oldqty: number,
-    newqty: number,
-    apr: number,
-    may: number,
-    jun: number,
-    jul: number,
-    aug: number,
-    sep: number,
-    oct: number,
-    nov: number,
-    dec: number,
-    jan: number,
-    feb: number,
-    mar: number
+export type IPartyTargetReportTemplate = {
+    slno: string,
+    PARTY: string,
+    Create_Date: string,
+    STATION: string,
+    SALES_OWNER: string,
+    report_owner: string
+    All_TARGET: string,
+    TARGET: number,
+    PROJECTION: number,
+    GROWTH: number,
+    TARGET_ACHIEVE: number,
+    TOTAL_SALE_OLD: number,
+    TOTAL_SALE_NEW: number,
+    Last_Apr: number,
+    Cur_Apr: number,
+    Last_May: number,
+    Cur_May: number,
+    Last_Jun: number,
+    Cur_Jun: number,
+    Last_Jul: number,
+    Cur_Jul: number,
+    Last_Aug: number,
+    Cur_Aug: number,
+    Last_Sep: number,
+    Cur_Sep: number,
+    Last_Oct: number,
+    Cur_Oct: number,
+    Last_Nov: number,
+    Cur_Nov: number,
+    Last_Dec: number,
+    Cur_Dec: number,
+    Last_Jan: number,
+    Cur_Jan: number,
+    Last_Feb: number,
+    Cur_Feb: number,
+    Last_Mar: number,
+    Cur_Mar: number,
+    status?: string
 }
 export default function PartyTargetReportPage() {
-    const [reports, setClientSaleReports] = useState<ClientSaleReportTemplate[]>([])
+    const [reports, setReports] = useState<IPartyTargetReportTemplate[]>([])
     const { user } = useContext(UserContext)
     const [sent, setSent] = useState(false)
-    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ClientSaleReportTemplate[]>, BackendError>("reports", GetClientSaleReports)
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IPartyTargetReportTemplate[]>, BackendError>("party_target_reports", GetPartyTargetReports)
     const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-    const columns = useMemo<MRT_ColumnDef<ClientSaleReportTemplate>[]>(
+    const columns = useMemo<MRT_ColumnDef<IPartyTargetReportTemplate>[]>(
         //column definitions...
         () => [
             {
-                accessorKey: 'report_owner',
-                header: 'State',
-                width: '50',
+                accessorKey: 'slno',
+                header: 'Sl.No.',
+                size: 50,
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'PARTY',
+                header: 'PARTY',
+                size: 200,
                 filterVariant: 'multi-select',
-                filterSelectOptions: reports.map((i) => { return i.report_owner }).filter(onlyUnique)
+                filterSelectOptions: reports.map((i) => { return i.PARTY }).filter(onlyUnique),
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
-                accessorKey: 'account',
-                header: 'Account',
-                size: 200
-
-            },
-            {
-                accessorKey: 'article',
-                header: 'Article',
-                Footer: <b>Total</b>,
+                accessorKey: 'Create_Date',
+                header: 'Create Date',
+                Footer: <b>Total</b>, 
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 size: 150
             },
             {
-                accessorKey: 'oldqty',
-                header: 'Old Qty',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oldqty) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'newqty',
-                header: 'New Qty',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.newqty) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'apr',
-                header: 'APR',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.apr) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'may',
-                header: 'MAY',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.may) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'jun',
-                header: 'JUN',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jun) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'jul',
-                header: 'JUL',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jul) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'aug',
-                header: 'AUG',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.aug) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'sep',
-                header: 'SEP',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.sep) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'oct',
-                header: 'OCT',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oct) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'nov',
-                header: 'NOV',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.nov) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'dec',
-                header: 'DEC',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.dec) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'jan',
-                header: 'JAN',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jan) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'feb',
-                header: 'FEB',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.feb) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'mar',
-                header: 'MAR',
-                aggregationFn: 'sum', //calc total points for each team by adding up all the points for each player on the team
+                accessorKey: 'STATION',
+                header: 'Station',
+                filterVariant: 'multi-select',
+                aggregationFn: 'count',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.mar) }, 0).toFixed()}</b>
-            }
+                filterSelectOptions: reports.map((i) => { return i.STATION }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'SALES_OWNER',
+                header: 'Sales Owner',
+                filterVariant: 'multi-select',
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                filterSelectOptions: reports.map((i) => { return i.SALES_OWNER }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'report_owner',
+                header: 'State',
+                filterVariant: 'multi-select',
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                filterSelectOptions: reports.map((i) => { return i.report_owner }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'All_TARGET',
+                header: 'ALL TARGET',
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'TARGET',
+                header: 'TARGET',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.TARGET) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'PROJECTION',
+                header: 'Projection',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.PROJECTION) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'GROWTH',
+                header: 'Growth',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.GROWTH) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'TARGET_ACHIEVE',
+                header: 'Target Achieved',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.TARGET_ACHIEVE) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'TOTAL_SALE_OLD',
+                header: 'Total Old Sale',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.TOTAL_SALE_OLD) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'TOTAL_SALE_NEW',
+                header: 'Total Sale New',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.TOTAL_SALE_NEW) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Apr',
+                header: 'L-Apr',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Apr) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Apr',
+                header: 'C-APr',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Apr) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_May',
+                header: 'L-May',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_May) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_May',
+                header: 'C-MAY',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_May) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Jun',
+                header: 'L-JUN',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Jun) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Jun',
+                header: 'C-JUN',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jun) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Jul',
+                header: 'L-JUL',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Jul) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Jul',
+                header: 'C-JUL',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jul) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Aug',
+                header: 'L-AUG',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Aug) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Aug',
+                header: 'C-AUG',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Aug) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Sep',
+                header: 'L-SEP',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Sep) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Sep',
+                header: 'C-SEP',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Sep) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Oct',
+                header: 'L-OCT',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Oct) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Oct',
+                header: 'C-OCT',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Oct) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Nov',
+                header: 'L-NOV',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Nov) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Nov',
+                header: 'C-NOV',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Nov) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Dec',
+                header: 'L-DEC',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Dec) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Dec',
+                header: 'C-DEC',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Dec) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Jan',
+                header: 'L-JAN',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Jan) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Jan',
+                header: 'C-JAN',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Jan) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Feb',
+                header: 'L-FEB',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Feb) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Feb',
+                header: 'C-FEB',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Feb) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Last_Mar',
+                header: 'L-MAR',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Last_Mar) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'Cur_Mar',
+                header: 'C-,MAR',
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.Cur_Mar) }, 0).toFixed()}</b>
+            },
         ],
         [reports,],
         //end
@@ -143,28 +337,48 @@ export default function PartyTargetReportPage() {
 
     function handleExcel() {
         try {
-            let data: ClientSaleReportTemplate[] = [
+            let data: IPartyTargetReportTemplate[] = [
                 {
-                    report_owner: "Goa",
-                    account: "agarson safety",
-                    article: "34",
-                    oldqty: 3434,
-                    newqty: 4343,
-                    apr: 23,
-                    may: 34,
-                    jun: 223,
-                    jul: 445,
-                    aug: 66,
-                    sep: 34,
-                    oct: 66,
-                    nov: 34,
-                    dec: 67,
-                    jan: 7,
-                    feb: 666,
-                    mar: 555,
+                    slno: "1",
+                    PARTY: "agarson shoes",
+                    Create_Date: "20-07-2024",
+                    STATION: "DELHI",
+                    SALES_OWNER: "DELHI",
+                    report_owner: "DELHI",
+                    All_TARGET: "",
+                    TARGET: 0,
+                    PROJECTION: 0,
+                    GROWTH: 0,
+                    TARGET_ACHIEVE: 0,
+                    TOTAL_SALE_OLD: 0,
+                    TOTAL_SALE_NEW: 0,
+                    Last_Apr: 0,
+                    Cur_Apr: 0,
+                    Last_May: 0,
+                    Cur_May: 0,
+                    Last_Jun: 0,
+                    Cur_Jun: 0,
+                    Last_Jul: 0,
+                    Cur_Jul: 0,
+                    Last_Aug: 0,
+                    Cur_Aug: 0,
+                    Last_Sep: 0,
+                    Cur_Sep: 0,
+                    Last_Oct: 0,
+                    Cur_Oct: 0,
+                    Last_Nov: 0,
+                    Cur_Nov: 0,
+                    Last_Dec: 0,
+                    Cur_Dec: 0,
+                    Last_Jan: 0,
+                    Cur_Jan: 0,
+                    Last_Feb: 0,
+                    Cur_Feb: 0,
+                    Last_Mar: 0,
+                    Cur_Mar: 0,
                 }
             ]
-            ExportToExcel(data, "client_sale_template")
+            ExportToExcel(data, "party_target_template")
             setSent(true)
         }
         catch (err) {
@@ -175,7 +389,7 @@ export default function PartyTargetReportPage() {
 
     useEffect(() => {
         if (typeof window !== 'undefined' && isSuccess) {
-            setClientSaleReports(data.data);
+            setReports(data.data);
         }
     }, [isSuccess]);
 
@@ -197,7 +411,7 @@ export default function PartyTargetReportPage() {
         enableColumnVirtualization: true,
         muiTableHeadRowProps: () => ({
             sx: {
-                backgroundColor: 'yellow',
+                backgroundColor: 'whitesmoke',
                 color: 'white'
             },
         }),
@@ -245,11 +459,11 @@ export default function PartyTargetReportPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                    Client Sale {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
+                   PARTY TARGET {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     {user?.erp_access_fields.is_editable && <>
-                        <UploadClientSalesButton disabled={!user?.erp_access_fields.is_editable} />
+                        <UploadPartyTargetButton disabled={!user?.erp_access_fields.is_editable} />
                         <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
                     </>}
                 </Stack>
@@ -260,7 +474,6 @@ export default function PartyTargetReportPage() {
                 overflow: "auto",
                 height: '80vh'
             }}
-                className='hideme'
             >
                 {/* table */}
                 {!isLoading && data && <MaterialReactTable table={table} />}

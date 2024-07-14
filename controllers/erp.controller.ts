@@ -6,7 +6,7 @@ import { IPendingOrdersReport, PendingOrdersReport } from "../models/erp_reports
 import { IUser, User } from "../models/users/user.model";
 import { ClientSaleLastYearReport, ClientSaleReport } from "../models/erp_reports/client_sale.model";
 import { IPartyTargetReport, PartyTargetReport } from "../models/erp_reports/partytarget.model";
-import { ClientSaleReportTemplate, IErpStateTemplate, ISaleAnalysisReportTemplate } from "../types/template.type";
+import { ClientSaleReportTemplate, IErpStateTemplate, IPartyTargetReportTemplate, ISaleAnalysisReportTemplate } from "../types/template.type";
 import isMongoId from "validator/lib/isMongoId";
 import mongoose from "mongoose";
 import { GetLastYearlyachievementBystate, GetMonthlyachievementBystate, GetMonthlytargetBystate, GetYearlyachievementBystate } from "../utils/ErpUtils";
@@ -288,7 +288,7 @@ export const BulkPendingOrderReportFromExcel = async (req: Request, res: Respons
 }
 export const GetClientSaleReportsForLastYear = async (req: Request, res: Response, next: NextFunction) => {
     let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-    let data:ClientSaleReportTemplate[] = (await ClientSaleLastYearReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i)=>{
+    let data: ClientSaleReportTemplate[] = (await ClientSaleLastYearReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
         return {
             report_owner: i.report_owner.state,
             account: i.account,
@@ -317,48 +317,74 @@ export const GetClientSaleReports = async (req: Request, res: Response, next: Ne
     let data: ClientSaleReportTemplate[] = (await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
         console.log(i)
         return {
-            report_owner:i.report_owner.state,
-            account:i.account,
-            article:i.article,
-            oldqty:i.oldqty,
-            newqty:i.newqty,
-            apr:i.apr,
-            may:i.may,
-            jun:i.jun,
-            jul:i.jul,
-            aug:i.aug,
-            sep:i.sep,
-            oct:i.oct,
-            nov:i.nov,
-            dec:i.dec,
-            jan:i.jan,
-            feb:i.feb,
-            mar:i.mar,
+            report_owner: i.report_owner.state,
+            account: i.account,
+            article: i.article,
+            oldqty: i.oldqty,
+            newqty: i.newqty,
+            apr: i.apr,
+            may: i.may,
+            jun: i.jun,
+            jul: i.jul,
+            aug: i.aug,
+            sep: i.sep,
+            oct: i.oct,
+            nov: i.nov,
+            dec: i.dec,
+            jan: i.jan,
+            feb: i.feb,
+            mar: i.mar,
         }
     });
     return res.status(200).json(data)
 }
 export const GetPartyTargetReports = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let reports: IPartyTargetReport[] = []
-    let count = 0
+
     let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
 
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+    let reports: IPartyTargetReportTemplate[] = (await PartyTargetReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((item) => {
+        return {
+            slno: item.slno,
+            PARTY: item.PARTY,
+            Create_Date: item.Create_Date,
+            STATION: item.STATION,
+            SALES_OWNER: item.SALES_OWNER,
+            report_owner: item.report_owner.state,
+            All_TARGET: item.All_TARGET,
+            TARGET: item.TARGET,
+            PROJECTION: item.PROJECTION,
+            GROWTH: item.GROWTH,
+            TARGET_ACHIEVE: item.TARGET_ACHIEVE,
+            TOTAL_SALE_OLD: item.TOTAL_SALE_OLD,
+            TOTAL_SALE_NEW: item.TOTAL_SALE_NEW,
+            Last_Apr: item.Last_Apr,
+            Cur_Apr: item.Cur_Apr,
+            Last_May: item.Last_May,
+            Cur_May: item.Cur_May,
+            Last_Jun: item.Last_Jun,
+            Cur_Jun: item.Cur_Jun,
+            Last_Jul: item.Last_Jul,
+            Cur_Jul: item.Cur_Jul,
+            Last_Aug: item.Last_Aug,
+            Cur_Aug: item.Cur_Aug,
+            Last_Sep: item.Last_Sep,
+            Cur_Sep: item.Cur_Sep,
+            Last_Oct: item.Last_Oct,
+            Cur_Oct: item.Cur_Oct,
+            Last_Nov: item.Last_Nov,
+            Cur_Nov: item.Cur_Nov,
+            Last_Dec: item.Last_Dec,
+            Cur_Dec: item.Cur_Dec,
+            Last_Jan: item.Last_Jan,
+            Cur_Jan: item.Cur_Jan,
+            Last_Feb: item.Last_Feb,
+            Cur_Feb: item.Cur_Feb,
+            Last_Mar: item.Last_Mar,
+            Cur_Mar: item.Cur_Mar,
+        }
+    })
 
-        reports = await PartyTargetReport.find({ report_owner: { $in: state_ids } }).populate('report_owner').populate('updated_by').populate('created_by').sort('account').skip((page - 1) * limit).limit(limit)
-        count = await PartyTargetReport.find({ report_owner: { $in: state_ids } }).countDocuments()
-
-        return res.status(200).json({
-            reports,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
+    return res.status(200).json(reports)
 }
 export const GetSaleAnalysisReport = async (req: Request, res: Response, next: NextFunction) => {
     let month = Number(req.params.month)
@@ -373,15 +399,15 @@ export const GetSaleAnalysisReport = async (req: Request, res: Response, next: N
 
                 if (reports && reports.length > 0)
                     result.push({
-                        state: states[i].toString(),
-                        monthly_target: GetMonthlytargetBystate(states[i], month).toString(),
-                        monthly_achivement: GetMonthlyachievementBystate(reports, month).toString(),
-                        monthly_percentage: (Math.round((GetMonthlyachievementBystate(reports, 6) / GetMonthlytargetBystate(states[i], month)) * 10000) / 100).toString(),
-                        annual_target: antarget.toString(),
-                        annual_achivement: GetYearlyachievementBystate(reports).toString(),
-                        annual_percentage: (Math.round((GetYearlyachievementBystate(reports) / antarget) * 10000) / 100).toString(),
-                        last_year_sale: GetLastYearlyachievementBystate(reports).toString(),
-                        last_year_sale_percentage_comparison: (Math.round((GetLastYearlyachievementBystate(reports) / antarget) * 10000) / 100).toString()
+                        state: states[i].state,
+                        monthly_target: GetMonthlytargetBystate(states[i], month),
+                        monthly_achivement: GetMonthlyachievementBystate(reports, month),
+                        monthly_percentage: (Math.round((GetMonthlyachievementBystate(reports, 6) / GetMonthlytargetBystate(states[i], month)) * 10000) / 100),
+                        annual_target: antarget,
+                        annual_achivement: GetYearlyachievementBystate(reports),
+                        annual_percentage: (Math.round((GetYearlyachievementBystate(reports) / antarget) * 10000) / 100),
+                        last_year_sale: GetLastYearlyachievementBystate(reports),
+                        last_year_sale_percentage_comparison: (Math.round((GetLastYearlyachievementBystate(reports) / antarget) * 10000) / 100)
                     })
             }
         }
@@ -599,7 +625,7 @@ export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Reques
         return res.status(400).json({
             message: "please provide an Excel file",
         });
-    await ClientSaleReport.deleteMany({})
+    await ClientSaleLastYearReport.deleteMany({})
     if (req.file) {
         const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
         if (!allowedFiles.includes(req.file.mimetype))
@@ -633,7 +659,7 @@ export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Reques
             let feb: number | null = report.feb
             let mar: number | null = report.mar
             let validated = true
-
+            console.log("running")
             if (!report_owner) {
                 validated = false
                 statusText = "report owner required"
@@ -648,7 +674,7 @@ export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Reques
             if (validated) {
                 let owner = await State.findOne({ state: report.report_owner })
                 if (owner) {
-                    await new ClientSaleReport({
+                    await new ClientSaleLastYearReport({
                         report_owner: owner,
                         article: article,
                         account: account,
@@ -710,10 +736,10 @@ export const BulkCreatePartyTargetReportFromExcel = async (req: Request, res: Re
             let SALES_OWNER: string | null = String(report.SALES_OWNER)
             let report_owner: string | null = String(report.report_owner)
             let All_TARGET: string | null = report.All_TARGET
-            let TARGET: number | null = Number(report.TARGET)
-            let PROJECTION: number | null = Number(report.PROJECTION)
-            let GROWTH: number | null = Number(report.GROWTH)
-            let TARGET_ACHIEVE: number | null = Number(report.TARGET_ACHIEVE)
+            let TARGET: number | null = Number(report.TARGET) || null
+            let PROJECTION: number | null = Number(report.PROJECTION) || null
+            let GROWTH: number | null = Number(report.GROWTH) || null
+            let TARGET_ACHIEVE: number | null = Number(report.TARGET_ACHIEVE) || null
             let TOTAL_SALE_OLD: number | null = Number(report.TOTAL_SALE_OLD) || null
             let TOTAL_SALE_NEW: number | null = Number(report.TOTAL_SALE_NEW) || null
             let Last_Apr: number | null = Number(report.Last_Apr) || null
