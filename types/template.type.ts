@@ -50,6 +50,47 @@ export type IErpStateTemplate = {
     mar: string,
     status?: any
 }
+
+export type IBillsAgingReportTemplate = {
+    report_owner: string
+    account: string,
+    plu70: number,
+    in70to90: number,
+    in90to120: number,
+    plus120: number
+    status?: string
+}
+export type IPendingOrdersReportTemplate = {
+    report_owner: string
+    account: string,
+    product_family: string,
+    article: string,
+    size5: number,
+    size6: number,
+    size7: number,
+    size8: number,
+    size9: number,
+    size10: number,
+    size11: number,
+    size12_24pairs: number,
+    size13: number,
+    size11x12: number,
+    size3: number,
+    size4: number,
+    size6to10: number,
+    size7to10: number,
+    size8to10: number,
+    size4to8: number,
+    size6to9: number,
+    size5to8: number,
+    size6to10A: number,
+    size7to10B: number,
+    size6to9A: number,
+    size11close: number,
+    size11to13: number,
+    size3to8: number,
+    status?: string
+}
 export type ISaleAnalysisReportTemplate = {
     state: string,
     monthly_target: number,

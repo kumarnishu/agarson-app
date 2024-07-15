@@ -4,136 +4,78 @@ import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import { GetClientSaleReports } from '../../services/ErpServices'
+import { GetBillsAgingReports } from '../../services/ErpServices'
 import { UserContext } from '../../contexts/userContext'
 import { Download } from '@mui/icons-material'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import UploadClientSalesButton from '../../components/buttons/UploadClientSalesButton'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
+import UploadBillsAgingFromExcelButton from '../../components/buttons/UploadBillsAgingButton'
 
 
-export type ClientSaleReportTemplate = {
-    report_owner: string,
+export type IBillsAgingReportTemplate = {
+    report_owner: string
     account: string,
-    article: string,
-    oldqty: number,
-    newqty: number,
-    apr: number,
-    may: number,
-    jun: number,
-    jul: number,
-    aug: number,
-    sep: number,
-    oct: number,
-    nov: number,
-    dec: number,
-    jan: number,
-    feb: number,
-    mar: number
+    plu70: number,
+    in70to90: number,
+    in90to120: number,
+    plus120: number
+    status?: string
 }
 export default function BillsAgingReportPage() {
-    const [reports, setClientSaleReports] = useState<ClientSaleReportTemplate[]>([])
+    const [reports, setReports] = useState<IBillsAgingReportTemplate[]>([])
     const { user } = useContext(UserContext)
     const [sent, setSent] = useState(false)
-    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ClientSaleReportTemplate[]>, BackendError>("reports", GetClientSaleReports)
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IBillsAgingReportTemplate[]>, BackendError>("reports", GetBillsAgingReports)
     const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-    const columns = useMemo<MRT_ColumnDef<ClientSaleReportTemplate>[]>(
+    const columns = useMemo<MRT_ColumnDef<IBillsAgingReportTemplate>[]>(
         //column definitions...
         () => [
             {
                 accessorKey: 'report_owner',
                 header: 'State',
-                width: '50',
+                size: 150,
                 filterVariant: 'multi-select',
                 filterSelectOptions: reports.map((i) => { return i.report_owner }).filter(onlyUnique)
             },
             {
                 accessorKey: 'account',
                 header: 'Account',
-                size: 200
+                size: 350,
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.account }).filter(onlyUnique)
 
             },
             {
-                accessorKey: 'article',
-                header: 'Article',
-                Footer: <b>Total</b>,
-                size: 150
-            },
-            {
-                accessorKey: 'oldqty',
-                header: 'Old Qty',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oldqty) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'newqty',
-                header: 'New Qty',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.newqty) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'apr',
-                header: 'APR',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.apr) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'may',
-                header: 'MAY',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.may) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'jun',
-                header: 'JUN',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jun) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'jul',
-                header: 'JUL',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jul) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'aug',
-                header: 'AUG',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.aug) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'sep',
-                header: 'SEP',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.sep) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'oct',
-                header: 'OCT',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oct) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'nov',
-                header: 'NOV',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.nov) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'dec',
-                header: 'DEC',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.dec) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'jan',
-                header: 'JAN',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jan) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'feb',
-                header: 'FEB',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.feb) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'mar',
-                header: 'MAR',
-                aggregationFn: 'sum', //calc total points for each team by adding up all the points for each player on the team
+                accessorKey: 'plu70',
+                header: '>70',
+                aggregationFn: 'sum', 
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.mar) }, 0).toFixed()}</b>
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'in70to90',
+                header: '70-90',
+                aggregationFn: 'sum', 
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'in90to120',
+                header: '90-120',
+                aggregationFn: 'sum', 
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()}</b>
+            },
+            {
+                accessorKey: 'plus120',
+                header: '>120',
+                aggregationFn: 'sum', 
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()}</b>
             }
         ],
         [reports,],
@@ -143,28 +85,17 @@ export default function BillsAgingReportPage() {
 
     function handleExcel() {
         try {
-            let data: ClientSaleReportTemplate[] = [
+            let data: IBillsAgingReportTemplate[] = [
                 {
                     report_owner: "Goa",
                     account: "agarson safety",
-                    article: "34",
-                    oldqty: 3434,
-                    newqty: 4343,
-                    apr: 23,
-                    may: 34,
-                    jun: 223,
-                    jul: 445,
-                    aug: 66,
-                    sep: 34,
-                    oct: 66,
-                    nov: 34,
-                    dec: 67,
-                    jan: 7,
-                    feb: 666,
-                    mar: 555,
+                    plu70: 0,
+                    in70to90: 0,
+                    in90to120: 0,
+                    plus120: 0
                 }
             ]
-            ExportToExcel(data, "client_sale_template")
+            ExportToExcel(data, "bills_ageing_template")
             setSent(true)
         }
         catch (err) {
@@ -175,7 +106,7 @@ export default function BillsAgingReportPage() {
 
     useEffect(() => {
         if (typeof window !== 'undefined' && isSuccess) {
-            setClientSaleReports(data.data);
+            setReports(data.data);
         }
     }, [isSuccess]);
 
@@ -249,7 +180,7 @@ export default function BillsAgingReportPage() {
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     {user?.erp_access_fields.is_editable && <>
-                        <UploadClientSalesButton disabled={!user?.erp_access_fields.is_editable} />
+                        <UploadBillsAgingFromExcelButton disabled={!user?.erp_access_fields.is_editable} />
                         <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
                     </>}
                 </Stack>

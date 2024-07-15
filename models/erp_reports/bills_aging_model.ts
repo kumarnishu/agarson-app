@@ -6,10 +6,10 @@ export type IBillsAgingReport = {
     _id: string,
     report_owner: IState
     account: string,
-    plu70: Number,
-    in70to90: Number,
-    in90to120: Number,
-    plus120: Number
+    plu70: number,
+    in70to90: number,
+    in90to120: number,
+    plus120: number
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

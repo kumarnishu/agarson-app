@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import {  GetPartyTargetReports } from '../../services/ErpServices'
+import {   GetPartyTargetReports } from '../../services/ErpServices'
 import { UserContext } from '../../contexts/userContext'
 import { Download } from '@mui/icons-material'
 import ExportToExcel from '../../utils/ExportToExcel'
@@ -66,7 +66,7 @@ export default function PartyTargetReportPage() {
         //column definitions...
         () => [
             {
-                accessorKey: 'slno',
+                accessorKey: 'slnoinvalid',
                 header: 'Sl.No.',
                 size: 50,
                 aggregationFn: 'count',
@@ -75,7 +75,7 @@ export default function PartyTargetReportPage() {
             {
                 accessorKey: 'PARTY',
                 header: 'PARTY',
-                size: 200,
+                size: 350,
                 filterVariant: 'multi-select',
                 filterSelectOptions: reports.map((i) => { return i.PARTY }).filter(onlyUnique),
                 aggregationFn: 'count',
@@ -85,6 +85,8 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Create_Date',
                 header: 'Create Date',
                 Footer: <b>Total</b>, 
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.PARTY }).filter(onlyUnique),
                 aggregationFn: 'count',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 size: 150

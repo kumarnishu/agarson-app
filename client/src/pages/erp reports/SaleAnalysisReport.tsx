@@ -163,8 +163,8 @@ export default function SaleAnalysisReport() {
 
 
       <Stack
-        spacing={2}
-        padding={1}
+        spacing={4}
+        padding={2}
         direction="row"
         justifyContent="space-between"
         alignItems={'center'}

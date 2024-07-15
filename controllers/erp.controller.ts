@@ -6,7 +6,7 @@ import { IPendingOrdersReport, PendingOrdersReport } from "../models/erp_reports
 import { IUser, User } from "../models/users/user.model";
 import { ClientSaleLastYearReport, ClientSaleReport } from "../models/erp_reports/client_sale.model";
 import { IPartyTargetReport, PartyTargetReport } from "../models/erp_reports/partytarget.model";
-import { ClientSaleReportTemplate, IErpStateTemplate, IPartyTargetReportTemplate, ISaleAnalysisReportTemplate } from "../types/template.type";
+import { ClientSaleReportTemplate, IBillsAgingReportTemplate, IErpStateTemplate, IPartyTargetReportTemplate, IPendingOrdersReportTemplate, ISaleAnalysisReportTemplate } from "../types/template.type";
 import isMongoId from "validator/lib/isMongoId";
 import mongoose from "mongoose";
 import { GetLastYearlyachievementBystate, GetMonthlyachievementBystate, GetMonthlytargetBystate, GetYearlyachievementBystate } from "../utils/ErpUtils";
@@ -168,17 +168,57 @@ export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: R
 
 export const GetBillsAgingReports = async (req: Request, res: Response, next: NextFunction) => {
     let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-    let reports = (await BillsAgingReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => { return { ...i, report_owner: i.report_owner.state } })
+    let reports: IBillsAgingReportTemplate[] = (await BillsAgingReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
+        return {
+            report_owner: i.report_owner.state,
+            account: i.account,
+            plu70: i.plu70,
+            in70to90: i.in70to90,
+            in90to120: i.in90to120,
+            plus120: i.plus120,
+        }
+    })
     return res.status(200).json(reports);
 }
 export const GetPendingOrderReports = async (req: Request, res: Response, next: NextFunction) => {
     let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-    let reports = (await PendingOrdersReport.find({ report_owner: { $in: state_ids } }).populate("report_owner")).map((i) => { return { ...i, report_owner: i.report_owner.state } })
+    let reports: IPendingOrdersReportTemplate[] = (await PendingOrdersReport.find({ report_owner: { $in: state_ids } }).populate("report_owner")).map((i) => {
+        return {
+            report_owner: i.report_owner.state,
+            account: i.account,
+            product_family: i.product_family,
+            article: i.article,
+            size5: i.size5,
+            size6: i.size6,
+            size7: i.size7,
+            size8: i.size8,
+            size9: i.size9,
+            size10: i.size10,
+            size11: i.size11,
+            size12_24pairs: i.size12_24pairs,
+            size13: i.size13,
+            size11x12: i.size11x12,
+            size3: i.size3,
+            size4: i.size4,
+            size6to10: i.size6to10,
+            size7to10: i.size7to10,
+            size8to10: i.size8to10,
+            size4to8: i.size4to8,
+            size6to9: i.size6to9,
+            size5to8: i.size5to8,
+            size6to10A: i.size6to10A,
+            size7to10B: i.size7to10B,
+            size6to9A: i.size6to9A,
+            size11close: i.size11close,
+            size11to13: i.size11to13,
+            size3to8: i.size3to8,
+        }
+    })
     return res.status(200).json(reports);
 }
 
 export const BulkPendingOrderReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {
-    let result: IPendingOrdersReport[] = []
+    let result: IPendingOrdersReportTemplate[] = []
     if (!req.file)
         return res.status(400).json({
             message: "please provide an Excel file",
@@ -192,7 +232,7 @@ export const BulkPendingOrderReportFromExcel = async (req: Request, res: Respons
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: IPendingOrdersReport[] = xlsx.utils.sheet_to_json(
+        let workbook_response: IPendingOrdersReportTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         let statusText = ""
@@ -419,9 +459,8 @@ export const GetSaleAnalysisReport = async (req: Request, res: Response, next: N
 }
 
 
-
 export const BulkCreateBillsAgingReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {
-    let result: IBillsAgingReport[] = []
+    let result: IBillsAgingReportTemplate[] = []
     if (!req.file)
         return res.status(400).json({
             message: "please provide an Excel file",
@@ -435,7 +474,7 @@ export const BulkCreateBillsAgingReportFromExcel = async (req: Request, res: Res
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: IBillsAgingReport[] = xlsx.utils.sheet_to_json(
+        let workbook_response: IBillsAgingReportTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         let statusText = ""

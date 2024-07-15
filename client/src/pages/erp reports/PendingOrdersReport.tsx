@@ -4,136 +4,261 @@ import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import { GetClientSaleReports } from '../../services/ErpServices'
+import { GetPendingOrdersReports } from '../../services/ErpServices'
 import { UserContext } from '../../contexts/userContext'
 import { Download } from '@mui/icons-material'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import UploadClientSalesButton from '../../components/buttons/UploadClientSalesButton'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
+import UploadPendingOrdersButton from '../../components/buttons/UploadPendingOrdersButton'
 
 
-export type ClientSaleReportTemplate = {
-    report_owner: string,
+export type IPendingOrdersReportTemplate = {
+    report_owner: string
     account: string,
+    product_family: string,
     article: string,
-    oldqty: number,
-    newqty: number,
-    apr: number,
-    may: number,
-    jun: number,
-    jul: number,
-    aug: number,
-    sep: number,
-    oct: number,
-    nov: number,
-    dec: number,
-    jan: number,
-    feb: number,
-    mar: number
+    size5: number,
+    size6: number,
+    size7: number,
+    size8: number,
+    size9: number,
+    size10: number,
+    size11: number,
+    size12_24pairs: number,
+    size13: number,
+    size11x12: number,
+    size3: number,
+    size4: number,
+    size6to10: number,
+    size7to10: number,
+    size8to10: number,
+    size4to8: number,
+    size6to9: number,
+    size5to8: number,
+    size6to10A: number,
+    size7to10B: number,
+    size6to9A: number,
+    size11close: number,
+    size11to13: number,
+    size3to8: number,
+    status?: string
 }
 export default function PendingOrdersReport() {
-    const [reports, setClientSaleReports] = useState<ClientSaleReportTemplate[]>([])
+    const [reports, setReports] = useState<IPendingOrdersReportTemplate[]>([])
     const { user } = useContext(UserContext)
     const [sent, setSent] = useState(false)
-    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ClientSaleReportTemplate[]>, BackendError>("reports", GetClientSaleReports)
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IPendingOrdersReportTemplate[]>, BackendError>("pending_order_reports", GetPendingOrdersReports)
     const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-    const columns = useMemo<MRT_ColumnDef<ClientSaleReportTemplate>[]>(
+    const columns = useMemo<MRT_ColumnDef<IPendingOrdersReportTemplate>[]>(
         //column definitions...
         () => [
             {
                 accessorKey: 'report_owner',
                 header: 'State',
-                width: '50',
                 filterVariant: 'multi-select',
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 filterSelectOptions: reports.map((i) => { return i.report_owner }).filter(onlyUnique)
             },
             {
                 accessorKey: 'account',
                 header: 'Account',
-                size: 200
-
+                size: 350, 
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.account }).filter(onlyUnique)
             },
+            {
+                accessorKey: 'product_family',
+                header: 'Product Family',
+                size: 350, 
+                aggregationFn: 'count',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.product_family }).filter(onlyUnique)
+            },
+
             {
                 accessorKey: 'article',
                 header: 'Article',
-                Footer: <b>Total</b>,
-                size: 150
-            },
-            {
-                accessorKey: 'oldqty',
-                header: 'Old Qty',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oldqty) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'newqty',
-                header: 'New Qty',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.newqty) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'apr',
-                header: 'APR',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.apr) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'may',
-                header: 'MAY',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.may) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'jun',
-                header: 'JUN',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jun) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'jul',
-                header: 'JUL',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jul) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'aug',
-                header: 'AUG',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.aug) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'sep',
-                header: 'SEP',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.sep) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'oct',
-                header: 'OCT',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.oct) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'nov',
-                header: 'NOV',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.nov) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'dec',
-                header: 'DEC',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.dec) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'jan',
-                header: 'JAN',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.jan) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'feb',
-                header: 'FEB',
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.feb) }, 0).toFixed()}</b>
-            },
-            {
-                accessorKey: 'mar',
-                header: 'MAR',
-                aggregationFn: 'sum', //calc total points for each team by adding up all the points for each player on the team
+                size: 350, 
+                aggregationFn: 'count',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.mar) }, 0).toFixed()}</b>
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.article }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'size5',
+                header: '5',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size5) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size6',
+                header: '6',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size7',
+                header: '7',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size7) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size8',
+                header: '8',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size8) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size9',
+                header: '9',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size9) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size10',
+                header: '10',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size10) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size11',
+                header: '11',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size12_24pairs',
+                header: '12x24',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size12_24pairs) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size13',
+                header: '13',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size13) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size11x12',
+                header: '11x12',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11x12) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size3',
+                header: '3',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size3) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size4',
+                header: '4',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size4) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size6to10',
+                header: '6-10',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to10) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size7to10',
+                header: '7-10',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size8to10',
+                header: '8-10',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size8to10) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size4to8',
+                header: '4-8',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size4to8) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size6to9',
+                header: '6-9',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to9) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size5to8',
+                header: '5-8',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size5to8) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size6to10A',
+                header: '6-10A',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to10A) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size7to10B',
+                header: '7-10B',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size7to10B) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size6to9A',
+                header: '6-9A',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size6to9A) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size11close',
+                header: '11 Close',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11close) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size11to13',
+                header: '11-13',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size11to13) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            {
+                accessorKey: 'size3to8',
+                header: '3-8',
+                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.size3to8) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             }
         ],
         [reports,],
@@ -143,28 +268,39 @@ export default function PendingOrdersReport() {
 
     function handleExcel() {
         try {
-            let data: ClientSaleReportTemplate[] = [
+            let data: IPendingOrdersReportTemplate[] = [
                 {
-                    report_owner: "Goa",
-                    account: "agarson safety",
-                    article: "34",
-                    oldqty: 3434,
-                    newqty: 4343,
-                    apr: 23,
-                    may: 34,
-                    jun: 223,
-                    jul: 445,
-                    aug: 66,
-                    sep: 34,
-                    oct: 66,
-                    nov: 34,
-                    dec: 67,
-                    jan: 7,
-                    feb: 666,
-                    mar: 555,
+                    report_owner: "DELHI",
+                    account: "agarsoin safety",
+                    product_family: "power black",
+                    article: "power",
+                    size5: 0,
+                    size6: 0,
+                    size7: 0,
+                    size8: 0,
+                    size9: 0,
+                    size10: 0,
+                    size11: 0,
+                    size12_24pairs: 0,
+                    size13: 0,
+                    size11x12: 0,
+                    size3: 0,
+                    size4: 0,
+                    size6to10: 0,
+                    size7to10: 0,
+                    size8to10: 0,
+                    size4to8: 0,
+                    size6to9: 0,
+                    size5to8: 0,
+                    size6to10A: 0,
+                    size7to10B: 0,
+                    size6to9A: 0,
+                    size11close: 0,
+                    size11to13: 0,
+                    size3to8: 0
                 }
             ]
-            ExportToExcel(data, "client_sale_template")
+            ExportToExcel(data, "pending_order_template")
             setSent(true)
         }
         catch (err) {
@@ -175,7 +311,7 @@ export default function PendingOrdersReport() {
 
     useEffect(() => {
         if (typeof window !== 'undefined' && isSuccess) {
-            setClientSaleReports(data.data);
+            setReports(data.data);
         }
     }, [isSuccess]);
 
@@ -249,7 +385,7 @@ export default function PendingOrdersReport() {
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     {user?.erp_access_fields.is_editable && <>
-                        <UploadClientSalesButton disabled={!user?.erp_access_fields.is_editable} />
+                        <UploadPendingOrdersButton disabled={!user?.erp_access_fields.is_editable} />
                         <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
                     </>}
                 </Stack>
