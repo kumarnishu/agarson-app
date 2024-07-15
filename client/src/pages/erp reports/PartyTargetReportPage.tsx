@@ -66,7 +66,7 @@ export default function PartyTargetReportPage() {
         //column definitions...
         () => [
             {
-                accessorKey: 'slnoinvalid',
+                accessorKey: 'slno',
                 header: 'Sl.No.',
                 size: 50,
                 aggregationFn: 'count',
@@ -429,7 +429,7 @@ export default function PartyTargetReportPage() {
         enablePagination: false,
         enableColumnPinning: true,
         enableTableFooter: true,
-        enableRowNumbers: true,
+        enableRowNumbers: false,
         enableRowVirtualization: true,
         muiTableContainerProps: { sx: { maxHeight: '450px' } },
         onSortingChange: setSorting,
