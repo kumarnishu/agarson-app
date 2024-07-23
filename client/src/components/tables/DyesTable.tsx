@@ -80,6 +80,18 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                             <STableHeadCell
                             >
 
+                               Article
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                St Weight
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Status
 
                             </STableHeadCell>
@@ -195,6 +207,12 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                         </STableCell>
                                         <STableCell>
                                             {dye.size}
+                                        </STableCell>
+                                        <STableCell>
+                                            {dye.article?dye.article.display_name:""}
+                                        </STableCell>
+                                        <STableCell>
+                                            {dye.stdshoe_weight}
                                         </STableCell>
                                         <STableCell>
                                             {dye.active ? "active" : "inactive"}

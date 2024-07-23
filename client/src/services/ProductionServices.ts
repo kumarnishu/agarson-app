@@ -21,11 +21,11 @@ export const GetMachines = async (hidden?: string) => {
     return await apiClient.get(`machines`);
 };
 
-export const CreateDye = async (body: { dye_number: number, size: string }) => {
+export const CreateDye = async (body: { dye_number: number, size: string, article_id: string, st_weight:number }) => {
     return await apiClient.post(`dyes`, body);
 };
 
-export const UpdateDye = async ({ body, id }: { body: { dye_number: number, size: string }, id: string }) => {
+export const UpdateDye = async ({ body, id }: { body: { dye_number: number, size: string, article_id: string, st_weight: number }, id: string, }) => {
     return await apiClient.put(`dyes/${id}`, body);
 };
 

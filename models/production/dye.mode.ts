@@ -1,11 +1,14 @@
 import mongoose from "mongoose"
 import { IUser } from "../users/user.model"
+import { IArticle } from "./article.model"
 
 export type IDye = {
     _id: string,
     active: boolean,
     dye_number: number,
     size: string,
+    article:IArticle,
+    stdshoe_weight:number,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
@@ -19,10 +22,20 @@ const DyeSchema = new mongoose.Schema<IDye, mongoose.Model<IDye, {}, {}>, {}>({
         required: true,
         trim: true
     },
+    stdshoe_weight: {
+        type: Number,
+        required: true,
+        trim: true,
+        default:0
+    },
     size: {
         type: String,
         required: true,
         trim: true
+    },
+    article: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Article'
     },
     active: {
         type: Boolean,

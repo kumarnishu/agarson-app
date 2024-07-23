@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { IMachine, Machine } from "../models/production/machine.model"
 import { Article, IArticle } from "../models/production/article.model"
-import { Dye, IDye } from "../models/production/dye.types"
+import { Dye, IDye } from "../models/production/dye.mode"
 import xlsx from "xlsx"
 import { IProduction, Production } from "../models/production/production.model"
 import { IUser, User } from "../models/users/user.model"
@@ -36,9 +36,9 @@ export const GetDyes = async (req: Request, res: Response, next: NextFunction) =
     let hidden = String(req.query.hidden)
     let dyes: IDye[] = []
     if (hidden === "true") {
-        dyes = await Dye.find().populate('created_by').populate('updated_by').sort('dye_number')
+        dyes = await Dye.find().populate('article').populate('created_by').populate('updated_by').sort('dye_number')
     } else
-        dyes = await Dye.find({ active: true }).populate('created_by').populate('updated_by').sort('dye_number')
+        dyes = await Dye.find({ active: true }).populate('article').populate('created_by').populate('updated_by').sort('dye_number')
     return res.status(200).json(dyes)
 }
 
@@ -175,22 +175,32 @@ export const BulkUploadDye = async (req: Request, res: Response, next: NextFunct
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: { dye_number: number, size: string }[] = xlsx.utils.sheet_to_json(
+        let workbook_response: { dye_number: number, size: string, article: string, st_weight: number }[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
-        console.log(workbook_response)
-        let newDyes: { dye_number: number, size: string }[] = []
+        let newDyes: { dye_number: number, size: string, article: string, st_weight: number }[] = []
         workbook_response.forEach(async (dye) => {
             let dye_number: number | null = dye.dye_number
             let size: string | null = dye.size
-            newDyes.push({ dye_number: dye_number, size: size })
+            let article: string | null = dye.article || ""
+            let st_weight: number | null = dye.st_weight
+            newDyes.push({ dye_number: dye_number, size: size, article: article, st_weight: st_weight })
         })
-        console.log(newDyes)
-        newDyes.forEach(async (mac) => {
+      
+        for (let i = 0; i < newDyes.length; i++) {
+            let mac = newDyes[i];
             let dye = await Dye.findOne({ dye_number: mac.dye_number })
-            if (!dye)
-                await new Dye({ dye_number: mac.dye_number, size: mac.size, created_by: req.user, updated_by: req.user }).save()
-        })
+            let art = await Article.findOne({ name: mac.article.toLowerCase().trim() })
+            if (!dye) {
+                await new Dye({ dye_number: mac.dye_number, size: mac.size, article: art, stdshoe_weight: mac.st_weight, created_by: req.user, updated_by: req.user }).save()
+            }
+            else {
+                await Dye.findByIdAndUpdate(dye._id, {
+                    dye_number: mac.dye_number, size: mac.size, article: art?._id, stdshoe_weight: mac.st_weight, created_by: req.user, updated_by: req.user
+                })
+            }
+        }
+     
     }
     return res.status(200).json({ message: "dyes updated" });
 }
@@ -280,7 +290,7 @@ export const CreateArticle = async (req: Request, res: Response, next: NextFunct
     if (await Article.findOne({ name: name }))
         return res.status(400).json({ message: "already exists this article" })
     let machine = await new Article({
-        name: name, display_name: display_name, 
+        name: name, display_name: display_name,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -294,7 +304,8 @@ export const CreateArticle = async (req: Request, res: Response, next: NextFunct
 export const UpdateArticle = async (req: Request, res: Response, next: NextFunction) => {
     const { name, display_name } = req.body as {
         name: string,
-        display_name: string
+        display_name: string,
+
     }
     if (!name) {
         return res.status(400).json({ message: "please fill all reqired fields" })
@@ -330,17 +341,25 @@ export const ToogleArticle = async (req: Request, res: Response, next: NextFunct
 }
 
 export const CreateDye = async (req: Request, res: Response, next: NextFunction) => {
-    const { dye_number, size } = req.body as {
+    const { dye_number, size, article_id, st_weight } = req.body as {
         dye_number: number,
         size: string,
+        article_id: string,
+        st_weight: number
     }
     if (!dye_number || !size) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     if (await Dye.findOne({ dye_number: dye_number }))
         return res.status(400).json({ message: "already exists this dye" })
+    let art = await Article.findById(article_id)
+    if (!art)
+        return res.status(404).json({ message: "article not found" })
     let dye = await new Dye({
-        dye_number: dye_number, size: size, created_at: new Date(),
+        dye_number: dye_number, size: size,
+        article: art,
+        stdshoe_weight: st_weight,
+        created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
         updated_by: req.user
@@ -348,9 +367,11 @@ export const CreateDye = async (req: Request, res: Response, next: NextFunction)
     return res.status(201).json(dye)
 }
 export const UpdateDye = async (req: Request, res: Response, next: NextFunction) => {
-    const { dye_number, size } = req.body as {
+    const { dye_number, size, article_id, st_weight } = req.body as {
         dye_number: number,
         size: string,
+        article_id: string,
+        st_weight: number
     }
     if (!dye_number || !size) {
         return res.status(400).json({ message: "please fill all reqired fields" })
@@ -363,9 +384,15 @@ export const UpdateDye = async (req: Request, res: Response, next: NextFunction)
     if (dye_number !== dye.dye_number)
         if (await Dye.findOne({ dye_number: dye_number }))
             return res.status(400).json({ message: "already exists this dye" })
+
+    let art = await Article.findById(article_id)
+    if (!art)
+        return res.status(404).json({ message: "article not found" })
     dye.dye_number = dye_number
     dye.size = size
-    dye.updated_at = new Date()
+    dye.article = art
+    dye.stdshoe_weight = st_weight,
+        dye.updated_at = new Date()
     if (req.user)
         dye.updated_by = req.user
     await dye.save()

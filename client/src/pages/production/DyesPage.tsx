@@ -22,6 +22,8 @@ import UploadDyesFromExcelButton from '../../components/buttons/UploadDyesButton
 type SelectedData = {
   dye_number?: number,
   size?: string,
+  article?: string,
+  st_weight?: number,
   is_active?: boolean,
   created_at?: string,
   updated_at?: string
@@ -30,6 +32,8 @@ let template: SelectedData[] = [
   {
     dye_number: 1,
     is_active: true,
+    article:'Power',
+    st_weight:1000,
     size: "6"
   }
 ]
@@ -73,6 +77,8 @@ export default function DyePage() {
       return data.push({
         dye_number: dye.dye_number,
         size: dye.size,
+        article: dye.article.display_name,
+        st_weight: dye.stdshoe_weight,
         is_active: dye.active ? true : false,
         created_at: new Date(dye.created_at).toLocaleDateString(),
         updated_at: new Date(dye.updated_at).toLocaleDateString()
@@ -93,7 +99,7 @@ export default function DyePage() {
   useEffect(() => {
     if (filter) {
       if (dyes) {
-        const searcher = new FuzzySearch(dyes, ["dye_number", "size",  "created_by", "updated_by"], {
+        const searcher = new FuzzySearch(dyes, ["dye_number","stdshoe_weight","article.name", "size",  "created_by", "updated_by"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);
