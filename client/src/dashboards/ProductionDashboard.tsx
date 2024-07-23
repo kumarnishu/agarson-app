@@ -20,8 +20,16 @@ function ProductionDashboard() {
      
       tmpfeatures.push({ feature: 'articles', is_visible: true, url: paths.articles })
       tmpfeatures.push({ feature: 'machines ', is_visible: true, url: paths.machines })
-      tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
       tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })
+      tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
+    }
+    if (user?.productions_access_fields.is_editable&&user.is_admin) {
+      tmpfeatures.push({ feature: 'shoe weight ', is_visible: true, url: paths.shoe_weight })
+
+      tmpfeatures.push({ feature: 'show weight report', is_visible: true, url: paths.articles })
+      tmpfeatures.push({ feature: ' machine production ', is_visible: true, url: paths.machines })
+      tmpfeatures.push({ feature: 'thekedar production ', is_visible: true, url: paths.dyes })
+      tmpfeatures.push({ feature: 'm-category production ', is_visible: true, url: paths.machine_categories })
     }
     setFeatures(tmpfeatures)
   }, [])

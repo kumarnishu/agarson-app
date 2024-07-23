@@ -1,4 +1,3 @@
-import { Search } from '@mui/icons-material'
 import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
@@ -16,7 +15,7 @@ import ProductionTable from '../../components/tables/ProductionTable'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
 import { IProduction } from '../../types/production.types'
-import { FuzzySearchProductions, GetProductions } from '../../services/ProductionServices'
+import {  GetProductions } from '../../services/ProductionServices'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
 import NewProductionDialog from '../../components/dialogs/production/CreateProductionDialog'
 
@@ -25,14 +24,13 @@ export default function ProductionAdminPage() {
   const { setChoice } = useContext(ChoiceContext)
   const [users, setUsers] = useState<IUser[]>([])
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
-  const [filter, setFilter] = useState<string | undefined>()
+  const [filter] = useState<string | undefined>()
   const [production, setProduction] = useState<IProduction>()
   const [productions, setProductions] = useState<IProduction[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => productions, [productions])
   const [preFilteredData, setPreFilteredData] = useState<IProduction[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
-  const [filterCount, setFilterCount] = useState(0)
   const [selectedProductions, setSelectedProductions] = useState<IProduction[]>([])
   const [userId, setUserId] = useState<string>()
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
@@ -42,11 +40,6 @@ export default function ProductionAdminPage() {
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
   const { data, isLoading, refetch: ReftechProductions } = useQuery<AxiosResponse<{ productions: IProduction[], page: number, total: number, limit: number }>, BackendError>(["productions", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetProductions({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
-
-
-  const { data: fuzzyproductions, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ productions: IProduction[], page: number, total: number, limit: number }>, BackendError>(["fuzzyproductions", filter], async () => FuzzySearchProductions({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
-    enabled: false
-  })
 
   const [selectedData, setSelectedData] = useState<{
     machine?: string,
@@ -136,14 +129,6 @@ export default function ProductionAdminPage() {
 
 
   useEffect(() => {
-    if (filter) {
-      refetchFuzzy()
-    }
-  }, [paginationData])
-
-
-
-  useEffect(() => {
     if (data && !filter) {
       setProductions(data.data.productions)
       setPreFilteredData(data.data.productions)
@@ -162,31 +147,12 @@ export default function ProductionAdminPage() {
     }
   }, [data])
 
-  useEffect(() => {
-    if (fuzzyproductions && filter) {
-      setProductions(fuzzyproductions.data.productions)
-      let count = filterCount
-      if (count === 0)
-        setPaginationData({
-          ...paginationData,
-          page: fuzzyproductions.data.page,
-          limit: fuzzyproductions.data.limit,
-          total: fuzzyproductions.data.total
-        })
-      count = filterCount + 1
-      setFilterCount(count)
-    }
-  }, [fuzzyproductions])
-
-
   return (
     <>
       {
         isLoading && <LinearProgress />
       }
-      {
-        isFuzzyLoading && <LinearProgress />
-      }
+     
       {/*heading, search bar and table menu */}
 
       <Stack
@@ -203,42 +169,78 @@ export default function ProductionAdminPage() {
         >
           Production
         </Typography>
+        {/* filter dates and person */}
+        <Stack direction="row"  gap={2}>
+          < TextField
 
+            size="small"
+            type="date"
+            id="start_date"
+            label="Start Date"
+            fullWidth
+            value={dates.start_date}
+            focused
+            onChange={(e) => {
+              if (e.currentTarget.value) {
+                setDates({
+                  ...dates,
+                  start_date: moment(e.target.value).format("YYYY-MM-DD")
+                })
+              }
+            }}
+          />
+          < TextField
+
+            size="small"
+            type="date"
+            id="end_date"
+            label="End Date"
+            focused
+            value={dates.end_date}
+            fullWidth
+            onChange={(e) => {
+              if (e.currentTarget.value) {
+                setDates({
+                  ...dates,
+                  end_date: moment(e.target.value).format("YYYY-MM-DD")
+                })
+              }
+            }}
+          />
+          {user?.assigned_users && user?.assigned_users.length > 0 && < TextField
+            focused
+            size="small"
+            select
+            SelectProps={{
+              native: true,
+            }}
+            onChange={(e) => {
+              setUserId(e.target.value)
+              ReftechProductions()
+            }}
+            required
+            id="production_owner"
+            label="Person"
+            fullWidth
+          >
+            <option key={'00'} value={undefined}>
+
+            </option>
+            {
+              users.map((user, index) => {
+                if (!user.productions_access_fields.is_hidden)
+                  return (<option key={index} value={user._id}>
+                    {user.username}
+                  </option>)
+                else
+                  return null
+              })
+            }
+          </TextField>}
+        </Stack>
         <Stack
           direction="row"
         >
-          {/* search bar */}
-          < Stack direction="row" spacing={2}>
-
-            <TextField
-              fullWidth
-              size="small"
-              onChange={(e) => {
-                setFilter(e.currentTarget.value)
-                setFilterCount(0)
-              }}
-              autoFocus
-              placeholder={`${MemoData?.length} records...`}
-              style={{
-                fontSize: '1.1rem',
-                border: '0',
-              }}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
-                  refetchFuzzy()
-                }
-              }}
-            />
-            <IconButton
-              sx={{ bgcolor: 'whitesmoke' }}
-              onClick={() => {
-                refetchFuzzy()
-              }}
-            >
-              <Search />
-            </IconButton>
-
-          </Stack >
           <>
 
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
@@ -267,10 +269,10 @@ export default function ProductionAdminPage() {
                 setChoice({ type: ProductionChoiceActions.create_production })
               }}
               >New Production</MenuItem>}
-              < MenuItem onClick={() => {
+              {user?.productions_access_fields.is_editable &&user.is_admin&&< MenuItem onClick={() => {
                 handleExcel()
               }}
-              >Export To Excel</MenuItem>
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <NewProductionDialog/>
@@ -278,80 +280,12 @@ export default function ProductionAdminPage() {
         </Stack >
       </Stack >
 
-      {/* filter dates and person */}
-      <Stack direction="row" p={2} gap={2}>
-        < TextField
-
-          size="small"
-          type="date"
-          id="start_date"
-          label="Start Date"
-          fullWidth
-          value={dates.start_date}
-          focused
-          onChange={(e) => {
-            if (e.currentTarget.value) {
-              setDates({
-                ...dates,
-                start_date: moment(e.target.value).format("YYYY-MM-DD")
-              })
-            }
-          }}
-        />
-        < TextField
-
-          size="small"
-          type="date"
-          id="end_date"
-          label="End Date"
-          focused
-          value={dates.end_date}
-          fullWidth
-          onChange={(e) => {
-            if (e.currentTarget.value) {
-              setDates({
-                ...dates,
-                end_date: moment(e.target.value).format("YYYY-MM-DD")
-              })
-            }
-          }}
-        />
-        {user?.assigned_users && user?.assigned_users.length > 0 && < TextField
-          focused
-          size="small"
-          select
-          SelectProps={{
-            native: true,
-          }}
-          onChange={(e) => {
-            setUserId(e.target.value)
-            ReftechProductions()
-          }}
-          required
-          id="production_owner"
-          label="Person"
-          fullWidth
-        >
-          <option key={'00'} value={undefined}>
-
-          </option>
-          {
-            users.map((user, index) => {
-              if (!user.productions_access_fields.is_hidden)
-                return (<option key={index} value={user._id}>
-                  {user.username}
-                </option>)
-              else
-                return null
-            })
-          }
-        </TextField>}
-      </Stack>
+     
 
       {/* table */}
       {isLoading && <TableSkeleton />}
       {!isLoading &&
-        <Box sx={{ px: 2 }}>
+      <Box>
           <ProductionTable
             production={production}
             setProduction={setProduction}

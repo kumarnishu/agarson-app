@@ -110,7 +110,25 @@ export const GetProductions = async ({ limit, page, start_date, end_date, id }: 
 
 }
 
+export const CreateShoeWeight = async ({ body }: { body: FormData }) => {
+    return await apiClient.post(`weights`, body);
+}
 
+export const UpdateShoeWeight = async ({ id, body }: { id: string, body: FormData }) => {
+    return await apiClient.put(`weights/${id}`, body);
+}
+export const ValidateShoeWeight = async (id: string) => {
+    return await apiClient.patch(`weights/validate/${id}`);
+}
+export const GetShoeWeights = async () => {
+    return await apiClient.get(`weights`);
+}
+export const GetMyShoeWeights = async (dye: string | undefined) => {
+    if (dye)
+        return await apiClient.get(`weights/me?dye=${dye}`);
+    else
+        return await apiClient.get(`weights/me`);
+}
 
 export const BulkUploadMachines = async (body: FormData) => {
     return await apiClient.put(`machines/upload/bulk`, body);
@@ -129,6 +147,3 @@ export const GetMachineCategories = async () => {
     return await apiClient.get(`machine/categories`)
 }
 
-export const FuzzySearchProductions = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
-    return await apiClient.get(`search/visits?key=${searchString}&limit=${limit}&page=${page}`)
-}

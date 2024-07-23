@@ -21,7 +21,7 @@ function NewDyeForm() {
                 queryClient.invalidateQueries('dyes')
             }
         })
-    const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
+    const { data: articles,isLoading:userLoading } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
     const { setChoice } = useContext(ChoiceContext)
 
     const formik = useFormik({
@@ -63,7 +63,7 @@ function NewDyeForm() {
     return (
         <form onSubmit={formik.handleSubmit}>
 
-            <Stack
+            {!userLoading&& <Stack
                 direction="column"
                 gap={2}
                 pt={2}
@@ -127,7 +127,7 @@ function NewDyeForm() {
                 >
                     {
                         articles && articles.data && articles.data.map((article, index) => {
-                            return (<option key={index} value={article._id}>
+                            return (<option key={index} value={article&&article._id}>
                                 {article.display_name}
                             </option>)
                         })
@@ -147,7 +147,7 @@ function NewDyeForm() {
                     disabled={Boolean(isLoading)}
                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Create Dye"}
                 </Button>
-            </Stack>
+            </Stack>}
         </form>
     )
 }

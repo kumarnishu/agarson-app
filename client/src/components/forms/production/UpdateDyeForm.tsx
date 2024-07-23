@@ -23,7 +23,7 @@ function UpdateDyeForm({ dye }: { dye: IDye }) {
                 queryClient.invalidateQueries('dyes')
             }
         })
-    const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
+    const { data: articles, isLoading: articleLoading } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
     const { setChoice } = useContext(ChoiceContext)
 
     const formik = useFormik({
@@ -31,7 +31,7 @@ function UpdateDyeForm({ dye }: { dye: IDye }) {
             dye_number: dye.dye_number,
             size: dye.size,
             st_weight: dye.stdshoe_weight,
-            article_id: dye.article._id
+            article_id: dye.article&&dye.article._id
         },
         validationSchema: Yup.object({
             dye_number: Yup.number()
@@ -66,7 +66,7 @@ function UpdateDyeForm({ dye }: { dye: IDye }) {
     return (
         <form onSubmit={formik.handleSubmit}>
 
-            <Stack
+            {!articleLoading &&<Stack
                 direction="column"
                 gap={2}
                 pt={2}
@@ -130,7 +130,7 @@ function UpdateDyeForm({ dye }: { dye: IDye }) {
                 >
                     {
                         articles && articles.data && articles.data.map((article, index) => {
-                            return (<option key={index} value={article._id}>
+                            return (<option key={index} value={article&&article._id}>
                                 {article.display_name}
                             </option>)
                         })
@@ -150,7 +150,7 @@ function UpdateDyeForm({ dye }: { dye: IDye }) {
                     disabled={Boolean(isLoading)}
                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Update Dye"}
                 </Button>
-            </Stack>
+            </Stack>}
         </form>
     )
 }

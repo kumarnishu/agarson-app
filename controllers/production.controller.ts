@@ -6,6 +6,8 @@ import xlsx from "xlsx"
 import { IProduction, Production } from "../models/production/production.model"
 import { IUser, User } from "../models/users/user.model"
 import { MachineCategory } from "../models/production/category.machine.model"
+import { IShoeWeight, ShoeWeight } from "../models/production/shoe.weight.model"
+import { uploadFileToCloud } from "../utils/uploadFile.util"
 
 //get
 export const GetMachineCategories = async (req: Request, res: Response, next: NextFunction) => {
@@ -579,4 +581,109 @@ export const UpdateMachineCategories = async (req: Request, res: Response, next:
     }
     await cat.save()
     return res.status(200).json({ message: "updated categories" })
+}
+export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
+    let dt1 = new Date()
+    dt1.setDate(new Date().getDate() - 1)
+    let dye = req.query.dye
+    let weights: IShoeWeight[] = []
+    if (dye) {
+        weights = await ShoeWeight.find({ created_at: { $gt: dt1 }, dye: dye, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+    }
+    else {
+        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+    }
+    return res.status(200).json(weights)
+}
+export const GetShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
+    let weights = await ShoeWeight.find().populate('created_by').populate('updated_by').sort('dye_number')
+    return res.status(200).json(weights)
+}
+
+export const CreateShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body) as {
+        machine: string,
+        dye: string,
+        article: string,
+        weight: number
+    }
+    let { machine, dye, article, weight } = body
+
+    if (!machine || !dye || !article || !weight)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+
+    let m1 = await Machine.findById(machine)
+    let d1 = await Dye.findById(dye)
+    let art1 = await Article.findById(article)
+    if (!m1 || !d1 || !art1)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    let shoe_weight = new ShoeWeight({
+        machine: m1, dye: d1, article: art1, shoe_weight: weight
+    })
+    if (req.file) {
+        console.log(req.file.mimetype)
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
+        const storageLocation = `visits/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 10 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            shoe_weight.shoe_photo = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    shoe_weight.created_at = new Date()
+    shoe_weight.updated_at = new Date()
+    shoe_weight.created_by = req.user
+    shoe_weight.updated_by = req.user
+    await shoe_weight.save()
+    return res.status(201).json(shoe_weight)
+}
+
+export const UpdateShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body) as {
+        machine: string,
+        dye: string,
+        article: string,
+        weight: number
+    }
+    let { machine, dye, article, weight } = body
+
+    if (!machine || !dye || !article || !weight)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    const id = req.params.id
+    let shoe_weight = await ShoeWeight.findById(id)
+    if (!shoe_weight)
+        return res.status(404).json({ message: "shoe weight not found" })
+    let m1 = await Machine.findById(machine)
+    let d1 = await Dye.findById(dye)
+    let art1 = await Article.findById(article)
+    if (!m1 || !d1 || !art1)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+
+    shoe_weight.machine = m1
+    shoe_weight.dye = d1
+    shoe_weight.article = art1
+    shoe_weight.shoe_weight = weight
+    shoe_weight.created_at = new Date()
+    shoe_weight.updated_at = new Date()
+    shoe_weight.created_by = req.user
+    shoe_weight.updated_by = req.user
+    await shoe_weight.save()
+    return res.status(200).json(shoe_weight)
+}
+
+export const ValidateShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let shoe_weight = await ShoeWeight.findById(id)
+    if (!shoe_weight)
+        return res.status(404).json({ message: "shoe weight not found" })
+    shoe_weight.is_validated = true
+    shoe_weight.updated_at = new Date()
+    shoe_weight.updated_by = req.user
+    await shoe_weight.save()
+    return res.status(200).json(shoe_weight)
 }
