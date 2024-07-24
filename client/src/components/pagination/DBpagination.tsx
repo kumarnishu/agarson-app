@@ -25,7 +25,7 @@ function DBPagination({ paginationData, setPaginationData }: Props) {
                 >
                     <label htmlFor="records">Show</label>
                     <select id="records"
-                        style={{ width: '55px' }}
+                        style={{ width: '70px' }}
                         value={paginationData.limit}
                         onChange={(e) => {
                             setPaginationData({
@@ -36,7 +36,7 @@ function DBPagination({ paginationData, setPaginationData }: Props) {
                         }}
                     >
                         {
-                            [5, 10, 20, 50, 100, 500, 1000].map(item => {
+                            [100,1000,5000,10000,15000,30000].map(item => {
                                 return (<option key={item} value={item}>
                                     {item}
                                 </option>)
