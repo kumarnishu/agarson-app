@@ -34,6 +34,11 @@ export const GetArticles = async (req: Request, res: Response, next: NextFunctio
     return res.status(200).json(articles)
 }
 
+export const GetDyeById = async (req: Request, res: Response, next: NextFunction) => {
+    let id=req.params.id;
+    let dye=await Dye.findById(id).populate('article');
+    return res.status(200).json(dye)
+}
 export const GetDyes = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = String(req.query.hidden)
     let dyes: IDye[] = []
@@ -596,7 +601,7 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
     return res.status(200).json(weights)
 }
 export const GetShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
-    let weights = await ShoeWeight.find().populate('created_by').populate('updated_by').sort('dye_number')
+    let weights = await ShoeWeight.find().populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort('dye_number')
     return res.status(200).json(weights)
 }
 
@@ -605,9 +610,10 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
         machine: string,
         dye: string,
         article: string,
-        weight: number
+        weight: number,
+        month: number,
     }
-    let { machine, dye, article, weight } = body
+    let { machine, dye, article, weight, month } = body
 
     if (!machine || !dye || !article || !weight)
         return res.status(400).json({ message: "please fill all reqired fields" })
@@ -618,7 +624,7 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
     let shoe_weight = new ShoeWeight({
-        machine: m1, dye: d1, article: art1, shoe_weight: weight
+        machine: m1, dye: d1, article: art1, shoe_weight: weight, month: month
     })
     if (req.file) {
         console.log(req.file.mimetype)
@@ -648,9 +654,10 @@ export const UpdateShoeWeight = async (req: Request, res: Response, next: NextFu
         machine: string,
         dye: string,
         article: string,
-        weight: number
+        weight: number,
+        month: number
     }
-    let { machine, dye, article, weight } = body
+    let { machine, dye, article, weight,month } = body
 
     if (!machine || !dye || !article || !weight)
         return res.status(400).json({ message: "please fill all reqired fields" })
@@ -664,8 +671,9 @@ export const UpdateShoeWeight = async (req: Request, res: Response, next: NextFu
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
 
-    shoe_weight.machine = m1
+    shoe_weight.machine = m1    
     shoe_weight.dye = d1
+    shoe_weight.month = month
     shoe_weight.article = art1
     shoe_weight.shoe_weight = weight
     shoe_weight.created_at = new Date()

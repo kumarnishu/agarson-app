@@ -22,14 +22,13 @@ import UploadArticlesFromExcelButton from '../../components/buttons/UploadArticl
 type SelectedData = {
   name?: string,
   display_name?: string,
-  is_active: boolean
+  is_active?: boolean
   created_at?: string,
   updated_at?: string
 }
 let template: SelectedData[] = [
   {
     name: "power",
-    is_active: true,
     display_name: "power"
   }
 ]

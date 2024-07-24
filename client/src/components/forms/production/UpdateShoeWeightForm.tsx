@@ -11,11 +11,13 @@ import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import { GetArticles, GetDyes, GetMachines, UpdateShoeWeight } from '../../../services/ProductionServices';
 import { IArticle, IDye, IMachine, IShoeWeight } from '../../../types/production.types';
+import { months } from '../../../utils/months';
 
 
 type TformData = {
     machine: string,
     dye: string,
+    month: number,
     article: string,
     weight: number,
     st_weight:number
@@ -24,6 +26,7 @@ type TformData = {
 function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
     const { data: dyes } = useQuery<AxiosResponse<IDye[]>, BackendError>("dyes", async () => GetDyes())
     const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
+    
     const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IUser>, BackendError, {
@@ -42,6 +45,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
         initialValues: {
             machine: shoe_weight.machine._id,
             dye: shoe_weight.dye._id,
+            month: shoe_weight.month,
             article: shoe_weight.article._id,
             weight: shoe_weight.shoe_weight,
             st_weight: shoe_weight.dye&& shoe_weight.dye.stdshoe_weight
@@ -51,7 +55,8 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
             st_weight: Yup.number().required("required St weight"),
             machine: Yup.string().required("required machine"),
             article: Yup.string().required("required article"),
-            dye: Yup.string().required("required dye")
+            dye: Yup.string().required("required dye"),
+            month: Yup.number().required("required clock in")
 
         }),
         onSubmit: (values: TformData) => {
@@ -61,6 +66,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                 st_weight: values.st_weight,
                 article: values.article,
                 dye: values.dye,
+                month: values.month,
                 machine: values.machine
             }
             formdata.append("body", JSON.stringify(Data))
@@ -69,7 +75,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
     });
 
 
-
+    console.log(shoe_weight)
     useEffect(() => {
         if (isSuccess) {
             setTimeout(() => {
@@ -165,6 +171,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         {...formik.getFieldProps('article')}
                         required
                         label="Select Article"
+                        disabled
                         fullWidth
                     >
                         <option key={'00'} value={undefined}>
@@ -208,8 +215,34 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         }
                         {...formik.getFieldProps('weight')}
                     />
+                    < TextField
+                        select
 
-
+                        SelectProps={{
+                            native: true,
+                        }}
+                        error={
+                            formik.touched.month && formik.errors.month ? true : false
+                        }
+                        id="month"
+                        helperText={
+                            formik.touched.month && formik.errors.month ? formik.errors.month : ""
+                        }
+                        {...formik.getFieldProps('month')}
+                        required
+                        label="Clock In"
+                        fullWidth
+                    >
+                        <option key={'00'} value={undefined}>
+                        </option>
+                        {
+                            months.map((month, index) => {
+                                return (<option key={index} value={month.month}>
+                                    {month.label}
+                                </option>)
+                            })
+                        }
+                    </TextField>
                     {
                         isError ? (
                             <AlertBar message={error?.response.data.message} color="error" />

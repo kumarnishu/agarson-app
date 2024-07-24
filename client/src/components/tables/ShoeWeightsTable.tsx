@@ -11,6 +11,7 @@ import { Check, Edit, Photo } from '@mui/icons-material'
 import ValidateShoeWeightDialog from '../dialogs/production/ValidateShoeWeightDialog'
 import UpdateShoeWeightDialog from '../dialogs/production/UpdateShoeWeightDialog'
 import moment from 'moment'
+import { months } from '../../utils/months'
 
 
 
@@ -85,6 +86,12 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                             >
 
                                 Machine
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Clock In
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -235,6 +242,9 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.machine.name}
+                                        </STableCell>
+                                        <STableCell>
+                                            {months.find(x => x.month == shoe_weight.month) && months.find(x => x.month == shoe_weight.month)?.label}
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.dye.dye_number}

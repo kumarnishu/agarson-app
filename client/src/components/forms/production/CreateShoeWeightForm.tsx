@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Button,  Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
@@ -10,20 +10,24 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
 import UploadFileButton from '../../buttons/UploadFileButton';
-import { CreateShoeWeight, GetArticles, GetDyes, GetMachines } from '../../../services/ProductionServices';
+import { CreateShoeWeight, GetArticles, GetDyeById, GetDyes, GetMachines } from '../../../services/ProductionServices';
 import { IArticle, IDye, IMachine } from '../../../types/production.types';
+import { months } from '../../../utils/months';
 
 
 type TformData = {
     machine: string,
     dye: string,
     article: string,
+    month: number,
     weight: number,
     st_weight:number
 }
 
 function CreateShoeWeightForm() {
     const [file, setFile] = useState<File>()
+    const[dyeid,setDyeid]=useState<string>('');
+    const { data: dyedata, refetch: refetchDye } = useQuery<AxiosResponse<IDye>, BackendError>(["dye", dyeid], async () => GetDyeById(dyeid),{enabled:false})
     const { data: dyes } = useQuery<AxiosResponse<IDye[]>, BackendError>("dyes", async () => GetDyes())
     const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
     const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
@@ -44,6 +48,7 @@ function CreateShoeWeightForm() {
             machine: "",
             dye: "",
             article: "",
+            month: new Date().getMonth(),
             weight: 0,
             st_weight:0
         },
@@ -52,7 +57,8 @@ function CreateShoeWeightForm() {
             st_weight: Yup.number().required("required St weight"),
             machine: Yup.string().required("required machine"),
             article: Yup.string().required("required article"),
-            dye: Yup.string().required("required dye")
+            dye: Yup.string().required("required dye"),
+            month: Yup.number().required("required clock in")
 
         }),
         onSubmit: (values: TformData) => {
@@ -61,6 +67,7 @@ function CreateShoeWeightForm() {
                 let Data = {
                     weight: values.weight,
                     article: values.article,
+                    month: values.month,
                     dye: values.dye,
                     machine: values.machine,
                     st_weight: values.st_weight
@@ -81,6 +88,21 @@ function CreateShoeWeightForm() {
             setFile(file)
     }, [file])
 
+    useEffect(() => {
+        if (formik.values.dye)
+            setDyeid(formik.values.dye)
+    }, [formik.values.dye])
+
+    useEffect(()=>{
+        refetchDye()
+    },[dyeid])
+
+useEffect(()=>{
+    if (dyedata && dyedata.data.article){
+        formik.setFieldValue('article', dyedata.data.article._id);
+        formik.setFieldValue('st_weight', dyedata.data.stdshoe_weight);
+}
+}, [dyedata])
     useEffect(() => {
         if (isSuccess) {
             setTimeout(() => {
@@ -220,6 +242,34 @@ function CreateShoeWeightForm() {
                         }
                         {...formik.getFieldProps('weight')}
                     />
+                    < TextField
+                        select
+
+                        SelectProps={{
+                            native: true,
+                        }}
+                        error={
+                            formik.touched.month && formik.errors.month ? true : false
+                        }
+                        id="month"
+                        helperText={
+                            formik.touched.month && formik.errors.month ? formik.errors.month : ""
+                        }
+                        {...formik.getFieldProps('month')}
+                        required
+                        label="Clock In"
+                        fullWidth
+                    >
+                        <option key={'00'} value={undefined}>
+                        </option>
+                        {
+                            months.map((month, index) => {
+                                return (<option key={index} value={month.month}>
+                                    {month.label}
+                                </option>)
+                            })
+                        }
+                    </TextField>
                     <UploadFileButton name="media" required={true} camera={true} isLoading={isLoading} label="Upload Shoe Weight Photo" file={file} setFile={setFile} disabled={isLoading} />
 
                     {
@@ -234,7 +284,7 @@ function CreateShoeWeightForm() {
                     }
                     <Button size="large" variant="contained" color="primary" type="submit"
                         disabled={Boolean(isLoading)}
-                        fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
+                        fullWidth>{Boolean(isLoading) ? "Saving" : "Submit"}
                     </Button>
                 </Stack>
             </Stack>

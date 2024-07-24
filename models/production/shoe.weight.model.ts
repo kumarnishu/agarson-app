@@ -11,6 +11,7 @@ export type IShoeWeight = {
     article: IArticle,
     is_validated: boolean,
     shoe_weight: number,
+    month:number,
     shoe_photo: Asset,
     created_at: Date,
     updated_at: Date,
@@ -35,6 +36,7 @@ const ShoeWeightSchema = new mongoose.Schema<IShoeWeight, mongoose.Model<IShoeWe
         required: true
     },
     shoe_weight: Number,
+    month: Number,
     shoe_photo: {
         _id: { type: String },
         filename: { type: String },

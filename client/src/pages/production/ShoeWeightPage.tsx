@@ -96,7 +96,7 @@ export default function ShoeWeightPage() {
   useEffect(() => {
     if (filter) {
       if (shoe_weights) {
-        const searcher = new FuzzySearch(shoe_weights, ["shoe_weight", "dye.dye_number", "dye.size", "dye.article.name", "dye.machine.name", "updated_by"], {
+        const searcher = new FuzzySearch(shoe_weights, ["shoe_weight.article.name", "shoe_weight.machine.name","shoe_weight.month"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);

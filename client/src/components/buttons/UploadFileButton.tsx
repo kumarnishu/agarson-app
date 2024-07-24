@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, CircularProgress, Stack } from "@mui/material"
+import { Button,  Stack } from "@mui/material"
 import styled from "styled-components"
 
 
@@ -23,9 +23,7 @@ function UploadFileButton({ disabled, file, name, required, camera, label, isLoa
     return (
         <>
             {
-                isLoading ?
-                    <CircularProgress />
-                    :
+                !isLoading &&                 
                     <>
                         <Button
                             fullWidth

@@ -1,7 +1,7 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
-import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateMachine, CreateProduction, CreateShoeWeight, DeleteProduction, GetArticles, GetDyes, GetMachineCategories, GetMachines, GetMyTodayProductions, GetProductions, GetShoeWeights, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight, ValidateShoeWeight } from "../controllers/production.controller";
+import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateMachine, CreateProduction, CreateShoeWeight, DeleteProduction, GetArticles, GetDyeById, GetDyes, GetMachineCategories, GetMachines, GetMyTodayProductions, GetProductions, GetShoeWeights, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight, ValidateShoeWeight } from "../controllers/production.controller";
 
 const router = express.Router()
 
@@ -18,6 +18,7 @@ router.put("/machines/upload/bulk", isAuthenticatedUser, upload.single('file'), 
 router.route("/dyes").get(isAuthenticatedUser, GetDyes)
     .post(isAuthenticatedUser, CreateDye)
 router.put("/dyes/:id", isAuthenticatedUser, UpdateDye)
+router.get("/dyes/:id", isAuthenticatedUser, GetDyeById)
 router.patch("/dyes/toogle/:id", isAuthenticatedUser, ToogleDye)
 router.put("/dyes/upload/bulk", isAuthenticatedUser, upload.single('file'), BulkUploadDye)
 router.route("/productions/me").get(isAuthenticatedUser, GetMyTodayProductions)

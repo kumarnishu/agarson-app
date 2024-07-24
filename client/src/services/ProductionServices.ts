@@ -29,6 +29,9 @@ export const UpdateDye = async ({ body, id }: { body: { dye_number: number, size
     return await apiClient.put(`dyes/${id}`, body);
 };
 
+export const GetDyeById = async (id: string) => {
+    return await apiClient.get(`dyes/${id}`);
+};
 export const ToogleDye = async (id: string) => {
     return await apiClient.patch(`dyes/toogle/${id}`);
 };
@@ -122,12 +125,6 @@ export const ValidateShoeWeight = async (id: string) => {
 }
 export const GetShoeWeights = async () => {
     return await apiClient.get(`weights`);
-}
-export const GetMyShoeWeights = async (dye: string | undefined) => {
-    if (dye)
-        return await apiClient.get(`weights/me?dye=${dye}`);
-    else
-        return await apiClient.get(`weights/me`);
 }
 
 export const BulkUploadMachines = async (body: FormData) => {

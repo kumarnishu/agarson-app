@@ -16,6 +16,7 @@ export type IDye = {
 export type IShoeWeight = {
     _id: string,
     machine: IMachine,
+    month:number,
     dye: IDye,
     article: IArticle,
     is_validated: boolean,
