@@ -6,6 +6,7 @@ import { Asset, Feature, FeatureAccess, IUser, User } from '../models/users/user
 import isMongoId from "validator/lib/isMongoId";
 import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
+import { Role } from '../models/users/role.model';
 
 
 export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
@@ -1099,4 +1100,100 @@ export const VerifyEmail = async (req: Request, res: Response, next: NextFunctio
     res.status(200).json({
         message: `congrats ${user.email} verification successful`
     });
+}
+
+
+export const AssignRolesToUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const { role_ids, user_ids, flag } = req.body as {
+        user_ids: string[],
+        role_ids: string[],
+        flag: number
+    }
+    if (role_ids && role_ids.length === 0)
+        return res.status(400).json({ message: "please select one role " })
+    if (user_ids && user_ids.length === 0)
+        return res.status(400).json({ message: "please select one role owner" })
+
+    let owners = user_ids
+
+    if (flag == 0) {
+        for (let i = 0; i < owners.length; i++) {
+            let owner = await User.findById(owners[i]).populate('assigned_roles');
+            if (owner) {
+                let oldroles = owner.assigned_roles.map((item) => { return item._id.valueOf() });
+                oldroles = oldroles.filter((item) => { return !role_ids.includes(item) });
+                console.log(oldroles)
+                await User.findByIdAndUpdate(owner._id, {
+                    assigned_roles: oldroles
+                })
+            }
+        }
+    }
+    else for (let k = 0; k < owners.length; k++) {
+        const user = await User.findById(owners[k]).populate('assigned_roles')
+        if (user) {
+            let assigned_roles = user.assigned_roles;
+            for (let i = 0; i <= role_ids.length; i++) {
+                if (!assigned_roles.map(i => { return i._id.valueOf() }).includes(role_ids[i])) {
+                    let role = await Role.findById(role_ids[i]);
+                    if (role)
+                        assigned_roles.push(role)
+                }
+            }
+
+            user.assigned_roles = assigned_roles
+            await user.save();
+        }
+
+    }
+
+    return res.status(200).json({ message: "successfull" })
+}
+export const GetRoles = async (req: Request, res: Response, next: NextFunction) => {
+
+    let roles=await Role.find().populate('created_by').populate('updated_by');
+    return res.status(201).json(roles)
+}
+export const CreateRole = async (req: Request, res: Response, next: NextFunction) => {
+    const {role,permissions} = req.body as {role:string,permissions:string[]};
+    if (!role) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    if (await Role.findOne({ role: role.toLowerCase().trim() }))
+        return res.status(400).json({ message: "already exists this role" })
+    let result = await new Role({
+        role:role,
+        permissions:permissions,
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save()
+    return res.status(201).json(result)
+}
+
+export const UpdateRole = async (req: Request, res: Response, next: NextFunction) => {
+    const {role,permissions} = req.body as { role: string, permissions: string[]}
+    if (!role) 
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    const id = req.params.id
+    let oldrole = await Role.findById(id)
+    if (!oldrole)
+        return res.status(404).json({ message: "role not found" })
+    if (role !== oldrole.role)
+        if (await Role.findOne({ role:role.toLowerCase().trim() }))
+            return res.status(400).json({ message: "already exists this role" })
+    await Role.findByIdAndUpdate(oldrole._id, { role, permissions, updated_by: req.user, updated_at: new Date() })
+    return res.status(200).json(oldrole)
+
+}
+
+export const DeleteRole = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "role id not valid" })
+    let role = await Role.findById(id);
+    if (!role) {
+        return res.status(404).json({ message: "role not found" })
+    }
+    await role.remove();
+    return res.status(200).json({ message: "role deleted successfully" })
 }

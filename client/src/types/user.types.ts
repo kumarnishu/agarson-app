@@ -2,6 +2,16 @@ import { FeatureAccess } from "./access.types"
 import { Asset } from "./asset.types"
 import { IState } from "./erp_report.types"
 
+export type IRole = {
+    _id: string,
+    role: string,
+    permissions: string[],
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
+
 export type IUser = {
     _id: string,
     username: string,
@@ -24,6 +34,7 @@ export type IUser = {
     visit_access_fields: FeatureAccess,
     email_verified: Boolean,
     mobile_verified: Boolean,
+    assigned_roles: IRole[],
     is_active: Boolean,
     last_login: Date,
     multi_login_token: string | null,

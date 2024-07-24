@@ -33,6 +33,7 @@ import CrmActivitiesPage from './pages/crm/CrmActivitiesPage.tsx'
 import PartyTargetReportsPage from './pages/erp reports/PartyTargetReportPage.tsx'
 import SaleAnalysisReport from './pages/erp reports/SaleAnalysisReport.tsx'
 import ShoeWeightPage from './pages/production/ShoeWeightPage.tsx'
+import RolesPage from './pages/users/RolesPage.tsx'
 const StatesPage = React.lazy(() => import('./pages/erp reports/StatesPage.tsx'))
 const PendingOrdersReportPage = React.lazy(() => import('./pages/erp reports/PendingOrdersReport.tsx'))
 const ClientSaleReportPage = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPage.tsx'))
@@ -150,6 +151,7 @@ export enum paths {
 
   //users
   users = "users",
+  roles ="roles",
   feature_reports = "feature_reports",
   states = "states",
   login = "/",
@@ -198,7 +200,11 @@ function AppRoutes() {
                   <Suspense fallback={<LinearProgress />}><UsersPage /></Suspense>
                 }
               />
-            
+              <Route
+                path={paths.roles} element={
+                  <Suspense fallback={<LinearProgress />}><RolesPage /></Suspense>
+                }
+              />
 
               <Route
                 path={paths.feature_reports} element={
