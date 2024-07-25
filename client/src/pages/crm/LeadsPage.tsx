@@ -1,13 +1,14 @@
-import { Box, Button, Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
+import { Delete, Search } from '@mui/icons-material'
+import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { BuildOutlined, Comment, Delete, Search ,  Edit, Share, Visibility, Download } from '@mui/icons-material'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchLeads, GetAllStages, GetLeads } from '../../services/LeadsServices'
 import { UserContext } from '../../contexts/userContext'
 import UploadLeadsExcelButton from '../../components/buttons/UploadLeadsExcelButton';
 import DBPagination from '../../components/pagination/DBpagination';
+import LeadsTable from '../../components/tables/crm/LeadsTable';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
@@ -19,16 +20,6 @@ import { ILead, IStage } from '../../types/crm.types'
 import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
 import { toTitleCase } from '../../utils/TitleCase'
 import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
-import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
-import { onlyUnique } from '../../utils/UniqueArray'
-import CreateOrEditRemarkDialog from '../../components/dialogs/crm/CreateOrEditRemarkDialog'
-import DeleteCrmItemDialog from '../../components/dialogs/crm/DeleteCrmItemDialog'
-import ViewRemarksDialog from '../../components/dialogs/crm/ViewRemarksDialog'
-import RemoveLeadReferralDialog from '../../components/dialogs/crm/RemoveLeadReferralDialog'
-import ConvertLeadToReferDialog from '../../components/dialogs/crm/ConvertLeadToReferDialog'
-import ReferLeadDialog from '../../components/dialogs/crm/ReferLeadDialog'
-import PopUp from '../../components/popup/PopUp'
-import BackHandIcon from '@mui/icons-material/BackHand';
 
 let template: ILeadTemplate[] = [
   {
@@ -61,37 +52,76 @@ export default function LeadsPage() {
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<ILead>()
-  const [leadids, setLeadIds] = useState<string[]>([])
   const [leads, setLeads] = useState<ILead[]>([])
+  const [selectAll, setSelectAll] = useState(false)
   const [preFilteredData, setPreFilteredData] = useState<ILead[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
+  const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
   const [stage, setStage] = useState<string>();
   const [stages, setStages] = useState<IStage[]>([])
-  const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
-  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
   const { data, isLoading, refetch } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
-  const {user}=useContext(UserContext);
+
   const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
 
   const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
     enabled: false
   })
+  const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-  function handleExcel(data: any[]) {
+  function handleExcel() {
     setAnchorEl(null)
     try {
-      ExportToExcel(data, "leads_data")
+      ExportToExcel(selectedData, "leads_data")
       setSent(true)
+      setSelectAll(false)
+      setSelectedData([])
+      setSelectedLeads([])
     }
     catch (err) {
       console.log(err)
       setSent(false)
     }
   }
+
+
+  // refine data
+  useEffect(() => {
+    let data: ILeadTemplate[] = []
+    selectedLeads.map((lead) => {
+      return data.push(
+
+        {
+          _id: lead._id,
+          name: lead.name,
+          customer_name: lead.customer_name,
+          customer_designation: lead.customer_designation,
+          mobile: lead.mobile,
+          gst: lead.gst,
+          email: lead.email,
+          city: lead.city,
+          state: lead.state,
+          country: lead.country,
+          address: lead.address,
+          work_description: lead.work_description,
+          turnover: lead.turnover,
+          alternate_mobile1: lead.alternate_mobile1,
+          alternate_mobile2: lead.alternate_mobile2,
+          alternate_email: lead.alternate_email,
+          lead_type: lead.lead_type,
+          stage: lead.stage,
+          lead_source: lead.lead_source,
+          remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
+
+        })
+    })
+    if (data.length > 0)
+      setSelectedData(data)
+  }, [selectedLeads])
 
 
   useEffect(() => {
@@ -155,343 +185,6 @@ export default function LeadsPage() {
       setFilterCount(count)
     }
   }, [fuzzyleads])
-
-  const columns = useMemo<MRT_ColumnDef<ILead>[]>(
-    //column definitions...
-    () => [
-      {
-        accessorKey: 'action',
-        header: 'Actions',
-        Cell: ((row) => {
-          
-          return <PopUp
-            element={
-              <Stack direction="row" spacing={1}>
-
-                {lead&&lead.referred_party &&
-                  <Tooltip title="Remove Refrerral">
-                    <IconButton color="error"
-                      onClick={() => {
-
-                        setChoice({ type: LeadChoiceActions.remove_referral })
-                        setLead(row.row.original)
-
-                      }}
-                    >
-                      <BackHandIcon />
-                    </IconButton>
-                  </Tooltip>}
-                {lead &&!lead.referred_party &&
-                  <Tooltip title="refer">
-                    <IconButton color="primary"
-                      onClick={() => {
-
-                        setChoice({ type: LeadChoiceActions.refer_lead })
-                        setLead(row.row.original)
-
-                      }}
-                    >
-                      <Share />
-                    </IconButton>
-                  </Tooltip>}
-
-                {lead &&!lead.referred_party &&
-                  <Tooltip title="convert to refer">
-                    <IconButton color="primary"
-                      onClick={() => {
-
-                        setChoice({ type: LeadChoiceActions.convert_lead_to_refer })
-                        setLead(row.row.original)
-
-                      }}
-                    >
-                      <BuildOutlined />
-                    </IconButton>
-                  </Tooltip>}
-
-                {user?.crm_access_fields.is_deletion_allowed &&
-                  <Tooltip title="delete">
-                    <IconButton color="error"
-                      onClick={() => {
-                        setChoice({ type: LeadChoiceActions.delete_crm_item })
-                        setLead(row.row.original)
-
-                      }}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </Tooltip>
-                }
-
-
-
-
-                {user?.crm_access_fields.is_editable &&
-                  <Tooltip title="edit">
-                    <IconButton color="secondary"
-                      onClick={() => {
-
-                        setChoice({ type: LeadChoiceActions.create_or_edit_lead })
-                        setLead(row.row.original)
-                      }}
-
-                    >
-                      <Edit />
-                    </IconButton>
-                  </Tooltip>}
-
-
-                <Tooltip title="view remarks">
-                  <IconButton color="primary"
-                    onClick={() => {
-
-                      setChoice({ type: LeadChoiceActions.view_remarks })
-                      setLead(row.row.original)
-
-
-                    }}
-                  >
-                    <Visibility />
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip title="Add Remark">
-                  <IconButton
-                    color="success"
-                    onClick={() => {
-
-                      setChoice({ type: LeadChoiceActions.create_or_edt_remark })
-                      setLead(row.row.original)
-
-                    }}
-                  >
-                    <Comment />
-                  </IconButton>
-                </Tooltip>
-
-              </Stack>}
-          />
-        })
-
-      },
-      {
-        accessorKey: 'name',
-        header: 'Party Name',
-        size: 350
-      },
-      {
-        accessorKey: 'city',
-        header: 'City',
-        aggregationFn: 'count',
-        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        filterVariant: 'multi-select',
-        filterSelectOptions: leads.map((i) => { return i.city }).filter(onlyUnique)
-
-      },
-      {
-        accessorKey: 'state',
-        header: 'State',
-        aggregationFn: 'count',
-        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        filterVariant: 'multi-select',
-        filterSelectOptions: leads.map((i) => { return i.state }).filter(onlyUnique)
-      },
-      {
-        accessorKey: 'stage',
-        header: 'Stage',
-        aggregationFn: 'count',
-        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        filterVariant: 'multi-select',
-        filterSelectOptions: leads.map((i) => { return i.state }).filter(onlyUnique)
-      },
-      {
-        accessorKey: 'mobile',
-        header: 'Mobile1',
-      },
-      {
-        accessorKey: 'mobile2',
-        header: 'Mobile2',
-      },
-      {
-        accessorKey: 'mobile3',
-        header: 'Mobile3',
-      },
-      {
-        accessorKey: 'gst',
-        header: 'GST'
-      },
-      {
-        accessorKey: 'lead_type',
-        header: 'Lead Type',
-        aggregationFn: 'count',
-        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        filterVariant: 'multi-select',
-        filterSelectOptions: leads.map((i) => { return i.lead_type }).filter(onlyUnique)
-      },
-      {
-        accessorKey: 'lead_source',
-        header: 'Lead Source',
-        aggregationFn: 'count',
-        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        filterVariant: 'multi-select',
-        filterSelectOptions: leads.map((i) => { return i.lead_source }).filter(onlyUnique)
-      },
-      {
-        accessorKey: 'turnover',
-        header: 'Turn Over'
-      },
-      {
-        accessorKey: 'work_description',
-        header: 'Work Description'
-      },
-      {
-        accessorKey: 'customer_name',
-        header: 'Customer Name',
-      },
-      {
-        accessorKey: 'customer_designation',
-        header: 'Customer Designation',
-      },
-      {
-        accessorKey: 'referred_party_name',
-        header: 'Refer Party',
-      },
-      {
-        accessorKey: 'referred_party_mobile',
-        header: 'Refer Mobile',
-      },
-      {
-        accessorKey: 'referred_date',
-        header: 'Refer Date',
-      },
-      {
-        accessorKey: 'email',
-        header: 'Email',
-      },
-      {
-        accessorKey: 'email2',
-        header: 'Email2',
-      },
-      {
-        accessorKey: 'address',
-        header: 'Address',
-      },
-      {
-        accessorKey: 'country',
-        header: 'Country',
-      },
-      {
-        accessorKey: 'created_at',
-        header: 'Created At',
-      },
-      {
-        accessorKey: 'updated_at',
-        header: 'Updated At',
-      },
-      {
-        accessorKey: 'visiting_card',
-        header: 'Visiting Card',
-      }
-    ],
-    [leads,],
-    //end
-  );
-
-
-  useEffect(() => {
-    //scroll to the top of the table when the sorting changes
-    try {
-      rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [sorting]);
-
-  
-
-  const table = useMaterialReactTable({
-    columns,
-    data: leads, //10,000 rows
-    defaultDisplayColumn: { enableResizing: true },
-    enableBottomToolbar: false,
-    enableGlobalFilter: false,
-    enableColumnResizing: true,
-    enableColumnVirtualization: true,
-    muiTableHeadRowProps: () => ({
-      sx: {
-        backgroundColor: 'whitesmoke',
-        color: 'white'
-      },
-    }),
-    muiTableBodyCellProps: () => ({
-      sx: {
-        fontSize: '13px',
-        border: '1px solid #ddd;'
-      },
-    }),
-    renderTopToolbarCustomActions: ({ table }) => (
-      <Box
-        sx={{
-          display: 'flex',
-          gap: '16px',
-          flexWrap: 'wrap',
-        }}
-      >
-        {LoggedInUser?.is_admin &&<Button
-          //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-          onClick={()=>handleExcel(leads)}
-          startIcon={<Download />}
-        >
-          Export All Data
-        </Button>}
-        {LoggedInUser?.created_by._id === LoggedInUser?._id && LoggedInUser ?.crm_access_fields.is_deletion_allowed&&<Button
-          disabled={
-            !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-          }
-          //only export selected rows
-          onClick={() => {
-            if (leadids.length == 0)
-              alert("select some useless leads")
-            else{
-              setLeadIds(table.getSelectedRowModel().rows.map((item) => { return item.original._id }))
-              setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })
-            }
-          }
-          }
-          startIcon={<Delete />}
-        >
-          Delete
-        </Button>}
-       
-        {LoggedInUser?.is_admin &&<Button
-          disabled={
-            !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-          }
-          //only export selected rows
-          onClick={() => {
-            handleExcel(table.getSelectedRowModel().rows.map((item)=>{return item.original}))}
-          }
-          startIcon={<Download />}
-        >
-          Export Selected Rows
-        </Button>}
-      </Box>
-    ),
-    enableGrouping: true,
-    enableRowSelection: true,
-    enableGlobalFilterModes: true,
-    enablePagination: false,
-    enableColumnPinning: true,
-    enableTableFooter: true,
-    enableRowNumbers: true,
-    enableRowVirtualization: true,
-    muiTableContainerProps: { sx: { maxHeight: '400px' } },
-    onSortingChange: setSorting,
-    state: { isLoading, sorting },
-    rowVirtualizerInstanceRef, //optional
-    rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
-    columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
-  });
   return (
     <>
 
@@ -516,7 +209,7 @@ export default function LeadsPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Leads 
+          Leads {selectedLeads.length > 0 ? <span>(checked : {selectedLeads.length})</span> : `- ${leads.length}`}
         </Typography>
 
         <TextField
@@ -552,6 +245,20 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
+            {LoggedInUser?.created_by._id === LoggedInUser?._id && <Tooltip title="Delete Selected Leads">
+              <IconButton color="error"
+                disabled={!LoggedInUser?.crm_access_fields.is_deletion_allowed}
+                onClick={() => {
+                  if (selectedLeads.length == 0)
+                    alert("select some useless leads")
+                  else
+                    setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })
+                }}
+              >
+                <Delete />
+              </IconButton>
+            </Tooltip>}
+
             < TextField
               select
               SelectProps={{
@@ -613,11 +320,12 @@ export default function LeadsPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>
-              {LoggedInUser?.is_admin && < MenuItem onClick={() => handleExcel(template)}
-              >Export Template</MenuItem>}
+              {LoggedInUser?.is_admin && < MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>}
+
             </Menu >
-            <CreateOrEditLeadDialog lead={lead} />
-            <BulkDeleteUselessLeadsDialog selectedLeadsIds={leadids} />
+            <CreateOrEditLeadDialog lead={undefined} />
+            <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />
           </>
         </Stack >
       </Stack >
@@ -625,25 +333,20 @@ export default function LeadsPage() {
       {isLoading && <TableSkeleton />}
       {leads && leads.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
       {!isLoading && leads.length > 0 && <>
-        <MaterialReactTable table={table} />
+        < LeadsTable
+          lead={lead}
+          setLead={setLead}
+          selectAll={selectAll}
+          selectedLeads={selectedLeads}
+          setSelectedLeads={setSelectedLeads}
+          setSelectAll={setSelectAll}
+          leads={leads}
+        />
       </>
       }
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
-      {
-        lead ?
-          <>
-            <CreateOrEditRemarkDialog lead={lead} />
-            <DeleteCrmItemDialog lead={lead} />
-            <ViewRemarksDialog lead={lead} />
-            <ReferLeadDialog lead={lead} />
-            <RemoveLeadReferralDialog lead={lead} />
-            <ConvertLeadToReferDialog lead={lead} />
-          </>
-          : null
-      }
     </>
 
   )
 
 }
-

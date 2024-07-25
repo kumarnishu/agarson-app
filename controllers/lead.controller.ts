@@ -637,17 +637,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
             leads = await Lead.find({
                 stage: stage, state: { $in: states }, city: { $in: cities }
             }).populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
+                path: 'remarks'
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
                 stage: stage, state: { $in: states }, city: { $in: cities }

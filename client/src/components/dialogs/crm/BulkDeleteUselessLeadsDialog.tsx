@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, Button, Typography, Stack, CircularProgress, IconButton } from '@mui/material'
 import { AxiosResponse } from 'axios';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { BulkDeleteUselessLeads } from '../../../services/LeadsServices';
@@ -8,10 +8,12 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
+import { ILead } from '../../../types/crm.types';
 
 
-function BulkDeleteUselessLeadsDialog({ selectedLeadsIds }: { selectedLeadsIds: string[] }) {
+function BulkDeleteUselessLeadsDialog({ selectedLeads }: { selectedLeads: ILead[] }) {
     const { choice, setChoice } = useContext(ChoiceContext)
+    const [leadsIds, setLeadsIds] = useState<string[]>()
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
         <AxiosResponse<any>, BackendError, { leads_ids: string[] }>
         (BulkDeleteUselessLeads, {
@@ -19,6 +21,16 @@ function BulkDeleteUselessLeadsDialog({ selectedLeadsIds }: { selectedLeadsIds: 
                 queryClient.invalidateQueries('leads')
             }
         })
+
+    useEffect(() => {
+        if (selectedLeads && selectedLeads.length > 0) {
+            let ids: string[] = []
+            ids = selectedLeads.map((lead) => {
+                return lead._id
+            })
+            setLeadsIds(ids)
+        }
+    }, [selectedLeads])
 
     useEffect(() => {
         if (isSuccess)
@@ -49,7 +61,7 @@ function BulkDeleteUselessLeadsDialog({ selectedLeadsIds }: { selectedLeadsIds: 
             }
             <DialogContent>
                 <Typography variant="body1" color="error">
-                    {`Warning ! This will delete selected ${selectedLeadsIds.length} leads permanently and associated remarks to it.`}
+                    {`Warning ! This will delete selected ${selectedLeads.length} leads permanently and associated remarks to it.`}
 
                 </Typography>
             </DialogContent>
@@ -62,8 +74,8 @@ function BulkDeleteUselessLeadsDialog({ selectedLeadsIds }: { selectedLeadsIds: 
                 <Button fullWidth variant="outlined" color="error"
                     onClick={() => {
                         setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })
-                        if (selectedLeadsIds && selectedLeadsIds.length > 0)
-                            mutate({ leads_ids: selectedLeadsIds })
+                        if (leadsIds && leadsIds.length > 0)
+                            mutate({ leads_ids: leadsIds })
                     }}
                     disabled={isLoading}
                 >

@@ -3,8 +3,6 @@ import { IRemark } from "./remark.model";
 import { Asset, IUser } from "../users/user.model";
 import { IReferredParty } from "./referred.model";
 
-
-
 export type ILead = {
     _id: string,
     name: string,
