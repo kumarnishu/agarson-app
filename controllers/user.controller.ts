@@ -7,6 +7,7 @@ import isMongoId from "validator/lib/isMongoId";
 import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
 import { Role } from '../models/users/role.model';
+import { FetchAllPermissions, IMenu } from '../utils/fillAllPermissions';
 
 
 export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
@@ -1152,8 +1153,15 @@ export const AssignRolesToUsers = async (req: Request, res: Response, next: Next
 export const GetRoles = async (req: Request, res: Response, next: NextFunction) => {
 
     let roles=await Role.find().populate('created_by').populate('updated_by');
-    return res.status(201).json(roles)
+    return res.status(200).json(roles)
 }
+export const GetAllPermissions = async (req: Request, res: Response, next: NextFunction) => {
+    let permissions: IMenu[]=[];
+    permissions= FetchAllPermissions();
+    return res.status(200).json(permissions)
+}
+
+
 export const CreateRole = async (req: Request, res: Response, next: NextFunction) => {
     const {role,permissions} = req.body as {role:string,permissions:string[]};
     if (!role) {

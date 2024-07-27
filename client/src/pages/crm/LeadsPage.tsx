@@ -14,7 +14,6 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { ILeadTemplate } from '../../types/template.type'
 import { ILead, IStage } from '../../types/crm.types'
 import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
@@ -329,21 +328,17 @@ export default function LeadsPage() {
           </>
         </Stack >
       </Stack >
-      {/* table */}
-      {isLoading && <TableSkeleton />}
-      {leads && leads.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && leads.length > 0 && <>
-        < LeadsTable
-          lead={lead}
-          setLead={setLead}
-          selectAll={selectAll}
-          selectedLeads={selectedLeads}
-          setSelectedLeads={setSelectedLeads}
-          setSelectAll={setSelectAll}
-          leads={leads}
-        />
-      </>
-      }
+    
+      < LeadsTable
+        lead={lead}
+        setLead={setLead}
+        selectAll={selectAll}
+        selectedLeads={selectedLeads}
+        setSelectedLeads={setSelectedLeads}
+        setSelectAll={setSelectAll}
+        leads={leads}
+      />
+      
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
     </>
 

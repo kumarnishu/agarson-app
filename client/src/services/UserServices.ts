@@ -58,6 +58,9 @@ export const GetPaginatedUsers = async ({ limit, page }: { limit?: number | unde
   return await apiClient.get(`users/paginated/?limit=${limit}&page=${page}`)
 }
 
+export const GetPermissions = async () => {
+  return await apiClient.get(`permissions`)
+}
 export const FuzzySearchUsers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
   return await apiClient.get(`search/users?key=${searchString}&limit=${limit}&page=${page}`)
 }
@@ -159,6 +162,34 @@ export const SendVerifyEmail = async ({ email }:
   }) => {
   return await apiClient.post(`email/verify`, { email: email })
 };
+
 export const AssignUsers = async ({ id, body }: { id: string, body: { ids: string[] } }) => {
   return await apiClient.patch(`assign/users/${id}`, body)
 }
+
+export const GetRoles = async () => {
+  return await apiClient.get(`roles`)
+}
+
+export const CreateRole = async ({  body }: {  body: { role:string,permissions: string[] } }) => {
+  return await apiClient.post(`roles`, body)
+}
+
+
+export const AssignRolesToUsers = async ({ body }: { body: {
+    user_ids: string[],
+    role_ids: string[],
+    flag: number
+  } }) => {
+  return await apiClient.patch(`roles/assign`, body)
+}
+
+export const UpdateRole = async ({ id, body }: { id: string, body: { role: string, permissions: string[] } }) => {
+  return await apiClient.put(`roles/${id}`, body)
+}
+
+export const DeleteRole = async ({id}:{ id:string}) => {
+  return await apiClient.delete(`roles/${id}`)
+}
+
+

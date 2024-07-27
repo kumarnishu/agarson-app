@@ -39,584 +39,590 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
   return (
     <>
-      <Box sx={{
-        overflow: "auto",
-        height: '76vh'
-      }}>
-        <STable>
-          <STableHead style={{
 
-          }}>
-            <STableRow>
-              <STableHeadCell
-              >
 
-                <Checkbox
-                  indeterminate={selectAll ? true : false}
-                  checked={Boolean(selectAll)}
-                  size="small"
-                  sx={{ width: 10, height: 10 }}
-                  onChange={(e) => {
-                    if (e.currentTarget.checked) {
-                      setSelectedLeads(leads)
-                      setSelectAll(true)
-                    }
-                    if (!e.currentTarget.checked) {
-                      setSelectedLeads([])
-                      setSelectAll(false)
-                    }
-                  }} />
+      {leads && leads.length == 0 ? <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>
+        :
+        <Box sx={{
+          overflow: "auto",
+          height: '76vh'
+        }}>
+          <STable>
+            <STableHead style={{
 
-              </STableHeadCell>
+            }}>
+              <STableRow>
+                <STableHeadCell
+                >
 
-              <STableHeadCell
-              >
+                  <Checkbox
+                    indeterminate={selectAll ? true : false}
+                    checked={Boolean(selectAll)}
+                    size="small"
+                    sx={{ width: 10, height: 10 }}
+                    onChange={(e) => {
+                      if (e.currentTarget.checked) {
+                        setSelectedLeads(leads)
+                        setSelectAll(true)
+                      }
+                      if (!e.currentTarget.checked) {
+                        setSelectedLeads([])
+                        setSelectAll(false)
+                      }
+                    }} />
 
-                Actions
+                </STableHeadCell>
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Actions
 
+                </STableHeadCell>
 
 
-              <STableHeadCell
-              >
 
-                Lead Name
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Lead Name
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                City
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  City
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                State
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
-              <STableHeadCell
-              >
+                  State
 
-                Stage
+                </STableHeadCell>
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
-              <STableHeadCell
-              >
+                  Stage
 
-                Mobile
+                </STableHeadCell>
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Mobile
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Mobile2
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
-              <STableHeadCell
-              >
+                  Mobile2
 
-                Mobile3
+                </STableHeadCell>
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Mobile3
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                GST
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  GST
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Lead Type
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Lead Type
 
+                </STableHeadCell>
 
 
 
-              <STableHeadCell
-              >
 
-                TurnOver
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  TurnOver
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Work Description
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
-              <STableHeadCell
-              >
+                  Work Description
 
-                Customer Name
+                </STableHeadCell>
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
-              <STableHeadCell
-              >
+                  Customer Name
 
-                Customer Desigination
+                </STableHeadCell>
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Customer Desigination
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Last Remark
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Last Remark
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Refer Party
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
-              <STableHeadCell
-              >
+                  Refer Party
 
-                Refer Party Mobile
+                </STableHeadCell>
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
-              <STableHeadCell
-              >
+                  Refer Party Mobile
 
-                Refer Date
+                </STableHeadCell>
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Refer Date
 
+                </STableHeadCell>
 
-              <STableHeadCell
-              >
 
-                Email
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Email
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Email2
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Email2
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Address
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Address
 
+                </STableHeadCell>
 
 
-              <STableHeadCell
-              >
 
-                Lead Source
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Lead Source
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Country
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Country
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Created At
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Created At
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Updated At
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
+                  Updated At
 
-              <STableHeadCell
-              >
+                </STableHeadCell>
 
-                Created By
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
 
-              <STableHeadCell
-              >
+                  Created By
 
-                Updated By
+                </STableHeadCell>
 
-              </STableHeadCell>
-              <STableHeadCell
-              >
+                <STableHeadCell
+                >
 
-                Whatsapp Status
+                  Updated By
 
-              </STableHeadCell>
-              <STableHeadCell
-              >
+                </STableHeadCell>
+                <STableHeadCell
+                >
 
-                Last whatsapp
+                  Whatsapp Status
 
-              </STableHeadCell>
-              <STableHeadCell
-              >
+                </STableHeadCell>
+                <STableHeadCell
+                >
 
-                Visiting Card
+                  Last whatsapp
 
-              </STableHeadCell>
-            </STableRow>
-          </STableHead>
-          <STableBody >
-            {
+                </STableHeadCell>
+                <STableHeadCell
+                >
 
-              data && data.map((lead, index) => {
-                return (
-                  <STableRow
-                    style={{ backgroundColor: selectedLeads.length > 0 && selectedLeads.find((t) => t._id === lead._id) ? "lightgrey" : "white" }}
-                    key={index}>
-                    {selectAll ?
+                  Visiting Card
 
-                      <STableCell>
+                </STableHeadCell>
+              </STableRow>
+            </STableHead>
+            <STableBody >
+              {
 
+                data && data.map((lead, index) => {
+                  return (
+                    <STableRow
+                      style={{ backgroundColor: selectedLeads.length > 0 && selectedLeads.find((t) => t._id === lead._id) ? "lightgrey" : "white" }}
+                      key={index}>
+                      {selectAll ?
 
-                        <Checkbox sx={{ width: 10, height: 10 }} size="small"
-                          checked={Boolean(selectAll)}
-                        />
+                        <STableCell>
 
 
-                      </STableCell>
-                      :
-                      null
-                    }
-                    {!selectAll ?
+                          <Checkbox sx={{ width: 10, height: 10 }} size="small"
+                            checked={Boolean(selectAll)}
+                          />
 
-                      <STableCell>
 
-                        <Checkbox sx={{ width: 10, height: 10 }} size="small"
-                          checked={selectedLeads.length > 0 && selectedLeads.find((t) => t._id === lead._id) ? true : false}
-                          onChange={(e) => {
-                            setLead(lead)
-                            if (e.target.checked) {
-                              setSelectedLeads([...selectedLeads, lead])
-                            }
-                            if (!e.target.checked) {
-                              setSelectedLeads((leads) => leads.filter((item) => {
-                                return item._id !== lead._id
-                              }))
-                            }
-                          }}
-                        />
+                        </STableCell>
+                        :
+                        null
+                      }
+                      {!selectAll ?
 
-                      </STableCell>
-                      :
-                      null
-                    }
+                        <STableCell>
 
-                    <STableCell style={{ zIndex: -1 }}>
-                      <PopUp
-                        element={
-                          <Stack direction="row" spacing={1}>
+                          <Checkbox sx={{ width: 10, height: 10 }} size="small"
+                            checked={selectedLeads.length > 0 && selectedLeads.find((t) => t._id === lead._id) ? true : false}
+                            onChange={(e) => {
+                              setLead(lead)
+                              if (e.target.checked) {
+                                setSelectedLeads([...selectedLeads, lead])
+                              }
+                              if (!e.target.checked) {
+                                setSelectedLeads((leads) => leads.filter((item) => {
+                                  return item._id !== lead._id
+                                }))
+                              }
+                            }}
+                          />
 
-                            {lead.referred_party &&
-                              <Tooltip title="Remove Refrerral">
-                                <IconButton color="error"
-                                  onClick={() => {
+                        </STableCell>
+                        :
+                        null
+                      }
 
-                                    setChoice({ type: LeadChoiceActions.remove_referral })
-                                    setLead(lead)
+                      <STableCell style={{ zIndex: -1 }}>
+                        <PopUp
+                          element={
+                            <Stack direction="row" spacing={1}>
 
-                                  }}
-                                >
-                                  <BackHandIcon />
-                                </IconButton>
-                              </Tooltip>}
-                            {!lead.referred_party &&
-                              <Tooltip title="refer">
+                              {lead.referred_party &&
+                                <Tooltip title="Remove Refrerral">
+                                  <IconButton color="error"
+                                    onClick={() => {
+
+                                      setChoice({ type: LeadChoiceActions.remove_referral })
+                                      setLead(lead)
+
+                                    }}
+                                  >
+                                    <BackHandIcon />
+                                  </IconButton>
+                                </Tooltip>}
+                              {!lead.referred_party &&
+                                <Tooltip title="refer">
+                                  <IconButton color="primary"
+                                    onClick={() => {
+
+                                      setChoice({ type: LeadChoiceActions.refer_lead })
+                                      setLead(lead)
+
+                                    }}
+                                  >
+                                    <Share />
+                                  </IconButton>
+                                </Tooltip>}
+
+                              {!lead.referred_party &&
+                                <Tooltip title="convert to refer">
+                                  <IconButton color="primary"
+                                    onClick={() => {
+
+                                      setChoice({ type: LeadChoiceActions.convert_lead_to_refer })
+                                      setLead(lead)
+
+                                    }}
+                                  >
+                                    <BuildOutlined />
+                                  </IconButton>
+                                </Tooltip>}
+
+                              {user?.crm_access_fields.is_deletion_allowed &&
+                                <Tooltip title="delete">
+                                  <IconButton color="error"
+                                    onClick={() => {
+                                      setChoice({ type: LeadChoiceActions.delete_crm_item })
+                                      setLead(lead)
+
+                                    }}
+                                  >
+                                    <Delete />
+                                  </IconButton>
+                                </Tooltip>
+                              }
+
+
+
+
+                              {user?.crm_access_fields.is_editable &&
+                                <Tooltip title="edit">
+                                  <IconButton color="secondary"
+                                    onClick={() => {
+
+                                      setChoice({ type: LeadChoiceActions.create_or_edit_lead })
+                                      setLead(lead)
+                                    }}
+
+                                  >
+                                    <Edit />
+                                  </IconButton>
+                                </Tooltip>}
+
+
+                              <Tooltip title="view remarks">
                                 <IconButton color="primary"
                                   onClick={() => {
 
-                                    setChoice({ type: LeadChoiceActions.refer_lead })
+                                    setChoice({ type: LeadChoiceActions.view_remarks })
                                     setLead(lead)
+
 
                                   }}
                                 >
-                                  <Share />
-                                </IconButton>
-                              </Tooltip>}
-
-                            {!lead.referred_party &&
-                              <Tooltip title="convert to refer">
-                                <IconButton color="primary"
-                                  onClick={() => {
-
-                                    setChoice({ type: LeadChoiceActions.convert_lead_to_refer })
-                                    setLead(lead)
-
-                                  }}
-                                >
-                                  <BuildOutlined />
-                                </IconButton>
-                              </Tooltip>}
-
-                            {user?.crm_access_fields.is_deletion_allowed &&
-                              <Tooltip title="delete">
-                                <IconButton color="error"
-                                  onClick={() => {
-                                    setChoice({ type: LeadChoiceActions.delete_crm_item })
-                                    setLead(lead)
-
-                                  }}
-                                >
-                                  <Delete />
+                                  <Visibility />
                                 </IconButton>
                               </Tooltip>
-                            }
 
-
-
-
-                            {user?.crm_access_fields.is_editable &&
-                              <Tooltip title="edit">
-                                <IconButton color="secondary"
+                              <Tooltip title="Add Remark">
+                                <IconButton
+                                  color="success"
                                   onClick={() => {
 
-                                    setChoice({ type: LeadChoiceActions.create_or_edit_lead })
+                                    setChoice({ type: LeadChoiceActions.create_or_edt_remark })
                                     setLead(lead)
+
                                   }}
-
                                 >
-                                  <Edit />
+                                  <Comment />
                                 </IconButton>
-                              </Tooltip>}
+                              </Tooltip>
 
+                            </Stack>}
+                        />
+                      </STableCell>
 
-                            <Tooltip title="view remarks">
-                              <IconButton color="primary"
-                                onClick={() => {
+                      <STableCell style={{ fontWeight: lead.visiting_card && lead.visiting_card.public_url && 'bold' }} title={lead.visiting_card && lead.visiting_card.public_url && 'This number has Visitng card Uploaded'}>
+                        {lead.name}
+                      </STableCell>
 
-                                  setChoice({ type: LeadChoiceActions.view_remarks })
-                                  setLead(lead)
 
+                      <STableCell>
+                        {lead.city}
+                      </STableCell>
 
-                                }}
-                              >
-                                <Visibility />
-                              </IconButton>
-                            </Tooltip>
 
-                            <Tooltip title="Add Remark">
-                              <IconButton
-                                color="success"
-                                onClick={() => {
+                      <STableCell>
+                        {lead.state}
+                      </STableCell>
 
-                                  setChoice({ type: LeadChoiceActions.create_or_edt_remark })
-                                  setLead(lead)
+                      <STableCell>
+                        {lead.stage}
+                      </STableCell>
 
-                                }}
-                              >
-                                <Comment />
-                              </IconButton>
-                            </Tooltip>
 
-                          </Stack>}
-                      />
-                    </STableCell>
+                      <STableCell>
+                        {lead.mobile}
+                      </STableCell>
 
-                    <STableCell style={{ fontWeight: lead.visiting_card && lead.visiting_card.public_url && 'bold' }} title={lead.visiting_card && lead.visiting_card.public_url && 'This number has Visitng card Uploaded'}>
-                      {lead.name}
-                    </STableCell>
 
+                      <STableCell>
+                        {lead.alternate_mobile1}
+                      </STableCell>
 
-                    <STableCell>
-                      {lead.city}
-                    </STableCell>
 
+                      <STableCell>
+                        {lead.alternate_mobile2}
+                      </STableCell>
 
-                    <STableCell>
-                      {lead.state}
-                    </STableCell>
 
-                    <STableCell>
-                      {lead.stage}
-                    </STableCell>
+                      <STableCell>
 
+                        {lead.gst}
 
-                    <STableCell>
-                      {lead.mobile}
-                    </STableCell>
+                      </STableCell>
+                      <STableCell>
+                        {lead.lead_type}
+                      </STableCell>
 
+                      <STableCell>
+                        {lead.turnover ? lead.turnover : 'na'}
+                      </STableCell>
 
-                    <STableCell>
-                      {lead.alternate_mobile1}
-                    </STableCell>
 
+                      <STableCell>
+                        {lead.work_description ? lead.work_description.slice(0, 50) : ""}
+                      </STableCell>
 
-                    <STableCell>
-                      {lead.alternate_mobile2}
-                    </STableCell>
 
+                      <STableCell>
+                        {lead.customer_name}
+                      </STableCell>
 
-                    <STableCell>
 
-                      {lead.gst}
+                      <STableCell>
+                        {lead.customer_designation}
+                      </STableCell>
 
-                    </STableCell>
-                    <STableCell>
-                      {lead.lead_type}
-                    </STableCell>
 
-                    <STableCell>
-                      {lead.turnover ? lead.turnover : 'na'}
-                    </STableCell>
+                      <STableCell>
+                        {lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark.slice(0, 50) || ""}
 
+                      </STableCell>
 
-                    <STableCell>
-                      {lead.work_description ? lead.work_description.slice(0, 50) : ""}
-                    </STableCell>
+                      <STableCell>
+                        {lead.referred_party_name && lead.referred_party_name}
 
+                      </STableCell>
+                      <STableCell>
 
-                    <STableCell>
-                      {lead.customer_name}
-                    </STableCell>
+                        {lead.referred_party_mobile && lead.referred_party_mobile}
 
+                      </STableCell>
 
-                    <STableCell>
-                      {lead.customer_designation}
-                    </STableCell>
 
+                      <STableCell>
+                        {lead.referred_date &&
+                          new Date(lead.referred_date).toLocaleString()}
 
-                    <STableCell>
-                      {lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark.slice(0, 50) || ""}
+                      </STableCell>
 
-                    </STableCell>
 
-                    <STableCell>
-                      {lead.referred_party_name && lead.referred_party_name}
 
-                    </STableCell>
-                    <STableCell>
+                      <STableCell>
+                        {lead.email}
+                      </STableCell>
 
-                      {lead.referred_party_mobile && lead.referred_party_mobile}
+                      <STableCell>
+                        {lead.alternate_email}
+                      </STableCell>
 
-                    </STableCell>
 
 
-                    <STableCell>
-                      {lead.referred_date &&
-                        new Date(lead.referred_date).toLocaleString()}
+                      <STableCell >
+                        {lead.address ? lead.address.slice(0, 50) : "..."}
 
-                    </STableCell>
+                      </STableCell>
+                      <STableCell>
+                        {lead.lead_source}
 
+                      </STableCell>
 
 
-                    <STableCell>
-                      {lead.email}
-                    </STableCell>
+                      <STableCell>
+                        {lead.country}
 
-                    <STableCell>
-                      {lead.alternate_email}
-                    </STableCell>
+                      </STableCell>
 
 
 
-                    <STableCell >
-                      {lead.address ? lead.address.slice(0, 50) : "..."}
+                      <STableCell>
+                        {new Date(lead.created_at).toLocaleString()}
 
-                    </STableCell>
-                    <STableCell>
-                      {lead.lead_source}
+                      </STableCell>
 
-                    </STableCell>
 
+                      <STableCell>
+                        {new Date(lead.updated_at).toLocaleString()}
 
-                    <STableCell>
-                      {lead.country}
+                      </STableCell>
 
-                    </STableCell>
 
+                      <STableCell>
+                        {lead.created_by.username}
+                      </STableCell>
 
 
-                    <STableCell>
-                      {new Date(lead.created_at).toLocaleString()}
+                      <STableCell>
+                        {lead.updated_by.username}
 
-                    </STableCell>
+                      </STableCell>
+                      <STableCell>
+                        {lead.is_sent ? "Sent" : "Pending"}
+                      </STableCell>
+                      <STableCell>
+                        {new Date(lead.last_whatsapp).toLocaleString()}
+                      </STableCell>
+                      <STableCell
+                        title="double click to download"
+                        onDoubleClick={() => {
+                          if (lead.visiting_card && lead.visiting_card?.public_url) {
+                            DownloadFile(lead.visiting_card.public_url, lead.visiting_card.filename)
+                          }
+                        }}>
+                        {lead.visiting_card && lead.visiting_card.public_url ? < img height="20" width="55" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" /> : "na"}
+                      </STableCell>
+                    </STableRow>
+                  )
+                })
 
+              }
+            </STableBody>
+          </STable>
+        </Box >
+      }
 
-                    <STableCell>
-                      {new Date(lead.updated_at).toLocaleString()}
-
-                    </STableCell>
-
-
-                    <STableCell>
-                      {lead.created_by.username}
-                    </STableCell>
-
-
-                    <STableCell>
-                      {lead.updated_by.username}
-
-                    </STableCell>
-                    <STableCell>
-                      {lead.is_sent ? "Sent" : "Pending"}
-                    </STableCell>
-                    <STableCell>
-                      {new Date(lead.last_whatsapp).toLocaleString()}
-                    </STableCell>
-                    <STableCell
-                      title="double click to download"
-                      onDoubleClick={() => {
-                        if (lead.visiting_card && lead.visiting_card?.public_url) {
-                          DownloadFile(lead.visiting_card.public_url, lead.visiting_card.filename)
-                        }
-                      }}>
-                      {lead.visiting_card && lead.visiting_card.public_url ? < img height="20" width="55" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" /> : "na"}
-                    </STableCell>
-                  </STableRow>
-                )
-              })
-
-            }
-          </STableBody>
-        </STable>
-      </Box >
       <CreateOrEditLeadDialog lead={lead} />
 
       {

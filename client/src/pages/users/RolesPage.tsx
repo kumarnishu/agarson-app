@@ -235,7 +235,7 @@ export default function RolesPage() {
       </Stack >
       {/*  table */}
       {isLoading && <TableSkeleton />}
-      {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
+      {!isLoading && MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
       {!isLoading && MemoData.length > 0 &&
         <RolesTable
           state={state}

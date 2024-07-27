@@ -64,7 +64,7 @@ export type IUser = {
   assigned_states: IState[]
   assigned_crm_states: ICRMState[]
   assigned_crm_cities: ICRMCity[],
-  assigned_roles:IRole[],
+  assigned_roles: IRole[],
   created_at: Date,
   updated_at: Date,
   created_by: IUser,
@@ -135,7 +135,6 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     default: false,
     required: true,
   },
-
   productions_access_fields: {
     is_hidden: { type: Boolean, default: false },
     is_deletion_allowed: { type: Boolean, default: false },
@@ -203,10 +202,10 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
   },
   assigned_roles: [
     {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Role',
-    default: []
-  }],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Role',
+      default: []
+    }],
   assigned_users: [
     {
       type: mongoose.Schema.Types.ObjectId,

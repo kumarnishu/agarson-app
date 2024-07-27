@@ -4,6 +4,7 @@ import { LoadingContext } from "./contexts/loaderContext";
 import { LinearProgress } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
 
+
 function App() {
   const { loading } = useContext(LoadingContext)
   if (!localStorage.getItem('multi_login_token'))
@@ -12,7 +13,6 @@ function App() {
     <>
       {!loading && < AppRoutes />}
       {loading && <LinearProgress />}
-      {/* <Example/> */}
     </>
   )
 }
