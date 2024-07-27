@@ -2,9 +2,8 @@ import { Search } from '@mui/icons-material'
 import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { FuzzySearchUsers, GetPaginatedUsers } from '../../services/UserServices'
 import { BackendError } from '../..'
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
@@ -12,10 +11,10 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import NewUserDialog from '../../components/dialogs/users/NewUserDialog'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IUser } from '../../types/user.types'
-import DBPagination from '../../components/pagination/DBpagination'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { UserContext } from '../../contexts/userContext'
 import UsersSTable from '../../components/tables/users/UsersTable'
+import { GetUsers } from '../../services/UserServices'
+import FuzzySearch from 'fuzzy-search'
 
 type SelectedData = {
     username?: string,
@@ -31,26 +30,18 @@ type SelectedData = {
 
 // react component
 export default function UsersPage() {
-    const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
-    const { user: loggedInUser } = useContext(UserContext)
+    const [filter, setFilter] = useState<string | undefined>()
     const [user, setUser] = useState<IUser>()
     const [users, setUsers] = useState<IUser[]>([])
-    const [selectAll, setSelectAll] = useState(false)
-    const MemoData = React.useMemo(() => users, [users])
     const [preFilteredData, setPreFilteredData] = useState<IUser[]>([])
-    const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+    const [selectAll, setSelectAll] = useState(false)
     const [selectedUsers, setSelectedUsers] = useState<IUser[]>([])
-    const [filter, setFilter] = useState<string | undefined>()
     const [selectedData, setSelectedData] = useState<SelectedData[]>([])
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const [filterCount, setFilterCount] = useState(0)
-    const { data, isLoading } = useQuery<AxiosResponse<{ users: IUser[], page: number, total: number, limit: number }>, BackendError>(["users", paginationData], async () => GetPaginatedUsers({ limit: paginationData?.limit, page: paginationData?.page }))
+    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
 
-    const { data: fuzzyusers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ users: IUser[], page: number, total: number, limit: number }>, BackendError>(["fuzzyusers", filter], async () => FuzzySearchUsers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
-        enabled: false
-    })
 
     function handleExcel() {
         setAnchorEl(null)
@@ -95,68 +86,40 @@ export default function UsersPage() {
     }, [selectedUsers])
 
     useEffect(() => {
-        if (!filter) {
-            setUsers(preFilteredData)
-            setPaginationData(preFilteredPaginationData)
+        if (isSuccess && data) {
+            setUsers(data.data)
+            setPreFilteredData(data.data)
         }
-    }, [filter])
+    }, [isSuccess])
 
     useEffect(() => {
         if (filter) {
-            refetchFuzzy()
+            if (users) {
+                const searcher = new FuzzySearch(users, ["username"], {
+                    caseSensitive: false,
+                });
+                const result = searcher.search(filter);
+                setUsers(result)
+            }
         }
-    }, [paginationData])
+        if (!filter)
+            setUsers(preFilteredData)
 
-    useEffect(() => {
-        if (data && !filter) {
-            setUsers(data.data.users)
-            setPreFilteredData(data.data.users)
-            setPreFilteredPaginationData({
-                ...paginationData,
-                page: data.data.page,
-                limit: data.data.limit,
-                total: data.data.total
-            })
-            setPaginationData({
-                ...paginationData,
-                page: data.data.page,
-                limit: data.data.limit,
-                total: data.data.total
-            })
-        }
-    }, [data])
-
-    useEffect(() => {
-        if (fuzzyusers && filter) {
-            setUsers(fuzzyusers.data.users)
-            let count = filterCount
-            if (count === 0)
-                setPaginationData({
-                    ...paginationData,
-                    page: fuzzyusers.data.page,
-                    limit: fuzzyusers.data.limit,
-                    total: fuzzyusers.data.total
-                })
-            count = filterCount + 1
-            setFilterCount(count)
-        }
-    }, [fuzzyusers])
+    }, [filter])
 
     return (
         <>
             {
                 isLoading && <LinearProgress />
             }
-            {
-                isFuzzyLoading && <LinearProgress />
-            }
+
             {/*heading, search bar and table menu */}
             <Stack
                 spacing={2}
                 padding={1}
                 direction="row"
                 justifyContent="space-between"
-              
+
             >
                 <Typography
                     variant={'h6'}
@@ -175,20 +138,15 @@ export default function UsersPage() {
                             fullWidth
                             size="small"
                             onChange={(e) => {
-                                setFilter(e.currentTarget.value)
-                                setFilterCount(0)
+                                setFilter(e.target.value)
                             }}
 
-                            placeholder={`${MemoData?.length} records...`}
+                            placeholder={`${users?.length} records...`}
                             style={{
                                 fontSize: '1.1rem',
                                 border: '0',
                             }}
-                            onKeyUp={(e) => {
-                                if (e.key === "Enter") {
-                                    refetchFuzzy()
-                                }
-                            }}
+
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -197,7 +155,7 @@ export default function UsersPage() {
                                 ),
                             }}
                         />
-                       
+
                     </Stack >
                     {/* user menu */}
                     <>
@@ -222,7 +180,7 @@ export default function UsersPage() {
                             sx={{ borderRadius: 2 }}
                         >
                             {
-                               
+
                                 <MenuItem onClick={() => {
                                     setChoice({ type: UserChoiceActions.new_user })
                                     setAnchorEl(null)
@@ -248,10 +206,9 @@ export default function UsersPage() {
                     selectedUsers={selectedUsers}
                     setSelectedUsers={setSelectedUsers}
                     setSelectAll={setSelectAll}
-                    users={MemoData}
+                    users={users}
                     setUser={setUser}
                 />}
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />
         </>
 
     )

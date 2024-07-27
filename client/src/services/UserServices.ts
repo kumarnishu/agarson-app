@@ -35,29 +35,16 @@ export const Logout = async () => {
 };
 // get users
 
-export const GetAllUsers = async () => {
-  return await apiClient.get(`users/all`)
-}
+
 export const GetUsers = async () => {
   return await apiClient.get(`users`)
 }
 
 
-export const GetPaginatedUsers = async ({ limit, page }: { limit?: number | undefined, page?: number | undefined }) => {
-  return await apiClient.get(`users/paginated/?limit=${limit}&page=${page}`)
-}
-
 export const GetPermissions = async () => {
   return await apiClient.get(`permissions`)
 }
-export const FuzzySearchUsers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
-  return await apiClient.get(`search/users?key=${searchString}&limit=${limit}&page=${page}`)
-}
 
-// get user
-export const GetUser = async (id: string) => {
-  return await apiClient.get(`users/${id}`)
-}
 
 // block user
 export const BlockUser = async (id: string) => {
@@ -78,7 +65,6 @@ export const BlockMultiLogin = async (id: string) => {
 export const UnBlockUser = async (id: string) => {
   return await apiClient.patch(`unblock/user/${id}`)
 }
-// make leads controlled
 
 
 

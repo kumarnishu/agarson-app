@@ -10,262 +10,13 @@ import { Role } from '../models/users/role.model';
 import { FetchAllPermissions, IMenu } from '../utils/fillAllPermissions';
 
 
-export const GetPaginatedUsers = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let users: IUser[] = []
-    let count = 0
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        users = await User.find().populate("assigned_roles").populate("created_by").populate("updated_by").populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
-        count = await User.find().countDocuments()
-        return res.status(200).json({
-            users,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
-}
-
-
 export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
-    let users: IUser[] = []
-    let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
-    if (user_ids.length > 0)
-        users = await User.find({ _id: { $in: user_ids } }).populate("created_by").populate("updated_by").populate("assigned_roles").populate('assigned_users').sort('username')
-    else
-        users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
-    res.status(200).json(users)
-}
-
-export const GetAllUsers = async (req: Request, res: Response, next: NextFunction) => {
-    let users: IUser[] = []
-    users = await User.find().populate("assigned_roles").populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
-    res.status(200).json(users)
-}
-
-export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFunction) => {
-    let limit = Number(req.query.limit)
-    let page = Number(req.query.page)
-    let key = String(req.query.key).split(",")
-    if (!key)
-        return res.status(500).json({ message: "bad request" })
-    let users: IUser[] = []
-    let count = 0
-    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        if (key.length == 1 || key.length > 4) {
-            users = await User.find({
-
-                $or: [
-                    { username: { $regex: key[0], $options: 'i' } },
-                    { email: { $regex: key[0], $options: 'i' } },
-                    { mobile: { $regex: key[0], $options: 'i' } },
-                ]
-
-            }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
-            count = await User.find({
-
-                $or: [
-                    { username: { $regex: key[0], $options: 'i' } },
-                    { email: { $regex: key[0], $options: 'i' } },
-                    { mobile: { $regex: key[0], $options: 'i' } },
-                ]
-
-            }
-            ).countDocuments()
-        }
-        if (key.length == 2) {
-            users = await User.find({
-
-                $and: [
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    }
-                ]
-                ,
-
-            }
-            ).populate("assigned_roles").populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
-            count = await User.find({
-
-                $and: [
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    }
-                ]
-                ,
-
-            }
-            ).countDocuments()
-        }
-        if (key.length == 3) {
-            users = await User.find({
-
-                $and: [
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    }
-                ]
-                ,
-
-            }
-            ).populate("assigned_roles").populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
-            count = await User.find({
-
-                $and: [
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    }
-                ]
-                ,
-
-            }
-            ).countDocuments()
-        }
-        if (key.length == 4) {
-            users = await User.find({
-
-                $and: [
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    }
-                ]
-                ,
-
-            }
-            ).populate("assigned_roles").populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
-            count = await User.find({
-
-                $and: [
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    },
-                    {
-                        $or: [
-                            { username: { $regex: key[0], $options: 'i' } },
-                            { email: { $regex: key[0], $options: 'i' } },
-                            { mobile: { $regex: key[0], $options: 'i' } },
-                        ]
-                    }
-                ]
-                ,
-
-            }
-            ).countDocuments()
-        }
-        return res.status(200).json({
-            users,
-            total: Math.ceil(count / limit),
-            page: page,
-            limit: limit
-        })
-    }
-    else
-        return res.status(400).json({ message: "bad request" })
+    let active = req.query.active
+    let show_active = true;
+    if (active == "false")
+        show_active = false;
+    let users = await User.find({ is_active: show_active }).populate("assigned_roles").populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+    return res.status(200).json(users)
 }
 
 
@@ -323,7 +74,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         client_data_path: username.split(" ")[0] + `${Number(new Date())}`
 
     })
-    
+
     owner.updated_by = owner
     owner.created_by = owner
     owner.created_at = new Date()
@@ -384,7 +135,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
     }
     user.created_at = new Date()
     user.updated_at = new Date()
-   
+
     await user.save()
     user = await User.findById(user._id).populate("created_by").populate("updated_by") || user
     res.status(201).json(user)
@@ -400,18 +151,18 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
 
     let user = await User.findOne({
         username: String(username).toLowerCase().trim(),
-    }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
+    }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by").populate("assigned_roles")
 
     if (!user) {
         user = await User.findOne({
             mobile: String(username).toLowerCase().trim(),
-        }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
+        }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by").populate("assigned_roles")
 
     }
     if (!user) {
         user = await User.findOne({
             email: String(username).toLowerCase().trim(),
-        }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
+        }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by").populate("assigned_roles")
         if (user)
             if (!user.email_verified)
                 return res.status(403).json({ message: "please verify email id before login" })
@@ -706,7 +457,6 @@ export const AllowMultiLogin = async (req: Request, res: Response, next: NextFun
 }
 export const BlockMultiLogin = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const { multi_login_token } = req.body as { multi_login_token: string }
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
     let user = await User.findById(id)
     if (!user) {

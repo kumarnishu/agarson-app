@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress, TextField } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress, TextField, MenuItem, Select, OutlinedInput, FormControl } from '@mui/material'
 import { useContext, useEffect, useState } from 'react';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
@@ -6,16 +6,17 @@ import { IUser } from '../../../types/user.types';
 import { AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
 import { BackendError } from '../../..';
-import { AssignUsers, GetAllUsers } from '../../../services/UserServices';
+import { AssignUsers, GetUsers } from '../../../services/UserServices';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { useFormik } from 'formik';
 import * as Yup from "yup"
+import { toTitleCase } from '../../../utils/TitleCase';
 
 
 function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser | undefined>> }) {
     const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetAllUsers())
+    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
@@ -90,27 +91,24 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                     </Typography>
                     <Button onClick={() => formik.setValues({ ids: [] })}>Remove Selection</Button>
                     <form onSubmit={formik.handleSubmit}>
-                        < TextField
-                            select
-                            SelectProps={{
-                                native: true,
-                                multiple: true
-                            }}
-                            focused
-                            id="users"
-                            label="Select Users"
+                        <Select
+                            sx={{ mt: 2 }}
+                            multiple
                             fullWidth
+                            size='small'
                             {...formik.getFieldProps('ids')}
                         >
-                            {
-                                users.map(user => {
-                                    if (user.is_active)
-                                        return (<option key={user._id} value={user._id}>
-                                            {user.username}
-                                        </option>)
-                                })
-                            }
-                        </TextField>
+
+                            {users.map((user, index) => (
+                                <MenuItem
+                                    key={index}
+                                    value={user._id}
+                                >
+                                    {toTitleCase(user.username)}
+                                </MenuItem>
+                            ))}
+                        </Select>
+
                         <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color="primary" type="submit"
                             disabled={Boolean(isLoading)}
                             fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Assign"}

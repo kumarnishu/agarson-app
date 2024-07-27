@@ -82,7 +82,7 @@ export default function RolesPage() {
   useEffect(() => {
     if (filter) {
       if (roles) {
-        const searcher = new FuzzySearch(roles, ["role.role", "users.username"], {
+        const searcher = new FuzzySearch(roles, ["role"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);

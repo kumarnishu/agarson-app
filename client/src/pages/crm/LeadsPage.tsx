@@ -1,5 +1,5 @@
 import { Delete, Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
+import { Fade, FormControl, IconButton, InputAdornment, InputLabel, LinearProgress, Menu, MenuItem, OutlinedInput, Select, TextField, Theme, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useState } from 'react'
@@ -20,6 +20,7 @@ import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLea
 import { toTitleCase } from '../../utils/TitleCase'
 import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
 import { is_authorized } from '../../utils/auth'
+
 
 let template: ILeadTemplate[] = [
   {
@@ -87,8 +88,7 @@ export default function LeadsPage() {
       setSent(false)
     }
   }
-
-
+  
   // refine data
   useEffect(() => {
     let data: ILeadTemplate[] = []
@@ -258,33 +258,34 @@ export default function LeadsPage() {
                 <Delete />
               </IconButton>
             </Tooltip>}
-
-            < TextField
-              select
-              SelectProps={{
-                native: true
-              }}
-              id="stage"
-              size="small"
-              label="Select Stage"
-              sx={{ width: '200px' }}
-              value={stage}
-              onChange={(e) => {
-                setStage(e.target.value);
-              }
-              }
-            >
-              <option key={0} value={'undefined'}>
-                All
-              </option>
-              {
-                stages.map(stage => {
-                  return (<option key={stage._id} value={stage.stage}>
+          
+              <Select
+                sx={{ m: 1, width: 300 }}
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                value={stage}
+                onChange={(e) => {
+                  setStage(e.target.value);
+                }}
+                size='small'
+              >
+                <MenuItem
+                  key={'00'}
+                  value={undefined}
+                >
+                 All
+                </MenuItem>
+                {stages.map((stage,index) => (
+                  <MenuItem
+                    key={index}
+                    value={stage.stage}
+                  >
                     {toTitleCase(stage.stage)}
-                  </option>)
-                })
-              }
-            </TextField>
+                  </MenuItem>
+                ))}
+              </Select>
+
+            
             {LoggedInUser?.is_admin && <UploadLeadsExcelButton disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)} />}
           </Stack >
           <>
