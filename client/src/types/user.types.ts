@@ -1,4 +1,3 @@
-import { FeatureAccess } from "./access.types"
 import { Asset } from "./asset.types"
 import { IState } from "./erp_report.types"
 
@@ -33,15 +32,6 @@ export type IUser = {
     connected_number?: string,
     is_admin: Boolean,
     show_only_visiting_card_leads: boolean,
-    user_access_fields: FeatureAccess,
-    crm_access_fields: FeatureAccess,
-    productions_access_fields: FeatureAccess,
-    templates_access_fields: FeatureAccess,
-    erp_access_fields: FeatureAccess,
-    backup_access_fields: FeatureAccess,
-    todos_access_fields: FeatureAccess,
-    checklists_access_fields: FeatureAccess,
-    visit_access_fields: FeatureAccess,
     email_verified: Boolean,
     mobile_verified: Boolean,
     assigned_roles: IRole[],

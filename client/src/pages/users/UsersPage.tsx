@@ -222,7 +222,7 @@ export default function UsersPage() {
                             sx={{ borderRadius: 2 }}
                         >
                             {
-                                loggedInUser?.user_access_fields.is_editable &&
+                               
                                 <MenuItem onClick={() => {
                                     setChoice({ type: UserChoiceActions.new_user })
                                     setAnchorEl(null)

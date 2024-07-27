@@ -54,12 +54,12 @@ function UpdateTemplateCategoriesPage() {
 
             {isSuccess && <AlertBar message='Fields Saved Successfuly' color="success" />}
 
-            {user?.templates_access_fields.is_editable && <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
+            { <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
                 if (fields) {
                     mutate({ body: { categories: fields } })
                 }
             }}
-                disabled={isLoading || !user?.templates_access_fields.is_deletion_allowed}
+               
             >
                 Save
             </Button>}
@@ -83,7 +83,7 @@ function UpdateTemplateCategoriesPage() {
                             <TextField disabled defaultValue={item}>
                             </TextField>
                             <Button color="error"
-                                disabled={isLoading || !user?.templates_access_fields.is_deletion_allowed}
+                                disabled={isLoading}
                                 sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
                                     let tmps = fields.filter((field) => { return field !== item })
                                     setFields(tmps)

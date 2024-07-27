@@ -1,25 +1,24 @@
-import { Accessibility, Assignment, Block, DeviceHubOutlined, Edit, GroupAdd, GroupRemove, Key, RemoveCircle, RemoveRedEye, Restore } from '@mui/icons-material'
+import {  Assignment, Block, DeviceHubOutlined, Edit, GroupAdd, GroupRemove, Key, RemoveCircle, RemoveRedEye, Restore } from '@mui/icons-material'
 import { Avatar, Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
-import { IUser } from '../../types/user.types'
+import { IUser } from '../../../types/user.types'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
-import { UserContext } from '../../contexts/userContext'
-import UpdateUserDialog from '../dialogs/users/UpdateUserDialog'
-import ManageAccessControlDialog from '../dialogs/users/ManageAccessControlDialog'
-import BlockUserDialog from '../dialogs/users/BlockUserDialog'
-import UnBlockUserDialog from '../dialogs/users/UnBlockUserDialog'
-import MakeAdminDialog from '../dialogs/users/MakeAdminDialog'
-import RemoveAdminDialog from '../dialogs/users/RemoveAdminDialog'
-import UpdatePasswordDialog from '../dialogs/users/UpdatePasswordDialog'
-import UpdateUsePasswordDialog from '../dialogs/users/UpdateUsePasswordDialog'
-import { DownloadFile } from '../../utils/DownloadFile'
-import PopUp from '../popup/PopUp'
-import ResetMultiLoginDialog from '../dialogs/users/ResetMultiLogin'
-import BlockMultiLoginDialog from '../dialogs/users/BlockMultiLoginDialog'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import AssignUsersDialog from '../dialogs/users/AssignUsersDialog'
-import ToogleVisitingcardShowDialog from '../dialogs/users/ToogleVisitingcardShowDialog'
+import { ChoiceContext, UserChoiceActions } from '../../../contexts/dialogContext'
+import { UserContext } from '../../../contexts/userContext'
+import UpdateUserDialog from '../../dialogs/users/UpdateUserDialog'
+import BlockUserDialog from '../../dialogs/users/BlockUserDialog'
+import UnBlockUserDialog from '../../dialogs/users/UnBlockUserDialog'
+import MakeAdminDialog from '../../dialogs/users/MakeAdminDialog'
+import RemoveAdminDialog from '../../dialogs/users/RemoveAdminDialog'
+import UpdatePasswordDialog from '../../dialogs/users/UpdatePasswordDialog'
+import UpdateUsePasswordDialog from '../../dialogs/users/UpdateUsePasswordDialog'
+import { DownloadFile } from '../../../utils/DownloadFile'
+import PopUp from '../../popup/PopUp'
+import ResetMultiLoginDialog from '../../dialogs/users/ResetMultiLogin'
+import BlockMultiLoginDialog from '../../dialogs/users/BlockMultiLoginDialog'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import AssignUsersDialog from '../../dialogs/users/AssignUsersDialog'
+import ToogleVisitingcardShowDialog from '../../dialogs/users/ToogleVisitingcardShowDialog'
 
 type Props = {
     user: IUser | undefined,
@@ -69,13 +68,13 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                     }} />
 
                             </STableHeadCell>
-                            {LoggedInUser?.user_access_fields.is_editable &&
+                          
                                 <STableHeadCell
                                 >
 
                                     Actions
 
-                                </STableHeadCell>}
+                                </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -202,7 +201,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                             :
                                             null
                                         }
-                                        {LoggedInUser?.user_access_fields.is_editable &&
+                                       
                                             <STableCell>
 
                                                 <PopUp
@@ -393,37 +392,10 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                                                 </Tooltip>
                                                             }
 
-                                                            {LoggedInUser?._id === user._id ?
-                                                                <Tooltip title="Access Control">
-                                                                    <IconButton
-                                                                        color="info"
-                                                                        size="medium"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: UserChoiceActions.control_access })
-                                                                            setUser(user)
-
-
-                                                                        }}>
-                                                                        <Accessibility />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                                :
-                                                                <Tooltip title="Access Control">
-                                                                    <IconButton
-                                                                        disabled={user._id == user.created_by._id}
-                                                                        color="info" size="medium"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: UserChoiceActions.control_access })
-                                                                            setUser(user)
-
-
-                                                                        }}>
-                                                                        <Accessibility />
-                                                                    </IconButton>
-                                                                </Tooltip>}
+                                                           
                                                         </Stack>} />
 
-                                            </STableCell>}
+                                            </STableCell>
 
 
 
@@ -519,7 +491,6 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                         <ResetMultiLoginDialog id={user._id} />
                         <BlockMultiLoginDialog id={user._id} />
                         <UpdatePasswordDialog />
-                        <ManageAccessControlDialog user={user} />
                         <BlockUserDialog id={user._id} />
                         <UnBlockUserDialog id={user._id} />
                         <MakeAdminDialog id={user._id} />

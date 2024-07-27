@@ -58,12 +58,12 @@ function AttendenceTable({ attendences, attendence, selectedAttendeces, setSelec
 
                             </STableHeadCell>
 
-                            {user?.visit_access_fields.is_editable && <STableHeadCell
+                            <STableHeadCell
                             >
 
                                 Actions
 
-                            </STableHeadCell>}
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -160,7 +160,7 @@ function AttendenceTable({ attendences, attendence, selectedAttendeces, setSelec
                                             </STableCell>
                                             :
                                             null}
-                                        {user?.visit_access_fields.is_editable && <STableCell>
+                                       <STableCell>
                                             <Tooltip title="change attendence">
                                                 <IconButton color="success"
                                                     onClick={() => {
@@ -171,7 +171,7 @@ function AttendenceTable({ attendences, attendence, selectedAttendeces, setSelec
                                                     <Edit />
                                                 </IconButton>
                                             </Tooltip>
-                                        </STableCell>}
+                                        </STableCell>
                                         <STableCell>
                                             {index + 1}
                                         </STableCell>

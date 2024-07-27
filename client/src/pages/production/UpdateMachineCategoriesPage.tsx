@@ -55,12 +55,12 @@ function UpdateMachineCategoriesPage() {
 
             {isSuccess && <AlertBar message='categories Saved Successfuly' color="success" />}
 
-            {user?.productions_access_fields.is_editable && <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
+            { <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
                 if (fields) {
                     mutate({ body: { categories: fields } })
                 }
             }}
-                disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                disabled={isLoading||user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
             >
                 Save
             </Button>}

@@ -129,8 +129,8 @@ export default function ArticlePage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {LoggedInUser?.productions_access_fields.is_editable ?
-              < UploadArticlesFromExcelButton disabled={Boolean(!LoggedInUser?.productions_access_fields.is_editable)} /> : null}
+            {
+              < UploadArticlesFromExcelButton disabled={true} />}
             <FormControlLabel control={<Switch
               defaultChecked={Boolean(hidden)}
               onChange={() => setHidden(!hidden)}
@@ -177,7 +177,7 @@ export default function ArticlePage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >{LoggedInUser?.productions_access_fields.is_editable &&
+            >{
               <MenuItem onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_article })
                 setAnchorEl(null)

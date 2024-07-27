@@ -233,7 +233,7 @@ export default function TodosPage() {
                 >
                     {/* search bar */}
                     < Stack direction='row' spacing={2}>
-                        {LoggedInUser?.todos_access_fields.is_editable && <UploadTodoExcelButton />}
+                       <UploadTodoExcelButton />
                         {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 &&
                             < TextField
                                 size='small'
@@ -254,12 +254,11 @@ export default function TodosPage() {
                                 </option>
                                 {
                                     users.map((user, index) => {
-                                        if (!user.todos_access_fields.is_hidden)
+                                        
                                             return (<option key={index} value={user.mobile}>
                                                 {user.username}
                                             </option>)
-                                        else
-                                            return null
+                                       
                                     })
                                 }
                             </TextField>}
@@ -307,7 +306,7 @@ export default function TodosPage() {
                         >
                             < MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
-                            {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
+                            { <MenuItem
                                 onClick={() => {
                                     if (selectedTodos.length === 0)
                                         alert("please select some todos")
@@ -317,7 +316,7 @@ export default function TodosPage() {
                                 }}
                             > Start Seletced</MenuItem>}
 
-                            {LoggedInUser?.todos_access_fields.is_editable && <MenuItem
+                            { <MenuItem
                                 onClick={() => {
                                     if (selectedTodos.length === 0)
                                         alert("please select some todos")
@@ -326,7 +325,7 @@ export default function TodosPage() {
                                     setAnchorEl(null)
                                 }}
                             > Stop Seletced</MenuItem>}
-                            {LoggedInUser?.todos_access_fields.is_editable && <MenuItem sx={{ color: 'red' }}
+                            { <MenuItem sx={{ color: 'red' }}
                                 onClick={() => {
                                     if (selectedTodos.length === 0)
                                         alert("please select some todos")

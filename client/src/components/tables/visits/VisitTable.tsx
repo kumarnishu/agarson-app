@@ -299,7 +299,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                                                 {user?.assigned_users && user?.assigned_users.find((user) => user._id === visit.created_by._id) &&
                                                                     <>
 
-                                                                        {!visit.visit_validated && user?.visit_access_fields.is_editable && <Tooltip title="validate">
+                                                                        {!visit.visit_validated  && <Tooltip title="validate">
                                                                             <IconButton color="error"
                                                                                 onClick={() => {
                                                                                     setChoice({ type: VisitChoiceActions.validate_visit })
@@ -309,7 +309,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                                                                 <Check />
                                                                             </IconButton>
                                                                         </Tooltip>}
-                                                                        {user?.visit_access_fields.is_editable && <Tooltip title="Edit Summary">
+                                                                        { <Tooltip title="Edit Summary">
                                                                             <IconButton color="success"
                                                                                 onClick={() => {
                                                                                     setChoice({ type: VisitChoiceActions.edit_summary })
@@ -320,7 +320,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                                                             </IconButton>
                                                                         </Tooltip>}
 
-                                                                        {user?.visit_access_fields.is_editable &&
+                                                                        {
                                                                             <Tooltip title="ankit input">
                                                                                 <IconButton color="primary"
                                                                                     onClick={() => {

@@ -6,7 +6,7 @@ function PopUp({ element }: { element: JSX.Element }) {
     return (
         <div>
             <span style={{fontSize:'13px'}} onClick={(e) => setPopup(e.currentTarget)}>
-                🔁 Actions
+                🔁 actions
             </span>
             <Popover
                 open={Boolean(popup)}

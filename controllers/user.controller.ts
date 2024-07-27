@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import isEmail from "validator/lib/isEmail";
 import { uploadFileToCloud } from '../utils/uploadFile.util';
 import { deleteToken, sendUserToken } from '../middlewares/auth.middleware';
-import { Asset, Feature, FeatureAccess, IUser, User } from '../models/users/user.model';
+import { Asset, IUser, User } from '../models/users/user.model';
 import isMongoId from "validator/lib/isMongoId";
 import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
@@ -323,58 +323,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         client_data_path: username.split(" ")[0] + `${Number(new Date())}`
 
     })
-    owner.user_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
-    owner.productions_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
-    owner.erp_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
-
-    owner.visit_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
-
-
-    owner.crm_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
-
-    owner.templates_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
-
-
-    owner.backup_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
-    owner.todos_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
-
-    owner.checklists_access_fields = {
-        is_hidden: false,
-        is_editable: true,
-        is_deletion_allowed: true
-    }
+    
     owner.updated_by = owner
     owner.created_by = owner
     owner.created_at = new Date()
@@ -435,57 +384,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
     }
     user.created_at = new Date()
     user.updated_at = new Date()
-    user.user_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.productions_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-
-    user.visit_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.erp_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-
-    user.crm_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-
-    user.templates_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-
-
-    user.backup_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-    user.todos_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
-
-    user.checklists_access_fields = {
-        is_hidden: true,
-        is_editable: false,
-        is_deletion_allowed: false
-    }
+   
     await user.save()
     user = await User.findById(user._id).populate("created_by").populate("updated_by") || user
     res.status(201).json(user)
@@ -570,120 +469,8 @@ export const AssignUsers = async (req: Request, res: Response, next: NextFunctio
     await user.save();
     res.status(200).json({ message: "assigned users successfully" });
 }
-export const UpdateUserWiseAccessFields = async (req: Request, res: Response, next: NextFunction) => {
-    const { user_access_fields,
-        crm_access_fields,
-        templates_access_fields,
-        backup_access_fields,
-        todos_access_fields,
-        checklists_access_fields,
-        visit_access_fields,
-        erp_access_fields,
-        productions_access_fields
 
-    } = req.body as Request['body'] & IUser
 
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
-    let user = await User.findById(id);
-    if (!user) {
-        return res.status(404).json({ message: "user not found" })
-    }
-    await User.findByIdAndUpdate(user._id, {
-        user_access_fields,
-        crm_access_fields,
-        templates_access_fields,
-        backup_access_fields,
-        todos_access_fields,
-        checklists_access_fields,
-        visit_access_fields,
-        erp_access_fields,
-        productions_access_fields
-    })
-    res.status(200).json({ message: " updated" })
-}
-
-export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response, next: NextFunction) => {
-    const {
-        feature, body
-    } = req.body as {
-        feature: string,
-        body: {
-            user: string,
-            access: FeatureAccess
-        }[]
-    }
-    if (feature === Feature.users) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                user_access_fields: data.access
-            })
-        })
-    }
-    if (feature === Feature.crm) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                crm_access_fields: data.access
-            })
-        })
-    }
-    if (feature === Feature.productions) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                productions_access_fields: data.access
-            })
-        })
-    }
-
-    if (feature === Feature.templates) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                templates_access_fields: data.access
-            })
-        })
-    }
-
-    if (feature === Feature.erp_reports) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                erp_access_fields: data.access
-            })
-        })
-    }
-
-    if (feature === Feature.backup) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                backup_access_fields: data.access
-            })
-        })
-    }
-    if (feature === Feature.todos) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                todos_access_fields: data.access
-            })
-        })
-    }
-
-    if (feature === Feature.checklists) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                checklists_access_fields: data.access
-            })
-        })
-    }
-
-    if (feature === Feature.visit) {
-        body.forEach(async (data) => {
-            await User.findByIdAndUpdate(data.user, {
-                visit_access_fields: data.access
-            })
-        })
-    }
-
-    res.status(200).json({ message: " updated" })
-}
 export const UpdateUser = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })

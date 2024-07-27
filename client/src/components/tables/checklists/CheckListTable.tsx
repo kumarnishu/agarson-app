@@ -68,12 +68,12 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                             </STableHeadCell>
 
                             {/* actions popup */}
-                            {user?.checklists_access_fields.is_editable && <STableHeadCell
+                          <STableHeadCell
                             >
 
                                 Actions
 
-                            </STableHeadCell>}
+                            </STableHeadCell>
 
                             <STableHeadCell
                             >
@@ -186,7 +186,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                             </STableCell>
                                             :
                                             null/* actions popup */}
-                                        {user?.checklists_access_fields.is_editable &&
+                                       
                                             <STableCell>
                                                 <PopUp
                                                     element={
@@ -194,7 +194,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                             {
 
                                                                 <>
-                                                                    {checklist.created_by._id === user._id &&
+                                                                   
                                                                         <>
                                                                             <Tooltip title="Edit">
                                                                                 <IconButton color="info"
@@ -216,7 +216,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                                                     <Add />
                                                                                 </IconButton>
                                                                             </Tooltip>
-                                                                            {user?.checklists_access_fields.is_deletion_allowed &&
+                                                                          
                                                                                 <Tooltip title="Delete">
                                                                                     <IconButton color="error"
                                                                                         onClick={() => {
@@ -226,10 +226,10 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                                                     >
                                                                                         <Delete />
                                                                                     </IconButton>
-                                                                                </Tooltip>}
+                                                                                </Tooltip>
 
                                                                         </>
-                                                                    }
+                                                                    
                                                                     <Tooltip title="View">
                                                                         <IconButton color="success"
                                                                             onClick={() => {
@@ -246,7 +246,7 @@ function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll,
                                                             }
 
                                                         </Stack>} />
-                                            </STableCell>}
+                                            </STableCell>
 
                                         <STableCell>
                                             {checklist.serial_no || 0}

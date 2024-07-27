@@ -399,7 +399,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                   </IconButton>
                                 </Tooltip>}
 
-                              {user?.crm_access_fields.is_deletion_allowed &&
+                         
                                 <Tooltip title="delete">
                                   <IconButton color="error"
                                     disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
@@ -412,12 +412,12 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                     <Delete />
                                   </IconButton>
                                 </Tooltip>
-                              }
+                              
 
 
 
 
-                              {user?.crm_access_fields.is_editable &&
+                             
                                 <Tooltip title="edit">
                                   <IconButton color="secondary"
                                     disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
@@ -430,7 +430,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                   >
                                     <Edit />
                                   </IconButton>
-                                </Tooltip>}
+                                </Tooltip>
 
 
                               <Tooltip title="view remarks">

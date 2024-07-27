@@ -197,7 +197,7 @@ async function SendDocument(client: Client) {
         for (let i = 0; i < users.length; i++) {
             let user = users[i]
             try {
-                if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${String(user.username)}_visits.pdf`)) {
+                if (fs.existsSync(`./pdfs/visit/${String(user.username)}_visits.pdf`)) {
                     console.log("sending visits pdf from", process.env.WAPHONE, user.username)
                     await client.sendMessage(String(process.env.WAPHONE), MessageMedia.fromFilePath(`./pdfs/visit/${String(user.username)}_visits.pdf`), { caption: String(" ") })
                 }
@@ -212,7 +212,7 @@ async function SendDocument(client: Client) {
 async function DeleteDocument() {
     let users = await User.find()
     users.forEach(async (user) => {
-        if (!user.visit_access_fields.is_hidden && fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
+        if (fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
             console.log(`deleting pdf from${`./pdfs/visit/${user.username}_visits.pdf`}`)
             if (fs.existsSync(`./pdfs/visit/${user.username}_visits.pdf`)) {
                 fs.rmSync(`./pdfs/visit/${user.username}_visits.pdf`)

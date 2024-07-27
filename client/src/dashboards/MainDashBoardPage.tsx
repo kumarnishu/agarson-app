@@ -4,8 +4,8 @@ import { Link, Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext";
 import AppsIcon from '@mui/icons-material/Apps';
-import { Feature } from "../types/access.types";
 import { is_authorized } from "../utils/auth";
+
 
 function MainDashBoardPage() {
   const { user } = useContext(UserContext)
@@ -14,10 +14,10 @@ function MainDashBoardPage() {
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, url: string }[] = []
-    user?.is_admin && tmpfeatures.push({ feature: Feature.users, url: paths.user_dashboard })
-    user?.assigned_roles && is_authorized('crm_menu', user?.assigned_roles) && tmpfeatures.push({ feature: Feature.crm, url: paths.crm_dashboard })
-    user?.assigned_roles && is_authorized('erpreport_menu', user?.assigned_roles) && tmpfeatures.push({ feature: Feature.erp_reports, url: paths.erp_dashboard })
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: Feature.productions, url: paths.production_dashboard })
+    user?.is_admin && tmpfeatures.push({ feature: 'users', url: paths.user_dashboard })
+    user?.assigned_roles && is_authorized('crm_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'crm', url: paths.crm_dashboard })
+    user?.assigned_roles && is_authorized('erpreport_menu', user?.assigned_roles) && tmpfeatures.push({ feature:'erp reports', url: paths.erp_dashboard })
+    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'productions', url: paths.production_dashboard })
 
     // if (user?.is_admin) {
     //   tmpfeatures.push({ feature: Feature.todos, url: paths.todo_dashboard })

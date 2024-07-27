@@ -62,13 +62,13 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
+                          
                                 <STableHeadCell style={{ width: '50px' }}
                                 >
 
                                     Actions
 
-                                </STableHeadCell>}
+                                </STableHeadCell>
                             <STableHeadCell style={{ width: '200px' }}
                             >
 
@@ -203,7 +203,7 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
                                                 element={
                                                     <Stack direction="row">
                                                         <>
-                                                            {user?.erp_access_fields.is_deletion_allowed &&
+                                                          
                                                                 <Tooltip title="delete">
                                                                     <IconButton color="error"
                                                                         onClick={() => {
@@ -215,9 +215,9 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
                                                                         <Delete />
                                                                     </IconButton>
                                                                 </Tooltip>
-                                                            }
+                                                            
 
-                                                            {user?.erp_access_fields.is_editable && <Tooltip title="edit">
+                                                          <Tooltip title="edit">
                                                                 <IconButton
                                                                     onClick={() => {
                                                                         setState(state)
@@ -227,7 +227,7 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
                                                                 >
                                                                     <Edit />
                                                                 </IconButton>
-                                                            </Tooltip>}
+                                                            </Tooltip>
 
                                                         </>
 

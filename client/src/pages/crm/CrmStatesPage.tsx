@@ -144,7 +144,7 @@ export default function CrmStatesPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMStatesFromExcelButton disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)} />}
+            <UploadCRMStatesFromExcelButton disabled={Boolean(LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles))} />
           </Stack >
           <>
 

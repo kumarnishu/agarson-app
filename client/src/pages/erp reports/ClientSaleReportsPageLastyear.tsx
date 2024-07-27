@@ -284,8 +284,8 @@ export default function ClientSaleLastYearReportsPage() {
                     Client Sale {new Date().getFullYear() - 1}-{new Date().getFullYear()}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
-                    {user?.erp_access_fields.is_editable && <>
-                        <UploadClientSalesLastYearButton disabled={!user?.erp_access_fields.is_editable} />
+                    { <>
+                        <UploadClientSalesLastYearButton disabled={true} />
                         <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
                     </>}
                 </Stack>

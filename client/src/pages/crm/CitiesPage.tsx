@@ -163,7 +163,7 @@ export default function CrmCitiesPage() {
           {/* search bar */}
           < Stack direction="row" spacing={2}>
 
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMCitiesFromExcelButton disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)} state={state} />}
+            {<UploadCRMCitiesFromExcelButton disabled={Boolean(LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles))} state={state} />}
             < TextField
               select
               SelectProps={{

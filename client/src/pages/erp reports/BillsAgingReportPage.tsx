@@ -179,10 +179,10 @@ export default function BillsAgingReportPage() {
                   Bills Ageing {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
-                    {user?.erp_access_fields.is_editable && <>
-                        <UploadBillsAgingFromExcelButton disabled={!user?.erp_access_fields.is_editable} />
+                   <>
+                        <UploadBillsAgingFromExcelButton disabled={true} />
                         <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
-                    </>}
+                    </>
                 </Stack>
 
 

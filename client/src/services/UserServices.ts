@@ -1,19 +1,7 @@
-import { FeatureAccess } from "../types/access.types";
 import { IRole } from "../types/user.types";
 import { apiClient } from "./utils/AxiosInterceptor";
 
-export type AccessTypes = {
-  user_access_fields: FeatureAccess,
-  crm_access_fields: FeatureAccess,
-  todos_access_fields: FeatureAccess,
-  templates_access_fields: FeatureAccess,
-  backup_access_fields: FeatureAccess,
-  checklists_access_fields: FeatureAccess,
-  visit_access_fields: FeatureAccess,
-  erp_access_fields: FeatureAccess,
-  productions_access_fields: FeatureAccess
 
-}
 // login
 export const Login = async (
   body: {
@@ -92,23 +80,7 @@ export const UnBlockUser = async (id: string) => {
 }
 // make leads controlled
 
-export const UpdateUserAccess = async ({ id, access_fields }: {
-  id: string,
-  access_fields: AccessTypes
 
-}) => {
-  return await apiClient.patch(`update/access/user/${id}`, access_fields)
-}
-export const UpdateFeatureAccess = async (body: {
-  feature: string,
-  body: {
-    access: FeatureAccess,
-    user: string
-  }[]
-
-}) => {
-  return await apiClient.put(`update/access/feature`, body)
-}
 
 // make admin
 export const MakeAdmin = async (id: string) => {

@@ -144,12 +144,11 @@ function NewCheckListForm({ users }: { users: IUser[] }) {
                     </option>
                     {
                         users.map((user, index) => {
-                            if (!user.checklists_access_fields.is_hidden)
+                         
                                 return (<option key={index} value={user._id}>
                                     {user.username}
                                 </option>)
-                            else
-                                return null
+                           
                         })
                     }
                 </TextField>

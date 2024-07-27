@@ -13,7 +13,7 @@ function ChecklistDashboard() {
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     tmpfeatures.push({ feature: 'my checklists ', is_visible: true, url: paths.checklists })
-    user?.checklists_access_fields.is_editable && tmpfeatures.push({ feature: 'checklists admin', is_visible: true, url: paths.checklist_admin_page })
+    tmpfeatures.push({ feature: 'checklists admin', is_visible: true, url: paths.checklist_admin_page })
     setFeatures(tmpfeatures)
   }, [])
 

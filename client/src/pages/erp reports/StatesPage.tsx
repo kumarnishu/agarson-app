@@ -165,7 +165,7 @@ export default function CrmStatesPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadStatesFromExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
+             <UploadStatesFromExcelButton disabled={true} />
           </Stack >
           <>
 

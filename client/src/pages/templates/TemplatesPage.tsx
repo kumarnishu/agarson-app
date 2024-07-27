@@ -162,7 +162,6 @@ export default function TemplatesPage() {
             >
               <MenuIcon />
             </IconButton>
-            {user?.templates_access_fields.is_editable &&
 
               <Menu
                 anchorEl={anchorEl}
@@ -179,7 +178,7 @@ export default function TemplatesPage() {
                   setAnchorEl(null)
                 }}
                 >New Template</MenuItem>
-              </Menu>}
+              </Menu>
             <NewTemplateDialog />
           </>
 
@@ -208,7 +207,7 @@ export default function TemplatesPage() {
                         {
 
                           <>
-                            {user?.templates_access_fields.is_editable && <Tooltip title="Edit">
+                            { <Tooltip title="Edit">
                               <IconButton color="info"
                                 onClick={() => {
                                   setChoice({ type: TemplateChoiceActions.update_template })
@@ -218,7 +217,7 @@ export default function TemplatesPage() {
                                 <Edit />
                               </IconButton>
                             </Tooltip>}
-                            {user?.templates_access_fields.is_deletion_allowed &&
+                            {
                               <Tooltip title="Delete">
                                 <IconButton color="error"
                                   onClick={() => {

@@ -17,22 +17,6 @@ export type Asset = {
   created_at: Date
 } | undefined
 
-export type FeatureAccess = {
-  is_editable: boolean,
-  is_hidden: boolean,
-  is_deletion_allowed: boolean
-}
-export enum Feature {
-  users = "users",
-  crm = "crm",
-  checklists = "checklists",
-  productions = "productions",
-  visit = "visit",
-  todos = "todos",
-  backup = "backup",
-  templates = "templates",
-  erp_reports = "erp reports",
-}
 
 export type IUser = {
   _id: string,
@@ -44,15 +28,6 @@ export type IUser = {
   client_id: string,
   connected_number: string,
   is_admin: Boolean,
-  user_access_fields: FeatureAccess,
-  crm_access_fields: FeatureAccess,
-  productions_access_fields: FeatureAccess,
-  templates_access_fields: FeatureAccess,
-  erp_access_fields: FeatureAccess,
-  backup_access_fields: FeatureAccess,
-  todos_access_fields: FeatureAccess,
-  checklists_access_fields: FeatureAccess,
-  visit_access_fields: FeatureAccess,
   email_verified: Boolean,
   mobile_verified: Boolean,
   show_only_visiting_card_leads: boolean,
@@ -135,55 +110,6 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     default: false,
     required: true,
   },
-  productions_access_fields: {
-    is_hidden: { type: Boolean, default: false },
-    is_deletion_allowed: { type: Boolean, default: false },
-    is_editable: { type: Boolean, default: false },
-  },
-  user_access_fields: {
-    is_hidden: { type: Boolean, default: false },
-    is_deletion_allowed: { type: Boolean, default: false },
-    is_editable: { type: Boolean, default: false },
-  },
-  erp_access_fields: {
-    is_hidden: { type: Boolean, default: false },
-    is_deletion_allowed: { type: Boolean, default: false },
-    is_editable: { type: Boolean, default: false },
-  },
-  crm_access_fields: {
-    is_hidden: { type: Boolean, default: false },
-    is_deletion_allowed: { type: Boolean, default: false },
-    is_editable: { type: Boolean, default: false },
-  },
-
-  templates_access_fields: {
-    is_hidden: { type: Boolean, default: false },
-    is_deletion_allowed: { type: Boolean, default: false },
-    is_editable: { type: Boolean, default: false },
-  },
-
-  backup_access_fields: {
-    is_hidden: { type: Boolean, default: false },
-    is_deletion_allowed: { type: Boolean, default: false },
-    is_editable: { type: Boolean, default: false },
-  },
-  todos_access_fields: {
-    is_hidden: { type: Boolean, default: false },
-    is_deletion_allowed: { type: Boolean, default: false },
-    is_editable: { type: Boolean, default: false },
-  },
-
-  checklists_access_fields: {
-    is_hidden: { type: Boolean, default: false },
-    is_deletion_allowed: { type: Boolean, default: false },
-    is_editable: { type: Boolean, default: false },
-  },
-  visit_access_fields: {
-    is_hidden: { type: Boolean, default: false },
-    is_deletion_allowed: { type: Boolean, default: false },
-    is_editable: { type: Boolean, default: false },
-  },
-
   email_verified: {
     type: Boolean,
     default: false,

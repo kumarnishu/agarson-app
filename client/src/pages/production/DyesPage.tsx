@@ -136,8 +136,8 @@ export default function DyePage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {LoggedInUser?.productions_access_fields.is_editable ?
-              < UploadDyesFromExcelButton disabled={Boolean(!LoggedInUser?.productions_access_fields.is_editable)} /> : null}
+            {
+              < UploadDyesFromExcelButton disabled={true} />}
             <FormControlLabel control={<Switch
               defaultChecked={Boolean(hidden)}
               onChange={() => setHidden(!hidden)}
@@ -183,7 +183,7 @@ export default function DyePage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >{LoggedInUser?.productions_access_fields.is_editable &&
+            >{
               <MenuItem onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_dye })
                 setAnchorEl(null)

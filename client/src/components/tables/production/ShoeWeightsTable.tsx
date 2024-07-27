@@ -61,13 +61,13 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
+                          
                                 <STableHeadCell
                                 >
 
                                     Actions
 
-                                </STableHeadCell>}
+                                </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -192,13 +192,13 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                             null
                                         }
                                         {/* actions */}
-                                        {user?.productions_access_fields.is_editable &&
+                                       
                                             <STableCell style={{ backgroundColor: Boolean(!shoe_weight.is_validated) ? 'rgba(255,0,0,0.1)' : 'rgba(52, 200, 84, 0.6)' }}>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row">
                                                             <>
-                                                                {user?.visit_access_fields.is_editable && <Tooltip title="edit">
+                                                                <Tooltip title="edit">
                                                                     <IconButton color="info"
                                                                         onClick={() => {
                                                                             setChoice({ type: ProductionChoiceActions.update_shoe_weight })
@@ -207,9 +207,9 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>}
+                                                                </Tooltip>
 
-                                                                {!shoe_weight.is_validated && user?.visit_access_fields.is_editable && <Tooltip title="validate">
+                                                              <Tooltip title="validate">
                                                                     <IconButton color="error"
                                                                         onClick={() => {
                                                                             setChoice({ type: ProductionChoiceActions.validate_weight })
@@ -218,13 +218,13 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                                                     >
                                                                         <Check />
                                                                     </IconButton>
-                                                                </Tooltip>}
+                                                                </Tooltip>
                                                             </>
 
                                                         </Stack>}
                                                 />
 
-                                            </STableCell>}
+                                            </STableCell>
                                         <STableCell>
                                             {shoe_weight.created_at && moment(new Date(shoe_weight.created_at)).format('DD/MM/YY')}
                                         </STableCell>

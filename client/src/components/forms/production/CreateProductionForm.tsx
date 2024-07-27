@@ -170,12 +170,11 @@ function NewProductionForm() {
                     </option>
                     {
                         users && users.data.map((user, index) => {
-                            if (!user.productions_access_fields.is_hidden && !user.productions_access_fields.is_editable)
+                          
                                 return (<option key={index} value={user._id}>
                                     {user.username}
                                 </option>)
-                            else
-                                return null
+                           
                         })
                     }
                 </TextField>}

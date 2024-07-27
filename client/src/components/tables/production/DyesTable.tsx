@@ -59,13 +59,13 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
+                          
                                 <STableHeadCell
                                 >
 
                                     Actions
 
-                                </STableHeadCell>}
+                                </STableHeadCell>
                             <STableHeadCell
                             >
 

@@ -12,7 +12,6 @@ function UsersDashboard() {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     tmpfeatures.push({ feature: 'users ', is_visible: true, url: paths.users })
     tmpfeatures.push({ feature: 'roles ', is_visible: true, url: paths.roles })
-    tmpfeatures.push({ feature: 'features', is_visible: true, url: paths.feature_reports })
     setFeatures(tmpfeatures)
   }, [])
 

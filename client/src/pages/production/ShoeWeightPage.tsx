@@ -175,7 +175,7 @@ export default function ShoeWeightPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {user?.productions_access_fields.is_editable && user.is_admin && < MenuItem onClick={() => {
+              { < MenuItem onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_shoe_weight })
               }}
               >New Weight</MenuItem>}

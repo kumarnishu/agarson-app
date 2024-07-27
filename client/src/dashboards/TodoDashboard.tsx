@@ -13,7 +13,7 @@ function TodoDashboard() {
     useEffect(() => {
         let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
         tmpfeatures.push({ feature: 'my todos ', is_visible: true, url: paths.todo })
-        user?.todos_access_fields.is_editable && tmpfeatures.push({ feature: 'todos admin', is_visible: true, url: paths.todo_admin })
+        tmpfeatures.push({ feature: 'todos admin', is_visible: true, url: paths.todo_admin })
         setFeatures(tmpfeatures)
         
     }, [])

@@ -151,7 +151,7 @@ function EditCheckListForm({ checklist, users }: { checklist: IChecklist, users:
                     }
                     {
                         users.map(user => {
-                            if (!user.checklists_access_fields.is_hidden && user._id !== personId)
+                           
                                 return (<option key={user._id} value={user._id}>
                                     {user.username}
                                 </option>)

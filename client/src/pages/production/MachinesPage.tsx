@@ -134,8 +134,8 @@ export default function MachinePage() {
         <Stack
           direction="row"
         >
-          {LoggedInUser?.productions_access_fields.is_editable ?
-            < UploadMachinesFromExcelButton disabled={Boolean(!LoggedInUser?.productions_access_fields.is_editable)} /> : null}
+          {
+            < UploadMachinesFromExcelButton disabled={true} />}
           {/* search bar */}
           < Stack direction="row" spacing={2} >
             <FormControlLabel control={<Switch
@@ -183,7 +183,7 @@ export default function MachinePage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >{LoggedInUser?.productions_access_fields.is_editable &&
+            >{
               <MenuItem onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_machine })
                 setAnchorEl(null)

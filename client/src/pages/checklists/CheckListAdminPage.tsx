@@ -236,15 +236,14 @@ export default function CheckListAdminPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {
-                user?.checklists_access_fields.is_editable && <>
+              <>
                   <MenuItem
                     onClick={() => {
                       setChoice({ type: CheckListChoiceActions.create_checklist })
                       setAnchorEl(null)
                     }}
                   > Add New</MenuItem>
-                </>}
+                </>
               < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>
 
@@ -311,12 +310,10 @@ export default function CheckListAdminPage() {
           </option>
           {
             users.map((user, index) => {
-              if (!user.checklists_access_fields.is_hidden)
                 return (<option key={index} value={user._id}>
                   {user.username}
                 </option>)
-              else
-                return null
+              
             })
           }
         </TextField>}

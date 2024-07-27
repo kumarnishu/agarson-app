@@ -36,9 +36,7 @@ async function CreateReports(client: Client) {
     let productions: IProduction[] = []
     let users = await User.find().sort("username")
     users = users.filter((u) => {
-        if (!u.productions_access_fields.is_hidden && !u.productions_access_fields.is_editable) {
             return u
-        }
     })
     //header 
     TableRow.push({ text: 'DATE', style: { bold: true } })

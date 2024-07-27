@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 
-import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword, FuzzySearchUsers, AssignUsers, GetPaginatedUsers, AllowMultiLogin, BlockMultiLogin, GetAllUsers, UpdateUserWiseAccessFields, UpdateFeatureWiseAccessFields, ToogleShowvisitingcard, GetRoles, CreateRole, UpdateRole, AssignRolesToUsers, GetAllPermissions, DeleteRole } from "../controllers/user.controller";
+import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword, FuzzySearchUsers, AssignUsers, GetPaginatedUsers, AllowMultiLogin, BlockMultiLogin, GetAllUsers, ToogleShowvisitingcard, GetRoles, CreateRole, UpdateRole, AssignRolesToUsers, GetAllPermissions, DeleteRole } from "../controllers/user.controller";
 import { isAdmin, isAuthenticatedUser, isProfileAuthenticated, } from "../middlewares/auth.middleware";
 
 export const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1024 * 1024 * 50 } })
@@ -22,8 +22,6 @@ router.patch("/block/user/:id", isAuthenticatedUser, isAdmin, BlockUser)
 router.patch("/unblock/user/:id", isAuthenticatedUser, isAdmin, UnBlockUser)
 router.patch("/remove-admin/user/:id", isAuthenticatedUser, isAdmin, RemoveAdmin)
 router.patch("/tooglevisitingcardleads/user/:id", isAuthenticatedUser, isAdmin, ToogleShowvisitingcard)
-router.patch("/update/access/user/:id", isAuthenticatedUser, UpdateUserWiseAccessFields)
-router.put("/update/access/feature", isAuthenticatedUser, UpdateFeatureWiseAccessFields)
 router.patch("/assign/users/:id", isAuthenticatedUser, AssignUsers)
 router.post("/login", Login)
 router.post("/logout", Logout)

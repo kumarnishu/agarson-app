@@ -60,7 +60,7 @@ function RolesTable({ role, selectAll, roles, setSelectAll, setRole, selectedRol
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
+                            {
                                 <STableHeadCell style={{ width: '50px' }}
                                 >
 
@@ -132,7 +132,7 @@ function RolesTable({ role, selectAll, roles, setSelectAll, setRole, selectedRol
                                                 element={
                                                     <Stack direction="row">
                                                         <>
-                                                            {user?.erp_access_fields.is_deletion_allowed &&
+                                                            {
                                                                 <Tooltip title="delete">
                                                                     <IconButton color="error"
                                                                         onClick={() => {
@@ -146,7 +146,7 @@ function RolesTable({ role, selectAll, roles, setSelectAll, setRole, selectedRol
                                                                 </Tooltip>
                                                             }
 
-                                                            {user?.erp_access_fields.is_editable && <Tooltip title="edit">
+                                                            { <Tooltip title="edit">
                                                                 <IconButton
                                                                     onClick={() => {
                                                                         setRole(role)
