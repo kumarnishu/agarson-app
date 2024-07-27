@@ -13,20 +13,18 @@ function ProductionDashboard() {
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'my production ', is_visible: true, url: paths.production })
+    user?.assigned_roles && is_authorized('production_view', user?.assigned_roles) &&tmpfeatures.push({ feature: 'production ', is_visible: true, url: paths.production_admin })
+    user?.assigned_roles && is_authorized('article_view', user?.assigned_roles) &&tmpfeatures.push({ feature: 'articles', is_visible: true, url: paths.articles })
+    user?.assigned_roles && is_authorized('machine_view', user?.assigned_roles) &&tmpfeatures.push({ feature: 'machines ', is_visible: true, url: paths.machines })
+    user?.assigned_roles && is_authorized('machine_category_view', user?.assigned_roles) &&tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })
+    user?.assigned_roles && is_authorized('dye_view', user?.assigned_roles) &&tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
+    user?.assigned_roles && is_authorized('shoe_weight_view', user?.assigned_roles) &&tmpfeatures.push({ feature: 'shoe weight ', is_visible: true, url: paths.shoe_weight })
 
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) &&  tmpfeatures.push({ feature: 'production ', is_visible: true, url: paths.production_admin })
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'articles', is_visible: true, url: paths.articles })
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'machines ', is_visible: true, url: paths.machines })
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'shoe weight ', is_visible: true, url: paths.shoe_weight })
+    user?.assigned_roles && is_authorized('shoe_weight_report_view', user?.assigned_roles) &&tmpfeatures.push({ feature: 'show weight report', is_visible: true, url: paths.articles })
+    user?.assigned_roles && is_authorized('machine_wise_production_report_view', user?.assigned_roles) &&tmpfeatures.push({ feature: ' machine production ', is_visible: true, url: paths.machines })
+    user?.assigned_roles && is_authorized('thekedar_wise_production_report_view', user?.assigned_roles) &&tmpfeatures.push({ feature: 'thekedar production ', is_visible: true, url: paths.dyes })
+    user?.assigned_roles && is_authorized('machine_category_wise_production_report_view', user?.assigned_roles) &&tmpfeatures.push({ feature: 'm-category production ', is_visible: true, url: paths.machine_categories })
 
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'show weight report', is_visible: true, url: paths.articles })
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) &&  tmpfeatures.push({ feature: ' machine production ', is_visible: true, url: paths.machines })
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'thekedar production ', is_visible: true, url: paths.dyes })
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'm-category production ', is_visible: true, url: paths.machine_categories })
-    
     setFeatures(tmpfeatures)
   }, [])
 

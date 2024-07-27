@@ -9,6 +9,7 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import CreateOrEditStateDialog from '../../dialogs/crm/CreateOrEditStateDialog'
 import { ICRMState } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -43,7 +44,7 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                             >
 
 
-                                <Checkbox  sx={{ width: 16, height: 16 }}
+                                <Checkbox sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -58,13 +59,13 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                     }} />
 
                             </STableHeadCell>
-                            {user?.crm_access_fields.is_editable &&
-                                <STableHeadCell style={{ width: '50px' }}
-                                >
 
-                                    Actions
+                            <STableHeadCell style={{ width: '50px' }}
+                            >
 
-                                </STableHeadCell>}
+                                Actions
+
+                            </STableHeadCell>
                             <STableHeadCell style={{ width: '200px' }}
                             >
 
@@ -74,12 +75,12 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                             <STableHeadCell
                             >
 
-                              Assigned Users
+                                Assigned Users
 
                             </STableHeadCell>
 
-                          
-                          
+
+
 
                         </STableRow>
                     </STableHead>
@@ -95,7 +96,7 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                             <STableCell style={{ width: '50px' }}>
 
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -107,7 +108,7 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                         {!selectAll ?
                                             <STableCell style={{ width: '50px' }}>
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setState(state)
                                                         if (e.target.checked) {
@@ -126,60 +127,61 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                             null
                                         }
 
-                                      
+
                                         {/* actions */}
-                                      
-                                            <STableCell style={{ width: '50' }}>
-                                                <PopUp
-                                                    element={
-                                                        <Stack direction="row">
-                                                            <>
-                                                                {user?.crm_access_fields.is_deletion_allowed &&
-                                                                    <Tooltip title="delete">
-                                                                        <IconButton color="error"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: LeadChoiceActions.delete_crm_item })
-                                                                                setState(state)
 
-                                                                            }}
-                                                                        >
-                                                                            <Delete />
-                                                                        </IconButton>
-                                                                    </Tooltip>
-                                                                }
-
-                                                                {user?.crm_access_fields.is_editable && <Tooltip title="edit">
-                                                                    <IconButton
+                                        <STableCell style={{ width: '50' }}>
+                                            <PopUp
+                                                element={
+                                                    <Stack direction="row">
+                                                        <>
+                                                            {user?.is_admin &&
+                                                                <Tooltip title="delete">
+                                                                    <IconButton color="error"
+                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                                                         onClick={() => {
+                                                                            setChoice({ type: LeadChoiceActions.delete_crm_item })
                                                                             setState(state)
-                                                                            setChoice({ type: LeadChoiceActions.create_or_edit_state })
+
                                                                         }}
-
                                                                     >
-                                                                        <Edit />
+                                                                        <Delete />
                                                                     </IconButton>
-                                                                </Tooltip>}
+                                                                </Tooltip>
+                                                            }
+                                                            <Tooltip title="edit">
+                                                                <IconButton
+                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                    onClick={() => {
+                                                                        setState(state)
+                                                                        setChoice({ type: LeadChoiceActions.create_or_edit_state })
+                                                                    }}
 
-                                                            </>
+                                                                >
+                                                                    <Edit />
+                                                                </IconButton>
+                                                            </Tooltip>
 
-                                                        </Stack>}
-                                                />
+                                                        </>
 
-                                            </STableCell>
-                                        <STableCell style={{width:'200px'}}>
+                                                    </Stack>}
+                                            />
+
+                                        </STableCell>
+                                        <STableCell style={{ width: '200px' }}>
                                             {state.state.state}
                                         </STableCell>
                                         <STableCell>
                                             {state.users.map((u) => { return u.username }).toString()}
                                         </STableCell>
-                                                                  
+
                                     </STableRow>
                                 )
                             })}
                     </STableBody>
                 </STable>
-               <CreateOrEditStateDialog state={state?.state}/>
-               <DeleteCrmItemDialog state={state?.state}/>
+                <CreateOrEditStateDialog state={state?.state} />
+                <DeleteCrmItemDialog state={state?.state} />
             </Box>
         </>
     )

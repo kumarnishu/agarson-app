@@ -5,7 +5,7 @@ import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { UserContext } from '../../contexts/userContext'
-import TodosTable from '../../components/tables/TodosTable';
+import TodosTable from '../../components/tables/todos/TodosTable';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'

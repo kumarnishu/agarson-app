@@ -1,13 +1,15 @@
 import { Box, Checkbox, IconButton, Stack, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { UserContext } from '../../contexts/userContext'
-import { IRole } from '../../types/user.types'
-import PopUp from '../popup/PopUp'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+
 import { Delete, Edit } from '@mui/icons-material'
-import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
-import CreateOrEditRoleDialog from '../dialogs/users/CreateOrEditRoleDialog'
-import DeleteRoleDialog from '../dialogs/users/DeleteRoleDialog'
+import { IRole } from '../../../types/user.types'
+import { UserContext } from '../../../contexts/userContext'
+import { ChoiceContext, UserChoiceActions } from '../../../contexts/dialogContext'
+import CreateOrEditRoleDialog from '../../dialogs/users/CreateOrEditRoleDialog'
+import DeleteRoleDialog from '../../dialogs/users/DeleteRoleDialog'
+import PopUp from '../../popup/PopUp'
+
 
 
 

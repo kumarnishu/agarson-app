@@ -8,7 +8,7 @@ import { IChecklist } from '../../types/checklist.types'
 import { Box, LinearProgress, TextField } from '@mui/material'
 import moment from 'moment'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import MyChecklistTable from '../../components/tables/MyCheckListTable'
+import MyChecklistTable from '../../components/tables/checklists/MyCheckListTable'
 
 
 export default function CheckListPage() {

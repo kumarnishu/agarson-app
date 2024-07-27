@@ -1,14 +1,15 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
-import PopUp from '../popup/PopUp'
+import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext'
+import PopUp from '../../popup/PopUp'
 import { Edit, RestartAlt } from '@mui/icons-material'
-import { UserContext } from '../../contexts/userContext'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { IArticle } from '../../types/production.types'
-import UpdateArticleDialog from '../dialogs/production/UpdateArticleDialog'
-import ToogleArticleDialog from '../dialogs/production/ToogleArticleDialog'
+import { UserContext } from '../../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import { IArticle } from '../../../types/production.types'
+import UpdateArticleDialog from '../../dialogs/production/UpdateArticleDialog'
+import ToogleArticleDialog from '../../dialogs/production/ToogleArticleDialog'
+import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -58,13 +59,13 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
-                                <STableHeadCell
-                                >
 
-                                    Actions
+                            <STableHeadCell
+                            >
 
-                                </STableHeadCell>}
+                                Actions
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -83,7 +84,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                 Status
 
                             </STableHeadCell>
-                           
+
 
                             <STableHeadCell
                             >
@@ -155,41 +156,43 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                             null
                                         }
                                         {/* actions */}
-                                        {user?.productions_access_fields.is_editable &&
-                                            <STableCell>
-                                                <PopUp
-                                                    element={
-                                                        <Stack direction="row">
-                                                            <>
-                                                                <Tooltip title="edit">
-                                                                    <IconButton
-                                                                        onClick={() => {
-                                                                            setArticle(article)
-                                                                            setChoice({ type: ProductionChoiceActions.update_article })
-                                                                        }}
 
-                                                                    >
-                                                                        <Edit />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                                {user?.productions_access_fields.is_editable &&
-                                                                    <Tooltip title="Toogle">
-                                                                        <IconButton color="primary"
-                                                                            onClick={() => {
-                                                                                setArticle(article)
-                                                                                setChoice({ type: ProductionChoiceActions.toogle_article })
+                                        <STableCell>
+                                            <PopUp
+                                                element={
+                                                    <Stack direction="row">
+                                                        <>
+                                                            <Tooltip title="edit">
+                                                                <IconButton
+                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                    onClick={() => {
+                                                                        setArticle(article)
+                                                                        setChoice({ type: ProductionChoiceActions.update_article })
+                                                                    }}
 
-                                                                            }}
-                                                                        >
-                                                                            <RestartAlt />
-                                                                        </IconButton>
-                                                                    </Tooltip>}
-                                                            </>
+                                                                >
+                                                                    <Edit />
+                                                                </IconButton>
+                                                            </Tooltip>
 
-                                                        </Stack>}
-                                                />
+                                                            <Tooltip title="Toogle">
+                                                                <IconButton color="primary"
+                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                    onClick={() => {
+                                                                        setArticle(article)
+                                                                        setChoice({ type: ProductionChoiceActions.toogle_article })
 
-                                            </STableCell>}
+                                                                    }}
+                                                                >
+                                                                    <RestartAlt />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </>
+
+                                                    </Stack>}
+                                            />
+
+                                        </STableCell>
                                         <STableCell>
                                             {article.name}
                                         </STableCell>
@@ -199,7 +202,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                         <STableCell>
                                             {article.active ? "active" : "inactive"}
                                         </STableCell>
-                                      
+
                                         <STableCell>
                                             {article.created_at && new Date(article.created_at).toLocaleString()}
                                         </STableCell>

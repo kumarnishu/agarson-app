@@ -23,6 +23,7 @@ import { ICRMCity, ICRMState } from '../../types/crm.types'
 import { toTitleCase } from '../../utils/TitleCase'
 import AssignCrmCitiesDialog from '../../components/dialogs/crm/AssignCrmCitiesDialog'
 import FindUknownCrmCitiesDialog from '../../components/dialogs/crm/FindUknownCrmCitiesDialog'
+import { is_authorized } from '../../utils/auth'
 
 
 let template: ICRMCityTemplate[] = [
@@ -162,7 +163,7 @@ export default function CrmCitiesPage() {
           {/* search bar */}
           < Stack direction="row" spacing={2}>
 
-            {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMCitiesFromExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} state={state} />}
+            {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMCitiesFromExcelButton disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)} state={state} />}
             < TextField
               select
               SelectProps={{
@@ -222,6 +223,7 @@ export default function CrmCitiesPage() {
                   setCity(undefined)
                   setAnchorEl(null)
                 }}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               > Add New</MenuItem>
               <MenuItem
                 onClick={() => {
@@ -235,6 +237,7 @@ export default function CrmCitiesPage() {
                   }
                   setAnchorEl(null)
                 }}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               > Assign Cities</MenuItem>
               <MenuItem
                 onClick={() => {
@@ -248,6 +251,7 @@ export default function CrmCitiesPage() {
                   }
                   setAnchorEl(null)
                 }}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               > Remove Cities</MenuItem>
               <MenuItem
                 sx={{ color: 'red' }}
@@ -256,8 +260,10 @@ export default function CrmCitiesPage() {
                   setState(undefined)
                   setAnchorEl(null)
                 }}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               > Find Unknown Cities</MenuItem>
               < MenuItem onClick={handleExcel}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               >Export To Excel</MenuItem>
 
             </Menu >

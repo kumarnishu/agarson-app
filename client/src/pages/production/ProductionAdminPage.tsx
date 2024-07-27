@@ -11,13 +11,14 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
-import ProductionTable from '../../components/tables/ProductionTable'
+import ProductionTable from '../../components/tables/production/ProductionTable'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
 import { IProduction } from '../../types/production.types'
 import {  GetProductions } from '../../services/ProductionServices'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
 import NewProductionDialog from '../../components/dialogs/production/CreateProductionDialog'
+import { is_authorized } from '../../utils/auth'
 
 export default function ProductionAdminPage() {
   const { user } = useContext(UserContext)
@@ -265,14 +266,18 @@ export default function ProductionAdminPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {user?.productions_access_fields.is_editable && < MenuItem onClick={() => {
+              < MenuItem 
+                disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+              onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_production })
               }}
-              >New Production</MenuItem>}
-              {user?.productions_access_fields.is_editable &&user.is_admin&&< MenuItem onClick={() => {
+              >New Production</MenuItem>
+              < MenuItem 
+                disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+              onClick={() => {
                 handleExcel()
               }}
-              >Export To Excel</MenuItem>}
+              >Export To Excel</MenuItem>
 
             </Menu >
             <NewProductionDialog/>

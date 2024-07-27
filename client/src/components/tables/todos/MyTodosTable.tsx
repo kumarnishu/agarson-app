@@ -1,13 +1,13 @@
 import { Chat, Person2, RemoveRedEye } from '@mui/icons-material'
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { ITodo } from '../../types/todo.types'
-import ViewTextDialog from '../dialogs/text/ViewTextDialog'
-import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
-import ViewTodoContactsDialog from '../dialogs/todos/ViewTodoContactsDialog'
-import AddReplyDialog from '../dialogs/todos/AddReplyDialog'
-import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import { ITodo } from '../../../types/todo.types'
+import ViewTextDialog from '../../dialogs/text/ViewTextDialog'
+import { ChoiceContext, TodoChoiceActions } from '../../../contexts/dialogContext'
+import ViewTodoContactsDialog from '../../dialogs/todos/ViewTodoContactsDialog'
+import AddReplyDialog from '../../dialogs/todos/AddReplyDialog'
+import ViewTodoRepliesDialog from '../../dialogs/todos/ViewTodoRepliesDialog'
 
 
 type Props = {

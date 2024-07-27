@@ -8,6 +8,7 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import { GetMachineCategories, UpdateMachineCategories } from '../../services/ProductionServices'
 import { ITemplateCategoryField } from '../../types/template.type'
+import { is_authorized } from '../../utils/auth'
 
 
 function UpdateMachineCategoriesPage() {
@@ -59,7 +60,7 @@ function UpdateMachineCategoriesPage() {
                     mutate({ body: { categories: fields } })
                 }
             }}
-                disabled={isLoading || !user?.productions_access_fields.is_deletion_allowed}
+                disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
             >
                 Save
             </Button>}
@@ -73,7 +74,7 @@ function UpdateMachineCategoriesPage() {
                         onChange={(e) => setField(e.target.value)}
                     >
                     </TextField>
-                    <Button color="inherit" sx={{ borderRadius: 2 }} variant="contained" onClick={() => { handleAdd() }}>
+                    <Button disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}  color="inherit" sx={{ borderRadius: 2 }} variant="contained" onClick={() => { handleAdd() }}>
                         +
                     </Button>
                 </Stack>
@@ -83,7 +84,7 @@ function UpdateMachineCategoriesPage() {
                             <TextField disabled defaultValue={item}>
                             </TextField>
                             <Button color="error"
-                                disabled={isLoading || !user?.productions_access_fields.is_deletion_allowed}
+                                disabled={!user?.is_admin &&user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                 sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
                                     let tmps = fields.filter((field) => { return field !== item })
                                     setFields(tmps)

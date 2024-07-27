@@ -15,7 +15,7 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { IDye } from '../../types/production.types'
 import { GetDyes } from '../../services/ProductionServices'
 import NewDyeDialog from '../../components/dialogs/production/CreateDyeDialog'
-import DyesTable from '../../components/tables/DyesTable'
+import DyesTable from '../../components/tables/production/DyesTable'
 import UploadDyesFromExcelButton from '../../components/buttons/UploadDyesButton'
 
 

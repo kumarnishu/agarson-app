@@ -271,7 +271,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
 
 export const GetProfile = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.user?._id
-    const user = await User.findById(id).populate("created_by").populate("updated_by").populate('assigned_users')
+    const user = await User.findById(id).populate("assigned_roles").populate("created_by").populate("updated_by").populate('assigned_users')
     res.status(200).json({ user: user, token: req.cookies.accessToken })
 }
 

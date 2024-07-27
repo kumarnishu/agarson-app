@@ -17,7 +17,7 @@ import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
 import { UserContext } from '../../contexts/userContext'
 import NewCheckListDialog from '../../components/dialogs/checklists/NewCheckListDialog'
-import CheckListTable from '../../components/tables/CheckListTable'
+import CheckListTable from '../../components/tables/checklists/CheckListTable'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 
 

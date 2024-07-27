@@ -16,7 +16,7 @@ import moment from 'moment'
 import { IVisit } from '../../types/visit.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
-import AttendenceTable from '../../components/tables/AttendenceTable'
+import AttendenceTable from '../../components/tables/visits/AttendenceTable'
 
 export default function VisitAdminPage() {
     const { user } = useContext(UserContext)

@@ -14,7 +14,7 @@ import { IUser } from '../../types/user.types'
 import { ITodo } from '../../types/todo.types'
 import FuzzySearch from 'fuzzy-search'
 import { GetMyTodos } from '../../services/TodoServices'
-import MyTodosTable from '../../components/tables/MyTodosTable'
+import MyTodosTable from '../../components/tables/todos/MyTodosTable'
 
 
 type ITodoTemplate = {

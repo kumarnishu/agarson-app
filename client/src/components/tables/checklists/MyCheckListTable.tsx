@@ -1,10 +1,10 @@
 import { Box, Button, IconButton, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
-import { IChecklist } from '../../types/checklist.types'
+import { IChecklist } from '../../../types/checklist.types'
 import { RemoveRedEye } from '@mui/icons-material'
-import { CheckListChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import CheckMyCheckListDialog from '../dialogs/checklists/CheckMyCheckListDialog'
+import { CheckListChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import CheckMyCheckListDialog from '../../dialogs/checklists/CheckMyCheckListDialog'
 
 
 

@@ -7,6 +7,8 @@ import ViewRemarksDialog from '../../dialogs/crm/ViewRemarksDialog'
 import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
 import { Comment, Visibility } from '@mui/icons-material'
 import CreateOrEditRemarkDialog from '../../dialogs/crm/CreateOrEditRemarkDialog'
+import { is_authorized } from '../../../utils/auth'
+import { UserContext } from '../../../contexts/userContext'
 
 
 
@@ -19,9 +21,10 @@ type Props = {
 
 function ActivitiesTable({ remarks }: Props) {
     const [data, setData] = useState<IRemark[]>(remarks)
-    const [lead,setLead]=useState<ILead>();
+    const [lead, setLead] = useState<ILead>();
     const { setChoice } = useContext(ChoiceContext)
-
+    const { user } = useContext(UserContext)
+    
     useEffect(() => {
         setData(remarks)
     }, [remarks])
@@ -39,7 +42,7 @@ function ActivitiesTable({ remarks }: Props) {
                             <STableHeadCell
                             >
 
-                               Actions
+                                Actions
 
                             </STableHeadCell>
 
@@ -265,38 +268,40 @@ function ActivitiesTable({ remarks }: Props) {
 
                                         key={index}
                                     >
-                                       
-                                       <TableCell style={{padding:'0px'}}>
-                                            
+
+                                        <TableCell style={{ padding: '0px' }}>
+
                                             <Stack direction="row" gap={1} px={1}>
-                                            <Tooltip title="view remarks">
-                                                <IconButton  size="small" color="primary"
-                                                    onClick={() => {
+                                                <Tooltip title="view remarks">
+                                                    <IconButton size="small" color="primary"
+                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                        onClick={() => {
 
-                                                        setChoice({ type: LeadChoiceActions.view_remarks })
-                                                        setLead(remark.lead)
+                                                            setChoice({ type: LeadChoiceActions.view_remarks })
+                                                            setLead(remark.lead)
 
 
-                                                    }}
-                                                >
-                                                    <Visibility />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title="Add Remark">
-                                                <IconButton size="small" 
-                                                    color="success"
-                                                    onClick={() => {
+                                                        }}
+                                                    >
+                                                        <Visibility />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="Add Remark">
+                                                    <IconButton size="small"
+                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                        color="success"
+                                                        onClick={() => {
 
-                                                        setChoice({ type: LeadChoiceActions.create_or_edt_remark })
-                                                        setLead(remark.lead)
+                                                            setChoice({ type: LeadChoiceActions.create_or_edt_remark })
+                                                            setLead(remark.lead)
 
-                                                    }}
-                                                >
-                                                    <Comment />
-                                                </IconButton>
-                                            </Tooltip>
+                                                        }}
+                                                    >
+                                                        <Comment />
+                                                    </IconButton>
+                                                </Tooltip>
                                             </Stack>
-                                       </TableCell>
+                                        </TableCell>
                                         <STableCell title={remark.remark}>
                                             {remark.remark.slice(0, 50)}
 

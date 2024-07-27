@@ -19,6 +19,7 @@ import { ILead, IStage } from '../../types/crm.types'
 import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
 import { toTitleCase } from '../../utils/TitleCase'
 import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
+import { is_authorized } from '../../utils/auth'
 
 let template: ILeadTemplate[] = [
   {
@@ -246,7 +247,7 @@ export default function LeadsPage() {
           < Stack direction="row" spacing={2} >
             {LoggedInUser?.created_by._id === LoggedInUser?._id && <Tooltip title="Delete Selected Leads">
               <IconButton color="error"
-                disabled={!LoggedInUser?.crm_access_fields.is_deletion_allowed}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
                 onClick={() => {
                   if (selectedLeads.length == 0)
                     alert("select some useless leads")
@@ -284,7 +285,7 @@ export default function LeadsPage() {
                 })
               }
             </TextField>
-            {LoggedInUser?.is_admin && <UploadLeadsExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
+            {LoggedInUser?.is_admin && <UploadLeadsExcelButton disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)} />}
           </Stack >
           <>
 
@@ -318,9 +319,11 @@ export default function LeadsPage() {
                   setLead(undefined);
                   setAnchorEl(null)
                 }}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               > Add New</MenuItem>
-              {LoggedInUser?.is_admin && < MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>}
+              < MenuItem onClick={handleExcel}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
+              >Export To Excel</MenuItem>
 
             </Menu >
             <CreateOrEditLeadDialog lead={undefined} />

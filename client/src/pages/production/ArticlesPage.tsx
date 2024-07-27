@@ -10,7 +10,7 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
-import ArticlesTable from '../../components/tables/ArticleTable'
+import ArticlesTable from '../../components/tables/production/ArticleTable'
 import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import NewArticleDialog from '../../components/dialogs/production/CreateArticleDialog'

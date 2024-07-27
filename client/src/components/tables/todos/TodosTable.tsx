@@ -1,12 +1,12 @@
 import { Person2, RemoveRedEye } from '@mui/icons-material'
 import { Box, Checkbox, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, TodoChoiceActions } from '../../contexts/dialogContext'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { ITodo } from '../../types/todo.types'
-import ViewTodoContactsDialog from '../dialogs/todos/ViewTodoContactsDialog'
-import ViewTextDialog from '../dialogs/text/ViewTextDialog'
-import ViewTodoRepliesDialog from '../dialogs/todos/ViewTodoRepliesDialog'
+import { ChoiceContext, TodoChoiceActions } from '../../../contexts/dialogContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import { ITodo } from '../../../types/todo.types'
+import ViewTodoContactsDialog from '../../dialogs/todos/ViewTodoContactsDialog'
+import ViewTextDialog from '../../dialogs/text/ViewTextDialog'
+import ViewTodoRepliesDialog from '../../dialogs/todos/ViewTodoRepliesDialog'
 
 
 type Props = {

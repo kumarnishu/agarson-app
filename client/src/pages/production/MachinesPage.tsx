@@ -15,7 +15,7 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import NewMachineDialog from '../../components/dialogs/production/CreateMachineDialog'
 import { IMachine } from '../../types/production.types'
 import { GetMachines } from '../../services/ProductionServices'
-import MachinesTable from '../../components/tables/MachinesTable'
+import MachinesTable from '../../components/tables/production/MachinesTable'
 import UploadMachinesFromExcelButton from '../../components/buttons/UploadMachinesButton'
 
 

@@ -1,13 +1,13 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from "../styled/STyledTable"
-import ViewTextDialog from '../dialogs/text/ViewTextDialog'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from "../../styled/STyledTable"
+import ViewTextDialog from '../../dialogs/text/ViewTextDialog'
 import moment from 'moment'
-import ToogleAttendenceDialog from '../dialogs/visit/ToogleAttendenceDialog'
+import ToogleAttendenceDialog from '../../dialogs/visit/ToogleAttendenceDialog'
 import { Edit } from '@mui/icons-material'
-import { ChoiceContext, VisitChoiceActions } from '../../contexts/dialogContext'
-import { UserContext } from '../../contexts/userContext'
-import { IVisit } from '../../types/visit.types'
+import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext'
+import { UserContext } from '../../../contexts/userContext'
+import { IVisit } from '../../../types/visit.types'
 
 
 type Props = {

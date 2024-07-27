@@ -16,6 +16,7 @@ import ReferLeadDialog from '../../dialogs/crm/ReferLeadDialog'
 import RemoveLeadReferralDialog from '../../dialogs/crm/RemoveLeadReferralDialog'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 import ConvertLeadToReferDialog from '../../dialogs/crm/ConvertLeadToReferDialog'
+import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -39,10 +40,6 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
   return (
     <>
-
-
-      {leads && leads.length == 0 ? <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>
-        :
         <Box sx={{
           overflow: "auto",
           height: '76vh'
@@ -361,6 +358,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                               {lead.referred_party &&
                                 <Tooltip title="Remove Refrerral">
                                   <IconButton color="error"
+                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                     onClick={() => {
 
                                       setChoice({ type: LeadChoiceActions.remove_referral })
@@ -374,6 +372,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                               {!lead.referred_party &&
                                 <Tooltip title="refer">
                                   <IconButton color="primary"
+                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                     onClick={() => {
 
                                       setChoice({ type: LeadChoiceActions.refer_lead })
@@ -388,6 +387,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                               {!lead.referred_party &&
                                 <Tooltip title="convert to refer">
                                   <IconButton color="primary"
+                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                     onClick={() => {
 
                                       setChoice({ type: LeadChoiceActions.convert_lead_to_refer })
@@ -402,6 +402,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                               {user?.crm_access_fields.is_deletion_allowed &&
                                 <Tooltip title="delete">
                                   <IconButton color="error"
+                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                     onClick={() => {
                                       setChoice({ type: LeadChoiceActions.delete_crm_item })
                                       setLead(lead)
@@ -419,6 +420,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                               {user?.crm_access_fields.is_editable &&
                                 <Tooltip title="edit">
                                   <IconButton color="secondary"
+                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                     onClick={() => {
 
                                       setChoice({ type: LeadChoiceActions.create_or_edit_lead })
@@ -433,6 +435,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
                               <Tooltip title="view remarks">
                                 <IconButton color="primary"
+                                  disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                   onClick={() => {
 
                                     setChoice({ type: LeadChoiceActions.view_remarks })
@@ -447,6 +450,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
                               <Tooltip title="Add Remark">
                                 <IconButton
+                                  disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                   color="success"
                                   onClick={() => {
 
@@ -621,7 +625,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
             </STableBody>
           </STable>
         </Box >
-      }
+      
 
       <CreateOrEditLeadDialog lead={lead} />
 

@@ -12,11 +12,11 @@ import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { IRole } from '../../types/user.types'
 import { IRoleTemplate } from '../../types/template.type'
-import RolesTable from '../../components/tables/RolesTable'
 import { GetRoles } from '../../services/UserServices'
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
 import CreateOrEditRoleDialog from '../../components/dialogs/users/CreateOrEditRoleDialog'
 import AssignRolesDialog from '../../components/dialogs/users/AssignRolesDialog'
+import RolesTable from '../../components/tables/users/RolesTable'
 
 
 let template: IRoleTemplate[] = [

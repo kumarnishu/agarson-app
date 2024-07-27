@@ -1,40 +1,39 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import PopUp from '../popup/PopUp'
-import { UserContext } from '../../contexts/userContext'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { IProduction } from '../../types/production.types'
-import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
-import { Delete, Edit } from '@mui/icons-material'
-import UpdateProductionDialog from '../dialogs/production/UpdateProductionDialog'
-import moment from 'moment'
-import DeleteProductionDialog from '../dialogs/production/DeleteProductionDialog'
+import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext'
+import PopUp from '../../popup/PopUp'
+import { Edit, RestartAlt } from '@mui/icons-material'
+import { UserContext } from '../../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import { IMachine } from '../../../types/production.types'
+import UpdateMachineDialog from '../../dialogs/production/UpdateMachineDialog'
+import ToogleMachineDialog from '../../dialogs/production/ToogleMachineDialog'
+import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
-    production: IProduction | undefined,
-    setProduction: React.Dispatch<React.SetStateAction<IProduction | undefined>>,
+    machine: IMachine | undefined,
+    setMachine: React.Dispatch<React.SetStateAction<IMachine | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    productions: IProduction[],
-    selectedProductions: IProduction[]
-    setSelectedProductions: React.Dispatch<React.SetStateAction<IProduction[]>>,
+    machines: IMachine[],
+    selectedMachines: IMachine[]
+    setSelectedMachines: React.Dispatch<React.SetStateAction<IMachine[]>>,
 }
-function ProductionsTable({ production, selectAll, productions, setSelectAll, setProduction, selectedProductions, setSelectedProductions }: Props) {
-    const [data, setData] = useState<IProduction[]>(productions)
-    const { user } = useContext(UserContext)
+function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine, selectedMachines, setSelectedMachines }: Props) {
+    const [data, setData] = useState<IMachine[]>(machines)
     const { setChoice } = useContext(ChoiceContext)
-
+    const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
-            setData(productions)
-    }, [productions, data])
+            setData(machines)
+    }, [machines, data])
     return (
         <>
             <Box sx={{
                 overflow: "auto",
-                height: '65vh'
+                height: '80vh'
             }}>
                 <STable
                 >
@@ -43,81 +42,60 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                         <STableRow>
                             <STableHeadCell
                             >
+
+
                                 <Checkbox  sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
                                         if (e.currentTarget.checked) {
-                                            setSelectedProductions(productions)
+                                            setSelectedMachines(machines)
                                             setSelectAll(true)
                                         }
                                         if (!e.currentTarget.checked) {
-                                            setSelectedProductions([])
+                                            setSelectedMachines([])
                                             setSelectAll(false)
                                         }
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
+                          
                                 <STableHeadCell
                                 >
 
                                     Actions
 
-                                </STableHeadCell>}
+                                </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Date
-
-                            </STableHeadCell>
-
-
-                            <STableHeadCell
-                            >
-
-                                Article
+                                Name
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Machine
+                                Serial No
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Thekedar
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Production
+                                Status
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Production Hours
+                                Display name
 
                             </STableHeadCell>
+
                             <STableHeadCell
                             >
 
-                                Man Power
+                                Category
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Small Repair
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Big Repair
                             </STableHeadCell>
 
                             <STableHeadCell
@@ -150,10 +128,10 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                     </STableHead>
                     <STableBody >
                         {
-                            productions && productions.map((production, index) => {
+                            machines && machines.map((machine, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedProductions.length > 0 && selectedProductions.find((t) => t._id === production._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedMachines.length > 0 && selectedMachines.find((t) => t._id === machine._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
@@ -164,6 +142,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                                     checked={Boolean(selectAll)}
                                                 />
 
+
                                             </STableCell>
                                             :
                                             null
@@ -173,13 +152,13 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
 
                                                 <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
-                                                        setProduction(production)
+                                                        setMachine(machine)
                                                         if (e.target.checked) {
-                                                            setSelectedProductions([...selectedProductions, production])
+                                                            setSelectedMachines([...selectedMachines, machine])
                                                         }
                                                         if (!e.target.checked) {
-                                                            setSelectedProductions((productions) => productions.filter((item) => {
-                                                                return item._id !== production._id
+                                                            setSelectedMachines((machines) => machines.filter((item) => {
+                                                                return item._id !== machine._id
                                                             }))
                                                         }
                                                     }}
@@ -190,81 +169,70 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                             null
                                         }
                                         {/* actions */}
-                                        {user?.productions_access_fields.is_editable &&
+                                      
                                             <STableCell>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row">
                                                             <>
-                                                                {user?.productions_access_fields.is_editable && <Tooltip title="edit">
-                                                                    <IconButton color="info"
+                                                                <Tooltip title="edit">
+                                                                    <IconButton
+                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                                                         onClick={() => {
-                                                                            setChoice({ type: ProductionChoiceActions.update_production })
-                                                                            setProduction(production)
+                                                                            setMachine(machine)
+                                                                            setChoice({ type: ProductionChoiceActions.update_machine })
                                                                         }}
+
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>}
-                                                                {user?.productions_access_fields.is_deletion_allowed && <Tooltip title="delete">
-                                                                    <IconButton color="error"
-                                                                        onClick={() => {
-                                                                            setChoice({ type: ProductionChoiceActions.delete_production })
-                                                                            setProduction(production)
-                                                                        }}
-                                                                    >
-                                                                        <Delete />
-                                                                    </IconButton>
-                                                                </Tooltip>}
+                                                                </Tooltip>
+                                                               
+                                                                    <Tooltip title="Toogle">
+                                                                        <IconButton color="primary"
+                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                            onClick={() => {
+                                                                                setMachine(machine)
+                                                                                setChoice({ type: ProductionChoiceActions.toogle_machine })
+
+                                                                            }}
+                                                                        >
+                                                                            <RestartAlt />
+                                                                        </IconButton>
+                                                                    </Tooltip>
                                                             </>
 
                                                         </Stack>}
                                                 />
 
-                                            </STableCell>}
+                                            </STableCell>
                                         <STableCell>
-                                            {production.date && moment(new Date(production.date)).format('DD/MM/YY')}
+                                            {machine.name}
+                                        </STableCell>
+                                        <STableCell>
+                                            {machine.serial_no}
+                                        </STableCell>
+                                        <STableCell>
+                                            {machine.active ? "active" : "inactive"}
+                                        </STableCell>
+                                        <STableCell>
+                                            {machine.display_name}
+                                        </STableCell>
+                                        <STableCell>
+                                            {machine.category}
+                                        </STableCell>
+                                        <STableCell>
+                                            {machine.created_at && new Date(machine.created_at).toLocaleString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {machine.created_by.username}
+                                        </STableCell>
+                                        <STableCell>
+                                            {machine.updated_at && new Date(machine.updated_at).toLocaleString()}
                                         </STableCell>
 
                                         <STableCell>
-                                            {production.articles.map((a) => { return a.display_name }).toString()}
-                                        </STableCell>
-
-                                        <STableCell>
-                                            {production.machine.name}
-                                        </STableCell>
-                                        <STableCell>
-                                            {production.thekedar.username}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {production.production}
-                                        </STableCell>
-                                        <STableCell>
-                                            {production.production_hours}
-                                        </STableCell>
-                                        <STableCell>
-                                            {production.manpower}
-                                        </STableCell>
-                                        <STableCell>
-                                            {production.small_repair}
-                                        </STableCell>
-                                        <STableCell>
-                                            {production.big_repair}
-                                        </STableCell>
-                                        <STableCell>
-                                            {production.created_at && new Date(production.created_at).toLocaleString()}
-                                        </STableCell>
-                                        <STableCell>
-                                            {production.created_by.username}
-                                        </STableCell>
-                                        <STableCell>
-                                            {production.updated_at && new Date(production.updated_at).toLocaleString()}
-                                        </STableCell>
-
-                                        <STableCell>
-                                            {production.updated_by.username}
+                                            {machine.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>
@@ -272,15 +240,16 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                             })}
                     </STableBody>
                 </STable>
-
+                {
+                    machine ?
+                        <>
+                            <UpdateMachineDialog machine={machine} />
+                            <ToogleMachineDialog machine={machine} />
+                        </> : null
+                }
             </Box>
-            {production && <>
-                <UpdateProductionDialog production={production} />
-                <DeleteProductionDialog production={production} />
-            </>
-            }
         </>
     )
 }
 
-export default ProductionsTable
+export default MachinesTable

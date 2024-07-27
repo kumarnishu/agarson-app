@@ -91,13 +91,13 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                             <STableHeadCell
                             >
 
-                                General Role
+                                Type
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Assigned Roles
+                                Roles
 
                             </STableHeadCell>
                             <STableHeadCell

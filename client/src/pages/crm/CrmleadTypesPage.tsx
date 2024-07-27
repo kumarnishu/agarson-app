@@ -15,6 +15,8 @@ import CreateOrEditLeadTypeDialog from '../../components/dialogs/crm/CreateOrEdi
 import { ILeadType } from '../../types/crm.types'
 import LeadsTypeTable from '../../components/tables/crm/LeadsTypesTable'
 import { GetAllLeadTypes } from '../../services/LeadsServices'
+import { is_authorized } from '../../utils/auth'
+import { UserContext } from '../../contexts/userContext'
 
 type ITemplate = {
   _id: string,
@@ -40,7 +42,7 @@ export default function CrmTypesPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+  const { user: LoggedInUser } = useContext(UserContext)
 
   function handleExcel() {
     setAnchorEl(null)
@@ -170,9 +172,11 @@ export default function CrmTypesPage() {
                   setLeadType(undefined)
                   setAnchorEl(null)
                 }}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               > Add New</MenuItem>
 
               < MenuItem onClick={handleExcel}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               >Export To Excel</MenuItem>
 
             </Menu >

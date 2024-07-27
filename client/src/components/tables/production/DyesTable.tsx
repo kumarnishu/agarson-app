@@ -1,33 +1,34 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
-import PopUp from '../popup/PopUp'
+import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext'
+import PopUp from '../../popup/PopUp'
 import { Edit, RestartAlt } from '@mui/icons-material'
-import { UserContext } from '../../contexts/userContext'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { IMachine } from '../../types/production.types'
-import UpdateMachineDialog from '../dialogs/production/UpdateMachineDialog'
-import ToogleMachineDialog from '../dialogs/production/ToogleMachineDialog'
+import { UserContext } from '../../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import { IDye } from '../../../types/production.types'
+import UpdateDyeDialog from '../../dialogs/production/UpdateDyeDialog'
+import ToogleDyeDialog from '../../dialogs/production/ToogleDyeDialog'
+import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
-    machine: IMachine | undefined,
-    setMachine: React.Dispatch<React.SetStateAction<IMachine | undefined>>,
+    dye: IDye | undefined,
+    setDye: React.Dispatch<React.SetStateAction<IDye | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    machines: IMachine[],
-    selectedMachines: IMachine[]
-    setSelectedMachines: React.Dispatch<React.SetStateAction<IMachine[]>>,
+    dyes: IDye[],
+    selectedDyes: IDye[]
+    setSelectedDyes: React.Dispatch<React.SetStateAction<IDye[]>>,
 }
-function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine, selectedMachines, setSelectedMachines }: Props) {
-    const [data, setData] = useState<IMachine[]>(machines)
+function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, setSelectedDyes }: Props) {
+    const [data, setData] = useState<IDye[]>(dyes)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
-            setData(machines)
-    }, [machines, data])
+            setData(dyes)
+    }, [dyes, data])
     return (
         <>
             <Box sx={{
@@ -48,11 +49,11 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
                                         if (e.currentTarget.checked) {
-                                            setSelectedMachines(machines)
+                                            setSelectedDyes(dyes)
                                             setSelectAll(true)
                                         }
                                         if (!e.currentTarget.checked) {
-                                            setSelectedMachines([])
+                                            setSelectedDyes([])
                                             setSelectAll(false)
                                         }
                                     }} />
@@ -68,32 +69,31 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                             <STableHeadCell
                             >
 
-                                Name
+                                Dye Number
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Serial No
+                               Size
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                               Article
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                St Weight
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
                                 Status
-
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Display name
-
-                            </STableHeadCell>
-
-                            <STableHeadCell
-                            >
-
-                                Category
 
                             </STableHeadCell>
 
@@ -127,10 +127,10 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                     </STableHead>
                     <STableBody >
                         {
-                            machines && machines.map((machine, index) => {
+                            dyes && dyes.map((dye, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedMachines.length > 0 && selectedMachines.find((t) => t._id === machine._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedDyes.length > 0 && selectedDyes.find((t) => t._id === dye._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
@@ -151,13 +151,13 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
 
                                                 <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
-                                                        setMachine(machine)
+                                                        setDye(dye)
                                                         if (e.target.checked) {
-                                                            setSelectedMachines([...selectedMachines, machine])
+                                                            setSelectedDyes([...selectedDyes, dye])
                                                         }
                                                         if (!e.target.checked) {
-                                                            setSelectedMachines((machines) => machines.filter((item) => {
-                                                                return item._id !== machine._id
+                                                            setSelectedDyes((dyes) => dyes.filter((item) => {
+                                                                return item._id !== dye._id
                                                             }))
                                                         }
                                                     }}
@@ -168,7 +168,7 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                             null
                                         }
                                         {/* actions */}
-                                        {user?.productions_access_fields.is_editable &&
+                                      
                                             <STableCell>
                                                 <PopUp
                                                     element={
@@ -176,60 +176,63 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                                             <>
                                                                 <Tooltip title="edit">
                                                                     <IconButton
+                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                                                         onClick={() => {
-                                                                            setMachine(machine)
-                                                                            setChoice({ type: ProductionChoiceActions.update_machine })
+                                                                            setDye(dye)
+                                                                            setChoice({ type: ProductionChoiceActions.update_dye })
                                                                         }}
 
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
                                                                 </Tooltip>
-                                                                {user?.productions_access_fields.is_editable &&
+                                                                
                                                                     <Tooltip title="Toogle">
                                                                         <IconButton color="primary"
+                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                                                             onClick={() => {
-                                                                                setMachine(machine)
-                                                                                setChoice({ type: ProductionChoiceActions.toogle_machine })
+                                                                                setDye(dye)
+                                                                                setChoice({ type: ProductionChoiceActions.toogle_dye })
 
                                                                             }}
                                                                         >
                                                                             <RestartAlt />
                                                                         </IconButton>
-                                                                    </Tooltip>}
+                                                                    </Tooltip>
                                                             </>
 
                                                         </Stack>}
                                                 />
 
-                                            </STableCell>}
+                                            </STableCell>
                                         <STableCell>
-                                            {machine.name}
+                                            {dye.dye_number}
                                         </STableCell>
                                         <STableCell>
-                                            {machine.serial_no}
+                                            {dye.size}
                                         </STableCell>
                                         <STableCell>
-                                            {machine.active ? "active" : "inactive"}
+                                            {dye.article?dye.article.display_name:""}
                                         </STableCell>
                                         <STableCell>
-                                            {machine.display_name}
+                                            {dye.stdshoe_weight}
                                         </STableCell>
                                         <STableCell>
-                                            {machine.category}
-                                        </STableCell>
-                                        <STableCell>
-                                            {machine.created_at && new Date(machine.created_at).toLocaleString()}
-                                        </STableCell>
-                                        <STableCell>
-                                            {machine.created_by.username}
-                                        </STableCell>
-                                        <STableCell>
-                                            {machine.updated_at && new Date(machine.updated_at).toLocaleString()}
+                                            {dye.active ? "active" : "inactive"}
                                         </STableCell>
 
                                         <STableCell>
-                                            {machine.updated_by.username}
+                                            {dye.created_at && new Date(dye.created_at).toLocaleString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {dye.created_by.username}
+                                        </STableCell>
+                                        <STableCell>
+                                            {dye.updated_at && new Date(dye.updated_at).toLocaleString()}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {dye.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>
@@ -238,10 +241,10 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                     </STableBody>
                 </STable>
                 {
-                    machine ?
+                    dye ?
                         <>
-                            <UpdateMachineDialog machine={machine} />
-                            <ToogleMachineDialog machine={machine} />
+                            <UpdateDyeDialog dye={dye} />
+                            <ToogleDyeDialog dye={dye} />
                         </> : null
                 }
             </Box>
@@ -249,4 +252,4 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
     )
 }
 
-export default MachinesTable
+export default DyesTable

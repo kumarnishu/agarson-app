@@ -9,6 +9,7 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import CreateOrEditLeadSourceDialog from '../../dialogs/crm/CreateOrEditLeadSourceDialog'
 import { ILeadSource } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -58,13 +59,13 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                     }} />
 
                             </STableHeadCell>
-                            {user?.crm_access_fields.is_editable &&
+                            
                                 <STableHeadCell style={{ width: '50px' }}
                                 >
 
                                     Actions
 
-                                </STableHeadCell>}
+                                </STableHeadCell>
                             <STableHeadCell style={{ width: '200px' }}
                             >
 
@@ -129,9 +130,10 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                                 element={
                                                     <Stack direction="row">
                                                         <>
-                                                            {user?.crm_access_fields.is_deletion_allowed &&
+                                                            {user?.is_admin &&
                                                                 <Tooltip title="delete">
                                                                     <IconButton color="error"
+                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                                                         onClick={() => {
                                                                             setChoice({ type: LeadChoiceActions.delete_crm_item })
                                                                             setLeadSource(source)
@@ -143,8 +145,9 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                                                 </Tooltip>
                                                             }
 
-                                                            {user?.crm_access_fields.is_editable && <Tooltip title="edit">
+                                                            <Tooltip title="edit">
                                                                 <IconButton
+                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                                                     onClick={() => {
                                                                         setLeadSource(source)
                                                                         setChoice({ type: LeadChoiceActions.create_or_edit_source })
@@ -153,7 +156,7 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                                                 >
                                                                     <Edit />
                                                                 </IconButton>
-                                                            </Tooltip>}
+                                                            </Tooltip>
 
                                                         </>
 

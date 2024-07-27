@@ -10,6 +10,7 @@ import CreateOrEditReferDialog from '../../dialogs/crm/CreateOrEditReferDialog'
 import { IReferredParty } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 import AllReferralPageDialog from '../../dialogs/crm/AllReferralPageDialog'
+import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -201,9 +202,10 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                         element={
                           <Stack direction="row" spacing={1}>
 
-                            {user?.is_admin && user?.crm_access_fields.is_deletion_allowed &&
+                            {user?.is_admin &&
                               <Tooltip title="delete">
                                 <IconButton color="error"
+                                  disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                   onClick={() => {
                                     setChoice({ type: LeadChoiceActions.delete_crm_item })
                                     setRefer(refer)
@@ -214,13 +216,9 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                                 </IconButton>
                               </Tooltip>
                             }
-
-
-
-
-                            {user?.crm_access_fields.is_editable &&
                               <Tooltip title="edit">
                                 <IconButton color="secondary"
+                                  disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                   onClick={() => {
 
                                     setChoice({ type: LeadChoiceActions.create_or_edit_refer })
@@ -230,11 +228,12 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                                 >
                                   <Edit />
                                 </IconButton>
-                              </Tooltip>}
+                              </Tooltip>
 
 
                             <Tooltip title="view all refer refers">
                               <IconButton color="primary"
+                                disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                 onClick={() => {
                                   setChoice({ type: LeadChoiceActions.view_referrals })
                                   setRefer(refer)

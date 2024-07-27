@@ -17,7 +17,7 @@ import { IErpStateTemplate } from '../../types/template.type'
 import { GetStates } from '../../services/ErpServices'
 import CreateOrEditErpStateDialog from '../../components/dialogs/erp/CreateOrEditErpStateDialog'
 import AssignErpCrmStatesDialog from '../../components/dialogs/erp/AssignErpStatesDialog'
-import ErpStateTable from '../../components/tables/ErpStateTable'
+import ErpStateTable from '../../components/tables/erp reports/ErpStateTable'
 import UploadStatesFromExcelButton from '../../components/buttons/UploadStatesButton'
 import { IState } from '../../types/erp_report.types'
 

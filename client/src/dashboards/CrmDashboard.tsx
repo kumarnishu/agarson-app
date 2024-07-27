@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import AppsIcon from '@mui/icons-material/Apps';
 import { UserContext } from "../contexts/userContext";
+import { is_authorized } from "../utils/auth";
 
 function CrmDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
@@ -11,15 +12,15 @@ function CrmDashboard() {
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-    tmpfeatures.push({ feature: 'leads ', is_visible: true, url: paths.leads })
-    tmpfeatures.push({ feature: 'refers', is_visible: true, url: paths.refers })
-    tmpfeatures.push({ feature: 'reminders', is_visible: true, url: paths.crm_reminders })
-    tmpfeatures.push({ feature: 'activities', is_visible: true, url: paths.crm_activities })
-    user?.is_admin && tmpfeatures.push({ feature: 'states', is_visible: true, url: paths.crm_states })
-    user?.is_admin && tmpfeatures.push({ feature: 'cities', is_visible: true, url: paths.crm_cities })
-    user?.is_admin && tmpfeatures.push({ feature: 'Lead Type', is_visible: true, url: paths.crm_leadtypes })
-    user?.is_admin && tmpfeatures.push({ feature: 'Lead Source', is_visible: true, url: paths.crm_leadsources })
-    user?.is_admin && tmpfeatures.push({ feature: 'Lead Stage', is_visible: true, url: paths.crm_stages })
+    user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles) && tmpfeatures.push({ feature: 'leads ', is_visible: true, url: paths.leads })
+    user?.assigned_roles && is_authorized('refer_view', user?.assigned_roles) && tmpfeatures.push({ feature: 'refers', is_visible: true, url: paths.refers })
+    user?.assigned_roles && is_authorized('reminders_view', user?.assigned_roles) && tmpfeatures.push({ feature: 'reminders', is_visible: true, url: paths.crm_reminders })
+    user?.assigned_roles && is_authorized('activities_view', user?.assigned_roles) && tmpfeatures.push({ feature: 'activities', is_visible: true, url: paths.crm_activities })
+    user?.assigned_roles && is_authorized('states_view', user?.assigned_roles) && tmpfeatures.push({ feature: 'states', is_visible: true, url: paths.crm_states })
+    user?.assigned_roles && is_authorized('city_view', user?.assigned_roles) && tmpfeatures.push({ feature: 'cities', is_visible: true, url: paths.crm_cities })
+    user?.assigned_roles && is_authorized('leadtype_view', user?.assigned_roles) && tmpfeatures.push({ feature: 'Lead Type', is_visible: true, url: paths.crm_leadtypes })
+    user?.assigned_roles && is_authorized('lead_source_view', user?.assigned_roles) && tmpfeatures.push({ feature: 'Lead Source', is_visible: true, url: paths.crm_leadsources })
+    user?.assigned_roles && is_authorized('leadstage_view', user?.assigned_roles) && tmpfeatures.push({ feature: 'Lead Stage', is_visible: true, url: paths.crm_stages })
     setFeatures(tmpfeatures)
   }, [])
 

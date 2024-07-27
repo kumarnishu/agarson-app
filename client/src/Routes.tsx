@@ -60,7 +60,6 @@ const MachinesPage = React.lazy(() => import('./pages/production/MachinesPage.ts
 const DyesPage = React.lazy(() => import('./pages/production/DyesPage.tsx'))
 const ArticlesPage = React.lazy(() => import('./pages/production/ArticlesPage.tsx'))
 const ProductionHelpPage = React.lazy(() => import('./pages/production/ProductionHelpPage.tsx'))
-const MyProductionPage = React.lazy(() => import('./pages/production/MyProductionPage.tsx'))
 const VisitAttendencePage = React.lazy(() => import('./pages/visit/VisitAttendencePage.tsx'))
 const UpdateMachineCategoriesPage = React.lazy(() => import('./pages/production/UpdateMachineCategoriesPage.tsx'))
 
@@ -226,11 +225,7 @@ function AppRoutes() {
                   <ProductionDashboard />
                 }
               />
-              <Route
-                path={paths.production} element={
-                  <Suspense fallback={<LinearProgress />}> <MyProductionPage /></Suspense>
-                }
-              />
+             
               <Route
                 path={paths.machine_categories} element={
                   <Suspense fallback={<LinearProgress />}> <UpdateMachineCategoriesPage /></Suspense>
@@ -242,12 +237,7 @@ function AppRoutes() {
                 }
               />
 
-             
-              <Route
-                path={paths.production} element={
-                  <Suspense fallback={<LinearProgress />}> <MyProductionPage /></Suspense>
-                }
-              />
+        
               <Route
                 path={paths.shoe_weight} element={
                   <Suspense fallback={<LinearProgress />}> <ShoeWeightPage /></Suspense>

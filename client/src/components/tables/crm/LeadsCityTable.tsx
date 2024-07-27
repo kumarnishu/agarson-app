@@ -1,6 +1,6 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
-import { useContext, useEffect,  useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
 import PopUp from '../../popup/PopUp'
 import { Delete, Edit } from '@mui/icons-material'
@@ -9,6 +9,7 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import CreateOrEditCityDialog from '../../dialogs/crm/CreateOrEditCityDialog'
 import { ICRMCity } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -44,7 +45,7 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                             >
 
 
-                                <Checkbox  sx={{ width: 16, height: 16 }}
+                                <Checkbox sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -59,13 +60,13 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
-                                <STableHeadCell style={{ width: '50px' }}
-                                >
 
-                                    Actions
+                            <STableHeadCell style={{ width: '50px' }}
+                            >
 
-                                </STableHeadCell>}
+                                Actions
+
+                            </STableHeadCell>
                             <STableHeadCell style={{ width: '200px' }}
                             >
 
@@ -75,12 +76,12 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                             <STableHeadCell
                             >
 
-                              Assigned Users
+                                Assigned Users
 
                             </STableHeadCell>
 
-                          
-                          
+
+
 
                         </STableRow>
                     </STableHead>
@@ -96,7 +97,7 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                                             <STableCell style={{ width: '50px' }}>
 
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -108,7 +109,7 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                                         {!selectAll ?
                                             <STableCell style={{ width: '50px' }}>
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setCity(city)
                                                         if (e.target.checked) {
@@ -127,60 +128,63 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                                             null
                                         }
 
-                                      
+
                                         {/* actions */}
-                                      
-                                            <STableCell style={{ width: '50' }}>
-                                                <PopUp
-                                                    element={
-                                                        <Stack direction="row">
-                                                            <>
-                                                                {user?.crm_access_fields.is_deletion_allowed &&
-                                                                    <Tooltip title="delete">
-                                                                        <IconButton color="error"
-                                                                            onClick={() => {
-                                                                                setChoice({ type: LeadChoiceActions.delete_crm_item })
-                                                                                setCity(city)
 
-                                                                            }}
-                                                                        >
-                                                                            <Delete />
-                                                                        </IconButton>
-                                                                    </Tooltip>
-                                                                }
+                                        <STableCell style={{ width: '50' }}>
+                                            <PopUp
+                                                element={
+                                                    <Stack direction="row">
+                                                        <>
+                                                            {user?.is_admin &&
+                                                                <Tooltip title="delete">
+                                                                    <IconButton color="error"
+                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
 
-                                                                {user?.crm_access_fields.is_editable && <Tooltip title="edit">
-                                                                    <IconButton
                                                                         onClick={() => {
+                                                                            setChoice({ type: LeadChoiceActions.delete_crm_item })
                                                                             setCity(city)
-                                                                            setChoice({ type: LeadChoiceActions.create_or_edit_city })
+
                                                                         }}
-
                                                                     >
-                                                                        <Edit />
+                                                                        <Delete />
                                                                     </IconButton>
-                                                                </Tooltip>}
+                                                                </Tooltip>
+                                                            }
 
-                                                            </>
+                                                            {<Tooltip title="edit">
+                                                                <IconButton
+                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                    onClick={() => {
+                                                                        setCity(city)
+                                                                        setChoice({ type: LeadChoiceActions.create_or_edit_city })
+                                                                    }}
 
-                                                        </Stack>}
-                                                />
+                                                                >
+                                                                    <Edit />
+                                                                </IconButton>
+                                                            </Tooltip>}
 
-                                            </STableCell>
-                                        <STableCell style={{width:'200px'}}>
+                                                        </>
+
+                                                    </Stack>}
+                                            />
+
+                                        </STableCell>
+                                        <STableCell style={{ width: '200px' }}>
                                             {city.city.city}
                                         </STableCell>
                                         <STableCell>
                                             {city.users.map((u) => { return u.username }).toString()}
                                         </STableCell>
-                                                                  
+
                                     </STableRow>
                                 )
                             })}
                     </STableBody>
                 </STable>
-               <CreateOrEditCityDialog city={city?.city}/>
-               <DeleteCrmItemDialog city={city?.city}/>
+                <CreateOrEditCityDialog city={city?.city} />
+                <DeleteCrmItemDialog city={city?.city} />
             </Box>}
         </>
     )

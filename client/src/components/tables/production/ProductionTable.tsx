@@ -1,38 +1,41 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
-import PopUp from '../popup/PopUp'
-import { Edit, RestartAlt } from '@mui/icons-material'
-import { UserContext } from '../../contexts/userContext'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { IDye } from '../../types/production.types'
-import UpdateDyeDialog from '../dialogs/production/UpdateDyeDialog'
-import ToogleDyeDialog from '../dialogs/production/ToogleDyeDialog'
+import PopUp from '../../popup/PopUp'
+import { UserContext } from '../../../contexts/userContext'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import { IProduction } from '../../../types/production.types'
+import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext'
+import { Delete, Edit } from '@mui/icons-material'
+import UpdateProductionDialog from '../../dialogs/production/UpdateProductionDialog'
+import moment from 'moment'
+import DeleteProductionDialog from '../../dialogs/production/DeleteProductionDialog'
+import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
-    dye: IDye | undefined,
-    setDye: React.Dispatch<React.SetStateAction<IDye | undefined>>,
+    production: IProduction | undefined,
+    setProduction: React.Dispatch<React.SetStateAction<IProduction | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    dyes: IDye[],
-    selectedDyes: IDye[]
-    setSelectedDyes: React.Dispatch<React.SetStateAction<IDye[]>>,
+    productions: IProduction[],
+    selectedProductions: IProduction[]
+    setSelectedProductions: React.Dispatch<React.SetStateAction<IProduction[]>>,
 }
-function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, setSelectedDyes }: Props) {
-    const [data, setData] = useState<IDye[]>(dyes)
-    const { setChoice } = useContext(ChoiceContext)
+function ProductionsTable({ production, selectAll, productions, setSelectAll, setProduction, selectedProductions, setSelectedProductions }: Props) {
+    const [data, setData] = useState<IProduction[]>(productions)
     const { user } = useContext(UserContext)
+    const { setChoice } = useContext(ChoiceContext)
+
     useEffect(() => {
         if (data)
-            setData(dyes)
-    }, [dyes, data])
+            setData(productions)
+    }, [productions, data])
     return (
         <>
             <Box sx={{
                 overflow: "auto",
-                height: '80vh'
+                height: '65vh'
             }}>
                 <STable
                 >
@@ -41,59 +44,81 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                         <STableRow>
                             <STableHeadCell
                             >
-
-
                                 <Checkbox  sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
                                         if (e.currentTarget.checked) {
-                                            setSelectedDyes(dyes)
+                                            setSelectedProductions(productions)
                                             setSelectAll(true)
                                         }
                                         if (!e.currentTarget.checked) {
-                                            setSelectedDyes([])
+                                            setSelectedProductions([])
                                             setSelectAll(false)
                                         }
                                     }} />
 
                             </STableHeadCell>
-                            {user?.productions_access_fields.is_editable &&
+                          
                                 <STableHeadCell
                                 >
 
                                     Actions
 
-                                </STableHeadCell>}
+                                </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Dye Number
+                                Date
+
+                            </STableHeadCell>
+
+
+                            <STableHeadCell
+                            >
+
+                                Article
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                               Size
+                                Machine
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                               Article
+                                Thekedar
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Production
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                St Weight
+                                Production Hours
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Status
+                                Man Power
 
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Small Repair
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Big Repair
                             </STableHeadCell>
 
                             <STableHeadCell
@@ -126,10 +151,10 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                     </STableHead>
                     <STableBody >
                         {
-                            dyes && dyes.map((dye, index) => {
+                            productions && productions.map((production, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedDyes.length > 0 && selectedDyes.find((t) => t._id === dye._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedProductions.length > 0 && selectedProductions.find((t) => t._id === production._id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
@@ -140,7 +165,6 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                                     checked={Boolean(selectAll)}
                                                 />
 
-
                                             </STableCell>
                                             :
                                             null
@@ -150,13 +174,13 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
 
                                                 <Checkbox  sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
-                                                        setDye(dye)
+                                                        setProduction(production)
                                                         if (e.target.checked) {
-                                                            setSelectedDyes([...selectedDyes, dye])
+                                                            setSelectedProductions([...selectedProductions, production])
                                                         }
                                                         if (!e.target.checked) {
-                                                            setSelectedDyes((dyes) => dyes.filter((item) => {
-                                                                return item._id !== dye._id
+                                                            setSelectedProductions((productions) => productions.filter((item) => {
+                                                                return item._id !== production._id
                                                             }))
                                                         }
                                                     }}
@@ -167,69 +191,83 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                             null
                                         }
                                         {/* actions */}
-                                        {user?.productions_access_fields.is_editable &&
+                                        
                                             <STableCell>
                                                 <PopUp
                                                     element={
                                                         <Stack direction="row">
                                                             <>
                                                                 <Tooltip title="edit">
-                                                                    <IconButton
+                                                                    <IconButton color="info"
+                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
                                                                         onClick={() => {
-                                                                            setDye(dye)
-                                                                            setChoice({ type: ProductionChoiceActions.update_dye })
+                                                                            setChoice({ type: ProductionChoiceActions.update_production })
+                                                                            setProduction(production)
                                                                         }}
-
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
                                                                 </Tooltip>
-                                                                {user?.productions_access_fields.is_editable &&
-                                                                    <Tooltip title="Toogle">
-                                                                        <IconButton color="primary"
-                                                                            onClick={() => {
-                                                                                setDye(dye)
-                                                                                setChoice({ type: ProductionChoiceActions.toogle_dye })
-
-                                                                            }}
-                                                                        >
-                                                                            <RestartAlt />
-                                                                        </IconButton>
-                                                                    </Tooltip>}
+                                                                {user?.is_admin && <Tooltip title="delete">
+                                                                    <IconButton color="error"
+                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                        onClick={() => {
+                                                                            setChoice({ type: ProductionChoiceActions.delete_production })
+                                                                            setProduction(production)
+                                                                        }}
+                                                                    >
+                                                                        <Delete />
+                                                                    </IconButton>
+                                                                </Tooltip>}
                                                             </>
 
                                                         </Stack>}
                                                 />
 
-                                            </STableCell>}
+                                            </STableCell>
                                         <STableCell>
-                                            {dye.dye_number}
-                                        </STableCell>
-                                        <STableCell>
-                                            {dye.size}
-                                        </STableCell>
-                                        <STableCell>
-                                            {dye.article?dye.article.display_name:""}
-                                        </STableCell>
-                                        <STableCell>
-                                            {dye.stdshoe_weight}
-                                        </STableCell>
-                                        <STableCell>
-                                            {dye.active ? "active" : "inactive"}
+                                            {production.date && moment(new Date(production.date)).format('DD/MM/YY')}
                                         </STableCell>
 
                                         <STableCell>
-                                            {dye.created_at && new Date(dye.created_at).toLocaleString()}
-                                        </STableCell>
-                                        <STableCell>
-                                            {dye.created_by.username}
-                                        </STableCell>
-                                        <STableCell>
-                                            {dye.updated_at && new Date(dye.updated_at).toLocaleString()}
+                                            {production.articles.map((a) => { return a.display_name }).toString()}
                                         </STableCell>
 
                                         <STableCell>
-                                            {dye.updated_by.username}
+                                            {production.machine.name}
+                                        </STableCell>
+                                        <STableCell>
+                                            {production.thekedar.username}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {production.production}
+                                        </STableCell>
+                                        <STableCell>
+                                            {production.production_hours}
+                                        </STableCell>
+                                        <STableCell>
+                                            {production.manpower}
+                                        </STableCell>
+                                        <STableCell>
+                                            {production.small_repair}
+                                        </STableCell>
+                                        <STableCell>
+                                            {production.big_repair}
+                                        </STableCell>
+                                        <STableCell>
+                                            {production.created_at && new Date(production.created_at).toLocaleString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {production.created_by.username}
+                                        </STableCell>
+                                        <STableCell>
+                                            {production.updated_at && new Date(production.updated_at).toLocaleString()}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {production.updated_by.username}
                                         </STableCell>
 
                                     </STableRow>
@@ -237,16 +275,15 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                             })}
                     </STableBody>
                 </STable>
-                {
-                    dye ?
-                        <>
-                            <UpdateDyeDialog dye={dye} />
-                            <ToogleDyeDialog dye={dye} />
-                        </> : null
-                }
+
             </Box>
+            {production && <>
+                <UpdateProductionDialog production={production} />
+                <DeleteProductionDialog production={production} />
+            </>
+            }
         </>
     )
 }
 
-export default DyesTable
+export default ProductionsTable

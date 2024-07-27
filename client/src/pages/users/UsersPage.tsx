@@ -5,7 +5,6 @@ import { AxiosResponse } from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchUsers, GetPaginatedUsers } from '../../services/UserServices'
-import UsersTable from '../../components/tables/UsersTable'
 import { BackendError } from '../..'
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
@@ -16,6 +15,7 @@ import { IUser } from '../../types/user.types'
 import DBPagination from '../../components/pagination/DBpagination'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
+import UsersSTable from '../../components/tables/users/UsersTable'
 
 type SelectedData = {
     username?: string,
@@ -242,7 +242,7 @@ export default function UsersPage() {
             {/*  table */}
             {isLoading && <TableSkeleton />}
             {!isLoading &&
-                <UsersTable
+                <UsersSTable
                     user={user}
                     selectAll={selectAll}
                     selectedUsers={selectedUsers}

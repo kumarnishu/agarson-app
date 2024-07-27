@@ -1,15 +1,15 @@
 import { Box, Checkbox, IconButton, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useContext, useEffect, useState } from 'react'
-import PopUp from '../popup/PopUp'
+import PopUp from '../../popup/PopUp'
 import { Delete, Edit } from '@mui/icons-material'
-import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../styled/STyledTable'
-import { IUser } from '../../types/user.types'
-import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
-import { UserContext } from '../../contexts/userContext'
-import CreateOrEditErpStateDialog from '../dialogs/erp/CreateOrEditErpStateDialog'
-import { IState } from '../../types/erp_report.types'
-import DeleteErpStateDialog from '../dialogs/erp/DeleteErpStateDialog'
+import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
+import { IUser } from '../../../types/user.types'
+import { ChoiceContext, UserChoiceActions } from '../../../contexts/dialogContext'
+import { UserContext } from '../../../contexts/userContext'
+import CreateOrEditErpStateDialog from '../../dialogs/erp/CreateOrEditErpStateDialog'
+import { IState } from '../../../types/erp_report.types'
+import DeleteErpStateDialog from '../../dialogs/erp/DeleteErpStateDialog'
 
 
 

@@ -9,22 +9,23 @@ import { is_authorized } from "../utils/auth";
 
 function MainDashBoardPage() {
   const { user } = useContext(UserContext)
-  const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string, icon?: Element }[]>([])
+  const [features, setFeatures] = useState<{ feature: string, url: string, icon?: Element }[]>([])
 
   //process feature and access
   useEffect(() => {
-    let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-    !user?.user_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.users, is_visible: true, url: paths.user_dashboard })
-    !user?.crm_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.crm, is_visible: true, url: paths.crm_dashboard })
-    !user?.todos_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.todos, is_visible: true, url: paths.todo_dashboard })
-    !user?.visit_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.visit, is_visible: true, url: paths.visit_dashboard })
-    !user?.productions_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.productions, is_visible: true, url: paths.production_dashboard })
-    !user?.checklists_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.checklists, is_visible: true, url: paths.checklist_dashboard })
-    !user?.templates_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.templates, is_visible: true, url: paths.templates_dashboard })
-    
-    !user?.erp_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.erp_reports, is_visible: true, url: paths.erp_dashboard })
-    !user?.backup_access_fields.is_hidden && tmpfeatures.push({ feature: Feature.backup, is_visible: true, url: paths.backup_dashboard })
+    let tmpfeatures: { feature: string, url: string }[] = []
+    user?.is_admin && tmpfeatures.push({ feature: Feature.users, url: paths.user_dashboard })
+    user?.assigned_roles && is_authorized('crm_menu', user?.assigned_roles) && tmpfeatures.push({ feature: Feature.crm, url: paths.crm_dashboard })
+    user?.assigned_roles && is_authorized('erpreport_menu', user?.assigned_roles) && tmpfeatures.push({ feature: Feature.erp_reports, url: paths.erp_dashboard })
+    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: Feature.productions, url: paths.production_dashboard })
 
+    // if (user?.is_admin) {
+    //   tmpfeatures.push({ feature: Feature.todos, url: paths.todo_dashboard })
+    //   tmpfeatures.push({ feature: Feature.visit, url: paths.visit_dashboard })
+    //   tmpfeatures.push({ feature: Feature.checklists, url: paths.checklist_dashboard })
+    //   tmpfeatures.push({ feature: Feature.templates, url: paths.templates_dashboard })
+    //   tmpfeatures.push({ feature: Feature.backup, url: paths.backup_dashboard })
+    // }
     setFeatures(tmpfeatures)
 
   }, [user])
@@ -32,7 +33,7 @@ function MainDashBoardPage() {
   return (
     <>
       <Grid container sx={{ pt: 2 }} >
-        {user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) &&features.map((feat, index) => {
+        {features.map((feat, index) => {
           return (
             <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={feat.url} style={{ textDecoration: 'none' }}>

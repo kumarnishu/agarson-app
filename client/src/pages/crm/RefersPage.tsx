@@ -18,6 +18,7 @@ import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServi
 import { IReferTemplate } from '../../types/template.type'
 import UploadRefersExcelButton from '../../components/buttons/UploadRefersExcelButton'
 import { IReferredParty } from '../../types/crm.types'
+import { is_authorized } from '../../utils/auth'
 
 let template: IReferTemplate[] = [
   {
@@ -206,7 +207,7 @@ export default function RefersPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.is_admin && <UploadRefersExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />}
+            {LoggedInUser?.is_admin && <UploadRefersExcelButton disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)} />}
           </Stack >
           <>
 
@@ -233,14 +234,15 @@ export default function RefersPage() {
               sx={{ borderRadius: 2 }}
             >
               <MenuItem
-                disabled={LoggedInUser?.is_admin ? false : true}
-                onClick={() => {
+                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_refer })
                   setRefer(undefined);
                   setAnchorEl(null)
                 }}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               > Add New</MenuItem>
               {LoggedInUser?.is_admin && < MenuItem onClick={handleExcel}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               >Export To Excel</MenuItem>}
 
             </Menu >

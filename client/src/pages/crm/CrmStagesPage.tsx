@@ -16,6 +16,8 @@ import {  GetAllStages } from '../../services/LeadsServices'
 import CreateOrEditStageDialog from '../../components/dialogs/crm/CreateOrEditStageDialog'
 import { IStage } from '../../types/crm.types'
 import FindUknownCrmStagesDialog from '../../components/dialogs/crm/FindUknownCrmStagesDialog'
+import { UserContext } from '../../contexts/userContext'
+import { is_authorized } from '../../utils/auth'
 
 type ITemplate = {
   _id: string,
@@ -41,7 +43,7 @@ export default function CrmStagesPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+  const { user: LoggedInUser } = useContext(UserContext)
 
   function handleExcel() {
     setAnchorEl(null)
@@ -171,6 +173,7 @@ export default function CrmStagesPage() {
                   setStage(undefined)
                   setAnchorEl(null)
                 }}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               > Add New</MenuItem>
 
               <MenuItem
@@ -180,10 +183,12 @@ export default function CrmStagesPage() {
                   setStage(undefined)
                   setAnchorEl(null)
                 }}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               >Find Unknown Stages</MenuItem>
 
 
               < MenuItem onClick={handleExcel}
+                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
               >Export To Excel</MenuItem>
 
             </Menu >
