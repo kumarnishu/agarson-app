@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 
-import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword,  AssignUsers,  AllowMultiLogin, BlockMultiLogin, ToogleShowvisitingcard, GetRoles, CreateRole, UpdateRole, AssignRolesToUsers, GetAllPermissions, DeleteRole } from "../controllers/user.controller";
+import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword, AssignUsers, AllowMultiLogin, BlockMultiLogin, ToogleShowvisitingcard, AssignPermissionsToUsers, GetAllPermissions } from "../controllers/user.controller";
 import { isAdmin, isAuthenticatedUser, isProfileAuthenticated, } from "../middlewares/auth.middleware";
 
 export const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1024 * 1024 * 50 } })
@@ -31,9 +31,7 @@ router.post("/email/verify", isAuthenticatedUser, SendVerifyEmail)
 router.patch("/email/verify/:token", VerifyEmail)
 router.post("/password/reset", SendPasswordResetMail)
 router.patch("/password/reset/:token", ResetPassword)
-router.route("/roles").get(isAuthenticatedUser, GetRoles).post(isAuthenticatedUser, CreateRole)
-router.route("/roles/:id").put(isAuthenticatedUser, UpdateRole).patch(isAuthenticatedUser, AssignRolesToUsers).delete(isAuthenticatedUser, DeleteRole)
-router.route("/permissions").get(isAuthenticatedUser, GetAllPermissions)
+router.route("/permissions").get(isAuthenticatedUser, GetAllPermissions).post(isAuthenticatedUser, AssignPermissionsToUsers)
 
 
 export default router;

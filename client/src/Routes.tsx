@@ -32,7 +32,6 @@ import CrmActivitiesPage from './pages/crm/CrmActivitiesPage.tsx'
 import PartyTargetReportsPage from './pages/erp reports/PartyTargetReportPage.tsx'
 import SaleAnalysisReport from './pages/erp reports/SaleAnalysisReport.tsx'
 import ShoeWeightPage from './pages/production/ShoeWeightPage.tsx'
-import RolesPage from './pages/users/RolesPage.tsx'
 import { is_authorized } from './utils/auth.ts'
 const StatesPage = React.lazy(() => import('./pages/erp reports/StatesPage.tsx'))
 const PendingOrdersReportPage = React.lazy(() => import('./pages/erp reports/PendingOrdersReport.tsx'))
@@ -145,7 +144,6 @@ export enum paths {
 
   //users
   users = "users",
-  roles ="roles",
   feature_reports = "feature_reports",
   states = "states",
   login = "/",
@@ -194,14 +192,7 @@ function AppRoutes() {
                   <Suspense fallback={<LinearProgress />}><UsersPage /></Suspense>
                 }
               />
-              <Route
-                path={paths.roles} element={
-                  <Suspense fallback={<LinearProgress />}><RolesPage /></Suspense>
-                }
-              />
-
-            
-
+              
             </Route>}
 
           {user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) &&

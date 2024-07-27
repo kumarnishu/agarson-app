@@ -1,4 +1,3 @@
-import { IRole } from "../types/user.types";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
@@ -126,34 +125,15 @@ export const AssignUsers = async ({ id, body }: { id: string, body: { ids: strin
   return await apiClient.patch(`assign/users/${id}`, body)
 }
 
-export const GetRoles = async () => {
-  return await apiClient.get(`roles`)
-}
-
-export const CreateOreditRole = async ({ role, body }: { role?: IRole, body: { role: string, permissions: string[] } }) => {
-  if (role)
-    return await apiClient.put(`roles/${role._id}`, body)
-  else
-    return await apiClient.post(`roles`, body)
-
-};
 
 
-
-export const AssignRolesToUsers = async ({ body }: {
+export const AssignPermissionsToUsers = async ({ body }: {
   body: {
     user_ids: string[],
-    role_ids: string[],
-    flag: number
+    permissions: string[]
   }
 }) => {
-  return await apiClient.patch(`roles/assign`, body)
-}
-
-
-
-export const DeleteRole = async ({ role }: { role: IRole }) => {
-  return await apiClient.delete(`roles/${role._id}`)
+  return await apiClient.post(`permissions`, body)
 }
 
 
