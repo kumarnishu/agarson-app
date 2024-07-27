@@ -33,6 +33,8 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
 
   return (
     <>
+      {refers && refers.length == 0 ? <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>
+        :
       <Box sx={{
         overflow: "auto",
         height: '76vh'
@@ -301,7 +303,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
             }
           </STableBody>
         </STable>
-      </Box >
+      </Box >}
       <CreateOrEditReferDialog refer={refer} />
 
       {

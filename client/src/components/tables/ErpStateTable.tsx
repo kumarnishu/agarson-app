@@ -32,6 +32,8 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
     }, [states, data])
     return (
         <>
+            {states && states.length == 0 ? <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>
+                :
             <Box sx={{
                 overflow: "auto",
                 height: '80vh'
@@ -284,7 +286,7 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
                 </STable>
                 <CreateOrEditErpStateDialog state={state?.state} />
                 {state && <DeleteErpStateDialog state={state.state} />}
-            </Box>
+            </Box>}
         </>
     )
 }

@@ -40,7 +40,8 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
     }, [users])
 
     return (
-        <>
+        <> {users && users.length == 0 ? <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>
+            :
             <Box sx={{
                 overflow: "auto",
                 height: '70vh'
@@ -501,7 +502,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                             })}
                     </STableBody>
                 </STable>
-            </Box >
+            </Box >}
             {
                 user ?
                     <>

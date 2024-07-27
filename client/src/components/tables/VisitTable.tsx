@@ -40,7 +40,8 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
         setData(visits)
     }, [visits])
     return (
-        <>
+        <> {visits && visits.length == 0 ? <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>
+            :
             <Box sx={{
                 overflow: "auto",
                 height: '70vh'
@@ -452,7 +453,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                         }
                     </STableBody>
                 </STable>
-            </Box >
+            </Box >}
             {
                 visit ?
                     <>

@@ -29,7 +29,8 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
             setData(cities)
     }, [cities, data])
     return (
-        <>
+        <> {cities && cities.length == 0 ? <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>
+            :
             <Box sx={{
                 overflow: "auto",
                 height: '80vh'
@@ -180,7 +181,7 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                 </STable>
                <CreateOrEditCityDialog city={city?.city}/>
                <DeleteCrmItemDialog city={city?.city}/>
-            </Box>
+            </Box>}
         </>
     )
 }
