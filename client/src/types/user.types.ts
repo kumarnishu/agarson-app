@@ -11,6 +11,16 @@ export type IRole = {
     created_by: IUser,
     updated_by: IUser
 }
+export type IPermission = {
+    value: string,
+    label: string
+}
+
+export type IMenu = {
+    label: string,
+    menues?: IMenu[],
+    permissions: IPermission[]
+}
 
 export type IUser = {
     _id: string,

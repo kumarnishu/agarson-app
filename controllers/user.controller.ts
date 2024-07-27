@@ -16,7 +16,7 @@ export const GetPaginatedUsers = async (req: Request, res: Response, next: NextF
     let users: IUser[] = []
     let count = 0
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
+        users = await User.find().populate("assigned_roles").populate("created_by").populate("updated_by").populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
         count = await User.find().countDocuments()
         return res.status(200).json({
             users,
@@ -34,7 +34,7 @@ export const GetUsers = async (req: Request, res: Response, next: NextFunction) 
     let users: IUser[] = []
     let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
     if (user_ids.length > 0)
-        users = await User.find({ _id: { $in: user_ids } }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+        users = await User.find({ _id: { $in: user_ids } }).populate("created_by").populate("updated_by").populate("assigned_roles").populate('assigned_users').sort('username')
     else
         users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     res.status(200).json(users)
@@ -42,7 +42,7 @@ export const GetUsers = async (req: Request, res: Response, next: NextFunction) 
 
 export const GetAllUsers = async (req: Request, res: Response, next: NextFunction) => {
     let users: IUser[] = []
-    users = await User.find().populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+    users = await User.find().populate("assigned_roles").populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     res.status(200).json(users)
 }
 
@@ -99,7 +99,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
+            ).populate("assigned_roles").populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -152,7 +152,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
+            ).populate("assigned_roles").populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -219,7 +219,7 @@ export const FuzzySearchUsers = async (req: Request, res: Response, next: NextFu
                 ,
 
             }
-            ).populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
+            ).populate("assigned_roles").populate('updated_by').populate('created_by').sort('-created_at').populate('assigned_users').sort('username').skip((page - 1) * limit).limit(limit)
             count = await User.find({
 
                 $and: [
@@ -282,7 +282,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
     if (users.length > 0)
         return res.status(400).json({ message: "not allowed" })
 
-    let { username, email, password, mobile } = req.body as Request['body']&IUser
+    let { username, email, password, mobile } = req.body as Request['body'] & IUser
     // validations
     if (!username || !email || !password || !mobile)
         return res.status(400).json({ message: "fill all the required fields" });
@@ -338,14 +338,14 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
         is_editable: true,
         is_deletion_allowed: true
     }
-   
+
     owner.visit_access_fields = {
         is_hidden: false,
         is_editable: true,
         is_deletion_allowed: true
     }
 
-   
+
     owner.crm_access_fields = {
         is_hidden: false,
         is_editable: true,
@@ -387,7 +387,7 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
 }
 
 export const NewUser = async (req: Request, res: Response, next: NextFunction) => {
-    let { username, email, password, mobile } = req.body as Request['body']&IUser
+    let { username, email, password, mobile } = req.body as Request['body'] & IUser
     // validations
     if (!username || !email || !password || !mobile)
         return res.status(400).json({ message: "fill all the required fields" });
@@ -456,7 +456,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
         is_editable: false,
         is_deletion_allowed: false
     }
-   
+
     user.crm_access_fields = {
         is_hidden: true,
         is_editable: false,
@@ -493,7 +493,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
 
 
 export const Login = async (req: Request, res: Response, next: NextFunction) => {
-    const { username, password, multi_login_token } = req.body as Request['body']&IUser
+    const { username, password, multi_login_token } = req.body as Request['body'] & IUser
     if (!username)
         return res.status(400).json({ message: "please enter username or email" })
     if (!password)
@@ -541,7 +541,7 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
 export const Logout = async (req: Request, res: Response, next: NextFunction) => {
     let coToken = req.cookies.accessToken
     let AuthToken = req.headers.authorization && req.headers.authorization.split(" ")[1]
-    if(coToken)
+    if (coToken)
         await deleteToken(res, coToken);
     if (AuthToken)
         await deleteToken(res, AuthToken);
@@ -581,7 +581,7 @@ export const UpdateUserWiseAccessFields = async (req: Request, res: Response, ne
         erp_access_fields,
         productions_access_fields
 
-    } = req.body as Request['body']&IUser
+    } = req.body as Request['body'] & IUser
 
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
@@ -642,7 +642,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-    
+
     if (feature === Feature.erp_reports) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
@@ -673,7 +673,7 @@ export const UpdateFeatureWiseAccessFields = async (req: Request, res: Response,
             })
         })
     }
-   
+
     if (feature === Feature.visit) {
         body.forEach(async (data) => {
             await User.findByIdAndUpdate(data.user, {
@@ -691,7 +691,7 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
     if (!user) {
         return res.status(404).json({ message: "user not found" })
     }
-    let { email, username, mobile } = req.body as Request['body']&IUser;
+    let { email, username, mobile } = req.body as Request['body'] & IUser;
     if (!username || !email || !mobile)
         return res.status(400).json({ message: "fill all the required fields" });
     //check username
@@ -754,7 +754,7 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
     if (!user) {
         return res.status(404).json({ message: "user not found" })
     }
-    let { email, mobile } = req.body as Request['body']&IUser;
+    let { email, mobile } = req.body as Request['body'] & IUser;
     if (!email || !mobile) {
         return res.status(400).json({ message: "please fill required fields" })
     }
@@ -808,7 +808,7 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
 }
 
 export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
-    const { oldPassword, newPassword, confirmPassword } = req.body as Request['body']&IUser & { oldPassword: string, newPassword: string, confirmPassword: string };
+    const { oldPassword, newPassword, confirmPassword } = req.body as Request['body'] & IUser & { oldPassword: string, newPassword: string, confirmPassword: string };
     if (!oldPassword || !newPassword || !confirmPassword)
         return res.status(400).json({ message: "please fill required fields" })
     if (confirmPassword == oldPassword)
@@ -829,7 +829,7 @@ export const updatePassword = async (req: Request, res: Response, next: NextFunc
 }
 
 export const resetUserPassword = async (req: Request, res: Response, next: NextFunction) => {
-    const { newPassword, confirmPassword } = req.body as Request['body']&IUser & { oldPassword: string, newPassword: string, confirmPassword: string };
+    const { newPassword, confirmPassword } = req.body as Request['body'] & IUser & { oldPassword: string, newPassword: string, confirmPassword: string };
     if (!newPassword || !confirmPassword)
         return res.status(400).json({ message: "please fill required fields" })
     if (newPassword !== confirmPassword)
@@ -1002,7 +1002,7 @@ export const SendPasswordResetMail = async (req: Request, res: Response, next: N
     if (!isEmail(userEmail))
         return res.status(400).json({ message: "provide a valid email" })
     let user = await User.findOne({ email: userEmail }).populate('created_by')
-    
+
     if (user) {
         if (String(user._id) !== String(user.created_by._id))
             return res.status(403).json({ message: "not allowed this service" })
@@ -1123,7 +1123,6 @@ export const AssignRolesToUsers = async (req: Request, res: Response, next: Next
             if (owner) {
                 let oldroles = owner.assigned_roles.map((item) => { return item._id.valueOf() });
                 oldroles = oldroles.filter((item) => { return !role_ids.includes(item) });
-                console.log(oldroles)
                 await User.findByIdAndUpdate(owner._id, {
                     assigned_roles: oldroles
                 })
@@ -1152,26 +1151,26 @@ export const AssignRolesToUsers = async (req: Request, res: Response, next: Next
 }
 export const GetRoles = async (req: Request, res: Response, next: NextFunction) => {
 
-    let roles=await Role.find().populate('created_by').populate('updated_by');
+    let roles = await Role.find().populate('created_by').populate('updated_by');
     return res.status(200).json(roles)
 }
 export const GetAllPermissions = async (req: Request, res: Response, next: NextFunction) => {
-    let permissions: IMenu[]=[];
-    permissions= FetchAllPermissions();
+    let permissions: IMenu[] = [];
+    permissions = FetchAllPermissions();
     return res.status(200).json(permissions)
 }
 
 
 export const CreateRole = async (req: Request, res: Response, next: NextFunction) => {
-    const {role,permissions} = req.body as {role:string,permissions:string[]};
+    const { role, permissions } = req.body as { role: string, permissions: string[] };
     if (!role) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     if (await Role.findOne({ role: role.toLowerCase().trim() }))
         return res.status(400).json({ message: "already exists this role" })
     let result = await new Role({
-        role:role,
-        permissions:permissions,
+        role: role,
+        permissions: permissions,
         updated_at: new Date(),
         created_by: req.user,
         updated_by: req.user
@@ -1180,15 +1179,15 @@ export const CreateRole = async (req: Request, res: Response, next: NextFunction
 }
 
 export const UpdateRole = async (req: Request, res: Response, next: NextFunction) => {
-    const {role,permissions} = req.body as { role: string, permissions: string[]}
-    if (!role) 
+    const { role, permissions } = req.body as { role: string, permissions: string[] }
+    if (!role)
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let oldrole = await Role.findById(id)
     if (!oldrole)
         return res.status(404).json({ message: "role not found" })
     if (role !== oldrole.role)
-        if (await Role.findOne({ role:role.toLowerCase().trim() }))
+        if (await Role.findOne({ role: role.toLowerCase().trim() }))
             return res.status(400).json({ message: "already exists this role" })
     await Role.findByIdAndUpdate(oldrole._id, { role, permissions, updated_by: req.user, updated_at: new Date() })
     return res.status(200).json(oldrole)
@@ -1202,6 +1201,16 @@ export const DeleteRole = async (req: Request, res: Response, next: NextFunction
     if (!role) {
         return res.status(404).json({ message: "role not found" })
     }
+    let owners = await User.find().populate('assigned_roles');
+    owners.forEach(async (owner) => {
+        let oldroles = owner.assigned_roles.map((item) => { return item._id.valueOf() });
+        oldroles = oldroles.filter((item) => { return item !== id });
+        await User.findByIdAndUpdate(owner._id, {
+            assigned_roles: oldroles
+        })
+    })
+
+
     await role.remove();
     return res.status(200).json({ message: "role deleted successfully" })
 }

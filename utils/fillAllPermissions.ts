@@ -24,23 +24,23 @@ export function FetchAllPermissions() {
                 permissions: [
                     {
                         value: 'production_view',
-                        label: 'View Production'
+                        label: 'view'
                     },
                     {
                         value: 'production_create',
-                        label: 'Create Production'
+                        label: 'create'
                     },
                     {
                         value: 'production_edit',
-                        label: 'Edit Production'
+                        label: 'edit'
                     },
                     {
                         value: 'production_delete',
-                        label: 'Delete Production'
+                        label: 'delete'
                     },
                     {
                         value: 'production_export',
-                        label: 'Export Production'
+                        label: 'export'
                     }
                 ]
             },
@@ -49,23 +49,23 @@ export function FetchAllPermissions() {
                 permissions: [
                     {
                         value: 'article_view',
-                        label: 'View Article'
+                        label: 'view'
                     },
                     {
                         value: 'article_create',
-                        label: 'Create Article'
+                        label: 'create'
                     },
                     {
                         value: 'article_edit',
-                        label: 'Edit Article'
+                        label: 'edit'
                     },
                     {
                         value: 'article_delete',
-                        label: 'Delete Article'
+                        label: 'delete'
                     },
                     {
                         value: 'article_export',
-                        label: 'Export Article'
+                        label: 'export'
                     }
                 ]
             },
@@ -74,23 +74,23 @@ export function FetchAllPermissions() {
                 permissions: [
                     {
                         value: 'machine_view',
-                        label: 'View Machine'
+                        label: 'view'
                     },
                     {
                         value: 'machine_create',
-                        label: 'Create Machine'
+                        label: 'create'
                     },
                     {
                         value: 'machine_edit',
-                        label: 'Edit Machine'
+                        label: 'edit'
                     },
                     {
                         value: 'machine_delete',
-                        label: 'Delete Machine'
+                        label: 'delete'
                     },
                     {
                         value: 'machine_export',
-                        label: 'Export Machine'
+                        label: 'export'
                     }
                 ]
             },
@@ -99,23 +99,23 @@ export function FetchAllPermissions() {
                 permissions: [
                     {
                         value: 'machine_category_view',
-                        label: 'View Machine Category'
+                        label: 'view'
                     },
                     {
                         value: 'machine_category_create',
-                        label: 'Create Machine Category'
+                        label: 'create'
                     },
                     {
                         value: 'machine_category_edit',
-                        label: 'Edit Machine Category'
+                        label: 'edit'
                     },
                     {
                         value: 'machine_category_delete',
-                        label: 'Delete Machine Category'
+                        label: 'delete'
                     },
                     {
                         value: 'machine_category_export',
-                        label: 'Export Machine Category'
+                        label: 'export'
                     }
                 ]
             },
@@ -124,23 +124,23 @@ export function FetchAllPermissions() {
                 permissions: [
                     {
                         value: 'dye_view',
-                        label: 'View Dye'
+                        label: 'view'
                     },
                     {
                         value: 'dye_create',
-                        label: 'Create Dye'
+                        label: 'create'
                     },
                     {
                         value: 'dye_edit',
-                        label: 'Edit Dye'
+                        label: 'edit'
                     },
                     {
                         value: 'dye_delete',
-                        label: 'Delete Dye'
+                        label: 'delete'
                     },
                     {
                         value: 'dye_export',
-                        label: 'Export Dye'
+                        label: 'export'
                     }
                 ]
             },
@@ -149,139 +149,130 @@ export function FetchAllPermissions() {
                 permissions: [
                     {
                         value: 'shoe_weight_view',
-                        label: 'View Machine'
+                        label: 'view'
                     },
                     {
                         value: 'shoe_weight_create',
-                        label: 'Create Machine'
+                        label: 'create'
                     },
                     {
                         value: 'shoe_weight_edit',
-                        label: 'Edit Machine'
+                        label: 'edit'
                     },
                     {
                         value: 'shoe_weight_delete',
-                        label: 'Delete Machine'
+                        label: 'delete'
                     },
                     {
                         value: 'shoe_weight_export',
-                        label: 'Export Machine'
+                        label: 'export'
                     }
                 ]
             },
             {
-                label: 'Report',
+                label: 'Shoe Weight Report',
                 permissions: [
                     {
-                        value: 'production_report',
-                        label: 'View Reports'
-                    },
-                ],
-                menues:[
-                    {
-                        label: 'Shoe Weight Report',
-                        permissions: [
-                            {
-                                value: 'shoe_weight_report_view',
-                                label: 'View Shoe Weight Report'
-                            },
-                            {
-                                value: 'shoe_weight_report_create',
-                                label: 'Create Shoe Weight Report'
-                            },
-                            {
-                                value: 'shoe_weight_report_edit',
-                                label: 'Edit Shoe Weight Report'
-                            },
-                            {
-                                value: 'shoe_weight_report_delete',
-                                label: 'Delete Shoe Weight Report'
-                            },
-                            {
-                                value: 'shoe_weight_report_export',
-                                label: 'Export Shoe Weight Report'
-                            }
-                        ]
+                        value: 'shoe_weight_report_view',
+                        label: 'view'
                     },
                     {
-                        label: 'Machine Wise Production Report',
-                        permissions: [
-                            {
-                                value: 'machine_wise_production_report_view',
-                                label: 'View machine Wise Production Report'
-                            },
-                            {
-                                value: 'machine_wise_production_report_create',
-                                label: 'Create machine Wise Production Report'
-                            },
-                            {
-                                value: 'machine_wise_production_report_edit',
-                                label: 'Edit machine Wise Production Report'
-                            },
-                            {
-                                value: 'machine_wise_production_report_delete',
-                                label: 'Delete machine Wise Production Report'
-                            },
-                            {
-                                value: 'machine_wise_production_report_export',
-                                label: 'Export machine Wise Production Report'
-                            }
-                        ]
+                        value: 'shoe_weight_report_create',
+                        label: 'create'
                     },
                     {
-                        label: 'Thekedar Wise Production Report',
-                        permissions: [
-                            {
-                                value: 'thekedar_wise_production_report_view',
-                                label: 'View Thekedar Wise Production Report'
-                            },
-                            {
-                                value: 'thekedar_wise_production_report_create',
-                                label: 'Create Thekedar Wise Production Report'
-                            },
-                            {
-                                value: 'thekedar_wise_production_report_edit',
-                                label: 'Edit Thekedar Wise Production Report'
-                            },
-                            {
-                                value: 'thekedar_wise_production_report_delete',
-                                label: 'Delete Thekedar Wise Production Report'
-                            },
-                            {
-                                value: 'thekedar_wise_production_report_export',
-                                label: 'Export Thekedar Wise Production Report'
-                            }
-                        ]
+                        value: 'shoe_weight_report_edit',
+                        label: 'edit'
                     },
                     {
-                        label: 'Machine category Wise Production Report',
-                        permissions: [
-                            {
-                                value: 'machine_category_wise_production_report_view',
-                                label: 'View Machine Catgeory Wise Production Report'
-                            },
-                            {
-                                value: 'machine_category_wise_production_report_create',
-                                label: 'Create Machine Catgeory Wise Production Report'
-                            },
-                            {
-                                value: 'machine_category_wise_production_report_edit',
-                                label: 'Edit Machine Catgeory Wise Production Report'
-                            },
-                            {
-                                value: 'machine_category_wise_production_report_delete',
-                                label: 'Delete Machine Catgeory Wise Production Report'
-                            },
-                            {
-                                value: 'machine_category_wise_production_report_export',
-                                label: 'Export Machine Catgeory Wise Production Report'
-                            }
-                        ]
+                        value: 'shoe_weight_report_delete',
+                        label: 'delete'
                     },
+                    {
+                        value: 'shoe_weight_report_export',
+                        label: 'export'
+                    }
                 ]
             },
+            {
+                label: 'Machine Wise Production Report',
+                permissions: [
+                    {
+                        value: 'machine_wise_production_report_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'machine_wise_production_report_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'machine_wise_production_report_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'machine_wise_production_report_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'machine_wise_production_report_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
+                label: 'Thekedar Wise Production Report',
+                permissions: [
+                    {
+                        value: 'thekedar_wise_production_report_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'thekedar_wise_production_report_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'thekedar_wise_production_report_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'thekedar_wise_production_report_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'thekedar_wise_production_report_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
+                label: 'Machine category Wise Production Report',
+                permissions: [
+                    {
+                        value: 'machine_category_wise_production_report_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'machine_category_wise_production_report_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'machine_category_wise_production_report_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'machine_category_wise_production_report_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'machine_category_wise_production_report_export',
+                        label: 'export'
+                    }
+                ]
+            },
+           
         ]
     }
+    
     permissions.push(productionMenu)
     return permissions;
 }

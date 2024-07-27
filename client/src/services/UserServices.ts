@@ -1,10 +1,11 @@
 import { FeatureAccess } from "../types/access.types";
+import { IRole } from "../types/user.types";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 export type AccessTypes = {
   user_access_fields: FeatureAccess,
   crm_access_fields: FeatureAccess,
-  todos_access_fields:FeatureAccess,
+  todos_access_fields: FeatureAccess,
   templates_access_fields: FeatureAccess,
   backup_access_fields: FeatureAccess,
   checklists_access_fields: FeatureAccess,
@@ -171,25 +172,30 @@ export const GetRoles = async () => {
   return await apiClient.get(`roles`)
 }
 
-export const CreateRole = async ({  body }: {  body: { role:string,permissions: string[] } }) => {
-  return await apiClient.post(`roles`, body)
-}
+export const CreateOreditRole = async ({ role, body }: { role?: IRole, body: { role: string, permissions: string[] } }) => {
+  if (role)
+    return await apiClient.put(`roles/${role._id}`, body)
+  else
+    return await apiClient.post(`roles`, body)
+
+};
 
 
-export const AssignRolesToUsers = async ({ body }: { body: {
+
+export const AssignRolesToUsers = async ({ body }: {
+  body: {
     user_ids: string[],
     role_ids: string[],
     flag: number
-  } }) => {
+  }
+}) => {
   return await apiClient.patch(`roles/assign`, body)
 }
 
-export const UpdateRole = async ({ id, body }: { id: string, body: { role: string, permissions: string[] } }) => {
-  return await apiClient.put(`roles/${id}`, body)
-}
 
-export const DeleteRole = async ({id}:{ id:string}) => {
-  return await apiClient.delete(`roles/${id}`)
+
+export const DeleteRole = async ({ role }: { role: IRole }) => {
+  return await apiClient.delete(`roles/${role._id}`)
 }
 
 

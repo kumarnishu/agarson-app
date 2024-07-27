@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext";
 import AppsIcon from '@mui/icons-material/Apps';
 import { Feature } from "../types/access.types";
+import { is_authorized } from "../utils/auth";
 
 function MainDashBoardPage() {
   const { user } = useContext(UserContext)
@@ -31,7 +32,7 @@ function MainDashBoardPage() {
   return (
     <>
       <Grid container sx={{ pt: 2 }} >
-        {features.map((feat, index) => {
+        {user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) &&features.map((feat, index) => {
           return (
             <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={feat.url} style={{ textDecoration: 'none' }}>

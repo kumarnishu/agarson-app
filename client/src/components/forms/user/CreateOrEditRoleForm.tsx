@@ -1,317 +1,119 @@
-import { Button, CircularProgress, Grid, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
-import { useFormik } from 'formik';
-import { useEffect, useContext } from 'react';
-import { useMutation } from 'react-query';
-import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
+import { useEffect, useContext, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
+import { ChoiceContext, UserChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import * as yup from 'yup';
-import { CreateOreditErpState } from '../../../services/ErpServices';
-import { IState } from '../../../types/erp_report.types';
-import { IErpStateTemplate } from '../../../types/template.type';
+import { IMenu, IPermission, IRole } from '../../../types/user.types';
+import { CreateOreditRole, GetPermissions } from '../../../services/UserServices';
 
-function CreateOrEditRoleForm({ state }: { state?: IState }) {
+function CreateOrEditRoleForm({ role }: { role?: IRole }) {
+    const [role_name, setRoleName] = useState<string | undefined>(role && role.role)
+    const [permissiontree, setPermissiontree] = useState<IMenu>()
+    const [permissions, setPermissions] = useState<string[]>(role ? role.permissions : [])
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<string>, BackendError, {
-            state?: IState | undefined;
-            body: IErpStateTemplate
-        }>
-        (CreateOreditErpState, {
+        <AxiosResponse<string>, BackendError, { role?: IRole, body: { role: string, permissions: string[] } }>
+        (CreateOreditRole, {
             onSuccess: () => {
-                queryClient.invalidateQueries('erp_states')
+                queryClient.invalidateQueries('roles')
             }
         })
+    const { data, isSuccess: isPermSuccess } = useQuery<AxiosResponse<IMenu>, BackendError>("permissions", GetPermissions)
 
     const { setChoice } = useContext(ChoiceContext)
 
-    const formik = useFormik<IErpStateTemplate>({
-        initialValues: {
-            state: state ? state.state : "",
-            apr: state ? state.apr : 0,
-            may: state ? state.may : 0,
-            jun: state ? state.jun : 0,
-            jul: state ? state.jul : 0,
-            aug: state ? state.aug : 0,
-            sep: state ? state.sep : 0,
-            oct: state ? state.oct : 0,
-            nov: state ? state.nov : 0,
-            dec: state ? state.dec : 0,
-            jan: state ? state.jan : 0,
-            feb: state ? state.feb : 0,
-            mar: state ? state.mar : 0
-        },
-        validationSchema: yup.object({
-            state: yup.string().required()
-        }),
-        onSubmit: (values: IErpStateTemplate) => {
-            mutate({
-                state: state,
-                body:  {
-                        state: values.state,
-                        apr: values.apr,
-                        may: values.may,
-                        jun: values.jun,
-                        jul: values.jul,
-                        aug: values.aug,
-                        sep: values.sep,
-                        oct: values.oct,
-                        nov: values.nov,
-                        dec: values.dec,
-                        jan: values.jan,
-                        feb: values.feb,
-                        mar: values.mar,
-                    }
-            })
+    function handleRole() {
+        console.log(role)
+        if (!role_name) {
+            alert("please provide role name")
+            return;
         }
-    });
+        else {
+            if (role)
+                mutate({ role: role, body: { role: role_name, permissions: permissions } })
+            else
+                mutate({ body: { role: role_name, permissions: permissions } })
+
+        }
+
+    }
+
+    useEffect(() => {
+        if (isPermSuccess) {
+            setPermissiontree(data.data);
+        }
+
+    }, [isPermSuccess, setChoice])
 
     useEffect(() => {
         if (isSuccess) {
-            setChoice({ type: LeadChoiceActions.close_lead })
+            setChoice({ type: UserChoiceActions.close_user })
 
         }
     }, [isSuccess, setChoice])
+
+    const renderData = (permissiontree: IMenu) => {
+        if (Array.isArray(permissiontree)) {
+            return permissiontree.map((item, index) => (
+                <div key={index} style={{ paddingTop: 10 }}>
+                    <h3 style={{ paddingLeft: item.menues && item.permissions ? '10px' : '25px' }}>{item.label}</h3>
+                    {item.permissions && (
+                        <ul>
+                            {item.permissions.map((perm: IPermission, idx: number) => (
+                                <Stack flexDirection={'row'} pl={item.menues && item.permissions ? '10px' : '25px'} key={idx}>
+                                    <input type="checkbox"
+                                        defaultChecked={role?.permissions.includes(perm.value)}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                let perms = permissions;
+                                                if (!perms.includes(perm.value)) {
+                                                    perms.push(perm.value);
+                                                    setPermissions(perms);
+                                                }
+                                            }
+                                            else {
+                                                let perms = permissions.filter((i) => { return i !== perm.value })
+                                                setPermissions(perms);
+                                            }
+                                        }} /><span style={{ paddingLeft: 5 }}>{perm.label}</span>
+                                </Stack>
+                            ))}
+                        </ul>
+                    )}
+                    {item.menues && renderData(item.menues)}
+                </div>
+            ));
+        }
+        return null;
+    };
+
     return (
-        <form onSubmit={formik.handleSubmit} style={{ paddingTop: '10px' }}>
+        <form style={{ paddingTop: '10px' }} onSubmit={(e) => e.preventDefault()}>
             <TextField
                 required
-                error={
-                    formik.touched.state && formik.errors.state ? true : false
-                }
                 autoFocus
-                id="state"
-                label="State"
+                value={role_name}
+                onChange={(e) => setRoleName(e.target.value)}
+                id="role"
+                label="Role"
                 fullWidth
-                helperText={
-                    formik.touched.state && formik.errors.state ? formik.errors.state : ""
-                }
-                {...formik.getFieldProps('state')}
             />
-
-            <Grid container sx={{ pt: 2 }} >
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.apr && formik.errors.apr ? true : false
-                        }
-                        autoFocus
-                        id="apr"
-                        label="APR"
-                        fullWidth
-                        helperText={
-                            formik.touched.apr && formik.errors.apr ? formik.errors.apr : ""
-                        }
-                        {...formik.getFieldProps('apr')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.may && formik.errors.may ? true : false
-                        }
-                        autoFocus
-                        id="may"
-                        label="MAY"
-                        fullWidth
-                        helperText={
-                            formik.touched.may && formik.errors.may ? formik.errors.may : ""
-                        }
-                        {...formik.getFieldProps('may')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.jun && formik.errors.jun ? true : false
-                        }
-                        autoFocus
-                        id="jun"
-                        label="JUN"
-                        fullWidth
-                        helperText={
-                            formik.touched.jun && formik.errors.jun ? formik.errors.jun : ""
-                        }
-                        {...formik.getFieldProps('jun')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.jul && formik.errors.jul ? true : false
-                        }
-                        autoFocus
-                        id="jul"
-                        label="JUL"
-                        fullWidth
-                        helperText={
-                            formik.touched.jul && formik.errors.jul ? formik.errors.jul : ""
-                        }
-                        {...formik.getFieldProps('jul')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.aug && formik.errors.aug ? true : false
-                        }
-                        autoFocus
-                        id="aug"
-                        label="AUG"
-                        fullWidth
-                        helperText={
-                            formik.touched.aug && formik.errors.aug ? formik.errors.aug : ""
-                        }
-                        {...formik.getFieldProps('aug')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.sep && formik.errors.sep ? true : false
-                        }
-                        autoFocus
-                        id="sep"
-                        label="SEP"
-                        fullWidth
-                        helperText={
-                            formik.touched.sep && formik.errors.sep ? formik.errors.sep : ""
-                        }
-                        {...formik.getFieldProps('sep')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.oct && formik.errors.oct ? true : false
-                        }
-                        autoFocus
-                        id="oct"
-                        label="OCT"
-                        fullWidth
-                        helperText={
-                            formik.touched.oct && formik.errors.oct ? formik.errors.oct : ""
-                        }
-                        {...formik.getFieldProps('oct')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.nov && formik.errors.nov ? true : false
-                        }
-                        autoFocus
-                        id="nov"
-                        label="NOV"
-                        fullWidth
-                        helperText={
-                            formik.touched.nov && formik.errors.nov ? formik.errors.nov : ""
-                        }
-                        {...formik.getFieldProps('nov')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.dec && formik.errors.dec ? true : false
-                        }
-                        autoFocus
-                        id="dec"
-                        label="DEC"
-                        fullWidth
-                        helperText={
-                            formik.touched.dec && formik.errors.dec ? formik.errors.dec : ""
-                        }
-                        {...formik.getFieldProps('dec')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.jan && formik.errors.jan ? true : false
-                        }
-                        autoFocus
-                        id="jan"
-                        label="JAN"
-                        fullWidth
-                        helperText={
-                            formik.touched.jan && formik.errors.jan ? formik.errors.jan : ""
-                        }
-                        {...formik.getFieldProps('jan')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.feb && formik.errors.feb ? true : false
-                        }
-                        autoFocus
-                        id="feb"
-                        label="FEB"
-                        fullWidth
-                        helperText={
-                            formik.touched.feb && formik.errors.feb ? formik.errors.feb : ""
-                        }
-                        {...formik.getFieldProps('feb')}
-                    /></Grid>
-                <Grid key={1} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
-                    <TextField
-                        type='number'
-                        required
-                        variant='outlined'
-                        error={
-                            formik.touched.mar && formik.errors.mar ? true : false
-                        }
-                        autoFocus
-                        id="mar"
-                        label="MAR"
-                        fullWidth
-                        helperText={
-                            formik.touched.mar && formik.errors.mar ? formik.errors.mar : ""
-                        }
-                        {...formik.getFieldProps('mar')}
-                    />
-
-                </Grid>
-
-            </Grid>
-
+          <div>
+              {permissiontree && renderData(permissiontree)}
+          </div>
             <Stack
                 gap={2}
                 pt={2}
             >
                 {/* remarks */}
 
-                <Button variant="contained" color="primary" type="submit"
+                <Button variant="contained" color="primary"
+                    onClick={handleRole}
                     disabled={Boolean(isLoading)}
-                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : !state ? "Add State" : "Update State"}
+                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : !role ? "Add Role" : "Update Role"}
                 </Button>
-
-
             </Stack>
 
             {
@@ -324,7 +126,7 @@ function CreateOrEditRoleForm({ state }: { state?: IState }) {
             {
                 isSuccess ? (
                     <>
-                        {!state ? <AlertBar message="new state created" color="success" /> : <AlertBar message="state updated" color="success" />}
+                        {!role ? <AlertBar message="new role created" color="success" /> : <AlertBar message="role updated" color="success" />}
                     </>
                 ) : null
             }

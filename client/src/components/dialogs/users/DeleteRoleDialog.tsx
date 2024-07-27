@@ -7,17 +7,17 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
-import { IState } from '../../../types/erp_report.types';
-import { DeleteErpState } from '../../../services/ErpServices';
+import { IRole } from '../../../types/user.types';
+import { DeleteRole } from '../../../services/UserServices';
 
 
-function DeleteRoleDialog({ state }: { state: IState}) {
+function DeleteRoleDialog({ role }: { role: IRole}) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
-        <AxiosResponse<any>, BackendError, { state: IState }>
-        (DeleteErpState, {
+        <AxiosResponse<any>, BackendError, { role: IRole }>
+        (DeleteRole, {
             onSuccess: () => {
-                queryClient.invalidateQueries('erp_states')
+                queryClient.invalidateQueries('roles')
             }
         })
 
@@ -30,7 +30,7 @@ function DeleteRoleDialog({ state }: { state: IState}) {
     }, [setChoice, isSuccess])
 
     return (
-        <Dialog open={choice === UserChoiceActions.delete_erp_state ? true : false}
+        <Dialog open={choice === UserChoiceActions.delete_role ? true : false}
             onClose={() => setChoice({ type: UserChoiceActions.close_user })}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: UserChoiceActions.close_user })}>
@@ -46,12 +46,12 @@ function DeleteRoleDialog({ state }: { state: IState}) {
             }
             {
                 isSuccess ? (
-                    <AlertBar message={"selected state deleted"} color="success" />
+                    <AlertBar message={"selected role deleted"} color="success" />
                 ) : null
             }
             <DialogContent>
                 <Typography variant="body1" color="error">
-                    {`Warning ! This will delete selected ${state.state}  permanently`}
+                    {`Warning ! This will delete selected ${role.role}  permanently`}
 
                 </Typography>
             </DialogContent>
@@ -64,7 +64,7 @@ function DeleteRoleDialog({ state }: { state: IState}) {
                 <Button fullWidth variant="outlined" color="error"
                     onClick={() => {
 
-                        mutate({ state: state })
+                        mutate({ role: role })
                     }}
                     disabled={isLoading}
                 >

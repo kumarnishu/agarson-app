@@ -25,7 +25,11 @@ export type ILeadTemplate = {
     lead_source: string
     status?: string
 }
-
+export type IRoleTemplate={
+    _id:string,
+    role:string,
+    permissions:string[]
+}
 export type IReferTemplate = {
     _id: string,
     name: string,

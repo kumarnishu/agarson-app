@@ -91,10 +91,15 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                             <STableHeadCell
                             >
 
-                                Role
+                                General Role
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                                Assigned Roles
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -321,7 +326,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                                                     }
                                                                 </>
                                                             }
-                                                           <Tooltip title="Manage Leads View">
+                                                            <Tooltip title="Manage Leads View">
                                                                 <IconButton
                                                                     color="success"
                                                                     size="medium"
@@ -334,8 +339,8 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                                                     <RemoveRedEye />
                                                                 </IconButton>
                                                             </Tooltip>
-                                                                
-                                                        
+
+
                                                             {/*  block login */}
                                                             {LoggedInUser?.created_by._id === user._id ?
                                                                 null :
@@ -454,13 +459,17 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                                     </>
                                             }
                                         </STableCell>
-
+                                        <STableCell>
+                                            {
+                                                user.assigned_roles.map((i) => { return i.role }).toString()
+                                            }
+                                        </STableCell>
 
                                         <STableCell>
                                             {user.username}
                                         </STableCell>
                                         <STableCell>
-                                            {user.show_only_visiting_card_leads?"only lead with cards":"all Leads"}
+                                            {user.show_only_visiting_card_leads ? "only lead with cards" : "all Leads"}
                                         </STableCell>
                                         <STableCell>
 
@@ -517,7 +526,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                         <RemoveAdminDialog id={user._id} />
                         <UpdateUsePasswordDialog user={user} />
                         <AssignUsersDialog user={user} setUser={setUser} />
-                        <ToogleVisitingcardShowDialog user={user}/>
+                        <ToogleVisitingcardShowDialog user={user} />
                     </>
                     : null
             }
