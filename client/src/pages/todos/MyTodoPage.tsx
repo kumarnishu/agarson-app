@@ -36,7 +36,7 @@ export default function TodosPage() {
   const [selectedData, setSelectedData] = useState<ITodoTemplate[]>([])
   const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["my_todos", hidden], async () => GetMyTodos({ hidden: hidden }))
 
-  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false' }))
 
   const [sent, setSent] = useState(false)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);

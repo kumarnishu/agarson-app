@@ -18,7 +18,7 @@ import { IProduction } from '../../types/production.types'
 import {  GetProductions } from '../../services/ProductionServices'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
 import NewProductionDialog from '../../components/dialogs/production/CreateProductionDialog'
-import { is_authorized } from '../../utils/auth'
+
 
 export default function ProductionAdminPage() {
   const { user } = useContext(UserContext)
@@ -38,7 +38,7 @@ export default function ProductionAdminPage() {
     start_date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
   })
-  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({hidden:'false'}))
 
   const { data, isLoading, refetch: ReftechProductions } = useQuery<AxiosResponse<{ productions: IProduction[], page: number, total: number, limit: number }>, BackendError>(["productions", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetProductions({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
@@ -266,13 +266,13 @@ export default function ProductionAdminPage() {
               sx={{ borderRadius: 2 }}
             >
               < MenuItem 
-                disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+               
               onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_production })
               }}
               >New Production</MenuItem>
               < MenuItem 
-                disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+               
               onClick={() => {
                 handleExcel()
               }}

@@ -9,7 +9,6 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import CreateOrEditLeadSourceDialog from '../../dialogs/crm/CreateOrEditLeadSourceDialog'
 import { ILeadSource } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
-import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -130,10 +129,10 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                                 element={
                                                     <Stack direction="row">
                                                         <>
-                                                            {user?.is_admin &&
+                                                            {user?.is_admin &&  user.assigned_permissions.includes('lead_source_delete') &&
                                                                 <Tooltip title="delete">
                                                                     <IconButton color="error"
-                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                     
                                                                         onClick={() => {
                                                                             setChoice({ type: LeadChoiceActions.delete_crm_item })
                                                                             setLeadSource(source)
@@ -145,9 +144,9 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                                                 </Tooltip>
                                                             }
 
-                                                            <Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes('lead_source_edit') &&<Tooltip title="edit">
                                                                 <IconButton
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                   
                                                                     onClick={() => {
                                                                         setLeadSource(source)
                                                                         setChoice({ type: LeadChoiceActions.create_or_edit_source })
@@ -156,7 +155,7 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                                                 >
                                                                     <Edit />
                                                                 </IconButton>
-                                                            </Tooltip>
+                                                            </Tooltip>}
 
                                                         </>
 

@@ -21,7 +21,7 @@ function RefreshWhatsappDialog() {
     const [loading, setLoading] = useState(false)
     const [clientid, setClient_id] = useState<string>()
 
-    const { data: usersData } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+    const { data: usersData } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({hidden:'false'}))
 
 
     useEffect(() => {

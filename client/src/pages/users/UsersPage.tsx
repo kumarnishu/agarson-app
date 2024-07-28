@@ -31,6 +31,7 @@ type SelectedData = {
 
 // react component
 export default function UsersPage() {
+    const [hidden, setHidden] = useState('false')
     const [filter, setFilter] = useState<string | undefined>()
     const [user, setUser] = useState<IUser>()
     const [users, setUsers] = useState<IUser[]>([])
@@ -41,7 +42,7 @@ export default function UsersPage() {
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IUser[]>, BackendError>(["users",hidden], async () => GetUsers({ hidden: hidden, permission: undefined }))
 
 
     function handleExcel() {
@@ -135,6 +136,15 @@ export default function UsersPage() {
                 >
 
                     < Stack direction="row" spacing={2}>
+                       <Stack direction={'row'} alignItems={'center'}>
+                            <input type='checkbox' onChange={(e) => {
+                                if (e.target.checked) {
+                                    setHidden('true')
+                                }
+                                else
+                                    setHidden('false')
+                            }} /> <span style={{paddingLeft:'5px'}}>Blocked</span>
+                       </Stack >
                         <TextField
                             fullWidth
                             size="small"

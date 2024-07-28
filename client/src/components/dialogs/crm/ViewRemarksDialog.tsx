@@ -40,18 +40,18 @@ function ViewRemarksDialog({ lead }: { lead: ILead }) {
                                     <p>{new Date(item.created_at).toLocaleString()}</p>
                                     {
                                         user && item.remark && user?.username === item.created_by.username && new Date(item.created_at) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
-                                            <IconButton size="small" color="error" onClick={() => {
+                                            {user?.assigned_permissions.includes('reminders_delete') &&<IconButton size="small" color="error" onClick={() => {
                                                 setRemark(item)
                                                 setDisplay(true)
                                             }}>
-                                                Delete</IconButton>
-                                            <IconButton size="small" color="success"
+                                                Delete</IconButton>}
+                                    {user?.assigned_permissions.includes('reminders_edit')&& <IconButton size="small" color="success"
                                                 onClick={() => {
                                                     setRemark(item)
                                                     setDisplay2(true)
                                                     
                                                 }}
-                                            >Edit</IconButton>
+                                            >Edit</IconButton>}
                                         </Stack>
                                     }
                                 </div>

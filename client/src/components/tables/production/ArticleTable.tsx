@@ -9,7 +9,6 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import { IArticle } from '../../../types/production.types'
 import UpdateArticleDialog from '../../dialogs/production/UpdateArticleDialog'
 import ToogleArticleDialog from '../../dialogs/production/ToogleArticleDialog'
-import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -164,7 +163,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                                         <>
                                                             <Tooltip title="edit">
                                                                 <IconButton
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                  
                                                                     onClick={() => {
                                                                         setArticle(article)
                                                                         setChoice({ type: ProductionChoiceActions.update_article })
@@ -177,7 +176,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
 
                                                             <Tooltip title="Toogle">
                                                                 <IconButton color="primary"
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                 
                                                                     onClick={() => {
                                                                         setArticle(article)
                                                                         setChoice({ type: ProductionChoiceActions.toogle_article })

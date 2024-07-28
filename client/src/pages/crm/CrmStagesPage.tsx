@@ -17,7 +17,6 @@ import CreateOrEditStageDialog from '../../components/dialogs/crm/CreateOrEditSt
 import { IStage } from '../../types/crm.types'
 import FindUknownCrmStagesDialog from '../../components/dialogs/crm/FindUknownCrmStagesDialog'
 import { UserContext } from '../../contexts/userContext'
-import { is_authorized } from '../../utils/auth'
 
 type ITemplate = {
   _id: string,
@@ -141,7 +140,7 @@ export default function CrmStagesPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {/* {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMStagesFromExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />} */}
+            {/* {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMStagesFromExcelButton is_editable} />} */}
           </Stack >
           <>
 
@@ -167,29 +166,29 @@ export default function CrmStagesPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              <MenuItem
+              {LoggedInUser?.assigned_permissions.includes('leadstage_create')&&<MenuItem
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_stage })
                   setStage(undefined)
                   setAnchorEl(null)
                 }}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              > Add New</MenuItem>
+                
+              > Add New</MenuItem>}
 
-              <MenuItem
+              {LoggedInUser?.assigned_permissions.includes('leadstage_create') &&<MenuItem
               sx={{color:'red'}}
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.find_unknown_stages })
                   setStage(undefined)
                   setAnchorEl(null)
                 }}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              >Find Unknown Stages</MenuItem>
+                
+              >Find Unknown Stages</MenuItem>}
 
 
-              < MenuItem onClick={handleExcel}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              >Export To Excel</MenuItem>
+              {LoggedInUser?.assigned_permissions.includes('leadstage_export') &&< MenuItem onClick={handleExcel}
+                
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditStageDialog />

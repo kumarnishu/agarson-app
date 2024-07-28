@@ -9,7 +9,6 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import CreateOrEditStageDialog from '../../dialogs/crm/CreateOrEditStageDialog'
 import { IStage } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
-import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -133,10 +132,10 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                                         <Stack direction="row">
                                                             <>
 
-                                                                {user?.is_admin &&
+                                                            {user?.is_admin && user.assigned_permissions.includes('leadstage_delete') &&
                                                                     <Tooltip title="delete">
                                                                         <IconButton color="error"
-                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                     
                                                                             onClick={() => {
                                                                                 setChoice({ type: LeadChoiceActions.delete_crm_item })
                                                                                 setStage(stage)
@@ -147,9 +146,9 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                                                         </IconButton>
                                                                     </Tooltip>
                                                                 }
-                                                               <Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes('leadstage_edit') &&<Tooltip title="edit">
                                                                     <IconButton
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                   
                                                                         onClick={() => {
                                                                             setStage(stage)
                                                                             setChoice({ type: LeadChoiceActions.create_or_edit_stage })
@@ -158,7 +157,7 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                </Tooltip>}
 
                                                             </>
 

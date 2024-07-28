@@ -1,5 +1,5 @@
 import { Delete, Search } from '@mui/icons-material'
-import { Fade, FormControl, IconButton, InputAdornment, InputLabel, LinearProgress, Menu, MenuItem, OutlinedInput, Select, TextField, Theme, Tooltip, Typography } from '@mui/material'
+import { Fade,  IconButton, InputAdornment,  LinearProgress, Menu, MenuItem,  Select, TextField,  Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useState } from 'react'
@@ -19,7 +19,6 @@ import { ILead, IStage } from '../../types/crm.types'
 import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
 import { toTitleCase } from '../../utils/TitleCase'
 import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
-import { is_authorized } from '../../utils/auth'
 
 
 let template: ILeadTemplate[] = [
@@ -88,7 +87,7 @@ export default function LeadsPage() {
       setSent(false)
     }
   }
-  
+
   // refine data
   useEffect(() => {
     let data: ILeadTemplate[] = []
@@ -192,7 +191,7 @@ export default function LeadsPage() {
         isLoading && <LinearProgress />
       }
       {
-        isFuzzyLoading && <LinearProgress />
+        isFuzzyLoading && <LinearProgress color='success' />
       }
       {/*heading, search bar and table menu */}
 
@@ -245,9 +244,9 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {LoggedInUser?.created_by._id === LoggedInUser?._id && <Tooltip title="Delete Selected Leads">
+            {LoggedInUser?.created_by._id === LoggedInUser?._id && LoggedInUser?.assigned_permissions.includes('leads_delete')&& <Tooltip title="Delete Selected Leads">
               <IconButton color="error"
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
+
                 onClick={() => {
                   if (selectedLeads.length == 0)
                     alert("select some useless leads")
@@ -258,35 +257,35 @@ export default function LeadsPage() {
                 <Delete />
               </IconButton>
             </Tooltip>}
-          
-              <Select
-                sx={{ m: 1, width: 300 }}
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                value={stage}
-                onChange={(e) => {
-                  setStage(e.target.value);
-                }}
-                size='small'
-              >
-                <MenuItem
-                  key={'00'}
-                  value={undefined}
-                >
-                 All
-                </MenuItem>
-                {stages.map((stage,index) => (
-                  <MenuItem
-                    key={index}
-                    value={stage.stage}
-                  >
-                    {toTitleCase(stage.stage)}
-                  </MenuItem>
-                ))}
-              </Select>
 
-            
-            {LoggedInUser?.is_admin && <UploadLeadsExcelButton disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)} />}
+            <Select
+              sx={{ m: 1, width: 300 }}
+              labelId="demo-multiple-name-label"
+              id="demo-multiple-name"
+              value={stage}
+              onChange={(e) => {
+                setStage(e.target.value);
+              }}
+              size='small'
+            >
+              <MenuItem
+                key={'00'}
+                value={undefined}
+              >
+                All
+              </MenuItem>
+              {stages.map((stage, index) => (
+                <MenuItem
+                  key={index}
+                  value={stage.stage}
+                >
+                  {toTitleCase(stage.stage)}
+                </MenuItem>
+              ))}
+            </Select>
+
+
+            {LoggedInUser?.assigned_permissions.includes('leads_create') &&<UploadLeadsExcelButton />}
           </Stack >
           <>
 
@@ -314,17 +313,18 @@ export default function LeadsPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              <MenuItem
+              {LoggedInUser?.assigned_permissions.includes('leads_create') && <MenuItem
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_lead })
                   setLead(undefined);
                   setAnchorEl(null)
                 }}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              > Add New</MenuItem>
-              < MenuItem onClick={handleExcel}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              >Export To Excel</MenuItem>
+                
+
+              > Add New</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('leads_export') &&< MenuItem onClick={handleExcel}
+
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditLeadDialog lead={undefined} />
@@ -332,8 +332,8 @@ export default function LeadsPage() {
           </>
         </Stack >
       </Stack >
-    
-      < LeadsTable
+
+       < LeadsTable
         lead={lead}
         setLead={setLead}
         selectAll={selectAll}
@@ -342,7 +342,7 @@ export default function LeadsPage() {
         setSelectAll={setSelectAll}
         leads={leads}
       />
-      
+
       <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
     </>
 

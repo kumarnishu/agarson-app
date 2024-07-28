@@ -15,9 +15,9 @@ function MainDashBoardPage() {
   useEffect(() => {
     let tmpfeatures: { feature: string, url: string }[] = []
     user?.is_admin && tmpfeatures.push({ feature: 'users', url: paths.user_dashboard })
-    user?.assigned_roles && is_authorized('crm_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'crm', url: paths.crm_dashboard })
-    user?.assigned_roles && is_authorized('erpreport_menu', user?.assigned_roles) && tmpfeatures.push({ feature:'erp reports', url: paths.erp_dashboard })
-    user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) && tmpfeatures.push({ feature: 'productions', url: paths.production_dashboard })
+    user?.assigned_permissions.includes('crm_menu') && tmpfeatures.push({ feature: 'crm', url: paths.crm_dashboard })
+    user?.assigned_permissions.includes('erpreport_menu') && tmpfeatures.push({ feature: 'erp reports', url: paths.erp_dashboard })
+    user?.assigned_permissions.includes('production_menu') && tmpfeatures.push({ feature: 'productions', url: paths.production_dashboard })
 
     // if (user?.is_admin) {
     //   tmpfeatures.push({ feature: Feature.todos, url: paths.todo_dashboard })

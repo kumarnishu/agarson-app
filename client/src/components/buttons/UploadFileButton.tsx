@@ -30,7 +30,7 @@ function UploadFileButton({ disabled, file, name, required, camera, label, isLoa
                             color="warning"
                             variant="outlined"
                             component="label"
-                            disabled={Boolean(disabled)}
+                            
                         >
                             {label}
                             {camera ?

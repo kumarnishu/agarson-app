@@ -84,6 +84,12 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                             <STableHeadCell
                             >
 
+                                Name
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Status
 
                             </STableHeadCell>
@@ -99,12 +105,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                 Permissions
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                User Name
-
-                            </STableHeadCell>
+                           
                             <STableHeadCell
                             >
 
@@ -420,6 +421,9 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
 
                                                 alt="display picture" src={user.dp?.public_url} />
                                         </STableCell>
+                                        <STableCell>
+                                            {user.username}
+                                        </STableCell>
                                         <STableCell style={{ color: user.is_active ? "" : "red" }}>
                                             {
 
@@ -446,9 +450,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                             }
                                         </STableCell>
 
-                                        <STableCell>
-                                            {user.username}
-                                        </STableCell>
+                                     
                                         <STableCell>
                                             {user.show_only_visiting_card_leads ? "only lead with cards" : "all Leads"}
                                         </STableCell>

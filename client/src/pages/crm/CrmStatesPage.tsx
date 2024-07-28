@@ -20,7 +20,6 @@ import AssignCrmStatesDialog from '../../components/dialogs/crm/AssignCrmStatesD
 import FindUknownCrmStatesDialog from '../../components/dialogs/crm/FindUknownCrmStatesDialog'
 import { ICRMState } from '../../types/crm.types'
 import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
-import { is_authorized } from '../../utils/auth'
 
 
 let template: ICRMStateTemplate[] = [
@@ -144,7 +143,7 @@ export default function CrmStatesPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            <UploadCRMStatesFromExcelButton disabled={Boolean(LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles))} />
+            {LoggedInUser?.assigned_permissions.includes('states_create')&&<UploadCRMStatesFromExcelButton  />}
           </Stack >
           <>
 
@@ -170,16 +169,16 @@ export default function CrmStatesPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              <MenuItem
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
+              {LoggedInUser?.assigned_permissions.includes('states_edit') &&<MenuItem
+             
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_state })
                   setState(undefined)
                   setAnchorEl(null)
                 }}
-              > Add New</MenuItem>
-              <MenuItem
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
+              > Add New</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('') && <MenuItem
+             
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {
                     alert("select some states")
@@ -191,9 +190,9 @@ export default function CrmStatesPage() {
                   }
                   setAnchorEl(null)
                 }}
-              > Assign States</MenuItem>
-              <MenuItem
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
+              > Assign States</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('states_create') &&<MenuItem
+             
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {
                     alert("select some states")
@@ -205,20 +204,20 @@ export default function CrmStatesPage() {
                   }
                   setAnchorEl(null)
                 }}
-              > Remove States</MenuItem>
-              <MenuItem
+              > Remove States</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('states_edit') &&<MenuItem
                 sx={{ color: 'red' }}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
+             
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.find_unknown_states })
                   setState(undefined)
                   setAnchorEl(null)
                 }}
-              > Find Unknown States</MenuItem>
+              > Find Unknown States</MenuItem>}
 
-              < MenuItem onClick={handleExcel}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              >Export To Excel</MenuItem>
+              {LoggedInUser?.assigned_permissions.includes('states_export') &&< MenuItem onClick={handleExcel}
+             
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditStateDialog />

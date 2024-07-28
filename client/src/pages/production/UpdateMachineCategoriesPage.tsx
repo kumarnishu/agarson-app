@@ -8,12 +8,11 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import { GetMachineCategories, UpdateMachineCategories } from '../../services/ProductionServices'
 import { ITemplateCategoryField } from '../../types/template.type'
-import { is_authorized } from '../../utils/auth'
 
 
 function UpdateMachineCategoriesPage() {
     const { user } = useContext(UserContext)
-    const { mutate, isLoading, isSuccess } = useMutation
+    const { mutate,  isSuccess } = useMutation
         <AxiosResponse<ITemplateCategoryField>, BackendError, {
             body: { categories: string[] }
         }>(UpdateMachineCategories)
@@ -60,7 +59,7 @@ function UpdateMachineCategoriesPage() {
                     mutate({ body: { categories: fields } })
                 }
             }}
-                disabled={isLoading||user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                
             >
                 Save
             </Button>}
@@ -74,7 +73,7 @@ function UpdateMachineCategoriesPage() {
                         onChange={(e) => setField(e.target.value)}
                     >
                     </TextField>
-                    <Button disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}  color="inherit" sx={{ borderRadius: 2 }} variant="contained" onClick={() => { handleAdd() }}>
+                    <Button disabled={true}  color="inherit" sx={{ borderRadius: 2 }} variant="contained" onClick={() => { handleAdd() }}>
                         +
                     </Button>
                 </Stack>
@@ -84,7 +83,7 @@ function UpdateMachineCategoriesPage() {
                             <TextField disabled defaultValue={item}>
                             </TextField>
                             <Button color="error"
-                                disabled={!user?.is_admin &&user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                disabled={!user?.is_admin }
                                 sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
                                     let tmps = fields.filter((field) => { return field !== item })
                                     setFields(tmps)

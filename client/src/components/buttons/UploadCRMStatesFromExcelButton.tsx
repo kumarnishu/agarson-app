@@ -12,7 +12,7 @@ const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadCRMStatesFromExcelButton({ disabled }: { disabled: boolean }) {
+function UploadCRMStatesFromExcelButton() {
     const {data, mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any[]>, BackendError, FormData>
         (BulkCrmStateUpdateFromExcel)
@@ -64,7 +64,7 @@ function UploadCRMStatesFromExcelButton({ disabled }: { disabled: boolean }) {
                     <>
                         <Button
                             component="label"
-                            disabled={Boolean(disabled)}
+                            
                         >
                             <Upload />
                             <FileInput

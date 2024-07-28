@@ -5,11 +5,7 @@ import { useQuery } from 'react-query'
 import { GetReminderRemarks } from '../../services/LeadsServices'
 import { BackendError } from '../..'
 import { Box,  DialogTitle,  LinearProgress, Paper, Stack, Typography } from '@mui/material'
-// import ViewRemarksDialog from '../../components/dialogs/crm/ViewRemarksDialog'
-// import { ChoiceContext } from '../../contexts/dialogContext'
-// import DeleteRemarkDialog from '../../components/dialogs/crm/DeleteRemarkDialog'
-// import { Delete, Edit } from '@mui/icons-material'
-// import { UserContext } from '../../contexts/userContext'
+
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import ActivitiesTable from '../../components/tables/crm/ActivitiesTable'
 
@@ -17,12 +13,10 @@ function CrmReminderPage() {
   const [remarks, setRemarks] = useState<IRemark[]>([])
   const [remark, setRemark] = useState<IRemark>()
   const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IRemark[]>, BackendError>("reminderremarks", GetReminderRemarks)
-  // const [display, setDisplay] = useState<boolean>(false)
-  // const { setChoice } = useContext(ChoiceContext)
+
   let previous_date = new Date()
   let day = previous_date.getDate() - 1
   previous_date.setDate(day)
-  // const { user } = useContext(UserContext)
 
 
   useEffect(() => {
@@ -92,24 +86,7 @@ function CrmReminderPage() {
                           Timestamp : {new Date(remark.created_at).toLocaleString()}
                         </Typography>
                        
-                        {/* <Stack direction={'row'} gap={2}>
-                          <Button onClick={() => {
-                            setRemark(remark)
-                            setChoice({ type: LeadChoiceActions.add_remark })
-                          }}>Add Remark</Button>
-                          <Button onClick={() => {
-                            setRemark(remark)
-                            setChoice({ type: LeadChoiceActions.view_remarks })
-                          }}>View {remark && remark.lead && remark.lead.remarks && remark.lead.remarks.length ? remark.lead.remarks.length : null} Remarks</Button>
-                          {user?.username === remark.created_by.username && new Date(remark.created_at) > new Date(previous_date) && <IconButton size="small" color="error" onClick={() => {
-                            setRemark(remark)
-                            setChoice({ type: LeadChoiceActions.delete_remark })
-                          }}><Delete /></IconButton>}
-                          {user?.username === remark.created_by.username && new Date(remark.created_at) > new Date(previous_date) && <IconButton size="small" color="success" onClick={() => {
-                            setRemark(remark)
-                            setChoice({ type: LeadChoiceActions.update_remark })
-                          }}><Edit /></IconButton>}
-                        </Stack> */}
+                      
                       </Paper>
                     </Stack>
                   )
@@ -118,14 +95,7 @@ function CrmReminderPage() {
               <ActivitiesTable remark={remark} remarks={remarks} setRemark={setRemark} />
             }
           </Box >
-          {/* {remark && remark.lead ?
-            <>
-              <NewRemarkDialog lead={remark.lead} />
-              <ViewRemarksDialog lead={remark.lead} />
-            </> : null
-          }
-          {remark && <DeleteRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
-          {remark && <UpdateRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />} */}
+          
         </Stack >}
     </Box >
   )

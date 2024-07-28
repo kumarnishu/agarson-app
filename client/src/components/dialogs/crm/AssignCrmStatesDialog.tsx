@@ -18,7 +18,7 @@ import { AssignCRMStatesToUsers } from '../../../services/LeadsServices';
 function AssignCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:number }) {
 
     const [users, setUsers] = useState<IUser[]>([])
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({hidden:'false'}))
 
 
 

@@ -15,7 +15,6 @@ import CreateOrEditLeadTypeDialog from '../../components/dialogs/crm/CreateOrEdi
 import { ILeadType } from '../../types/crm.types'
 import LeadsTypeTable from '../../components/tables/crm/LeadsTypesTable'
 import { GetAllLeadTypes } from '../../services/LeadsServices'
-import { is_authorized } from '../../utils/auth'
 import { UserContext } from '../../contexts/userContext'
 
 type ITemplate = {
@@ -166,18 +165,18 @@ export default function CrmTypesPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              <MenuItem
+              {LoggedInUser?.assigned_permissions.includes("leadtype_create")&& <MenuItem
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_leadtype })
                   setLeadType(undefined)
                   setAnchorEl(null)
                 }}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              > Add New</MenuItem>
+              
+              > Add New</MenuItem>}
 
-              < MenuItem onClick={handleExcel}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              >Export To Excel</MenuItem>
+              {LoggedInUser?.assigned_permissions.includes("leadtype_export") &&  < MenuItem onClick={handleExcel}
+              
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditLeadTypeDialog />

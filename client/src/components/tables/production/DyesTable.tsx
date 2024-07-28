@@ -9,7 +9,6 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import { IDye } from '../../../types/production.types'
 import UpdateDyeDialog from '../../dialogs/production/UpdateDyeDialog'
 import ToogleDyeDialog from '../../dialogs/production/ToogleDyeDialog'
-import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -176,7 +175,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                                             <>
                                                                 <Tooltip title="edit">
                                                                     <IconButton
-                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                      
                                                                         onClick={() => {
                                                                             setDye(dye)
                                                                             setChoice({ type: ProductionChoiceActions.update_dye })
@@ -189,7 +188,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                                                 
                                                                     <Tooltip title="Toogle">
                                                                         <IconButton color="primary"
-                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                       
                                                                             onClick={() => {
                                                                                 setDye(dye)
                                                                                 setChoice({ type: ProductionChoiceActions.toogle_dye })

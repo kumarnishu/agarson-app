@@ -10,7 +10,6 @@ import { Delete, Edit } from '@mui/icons-material'
 import UpdateProductionDialog from '../../dialogs/production/UpdateProductionDialog'
 import moment from 'moment'
 import DeleteProductionDialog from '../../dialogs/production/DeleteProductionDialog'
-import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -199,7 +198,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                                             <>
                                                                 <Tooltip title="edit">
                                                                     <IconButton color="info"
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                  
                                                                         onClick={() => {
                                                                             setChoice({ type: ProductionChoiceActions.update_production })
                                                                             setProduction(production)
@@ -210,7 +209,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                                                 </Tooltip>
                                                                 {user?.is_admin && <Tooltip title="delete">
                                                                     <IconButton color="error"
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                  
                                                                         onClick={() => {
                                                                             setChoice({ type: ProductionChoiceActions.delete_production })
                                                                             setProduction(production)

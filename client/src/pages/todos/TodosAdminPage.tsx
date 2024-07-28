@@ -62,7 +62,7 @@ export default function TodosAdminPage() {
     const [selectedData, setSelectedData] = useState<ITodoTemplate[]>(template)
     const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["todos", type, stopped, mobile], async () => GetTodos({ type: type, mobile: mobile, stopped: stopped }))
 
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false' }))
 
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)

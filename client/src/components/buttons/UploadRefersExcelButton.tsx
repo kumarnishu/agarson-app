@@ -13,7 +13,7 @@ const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadRefersExcelButton({ disabled }: { disabled: boolean }) {
+function UploadRefersExcelButton() {
   const [leads, setLeads] = React.useState<IReferTemplate[]>()
   const { data, mutate, isLoading, isSuccess, isError, error } = useMutation
     <AxiosResponse<IReferTemplate[]>, BackendError, FormData>
@@ -72,7 +72,7 @@ function UploadRefersExcelButton({ disabled }: { disabled: boolean }) {
           <>
             <Button
               size="small"
-              disabled={Boolean(disabled)}
+              
               component="label"
             >
               <Tooltip title="upload excel template">

@@ -11,7 +11,7 @@ const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadPendingOrdersButton({ disabled }: { disabled: boolean }) {
+function UploadPendingOrdersButton() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any[]>, BackendError, FormData>
         (BulkPendingOrderFromExcel)
@@ -56,7 +56,7 @@ function UploadPendingOrdersButton({ disabled }: { disabled: boolean }) {
                     <>
                         <Button
                             component="label"
-                            disabled={Boolean(disabled)}
+                            
                         >
                             <Upload />
                             <FileInput

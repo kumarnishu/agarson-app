@@ -11,7 +11,7 @@ const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadDyesFromExcelButton({ disabled }: { disabled: boolean }) {
+function UploadDyesFromExcelButton() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any[]>, BackendError, FormData>
         (BulkUploadDyes)
@@ -56,7 +56,7 @@ function UploadDyesFromExcelButton({ disabled }: { disabled: boolean }) {
                     <>
                         <Button
                             component="label"
-                            disabled={Boolean(disabled)}
+                            
                         >
                             <Upload />
                             <FileInput

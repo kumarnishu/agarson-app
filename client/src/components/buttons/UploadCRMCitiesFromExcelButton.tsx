@@ -12,7 +12,7 @@ const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadCRMCitiesFromExcelButton({ disabled,state }: { disabled: boolean ,state?:string}) {
+function UploadCRMCitiesFromExcelButton({ state }: { state?:string}) {
     const {data, mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any[]>, BackendError, {state:string,body:FormData}>
         (BulkCityUpdateFromExcel)
@@ -68,7 +68,7 @@ function UploadCRMCitiesFromExcelButton({ disabled,state }: { disabled: boolean 
                     <>
                         <Button
                             component="label"
-                            disabled={Boolean(disabled)}
+                            
                         >
                             <Upload />
                             <FileInput

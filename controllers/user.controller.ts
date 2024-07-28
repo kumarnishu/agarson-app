@@ -10,11 +10,8 @@ import { FetchAllPermissions, IMenu } from '../utils/fillAllPermissions';
 
 
 export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
-    let active = req.query.active
-    let show_active = true;
-    if (active == "false")
-        show_active = false;
-    let users = await User.find({ is_active: show_active }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+    let showhidden = req.query.hidden
+    let users = await User.find({ is_active: showhidden == 'false' }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     return res.status(200).json(users)
 }
 

@@ -7,7 +7,6 @@ import ViewRemarksDialog from '../../dialogs/crm/ViewRemarksDialog'
 import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
 import { Comment, Visibility } from '@mui/icons-material'
 import CreateOrEditRemarkDialog from '../../dialogs/crm/CreateOrEditRemarkDialog'
-import { is_authorized } from '../../../utils/auth'
 import { UserContext } from '../../../contexts/userContext'
 
 
@@ -272,9 +271,9 @@ function ActivitiesTable({ remarks }: Props) {
                                         <TableCell style={{ padding: '0px' }}>
 
                                             <Stack direction="row" gap={1} px={1}>
-                                                <Tooltip title="view remarks">
+                                                {user?.assigned_permissions.includes('reminders_view')&&<Tooltip title="view remarks">
                                                     <IconButton size="small" color="primary"
-                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                       
                                                         onClick={() => {
 
                                                             setChoice({ type: LeadChoiceActions.view_remarks })
@@ -285,10 +284,10 @@ function ActivitiesTable({ remarks }: Props) {
                                                     >
                                                         <Visibility />
                                                     </IconButton>
-                                                </Tooltip>
-                                                <Tooltip title="Add Remark">
+                                                </Tooltip>}
+                                                {user?.assigned_permissions.includes('reminders_create')  &&<Tooltip title="Add Remark">
                                                     <IconButton size="small"
-                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                       
                                                         color="success"
                                                         onClick={() => {
 
@@ -299,7 +298,7 @@ function ActivitiesTable({ remarks }: Props) {
                                                     >
                                                         <Comment />
                                                     </IconButton>
-                                                </Tooltip>
+                                                </Tooltip>}
                                             </Stack>
                                         </TableCell>
                                         <STableCell title={remark.remark}>

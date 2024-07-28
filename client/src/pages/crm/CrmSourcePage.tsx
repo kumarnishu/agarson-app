@@ -15,7 +15,6 @@ import CreateOrEditLeadSourceDialog from '../../components/dialogs/crm/CreateOrE
 import { ILeadSource } from '../../types/crm.types'
 import { GetAllSources } from '../../services/LeadsServices'
 import LeadsLeadSourceTable from '../../components/tables/crm/LeadsSourceTable'
-import { is_authorized } from '../../utils/auth'
 import { UserContext } from '../../contexts/userContext'
 
 type ITemplate = {
@@ -166,18 +165,18 @@ export default function CrmLeadSourcesPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              <MenuItem
+              {LoggedInUser?.assigned_permissions.includes('lead_source_create')&&<MenuItem
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_source })
                   setLeadSource(undefined)
                   setAnchorEl(null)
                 }}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              > Add New</MenuItem>
+              
+              > Add New</MenuItem>}
 
-              < MenuItem onClick={handleExcel}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              >Export To Excel</MenuItem>
+              {LoggedInUser?.assigned_permissions.includes('lead_source_export') &&< MenuItem onClick={handleExcel}
+              
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditLeadSourceDialog />

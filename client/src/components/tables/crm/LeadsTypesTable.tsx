@@ -9,7 +9,6 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import { ILeadType } from '../../../types/crm.types'
 import CreateOrEditLeadTypeDialog from '../../dialogs/crm/CreateOrEditLeadTypeDialog'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
-import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -133,10 +132,10 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                                                     element={
                                                         <Stack direction="row">
                                                             <>
-                                                                {user?.is_admin &&
+                                                            {user?.is_admin && user.assigned_permissions.includes('leadtype_delete')&&
                                                                     <Tooltip title="delete">
                                                                         <IconButton color="error"
-                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                      
                                                                             onClick={() => {
                                                                                 setChoice({ type: LeadChoiceActions.delete_crm_item })
                                                                                 setType(type)
@@ -147,9 +146,9 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                                                                         </IconButton>
                                                                     </Tooltip>
                                                                 }
-                                                              <Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes('leadtype_edit') &&<Tooltip title="edit">
                                                                     <IconButton
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                  
                                                                         onClick={() => {
                                                                             setType(type)
                                                                             setChoice({ type: LeadChoiceActions.create_or_edit_leadtype })
@@ -158,7 +157,7 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                </Tooltip>}
 
                                                             </>
 

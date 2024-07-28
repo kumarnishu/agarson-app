@@ -12,7 +12,7 @@ import NewCheckListForm from '../../forms/checklists/NewCheckListForm';
 function NewCheckListDialog() {
     const { choice, setChoice } = useContext(ChoiceContext)
     const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
+    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({hidden:'false'}))
 
     useEffect(() => {
         if (isSuccess)

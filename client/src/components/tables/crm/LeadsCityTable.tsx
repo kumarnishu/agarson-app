@@ -9,7 +9,6 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import CreateOrEditCityDialog from '../../dialogs/crm/CreateOrEditCityDialog'
 import { ICRMCity } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
-import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -136,10 +135,10 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                                                 element={
                                                     <Stack direction="row">
                                                         <>
-                                                            {user?.is_admin &&
+                                                            {user?.is_admin && user.assigned_permissions.includes('city_delete')&&
                                                                 <Tooltip title="delete">
                                                                     <IconButton color="error"
-                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                       
 
                                                                         onClick={() => {
                                                                             setChoice({ type: LeadChoiceActions.delete_crm_item })
@@ -152,9 +151,9 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                                                                 </Tooltip>
                                                             }
 
-                                                            {<Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes('city_edit') &&<Tooltip title="edit">
                                                                 <IconButton
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                   
                                                                     onClick={() => {
                                                                         setCity(city)
                                                                         setChoice({ type: LeadChoiceActions.create_or_edit_city })

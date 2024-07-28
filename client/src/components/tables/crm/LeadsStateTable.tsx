@@ -9,7 +9,6 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import CreateOrEditStateDialog from '../../dialogs/crm/CreateOrEditStateDialog'
 import { ICRMState } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
-import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -135,10 +134,10 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                 element={
                                                     <Stack direction="row">
                                                         <>
-                                                            {user?.is_admin &&
+                                                            {user?.is_admin && user.assigned_permissions.includes('states_delete')&&
                                                                 <Tooltip title="delete">
                                                                     <IconButton color="error"
-                                                                        disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                      
                                                                         onClick={() => {
                                                                             setChoice({ type: LeadChoiceActions.delete_crm_item })
                                                                             setState(state)
@@ -149,9 +148,9 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                                     </IconButton>
                                                                 </Tooltip>
                                                             }
-                                                            <Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes('states_edit') &&<Tooltip title="edit">
                                                                 <IconButton
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                  
                                                                     onClick={() => {
                                                                         setState(state)
                                                                         setChoice({ type: LeadChoiceActions.create_or_edit_state })
@@ -160,7 +159,7 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                                 >
                                                                     <Edit />
                                                                 </IconButton>
-                                                            </Tooltip>
+                                                            </Tooltip>}
 
                                                         </>
 

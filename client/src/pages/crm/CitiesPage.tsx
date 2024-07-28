@@ -23,7 +23,6 @@ import { ICRMCity, ICRMState } from '../../types/crm.types'
 import { toTitleCase } from '../../utils/TitleCase'
 import AssignCrmCitiesDialog from '../../components/dialogs/crm/AssignCrmCitiesDialog'
 import FindUknownCrmCitiesDialog from '../../components/dialogs/crm/FindUknownCrmCitiesDialog'
-import { is_authorized } from '../../utils/auth'
 
 
 let template: ICRMCityTemplate[] = [
@@ -163,7 +162,7 @@ export default function CrmCitiesPage() {
           {/* search bar */}
           < Stack direction="row" spacing={2}>
 
-            {<UploadCRMCitiesFromExcelButton disabled={Boolean(LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles))} state={state} />}
+            {LoggedInUser?.assigned_permissions.includes('')&&<UploadCRMCitiesFromExcelButton state={state} />}
             < TextField
               select
               SelectProps={{
@@ -217,15 +216,15 @@ export default function CrmCitiesPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              <MenuItem
+              {LoggedInUser?.assigned_permissions.includes('city_create') &&<MenuItem
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_city })
                   setCity(undefined)
                   setAnchorEl(null)
                 }}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              > Add New</MenuItem>
-              <MenuItem
+              
+              > Add New</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('city_edit') &&<MenuItem
                 onClick={() => {
                   if (selectedCities && selectedCities.length == 0) {
                     alert("select some cities")
@@ -237,9 +236,9 @@ export default function CrmCitiesPage() {
                   }
                   setAnchorEl(null)
                 }}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              > Assign Cities</MenuItem>
-              <MenuItem
+              
+              > Assign Cities</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('city_edit') &&<MenuItem
                 onClick={() => {
                   if (selectedCities && selectedCities.length == 0) {
                     alert("select some cities")
@@ -251,20 +250,20 @@ export default function CrmCitiesPage() {
                   }
                   setAnchorEl(null)
                 }}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              > Remove Cities</MenuItem>
-              <MenuItem
+              
+              > Remove Cities</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('city_edit') &&<MenuItem
                 sx={{ color: 'red' }}
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.find_unknown_cities })
                   setState(undefined)
                   setAnchorEl(null)
                 }}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              > Find Unknown Cities</MenuItem>
-              < MenuItem onClick={handleExcel}
-                disabled={LoggedInUser?.assigned_roles && is_authorized('leads_view', LoggedInUser?.assigned_roles)}
-              >Export To Excel</MenuItem>
+              
+              > Find Unknown Cities</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('city_export') &&< MenuItem onClick={handleExcel}
+              
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditCityDialog />

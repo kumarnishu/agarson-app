@@ -11,7 +11,7 @@ const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadClientSalesButton({ disabled }: { disabled: boolean }) {
+function UploadClientSalesButton() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any[]>, BackendError, FormData>
         (BulkClientSalereportFromExcel)
@@ -56,7 +56,7 @@ function UploadClientSalesButton({ disabled }: { disabled: boolean }) {
                     <>
                         <Button
                             component="label"
-                            disabled={Boolean(disabled)}
+                            
                             variant="contained"
                         >
                             <Upload />

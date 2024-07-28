@@ -1,4 +1,4 @@
-import React, {  useContext } from 'react'
+import  {  useContext } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { UserContext } from './contexts/userContext'
 
@@ -30,7 +30,6 @@ import CrmActivitiesPage from './pages/crm/CrmActivitiesPage.tsx'
 import PartyTargetReportsPage from './pages/erp reports/PartyTargetReportPage.tsx'
 import SaleAnalysisReport from './pages/erp reports/SaleAnalysisReport.tsx'
 import ShoeWeightPage from './pages/production/ShoeWeightPage.tsx'
-import { is_authorized } from './utils/auth.ts'
 import LoginPage from './pages/users/LoginPage.tsx'
 import UsersPage from './pages/users/UsersPage.tsx'
 import UpdateMachineCategoriesPage from './pages/production/UpdateMachineCategoriesPage.tsx'
@@ -52,12 +51,9 @@ import CheckListAdminPage from './pages/checklists/CheckListAdminPage.tsx'
 import TodosPage from './pages/todos/MyTodoPage.tsx'
 import TodosAdminPage from './pages/todos/TodosAdminPage.tsx'
 import EmailVerifyPage from './pages/users/EmailVerifyPage.tsx'
+import LeadsPage from './pages/crm/LeadsPage.tsx'
+import ResetPasswordDialog from './components/dialogs/users/ResetPasswordDialog.tsx'
 
-
-
-// lazy loding
-const ResetPasswordDialog = React.lazy(() => import('./components/dialogs/users/ResetPasswordDialog'))
-const LeadsPage = React.lazy(() => import('./pages/crm/LeadsPage'))
 
 export enum paths {
   //dashboards
@@ -191,7 +187,7 @@ function AppRoutes() {
               
             </Route>}
 
-          {user?.assigned_permissions && is_authorized('production_menu', user?.assigned_permissions) &&
+          { user?.assigned_permissions.includes('production_menu') &&
             < Route path={paths.production_dashboard} element={<ProductionNavBar />}>
               <Route index
                 element={
@@ -238,7 +234,7 @@ function AppRoutes() {
               />
             
             </Route>}
-          {user?.assigned_permissions && is_authorized('erpreport_menu', user?.assigned_permissions) &&
+          { user?.assigned_permissions.includes('erpreport_menu') &&
             < Route path={paths.erp_dashboard} element={<PasswordNavbar />
             }>
               <Route
@@ -297,50 +293,50 @@ function AppRoutes() {
               />
             </Route>}
 
-          {user?.assigned_permissions && is_authorized('crm_menu', user?.assigned_permissions) &&
+          { user?.assigned_permissions.includes('crm_menu') &&
             < Route path={paths.crm_dashboard} element={<CrmNavBar />
             }>
               <Route index element={
                 <CrmDashboard />
               }
               />
-              <Route path={paths.crm_dashboard} index element={
+              <Route path={paths.crm_dashboard}  element={
                 <CrmDashboard />
               }
               />
-              <Route path={paths.leads} index element={
+              <Route path={paths.leads} element={
                 <LeadsPage />
               }
               />
-              <Route path={paths.refers} index element={
+              <Route path={paths.refers}  element={
                 <RefersPage />
               }
               />
-              <Route path={paths.crm_activities} index element={
+              <Route path={paths.crm_activities}  element={
                 <CrmActivitiesPage />
               }
               />
-              <Route path={paths.crm_reminders} index element={
+              <Route path={paths.crm_reminders}  element={
                 < RemindersPage />
               }
               />
-              <Route path={paths.crm_cities} index element={
+              <Route path={paths.crm_cities}  element={
                 <CitiesPage />
               }
               />
-              <Route path={paths.crm_leadsources} index element={
+              <Route path={paths.crm_leadsources}  element={
                 <CrmLeadSourcesPage />
               }
               />
-              <Route path={paths.crm_stages} index element={
+              <Route path={paths.crm_stages}  element={
                 <CrmStagesPage />
               }
               />
-              <Route path={paths.crm_states} index element={
+              <Route path={paths.crm_states}  element={
                 <CrmStatesPage />
               }
               />
-              <Route path={paths.crm_leadtypes} index element={
+              <Route path={paths.crm_leadtypes}  element={
                 <CrmTypesPage />
               }
               />
@@ -348,7 +344,7 @@ function AppRoutes() {
             </Route>}
 
 
-          {user?.assigned_permissions && is_authorized('visits_menu', user?.assigned_permissions) &&
+          { user?.assigned_permissions.includes('visits_menu') &&
             < Route path={paths.visit_dashboard} element={<VisitNavBar />}>
               <Route index
                 element={
@@ -378,7 +374,7 @@ function AppRoutes() {
 
             </Route>}
 
-          {user?.assigned_permissions && is_authorized('template_menu', user?.assigned_permissions) &&
+          { user?.assigned_permissions.includes('template_menu') &&
             < Route path={paths.templates_dashboard} element={<TemplatesNavBar />
             }>
 
@@ -402,7 +398,7 @@ function AppRoutes() {
 
             </Route>}
 
-          {user?.assigned_permissions && is_authorized('checklists_menu', user?.assigned_permissions) &&
+          { user?.assigned_permissions.includes('checklists_menu') &&
             < Route path={paths.checklist_dashboard} element={<CheckListNavBar />
             }>
               <Route
@@ -427,7 +423,7 @@ function AppRoutes() {
             
 
             </Route>}
-          {user?.assigned_permissions && is_authorized('todo_menu', user?.assigned_permissions) &&
+          { user?.assigned_permissions.includes('todo_menu') &&
             < Route path={paths.todo_dashboard} element={<TodoNavBar />
             }>
               <Route

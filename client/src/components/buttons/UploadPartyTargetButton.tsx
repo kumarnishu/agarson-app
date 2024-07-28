@@ -11,7 +11,7 @@ const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadPartyTargetButton({ disabled }: { disabled: boolean }) {
+function UploadPartyTargetButton() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any[]>, BackendError, FormData>
         (BulkPartyTargetFromExcel)
@@ -57,7 +57,7 @@ function UploadPartyTargetButton({ disabled }: { disabled: boolean }) {
                     <>
                         <Button
                             component="label"
-                            disabled={Boolean(disabled)}
+                            
                         >
                             <Upload />
                             <FileInput

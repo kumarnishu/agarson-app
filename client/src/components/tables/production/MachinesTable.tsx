@@ -9,7 +9,6 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import { IMachine } from '../../../types/production.types'
 import UpdateMachineDialog from '../../dialogs/production/UpdateMachineDialog'
 import ToogleMachineDialog from '../../dialogs/production/ToogleMachineDialog'
-import { is_authorized } from '../../../utils/auth'
 
 
 type Props = {
@@ -177,7 +176,7 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                                             <>
                                                                 <Tooltip title="edit">
                                                                     <IconButton
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                 
                                                                         onClick={() => {
                                                                             setMachine(machine)
                                                                             setChoice({ type: ProductionChoiceActions.update_machine })
@@ -190,7 +189,7 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                                                
                                                                     <Tooltip title="Toogle">
                                                                         <IconButton color="primary"
-                                                                    disabled={user?.assigned_roles && is_authorized('leads_view', user?.assigned_roles)}
+                                                                   
                                                                             onClick={() => {
                                                                                 setMachine(machine)
                                                                                 setChoice({ type: ProductionChoiceActions.toogle_machine })

@@ -12,7 +12,7 @@ const FileInput = styled.input`
 background:none;
 color:blue;
 `
-function UploadStatesFromExcelButton({ disabled }: { disabled: boolean }) {
+function UploadStatesFromExcelButton() {
     const { data,mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<any[]>, BackendError, FormData>
         (BulkCreateStateFromExcel)
@@ -62,7 +62,7 @@ function UploadStatesFromExcelButton({ disabled }: { disabled: boolean }) {
                     <>
                         <Button
                             component="label"
-                            disabled={Boolean(disabled)}
+                            
                         >
                             <Upload />
                             <FileInput
