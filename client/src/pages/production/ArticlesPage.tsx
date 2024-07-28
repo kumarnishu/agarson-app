@@ -129,12 +129,12 @@ export default function ArticlePage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {
-              < UploadArticlesFromExcelButton disabled={true} />}
+            
+            {LoggedInUser?.assigned_permissions.includes("article_create")&&< UploadArticlesFromExcelButton  />}
             <FormControlLabel control={<Switch
               defaultChecked={Boolean(hidden)}
               onChange={() => setHidden(!hidden)}
-            />} label="Show hidden" />
+            />} label="Show Inactive" />
 
             <TextField
               fullWidth
@@ -177,14 +177,13 @@ export default function ArticlePage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >{
-              <MenuItem onClick={() => {
+            >  {LoggedInUser?.assigned_permissions.includes("article_create") && <MenuItem onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_article })
                 setAnchorEl(null)
               }}
               >New Article</MenuItem>}
-              <MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>
+              {LoggedInUser?.assigned_permissions.includes("article_export") &&<MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>}
 
 
             </Menu>

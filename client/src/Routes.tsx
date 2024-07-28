@@ -53,6 +53,7 @@ import TodosAdminPage from './pages/todos/TodosAdminPage.tsx'
 import EmailVerifyPage from './pages/users/EmailVerifyPage.tsx'
 import LeadsPage from './pages/crm/LeadsPage.tsx'
 import ResetPasswordDialog from './components/dialogs/users/ResetPasswordDialog.tsx'
+import MachinePage from './pages/production/MachinesPage.tsx'
 
 
 export enum paths {
@@ -219,7 +220,7 @@ function AppRoutes() {
               />
               <Route
                 path={paths.machines} element={
-                   <UpdateMachineCategoriesPage />
+                   <MachinePage />
                 }
               />
               <Route
@@ -234,7 +235,7 @@ function AppRoutes() {
               />
             
             </Route>}
-          { user?.assigned_permissions.includes('erpreport_menu') &&
+          { user?.assigned_permissions.includes('erp_report_menu') &&
             < Route path={paths.erp_dashboard} element={<PasswordNavbar />
             }>
               <Route

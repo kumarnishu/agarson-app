@@ -161,7 +161,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                                 element={
                                                     <Stack direction="row">
                                                         <>
-                                                            <Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes("article_edit") &&<Tooltip title="edit">
                                                                 <IconButton
                                                                   
                                                                     onClick={() => {
@@ -172,9 +172,9 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                                                 >
                                                                     <Edit />
                                                                 </IconButton>
-                                                            </Tooltip>
+                                                            </Tooltip>}
 
-                                                            <Tooltip title="Toogle">
+                                                            {user?.assigned_permissions.includes("article_edit") &&<Tooltip title="Toogle">
                                                                 <IconButton color="primary"
                                                                  
                                                                     onClick={() => {
@@ -185,7 +185,7 @@ function ArticlesTable({ article, selectAll, articles, setSelectAll, setArticle,
                                                                 >
                                                                     <RestartAlt />
                                                                 </IconButton>
-                                                            </Tooltip>
+                                                            </Tooltip>}
                                                         </>
 
                                                     </Stack>}

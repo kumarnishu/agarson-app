@@ -134,14 +134,14 @@ export default function MachinePage() {
         <Stack
           direction="row"
         >
-          {
-            < UploadMachinesFromExcelButton disabled={true} />}
+          {LoggedInUser?.assigned_permissions.includes('')&&
+            < UploadMachinesFromExcelButton  />}
           {/* search bar */}
           < Stack direction="row" spacing={2} >
             <FormControlLabel control={<Switch
               defaultChecked={Boolean(hidden)}
               onChange={() => setHidden(!hidden)}
-            />} label="Show hidden" />
+            />} label="Show Inactive" />
             <TextField
               fullWidth
               size="small"
@@ -183,14 +183,14 @@ export default function MachinePage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >{
-              <MenuItem onClick={() => {
+            >
+              {LoggedInUser?.assigned_permissions.includes('machine_create') && <MenuItem onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_machine })
                 setAnchorEl(null)
               }}
               >New Machine</MenuItem>}
-              <MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>
+              {LoggedInUser?.assigned_permissions.includes('machine_export') &&<MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>}
 
 
             </Menu>

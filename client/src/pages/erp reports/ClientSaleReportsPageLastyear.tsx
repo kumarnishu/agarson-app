@@ -284,10 +284,10 @@ export default function ClientSaleLastYearReportsPage() {
                     Client Sale {new Date().getFullYear() - 1}-{new Date().getFullYear()}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
-                    { <>
-                        <UploadClientSalesLastYearButton disabled={true} />
-                        <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
-                    </>}
+                     <>
+                        {user?.assigned_permissions.includes("last_year_client_sale_report_create") &&<UploadClientSalesLastYearButton  />}
+                        {user?.assigned_permissions.includes("last_year_client_sale_report_create") && <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
+                    </>
                 </Stack>
 
 

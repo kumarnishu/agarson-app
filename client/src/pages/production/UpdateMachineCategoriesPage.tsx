@@ -12,7 +12,7 @@ import { ITemplateCategoryField } from '../../types/template.type'
 
 function UpdateMachineCategoriesPage() {
     const { user } = useContext(UserContext)
-    const { mutate,  isSuccess } = useMutation
+    const { mutate, isSuccess } = useMutation
         <AxiosResponse<ITemplateCategoryField>, BackendError, {
             body: { categories: string[] }
         }>(UpdateMachineCategories)
@@ -54,12 +54,12 @@ function UpdateMachineCategoriesPage() {
 
             {isSuccess && <AlertBar message='categories Saved Successfuly' color="success" />}
 
-            { <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
+            {user?.assigned_permissions.includes('machine_category_create') && <Button size="large" sx={{ position: 'absolute', right: 20, m: 1 }} variant='outlined' color="primary" onClick={() => {
                 if (fields) {
                     mutate({ body: { categories: fields } })
                 }
             }}
-                
+
             >
                 Save
             </Button>}
@@ -73,24 +73,24 @@ function UpdateMachineCategoriesPage() {
                         onChange={(e) => setField(e.target.value)}
                     >
                     </TextField>
-                    <Button disabled={true}  color="inherit" sx={{ borderRadius: 2 }} variant="contained" onClick={() => { handleAdd() }}>
+                    {user?.assigned_permissions.includes('machine_category_edit') && <Button color="inherit" sx={{ borderRadius: 2 }} variant="contained" onClick={() => { handleAdd() }}>
                         +
-                    </Button>
+                    </Button>}
                 </Stack>
                 {fields && fields.map((item) => {
                     return (
                         <Stack key={item} spacing={2} direction="row" alignItems="center">
                             <TextField disabled defaultValue={item}>
                             </TextField>
-                            <Button color="error"
-                                disabled={!user?.is_admin }
+                            {user?.is_admin && user?.assigned_permissions.includes('machine_category_delete') && <Button color="error"
+
                                 sx={{ borderRadius: 2 }} variant="contained" onClick={() => {
                                     let tmps = fields.filter((field) => { return field !== item })
                                     setFields(tmps)
 
                                 }}>
                                 <Delete />
-                            </Button>
+                            </Button>}
                         </Stack>
                     )
                 })}

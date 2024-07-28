@@ -465,8 +465,8 @@ export default function PartyTargetReportPage() {
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                   <>
-                        <UploadPartyTargetButton disabled={true} />
-                        <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
+                        {user?.assigned_permissions.includes("party_target_create") &&<UploadPartyTargetButton />}
+                        {user?.assigned_permissions.includes("party_target_create") && <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
                     </>
                 </Stack>
 

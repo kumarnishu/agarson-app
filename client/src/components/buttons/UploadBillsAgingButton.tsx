@@ -56,7 +56,7 @@ function UploadBillsAgingFromExcelButton() {
                     <>
                         <Button
                             component="label"
-                            
+                            variant="contained"
                         >
                             <Upload />
                             <FileInput

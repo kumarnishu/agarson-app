@@ -175,12 +175,12 @@ export default function ShoeWeightPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              { < MenuItem onClick={() => {
+              {user?.assigned_permissions.includes('shoe_weight_create')&&< MenuItem onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_shoe_weight })
               }}
               >New Weight</MenuItem>}
-              <MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>
+              {user?.assigned_permissions.includes('shoe_weight_export') &&<MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>}
 
 
             </Menu>

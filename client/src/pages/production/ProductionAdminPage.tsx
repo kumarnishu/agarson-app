@@ -265,19 +265,18 @@ export default function ProductionAdminPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              < MenuItem 
+              {user?.assigned_permissions.includes('production_create')&&< MenuItem 
                
               onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_production })
               }}
-              >New Production</MenuItem>
-              < MenuItem 
+              >New Production</MenuItem>}
+              {user?.assigned_permissions.includes('production_export') &&< MenuItem 
                
               onClick={() => {
                 handleExcel()
               }}
-              >Export To Excel</MenuItem>
-
+              >Export To Excel</MenuItem>}
             </Menu >
             <NewProductionDialog/>
           </>

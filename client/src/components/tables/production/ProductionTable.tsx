@@ -196,7 +196,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                                     element={
                                                         <Stack direction="row">
                                                             <>
-                                                                <Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes('production_edit') &&<Tooltip title="edit">
                                                                     <IconButton color="info"
                                                                   
                                                                         onClick={() => {
@@ -206,8 +206,8 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>
-                                                                {user?.is_admin && <Tooltip title="delete">
+                                                                </Tooltip>}
+                                                            {user?.is_admin && user?.assigned_permissions.includes('production_delete') &&<Tooltip title="delete">
                                                                     <IconButton color="error"
                                                                   
                                                                         onClick={() => {

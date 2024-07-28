@@ -56,7 +56,7 @@ function UploadPendingOrdersButton() {
                     <>
                         <Button
                             component="label"
-                            
+                            variant="contained"
                         >
                             <Upload />
                             <FileInput

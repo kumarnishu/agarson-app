@@ -180,8 +180,10 @@ export default function BillsAgingReportPage() {
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                    <>
-                        <UploadBillsAgingFromExcelButton disabled={true} />
-                        <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
+
+                        {user?.assigned_permissions.includes("bills_ageing_create") &&<UploadBillsAgingFromExcelButton  />}
+
+                        {user?.assigned_permissions.includes("bills_ageing_create") &&<Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
                     </>
                 </Stack>
 

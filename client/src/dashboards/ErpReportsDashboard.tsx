@@ -12,13 +12,13 @@ function ErpReportsDashboard() {
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-     tmpfeatures.push({ feature: 'pending orders ', is_visible: true, url: paths.pending_orders })
-     tmpfeatures.push({ feature: 'bills aging report ', is_visible: true, url: paths.bill_aging_report })
-     tmpfeatures.push({ feature: 'Client Sale report ', is_visible: true, url: paths.clients_sale }),
-       tmpfeatures.push({ feature: 'Client Sale Last Year ', is_visible: true, url: paths.clients_sale_lastyear }),
-       tmpfeatures.push({ feature: 'Party Target ', is_visible: true, url: paths.party_target }),
-       tmpfeatures.push({ feature: 'Sale Analysis ', is_visible: true, url: paths.sale_analysis }),
-       tmpfeatures.push({ feature: 'states', is_visible: true, url: paths.states })
+    user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'pending orders ', is_visible: true, url: paths.pending_orders })
+    user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'bills aging report ', is_visible: true, url: paths.bill_aging_report })
+    user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'Client Sale report ', is_visible: true, url: paths.clients_sale }),
+      user?.assigned_permissions.includes('last_year_client_sale_report_view') && tmpfeatures.push({ feature: 'Client Sale Last Year ', is_visible: true, url: paths.clients_sale_lastyear }),
+      user?.assigned_permissions.includes('party_target_view') && tmpfeatures.push({ feature: 'Party Target ', is_visible: true, url: paths.party_target }),
+      user?.assigned_permissions.includes('sale_analysis_view') && tmpfeatures.push({ feature: 'Sale Analysis ', is_visible: true, url: paths.sale_analysis }),
+      user?.assigned_permissions.includes('erp_state_view') && tmpfeatures.push({ feature: 'states', is_visible: true, url: paths.states })
     setFeatures(tmpfeatures)
   }, [])
 

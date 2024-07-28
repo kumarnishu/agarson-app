@@ -174,7 +174,7 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                                     element={
                                                         <Stack direction="row">
                                                             <>
-                                                                <Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes('machine_edit')&& <Tooltip title="edit">
                                                                     <IconButton
                                                                  
                                                                         onClick={() => {
@@ -185,9 +185,9 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                </Tooltip>}
                                                                
-                                                                    <Tooltip title="Toogle">
+                                                            {user?.assigned_permissions.includes('machine_edit') && <Tooltip title="Toogle">
                                                                         <IconButton color="primary"
                                                                    
                                                                             onClick={() => {
@@ -198,7 +198,7 @@ function MachinesTable({ machine, selectAll, machines, setSelectAll, setMachine,
                                                                         >
                                                                             <RestartAlt />
                                                                         </IconButton>
-                                                                    </Tooltip>
+                                                                    </Tooltip>}
                                                             </>
 
                                                         </Stack>}

@@ -55,8 +55,7 @@ export default function ErpStatesPage() {
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { user: LoggedInUser } = useContext(UserContext)
-
+  const { user } = useContext(UserContext)
 
   function handleExcel() {
     setAnchorEl(null)
@@ -165,7 +164,7 @@ export default function ErpStatesPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-             <UploadStatesFromExcelButton disabled={true} />
+            {user?.assigned_permissions.includes("pending_orders_create") &&<UploadStatesFromExcelButton  />}
           </Stack >
           <>
 
@@ -191,14 +190,14 @@ export default function ErpStatesPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              <MenuItem
+              {user?.assigned_permissions.includes("erp_state_create") &&<MenuItem
                 onClick={() => {
                   setChoice({ type: UserChoiceActions.create_or_edit_erpstate })
                   setState(undefined)
                   setAnchorEl(null)
                 }}
-              > Add New</MenuItem>
-              <MenuItem
+              > Add New</MenuItem>}
+              {user?.assigned_permissions.includes("erp_state_edit") &&<MenuItem
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {
                     alert("select some states")
@@ -210,8 +209,8 @@ export default function ErpStatesPage() {
                   }
                   setAnchorEl(null)
                 }}
-              > Assign States</MenuItem>
-              <MenuItem
+              > Assign States</MenuItem>}
+              {user?.assigned_permissions.includes("erp_state_edit") &&<MenuItem
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {
                     alert("select some states")
@@ -223,9 +222,9 @@ export default function ErpStatesPage() {
                   }
                   setAnchorEl(null)
                 }}
-              > Remove States</MenuItem>
-              < MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>
+              > Remove States</MenuItem>}
+              {user?.assigned_permissions.includes("erp_state_export") &&< MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditErpStateDialog />

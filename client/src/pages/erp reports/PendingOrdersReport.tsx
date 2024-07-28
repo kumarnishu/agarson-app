@@ -67,7 +67,7 @@ export default function PendingOrdersReport() {
             {
                 accessorKey: 'account',
                 header: 'Account',
-                size: 350, 
+                size: 350,
                 aggregationFn: 'count',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 filterVariant: 'multi-select',
@@ -76,7 +76,7 @@ export default function PendingOrdersReport() {
             {
                 accessorKey: 'product_family',
                 header: 'Product Family',
-                size: 350, 
+                size: 350,
                 aggregationFn: 'count',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 filterVariant: 'multi-select',
@@ -86,7 +86,7 @@ export default function PendingOrdersReport() {
             {
                 accessorKey: 'article',
                 header: 'Article',
-                size: 350, 
+                size: 350,
                 aggregationFn: 'count',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 filterVariant: 'multi-select',
@@ -384,9 +384,9 @@ export default function PendingOrdersReport() {
                     Pending Orders {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
-                    { <>
-                        <UploadPendingOrdersButton disabled={true} />
-                        <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
+                    {<>
+                        {user?.assigned_permissions.includes("pending_orders_create") &&<UploadPendingOrdersButton />}
+                        {user?.assigned_permissions.includes("pending_orders_create") && <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
                     </>}
                 </Stack>
 

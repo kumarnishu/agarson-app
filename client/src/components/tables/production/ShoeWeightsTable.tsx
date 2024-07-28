@@ -198,7 +198,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                                     element={
                                                         <Stack direction="row">
                                                             <>
-                                                                <Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes('shoe_weight_edit') && <Tooltip title="edit">
                                                                     <IconButton color="info"
                                                                         onClick={() => {
                                                                             setChoice({ type: ProductionChoiceActions.update_shoe_weight })
@@ -207,9 +207,9 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                </Tooltip>}
 
-                                                              <Tooltip title="validate">
+                                                            {user?.assigned_permissions.includes('shoe_weight_edit') &&<Tooltip title="validate">
                                                                     <IconButton color="error"
                                                                         onClick={() => {
                                                                             setChoice({ type: ProductionChoiceActions.validate_weight })
@@ -218,7 +218,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                                                     >
                                                                         <Check />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                </Tooltip>}
                                                             </>
 
                                                         </Stack>}
@@ -231,6 +231,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                         <STableCell>
 
                                             {shoe_weight.shoe_photo && <IconButton
+                                                disabled={!user?.assigned_permissions.includes('shoe_weight_view')}
                                                 onClick={() => {
                                                     setShoeWeight(shoe_weight)
                                                     setChoice({ type: ProductionChoiceActions.view_shoe_photo })

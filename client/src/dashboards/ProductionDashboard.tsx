@@ -12,17 +12,17 @@ function ProductionDashboard() {
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-    tmpfeatures.push({ feature: 'production ', is_visible: true, url: paths.production_admin })
-    tmpfeatures.push({ feature: 'articles', is_visible: true, url: paths.articles })
-    tmpfeatures.push({ feature: 'machines ', is_visible: true, url: paths.machines })
-    tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })
-    tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
-    tmpfeatures.push({ feature: 'shoe weight ', is_visible: true, url: paths.shoe_weight })
+    user?.assigned_permissions.includes('production_view') && tmpfeatures.push({ feature: 'production ', is_visible: true, url: paths.production_admin })
+    user?.assigned_permissions.includes('article_view') && tmpfeatures.push({ feature: 'articles', is_visible: true, url: paths.articles })
+    user?.assigned_permissions.includes('machine_view') && tmpfeatures.push({ feature: 'machines ', is_visible: true, url: paths.machines })
+    user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })
+    user?.assigned_permissions.includes('dye_view') && tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
+    user?.assigned_permissions.includes('shoe_weight_view') && tmpfeatures.push({ feature: 'shoe weight ', is_visible: true, url: paths.shoe_weight })
 
-    tmpfeatures.push({ feature: 'show weight report', is_visible: true, url: paths.articles })
-    tmpfeatures.push({ feature: ' machine production ', is_visible: true, url: paths.machines })
-    tmpfeatures.push({ feature: 'thekedar production ', is_visible: true, url: paths.dyes })
-    tmpfeatures.push({ feature: 'm-category production ', is_visible: true, url: paths.machine_categories })
+    user?.assigned_permissions.includes('shoe_weight_report_view') && tmpfeatures.push({ feature: 'show weight report', is_visible: true, url: paths.articles })
+    user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: ' machine production ', is_visible: true, url: paths.machines })
+    user?.assigned_permissions.includes('thekedar_wise_production_report_view') && tmpfeatures.push({ feature: 'thekedar production ', is_visible: true, url: paths.dyes })
+    user?.assigned_permissions.includes('machine_category_wise_production_report_view') && tmpfeatures.push({ feature: 'm-category production ', is_visible: true, url: paths.machine_categories })
 
     setFeatures(tmpfeatures)
   }, [])

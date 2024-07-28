@@ -136,12 +136,12 @@ export default function DyePage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {
-              < UploadDyesFromExcelButton disabled={true} />}
+            
+            {LoggedInUser?.assigned_permissions.includes('dye_create') && < UploadDyesFromExcelButton  />}
             <FormControlLabel control={<Switch
               defaultChecked={Boolean(hidden)}
               onChange={() => setHidden(!hidden)}
-            />} label="Show hidden" />
+            />} label="Show Inactive" />
             <TextField
               fullWidth
               size="small"
@@ -183,14 +183,14 @@ export default function DyePage() {
                 'aria-labelledby': 'basic-button',
               }}
               sx={{ borderRadius: 2 }}
-            >{
-              <MenuItem onClick={() => {
+            >
+              {LoggedInUser?.assigned_permissions.includes('dye_create') &&  <MenuItem onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_dye })
                 setAnchorEl(null)
               }}
               >New Dye</MenuItem>}
-              <MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>
+              {LoggedInUser?.assigned_permissions.includes('dye_export') && <MenuItem onClick={handleExcel}
+              >Export To Excel</MenuItem>}
 
 
             </Menu>

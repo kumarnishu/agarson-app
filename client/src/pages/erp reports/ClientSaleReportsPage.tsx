@@ -285,8 +285,10 @@ export default function ClientSaleReportsPage() {
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                   <>
-                        <UploadClientSalesButton disabled={true}/>
-                        <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Download</Button>
+
+                        {user?.assigned_permissions.includes("client_sale_report_create") &&<UploadClientSalesButton />}
+
+                        {user?.assigned_permissions.includes("client_sale_report_create") && <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
                     </>
                 </Stack>
 
