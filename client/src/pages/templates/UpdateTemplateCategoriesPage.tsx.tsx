@@ -1,17 +1,15 @@
 import { AxiosResponse } from 'axios'
 import { useMutation, useQuery } from 'react-query'
-import { useContext, useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import { BackendError } from '../..'
 import AlertBar from '../../components/snacks/AlertBar'
-import { UserContext } from '../../contexts/userContext'
 import { GetCategories, UpdateCategories } from '../../services/TemplateServices'
 import { ITemplateCategoryField } from '../../types/template.type'
 
 
 function UpdateTemplateCategoriesPage() {
-    const { user } = useContext(UserContext)
     const { mutate, isLoading, isSuccess } = useMutation
         <AxiosResponse<ITemplateCategoryField>, BackendError, {
             body: { categories: string[] }

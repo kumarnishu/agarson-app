@@ -19,7 +19,7 @@ background:none;
 color:blue;
 `
 
-function UploadFileButton({ disabled, file, name, required, camera, label, isLoading, setFile }: Props) {
+function UploadFileButton({  file, name, required, camera, label, isLoading, setFile }: Props) {
     return (
         <>
             {

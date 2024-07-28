@@ -9,7 +9,6 @@ import EditCheckListDialog from '../../dialogs/checklists/EditCheckListDialog'
 import DeleteCheckListDialog from '../../dialogs/checklists/DeleteCheckListDialog'
 import AddCheckBoxesDialog from '../../dialogs/checklists/AddCheckBoxesDialog'
 import ViewCheckListBoxesDialog from '../../dialogs/checklists/ViewCheckListBoxesDialog'
-import { UserContext } from '../../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 
 
@@ -31,7 +30,6 @@ type Props = {
 function CheckListTable({ checklist, checklists, dates, setCheckList, selectAll, setSelectAll, selectedCheckLists, setSelectedCheckLists }: Props) {
     const [data, setData] = useState<IChecklist[]>(checklists)
     const { setChoice } = useContext(ChoiceContext)
-    const { user } = useContext(UserContext)
     useEffect(() => {
         setData(checklists)
     }, [checklists])

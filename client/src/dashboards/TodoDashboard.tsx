@@ -1,12 +1,10 @@
 import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import AppsIcon from '@mui/icons-material/Apps';
-import { UserContext } from "../contexts/userContext";
 
 function TodoDashboard() {
-    const { user } = useContext(UserContext)
     const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
 
     //process feature and access

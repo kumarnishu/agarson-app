@@ -6,7 +6,6 @@ import moment from 'moment'
 import ToogleAttendenceDialog from '../../dialogs/visit/ToogleAttendenceDialog'
 import { Edit } from '@mui/icons-material'
 import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogContext'
-import { UserContext } from '../../../contexts/userContext'
 import { IVisit } from '../../../types/visit.types'
 
 
@@ -21,7 +20,6 @@ type Props = {
 }
 
 function AttendenceTable({ attendences, attendence, selectedAttendeces, setSelectedAttendeces, setAttendence, selectAll, setSelectAll }: Props) {
-    const { user } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
     const [data, setData] = useState<IVisit[]>(attendences)
     const [text, setText] = useState<string>()

@@ -12,7 +12,6 @@ import { ChoiceContext, TemplateChoiceActions } from '../../contexts/dialogConte
 import NewTemplateDialog from '../../components/dialogs/templates/NewTemplateDialog'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { DownloadFile } from '../../utils/DownloadFile'
-import { UserContext } from '../../contexts/userContext'
 import UpdateTemplateDialog from '../../components/dialogs/templates/UpdateTemplateDialog'
 import ViewTemplateDialog from '../../components/dialogs/templates/ViewTemplateDialog'
 import DeleteTemplateDialog from '../../components/dialogs/templates/DeleteTemplateDialog'
@@ -30,7 +29,6 @@ export default function TemplatesPage() {
   const [filter, setFilter] = useState<string | undefined>()
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { user } = useContext(UserContext)
 
   const { data: categoryData } = useQuery<AxiosResponse<ITemplateCategoryField>, BackendError>("catgeories", GetCategories, {
     staleTime: 10000

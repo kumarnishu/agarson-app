@@ -6,7 +6,6 @@ import { Delete, Edit } from '@mui/icons-material'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import { IUser } from '../../../types/user.types'
 import { ChoiceContext, UserChoiceActions } from '../../../contexts/dialogContext'
-import { UserContext } from '../../../contexts/userContext'
 import CreateOrEditErpStateDialog from '../../dialogs/erp/CreateOrEditErpStateDialog'
 import { IState } from '../../../types/erp_report.types'
 import DeleteErpStateDialog from '../../dialogs/erp/DeleteErpStateDialog'
@@ -25,7 +24,6 @@ type Props = {
 function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
     const [data, setData] = useState<{ state: IState, users: IUser[] }[]>(states)
     const { setChoice } = useContext(ChoiceContext)
-    const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
             setData(states)
