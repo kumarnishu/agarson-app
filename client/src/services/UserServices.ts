@@ -125,6 +125,15 @@ export const AssignUsers = async ({ id, body }: { id: string, body: { ids: strin
   return await apiClient.patch(`assign/users/${id}`, body)
 }
 
+export const AssignPermissionsToOneUser = async ({ body }: {
+  body: {
+    user_id: string,
+    permissions: string[]
+  }
+}) => {
+  return await apiClient.post(`permissions/one`, body)
+}
+
 
 
 export const AssignPermissionsToUsers = async ({ body }: {

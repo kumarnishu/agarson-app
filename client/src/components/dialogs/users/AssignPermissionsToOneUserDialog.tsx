@@ -7,22 +7,60 @@ import { useMutation, useQuery } from 'react-query';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IMenu, IPermission } from '../../../types/user.types';
-import { AssignPermissionsToUsers, GetPermissions } from '../../../services/UserServices';
+import { IMenu, IPermission, IUser } from '../../../types/user.types';
+import { AssignPermissionsToOneUser, GetPermissions } from '../../../services/UserServices';
 
 
-function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
+
+function RenderTree({ permissiontree, permissions, setPermissions }: { permissiontree: any, permissions: string[], setPermissions: React.Dispatch<React.SetStateAction<string[]>> }) {
+    console.log(permissions);
+
+    if (Array.isArray(permissiontree)) {
+        return permissiontree.map((item: IMenu, index: number) => (
+            <div key={index} style={{ paddingTop: 10 }}>
+                <h3 style={{ paddingLeft: item.menues && item.permissions ? '10px' : '25px' }}>{item.label}</h3>
+                {item.permissions && (
+                    <ul>
+                        {item.permissions.map((perm: IPermission, idx: number) => (
+                            <Stack flexDirection={'row'} pl={item.menues && item.permissions ? '10px' : '25px'} key={idx}>
+                                <input type="checkbox"
+                                    defaultChecked={permissions.includes(perm.value)}
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            let perms = permissions;
+                                            if (!perms.includes(perm.value)) {
+                                                perms.push(perm.value);
+                                                setPermissions(perms);
+                                            }
+                                        }
+                                        else {
+                                            let perms = permissions.filter((i) => { return i !== perm.value })
+                                            setPermissions(perms);
+                                        }
+                                    }} /><span style={{ paddingLeft: 5 }}>{perm.label}</span>
+                            </Stack>
+                        ))}
+                    </ul>
+                )}
+                {item.menues && RenderTree({ permissiontree: item.menues, permissions: permissions, setPermissions: setPermissions })}
+            </div>
+        ))
+    }
+    else return null
+}
+
+function AssignPermissionsToOneUserDialog({ user }: { user: IUser }) {
     const [permissiontree, setPermissiontree] = useState<IMenu>()
-    const [permissions, setPermissions] = useState<string[]>([])
+    const [permissions, setPermissions] = useState<string[]>(user.assigned_permissions)
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: {
-                user_ids: string[],
+                user_id: string,
                 permissions: string[]
             }
         }>
-        (AssignPermissionsToUsers, {
+        (AssignPermissionsToOneUser, {
             onSuccess: () => {
                 queryClient.invalidateQueries('users')
             }
@@ -36,43 +74,13 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
             setPermissiontree(Permdata.data);
         }
 
-    }, [isPermSuccess])
+    }, [isPermSuccess, user])
 
-    const renderData = (permissiontree: IMenu) => {
-        if (Array.isArray(permissiontree)) {
-            return permissiontree.map((item, index) => (
-                <div key={index} style={{ paddingTop: 10 }}>
-                    <h3 style={{ paddingLeft: item.menues && item.permissions ? '10px' : '25px' }}>{item.label}</h3>
-                    {item.permissions && (
-                        <ul>
-                            {item.permissions.map((perm: IPermission, idx: number) => (
-                                <Stack flexDirection={'row'} pl={item.menues && item.permissions ? '10px' : '25px'} key={idx}>
-                                    <input type="checkbox"
-                                        defaultChecked={permissions.includes(perm.value)}
-                                        onChange={(e) => {
-                                            if (e.target.checked) {
-                                                let perms = permissions;
-                                                if (!perms.includes(perm.value)) {
-                                                    perms.push(perm.value);
-                                                    setPermissions(perms);
-                                                }
-                                            }
-                                            else {
-                                                let perms = permissions.filter((i) => { return i !== perm.value })
-                                                setPermissions(perms);
-                                            }
-                                        }} /><span style={{ paddingLeft: 5 }}>{perm.label}</span>
-                                </Stack>
-                            ))}
-                        </ul>
-                    )}
-                    {item.menues && renderData(item.menues)}
-                </div>
-            ));
-        }
-        return null;
-    };
     
+
+    useEffect(() => {
+        setPermissions(user.assigned_permissions)
+    }, [user])
 
     useEffect(() => {
         if (isSuccess) {
@@ -82,13 +90,15 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
     return (
         <Dialog
             fullWidth
-            open={choice === UserChoiceActions.bulk_assign_permissions ? true : false}
+            open={choice === UserChoiceActions.assign_permissions ? true : false}
             onClose={() => {
                 setChoice({ type: UserChoiceActions.close_user });
+                setPermissiontree(undefined)
             }}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => {
                 setChoice({ type: UserChoiceActions.close_user });
+                setPermissiontree(undefined)
             }}>
                 <Cancel fontSize='large' />
             </IconButton>
@@ -101,19 +111,19 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
                 >
                     <Typography variant="body1" color="error">
 
-                        {`Warning ! This will update  permissions for ${user_ids.length} Users.`}
+                        {`Warning ! This will update  permissions for ${user.username} `}
 
                     </Typography>
 
 
-                    {permissiontree && renderData(permissiontree)}
+                    {permissiontree && <RenderTree permissiontree={permissiontree} permissions={permissions} setPermissions={setPermissions} />}
 
                     <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color="primary" type="submit"
                         disabled={Boolean(isLoading)}
                         onClick={() => {
                             mutate({
                                 body: {
-                                    user_ids: user_ids,
+                                    user_id: user._id,
                                     permissions: permissions
                                 }
                             })
@@ -139,4 +149,4 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
     )
 }
 
-export default AssignPermissionsToUsersDialog
+export default AssignPermissionsToOneUserDialog

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress, TextField, MenuItem, Select, OutlinedInput, FormControl } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress,  MenuItem, Select,  } from '@mui/material'
 import { useContext, useEffect, useState } from 'react';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
@@ -15,7 +15,7 @@ import { toTitleCase } from '../../../utils/TitleCase';
 
 
 function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser | undefined>> }) {
-    const [users, setUsers] = useState<IUser[]>([])
+    const [users, setUsers] = useState<IUser[]>(user.assigned_users)
     const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers())
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
@@ -97,7 +97,12 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                             fullWidth
                             size='small'
                             {...formik.getFieldProps('ids')}
+                        > <MenuItem
+                            key={0}
+                            value={undefined}
                         >
+                                {toTitleCase(user.username)}
+                            </MenuItem>
 
                             {users.map((user, index) => (
                                 <MenuItem

@@ -15,6 +15,7 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import UsersSTable from '../../components/tables/users/UsersTable'
 import { GetUsers } from '../../services/UserServices'
 import FuzzySearch from 'fuzzy-search'
+import AssignPermissionsToUsersDialog from '../../components/dialogs/users/AssignPermissionsToUsersDialog'
 
 type SelectedData = {
     username?: string,
@@ -90,7 +91,7 @@ export default function UsersPage() {
             setUsers(data.data)
             setPreFilteredData(data.data)
         }
-    }, [isSuccess])
+    }, [isSuccess, data])
 
     useEffect(() => {
         if (filter) {
@@ -187,10 +188,24 @@ export default function UsersPage() {
                                 }}
                                 >New User</MenuItem>}
 
+
+                            <MenuItem onClick={() => {
+                                setChoice({ type: UserChoiceActions.close_user })
+                                if (selectedUsers && selectedUsers.length == 0) {
+                                    alert("select some users")
+                                }
+                                else {
+                                    setChoice({ type: UserChoiceActions.bulk_assign_permissions })
+                                }
+                                setAnchorEl(null)
+                            }}
+                            >Assign Permissions</MenuItem>
+
                             <MenuItem onClick={handleExcel}
                             >Export To Excel</MenuItem>
                         </Menu>
                         <NewUserDialog />
+                        <AssignPermissionsToUsersDialog user_ids={selectedUsers.map((I) => { return I._id })} />
                     </>
                 </Stack>
             </Stack>
@@ -199,7 +214,7 @@ export default function UsersPage() {
 
             {/*  table */}
             {isLoading && <TableSkeleton />}
-            {!isLoading &&
+            {!isLoading && users.length > 0 &&
                 <UsersSTable
                     user={user}
                     selectAll={selectAll}

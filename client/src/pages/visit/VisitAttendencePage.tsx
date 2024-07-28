@@ -18,7 +18,7 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
 import AttendenceTable from '../../components/tables/visits/AttendenceTable'
 
-export default function VisitAdminPage() {
+export default function VisitAttendencePage() {
     const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });

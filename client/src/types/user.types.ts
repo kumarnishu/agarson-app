@@ -34,7 +34,7 @@ export type IUser = {
     show_only_visiting_card_leads: boolean,
     email_verified: Boolean,
     mobile_verified: Boolean,
-    assigned_roles: IRole[],
+    assigned_permissions: string[],
     is_active: Boolean,
     last_login: Date,
     multi_login_token: string | null,

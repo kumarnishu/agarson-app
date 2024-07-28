@@ -1,5 +1,4 @@
-import { LinearProgress } from '@mui/material'
-import React, { Suspense, useContext } from 'react'
+import React, {  useContext } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { UserContext } from './contexts/userContext'
 
@@ -8,7 +7,6 @@ import MainDashBoardPage from './dashboards/MainDashBoardPage.tsx'
 import CrmNavBar from './components/navbar/CrmNavBar.tsx'
 import CrmDashboard from './dashboards/CrmDashboard.tsx'
 import UsersNavBar from './components/navbar/UsersNavBar'
-import UsersDashboard from './dashboards/UsersDashboard.tsx'
 import ProductionNavBar from './components/navbar/ProductionNavBar.tsx'
 import ProductionDashboard from './dashboards/ProductionDashboard.tsx'
 import VisitNavBar from './components/navbar/MyVisitNavBar'
@@ -33,29 +31,27 @@ import PartyTargetReportsPage from './pages/erp reports/PartyTargetReportPage.ts
 import SaleAnalysisReport from './pages/erp reports/SaleAnalysisReport.tsx'
 import ShoeWeightPage from './pages/production/ShoeWeightPage.tsx'
 import { is_authorized } from './utils/auth.ts'
-const StatesPage = React.lazy(() => import('./pages/erp reports/StatesPage.tsx'))
-const PendingOrdersReportPage = React.lazy(() => import('./pages/erp reports/PendingOrdersReport.tsx'))
-const ClientSaleReportPage = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPage.tsx'))
-const ClientSaleReportsPageLastyear = React.lazy(() => import('./pages/erp reports/ClientSaleReportsPageLastyear.tsx'))
-const BillsAgingReportsPage = React.lazy(() => import('./pages/erp reports/BillsAgingReportPage.tsx'))
-const TodoPage = React.lazy(() => import('./pages/todos/MyTodoPage.tsx'))
-const TodosAdminPage = React.lazy(() => import('./pages/todos/TodosAdminPage.tsx'))
-
-const LoginPage = React.lazy(() => import('./pages/users/LoginPage'))
-const EmailVerifyPage = React.lazy(() => import('./pages/users/EmailVerifyPage'))
-const UsersPage = React.lazy(() => import('./pages/users/UsersPage'))
-const TemplatesPage = React.lazy(() => import('./pages/templates/TemplatesPage'))
-const CheckListPage = React.lazy(() => import('./pages/checklists/CheckListPage'))
-const CheckListAdminPage = React.lazy(() => import('./pages/checklists/CheckListAdminPage'))
-const MyVisitPage = React.lazy(() => import('./pages/visit/MyVisitPage'))
-const VisitAdminPage = React.lazy(() => import('./pages/visit/VisitAdminPage'))
-const UpdateTemplateCategoriesPage = React.lazy(() => import('./pages/templates/UpdateTemplateCategoriesPage.tsx'))
-const ProductionAdminPage = React.lazy(() => import('./pages/production/ProductionAdminPage.tsx'))
-const MachinesPage = React.lazy(() => import('./pages/production/MachinesPage.tsx'))
-const DyesPage = React.lazy(() => import('./pages/production/DyesPage.tsx'))
-const ArticlesPage = React.lazy(() => import('./pages/production/ArticlesPage.tsx'))
-const VisitAttendencePage = React.lazy(() => import('./pages/visit/VisitAttendencePage.tsx'))
-const UpdateMachineCategoriesPage = React.lazy(() => import('./pages/production/UpdateMachineCategoriesPage.tsx'))
+import LoginPage from './pages/users/LoginPage.tsx'
+import UsersPage from './pages/users/UsersPage.tsx'
+import UpdateMachineCategoriesPage from './pages/production/UpdateMachineCategoriesPage.tsx'
+import ProductionAdminPage from './pages/production/ProductionAdminPage.tsx'
+import DyePage from './pages/production/DyesPage.tsx'
+import ArticlePage from './pages/production/ArticlesPage.tsx'
+import ErpStatesPage from './pages/erp reports/StatesPage.tsx'
+import PendingOrdersReport from './pages/erp reports/PendingOrdersReport.tsx'
+import ClientSaleReportsPage from './pages/erp reports/ClientSaleReportsPage.tsx'
+import ClientSaleLastYearReportsPage from './pages/erp reports/ClientSaleReportsPageLastyear.tsx'
+import BillsAgingReportPage from './pages/erp reports/BillsAgingReportPage.tsx'
+import MyVisitPage from './pages/visit/MyVisitPage.tsx'
+import VisitAttendencePage from './pages/visit/VisitAttendencePage.tsx'
+import VisitAdminPage from './pages/visit/VisitAdminPage.tsx'
+import TemplatesPage from './pages/templates/TemplatesPage.tsx'
+import UpdateTemplateCategoriesPage from './pages/templates/UpdateTemplateCategoriesPage.tsx.tsx'
+import CheckListPage from './pages/checklists/CheckListPage.tsx'
+import CheckListAdminPage from './pages/checklists/CheckListAdminPage.tsx'
+import TodosPage from './pages/todos/MyTodoPage.tsx'
+import TodosAdminPage from './pages/todos/TodosAdminPage.tsx'
+import EmailVerifyPage from './pages/users/EmailVerifyPage.tsx'
 
 
 
@@ -179,23 +175,23 @@ function AppRoutes() {
             < Route path={paths.user_dashboard} element={<UsersNavBar />}>
               <Route index
                 element={
-                  <UsersDashboard />
+                  <UsersPage />
                 }
               />
               <Route
                 path={paths.user_dashboard} element={
-                  <UsersDashboard />
+                  <UsersPage />
                 }
               />
               <Route
                 path={paths.users} element={
-                  <Suspense fallback={<LinearProgress />}><UsersPage /></Suspense>
+                  <UsersPage />
                 }
               />
               
             </Route>}
 
-          {user?.assigned_roles && is_authorized('production_menu', user?.assigned_roles) &&
+          {user?.assigned_permissions && is_authorized('production_menu', user?.assigned_permissions) &&
             < Route path={paths.production_dashboard} element={<ProductionNavBar />}>
               <Route index
                 element={
@@ -210,39 +206,39 @@ function AppRoutes() {
              
               <Route
                 path={paths.machine_categories} element={
-                  <Suspense fallback={<LinearProgress />}> <UpdateMachineCategoriesPage /></Suspense>
+                   <UpdateMachineCategoriesPage />
                 }
               />
               <Route
                 path={paths.production_admin} element={
-                  <Suspense fallback={<LinearProgress />}> <ProductionAdminPage /></Suspense>
+                   <ProductionAdminPage />
                 }
               />
 
         
               <Route
                 path={paths.shoe_weight} element={
-                  <Suspense fallback={<LinearProgress />}> <ShoeWeightPage /></Suspense>
+                   <ShoeWeightPage />
                 }
               />
               <Route
                 path={paths.machines} element={
-                  <Suspense fallback={<LinearProgress />}> <MachinesPage /></Suspense>
+                   <UpdateMachineCategoriesPage />
                 }
               />
               <Route
                 path={paths.dyes} element={
-                  <Suspense fallback={<LinearProgress />}> <DyesPage /></Suspense>
+                   <DyePage />
                 }
               />
               <Route
                 path={paths.articles} element={
-                  <Suspense fallback={<LinearProgress />}> <ArticlesPage /></Suspense>
+                   <ArticlePage />
                 }
               />
             
             </Route>}
-          {user?.assigned_roles && is_authorized('erpreport_menu', user?.assigned_roles) &&
+          {user?.assigned_permissions && is_authorized('erpreport_menu', user?.assigned_permissions) &&
             < Route path={paths.erp_dashboard} element={<PasswordNavbar />
             }>
               <Route
@@ -256,52 +252,52 @@ function AppRoutes() {
               />
               <Route
                 path={paths.states} element={
-                  <Suspense fallback={<LinearProgress />}><StatesPage /></Suspense>
+                  <ErpStatesPage />
                 }
               />
               <Route path={paths.pending_orders} element={
-                <Suspense fallback={<LinearProgress />}>
-                  < PendingOrdersReportPage />
-                </Suspense>
+                
+                  < PendingOrdersReport />
+                
               }
               /> <Route path={paths.clients_sale} element={
-                <Suspense fallback={<LinearProgress />}>
-                  < ClientSaleReportPage />
-                </Suspense>
+                
+                  < ClientSaleReportsPage />
+                
 
               }
               />
               <Route path={paths.clients_sale_lastyear} element={
-                <Suspense fallback={<LinearProgress />}>
-                  < ClientSaleReportsPageLastyear />
-                </Suspense>
+                
+                  < ClientSaleLastYearReportsPage />
+                
 
               }
               />
               <Route path={paths.bill_aging_report} element={
-                <Suspense fallback={<LinearProgress />}>
-                  < BillsAgingReportsPage />
-                </Suspense>
+                
+                  < BillsAgingReportPage />
+                
 
               }
               />
               <Route path={paths.party_target} element={
-                <Suspense fallback={<LinearProgress />}>
+                
                   < PartyTargetReportsPage />
-                </Suspense>
+                
 
               }
               />
               <Route path={paths.sale_analysis} element={
-                <Suspense fallback={<LinearProgress />}>
+                
                   < SaleAnalysisReport />
-                </Suspense>
+                
 
               }
               />
             </Route>}
 
-          {user?.assigned_roles && is_authorized('crm_menu', user?.assigned_roles) &&
+          {user?.assigned_permissions && is_authorized('crm_menu', user?.assigned_permissions) &&
             < Route path={paths.crm_dashboard} element={<CrmNavBar />
             }>
               <Route index element={
@@ -309,50 +305,50 @@ function AppRoutes() {
               }
               />
               <Route path={paths.crm_dashboard} index element={
-                <Suspense fallback={<LinearProgress />}><CrmDashboard /></Suspense>
+                <CrmDashboard />
               }
               />
               <Route path={paths.leads} index element={
-                <Suspense fallback={<LinearProgress />}><LeadsPage /></Suspense>
+                <LeadsPage />
               }
               />
               <Route path={paths.refers} index element={
-                <Suspense fallback={<LinearProgress />}><RefersPage /></Suspense>
+                <RefersPage />
               }
               />
               <Route path={paths.crm_activities} index element={
-                <Suspense fallback={<LinearProgress />}><CrmActivitiesPage /></Suspense>
+                <CrmActivitiesPage />
               }
               />
               <Route path={paths.crm_reminders} index element={
-                <Suspense fallback={<LinearProgress />}>< RemindersPage /></Suspense>
+                < RemindersPage />
               }
               />
               <Route path={paths.crm_cities} index element={
-                <Suspense fallback={<LinearProgress />}><CitiesPage /></Suspense>
+                <CitiesPage />
               }
               />
               <Route path={paths.crm_leadsources} index element={
-                <Suspense fallback={<LinearProgress />}><CrmLeadSourcesPage /></Suspense>
+                <CrmLeadSourcesPage />
               }
               />
               <Route path={paths.crm_stages} index element={
-                <Suspense fallback={<LinearProgress />}><CrmStagesPage /></Suspense>
+                <CrmStagesPage />
               }
               />
               <Route path={paths.crm_states} index element={
-                <Suspense fallback={<LinearProgress />}><CrmStatesPage /></Suspense>
+                <CrmStatesPage />
               }
               />
               <Route path={paths.crm_leadtypes} index element={
-                <Suspense fallback={<LinearProgress />}><CrmTypesPage /></Suspense>
+                <CrmTypesPage />
               }
               />
 
             </Route>}
 
 
-          {user?.assigned_roles && is_authorized('visits_menu', user?.assigned_roles) &&
+          {user?.assigned_permissions && is_authorized('visits_menu', user?.assigned_permissions) &&
             < Route path={paths.visit_dashboard} element={<VisitNavBar />}>
               <Route index
                 element={
@@ -366,23 +362,23 @@ function AppRoutes() {
               />
               <Route
                 path={paths.visit} element={
-                  <Suspense fallback={<LinearProgress />}> <MyVisitPage /></Suspense>
+                   <MyVisitPage />
                 }
               />
               <Route
                 path={paths.visit_attendence} element={
-                  <Suspense fallback={<LinearProgress />}> <VisitAttendencePage /></Suspense>
+                  <VisitAttendencePage />
                 }
               />
               <Route
                 path={paths.visit_admin} element={
-                  <Suspense fallback={<LinearProgress />}> <VisitAdminPage /></Suspense>
+                   <VisitAdminPage />
                 }
               />
 
             </Route>}
 
-          {user?.assigned_roles && is_authorized('template_menu', user?.assigned_roles) &&
+          {user?.assigned_permissions && is_authorized('template_menu', user?.assigned_permissions) &&
             < Route path={paths.templates_dashboard} element={<TemplatesNavBar />
             }>
 
@@ -396,17 +392,17 @@ function AppRoutes() {
               }
               />
               <Route path={paths.templates} element={
-                <Suspense fallback={<LinearProgress />}> < TemplatesPage /></Suspense>
+                 < TemplatesPage />
               }
               />
               <Route path={paths.template_categories} element={
-                <Suspense fallback={<LinearProgress />}> < UpdateTemplateCategoriesPage /></Suspense>
+                 < UpdateTemplateCategoriesPage />
               }
               />
 
             </Route>}
 
-          {user?.assigned_roles && is_authorized('checklists_menu', user?.assigned_roles) &&
+          {user?.assigned_permissions && is_authorized('checklists_menu', user?.assigned_permissions) &&
             < Route path={paths.checklist_dashboard} element={<CheckListNavBar />
             }>
               <Route
@@ -419,19 +415,19 @@ function AppRoutes() {
               }
               />
               <Route path={paths.checklists} element={
-                <Suspense fallback={<LinearProgress />}>< CheckListPage /></Suspense>
+                < CheckListPage />
               }
               />
 
               <Route
                 path={paths.checklist_admin_page} element={
-                  <Suspense fallback={<LinearProgress />}> <CheckListAdminPage /></Suspense>
+                   <CheckListAdminPage />
                 }
               />
             
 
             </Route>}
-          {user?.assigned_roles && is_authorized('todo_menu', user?.assigned_roles) &&
+          {user?.assigned_permissions && is_authorized('todo_menu', user?.assigned_permissions) &&
             < Route path={paths.todo_dashboard} element={<TodoNavBar />
             }>
               <Route
@@ -444,13 +440,13 @@ function AppRoutes() {
               }
               />
               <Route path={paths.todo} element={
-                <Suspense fallback={<LinearProgress />}>< TodoPage /></Suspense>
+                < TodosPage />
               }
               />
 
               <Route
                 path={paths.todo_admin} element={
-                  <Suspense fallback={<LinearProgress />}> <TodosAdminPage /></Suspense>
+                   <TodosAdminPage />
                 }
               />
             

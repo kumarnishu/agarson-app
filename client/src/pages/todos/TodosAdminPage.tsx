@@ -45,7 +45,7 @@ const template: ITodoTemplate[] = [
 ]
 
 
-export default function TodosPage() {
+export default function TodosAdminPage() {
     const [users, setUsers] = useState<IUser[]>([])
     const [type, setType] = useState<string>('visible')
     const [stopped, setStopped] = useState(false)

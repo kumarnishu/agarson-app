@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 
-import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword, AssignUsers, AllowMultiLogin, BlockMultiLogin, ToogleShowvisitingcard, AssignPermissionsToUsers, GetAllPermissions } from "../controllers/user.controller";
+import { BlockUser, GetProfile, GetUsers, Login, Logout, MakeAdmin, NewUser, RemoveAdmin, ResetPassword, SendPasswordResetMail, SendVerifyEmail, SignUp, UnBlockUser, UpdateProfile, UpdateUser, VerifyEmail, updatePassword, resetUserPassword, AssignUsers, AllowMultiLogin, BlockMultiLogin, ToogleShowvisitingcard, AssignPermissionsToUsers, GetAllPermissions, AssignPermissionsToOneUser } from "../controllers/user.controller";
 import { isAdmin, isAuthenticatedUser, isProfileAuthenticated, } from "../middlewares/auth.middleware";
 
 export const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1024 * 1024 * 50 } })
@@ -32,6 +32,6 @@ router.patch("/email/verify/:token", VerifyEmail)
 router.post("/password/reset", SendPasswordResetMail)
 router.patch("/password/reset/:token", ResetPassword)
 router.route("/permissions").get(isAuthenticatedUser, GetAllPermissions).post(isAuthenticatedUser, AssignPermissionsToUsers)
-
+router.route("/permissions/one").post(isAuthenticatedUser, AssignPermissionsToOneUser)
 
 export default router;

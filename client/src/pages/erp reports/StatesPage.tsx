@@ -41,7 +41,7 @@ let template: IErpStateTemplate[] = [
   }
 ]
 
-export default function CrmStatesPage() {
+export default function ErpStatesPage() {
   const [flag, setFlag] = useState(1);
   const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("erp_states", GetStates)
   const [state, setState] = useState<{ state: IState, users: IUser[] }>()

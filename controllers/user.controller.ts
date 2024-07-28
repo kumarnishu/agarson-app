@@ -14,14 +14,14 @@ export const GetUsers = async (req: Request, res: Response, next: NextFunction) 
     let show_active = true;
     if (active == "false")
         show_active = false;
-    let users = await User.find({ is_active: show_active }).populate("assigned_roles").populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+    let users = await User.find({ is_active: show_active }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     return res.status(200).json(users)
 }
 
 
 export const GetProfile = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.user?._id
-    const user = await User.findById(id).populate("assigned_roles").populate("created_by").populate("updated_by").populate('assigned_users')
+    const user = await User.findById(id).populate("created_by").populate("updated_by").populate('assigned_users')
     res.status(200).json({ user: user, token: req.cookies.accessToken })
 }
 
@@ -150,18 +150,18 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
 
     let user = await User.findOne({
         username: String(username).toLowerCase().trim(),
-    }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by").populate("assigned_roles")
+    }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
 
     if (!user) {
         user = await User.findOne({
             mobile: String(username).toLowerCase().trim(),
-        }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by").populate("assigned_roles")
+        }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
 
     }
     if (!user) {
         user = await User.findOne({
             email: String(username).toLowerCase().trim(),
-        }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by").populate("assigned_roles")
+        }).select("+password").populate("created_by").populate('assigned_users').populate("updated_by")
         if (user)
             if (!user.email_verified)
                 return res.status(403).json({ message: "please verify email id before login" })
@@ -638,28 +638,47 @@ export const VerifyEmail = async (req: Request, res: Response, next: NextFunctio
         message: `congrats ${user.email} verification successful`
     });
 }
-
-
-export const AssignPermissionsToUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const { permissions, users_ids } = req.body as {
+export const AssignPermissionsToOneUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { permissions, user_id } = req.body as {
         permissions: string[],
-        users_ids: string[]
+        user_id: string
     }
+
     if (permissions && permissions.length === 0)
         return res.status(400).json({ message: "please select one permission " })
-    if (users_ids && users_ids.length === 0)
-        return res.status(400).json({ message: "please select one user" })
-    for (let k = 0; k < users_ids.length; k++) {
-        const user = await User.findById(users_ids[k])
-        if (user) {
-            user.assigned_permissions = permissions
-            await user.save();
-        }
+    if (!user_id)
+        return res.status(400).json({ message: "please select  user" })
 
+    let user = await User.findById(user_id)
+    if (user) {
+        user.assigned_permissions = permissions
+        await user.save();
     }
 
     return res.status(200).json({ message: "successfull" })
 }
+
+export const AssignPermissionsToUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const { permissions, user_ids } = req.body as {
+        permissions: string[],
+        user_ids: string[]
+    }
+
+    if (permissions && permissions.length === 0)
+        return res.status(400).json({ message: "please select one permission " })
+    if (user_ids && user_ids.length === 0)
+        return res.status(400).json({ message: "please select one user" })
+    user_ids.forEach(async (i) => {
+        let user = await User.findById(i)
+        if (user) {
+            user.assigned_permissions = permissions
+            await user.save();
+        }
+    })
+
+    return res.status(200).json({ message: "successfull" })
+}
+
 
 export const GetAllPermissions = async (req: Request, res: Response, next: NextFunction) => {
     let permissions: IMenu[] = [];
