@@ -117,11 +117,20 @@ export const CreateShoeWeight = async ({ body }: { body: FormData }) => {
     return await apiClient.post(`weights`, body);
 }
 
-export const UpdateShoeWeight = async ({ id, body }: { id: string, body: FormData }) => {
+export const UpdateShoeWeight1 = async ({ id, body }: { id: string, body: FormData }) => {
     return await apiClient.put(`weights/${id}`, body);
+}
+export const UpdateShoeWeight2 = async ({ id, body }: { id: string, body: FormData }) => {
+    return await apiClient.put(`weights2/${id}`, body);
+}
+export const UpdateShoeWeight3 = async ({ id, body }: { id: string, body: FormData }) => {
+    return await apiClient.put(`weights3/${id}`, body);
 }
 export const ValidateShoeWeight = async (id: string) => {
     return await apiClient.patch(`weights/validate/${id}`);
+}
+export const DeleteShoeWeight = async (id: string) => {
+    return await apiClient.delete(`weights/${id}`);
 }
 export const GetShoeWeights = async () => {
     return await apiClient.get(`weights`);

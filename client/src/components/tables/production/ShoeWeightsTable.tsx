@@ -7,11 +7,12 @@ import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow }
 import { IShoeWeight } from '../../../types/production.types'
 import ViewShoeWeightPhotoDialog from '../../dialogs/production/ViewShoeWeightPhotoDialog'
 import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext'
-import { Check, Edit, Photo } from '@mui/icons-material'
+import { Check, Delete, Edit, Photo } from '@mui/icons-material'
 import ValidateShoeWeightDialog from '../../dialogs/production/ValidateShoeWeightDialog'
 import UpdateShoeWeightDialog from '../../dialogs/production/UpdateShoeWeightDialog'
 import moment from 'moment'
 import { months } from '../../../utils/months'
+import DeleteShoeWeightDialog from '../../dialogs/production/DeleteShoeWeightDialog'
 
 
 
@@ -79,7 +80,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                             <STableHeadCell
                             >
 
-                                Shoe Photo
+                                Photos
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -120,15 +121,45 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                             <STableHeadCell
                             >
 
-                                Shoe Weight
+                                Shoe Weight1
                             </STableHeadCell>
                           
+                            <STableHeadCell
+                            >
+
+                               Time1
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Shoe Weight2
+                            </STableHeadCell>
+
+                            <STableHeadCell
+                            >
+
+                               Time2
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Shoe Weight3
+                            </STableHeadCell>
+
+                            <STableHeadCell
+                            >
+
+                                Time3
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
                                 Created At
 
                             </STableHeadCell>
+
                             <STableHeadCell
                             >
 
@@ -198,12 +229,28 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                                     element={
                                                         <Stack direction="row">
                                                             <>
+                                                            {user?.is_admin && user.assigned_permissions.includes('shoe_weight_delete') &&
+                                                                <Tooltip title="delete">
+                                                                    <IconButton color="error"
+
+                                                                        onClick={() => {
+                                                                            setChoice({ type: ProductionChoiceActions.delete_weight })
+                                                                            setShoeWeight(shoe_weight)
+
+                                                                        }}
+                                                                    >
+                                                                        <Delete />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            }
+
                                                             {user?.assigned_permissions.includes('shoe_weight_edit') && <Tooltip title="edit">
                                                                     <IconButton color="info"
                                                                         onClick={() => {
                                                                             setChoice({ type: ProductionChoiceActions.update_shoe_weight })
                                                                             setShoeWeight(shoe_weight)
                                                                         }}
+                                                                    disabled={Boolean(shoe_weight.shoe_weight1 && shoe_weight.shoe_weight2 && shoe_weight.shoe_weight3)}
                                                                     >
                                                                         <Edit />
                                                                     </IconButton>
@@ -230,7 +277,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                         </STableCell>
                                         <STableCell>
 
-                                            {shoe_weight.shoe_photo && <IconButton
+                                            {shoe_weight.shoe_photo1 && <IconButton
                                                 disabled={!user?.assigned_permissions.includes('shoe_weight_view')}
                                                 onClick={() => {
                                                     setShoeWeight(shoe_weight)
@@ -239,7 +286,24 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
 
                                             ><Photo />
                                             </IconButton>}
+                                            {shoe_weight.shoe_photo2 && <IconButton
+                                                disabled={!user?.assigned_permissions.includes('shoe_weight_view')}
+                                                onClick={() => {
+                                                    setShoeWeight(shoe_weight)
+                                                    setChoice({ type: ProductionChoiceActions.view_shoe_photo2 })
+                                                }}
 
+                                            ><Photo />
+                                            </IconButton>}
+                                            {shoe_weight.shoe_photo3 && <IconButton
+                                                disabled={!user?.assigned_permissions.includes('shoe_weight_view')}
+                                                onClick={() => {
+                                                    setShoeWeight(shoe_weight)
+                                                    setChoice({ type: ProductionChoiceActions.view_shoe_photo3 })
+                                                }}
+
+                                            ><Photo />
+                                            </IconButton>}
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.machine.name}
@@ -260,7 +324,22 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                             {shoe_weight.dye&&shoe_weight.dye.stdshoe_weight}
                                         </STableCell>
                                         <STableCell>
-                                            {shoe_weight.shoe_weight}
+                                            {shoe_weight.shoe_weight1}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.weighttime1 && new Date(shoe_weight.weighttime1).toLocaleTimeString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.shoe_weight2}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.weighttime2 && new Date(shoe_weight.weighttime2).toLocaleTimeString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.shoe_weight3}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.weighttime3 && new Date(shoe_weight.weighttime3).toLocaleTimeString()}
                                         </STableCell>
                                         
                                         <STableCell>
@@ -287,6 +366,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
             {shoe_weight && <>
                 <ViewShoeWeightPhotoDialog weight={shoe_weight} />
                 <ValidateShoeWeightDialog weight={shoe_weight} />
+                <DeleteShoeWeightDialog weight={shoe_weight} />
                 <UpdateShoeWeightDialog shoe_weight={shoe_weight} />
             </>
             }

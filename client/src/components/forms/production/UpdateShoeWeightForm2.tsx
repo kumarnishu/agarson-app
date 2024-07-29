@@ -9,7 +9,7 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
-import { GetArticles, GetDyes, GetMachines, UpdateShoeWeight1 } from '../../../services/ProductionServices';
+import { GetArticles, GetDyes, GetMachines,  UpdateShoeWeight2 } from '../../../services/ProductionServices';
 import { IArticle, IDye, IMachine, IShoeWeight } from '../../../types/production.types';
 import { months } from '../../../utils/months';
 import UploadFileButton from '../../buttons/UploadFileButton';
@@ -24,7 +24,7 @@ type TformData = {
     st_weight:number
 }
 
-function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
+function UpdateShoeWeightForm2({ shoe_weight }: { shoe_weight: IShoeWeight }) {
     const { data: dyes } = useQuery<AxiosResponse<IDye[]>, BackendError>("dyes", async () => GetDyes())
     const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
     const [file, setFile] = useState<File>()
@@ -34,7 +34,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
             id: string,
             body: FormData
         }>
-        (UpdateShoeWeight1, {
+        (UpdateShoeWeight2, {
             onSuccess: () => {
                 queryClient.invalidateQueries('shoe_weights')
             }
@@ -48,7 +48,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
             dye: shoe_weight.dye._id,
             month: shoe_weight.month,
             article: shoe_weight.article._id,
-            weight: shoe_weight.shoe_weight1,
+            weight: shoe_weight.shoe_weight2,
             st_weight: shoe_weight.dye&& shoe_weight.dye.stdshoe_weight
         },
         validationSchema: Yup.object({
@@ -79,7 +79,6 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
             else {
                 alert("Upload a file")
             }
-
         }
     });
 
@@ -116,6 +115,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         error={
                             formik.touched.machine && formik.errors.machine ? true : false
                         }
+                        disabled
                         id="machine"
                         helperText={
                             formik.touched.machine && formik.errors.machine ? formik.errors.machine : ""
@@ -143,6 +143,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         SelectProps={{
                             native: true,
                         }}
+                        disabled
                         error={
                             formik.touched.dye && formik.errors.dye ? true : false
                         }
@@ -176,6 +177,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         error={
                             formik.touched.article && formik.errors.article ? true : false
                         }
+                        
                         id="article"
                         helperText={
                             formik.touched.article && formik.errors.article ? formik.errors.article : ""
@@ -242,6 +244,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         }
                         {...formik.getFieldProps('month')}
                         required
+                        disabled
                         label="Clock In"
                         fullWidth
                     >
@@ -276,4 +279,4 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
     )
 }
 
-export default UpdateShoeWeightForm
+export default UpdateShoeWeightForm2

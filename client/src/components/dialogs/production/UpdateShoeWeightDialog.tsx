@@ -4,6 +4,8 @@ import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialog
 import { Cancel } from '@mui/icons-material';
 import { IShoeWeight } from '../../../types/production.types';
 import UpdateShoeWeightForm from '../../forms/production/UpdateShoeWeightForm';
+import UpdateShoeWeightForm2 from '../../forms/production/UpdateShoeWeightForm2';
+import UpdateShoeWeightForm3 from '../../forms/production/UpdateShoeWeightForm3';
 
 
 function UpdateShoeWeightDialog({ shoe_weight }: { shoe_weight: IShoeWeight }) {
@@ -16,11 +18,18 @@ function UpdateShoeWeightDialog({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-                Update Shoe Weight
+
+                {!shoe_weight.shoe_weight1 && !shoe_weight.shoe_weight2 && !shoe_weight.shoe_weight3 && ' Update Shoe Weight 1'}
+                {shoe_weight.shoe_weight1 && !shoe_weight.shoe_weight2 && !shoe_weight.shoe_weight3 && ' Update Shoe Weight 2'}
+                {shoe_weight.shoe_weight1 && shoe_weight.shoe_weight2 && !shoe_weight.shoe_weight3 && ' Update Shoe Weight 3'}
             </DialogTitle>
 
             <DialogContent>
-                <UpdateShoeWeightForm shoe_weight={shoe_weight} />
+                {!shoe_weight.shoe_weight1 && !shoe_weight.shoe_weight2 && !shoe_weight.shoe_weight3 && <UpdateShoeWeightForm shoe_weight={shoe_weight} />}
+                {shoe_weight.shoe_weight1 && !shoe_weight.shoe_weight2 && !shoe_weight.shoe_weight3 && <UpdateShoeWeightForm2 shoe_weight={shoe_weight} />}
+                {shoe_weight.shoe_weight1 && shoe_weight.shoe_weight2 && !shoe_weight.shoe_weight3 && <UpdateShoeWeightForm3 shoe_weight={shoe_weight} />}
+
+
             </DialogContent>
             <Stack
                 direction="column"

@@ -8,6 +8,7 @@ import { IUser, User } from "../models/users/user.model"
 import { MachineCategory } from "../models/production/category.machine.model"
 import { IShoeWeight, ShoeWeight } from "../models/production/shoe.weight.model"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
+import { destroyFile } from "../utils/destroyFile.util"
 
 //get
 export const GetMachineCategories = async (req: Request, res: Response, next: NextFunction) => {
@@ -35,8 +36,8 @@ export const GetArticles = async (req: Request, res: Response, next: NextFunctio
 }
 
 export const GetDyeById = async (req: Request, res: Response, next: NextFunction) => {
-    let id=req.params.id;
-    let dye=await Dye.findById(id).populate('article');
+    let id = req.params.id;
+    let dye = await Dye.findById(id).populate('article');
     return res.status(200).json(dye)
 }
 export const GetDyes = async (req: Request, res: Response, next: NextFunction) => {
@@ -193,7 +194,7 @@ export const BulkUploadDye = async (req: Request, res: Response, next: NextFunct
             let st_weight: number | null = dye.st_weight
             newDyes.push({ dye_number: dye_number, size: size, article: article, st_weight: st_weight })
         })
-      
+
         for (let i = 0; i < newDyes.length; i++) {
             let mac = newDyes[i];
             let dye = await Dye.findOne({ dye_number: mac.dye_number })
@@ -207,7 +208,7 @@ export const BulkUploadDye = async (req: Request, res: Response, next: NextFunct
                 })
             }
         }
-     
+
     }
     return res.status(200).json({ message: "dyes updated" });
 }
@@ -624,19 +625,19 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
     let shoe_weight = new ShoeWeight({
-        machine: m1, dye: d1, article: art1, shoe_weight: weight, month: month
+        machine: m1, dye: d1, article: art1, shoe_weight1: weight, month: month
     })
     if (req.file) {
         console.log(req.file.mimetype)
         const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
-        const storageLocation = `visits/media`;
+        const storageLocation = `weights/media`;
         if (!allowedFiles.includes(req.file.mimetype))
             return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-        if (req.file.size > 10 * 1024 * 1024)
+        if (req.file.size > 20 * 1024 * 1024)
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
         const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
         if (doc)
-            shoe_weight.shoe_photo = doc
+            shoe_weight.shoe_photo1 = doc
         else {
             return res.status(500).json({ message: "file uploading error" })
         }
@@ -645,11 +646,11 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     shoe_weight.updated_at = new Date()
     shoe_weight.created_by = req.user
     shoe_weight.updated_by = req.user
+    shoe_weight.weighttime1 = new Date()
     await shoe_weight.save()
     return res.status(201).json(shoe_weight)
 }
-
-export const UpdateShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
+export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body) as {
         machine: string,
         dye: string,
@@ -657,27 +658,152 @@ export const UpdateShoeWeight = async (req: Request, res: Response, next: NextFu
         weight: number,
         month: number
     }
-    let { machine, dye, article, weight,month } = body
+    let { machine, dye, article, weight, month } = body
 
-    if (!machine || !dye || !article || !weight)
+    if (!machine || !dye || !article || !weight || !month)
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)
     if (!shoe_weight)
         return res.status(404).json({ message: "shoe weight not found" })
+
     let m1 = await Machine.findById(machine)
     let d1 = await Dye.findById(dye)
     let art1 = await Article.findById(article)
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
-
-    shoe_weight.machine = m1    
+    if (shoe_weight.shoe_photo1 && shoe_weight.shoe_photo1._id)
+        await destroyFile(shoe_weight.shoe_photo1._id)
+    if (req.file) {
+        console.log(req.file.mimetype)
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
+        const storageLocation = `weights/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 20 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            shoe_weight.shoe_photo1 = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+  
+    shoe_weight.machine = m1
     shoe_weight.dye = d1
     shoe_weight.month = month
     shoe_weight.article = art1
-    shoe_weight.shoe_weight = weight
+    shoe_weight.shoe_weight1 = weight
+    shoe_weight.created_at = new Date()
+    shoe_weight.weighttime1 = new Date()
+    shoe_weight.updated_at = new Date()
+    shoe_weight.created_by = req.user
+    shoe_weight.updated_by = req.user
+    await shoe_weight.save()
+    return res.status(200).json(shoe_weight)
+}
+export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body) as {
+        machine: string,
+        dye: string,
+        article: string,
+        weight: number,
+        month: number
+    }
+    let { machine, dye, article, weight, month } = body
+
+    if (!machine || !dye || !article || !weight || !month)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    const id = req.params.id
+    let shoe_weight = await ShoeWeight.findById(id)
+    if (!shoe_weight)
+        return res.status(404).json({ message: "shoe weight not found" })
+
+    let m1 = await Machine.findById(machine)
+    let d1 = await Dye.findById(dye)
+    let art1 = await Article.findById(article)
+    if (!m1 || !d1 || !art1)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    if (shoe_weight.shoe_photo2 && shoe_weight.shoe_photo2._id)
+        await destroyFile(shoe_weight.shoe_photo2._id)
+    if (req.file) {
+        console.log(req.file.mimetype)
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
+        const storageLocation = `weights/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 20 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            shoe_weight.shoe_photo2 = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+  
+    shoe_weight.machine = m1
+    shoe_weight.dye = d1
+    shoe_weight.month = month
+    shoe_weight.article = art1
+    shoe_weight.shoe_weight2 = weight
+    shoe_weight.weighttime2 = new Date()
     shoe_weight.created_at = new Date()
     shoe_weight.updated_at = new Date()
+    shoe_weight.created_by = req.user
+    shoe_weight.updated_by = req.user
+    await shoe_weight.save()
+    return res.status(200).json(shoe_weight)
+}
+export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body) as {
+        machine: string,
+        dye: string,
+        article: string,
+        weight: number,
+        month: number
+    }
+    let { machine, dye, article, weight, month } = body
+
+    if (!machine || !dye || !article || !weight || !month)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    const id = req.params.id
+    let shoe_weight = await ShoeWeight.findById(id)
+    if (!shoe_weight)
+        return res.status(404).json({ message: "shoe weight not found" })
+
+    let m1 = await Machine.findById(machine)
+    let d1 = await Dye.findById(dye)
+    let art1 = await Article.findById(article)
+    if (!m1 || !d1 || !art1)
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    if (shoe_weight.shoe_photo3 && shoe_weight.shoe_photo3._id)
+        await destroyFile(shoe_weight.shoe_photo3._id)
+    if (req.file) {
+        console.log(req.file.mimetype)
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
+        const storageLocation = `weights/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 20 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            shoe_weight.shoe_photo3 = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+  
+    shoe_weight.machine = m1
+    shoe_weight.dye = d1
+    shoe_weight.month = month
+    shoe_weight.article = art1
+    shoe_weight.shoe_weight3 = weight
+    shoe_weight.created_at = new Date()
+    shoe_weight.updated_at = new Date()
+    shoe_weight.weighttime3 = new Date()
     shoe_weight.created_by = req.user
     shoe_weight.updated_by = req.user
     await shoe_weight.save()
@@ -693,5 +819,22 @@ export const ValidateShoeWeight = async (req: Request, res: Response, next: Next
     shoe_weight.updated_at = new Date()
     shoe_weight.updated_by = req.user
     await shoe_weight.save()
+    return res.status(200).json(shoe_weight)
+}
+export const DeleteShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let shoe_weight = await ShoeWeight.findById(id)
+    if (!shoe_weight)
+        return res.status(404).json({ message: "shoe weight not found" })
+    shoe_weight.is_validated = true
+    shoe_weight.updated_at = new Date()
+    shoe_weight.updated_by = req.user
+    if (shoe_weight.shoe_photo1 && shoe_weight.shoe_photo1._id)
+        await destroyFile(shoe_weight.shoe_photo1._id)
+    if (shoe_weight.shoe_photo2 && shoe_weight.shoe_photo2._id)
+        await destroyFile(shoe_weight.shoe_photo2._id)
+    if (shoe_weight.shoe_photo3 && shoe_weight.shoe_photo3._id)
+        await destroyFile(shoe_weight.shoe_photo3._id)
+    await shoe_weight.remove()
     return res.status(200).json(shoe_weight)
 }

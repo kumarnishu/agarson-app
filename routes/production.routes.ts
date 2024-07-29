@@ -1,7 +1,7 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
-import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateMachine, CreateProduction, CreateShoeWeight, DeleteProduction, GetArticles, GetDyeById, GetDyes, GetMachineCategories, GetMachines, GetMyTodayProductions, GetProductions, GetShoeWeights, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight, ValidateShoeWeight } from "../controllers/production.controller";
+import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateMachine, CreateProduction, CreateShoeWeight, DeleteProduction, DeleteShoeWeight, GetArticles, GetDyeById, GetDyes, GetMachineCategories, GetMachines, GetMyTodayProductions, GetProductions, GetShoeWeights, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, ValidateShoeWeight } from "../controllers/production.controller";
 
 const router = express.Router()
 
@@ -30,7 +30,9 @@ router.route("/machine/categories").get(isAuthenticatedUser, GetMachineCategorie
 router.route("/machine/categories").put(isAuthenticatedUser, UpdateMachineCategories)
 router.route("/weights").get(isAuthenticatedUser, GetShoeWeights)
     .post(isAuthenticatedUser, upload.single('media'), CreateShoeWeight)
-router.put("/weights/:id", isAuthenticatedUser, upload.none(), UpdateShoeWeight)
-router.patch("/weights/validate/:id", isAuthenticatedUser, ValidateShoeWeight)
+router.route("/weights/:id").put(isAuthenticatedUser, upload.single('media'), UpdateShoeWeight1).delete(isAuthenticatedUser, DeleteShoeWeight),
+    router.put("/weights2/:id", isAuthenticatedUser, upload.single('media'), UpdateShoeWeight2),
+    router.put("/weights3/:id", isAuthenticatedUser, upload.single('media'), UpdateShoeWeight3),
+    router.patch("/weights/validate/:id", isAuthenticatedUser, ValidateShoeWeight)
 
 export default router

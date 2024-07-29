@@ -1820,7 +1820,7 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
         const storageLocation = `crm/media`;
         if (!allowedFiles.includes(req.file.mimetype))
             return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-        if (req.file.size > 10 * 1024 * 1024)
+        if (req.file.size > 20 * 1024 * 1024)
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
         const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
         if (doc)
@@ -1918,7 +1918,7 @@ export const UpdateLead = async (req: Request, res: Response, next: NextFunction
         const storageLocation = `crm/media`;
         if (!allowedFiles.includes(req.file.mimetype))
             return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-        if (req.file.size > 10 * 1024 * 1024)
+        if (req.file.size > 20 * 1024 * 1024)
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
         const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
         if (doc) {

@@ -13,15 +13,23 @@ export type IDye = {
     created_by: IUser,
     updated_by: IUser
 }
+
 export type IShoeWeight = {
     _id: string,
     machine: IMachine,
-    month:number,
     dye: IDye,
     article: IArticle,
     is_validated: boolean,
-    shoe_weight: number,
-    shoe_photo: Asset,
+    month: number,
+    shoe_weight1: number,
+    shoe_photo1: Asset,
+    weighttime1: Date,
+    weighttime2: Date,
+    weighttime3: Date,
+    shoe_weight2: number,
+    shoe_photo2: Asset,
+    shoe_weight3: number,
+    shoe_photo3: Asset,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

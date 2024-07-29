@@ -123,7 +123,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                             if (!file.size) //file not provided
                                 return true
                             else
-                                return Boolean(file.size <= 10 * 1024 * 1024)
+                                return Boolean(file.size <= 20 * 1024 * 1024)
                         return true
                     }
                 )
