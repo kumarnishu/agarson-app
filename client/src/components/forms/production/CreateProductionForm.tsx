@@ -29,6 +29,7 @@ function NewProductionForm() {
             production: number,
             production_hours: number,
             big_repair: number,
+            upper_damage:number,
             small_repair: number,
             date: string
         }>
@@ -49,6 +50,7 @@ function NewProductionForm() {
             manpower: 0,
             production: 0,
             big_repair: 0,
+            upper_damage: 0,
             small_repair: 0,
             date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
         },
@@ -67,6 +69,8 @@ function NewProductionForm() {
                 .required('Required field'),
             big_repair: Yup.number()
                 .required('Required field'),
+            upper_damage: Yup.number()
+                .required('Required field'),
             small_repair: Yup.number()
                 .required('Required field'),
             date: Yup.string().required('Required field'),
@@ -76,6 +80,7 @@ function NewProductionForm() {
                 machine: values.machine,
                 thekedar: values.thekedar,
                 articles: values.articles,
+                upper_damage: values.upper_damage,
                 production_hours: values.production_hours,
                 manpower: values.manpower,
                 production: values.production,
@@ -235,6 +240,20 @@ function NewProductionForm() {
                         formik.touched.big_repair && formik.errors.big_repair ? formik.errors.big_repair : ""
                     }
                     {...formik.getFieldProps('big_repair')}
+                />
+                <TextField
+                    required
+                    fullWidth
+                    type="number"
+                    error={
+                        formik.touched.upper_damage && formik.errors.upper_damage ? true : false
+                    }
+                    id="upper_damage"
+                    label="Upper Damage"
+                    helperText={
+                        formik.touched.upper_damage && formik.errors.upper_damage ? formik.errors.upper_damage : ""
+                    }
+                    {...formik.getFieldProps('upper_damage')}
                 />
                 <TextField
                     required

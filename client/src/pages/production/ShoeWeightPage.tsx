@@ -73,7 +73,7 @@ export default function ShoeWeightPage() {
     let data: SelectedData[] = []
     selectedShoeWeights.map((shoe_weight) => {
       return data.push({
-        shoe_weight: shoe_weight.shoe_weight,
+        shoe_weight: shoe_weight.shoe_weight1,
         machine: shoe_weight.machine.name,
         article: shoe_weight.article.name,
         size: shoe_weight.dye.size,
@@ -96,7 +96,7 @@ export default function ShoeWeightPage() {
   useEffect(() => {
     if (filter) {
       if (shoe_weights) {
-        const searcher = new FuzzySearch(shoe_weights, ["shoe_weight.article.name", "shoe_weight.machine.name","shoe_weight.month"], {
+        const searcher = new FuzzySearch(shoe_weights, ["article.name", "machine.name","month"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);

@@ -77,6 +77,7 @@ export type IProduction = {
     manpower: number,
     production: number,
     big_repair: number,
+    upper_damage: number,
     small_repair: number,
     date: Date,
     production_hours: number,

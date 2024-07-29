@@ -44,7 +44,7 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
                 <div key={index} style={{ paddingTop: 10 }}>
                     <h3 style={{ paddingLeft: item.menues && item.permissions ? '10px' : '25px' }}>{item.label}</h3>
                     {item.permissions && (
-                        <ul>
+                        <Stack flexDirection={'row'} gap={1} paddingTop={2}>
                             {item.permissions.map((perm: IPermission, idx: number) => (
                                 <Stack flexDirection={'row'} pl={item.menues && item.permissions ? '10px' : '25px'} key={idx}>
                                     <input type="checkbox"
@@ -64,7 +64,7 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
                                         }} /><span style={{ paddingLeft: 5 }}>{perm.label}</span>
                                 </Stack>
                             ))}
-                        </ul>
+                        </Stack>
                     )}
                     {item.menues && renderData(item.menues)}
                 </div>
@@ -82,6 +82,7 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
     return (
         <Dialog
             fullWidth
+            fullScreen
             open={choice === UserChoiceActions.bulk_assign_permissions ? true : false}
             onClose={() => {
                 setChoice({ type: UserChoiceActions.close_user });
@@ -95,7 +96,7 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
                 Assign Permissions
             </DialogTitle>
-            <DialogContent>
+            <DialogContent sx={{alignItems:'center'}}>
                 <Stack
                     gap={2}
                 >

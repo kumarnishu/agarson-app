@@ -119,7 +119,11 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
 
                                 Big Repair
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                                Upper Damage
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -254,6 +258,9 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
                                         </STableCell>
                                         <STableCell>
                                             {production.big_repair}
+                                        </STableCell>
+                                        <STableCell>
+                                            {production.upper_damage}
                                         </STableCell>
                                         <STableCell>
                                             {production.created_at && new Date(production.created_at).toLocaleString()}

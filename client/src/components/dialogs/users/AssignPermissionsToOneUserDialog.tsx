@@ -17,10 +17,10 @@ function RenderTree({ permissiontree, permissions, setPermissions }: { permissio
 
     if (Array.isArray(permissiontree)) {
         return permissiontree.map((item: IMenu, index: number) => (
-            <div key={index} style={{ paddingTop: 10 }}>
+            <div key={index} style={{ padding: 10 }}>
                 <h3 style={{ paddingLeft: item.menues && item.permissions ? '10px' : '25px' }}>{item.label}</h3>
                 {item.permissions && (
-                    <ul>
+                    <Stack flexDirection={'row'}  paddingTop={2}>
                         {item.permissions.map((perm: IPermission, idx: number) => (
                             <Stack flexDirection={'row'} pl={item.menues && item.permissions ? '10px' : '25px'} key={idx}>
                                 <input type="checkbox"
@@ -40,7 +40,7 @@ function RenderTree({ permissiontree, permissions, setPermissions }: { permissio
                                     }} /><span style={{ paddingLeft: 5 }}>{perm.label}</span>
                             </Stack>
                         ))}
-                    </ul>
+                    </Stack>
                 )}
                 {item.menues && RenderTree({ permissiontree: item.menues, permissions: permissions, setPermissions: setPermissions })}
             </div>
@@ -90,6 +90,7 @@ function AssignPermissionsToOneUserDialog({ user }: { user: IUser }) {
     return (
         <Dialog
             fullWidth
+            fullScreen
             open={choice === UserChoiceActions.assign_permissions ? true : false}
             onClose={() => {
                 setChoice({ type: UserChoiceActions.close_user });

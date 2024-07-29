@@ -431,7 +431,8 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
         big_repair,
         production_hours,
         small_repair,
-        date
+        date,
+        upper_damage
     } = req.body as {
         machine: string,
         date: string,
@@ -441,7 +442,8 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
         manpower: number,
         production: number,
         big_repair: number,
-        small_repair: number
+        small_repair: number,
+        upper_damage:number
     }
     let previous_date = new Date()
     let day = previous_date.getDate() - 3
@@ -485,8 +487,8 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
         manpower: manpower,
         production: production,
         big_repair: big_repair,
-        small_repair: small_repair
-    })
+        small_repair: small_repair,
+        upper_damage:  upper_damage     })
 
     new_prouction.date = production_date
     new_prouction.created_at = new Date()
@@ -509,6 +511,7 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
         production,
         big_repair,
         small_repair,
+        upper_damage,
         date
     } = req.body as {
         machine: string,
@@ -519,6 +522,7 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
         manpower: number,
         production: number,
         big_repair: number,
+            upper_damage:number,
         small_repair: number
     }
     let previous_date = new Date()
@@ -556,6 +560,7 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
             production_hours: production_hours,
             big_repair: big_repair,
             small_repair: small_repair,
+            upper_damage: upper_damage,
             created_at: new Date(),
             updated_at: new Date(),
             updated_by: req.user

@@ -11,6 +11,7 @@ export type IProduction = {
     manpower: number,
     production: number,
     big_repair: number,
+    upper_damage: number,
     small_repair: number,
     date: Date,
     production_hours: number,
@@ -44,6 +45,7 @@ const ProductionSchema = new mongoose.Schema<IProduction, mongoose.Model<IProduc
     manpower: Number,
     production: Number,
     big_repair: Number,
+    upper_damage: Number,
     small_repair: Number,
     created_at: {
         type: Date,
