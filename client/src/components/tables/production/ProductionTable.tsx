@@ -34,7 +34,7 @@ function ProductionsTable({ production, selectAll, productions, setSelectAll, se
         <>
             <Box sx={{
                 overflow: "auto",
-                height: '65vh'
+                height: '70vh'
             }}>
                 <STable
                 >
