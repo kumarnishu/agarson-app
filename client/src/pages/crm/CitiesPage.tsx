@@ -1,4 +1,3 @@
-
 import { Search } from '@mui/icons-material'
 import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
@@ -162,7 +161,7 @@ export default function CrmCitiesPage() {
           {/* search bar */}
           < Stack direction="row" spacing={2}>
 
-            {LoggedInUser?.assigned_permissions.includes('')&&<UploadCRMCitiesFromExcelButton state={state} />}
+            {LoggedInUser?.assigned_permissions.includes('') && <UploadCRMCitiesFromExcelButton state={state} />}
             < TextField
               select
               SelectProps={{
@@ -216,15 +215,15 @@ export default function CrmCitiesPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {LoggedInUser?.assigned_permissions.includes('city_create') &&<MenuItem
+              {LoggedInUser?.assigned_permissions.includes('city_create') && <MenuItem
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_city })
                   setCity(undefined)
                   setAnchorEl(null)
                 }}
-              
+
               > Add New</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('city_edit') &&<MenuItem
+              {LoggedInUser?.assigned_permissions.includes('city_edit') && <MenuItem
                 onClick={() => {
                   if (selectedCities && selectedCities.length == 0) {
                     alert("select some cities")
@@ -236,9 +235,9 @@ export default function CrmCitiesPage() {
                   }
                   setAnchorEl(null)
                 }}
-              
+
               > Assign Cities</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('city_edit') &&<MenuItem
+              {LoggedInUser?.assigned_permissions.includes('city_edit') && <MenuItem
                 onClick={() => {
                   if (selectedCities && selectedCities.length == 0) {
                     alert("select some cities")
@@ -250,19 +249,19 @@ export default function CrmCitiesPage() {
                   }
                   setAnchorEl(null)
                 }}
-              
+
               > Remove Cities</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('city_edit') &&<MenuItem
+              {LoggedInUser?.assigned_permissions.includes('city_edit') && <MenuItem
                 sx={{ color: 'red' }}
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.find_unknown_cities })
                   setState(undefined)
                   setAnchorEl(null)
                 }}
-              
+
               > Find Unknown Cities</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('city_export') &&< MenuItem onClick={handleExcel}
-              
+              {LoggedInUser?.assigned_permissions.includes('city_export') && < MenuItem onClick={handleExcel}
+
               >Export To Excel</MenuItem>}
 
             </Menu >
@@ -274,7 +273,7 @@ export default function CrmCitiesPage() {
       </Stack >
       {/*  table */}
       {isLoading && <TableSkeleton />}
-      {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
+      {!isLoading && MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
       {!isLoading && MemoData.length > 0 &&
         <LeadsCityTable
           city={city}

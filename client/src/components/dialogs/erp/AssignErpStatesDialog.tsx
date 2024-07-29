@@ -18,7 +18,7 @@ import { AssignErpStatesToUsers } from '../../../services/ErpServices';
 function AssignErpCrmStatesDialog({ states, flag }: { states: ICRMState[], flag: number }) {
 
     const [users, setUsers] = useState<IUser[]>([])
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({hidden:'false'}))
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission:'erp_report_menu'}))
 
 
 

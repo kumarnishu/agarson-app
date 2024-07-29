@@ -164,7 +164,7 @@ export default function ErpStatesPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {user?.assigned_permissions.includes("pending_orders_create") &&<UploadStatesFromExcelButton  />}
+            {user?.assigned_permissions.includes("pending_orders_create") && <UploadStatesFromExcelButton />}
           </Stack >
           <>
 
@@ -190,14 +190,14 @@ export default function ErpStatesPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {user?.assigned_permissions.includes("erp_state_create") &&<MenuItem
+              {user?.assigned_permissions.includes("erp_state_create") && <MenuItem
                 onClick={() => {
                   setChoice({ type: UserChoiceActions.create_or_edit_erpstate })
                   setState(undefined)
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>}
-              {user?.assigned_permissions.includes("erp_state_edit") &&<MenuItem
+              {user?.assigned_permissions.includes("erp_state_edit") && <MenuItem
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {
                     alert("select some states")
@@ -210,7 +210,7 @@ export default function ErpStatesPage() {
                   setAnchorEl(null)
                 }}
               > Assign States</MenuItem>}
-              {user?.assigned_permissions.includes("erp_state_edit") &&<MenuItem
+              {user?.assigned_permissions.includes("erp_state_edit") && <MenuItem
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {
                     alert("select some states")
@@ -223,7 +223,7 @@ export default function ErpStatesPage() {
                   setAnchorEl(null)
                 }}
               > Remove States</MenuItem>}
-              {user?.assigned_permissions.includes("erp_state_export") &&< MenuItem onClick={handleExcel}
+              {user?.assigned_permissions.includes("erp_state_export") && < MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>}
 
             </Menu >
@@ -234,7 +234,7 @@ export default function ErpStatesPage() {
       </Stack >
       {/*  table */}
       {isLoading && <TableSkeleton />}
-      {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
+      {!isLoading && MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
       {!isLoading && MemoData.length > 0 &&
         <ErpStateTable
           state={state}
