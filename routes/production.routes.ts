@@ -1,7 +1,7 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
-import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateMachine, CreateProduction, CreateShoeWeight, DeleteProduction, DeleteShoeWeight, GetArticles, GetDyeById, GetDyes, GetMachineCategories, GetMachines, GetMyTodayProductions, GetProductions, GetShoeWeights, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, ValidateShoeWeight } from "../controllers/production.controller";
+import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateMachine, CreateProduction, CreateShoeWeight, DeleteProduction, DeleteShoeWeight, GetArticles, GetDyeById, GetDyes, GetMachineCategories, GetMachines, GetMyTodayProductions, GetMyTodayShoeWeights, GetProductions, GetShoeWeights, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, ValidateShoeWeight } from "../controllers/production.controller";
 
 const router = express.Router()
 
@@ -28,6 +28,7 @@ router.route("/productions/:id").put(isAuthenticatedUser, UpdateProduction)
     .delete(isAuthenticatedUser, DeleteProduction)
 router.route("/machine/categories").get(isAuthenticatedUser, GetMachineCategories)
 router.route("/machine/categories").put(isAuthenticatedUser, UpdateMachineCategories)
+router.route("/weights/me").get(isAuthenticatedUser, GetMyTodayShoeWeights),
 router.route("/weights").get(isAuthenticatedUser, GetShoeWeights)
     .post(isAuthenticatedUser, upload.single('media'), CreateShoeWeight)
 router.route("/weights/:id").put(isAuthenticatedUser, upload.single('media'), UpdateShoeWeight1).delete(isAuthenticatedUser, DeleteShoeWeight),

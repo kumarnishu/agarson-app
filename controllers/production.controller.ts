@@ -443,7 +443,7 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
         production: number,
         big_repair: number,
         small_repair: number,
-        upper_damage:number
+        upper_damage: number
     }
     let previous_date = new Date()
     let day = previous_date.getDate() - 3
@@ -488,7 +488,8 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
         production: production,
         big_repair: big_repair,
         small_repair: small_repair,
-        upper_damage:  upper_damage     })
+        upper_damage: upper_damage
+    })
 
     new_prouction.date = production_date
     new_prouction.created_at = new Date()
@@ -522,7 +523,7 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
         manpower: number,
         production: number,
         big_repair: number,
-            upper_damage:number,
+        upper_damage: number,
         small_repair: number
     }
     let previous_date = new Date()
@@ -596,10 +597,11 @@ export const UpdateMachineCategories = async (req: Request, res: Response, next:
 export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
     let dt1 = new Date()
     dt1.setDate(new Date().getDate() - 1)
-    let dye = req.query.dye
+    dt1.setHours(0)
+    dt1.setMinutes(0)
     let weights: IShoeWeight[] = []
-    if (dye) {
-        weights = await ShoeWeight.find({ created_at: { $gt: dt1 }, dye: dye, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+    if (req.user.is_admin) {
+        weights = await ShoeWeight.find({ created_at: { $gte: dt1 } }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
     }
     else {
         weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
@@ -694,7 +696,7 @@ export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextF
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-  
+
     shoe_weight.machine = m1
     shoe_weight.dye = d1
     shoe_weight.month = month
@@ -747,7 +749,7 @@ export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextF
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-  
+
     shoe_weight.machine = m1
     shoe_weight.dye = d1
     shoe_weight.month = month
@@ -800,7 +802,7 @@ export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextF
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-  
+
     shoe_weight.machine = m1
     shoe_weight.dye = d1
     shoe_weight.month = month
