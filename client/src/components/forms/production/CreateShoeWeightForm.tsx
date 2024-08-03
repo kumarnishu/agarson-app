@@ -1,4 +1,4 @@
-import { Button,  Stack, TextField } from '@mui/material';
+import { Button, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
@@ -21,13 +21,13 @@ type TformData = {
     article: string,
     month: number,
     weight: number,
-    st_weight:number
+    st_weight: number
 }
 
 function CreateShoeWeightForm() {
     const [file, setFile] = useState<File>()
-    const[dyeid,setDyeid]=useState<string>('');
-    const { data: dyedata, refetch: refetchDye } = useQuery<AxiosResponse<IDye>, BackendError>(["dye", dyeid], async () => GetDyeById(dyeid),{enabled:false})
+    const [dyeid, setDyeid] = useState<string>('');
+    const { data: dyedata, refetch: refetchDye } = useQuery<AxiosResponse<IDye>, BackendError>(["dye", dyeid], async () => GetDyeById(dyeid), { enabled: false })
     const { data: dyes } = useQuery<AxiosResponse<IDye[]>, BackendError>("dyes", async () => GetDyes())
     const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
     const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
@@ -50,7 +50,7 @@ function CreateShoeWeightForm() {
             article: "",
             month: new Date().getMonth(),
             weight: 0,
-            st_weight:0
+            st_weight: 0
         },
         validationSchema: Yup.object({
             weight: Yup.number().required("required weight"),
@@ -93,16 +93,20 @@ function CreateShoeWeightForm() {
             setDyeid(formik.values.dye)
     }, [formik.values.dye])
 
-    useEffect(()=>{
+    useEffect(() => {
         refetchDye()
-    },[dyeid])
+    }, [dyeid])
 
-useEffect(()=>{
-    if (dyedata && dyedata.data.article){
-        formik.setFieldValue('article', dyedata.data.article._id);
-        formik.setFieldValue('st_weight', dyedata.data.stdshoe_weight);
-}
-}, [dyedata])
+    useEffect(() => {
+        if (dyedata && dyedata.data.article) {
+            formik.setFieldValue('article', dyedata.data.article._id);
+            formik.setFieldValue('st_weight', dyedata.data.stdshoe_weight);
+        }
+        else {
+            formik.setFieldValue('article', undefined);
+            formik.setFieldValue('st_weight', undefined);
+        }
+    }, [dyedata])
     useEffect(() => {
         if (isSuccess) {
             setTimeout(() => {
@@ -124,7 +128,7 @@ useEffect(()=>{
                     {/* machine */}
                     < TextField
                         select
-                       
+
                         SelectProps={{
                             native: true,
                         }}
@@ -183,7 +187,7 @@ useEffect(()=>{
                     {/* articles */}
                     < TextField
                         select
-                       
+
                         SelectProps={{
                             native: true,
                         }}
@@ -204,14 +208,14 @@ useEffect(()=>{
                         </option>
                         {
                             articles && articles.data && articles.data.map((article, index) => {
-                                return (<option key={index} value={article&&article._id}>
+                                return (<option key={index} value={article && article._id}>
                                     {article.display_name}
                                 </option>)
                             })
                         }
                     </TextField>
                     {/* dyes */}
-              
+
                     <TextField
                         variant="outlined"
                         fullWidth
