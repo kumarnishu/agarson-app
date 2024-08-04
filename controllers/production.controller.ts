@@ -667,7 +667,7 @@ export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextF
     }
     let { machine, dye, article, weight, month } = body
 
-    if (!machine || !dye || !article || !weight || !month)
+    if (!machine || !dye || !article || !weight )
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)
@@ -718,9 +718,10 @@ export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextF
         weight: number,
         month: number
     }
+    console.log(body)
     let { machine, dye, article, weight, month } = body
 
-    if (!machine || !dye || !article || !weight || !month)
+    if (!machine || !dye || !article || !weight )
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)
@@ -731,7 +732,7 @@ export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextF
     let d1 = await Dye.findById(dye)
     let art1 = await Article.findById(article)
     if (!m1 || !d1 || !art1)
-        return res.status(400).json({ message: "please fill all reqired fields" })
+        return res.status(400).json({ message: "please fill  reqired fields" })
     if (shoe_weight.shoe_photo2 && shoe_weight.shoe_photo2._id)
         await destroyFile(shoe_weight.shoe_photo2._id)
     if (req.file) {
@@ -773,7 +774,7 @@ export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextF
     }
     let { machine, dye, article, weight, month } = body
 
-    if (!machine || !dye || !article || !weight || !month)
+    if (!machine || !dye || !article || !weight )
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)

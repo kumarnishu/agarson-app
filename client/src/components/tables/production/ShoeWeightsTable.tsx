@@ -312,13 +312,13 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                             {months.find(x => x.month == shoe_weight.month) && months.find(x => x.month == shoe_weight.month)?.label}
                                         </STableCell>
                                         <STableCell>
-                                            {shoe_weight.dye.dye_number}
+                                            {shoe_weight.dye&&shoe_weight.dye.dye_number}
                                         </STableCell>
                                         <STableCell>
-                                            {shoe_weight.article.name}
+                                            {shoe_weight.article&&shoe_weight.article.name}
                                         </STableCell>
                                         <STableCell>
-                                            {shoe_weight.dye.size}
+                                            {shoe_weight.dye&&shoe_weight.dye.size}
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.dye&&shoe_weight.dye.stdshoe_weight}

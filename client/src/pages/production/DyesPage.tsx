@@ -77,7 +77,7 @@ export default function DyePage() {
       return data.push({
         dye_number: dye.dye_number,
         size: dye.size,
-        article: dye.article.display_name,
+        article: dye.article&& dye.article.display_name,
         st_weight: dye.stdshoe_weight,
         is_active: dye.active ? true : false,
         created_at: new Date(dye.created_at).toLocaleDateString(),
