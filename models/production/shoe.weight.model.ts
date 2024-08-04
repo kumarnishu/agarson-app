@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import { Asset, IUser } from "../users/user.model"
 import { IArticle } from "./article.model"
-import { IDye } from "./dye.mode"
+import { IDye } from "./dye.model"
 import { IMachine } from "./machine.model"
 
 export type IShoeWeight = {

@@ -1,7 +1,7 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
-import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateMachine, CreateProduction, CreateShoeWeight, DeleteProduction, DeleteShoeWeight, GetArticles, GetDyeById, GetDyes, GetMachineCategories, GetMachines, GetMyTodayProductions, GetMyTodayShoeWeights, GetProductions, GetShoeWeights, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, ValidateShoeWeight } from "../controllers/production.controller";
+import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateDyeLocation, CreateDyeStatus, CreateMachine, CreateProduction, CreateShoeWeight, DeleteDyeLocation, DeleteDyeStatus, DeleteProduction, DeleteShoeWeight, GetAllDyeLocations, GetArticles, GetDyeById, GetDyes, GetDyeStatus, GetMachineCategories, GetMachines, GetMyTodayDyeStatus, GetMyTodayProductions, GetMyTodayShoeWeights, GetProductions, GetShoeWeights, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateDyeLocation, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, ValidateShoeWeight } from "../controllers/production.controller";
 
 const router = express.Router()
 
@@ -29,11 +29,15 @@ router.route("/productions/:id").put(isAuthenticatedUser, UpdateProduction)
 router.route("/machine/categories").get(isAuthenticatedUser, GetMachineCategories)
 router.route("/machine/categories").put(isAuthenticatedUser, UpdateMachineCategories)
 router.route("/weights/me").get(isAuthenticatedUser, GetMyTodayShoeWeights),
-router.route("/weights").get(isAuthenticatedUser, GetShoeWeights)
-    .post(isAuthenticatedUser, upload.single('media'), CreateShoeWeight)
+    router.route("/weights").get(isAuthenticatedUser, GetShoeWeights)
+        .post(isAuthenticatedUser, upload.single('media'), CreateShoeWeight)
 router.route("/weights/:id").put(isAuthenticatedUser, upload.single('media'), UpdateShoeWeight1).delete(isAuthenticatedUser, DeleteShoeWeight),
     router.put("/weights2/:id", isAuthenticatedUser, upload.single('media'), UpdateShoeWeight2),
     router.put("/weights3/:id", isAuthenticatedUser, upload.single('media'), UpdateShoeWeight3),
     router.patch("/weights/validate/:id", isAuthenticatedUser, ValidateShoeWeight)
-
+router.route("/dye/status/me").get(isAuthenticatedUser, GetMyTodayDyeStatus),
+    router.route("/dye/status").get(isAuthenticatedUser, GetDyeStatus).post(isAuthenticatedUser, CreateDyeStatus)
+    router.route("/dye/status/:id").delete(isAuthenticatedUser, DeleteDyeStatus),
+    router.route("/dye/locations").get(isAuthenticatedUser, GetAllDyeLocations).post(isAuthenticatedUser, CreateDyeLocation),
+    router.route("/dye/locations/:id").put(isAuthenticatedUser, UpdateDyeLocation).delete(isAuthenticatedUser, DeleteDyeLocation)
 export default router

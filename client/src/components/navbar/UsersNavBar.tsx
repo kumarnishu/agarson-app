@@ -3,8 +3,7 @@ import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
 import { Box, Paper, Typography } from '@mui/material';
 import { paths } from '../../Routes';
-import AgarsonLogo from '../logo/Agarson';
-import AppsIcon from '@mui/icons-material/Apps';
+import AgarsonLogo, { ButtonLogo } from '../logo/Agarson';
 import ProfileLogo from '../logo/ProfileLogo';
 
 
@@ -45,7 +44,7 @@ export default function UsersNavBar() {
                             <Link to={paths.user_dashboard} replace={true} onDoubleClick={() => navigate(paths.dashboard)} style={{ textDecoration: 'none' }}>
                                 <Paper sx={{ bgcolor: 'white', boxShadow: 1, border: 10, borderRadius: 1, borderColor: 'white' }}>
                                     <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                                        <AppsIcon fontSize={'large'} />
+                                        <ButtonLogo title="" height={20} width={20} />
                                         <Typography variant="button" sx={{ fontSize: 12 }} component="div">
                                             users
                                         </Typography>

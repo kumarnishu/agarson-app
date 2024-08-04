@@ -4,7 +4,7 @@ import ResetPasswordSendMailDialog from '../../components/dialogs/users/ResetPas
 import SignUpDialog from '../../components/dialogs/users/SignUpDialog';
 import LoginForm from '../../components/forms/user/LoginForm';
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext';
-import { AgarsonPngLogo } from '../../components/logo/Agarson';
+import AgarsonLogo from '../../components/logo/Agarson';
 
 
 function LoginPage() {
@@ -15,7 +15,7 @@ function LoginPage() {
                 <Paper elevation={2} sx={{ maxWidth: '350px', p: 5  , px: 2, borderRadius: 10,border:4,borderColor:'whitesmoke' }}>
                     <Stack justifyContent={"center"} alignItems="center">
                         <a href="https://agarsonshoes.in/">
-                            <AgarsonPngLogo width={130} height={130} title='Agarson Shoes' />
+                            <AgarsonLogo width={130} height={130} title='Agarson Shoes' />
                         </a>
                         <LoginForm />
                         <Stack

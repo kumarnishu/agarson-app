@@ -1,46 +1,52 @@
 import mongoose from "mongoose"
-import { IUser } from "../users/user.model"
+import { Asset, IUser } from "../users/user.model"
 import { IArticle } from "./article.model"
+import { IDye } from "./dye.model"
+import { IMachine } from "./machine.model"
+import { IDyeLocation } from "./dye.location.model"
 
 export type IDyeStatus = {
     _id: string,
-    active: boolean,
-    dye_number: number,
-    size: string,
-    article:IArticle,
-    stdshoe_weight:number,
+    dye: IDye,
+    article: IArticle,
+    machine: IMachine,
+    dye_photo: Asset,
+    photo_time: Date,
+    location: IDyeLocation,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
     updated_by: IUser
 }
 
-
 const DyeStatusSchema = new mongoose.Schema<IDyeStatus, mongoose.Model<IDyeStatus, {}, {}>, {}>({
-    dye_number: {
-        type: Number,
-        required: true,
-        trim: true
+    machine: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Machine'
     },
-    stdshoe_weight: {
-        type: Number,
-        required: true,
-        trim: true,
-        default:0
-    },
-    size: {
-        type: String,
-        required: true,
-        trim: true
+    dye: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Dye',
+        required: true
     },
     article: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Article'
     },
-    active: {
-        type: Boolean,
-        default: true
+    location: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'DyeLocation'
     },
+    dye_photo: {
+        _id: { type: String },
+        filename: { type: String },
+        public_url: { type: String },
+        content_type: { type: String },
+        size: { type: String },
+        bucket: { type: String },
+        created_at: Date,
+    },
+    photo_time: Date,
     created_at: {
         type: Date,
         default: new Date(),

@@ -2,8 +2,7 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/system';
 import styled from '@emotion/styled';
 import { Box, Paper, Typography } from '@mui/material';
-import AgarsonLogo from '../logo/Agarson';
-import AppsIcon from '@mui/icons-material/Apps';
+import AgarsonLogo, { ButtonLogo } from '../logo/Agarson';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
@@ -49,7 +48,7 @@ export default function TemplatesNavBar() {
                                 >  <Link to={paths.templates_dashboard} onDoubleClick={() => navigate(paths.dashboard)} replace={true} style={{ textDecoration: 'none' }}>
                                         <Paper sx={{ bgcolor: 'white', boxShadow: 1, border: 10, borderRadius: 1, borderColor: 'white' }}>
                                             <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                                                <AppsIcon fontSize={'large'} />
+                                                <ButtonLogo title="" height={20} width={20} />
                                                 <Typography variant="button" sx={{ fontSize: 12 }} component="div">
                                                     templates
                                                 </Typography>

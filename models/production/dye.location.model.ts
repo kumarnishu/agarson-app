@@ -1,14 +1,10 @@
 import mongoose from "mongoose"
 import { IUser } from "../users/user.model"
-import { IArticle } from "./article.model"
 
-export type ILocation = {
+export type IDyeLocation = {
     _id: string,
-    active: boolean,
-    dye_number: number,
-    size: string,
-    article: IArticle,
-    stdshoe_weight: number,
+    name: string,
+    display_name: string,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
@@ -16,30 +12,16 @@ export type ILocation = {
 }
 
 
-const LocationSchema = new mongoose.Schema<ILocation, mongoose.Model<ILocation, {}, {}>, {}>({
-    dye_number: {
-        type: Number,
-        required: true,
-        trim: true
-    },
-    stdshoe_weight: {
-        type: Number,
-        required: true,
-        trim: true,
-        default: 0
-    },
-    size: {
+const DyeLocationSchema = new mongoose.Schema<IDyeLocation, mongoose.Model<IDyeLocation, {}, {}>, {}>({
+    name: {
         type: String,
         required: true,
         trim: true
     },
-    article: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article'
-    },
-    active: {
-        type: Boolean,
-        default: true
+    display_name: {
+        type: String,
+        required: true,
+        trim: true
     },
     created_at: {
         type: Date,
@@ -65,4 +47,4 @@ const LocationSchema = new mongoose.Schema<ILocation, mongoose.Model<ILocation, 
     }
 })
 
-export const Location = mongoose.model<ILocation, mongoose.Model<ILocation, {}, {}>>("Location", LocationSchema)
+export const DyeLocation = mongoose.model<IDyeLocation, mongoose.Model<IDyeLocation, {}, {}>>("DyeLocation", DyeLocationSchema)

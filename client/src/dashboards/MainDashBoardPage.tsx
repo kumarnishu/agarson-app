@@ -1,9 +1,9 @@
-import { Button, Grid, Paper, Stack, Typography } from "@mui/material"
+import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import { Link, Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext";
-
+import { ButtonLogo } from "../components/logo/Agarson";
 
 
 function MainDashBoardPage() {
@@ -38,7 +38,7 @@ function MainDashBoardPage() {
               <Link to={feat.url} style={{ textDecoration: 'none' }}>
                 <Paper sx={{ p: 2, bgcolor: 'white', boxShadow: 2, border: 10, borderRadius: 1, borderColor: 'white' }}>
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                    <Button variant="contained" sx={{ height: 60, width: 60, borderRadius: '50%', fontSize: 18 }}>{index + 1}</Button>
+                    <ButtonLogo title="" height={40} width={40} />
                     <Typography variant="button" fontSize={15} component="div">
                       {feat.feature}
                     </Typography>

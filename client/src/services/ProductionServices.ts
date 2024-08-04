@@ -155,3 +155,35 @@ export const GetMachineCategories = async () => {
     return await apiClient.get(`machine/categories`)
 }
 
+export const GetAllDyeLocations = async () => {
+    return await apiClient.get(`dye/locations`)
+}
+
+
+export const CreateOrEditDyeLocation = async ({ body, id }: {
+    body: {
+        name: string,
+        display_name: string }
+    id?: string
+}) => {
+    if (id) {
+        return await apiClient.put(`dye/locations/:id/${id}`, body)
+    }
+    return await apiClient.post(`dye/locations/:id`, body)
+}
+export const DeleteDyeLocation = async (id: string) => {
+    return await apiClient.delete(`dye/locations/:id/${id}`);
+}
+
+export const GetMyTodayDyeStatus = async () => {
+    return await apiClient.get(`dye/status/me`);
+}
+export const GetAllDyeStatus = async () => {
+    return await apiClient.get(`dye/status`);
+}
+export const CreateDyeStatus = async ({ body }: { body: FormData }) => {
+    return await apiClient.post(`dye/status`, body);
+}
+export const DeleteDyeStatus = async (id: string) => {
+    return await apiClient.delete(`dye/status/:id/${id}`);
+}

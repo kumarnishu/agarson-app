@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { IMachine, Machine } from "../models/production/machine.model"
 import { Article, IArticle } from "../models/production/article.model"
-import { Dye, IDye } from "../models/production/dye.mode"
+import { Dye, IDye } from "../models/production/dye.model"
 import xlsx from "xlsx"
 import { IProduction, Production } from "../models/production/production.model"
 import { IUser, User } from "../models/users/user.model"
@@ -9,6 +9,9 @@ import { MachineCategory } from "../models/production/category.machine.model"
 import { IShoeWeight, ShoeWeight } from "../models/production/shoe.weight.model"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { destroyFile } from "../utils/destroyFile.util"
+import { DyeLocation } from "../models/production/dye.location.model"
+import isMongoId from "validator/lib/isMongoId"
+import { DyeStatus, IDyeStatus } from "../models/production/dye.status.model"
 
 //get
 export const GetMachineCategories = async (req: Request, res: Response, next: NextFunction) => {
@@ -610,7 +613,7 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
 }
 export const GetShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
     let weights = await ShoeWeight.find().populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort('dye_number')
-    return res.status(200).json(weights)
+    return res.status(200).json("-created_at")
 }
 
 export const CreateShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
@@ -667,7 +670,7 @@ export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextF
     }
     let { machine, dye, article, weight, month } = body
 
-    if (!machine || !dye || !article || !weight )
+    if (!machine || !dye || !article || !weight)
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)
@@ -721,7 +724,7 @@ export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextF
     console.log(body)
     let { machine, dye, article, weight, month } = body
 
-    if (!machine || !dye || !article || !weight )
+    if (!machine || !dye || !article || !weight)
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)
@@ -774,7 +777,7 @@ export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextF
     }
     let { machine, dye, article, weight, month } = body
 
-    if (!machine || !dye || !article || !weight )
+    if (!machine || !dye || !article || !weight)
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)
@@ -845,4 +848,147 @@ export const DeleteShoeWeight = async (req: Request, res: Response, next: NextFu
         await destroyFile(shoe_weight.shoe_photo3._id)
     await shoe_weight.remove()
     return res.status(200).json(shoe_weight)
+}
+
+
+export const GetAllDyeLocations = async (req: Request, res: Response, next: NextFunction) => {
+    let locations = await DyeLocation.find()
+    return res.status(200).json(locations)
+}
+
+
+export const CreateDyeLocation = async (req: Request, res: Response, next: NextFunction) => {
+    const { name, display_name } = req.body as {
+        name: string,
+        display_name: string
+    }
+    if (!name) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    if (await DyeLocation.findOne({ name: name.toLowerCase() }))
+        return res.status(400).json({ message: "already exists this dye location" })
+    let result = await new DyeLocation({
+        name: name,
+        display_name: display_name,
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save()
+    return res.status(201).json(result)
+
+}
+
+export const UpdateDyeLocation = async (req: Request, res: Response, next: NextFunction) => {
+    const { name, display_name } = req.body as {
+        name: string,
+        display_name: string
+    }
+    if (!name) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    const id = req.params.id
+    let oldlocation = await DyeLocation.findById(id)
+    if (!oldlocation)
+        return res.status(404).json({ message: "location not found" })
+    if (name !== oldlocation.name)
+        if (await DyeLocation.findOne({ name: name.toLowerCase() }))
+            return res.status(400).json({ message: "already exists this location" })
+    let prevname = oldlocation.name
+    oldlocation.name = name
+    oldlocation.updated_at = new Date()
+    if (req.user)
+        oldlocation.updated_by = req.user
+    await oldlocation.save()
+    return res.status(200).json(oldlocation)
+
+}
+export const DeleteDyeLocation = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "location id not valid" })
+    let location = await DyeLocation.findById(id);
+    if (!location) {
+        return res.status(404).json({ message: "location not found" })
+    }
+    await location.remove();
+    return res.status(200).json({ message: "lead location deleted successfully" })
+}
+export const GetMyTodayDyeStatus = async (req: Request, res: Response, next: NextFunction) => {
+    let dt1 = new Date()
+    dt1.setDate(new Date().getDate() - 1)
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    let statusall: IDyeStatus[] = []
+    if (req.user.is_admin) {
+        statusall = await DyeStatus.find({ created_at: { $gte: dt1 } }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
+    }
+    else {
+        statusall = await DyeStatus.find({ created_at: { $gte: dt1 }, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
+    }
+    return res.status(200).json(statusall)
+}
+
+export const GetDyeStatus = async (req: Request, res: Response, next: NextFunction) => {
+    let statusall = await DyeStatus.find().populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at')
+    return res.status(200).json(statusall)
+}
+
+export const CreateDyeStatus = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body) as {
+        machine: string,
+        dye: string,
+        article: string,
+        location: string
+    }
+    let { machine, dye, article, location } = body
+
+    if (!location || !dye)
+        if (!machine || !article)
+            return res.status(400).json({ message: "please fill all reqired fields" })
+
+    let m1 = await Machine.findById(machine)
+    let l1 = await DyeLocation.findById(location)
+    let a1 = await Article.findById(article)
+    let d1 = await Dye.findById(dye)
+    if (!d1) {
+        return res.status(404).json({ message: "dye not found" })
+    }
+
+    let status = new DyeStatus({
+        machine: m1, dye: d1, article: a1, location: l1
+    })
+    if (req.file) {
+        console.log(req.file.mimetype)
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
+        const storageLocation = `dyestatus/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 20 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            status.dye_photo = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    status.created_at = new Date()
+    status.updated_at = new Date()
+    status.created_by = req.user
+    status.updated_by = req.user
+    status.photo_time = new Date()
+    await status.save()
+    return res.status(201).json(status)
+}
+
+export const DeleteDyeStatus = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let status = await DyeStatus.findById(id)
+    if (!status)
+        return res.status(404).json({ message: "dye status not found" })
+    status.updated_at = new Date()
+    status.updated_by = req.user
+    if (status.dye_photo && status.dye_photo._id)
+        await destroyFile(status.dye_photo._id)
+    await status.remove()
+    return res.status(200).json(status)
 }
