@@ -1,9 +1,9 @@
-import { Grid, Paper, Stack, Typography } from "@mui/material"
+import { Button, Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import { Link, Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext";
-import AppsIcon from '@mui/icons-material/Apps';
+
 
 
 function MainDashBoardPage() {
@@ -38,8 +38,8 @@ function MainDashBoardPage() {
               <Link to={feat.url} style={{ textDecoration: 'none' }}>
                 <Paper sx={{ p: 2, bgcolor: 'white', boxShadow: 2, border: 10, borderRadius: 1, borderColor: 'white' }}>
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                    <AppsIcon fontSize={'large'} />
-                    <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                    <Button variant="contained" sx={{ height: 60, width: 60, borderRadius: '50%', fontSize: 18 }}>{index + 1}</Button>
+                    <Typography variant="button" fontSize={15} component="div">
                       {feat.feature}
                     </Typography>
                   </Stack>

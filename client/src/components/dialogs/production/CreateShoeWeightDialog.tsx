@@ -5,7 +5,7 @@ import { Cancel } from '@mui/icons-material';
 import CreateShoeWeightForm from '../../forms/production/CreateShoeWeightForm';
 
 
-function NewShoeWeightDialog() {
+function NewShoeWeightDialog({ useddyes }: { useddyes: string[] }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
         <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === ProductionChoiceActions.create_shoe_weight ? true : false}
@@ -19,7 +19,7 @@ function NewShoeWeightDialog() {
             </DialogTitle>
 
             <DialogContent>
-                <CreateShoeWeightForm />
+                <CreateShoeWeightForm useddyes={useddyes} />
             </DialogContent>
             <Stack
                 direction="column"

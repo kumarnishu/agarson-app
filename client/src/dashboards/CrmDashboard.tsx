@@ -1,8 +1,7 @@
-import { Grid, Paper, Stack, Typography } from "@mui/material"
+import { Button, Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import AppsIcon from '@mui/icons-material/Apps';
 import { UserContext } from "../contexts/userContext";
 
 function CrmDashboard() {
@@ -33,8 +32,8 @@ function CrmDashboard() {
               <Link to={feat.url} style={{ textDecoration: 'none' }}>
                 <Paper sx={{ p: 2, bgcolor: 'white', boxShadow: 2, border: 10, borderRadius: 1, borderColor: 'white' }}>
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                    <AppsIcon fontSize={'large'} />
-                    <Typography variant="button" sx={{ fontSize: 16 }} component="div">
+                    <Button variant="contained" sx={{ height: 60, width: 60, borderRadius: '50%', fontSize: 18 }}>{index + 1}</Button>
+                    <Typography variant="button" fontSize={15} component="div">
                       {feat.feature}
                     </Typography>
                   </Stack>

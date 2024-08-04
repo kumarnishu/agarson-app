@@ -96,7 +96,7 @@ export default function ShoeWeightPage() {
   useEffect(() => {
     if (filter) {
       if (shoe_weights) {
-        const searcher = new FuzzySearch(shoe_weights, ["article.name", "machine.name","month"], {
+        const searcher = new FuzzySearch(shoe_weights, ["article.name", "machine.name", "month"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);
@@ -175,17 +175,17 @@ export default function ShoeWeightPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {user?.assigned_permissions.includes('shoe_weight_create')&&< MenuItem onClick={() => {
+              {user?.assigned_permissions.includes('shoe_weight_create') && < MenuItem onClick={() => {
                 setChoice({ type: ProductionChoiceActions.create_shoe_weight })
               }}
               >New Weight</MenuItem>}
-              {user?.assigned_permissions.includes('shoe_weight_export') &&<MenuItem onClick={handleExcel}
+              {user?.assigned_permissions.includes('shoe_weight_export') && <MenuItem onClick={handleExcel}
               >Export To Excel</MenuItem>}
 
 
             </Menu>
           </>
-          <NewShoeWeightDialog />
+          <NewShoeWeightDialog useddyes={shoe_weights.map((v) => v.dye._id)} />
         </Stack>
       </Stack>
       {/*  table */}

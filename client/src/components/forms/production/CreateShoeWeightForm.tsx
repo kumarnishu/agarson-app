@@ -24,7 +24,7 @@ type TformData = {
     st_weight: number
 }
 
-function CreateShoeWeightForm() {
+function CreateShoeWeightForm({ useddyes }: { useddyes: string[] }) {
     const [file, setFile] = useState<File>()
     const [dyeid, setDyeid] = useState<string>('');
     const { data: dyedata, refetch: refetchDye } = useQuery<AxiosResponse<IDye>, BackendError>(["dye", dyeid], async () => GetDyeById(dyeid), { enabled: false })
@@ -114,9 +114,6 @@ function CreateShoeWeightForm() {
             }, 1000)
         }
     }, [isSuccess, setChoice])
-
-
-
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>
@@ -148,6 +145,7 @@ function CreateShoeWeightForm() {
                         </option>
                         {
                             machines && machines.data && machines.data.map((machine, index) => {
+
                                 return (<option key={index} value={machine._id}>
                                     {machine.display_name}
                                 </option>)
@@ -176,11 +174,14 @@ function CreateShoeWeightForm() {
                         <option key={'00'} value={undefined}>
                         </option>
                         {
-                            dyes && dyes.data && dyes.data.map((dye, index) => {
-                                return (<option key={index} value={dye._id}>
-                                    {dye.dye_number}
-                                </option>)
 
+                            dyes && dyes.data && dyes.data.map((dye, index) => {
+                                if (!useddyes.includes(dye._id)) {
+                                    console.log(dye._id)
+                                    return (<option key={index} value={dye._id}>
+                                        {dye.dye_number}
+                                    </option>)
+                                }
                             })
                         }
                     </TextField>
