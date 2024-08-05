@@ -16,6 +16,7 @@ const DyeLocationSchema = new mongoose.Schema<IDyeLocation, mongoose.Model<IDyeL
     name: {
         type: String,
         required: true,
+        lowercase:true,
         trim: true
     },
     display_name: {
