@@ -606,10 +606,10 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
     let weights: IShoeWeight[] = []
 
     if (user_ids.length > 0) {
-        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: { $in: user_ids } }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: { $in: user_ids } }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-dye.dye_number')
     }
     else {
-        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-dye.dye_number')
     }
     return res.status(200).json(weights)
 }
