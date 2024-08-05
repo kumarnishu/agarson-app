@@ -602,15 +602,18 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
     dt1.setDate(new Date().getDate() - 1)
     dt1.setHours(0)
     dt1.setMinutes(0)
+    let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
     let weights: IShoeWeight[] = []
-    if (req.user.is_admin) {
-        weights = await ShoeWeight.find({ created_at: { $gte: dt1 } }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
+
+    if (user_ids.length > 0) {
+        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: { $in: user_ids } }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
     }
     else {
         weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-created_at')
     }
     return res.status(200).json(weights)
 }
+
 export const GetShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
     let weights = await ShoeWeight.find().populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at")
     return res.status(200).json(weights)

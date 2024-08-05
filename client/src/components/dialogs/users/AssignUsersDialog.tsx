@@ -101,7 +101,7 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                             key={0}
                             value={undefined}
                         >
-                                {toTitleCase(user.username)}
+                                {toTitleCase('Select')}
                             </MenuItem>
 
                             {users.map((user, index) => (
