@@ -169,6 +169,56 @@ export function FetchAllPermissions() {
                 ]
             },
             {
+                label: 'Dye Status',
+                permissions: [
+                    {
+                        value: 'dye_status_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'dye_status_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'dye_status_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'dye_status_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'dye_status_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
+                label: 'Dye Location',
+                permissions: [
+                    {
+                        value: 'dye_location_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'dye_location_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'dye_location_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'dye_location_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'dye_location_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
                 label: 'Shoe Weight Report',
                 permissions: [
                     {

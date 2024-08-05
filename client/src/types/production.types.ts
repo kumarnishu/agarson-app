@@ -66,8 +66,29 @@ export type IArticle = {
     created_by: IUser,
     updated_by: IUser
 }
+export type IDyeLocation = {
+    _id: string,
+    name: string,
+    display_name: string,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 
-
+export type IDyeStatus = {
+    _id: string,
+    dye: IDye,
+    article: IArticle,
+    machine: IMachine,
+    dye_photo: Asset,
+    photo_time: Date,
+    location: IDyeLocation,
+    created_at: Date,
+    updated_at: Date,
+    created_by: IUser,
+    updated_by: IUser
+}
 
 export type IProduction = {
     _id: string,

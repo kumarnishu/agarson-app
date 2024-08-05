@@ -612,8 +612,8 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
     return res.status(200).json(weights)
 }
 export const GetShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
-    let weights = await ShoeWeight.find().populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort('dye_number')
-    return res.status(200).json("-created_at")
+    let weights = await ShoeWeight.find().populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at")
+    return res.status(200).json(weights)
 }
 
 export const CreateShoeWeight = async (req: Request, res: Response, next: NextFunction) => {

@@ -54,6 +54,7 @@ import EmailVerifyPage from './pages/users/EmailVerifyPage.tsx'
 import LeadsPage from './pages/crm/LeadsPage.tsx'
 import ResetPasswordDialog from './components/dialogs/users/ResetPasswordDialog.tsx'
 import MachinePage from './pages/production/MachinesPage.tsx'
+import DyeLocationsPage from './pages/production/DyeLocationPage.tsx'
 
 
 export enum paths {
@@ -123,7 +124,8 @@ export enum paths {
   machines = "machines",
   dyes = "dyes",
   articles = "articles",
-  shoe_weight ="shoe_weight",
+  shoe_weight = "shoe_weight",
+  dye_location = "dye_location",
 
 
  
@@ -216,6 +218,11 @@ function AppRoutes() {
               <Route
                 path={paths.shoe_weight} element={
                    <ShoeWeightPage />
+                }
+              />
+              <Route
+                path={paths.dye_location} element={
+                  <DyeLocationsPage />
                 }
               />
               <Route

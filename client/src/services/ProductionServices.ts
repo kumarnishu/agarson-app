@@ -167,12 +167,12 @@ export const CreateOrEditDyeLocation = async ({ body, id }: {
     id?: string
 }) => {
     if (id) {
-        return await apiClient.put(`dye/locations/:id/${id}`, body)
+        return await apiClient.put(`dye/locations/${id}`, body)
     }
-    return await apiClient.post(`dye/locations/:id`, body)
+    return await apiClient.post(`dye/locations`, body)
 }
 export const DeleteDyeLocation = async (id: string) => {
-    return await apiClient.delete(`dye/locations/:id/${id}`);
+    return await apiClient.delete(`dye/locations/${id}`);
 }
 
 export const GetMyTodayDyeStatus = async () => {
@@ -185,5 +185,5 @@ export const CreateDyeStatus = async ({ body }: { body: FormData }) => {
     return await apiClient.post(`dye/status`, body);
 }
 export const DeleteDyeStatus = async (id: string) => {
-    return await apiClient.delete(`dye/status/:id/${id}`);
+    return await apiClient.delete(`dye/status/${id}`);
 }

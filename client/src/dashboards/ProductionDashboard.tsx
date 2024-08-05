@@ -14,7 +14,7 @@ function ProductionDashboard() {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     user?.assigned_permissions.includes('production_view') && tmpfeatures.push({ feature: 'production ', is_visible: true, url: paths.production_admin })
     user?.assigned_permissions.includes('production_view') && tmpfeatures.push({ feature: 'Dye-Status ', is_visible: true, url: paths.production_admin })
-    user?.assigned_permissions.includes('production_view') && tmpfeatures.push({ feature: 'Location ', is_visible: true, url: paths.production_admin })
+    user?.assigned_permissions.includes('production_view') && tmpfeatures.push({ feature: 'Location ', is_visible: true, url: paths.dye_location })
     user?.assigned_permissions.includes('article_view') && tmpfeatures.push({ feature: 'articles', is_visible: true, url: paths.articles })
     user?.assigned_permissions.includes('machine_view') && tmpfeatures.push({ feature: 'machines ', is_visible: true, url: paths.machines })
     user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })

@@ -17,7 +17,7 @@ type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_ch
 type LeadChoices = "create_or_edit_refer" |"create_or_edit_leadtype"| "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_city" | "bulk_assign_crm_cities" | "find_unknown_stages" | "delete_refer" | "convert_lead_to_refer" | "bulk_delete_useless_leads" | "view_referrals" | "delete_crm_state" |"find_unknown_cities"|
    "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "find_unknown_states"
 
-type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "view_shoe_photo2" | "view_shoe_photo3" | "create_shoe_weight" | "delete_production" | "update_shoe_weight" | "create_production" | "update_production" |"delete_weight"
+type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "view_shoe_photo2" | "view_shoe_photo3" | "create_shoe_weight" | "delete_production" | "update_shoe_weight" | "create_production" | "update_production" | "delete_weight" | "create_or_edit_location" |"delete_dye_location"
 
 
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
@@ -32,6 +32,8 @@ const initialState: ChoiceState | null = null
 export enum ProductionChoiceActions {
   validate_weight = "validate_weight",
   delete_weight ="delete_weight",
+  create_or_edit_location="create_or_edit_location",
+  delete_dye_location ="delete_dye_location",
   create_machine = "create_machine",
   view_shoe_photo = "view_shoe_photo",
   view_shoe_photo2 = "view_shoe_photo2",
@@ -266,6 +268,8 @@ function reducer(state: ChoiceState | null, action: Action) {
     case ProductionChoiceActions.update_shoe_weight: return type
     case ProductionChoiceActions.delete_production: return type
     case ProductionChoiceActions.delete_weight: return type
+    case ProductionChoiceActions.create_or_edit_location: return type
+    case ProductionChoiceActions.delete_dye_location: return type
 
     // template choice action
     case TemplateChoiceActions.create_template: return type
