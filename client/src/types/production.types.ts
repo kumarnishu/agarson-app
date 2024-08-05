@@ -81,6 +81,7 @@ export type IDyeStatus = {
     dye: IDye,
     article: IArticle,
     machine: IMachine,
+    repair_required: boolean,
     dye_photo: Asset,
     photo_time: Date,
     location: IDyeLocation,

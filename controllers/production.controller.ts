@@ -937,9 +937,10 @@ export const CreateDyeStatus = async (req: Request, res: Response, next: NextFun
         machine: string,
         dye: string,
         article: string,
+        repair_required:boolean,
         location: string
     }
-    let { machine, dye, article, location } = body
+    let { machine, dye, article, location, repair_required } = body
 
     if (!location || !dye)
         if (!machine || !article)
@@ -974,6 +975,7 @@ export const CreateDyeStatus = async (req: Request, res: Response, next: NextFun
     status.created_at = new Date()
     status.updated_at = new Date()
     status.created_by = req.user
+    status.repair_required = repair_required;
     status.updated_by = req.user
     status.photo_time = new Date()
     await status.save()

@@ -10,6 +10,7 @@ export type IDyeStatus = {
     dye: IDye,
     article: IArticle,
     machine: IMachine,
+    repair_required: boolean,
     dye_photo: Asset,
     photo_time: Date,
     location: IDyeLocation,
@@ -33,6 +34,7 @@ const DyeStatusSchema = new mongoose.Schema<IDyeStatus, mongoose.Model<IDyeStatu
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Article'
     },
+    repair_required: { type: Boolean, default: false },
     location: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'DyeLocation'
