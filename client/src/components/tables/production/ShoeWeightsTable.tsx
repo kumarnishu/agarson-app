@@ -115,8 +115,13 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                             <STableHeadCell
                             >
 
-                                St.Shoe Weight
+                                St. Sole Weight
 
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                               Upper Weight
                             </STableHeadCell>
                             <STableHeadCell
                             >
@@ -322,6 +327,9 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.dye&&shoe_weight.dye.stdshoe_weight}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.upper_weight}
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.shoe_weight1}

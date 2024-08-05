@@ -26,6 +26,7 @@ export type IShoeWeight = {
     weighttime1: Date,
     weighttime2: Date,
     weighttime3: Date,
+    upper_weight: number,
     shoe_weight2: number,
     shoe_photo2: Asset,
     shoe_weight3: number,

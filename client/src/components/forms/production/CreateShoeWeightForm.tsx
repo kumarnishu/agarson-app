@@ -21,7 +21,8 @@ type TformData = {
     article: string,
     month: number,
     weight: number,
-    st_weight: number
+    st_weight: number,
+    upper_weight: number
 }
 
 function CreateShoeWeightForm({ useddyes }: { useddyes: string[] }) {
@@ -50,11 +51,13 @@ function CreateShoeWeightForm({ useddyes }: { useddyes: string[] }) {
             article: "",
             month: new Date().getMonth(),
             weight: 0,
+            upper_weight:0,
             st_weight: 0
         },
         validationSchema: Yup.object({
             weight: Yup.number().required("required weight"),
             st_weight: Yup.number().required("required St weight"),
+            upper_weight: Yup.number().required("required Upper Weight"),
             machine: Yup.string().required("required machine"),
             article: Yup.string().required("required article"),
             dye: Yup.string().required("required dye"),
@@ -69,6 +72,7 @@ function CreateShoeWeightForm({ useddyes }: { useddyes: string[] }) {
                     article: values.article,
                     month: values.month,
                     dye: values.dye,
+                    upper_weight: values.upper_weight,
                     machine: values.machine,
                     st_weight: values.st_weight
                 }
@@ -232,6 +236,22 @@ function CreateShoeWeightForm({ useddyes }: { useddyes: string[] }) {
                             formik.touched.st_weight && formik.errors.st_weight ? formik.errors.st_weight : ""
                         }
                         {...formik.getFieldProps('st_weight')}
+                    />
+
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        required
+                        focused
+                        label="Upper Weight"
+                        error={
+                            formik.touched.upper_weight && formik.errors.upper_weight ? true : false
+                        }
+                        id="Upper Weight"
+                        helperText={
+                            formik.touched.upper_weight && formik.errors.upper_weight ? formik.errors.upper_weight : ""
+                        }
+                        {...formik.getFieldProps('upper_weight')}
                     />
                     <TextField
                         variant="outlined"

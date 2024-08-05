@@ -21,7 +21,8 @@ type TformData = {
     month: number,
     article: string,
     weight: number,
-    st_weight:number
+    st_weight: number,
+    upper_weight: number
 }
 
 function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
@@ -49,12 +50,14 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
             month: shoe_weight.month,
             article: shoe_weight.article._id,
             weight: shoe_weight.shoe_weight1,
+            upper_weight: shoe_weight.upper_weight,
             st_weight: shoe_weight.dye&& shoe_weight.dye.stdshoe_weight
         },
         validationSchema: Yup.object({
             weight: Yup.number().required("required weight"),
             st_weight: Yup.number().required("required St weight"),
             machine: Yup.string().required("required machine"),
+            upper_weight: Yup.number().required("required Upper Weight"),
             article: Yup.string().required("required article"),
             dye: Yup.string().required("required dye"),
             month: Yup.number().required("required clock in")
@@ -68,6 +71,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                     article: values.article,
                     month: values.month,
                     dye: values.dye,
+                    upper_weight: values.upper_weight,
                     machine: values.machine,
                     st_weight: values.st_weight
                 }
@@ -212,6 +216,21 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                             formik.touched.st_weight && formik.errors.st_weight ? formik.errors.st_weight : ""
                         }
                         {...formik.getFieldProps('st_weight')}
+                    />
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        required
+                        focused
+                        label="Upper Weight"
+                        error={
+                            formik.touched.upper_weight && formik.errors.upper_weight ? true : false
+                        }
+                        id="Upper Weight"
+                        helperText={
+                            formik.touched.upper_weight && formik.errors.upper_weight ? formik.errors.upper_weight : ""
+                        }
+                        {...formik.getFieldProps('upper_weight')}
                     />
                     <TextField
                         variant="outlined"

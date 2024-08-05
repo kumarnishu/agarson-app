@@ -622,11 +622,12 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
         dye: string,
         article: string,
         weight: number,
+        upper_weight: number,
         month: number,
     }
-    let { machine, dye, article, weight, month } = body
+    let { machine, dye, article, weight, month, upper_weight } = body
 
-    if (!machine || !dye || !article || !weight)
+    if (!machine || !dye || !article || !weight || !upper_weight)
         return res.status(400).json({ message: "please fill all reqired fields" })
 
     let m1 = await Machine.findById(machine)
@@ -635,7 +636,7 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
     let shoe_weight = new ShoeWeight({
-        machine: m1, dye: d1, article: art1, shoe_weight1: weight, month: month
+        machine: m1, dye: d1, article: art1, shoe_weight1: weight, month: month, upper_weight: upper_weight
     })
     if (req.file) {
         console.log(req.file.mimetype)
@@ -666,7 +667,8 @@ export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextF
         dye: string,
         article: string,
         weight: number,
-        month: number
+        month: number,
+        upper_weight: number,
     }
     let { machine, dye, article, weight, month } = body
 
@@ -719,12 +721,13 @@ export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextF
         dye: string,
         article: string,
         weight: number,
-        month: number
+        month: number,
+        upper_weight: number,
     }
     console.log(body)
-    let { machine, dye, article, weight, month } = body
+    let { machine, dye, article, weight, month, upper_weight } = body
 
-    if (!machine || !dye || !article || !weight)
+    if (!machine || !dye || !article || !weight || !upper_weight)
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)
@@ -758,6 +761,7 @@ export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextF
     shoe_weight.dye = d1
     shoe_weight.month = month
     shoe_weight.article = art1
+    shoe_weight.upper_weight = upper_weight;
     shoe_weight.shoe_weight2 = weight
     shoe_weight.weighttime2 = new Date()
     shoe_weight.created_at = new Date()
@@ -773,11 +777,12 @@ export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextF
         dye: string,
         article: string,
         weight: number,
-        month: number
+        month: number,
+        upper_weight: number,
     }
-    let { machine, dye, article, weight, month } = body
+    let { machine, dye, article, weight, month, upper_weight } = body
 
-    if (!machine || !dye || !article || !weight)
+    if (!machine || !dye || !article || !weight || !upper_weight)
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)
@@ -808,6 +813,7 @@ export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextF
     }
 
     shoe_weight.machine = m1
+    shoe_weight.upper_weight = upper_weight;
     shoe_weight.dye = d1
     shoe_weight.month = month
     shoe_weight.article = art1
@@ -937,7 +943,7 @@ export const CreateDyeStatus = async (req: Request, res: Response, next: NextFun
         machine: string,
         dye: string,
         article: string,
-        repair_required:boolean,
+        repair_required: boolean,
         location: string
     }
     let { machine, dye, article, location, repair_required } = body
