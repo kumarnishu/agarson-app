@@ -134,8 +134,13 @@ export const ValidateShoeWeight = async (id: string) => {
 export const DeleteShoeWeight = async (id: string) => {
     return await apiClient.delete(`weights/${id}`);
 }
-export const GetShoeWeights = async () => {
-    return await apiClient.get(`weights`);
+
+export const GetShoeWeights = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+    if (id)
+        return await apiClient.get(`weights/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+    else
+        return await apiClient.get(`weights/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+
 }
 
 export const BulkUploadMachines = async (body: FormData) => {

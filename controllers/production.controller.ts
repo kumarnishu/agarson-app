@@ -614,9 +614,47 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
     return res.status(200).json(weights)
 }
 
+
 export const GetShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
-    let weights = await ShoeWeight.find().populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at")
-    return res.status(200).json(weights)
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let id = req.query.id
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let weights: IShoeWeight[] = []
+    let count = 0
+    let dt1 = new Date(String(start_date))
+    let dt2 = new Date(String(end_date))
+    let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
+
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        if (!id) {
+            if (user_ids.length > 0) {
+                weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
+                count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
+            }
+
+            else {
+                weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
+                count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 } }).countDocuments()
+            }
+        }
+
+
+        if (id) {
+            weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
+            count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
+        }
+
+        return res.status(200).json({
+            weights,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(400).json({ message: "bad request" })
 }
 
 export const CreateShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
