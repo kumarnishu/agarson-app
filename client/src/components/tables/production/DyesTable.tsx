@@ -173,7 +173,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                                     element={
                                                         <Stack direction="row">
                                                             <>
-                                                            {user?.assigned_permissions.includes("") && <Tooltip title="dye_edit">
+                                                            {user?.assigned_permissions.includes("dye_edit") && <Tooltip title="dye_edit">
                                                                     <IconButton
                                                                       
                                                                         onClick={() => {
@@ -186,7 +186,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                                                     </IconButton>
                                                                 </Tooltip>}
                                                                 
-                                                            {user?.assigned_permissions.includes("") && <Tooltip title="dye_edit">
+                                                            {user?.assigned_permissions.includes("dye_edit") && <Tooltip title="dye_edit">
                                                                         <IconButton color="primary"
                                                                        
                                                                             onClick={() => {

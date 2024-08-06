@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
-import {  ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
@@ -14,22 +14,22 @@ import { CreateDye, GetArticles } from '../../../services/ProductionServices';
 function NewDyeForm() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IDye>, BackendError, {
-            dye_number: number, size: string, article_id:string,st_weight:number
+            dye_number: number, size: string, article_id: string, st_weight: number
         }>
         (CreateDye, {
             onSuccess: () => {
                 queryClient.invalidateQueries('dyes')
             }
         })
-    const { data: articles,isLoading:userLoading } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
+    const { data: articles, isLoading: userLoading } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
     const { setChoice } = useContext(ChoiceContext)
 
     const formik = useFormik({
         initialValues: {
             dye_number: 0,
             size: "",
-            st_weight:0,
-            article_id:''
+            st_weight: 0,
+            article_id: ''
         },
         validationSchema: Yup.object({
             dye_number: Yup.number()
@@ -46,7 +46,7 @@ function NewDyeForm() {
                 dye_number: values.dye_number,
                 size: values.size,
                 article_id: values.article_id,
-                st_weight:values.st_weight
+                st_weight: values.st_weight
 
             })
         }
@@ -63,7 +63,7 @@ function NewDyeForm() {
     return (
         <form onSubmit={formik.handleSubmit}>
 
-            {!userLoading&& <Stack
+            {!userLoading && <Stack
                 direction="column"
                 gap={2}
                 pt={2}
@@ -71,7 +71,7 @@ function NewDyeForm() {
                 <TextField
                     required
                     fullWidth
-                    SelectProps={{native:true}}
+                    SelectProps={{ native: true }}
                     error={
                         formik.touched.dye_number && formik.errors.dye_number ? true : false
                     }
@@ -112,6 +112,9 @@ function NewDyeForm() {
                 />
                 < TextField
                     select
+                    SelectProps={{
+                        native: true
+                    }}
                     focused
                     error={
                         formik.touched.article_id && formik.errors.article_id ? true : false
@@ -127,7 +130,7 @@ function NewDyeForm() {
                 >
                     {
                         articles && articles.data && articles.data.map((article, index) => {
-                            return (<option key={index} value={article&&article._id}>
+                            return (<option key={index} value={article && article._id}>
                                 {article.display_name}
                             </option>)
                         })

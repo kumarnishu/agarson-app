@@ -779,6 +779,7 @@ export const ConvertLeadToRefer = async (req: Request, res: Response, next: Next
 
     await new ReferredParty({
         name: lead.name, customer_name: lead.customer_name, city: lead.city, state: lead.state, mobile: lead.mobile, gst: "erertyujhtyuiop",
+        convertedfromlead:true,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,

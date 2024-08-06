@@ -61,14 +61,16 @@ export type IReferredParty = {
     name: string,
     customer_name: string,
     mobile: string,
-    gst:string,
+    gst: string,
     city: string,
     state: string,
+    convertedfromlead: boolean,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
     updated_by: IUser
 }
+
 
 export type TReferredPartyBody = Request['body'] & IReferredParty;
 

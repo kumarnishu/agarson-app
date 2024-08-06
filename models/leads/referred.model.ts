@@ -10,6 +10,7 @@ export type IReferredParty = {
     gst: string,
     city: string,
     state: string,
+    convertedfromlead: boolean,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
@@ -37,7 +38,7 @@ const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<I
         trim: true,
         index: true,
         lowercase: true,
-        required:true
+        required: true
     },
     mobile: {
         type: String,
@@ -61,6 +62,7 @@ const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<I
         index: true,
         lowercase: true,
     },
+    convertedfromlead: { type: Boolean, default: false },
     created_at: {
         type: Date,
         default: new Date(),
