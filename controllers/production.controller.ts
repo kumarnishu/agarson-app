@@ -599,7 +599,7 @@ export const UpdateMachineCategories = async (req: Request, res: Response, next:
 }
 export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
     let dt1 = new Date()
-    dt1.setDate(new Date().getDate() - 1)
+    dt1.setDate(new Date().getDate())
     dt1.setHours(0)
     dt1.setMinutes(0)
     let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
