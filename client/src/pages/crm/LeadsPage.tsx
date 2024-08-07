@@ -244,7 +244,7 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {LoggedInUser?.created_by._id === LoggedInUser?._id && LoggedInUser?.assigned_permissions.includes('leads_delete_useless') && <Tooltip title="Delete Selected Leads">
+            {LoggedInUser?.assigned_permissions.includes('leads_delete_useless') && <Tooltip title="Delete Selected Leads">
               <IconButton color="error"
 
                 onClick={() => {
