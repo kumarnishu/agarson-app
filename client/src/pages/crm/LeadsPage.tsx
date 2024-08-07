@@ -248,7 +248,9 @@ export default function LeadsPage() {
               <IconButton color="error"
 
                 onClick={() => {
-                  if (selectedLeads.length == 0)
+                  let data: ILead[] = [];
+                  data = selectedLeads.filter((lead) => { return lead.stage === 'useless' })
+                  if (data.length == 0)
                     alert("select some useless leads")
                   else
                     setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })

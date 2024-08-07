@@ -61,7 +61,7 @@ function BulkDeleteUselessLeadsDialog({ selectedLeads }: { selectedLeads: ILead[
             }
             <DialogContent>
                 <Typography variant="body1" color="error">
-                    {`Warning ! This will delete selected ${selectedLeads.length} leads permanently and associated remarks to it.`}
+                    {`Warning ! This will delete selected uselesss ${selectedLeads.length} leads permanently and associated remarks to it.`}
 
                 </Typography>
             </DialogContent>
