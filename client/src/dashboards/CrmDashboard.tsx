@@ -21,6 +21,7 @@ function CrmDashboard() {
     user?.assigned_permissions.includes('leadtype_view') &&tmpfeatures.push({ feature: 'Lead Type', is_visible: true, url: paths.crm_leadtypes })
     user?.assigned_permissions.includes('lead_source_view') &&tmpfeatures.push({ feature: 'Lead Source', is_visible: true, url: paths.crm_leadsources })
     user?.assigned_permissions.includes('leadstage_view') &&tmpfeatures.push({ feature: 'Lead Stage', is_visible: true, url: paths.crm_stages })
+    user?.assigned_permissions.includes('leadstage_view') && tmpfeatures.push({ feature: 'Reports', is_visible: true, url: paths.crm_stages })
     setFeatures(tmpfeatures)
   }, [user])
 

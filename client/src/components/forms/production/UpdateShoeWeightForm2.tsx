@@ -50,7 +50,7 @@ function UpdateShoeWeightForm2({ shoe_weight }: { shoe_weight: IShoeWeight }) {
             month: shoe_weight.month,
             article: shoe_weight.article._id,
             weight: shoe_weight.shoe_weight2,
-            upper_weight:shoe_weight.upper_weight,
+            upper_weight:shoe_weight.upper_weight2,
             st_weight: shoe_weight.dye&& shoe_weight.dye.stdshoe_weight
         },
         validationSchema: Yup.object({

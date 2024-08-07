@@ -121,7 +121,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                             <STableHeadCell
                             >
 
-                                Upper Weight
+                                Upper Weight1
                             </STableHeadCell>
                             <STableHeadCell
                             >
@@ -138,6 +138,11 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                             <STableHeadCell
                             >
 
+                                Upper Weight2
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Shoe Weight2
                             </STableHeadCell>
 
@@ -145,6 +150,11 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                             >
 
                                 Time2
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Upper Weight3
                             </STableHeadCell>
                             <STableHeadCell
                             >
@@ -348,7 +358,7 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                             {shoe_weight.dye && shoe_weight.dye.stdshoe_weight}
                                         </STableCell>
                                         <STableCell>
-                                            {shoe_weight.upper_weight}
+                                            {shoe_weight.upper_weight1}
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.shoe_weight1}
@@ -357,10 +367,16 @@ function ShoeWeightsTable({ shoe_weight, selectAll, shoe_weights, setSelectAll, 
                                             {shoe_weight.weighttime1 && new Date(shoe_weight.weighttime1).toLocaleTimeString()}
                                         </STableCell>
                                         <STableCell>
+                                            {shoe_weight.upper_weight2}
+                                        </STableCell>
+                                        <STableCell>
                                             {shoe_weight.shoe_weight2}
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.weighttime2 && new Date(shoe_weight.weighttime2).toLocaleTimeString()}
+                                        </STableCell>
+                                        <STableCell>
+                                            {shoe_weight.upper_weight3}
                                         </STableCell>
                                         <STableCell>
                                             {shoe_weight.shoe_weight3}

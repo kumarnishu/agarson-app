@@ -609,7 +609,7 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
         weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: { $in: user_ids } }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-updated_at')
     }
     else {
-        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-updated_at')
+        weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user?._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-updated_at')
     }
     return res.status(200).json(weights)
 }
@@ -677,7 +677,7 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
     let shoe_weight = new ShoeWeight({
-        machine: m1, dye: d1, article: art1, shoe_weight1: weight, month: month, upper_weight: upper_weight
+        machine: m1, dye: d1, article: art1, shoe_weight1: weight, month: month, upper_weight1: upper_weight
     })
     if (req.file) {
         console.log(req.file.mimetype)
@@ -696,8 +696,10 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     }
     shoe_weight.created_at = new Date()
     shoe_weight.updated_at = new Date()
-    shoe_weight.created_by = req.user
-    shoe_weight.updated_by = req.user
+    if (req.user)
+        shoe_weight.created_by = req.user
+    if (req.user)
+        shoe_weight.updated_by = req.user
     shoe_weight.weighttime1 = new Date()
     await shoe_weight.save()
     return res.status(201).json(shoe_weight)
@@ -711,9 +713,9 @@ export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextF
         month: number,
         upper_weight: number,
     }
-    let { machine, dye, article, weight, month } = body
+    let { machine, dye, article, weight, month, upper_weight } = body
 
-    if (!machine || !dye || !article || !weight)
+    if (!machine || !dye || !article || !weight || !upper_weight)
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)
@@ -746,13 +748,17 @@ export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextF
     shoe_weight.machine = m1
     shoe_weight.dye = d1
     shoe_weight.month = month
+    shoe_weight.upper_weight1 = upper_weight;
     shoe_weight.article = art1
     shoe_weight.shoe_weight1 = weight
     shoe_weight.created_at = new Date()
     shoe_weight.weighttime1 = new Date()
     shoe_weight.updated_at = new Date()
-    shoe_weight.created_by = req.user
-    shoe_weight.updated_by = req.user
+    if (req.user) {
+
+        shoe_weight.created_by = req.user
+        shoe_weight.updated_by = req.user
+    }
     await shoe_weight.save()
     return res.status(200).json(shoe_weight)
 }
@@ -802,13 +808,15 @@ export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextF
     shoe_weight.dye = d1
     shoe_weight.month = month
     shoe_weight.article = art1
-    shoe_weight.upper_weight = upper_weight;
+    shoe_weight.upper_weight2 = upper_weight;
     shoe_weight.shoe_weight2 = weight
     shoe_weight.weighttime2 = new Date()
     shoe_weight.created_at = new Date()
     shoe_weight.updated_at = new Date()
-    shoe_weight.created_by = req.user
-    shoe_weight.updated_by = req.user
+    if (req.user) {
+        shoe_weight.created_by = req.user
+        shoe_weight.updated_by = req.user
+    }
     await shoe_weight.save()
     return res.status(200).json(shoe_weight)
 }
@@ -854,7 +862,7 @@ export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextF
     }
 
     shoe_weight.machine = m1
-    shoe_weight.upper_weight = upper_weight;
+    shoe_weight.upper_weight3 = upper_weight;
     shoe_weight.dye = d1
     shoe_weight.month = month
     shoe_weight.article = art1
@@ -862,8 +870,10 @@ export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextF
     shoe_weight.created_at = new Date()
     shoe_weight.updated_at = new Date()
     shoe_weight.weighttime3 = new Date()
-    shoe_weight.created_by = req.user
-    shoe_weight.updated_by = req.user
+    if (req.user) {
+        shoe_weight.created_by = req.user
+        shoe_weight.updated_by = req.user
+    }
     await shoe_weight.save()
     return res.status(200).json(shoe_weight)
 }
@@ -875,7 +885,8 @@ export const ValidateShoeWeight = async (req: Request, res: Response, next: Next
         return res.status(404).json({ message: "shoe weight not found" })
     shoe_weight.is_validated = true
     shoe_weight.updated_at = new Date()
-    shoe_weight.updated_by = req.user
+    if (req.user)
+        shoe_weight.updated_by = req.user
     await shoe_weight.save()
     return res.status(200).json(shoe_weight)
 }
@@ -886,7 +897,8 @@ export const DeleteShoeWeight = async (req: Request, res: Response, next: NextFu
         return res.status(404).json({ message: "shoe weight not found" })
     shoe_weight.is_validated = true
     shoe_weight.updated_at = new Date()
-    shoe_weight.updated_by = req.user
+    if (req.user)
+        shoe_weight.updated_by = req.user
     if (shoe_weight.shoe_photo1 && shoe_weight.shoe_photo1._id)
         await destroyFile(shoe_weight.shoe_photo1._id)
     if (shoe_weight.shoe_photo2 && shoe_weight.shoe_photo2._id)
@@ -965,11 +977,11 @@ export const GetMyTodayDyeStatus = async (req: Request, res: Response, next: Nex
     dt1.setHours(0)
     dt1.setMinutes(0)
     let statusall: IDyeStatus[] = []
-    if (req.user.is_admin) {
+    if (req.user?.is_admin) {
         statusall = await DyeStatus.find({ created_at: { $gte: dt1 } }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
     }
     else {
-        statusall = await DyeStatus.find({ created_at: { $gte: dt1 }, created_by: req.user._id }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
+        statusall = await DyeStatus.find({ created_at: { $gte: dt1 }, created_by: req.user?._id }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
     }
     return res.status(200).json(statusall)
 }
@@ -1021,9 +1033,11 @@ export const CreateDyeStatus = async (req: Request, res: Response, next: NextFun
     }
     status.created_at = new Date()
     status.updated_at = new Date()
-    status.created_by = req.user
+    if (req.user)
+        status.created_by = req.user
     status.repair_required = repair_required;
-    status.updated_by = req.user
+    if (req.user)
+        status.updated_by = req.user
     status.photo_time = new Date()
     await status.save()
     return res.status(201).json(status)
@@ -1035,7 +1049,8 @@ export const DeleteDyeStatus = async (req: Request, res: Response, next: NextFun
     if (!status)
         return res.status(404).json({ message: "dye status not found" })
     status.updated_at = new Date()
-    status.updated_by = req.user
+    if (req.user)
+        status.updated_by = req.user
     if (status.dye_photo && status.dye_photo._id)
         await destroyFile(status.dye_photo._id)
     await status.remove()

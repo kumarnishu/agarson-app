@@ -1,4 +1,5 @@
 import { ICRMCity, ICRMState, ILead, ILeadSource, ILeadType, IReferredParty, IStage } from "../types/crm.types"
+import { IUser } from "../types/user.types"
 import { apiClient } from "./utils/AxiosInterceptor"
 
 //leads
@@ -28,9 +29,14 @@ export const FindUnknownCrmCities = async () => {
 }
 
 
-export const FuzzySearchLeads = async ({ searchString, limit, page, stage }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
-  return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
+export const FuzzySearchLeads = async ({ user, searchString, limit, page, stage }: { user?: IUser, searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
+  if (user && user.assigned_permissions.includes("show_leads_useless")) {
+    return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
+  }
+  return await apiClient.get(`search/leads/ok?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
 }
+
+
 
 export const ConvertLeadToRefer = async ({ id }: { id: string }) => {
   return await apiClient.patch(`leads/torefer/${id}`)

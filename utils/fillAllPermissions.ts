@@ -348,8 +348,8 @@ export function FetchAllPermissions() {
                         label: 'delete'
                     },
                     {
-                        value: 'leads_delete_useless',
-                        label: 'Delete Useless Leads'
+                        value: 'show_leads_useless',
+                        label: 'Show Useless Leads'
                     },
                     {
                         value: 'leads_export',

@@ -40,7 +40,7 @@ export default function ShoeWeightAdminPage() {
   })
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'shoe_weight_view' }))
 
-  const { data, isLoading, refetch: ReftechShoeWeights } = useQuery<AxiosResponse<{ weights: IShoeWeight[], page: number, total: number, limit: number }>, BackendError>(["weights", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetShoeWeights({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+  const { data, isLoading, refetch: ReftechShoeWeights } = useQuery<AxiosResponse<{ weights: IShoeWeight[], page: number, total: number, limit: number }>, BackendError>(["shoe_weights", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetShoeWeights({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
   const [selectedData, setSelectedData] = useState<{
     dye: string,
@@ -53,7 +53,9 @@ export default function ShoeWeightAdminPage() {
     weighttime1: string,
     weighttime2: string,
     weighttime3: string,
-    upper_weight: number,
+    upper_weight1: number,
+    upper_weight2: number,
+    upper_weight3: number,
     shoe_weight2: number,
     shoe_photo2: string,
     shoe_weight3: number,
@@ -102,7 +104,9 @@ export default function ShoeWeightAdminPage() {
       weighttime1: string,
       weighttime2: string,
       weighttime3: string,
-      upper_weight: number,
+      upper_weight1: number,
+      upper_weight2: number,
+      upper_weight3: number,
       shoe_weight2: number,
       shoe_photo2: string,
       shoe_weight3: number,
@@ -120,13 +124,15 @@ export default function ShoeWeightAdminPage() {
           machine: weight.machine.display_name,
           is_validated: weight.is_validated,
           month: weight.month,
+          upper_weight1: weight.upper_weight1,
           shoe_weight1: weight.shoe_weight1,
           shoe_photo1: weight.shoe_photo1 && weight.shoe_photo1?.public_url||'',
           weighttime1: new Date(weight.weighttime1).toLocaleDateString(),
-          upper_weight: weight.upper_weight,
+          upper_weight2: weight.upper_weight2,
           shoe_weight2: weight.shoe_weight2,
           shoe_photo2: weight.shoe_photo2 && weight.shoe_photo2?.public_url || '',
           weighttime2: new Date(weight.weighttime2).toLocaleDateString(),
+          upper_weight3: weight.upper_weight3,
           shoe_weight3: weight.shoe_weight3,
           shoe_photo3: weight.shoe_photo3 && weight.shoe_photo3?.public_url || '',
           weighttime3: new Date(weight.weighttime3).toLocaleDateString(),

@@ -65,7 +65,7 @@ export default function LeadsPage() {
 
   const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter, LoggedInUser], async () => FuzzySearchLeads({ user: LoggedInUser, searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
     enabled: false
   })
   const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
@@ -124,8 +124,15 @@ export default function LeadsPage() {
 
 
   useEffect(() => {
-    if (stageSuccess) {
-      setStages(stagedata.data)
+    if (stageSuccess && stagedata.data) {
+      if (LoggedInUser?.assigned_permissions.includes('show_leads_useless')) {
+        setStages(stagedata.data)
+      }
+      else {
+        let stagess = stagedata.data.filter((stage) => { return stage.stage !== 'useless' })
+        setStages(stagess)
+      }
+
     }
   }, [stageSuccess, stages, stagedata])
 
@@ -244,7 +251,7 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {LoggedInUser?.assigned_permissions.includes('leads_delete_useless') && <Tooltip title="Delete Selected Leads">
+            {LoggedInUser?._id === LoggedInUser?.created_by._id && LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="Delete Selected Leads">
               <IconButton color="error"
 
                 onClick={() => {
