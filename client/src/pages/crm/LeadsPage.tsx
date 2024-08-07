@@ -1,5 +1,5 @@
 import { Delete, Search } from '@mui/icons-material'
-import { Fade,  IconButton, InputAdornment,  LinearProgress, Menu, MenuItem,  Select, TextField,  Tooltip, Typography } from '@mui/material'
+import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useState } from 'react'
@@ -244,7 +244,7 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {LoggedInUser?.created_by._id === LoggedInUser?._id && LoggedInUser?.assigned_permissions.includes('leads_delete')&& <Tooltip title="Delete Selected Leads">
+            {LoggedInUser?.created_by._id === LoggedInUser?._id && LoggedInUser?.assigned_permissions.includes('leads_delete_useless') && <Tooltip title="Delete Selected Leads">
               <IconButton color="error"
 
                 onClick={() => {
@@ -285,7 +285,7 @@ export default function LeadsPage() {
             </Select>
 
 
-            {LoggedInUser?.assigned_permissions.includes('leads_create') &&<UploadLeadsExcelButton />}
+            {LoggedInUser?.assigned_permissions.includes('leads_create') && <UploadLeadsExcelButton />}
           </Stack >
           <>
 
@@ -319,21 +319,21 @@ export default function LeadsPage() {
                   setLead(undefined);
                   setAnchorEl(null)
                 }}
-                
+
 
               > Add New</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('leads_export') &&< MenuItem onClick={handleExcel}
+              {LoggedInUser?.assigned_permissions.includes('leads_export') && < MenuItem onClick={handleExcel}
 
               >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditLeadDialog lead={undefined} />
-            <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />
+            {selectedLeads && selectedLeads.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
           </>
         </Stack >
       </Stack >
 
-       < LeadsTable
+      < LeadsTable
         lead={lead}
         setLead={setLead}
         selectAll={selectAll}
