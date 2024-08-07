@@ -9,7 +9,7 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IUser } from '../../../types/user.types';
-import { GetArticles, GetDyes, GetMachines,  UpdateShoeWeight2 } from '../../../services/ProductionServices';
+import {  GetDyeById, GetDyes, GetMachines,  UpdateShoeWeight2 } from '../../../services/ProductionServices';
 import { IArticle, IDye, IMachine, IShoeWeight } from '../../../types/production.types';
 import { months } from '../../../utils/months';
 import UploadFileButton from '../../buttons/UploadFileButton';
@@ -29,7 +29,9 @@ function UpdateShoeWeightForm2({ shoe_weight }: { shoe_weight: IShoeWeight }) {
     const { data: dyes } = useQuery<AxiosResponse<IDye[]>, BackendError>("dyes", async () => GetDyes())
     const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
     const [file, setFile] = useState<File>()
-    const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
+    const [dyeid, setDyeid] = useState<string>('');
+    const [articles, setArticles] = useState<IArticle[]>([])
+    const { data: dyedata, refetch: refetchDye } = useQuery<AxiosResponse<IDye>, BackendError>(["dye", dyeid], async () => GetDyeById(dyeid), { enabled: false })
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IUser>, BackendError, {
             id: string,
@@ -90,7 +92,23 @@ function UpdateShoeWeightForm2({ shoe_weight }: { shoe_weight: IShoeWeight }) {
         if (file)
             setFile(file)
     }, [file])
-    console.log(shoe_weight)
+    useEffect(() => {
+        if (formik.values.dye)
+            setDyeid(formik.values.dye)
+    }, [formik.values.dye])
+
+    useEffect(() => {
+        refetchDye()
+    }, [dyeid])
+
+    useEffect(() => {
+        if (dyedata) {
+            setArticles(dyedata.data.articles)
+        }
+        else {
+            setArticles([])
+        }
+    }, [dyedata])
     useEffect(() => {
         if (isSuccess) {
             setTimeout(() => {
@@ -181,7 +199,7 @@ function UpdateShoeWeightForm2({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         error={
                             formik.touched.article && formik.errors.article ? true : false
                         }
-                        
+                        disabled
                         id="article"
                         helperText={
                             formik.touched.article && formik.errors.article ? formik.errors.article : ""
@@ -189,13 +207,13 @@ function UpdateShoeWeightForm2({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         {...formik.getFieldProps('article')}
                         required
                         label="Select Article"
-                        disabled
+                        
                         fullWidth
                     >
                         <option key={'00'} value={undefined}>
                         </option>
                         {
-                            articles && articles.data && articles.data.map((article, index) => {
+                            articles &&  articles.map((article, index) => {
                                 return (<option key={index} value={article._id}>
                                     {article.display_name}
                                 </option>)

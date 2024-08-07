@@ -14,7 +14,7 @@ import { CreateDye, GetArticles } from '../../../services/ProductionServices';
 function NewDyeForm() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IDye>, BackendError, {
-            dye_number: number, size: string, article_id: string, st_weight: number
+            dye_number: number, size: string, article_ids: string[], st_weight: number
         }>
         (CreateDye, {
             onSuccess: () => {
@@ -29,14 +29,14 @@ function NewDyeForm() {
             dye_number: 0,
             size: "",
             st_weight: 0,
-            article_id: ''
+            article_ids: []
         },
         validationSchema: Yup.object({
             dye_number: Yup.number()
                 .required('Required field'),
             size: Yup.string()
                 .required('Required field'),
-            article_id: Yup.string()
+            article_ids: Yup.array()
                 .required('Required field'),
             st_weight: Yup.string()
                 .required('Required field'),
@@ -45,7 +45,7 @@ function NewDyeForm() {
             mutate({
                 dye_number: values.dye_number,
                 size: values.size,
-                article_id: values.article_id,
+                article_ids: values.article_ids,
                 st_weight: values.st_weight
 
             })
@@ -110,22 +110,24 @@ function NewDyeForm() {
                     }
                     {...formik.getFieldProps('st_weight')}
                 />
+                
                 < TextField
                     select
                     SelectProps={{
-                        native: true
+                        native: true,
+                        multiple:true
                     }}
                     focused
                     error={
-                        formik.touched.article_id && formik.errors.article_id ? true : false
+                        formik.touched.article_ids && formik.errors.article_ids ? true : false
                     }
-                    id="article_id"
+                    id="article_ids"
                     helperText={
-                        formik.touched.article_id && formik.errors.article_id ? formik.errors.article_id : ""
+                        formik.touched.article_ids && formik.errors.article_ids ? formik.errors.article_ids : ""
                     }
-                    {...formik.getFieldProps('article_id')}
+                    {...formik.getFieldProps('article_ids')}
                     required
-                    label="Select Article"
+                    label="Select Articles"
                     fullWidth
                 >
                     {

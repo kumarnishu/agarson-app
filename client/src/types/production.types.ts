@@ -6,7 +6,7 @@ export type IDye = {
     active: boolean,
     dye_number: number,
     size: string,
-    article: IArticle,
+    articles: IArticle[],
     stdshoe_weight: number,
     created_at: Date,
     updated_at: Date,

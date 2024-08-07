@@ -40,16 +40,16 @@ export const GetArticles = async (req: Request, res: Response, next: NextFunctio
 
 export const GetDyeById = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.params.id;
-    let dye = await Dye.findById(id).populate('article');
+    let dye = await Dye.findById(id).populate('articles');
     return res.status(200).json(dye)
 }
 export const GetDyes = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = String(req.query.hidden)
     let dyes: IDye[] = []
     if (hidden === "true") {
-        dyes = await Dye.find().populate('article').populate('created_by').populate('updated_by').sort('dye_number')
+        dyes = await Dye.find().populate('articles').populate('created_by').populate('updated_by').sort('dye_number')
     } else
-        dyes = await Dye.find({ active: true }).populate('article').populate('created_by').populate('updated_by').sort('dye_number')
+        dyes = await Dye.find({ active: true }).populate('articles').populate('created_by').populate('updated_by').sort('dye_number')
     return res.status(200).json(dyes)
 }
 
@@ -186,28 +186,39 @@ export const BulkUploadDye = async (req: Request, res: Response, next: NextFunct
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: { dye_number: number, size: string, article: string, st_weight: number }[] = xlsx.utils.sheet_to_json(
+        let workbook_response: { dye_number: number, size: string, articles: string, st_weight: number }[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
-        let newDyes: { dye_number: number, size: string, article: string, st_weight: number }[] = []
-        workbook_response.forEach(async (dye) => {
-            let dye_number: number | null = dye.dye_number
-            let size: string | null = dye.size
-            let article: string | null = dye.article || ""
-            let st_weight: number | null = dye.st_weight
-            newDyes.push({ dye_number: dye_number, size: size, article: article, st_weight: st_weight })
-        })
+        let newDyes: { dye_number: number, size: string, articles: IArticle[], st_weight: number }[] = []
+
+        for (let i = 0; i < workbook_response.length; i++) {
+            let dye_number: number | null = workbook_response[i].dye_number
+            let size: string | null = workbook_response[i].size
+            let articles: string[] | null = workbook_response[i].articles && workbook_response[i].articles.split(",") || []
+            let st_weight: number | null = workbook_response[i].st_weight
+            let newArticles: IArticle[] = []
+            if (articles && articles.length > 0) {
+                for (let j = 0; j < articles.length; j++) {
+                    let art = await Article.findOne({ name: articles[j].toLowerCase().trim() })
+                    if (art) {
+                        newArticles.push(art)
+                    }
+                }
+            }
+
+            newDyes.push({ dye_number: dye_number, size: size, articles: newArticles, st_weight: st_weight })
+        }
+
 
         for (let i = 0; i < newDyes.length; i++) {
             let mac = newDyes[i];
             let dye = await Dye.findOne({ dye_number: mac.dye_number })
-            let art = await Article.findOne({ name: mac.article.toLowerCase().trim() })
             if (!dye) {
-                await new Dye({ dye_number: mac.dye_number, size: mac.size, article: art, stdshoe_weight: mac.st_weight, created_by: req.user, updated_by: req.user }).save()
+                await new Dye({ dye_number: mac.dye_number, size: mac.size, articles: newDyes[i].articles, stdshoe_weight: mac.st_weight, created_by: req.user, updated_by: req.user }).save()
             }
             else {
                 await Dye.findByIdAndUpdate(dye._id, {
-                    dye_number: mac.dye_number, size: mac.size, article: art?._id, stdshoe_weight: mac.st_weight, created_by: req.user, updated_by: req.user
+                    dye_number: mac.dye_number, size: mac.size, articles: newDyes[i].articles, stdshoe_weight: mac.st_weight, created_by: req.user, updated_by: req.user
                 })
             }
         }
@@ -352,10 +363,10 @@ export const ToogleArticle = async (req: Request, res: Response, next: NextFunct
 }
 
 export const CreateDye = async (req: Request, res: Response, next: NextFunction) => {
-    const { dye_number, size, article_id, st_weight } = req.body as {
+    const { dye_number, size, article_ids, st_weight } = req.body as {
         dye_number: number,
         size: string,
-        article_id: string,
+        article_ids: string,
         st_weight: number
     }
     if (!dye_number || !size) {
@@ -363,12 +374,10 @@ export const CreateDye = async (req: Request, res: Response, next: NextFunction)
     }
     if (await Dye.findOne({ dye_number: dye_number }))
         return res.status(400).json({ message: "already exists this dye" })
-    let art = await Article.findById(article_id)
-    if (!art)
-        return res.status(404).json({ message: "article not found" })
+
     let dye = await new Dye({
         dye_number: dye_number, size: size,
-        article: art,
+        article: article_ids,
         stdshoe_weight: st_weight,
         created_at: new Date(),
         updated_at: new Date(),
@@ -378,10 +387,10 @@ export const CreateDye = async (req: Request, res: Response, next: NextFunction)
     return res.status(201).json(dye)
 }
 export const UpdateDye = async (req: Request, res: Response, next: NextFunction) => {
-    const { dye_number, size, article_id, st_weight } = req.body as {
+    const { dye_number, size, article_ids, st_weight } = req.body as {
         dye_number: number,
         size: string,
-        article_id: string,
+        article_ids: string,
         st_weight: number
     }
     if (!dye_number || !size) {
@@ -396,12 +405,11 @@ export const UpdateDye = async (req: Request, res: Response, next: NextFunction)
         if (await Dye.findOne({ dye_number: dye_number }))
             return res.status(400).json({ message: "already exists this dye" })
 
-    let art = await Article.findById(article_id)
-    if (!art)
-        return res.status(404).json({ message: "article not found" })
+
     dye.dye_number = dye_number
     dye.size = size
-    dye.article = art
+    //@ts-ignore
+    dye.articles = article_ids
     dye.stdshoe_weight = st_weight,
         dye.updated_at = new Date()
     if (req.user)
@@ -624,7 +632,11 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
     let weights: IShoeWeight[] = []
     let count = 0
     let dt1 = new Date(String(start_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
     let dt2 = new Date(String(end_date))
+    dt2.setHours(0)
+    dt2.setMinutes(0)
     let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {

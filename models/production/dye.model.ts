@@ -7,7 +7,7 @@ export type IDye = {
     active: boolean,
     dye_number: number,
     size: string,
-    article:IArticle,
+    articles:IArticle[],
     stdshoe_weight:number,
     created_at: Date,
     updated_at: Date,
@@ -33,10 +33,10 @@ const DyeSchema = new mongoose.Schema<IDye, mongoose.Model<IDye, {}, {}>, {}>({
         required: true,
         trim: true
     },
-    article: {
+    articles: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Article'
-    },
+    }],
     active: {
         type: Boolean,
         default: true

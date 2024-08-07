@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress,  MenuItem, Select,  } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Button, CircularProgress, MenuItem, Select, FormControl, InputLabel, } from '@mui/material'
 import { useContext, useEffect, useState } from 'react';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
@@ -16,7 +16,7 @@ import { toTitleCase } from '../../../utils/TitleCase';
 
 function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser | undefined>> }) {
     const [users, setUsers] = useState<IUser[]>(user.assigned_users)
-    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({hidden:'false'}))
+    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false' }))
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
@@ -91,29 +91,27 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                     </Typography>
                     <Button onClick={() => formik.setValues({ ids: [] })}>Remove Selection</Button>
                     <form onSubmit={formik.handleSubmit}>
-                        <Select
-                            sx={{ mt: 2 }}
-                            multiple
-                            fullWidth
-                            size='small'
-                            {...formik.getFieldProps('ids')}
-                        > <MenuItem
-                            key={0}
-                            value={undefined}
-                        >
-                                {toTitleCase('Select')}
-                            </MenuItem>
+                        <FormControl fullWidth sx={{ pt: 2 }}>
+                            <InputLabel id="users" sx={{mt:1}}>Select Users</InputLabel>
+                            <Select
+                                multiple
+                                id="users"
+                                fullWidth
+                                size='small'
+                                {...formik.getFieldProps('ids')}
+                            >
 
-                            {users.map((user, index) => (
-                                <MenuItem
-                                    key={index}
-                                    value={user._id}
-                                >
-                                    {toTitleCase(user.username)}
-                                </MenuItem>
-                            ))}
-                        </Select>
-
+                                {users.map((user, index) => (
+                                    <MenuItem
+                                        
+                                        key={index}
+                                        value={user._id}
+                                    >
+                                        {toTitleCase(user.username)}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                         <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color="primary" type="submit"
                             disabled={Boolean(isLoading)}
                             fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Assign"}

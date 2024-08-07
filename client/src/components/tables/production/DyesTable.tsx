@@ -43,7 +43,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                             >
 
 
-                                <Checkbox  sx={{ width: 16, height: 16 }}
+                                <Checkbox sx={{ width: 16, height: 16 }}
                                     indeterminate={selectAll ? true : false}
                                     checked={Boolean(selectAll)}
                                     size="small" onChange={(e) => {
@@ -58,13 +58,13 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                     }} />
 
                             </STableHeadCell>
-                          
-                                <STableHeadCell
-                                >
 
-                                    Actions
+                            <STableHeadCell
+                            >
 
-                                </STableHeadCell>
+                                Actions
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -74,13 +74,13 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                             <STableHeadCell
                             >
 
-                               Size
+                                Size
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                               Article
+                                Article
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -136,7 +136,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                             <STableCell>
 
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     checked={Boolean(selectAll)}
                                                 />
 
@@ -148,7 +148,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                         {!selectAll ?
                                             <STableCell>
 
-                                                <Checkbox  sx={{ width: 16, height: 16 }} size="small"
+                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
                                                     onChange={(e) => {
                                                         setDye(dye)
                                                         if (e.target.checked) {
@@ -167,43 +167,43 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                             null
                                         }
                                         {/* actions */}
-                                      
-                                            <STableCell>
-                                                <PopUp
-                                                    element={
-                                                        <Stack direction="row">
-                                                            <>
+
+                                        <STableCell>
+                                            <PopUp
+                                                element={
+                                                    <Stack direction="row">
+                                                        <>
                                                             {user?.assigned_permissions.includes("dye_edit") && <Tooltip title="dye_edit">
-                                                                    <IconButton
-                                                                      
-                                                                        onClick={() => {
-                                                                            setDye(dye)
-                                                                            setChoice({ type: ProductionChoiceActions.update_dye })
-                                                                        }}
+                                                                <IconButton
 
-                                                                    >
-                                                                        <Edit />
-                                                                    </IconButton>
-                                                                </Tooltip>}
-                                                                
+                                                                    onClick={() => {
+                                                                        setDye(dye)
+                                                                        setChoice({ type: ProductionChoiceActions.update_dye })
+                                                                    }}
+
+                                                                >
+                                                                    <Edit />
+                                                                </IconButton>
+                                                            </Tooltip>}
+
                                                             {user?.assigned_permissions.includes("dye_edit") && <Tooltip title="dye_edit">
-                                                                        <IconButton color="primary"
-                                                                       
-                                                                            onClick={() => {
-                                                                                setDye(dye)
-                                                                                setChoice({ type: ProductionChoiceActions.toogle_dye })
+                                                                <IconButton color="primary"
 
-                                                                            }}
-                                                                        >
-                                                                            <RestartAlt />
-                                                                        </IconButton>
-                                                                    </Tooltip>}
-                                                            </>
+                                                                    onClick={() => {
+                                                                        setDye(dye)
+                                                                        setChoice({ type: ProductionChoiceActions.toogle_dye })
 
-                                                        </Stack>}
-                                                />
+                                                                    }}
+                                                                >
+                                                                    <RestartAlt />
+                                                                </IconButton>
+                                                            </Tooltip>}
+                                                        </>
 
-                                            </STableCell>
+                                                    </Stack>}
+                                            />
+
+                                        </STableCell>
                                         <STableCell>
                                             {dye.dye_number}
                                         </STableCell>
@@ -211,7 +211,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                                             {dye.size}
                                         </STableCell>
                                         <STableCell>
-                                            {dye.article?dye.article.display_name:""}
+                                            {dye.articles ? dye.articles.map((a) => { return a.display_name }).toString() : ""}
                                         </STableCell>
                                         <STableCell>
                                             {dye.stdshoe_weight}
