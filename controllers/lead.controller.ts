@@ -24,6 +24,11 @@ export const GetAllCRMLeadTypes = async (req: Request, res: Response, next: Next
     return res.status(200).json(types)
 }
 
+export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunction) => {
+    let types = await LeadType.find()
+    return res.status(200).json(types)
+}
+
 
 export const CreateCRMLeadTypes = async (req: Request, res: Response, next: NextFunction) => {
     const { type } = req.body as {

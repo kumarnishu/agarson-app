@@ -21,8 +21,8 @@ export function ButtonLogo({ width, height, title }: Props) {
 export function AgarsonLogo({ width, height, title }: Props) {
     return (
 
-        <Avatar title={title}
-            sx={{ width: width, height: height, borderRadius: 10 }}
+        <img  title={title}
+            style={{ width: width, height: height, borderRadius: 10 }}
             alt="img1" src={logo}
         />
     )
