@@ -460,7 +460,7 @@ export const CreateCRMCity = async (req: Request, res: Response, next: NextFunct
         created_by: req.user,
         updated_by: req.user
     }).save()
-    let users = await User.find({ assigned_crm_states:STate });
+    let users = await User.find({ assigned_crm_states: STate });
     console.log(users.length)
     await HandleCRMCitiesAssignment(users.map((i) => { return i._id.valueOf() }), [result._id.valueOf()], 1);
     return res.status(201).json(result)
@@ -779,7 +779,7 @@ export const ConvertLeadToRefer = async (req: Request, res: Response, next: Next
 
     await new ReferredParty({
         name: lead.name, customer_name: lead.customer_name, city: lead.city, state: lead.state, mobile: lead.mobile, gst: "erertyujhtyuiop",
-        convertedfromlead:true,
+        convertedfromlead: true,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -1787,13 +1787,13 @@ export const BackUpAllLeads = async (req: Request, res: Response, next: NextFunc
 
 export const CreateLead = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as Request['body'] &ILead& { remark: string }
+    let { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as Request['body'] & ILead & { remark: string }
 
     // validations
     if (!mobile)
         return res.status(400).json({ message: "provide primary mobile number" });
 
-    if(await ReferredParty.findOne({mobile:mobile}))
+    if (await ReferredParty.findOne({ mobile: mobile }))
         return res.status(400).json({ message: "our refer party exists with this mobile" });
     let uniqueNumbers = []
     if (mobile)
@@ -1862,7 +1862,7 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
 
 export const UpdateLead = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as Request['body'] &ILead& { remark: string }
+    const { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as Request['body'] & ILead & { remark: string }
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
     let lead = await Lead.findById(id);
@@ -2436,7 +2436,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
 
 export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state, gst, mobile } = body as Request['body']&&ReferredParty
+    const { name, customer_name, city, state, gst, mobile } = body as Request['body'] && ReferredParty
     if (!name || !city || !state || !mobile || !gst) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -2697,7 +2697,17 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
     let day = previous_date.getDate() - 7
     previous_date.setDate(day)
 
-    let reminders = await Remark.find({ remind_date: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
+    let leads = await Lead.find({ updated_at: { $lte: new Date(), $gt: previous_date } }).populate('remarks')
+
+    let remarkids: string[] = []
+
+    leads.forEach((lead) => {
+        let remark = lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1];
+        if (remark && remark.remind_date) {
+            remarkids.push(remark._id)
+        }
+    })
+    let reminders = await Remark.find({ _id: { $in: remarkids }, remind_date: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
         path: 'lead',
         populate: [
             {
@@ -2727,14 +2737,6 @@ export const GetReminderRemarks = async (req: Request, res: Response, next: Next
             }
         ]
     }).sort('-remind_date')
-
-    reminders = reminders.filter((reminder) => {
-        let all_remarks = reminder.lead && reminder.lead.remarks;
-        let last_remark = all_remarks && all_remarks.length > 0 && all_remarks[all_remarks.length - 1];
-        if (last_remark && last_remark.remind_date) {
-            return reminder;
-        }
-    })
     return res.status(200).json(reminders)
 }
 

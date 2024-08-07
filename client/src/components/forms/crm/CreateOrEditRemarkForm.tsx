@@ -32,6 +32,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: ILead, r
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')
                 queryClient.invalidateQueries('remarks')
+                queryClient.invalidateQueries('reminderremarks')
             }
         })
     const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
