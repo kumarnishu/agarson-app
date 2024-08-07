@@ -80,7 +80,7 @@ function DyesTable({ dye, selectAll, dyes, setSelectAll, setDye, selectedDyes, s
                             <STableHeadCell
                             >
 
-                                Article
+                                Articles
 
                             </STableHeadCell>
                             <STableHeadCell
