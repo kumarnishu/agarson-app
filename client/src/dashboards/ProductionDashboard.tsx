@@ -30,10 +30,10 @@ function ProductionDashboard() {
           return (
             <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={feat.url} style={{ textDecoration: 'none' }}>
-                <Paper sx={{ p: 2, m: 0, bgcolor: feat.feature.includes('report') ? 'black' : 'blue', boxShadow: 2, borderRadius: 5, borderColor: 'white' }} >
+                <Paper sx={{ p: 2, m: 0,  boxShadow: 2, borderRadius: 5, borderColor: 'white' }} >
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                     <ButtonLogo title="" height={40} width={40} />
-                    <Typography color={'white'} variant="button" fontSize={15} component="div">
+                    <Typography  variant="button" fontSize={15} component="div">
                       {feat.feature}
                     </Typography>
                   </Stack>

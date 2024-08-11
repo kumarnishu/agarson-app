@@ -23,7 +23,7 @@ export const STableRow = styled.tr`
 export const STableCell = styled.td`
   text-align: left;
   padding-left:3px;
-  padding: 5px;
+  padding: 3px;
   border: 1px solid #ddd;
   white-space: nowrap;
   text-transform: capitalize;
@@ -35,10 +35,10 @@ export const STableHeadCell = styled.th`
   position:sticky;
   z-index: 1;
   padding-left:3px;
-  padding: 5px;
+  padding: 3px;
   text-align: left;
   letter-spacing: 0.5px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   border: 1px solid #ddd;
   background-color: rgba(0,0,0,0.05);
   white-space: nowrap;

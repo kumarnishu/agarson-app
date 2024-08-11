@@ -1,13 +1,13 @@
-import { Popover } from '@mui/material';
+import { Button, Popover } from '@mui/material';
 import { useState } from 'react'
 
 function PopUp({ element }: { element: JSX.Element }) {
     const [popup, setPopup] = useState<any | null>(null);
     return (
         <div>
-            <span style={{fontSize:'11px'}} onClick={(e) => setPopup(e.currentTarget)}>
+            <Button size="small" variant='text' color='inherit' onClick={(e) => setPopup(e.currentTarget)}>
                 🔁 actions
-            </span>
+            </Button>
             <Popover
                 open={Boolean(popup)}
                 anchorEl={popup}

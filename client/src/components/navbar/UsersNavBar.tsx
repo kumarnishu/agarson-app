@@ -15,7 +15,7 @@ export default function UsersNavBar() {
     const navigate = useNavigate()
     return (
         <>
-            <Box sx={{ bgcolor: 'blue', width: '100%', p:2}}>
+            <Box sx={{ bgcolor: 'blue', width: '100%', py:1}}>
                 {/* parent stack */}
                 <Stack direction="row" sx={{
                     justifyContent: "space-between", alignItems: "center"

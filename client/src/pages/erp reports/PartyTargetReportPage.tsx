@@ -127,210 +127,210 @@ export default function PartyTargetReportPage() {
                 header: 'TARGET',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => {return Number(a) + Number(b.original.TARGET)}, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => {return Number(a) + Number(b.original.TARGET)}, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'PROJECTION',
                 header: 'Projection',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.PROJECTION) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.PROJECTION) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'GROWTH',
                 header: 'Growth',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.GROWTH) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.GROWTH) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'TARGET_ACHIEVE',
                 header: 'Target Achieved',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TARGET_ACHIEVE) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TARGET_ACHIEVE) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'TOTAL_SALE_OLD',
                 header: 'Total Old Sale',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TOTAL_SALE_OLD) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TOTAL_SALE_OLD) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'TOTAL_SALE_NEW',
                 header: 'Total Sale New',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TOTAL_SALE_NEW) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TOTAL_SALE_NEW) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Apr',
                 header: 'L-Apr',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Apr) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Apr) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Apr',
                 header: 'C-APr',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Apr) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Apr) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_May',
                 header: 'L-May',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_May) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_May) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_May',
                 header: 'C-MAY',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_May) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_May) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Jun',
                 header: 'L-JUN',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Jun) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Jun) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Jun',
                 header: 'C-JUN',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Jun) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Jun) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Jul',
                 header: 'L-JUL',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Jul) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Jul) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Jul',
                 header: 'C-JUL',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Jul) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Jul) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Aug',
                 header: 'L-AUG',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Aug) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Aug) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Aug',
                 header: 'C-AUG',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Aug) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Aug) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Sep',
                 header: 'L-SEP',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Sep) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Sep) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Sep',
                 header: 'C-SEP',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Sep) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Sep) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Oct',
                 header: 'L-OCT',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Oct) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Oct) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Oct',
                 header: 'C-OCT',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Oct) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Oct) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Nov',
                 header: 'L-NOV',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Nov) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Nov) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Nov',
                 header: 'C-NOV',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Nov) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Nov) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Dec',
                 header: 'L-DEC',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Dec) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Dec) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Dec',
                 header: 'C-DEC',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Dec) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Dec) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Jan',
                 header: 'L-JAN',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Jan) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Jan) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Jan',
                 header: 'C-JAN',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Jan) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Jan) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Feb',
                 header: 'L-FEB',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Feb) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Feb) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Feb',
                 header: 'C-FEB',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Feb) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Feb) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Last_Mar',
                 header: 'L-MAR',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Mar) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Mar) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'Cur_Mar',
                 header: 'C-,MAR',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Mar) }, 0).toFixed(2)}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Mar) }, 0).toFixed()}</b>
             },
         ],
         [reports,],
