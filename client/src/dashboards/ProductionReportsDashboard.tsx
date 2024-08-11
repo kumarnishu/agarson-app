@@ -1,19 +1,23 @@
-import {  Grid, Paper, Stack, Typography } from "@mui/material"
+import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import { Link } from "react-router-dom";
-import {  useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../contexts/userContext";
 import { ButtonLogo } from "../components/logo/Agarson";
 
-function TodoDashboard() {
+function ProductionReportsDashboard() {
     const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
+    const { user } = useContext(UserContext)
 
     //process feature and access
     useEffect(() => {
         let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-        tmpfeatures.push({ feature: 'my todos ', is_visible: true, url: paths.todo })
-        tmpfeatures.push({ feature: 'todos admin', is_visible: true, url: paths.todo_admin })
-        setFeatures(tmpfeatures)
-        
+        user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'Shoe Weight', is_visible: true, url: paths.pending_orders })
+        user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'Dye Status', is_visible: true, url: paths.pending_orders })
+        user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'Machine Wise production', is_visible: true, url: paths.bill_aging_report })
+        user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'Category Wise Production', is_visible: true, url: paths.clients_sale }),
+        user?.assigned_permissions.includes('last_year_client_sale_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production', is_visible: true, url: paths.clients_sale_lastyear })
+            setFeatures(tmpfeatures)
     }, [])
 
     return (
@@ -41,4 +45,4 @@ function TodoDashboard() {
 }
 
 
-export default TodoDashboard
+export default ProductionReportsDashboard

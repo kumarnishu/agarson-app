@@ -3413,7 +3413,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
 
 export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state, gst, mobile } = body as Request['body'] && ReferredParty
+    const { name, customer_name, city, state, gst, mobile } = body 
     if (!name || !city || !state || !mobile || !gst) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -3439,7 +3439,9 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
     if (!isMongoId(id))
         return res.status(400).json({ message: "bad mongo id" })
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state, mobile, gst } = body as Request['body'] && ReferredParty
+    console.log(body)
+    const { name, customer_name, city, state, mobile, gst } = body 
+    console.log(name,city,state,mobile,body.mobile)
     if (!name || !city || !state || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }

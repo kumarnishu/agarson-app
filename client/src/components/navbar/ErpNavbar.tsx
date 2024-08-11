@@ -17,7 +17,7 @@ export default function ErpNavbar() {
     const navigate = useNavigate()
     return (
         <>
-            <Box sx={{ bgcolor: 'rgba(0,0,255,0.7)', width: '100%', p: 0.6 }}>
+            <Box sx={{ bgcolor: 'blue', width: '100%', p: 2 }}>
                 {/* parent stack */}
                 <Stack direction="row" sx={{
                     justifyContent: "space-between", alignItems: "center"
@@ -45,8 +45,8 @@ export default function ErpNavbar() {
                                     justifyContent={"center"}
                                     alignItems="center"
                                     gap={2}
-                                >   <Link to={paths.erp_dashboard} onDoubleClick={() => navigate(paths.dashboard)} replace={true} style={{ textDecoration: 'none' }}>
-                                        <Paper sx={{ bgcolor: 'white', boxShadow: 1, border: 10, borderRadius: 1, borderColor: 'white' }}>
+                                >   <Link to={paths.erp_reports_dashboard} onDoubleClick={() => navigate(paths.dashboard)} replace={true} style={{ textDecoration: 'none' }}>
+                                        <Paper sx={{ p:1,bgcolor: 'white', boxShadow: 1,  borderRadius: 1, borderColor: 'white' }}>
                                             <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                                                 <ButtonLogo title="" height={20} width={20} />
                                                 <Typography variant="button" sx={{ fontSize: 12 }} component="div">

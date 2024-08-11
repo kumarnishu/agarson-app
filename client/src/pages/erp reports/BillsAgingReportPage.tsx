@@ -54,31 +54,31 @@ export default function BillsAgingReportPage() {
                 header: '>70',
                 aggregationFn: 'sum', 
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.plu70) }, 0).toFixed()}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.plu70) }, 0).toFixed(2)}</b>
             },
             {
                 accessorKey: 'in70to90',
                 header: '70-90',
                 aggregationFn: 'sum', 
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.in70to90) }, 0).toFixed()}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.in70to90) }, 0).toFixed(2)}</b>
             },
             {
                 accessorKey: 'in90to120',
                 header: '90-120',
                 aggregationFn: 'sum', 
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.in90to120) }, 0).toFixed()}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.in90to120) }, 0).toFixed(2)}</b>
             },
             {
                 accessorKey: 'plus120',
                 header: '>120',
                 aggregationFn: 'sum', 
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.plus120) }, 0).toFixed()}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.plus120) }, 0).toFixed(2)}</b>
             }
         ],
-        [reports,],
+        [reports],
         //end
     );
 
@@ -138,6 +138,7 @@ export default function BillsAgingReportPage() {
                 border: '1px solid #ddd;'
             },
         }),
+        initialState: { density: 'comfortable' },
         enableGrouping: true,
         enableRowSelection: true,
         enableGlobalFilterModes: true,

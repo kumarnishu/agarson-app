@@ -17,7 +17,7 @@ export default function TodoNavBar() {
     const navigate = useNavigate()
     return (
         <>
-            <Box sx={{ bgcolor: 'rgba(0,0,255,0.7)', width: '100%', p: 0.6 }}>
+            <Box sx={{ bgcolor: 'blue', width: '100%', p: 2 }}>
                 {/* parent stack */}
                 <Stack direction="row" sx={{
                     justifyContent: "space-between", alignItems: "center"
@@ -47,7 +47,7 @@ export default function TodoNavBar() {
                                     gap={2}
                                 >
                                     <Link to={paths.todo_dashboard} onDoubleClick={() => navigate(paths.dashboard)} replace={true} style={{ textDecoration: 'none' }}>
-                                        <Paper sx={{ bgcolor: 'white', boxShadow: 1, border: 10, borderRadius: 1, borderColor: 'white' }}>
+                                        <Paper sx={{p:1, bgcolor: 'white', boxShadow: 1,  borderRadius: 1, borderColor: 'white' }}>
                                             <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                                                 <ButtonLogo title="" height={20} width={20} />
                                                 <Typography variant="button" sx={{ fontSize: 12 }} component="div">

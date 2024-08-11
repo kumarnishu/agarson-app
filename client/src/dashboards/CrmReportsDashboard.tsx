@@ -1,19 +1,21 @@
-import {  Grid, Paper, Stack, Typography } from "@mui/material"
+import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import { Link } from "react-router-dom";
-import {  useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../contexts/userContext";
 import { ButtonLogo } from "../components/logo/Agarson";
 
-function TodoDashboard() {
+function CrmReportsDashboard() {
     const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
+    const { user } = useContext(UserContext)
 
     //process feature and access
     useEffect(() => {
         let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-        tmpfeatures.push({ feature: 'my todos ', is_visible: true, url: paths.todo })
-        tmpfeatures.push({ feature: 'todos admin', is_visible: true, url: paths.todo_admin })
+        user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'Activities ', is_visible: true, url: paths.pending_orders })
+        user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'Refer Reports', is_visible: true, url: paths.bill_aging_report })
+        user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'New Refers ', is_visible: true, url: paths.clients_sale })
         setFeatures(tmpfeatures)
-        
     }, [])
 
     return (
@@ -41,4 +43,4 @@ function TodoDashboard() {
 }
 
 
-export default TodoDashboard
+export default CrmReportsDashboard

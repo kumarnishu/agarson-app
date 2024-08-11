@@ -20,13 +20,6 @@ function ProductionDashboard() {
     user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })
     user?.assigned_permissions.includes('dye_view') && tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
     user?.assigned_permissions.includes('shoe_weight_view') && tmpfeatures.push({ feature: 'shoe weight ', is_visible: true, url: paths.shoe_weight })
-
-    user?.assigned_permissions.includes('shoe_weight_report_view') && tmpfeatures.push({ feature: 'show weight report', is_visible: true, url: paths.articles })
-    user?.assigned_permissions.includes('shoe_weight_report_view') && tmpfeatures.push({ feature: 'dye status report', is_visible: true, url: paths.articles })
-    user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: ' machine wise production Report ', is_visible: true, url: paths.machines })
-    user?.assigned_permissions.includes('thekedar_wise_production_report_view') && tmpfeatures.push({ feature: 'thekedar wise production Report  ', is_visible: true, url: paths.dyes })
-    user?.assigned_permissions.includes('machine_category_wise_production_report_view') && tmpfeatures.push({ feature: 'm-category wise production Report  ', is_visible: true, url: paths.machine_categories })
-
     setFeatures(tmpfeatures)
   }, [])
 
@@ -37,10 +30,10 @@ function ProductionDashboard() {
           return (
             <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={feat.url} style={{ textDecoration: 'none' }}>
-                <Paper sx={{ p: 2, bgcolor: 'white', boxShadow: 2, border: 10, borderRadius: 1, borderColor: 'white' }}>
+                <Paper sx={{ p: 2, m: 0, bgcolor: feat.feature.includes('report') ? 'black' : 'blue', boxShadow: 2, borderRadius: 5, borderColor: 'white' }} >
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                    <ButtonLogo title="" height={60} width={60}/>
-                    <Typography variant="button" fontSize={15} component="div">
+                    <ButtonLogo title="" height={40} width={40} />
+                    <Typography color={'white'} variant="button" fontSize={15} component="div">
                       {feat.feature}
                     </Typography>
                   </Stack>

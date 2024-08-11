@@ -55,60 +55,50 @@ import LeadsPage from './pages/crm/LeadsPage.tsx'
 import ResetPasswordDialog from './components/dialogs/users/ResetPasswordDialog.tsx'
 import MachinePage from './pages/production/MachinesPage.tsx'
 import DyeLocationsPage from './pages/production/DyeLocationPage.tsx'
+import CrmReportsDashboard from './dashboards/CrmReportsDashboard.tsx'
+import ProductionReportsDashboard from './dashboards/ProductionReportsDashboard.tsx'
 
 
 export enum paths {
-  //dashboards
   user_dashboard = "/user_dashboard",
   crm_dashboard = "/crm_dashboard",
   production_dashboard = "/production_dashboard",
   templates_dashboard = "/templates_dashboard",
-  erp_dashboard = "/erp_dashboard",
   backup_dashboard = "/backup_dashboard",
   checklist_dashboard = "/checklist_dashboard",
   visit_dashboard = "/visit_dashboard",
   todo_dashboard = "/todo_dashboard",
+  reports_dashboard="/reports/dashboard",
+  crm_reports_dashboard = "/crm_reports",
+  production_reports_dashboard="/production_reports",
+  erp_reports_dashboard = "/erp_reports_dashboard",
+
+  machine_wise_productionrepot = "machine_wise_productionrepot",
+  thekedar_wise_productionrepot = "thekedar_wise_productionrepot",
+  category_wise_productionrepot = "category_wise_productionrepot",
+  shoe_weight_productionreport = "shoe_weight_productionreport",
 
 
-  //help pages
-  user_help_page = "user_help_page",
-  crm_help_page = "crm_help_page",
-  production_help_page = "production_help_page",
-  templates_help_page = "templates_help_page",
-  erp_login_help_page = "erp_login_help_page",
-  backup_help_page = "backup_help_page",
-  greetings_help_page = "greetings_help_page",
-  checklist_help_page = "checklist_help_page",
-  visits_help_page = "visits_help_page",
-  todos_help_page = "todos_help_page",
+  refer_reports ="refer_reports",
+  new_refers="new_refers",
+  crm_activities = "crm_activities",
 
-  //visit
+
   visit = 'visit',
   visit_admin = 'visit_admin',
   visit_attendence = 'visit_attendence',
-
-  //todo
   todo = 'todo',
   todo_admin = 'todo_admin',
-
-
-  //erp reports
   pending_orders = "pending_orders",
   clients_sale = "clients_sale",
   clients_sale_lastyear = "clients_sale_lastyear",
   bill_aging_report = "bill_aging_report",
   sale_analysis ="sale_analysis",
   party_target ="party_target",
-
-  //checklists
   checklists = "checklists",
   checklist_admin_page = "checklist_admin_page",
-
-
-  //crm
   crm = "crm",
   crm_reminders = "crm_reminders",
-  crm_activities = "crm_activities",
   crm_states = "crm_states",
   crm_cities = "crm_cities",
   crm_stages = "crm_stages",
@@ -116,8 +106,6 @@ export enum paths {
   crm_leadsources = "crm_leadsources",
   leads = "leads",
   refers = "refers",
-
-  //production
   production = "production",
   machine_categories = "machine_categories",
   production_admin = "production_admin",
@@ -126,18 +114,9 @@ export enum paths {
   articles = "articles",
   shoe_weight = "shoe_weight",
   dye_location = "dye_location",
-
-
- 
-  // greeting
   greetings = "greetings",
-
-
-  // templates
   templates = "templates",
   template_categories = "template_categories",
-
-  //users
   users = "users",
   feature_reports = "feature_reports",
   states = "states",
@@ -145,8 +124,6 @@ export enum paths {
   dashboard = "/",
   reset_password = "/password/reset/:token",
   verify_email = "/email/verify/:token",
-
-  //backup
   backup_page = "backup_page",
 
 
@@ -242,64 +219,7 @@ function AppRoutes() {
               />
             
             </Route>}
-          { user?.assigned_permissions.includes('erp_report_menu') &&
-            < Route path={paths.erp_dashboard} element={<PasswordNavbar />
-            }>
-              <Route
-                index element={
-                  <ErpReportsDashboard />
-                }
-              />
-              <Route path={paths.erp_dashboard} element={
-                < ErpReportsDashboard />
-              }
-              />
-              <Route
-                path={paths.states} element={
-                  <ErpStatesPage />
-                }
-              />
-              <Route path={paths.pending_orders} element={
-                
-                  < PendingOrdersReport />
-                
-              }
-              /> <Route path={paths.clients_sale} element={
-                
-                  < ClientSaleReportsPage />
-                
-
-              }
-              />
-              <Route path={paths.clients_sale_lastyear} element={
-                
-                  < ClientSaleLastYearReportsPage />
-                
-
-              }
-              />
-              <Route path={paths.bill_aging_report} element={
-                
-                  < BillsAgingReportPage />
-                
-
-              }
-              />
-              <Route path={paths.party_target} element={
-                
-                  < PartyTargetReportsPage />
-                
-
-              }
-              />
-              <Route path={paths.sale_analysis} element={
-                
-                  < SaleAnalysisReport />
-                
-
-              }
-              />
-            </Route>}
+          
 
           { user?.assigned_permissions.includes('crm_menu') &&
             < Route path={paths.crm_dashboard} element={<CrmNavBar />
@@ -351,7 +271,133 @@ function AppRoutes() {
 
             </Route>}
 
+          {user?.assigned_permissions.includes('erp_report_menu') &&
+            < Route path={paths.erp_reports_dashboard} element={<PasswordNavbar />
+            }>
+              <Route
+                index element={
+                  <ErpReportsDashboard />
+                }
+              />
+              <Route path={paths.erp_reports_dashboard} element={
+                < ErpReportsDashboard />
+              }
+              />
+              <Route
+                path={paths.states} element={
+                  <ErpStatesPage />
+                }
+              />
+              <Route path={paths.pending_orders} element={
 
+                < PendingOrdersReport />
+
+              }
+              /> <Route path={paths.clients_sale} element={
+
+                < ClientSaleReportsPage />
+
+
+              }
+              />
+              <Route path={paths.clients_sale_lastyear} element={
+
+                < ClientSaleLastYearReportsPage />
+
+
+              }
+              />
+              <Route path={paths.bill_aging_report} element={
+
+                < BillsAgingReportPage />
+
+
+              }
+              />
+              <Route path={paths.party_target} element={
+
+                < PartyTargetReportsPage />
+
+
+              }
+              />
+              <Route path={paths.sale_analysis} element={
+
+                < SaleAnalysisReport />
+
+
+              }
+              />
+            </Route>}
+
+          {user?.assigned_permissions.includes('erp_report_menu') &&
+            < Route path={paths.production_reports_dashboard} element={<PasswordNavbar />
+            }>
+              <Route
+                index element={
+                  <ProductionReportsDashboard />
+                }
+              />
+              <Route path={paths.production_reports_dashboard} element={
+                < ProductionReportsDashboard />
+              }
+              />
+              <Route
+                path={paths.states} element={
+                  <ErpStatesPage />
+                }
+              />
+              <Route path={paths.machine_wise_productionrepot} element={
+
+                < PendingOrdersReport />
+
+              }
+              /> <Route path={paths.category_wise_productionrepot} element={
+
+                < ClientSaleReportsPage />
+
+
+              }
+              />
+              <Route path={paths.thekedar_wise_productionrepot} element={
+
+                < ClientSaleLastYearReportsPage />
+
+
+              }
+              />
+              <Route path={paths.shoe_weight_productionreport} element={
+
+                < BillsAgingReportPage />
+
+
+              }
+              />
+            </Route>}
+          {user?.assigned_permissions.includes('erp_report_menu') &&
+            < Route path={paths.crm_reports_dashboard} element={<PasswordNavbar />
+            }>
+              <Route
+                index element={
+                  <CrmReportsDashboard />
+                }
+              />
+              <Route path={paths.crm_reports_dashboard} element={
+                < CrmReportsDashboard />
+              }
+              />
+              <Route
+                path={paths.crm_activities} element={
+                  <ErpStatesPage />
+                }
+              />
+              <Route path={paths.new_refers} element={
+
+                < PendingOrdersReport />
+
+              }
+              /> 
+            </Route>}
           { user?.assigned_permissions.includes('visits_menu') &&
             < Route path={paths.visit_dashboard} element={<VisitNavBar />}>
               <Route index

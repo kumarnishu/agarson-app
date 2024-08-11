@@ -46,56 +46,55 @@ export default function SaleAnalysisReport() {
         header: 'MONTHLY TARGET', 
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.monthly_target) }, 0).toFixed()}</b>
+        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.monthly_target) }, 0).toFixed(2)}</b>
       },
       {
         accessorKey: 'monthly_achivement',
         header: 'MONTHLY ACHIVEMENT',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.monthly_achivement) }, 0).toFixed()}</b>
+        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.monthly_achivement) }, 0).toFixed(2)}</b>
       },
       {
         accessorKey: 'monthly_percentage',
         header: 'MONTHLY PERCENTAGE',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.monthly_percentage) }, 0).toFixed()}</b>
+        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.monthly_percentage) }, 0).toFixed(2)}</b>
       },
       {
         accessorKey: 'annual_target',
         header: 'ANNUAL TARGET',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.annual_target) }, 0).toFixed()}</b>
+        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.annual_target) }, 0).toFixed(2)}</b>
       },
       {
         accessorKey: 'annual_achivement',
         header: 'ANNUAL ACHIVEMENT',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.annual_achivement) }, 0).toFixed()}</b>
+        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.annual_achivement) }, 0).toFixed(2)}</b>
       },
       {
         accessorKey: 'annual_percentage',
         header: 'ANNUAL PERCENTAGE',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.annual_percentage) }, 0).toFixed()}</b>
+        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.annual_percentage) }, 0).toFixed(2)}</b>
       },
       {
         accessorKey: 'last_year_sale',
         header: 'LAST YEAR SALE',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.last_year_sale) }, 0).toFixed()}</b>
-      },
+         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.last_year_sale) }, 0).toFixed(2)}</b>},
       {
         accessorKey: 'last_year_sale_percentage_comparison',
         header: 'LAST YEAR PERCENTAGE COMPARISON',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: <b>{reports.reduce((a, b) => { return Number(a) + Number(b.last_year_sale_percentage_comparison) }, 0).toFixed()}</b>
+         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.last_year_sale_percentage_comparison) }, 0).toFixed(2)}</b>
       }
     ],
     [reports,],
@@ -136,7 +135,7 @@ export default function SaleAnalysisReport() {
         fontSize: '13px',
         border: '1px solid #ddd;'
       },
-    }),
+    }), initialState: { density: 'compact' },
     enableGrouping: true,
     enableRowSelection: true,
     enableGlobalFilterModes: true,

@@ -13,8 +13,8 @@ function ErpReportsDashboard() {
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'pending orders ', is_visible: true, url: paths.pending_orders })
-    user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'bills aging report ', is_visible: true, url: paths.bill_aging_report })
-    user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'Client Sale report ', is_visible: true, url: paths.clients_sale }),
+    user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'bills aging  ', is_visible: true, url: paths.bill_aging_report })
+    user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'Client Sale  ', is_visible: true, url: paths.clients_sale }),
       user?.assigned_permissions.includes('last_year_client_sale_report_view') && tmpfeatures.push({ feature: 'Client Sale Last Year ', is_visible: true, url: paths.clients_sale_lastyear }),
       user?.assigned_permissions.includes('party_target_view') && tmpfeatures.push({ feature: 'Party Target ', is_visible: true, url: paths.party_target }),
       user?.assigned_permissions.includes('sale_analysis_view') && tmpfeatures.push({ feature: 'Sale Analysis ', is_visible: true, url: paths.sale_analysis }),
@@ -29,10 +29,10 @@ function ErpReportsDashboard() {
           return (
             <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={feat.url} style={{ textDecoration: 'none' }}>
-                <Paper sx={{ p: 2, bgcolor: 'white', boxShadow: 2, border: 10, borderRadius: 1, borderColor: 'white' }}>
+                <Paper sx={{ p: 2, m: 0, bgcolor: feat.feature.includes('report') ? 'black' : 'blue', boxShadow: 2, borderRadius: 5, borderColor: 'white' }} >
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                    <ButtonLogo title="" height={60} width={60} />
-                    <Typography variant="button" fontSize={15} component="div">
+                    <ButtonLogo title="" height={40} width={40} />
+                    <Typography color={'white'} variant="button" fontSize={15} component="div">
                       {feat.feature}
                     </Typography>
                   </Stack>
