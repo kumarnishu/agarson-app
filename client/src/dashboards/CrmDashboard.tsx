@@ -20,7 +20,11 @@ function CrmDashboard() {
     user?.assigned_permissions.includes('leadtype_view') &&tmpfeatures.push({ feature: 'Lead Type', is_visible: true, url: paths.crm_leadtypes })
     user?.assigned_permissions.includes('lead_source_view') &&tmpfeatures.push({ feature: 'Lead Source', is_visible: true, url: paths.crm_leadsources })
     user?.assigned_permissions.includes('leadstage_view') &&tmpfeatures.push({ feature: 'Lead Stage', is_visible: true, url: paths.crm_stages })
+    user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'activities reports ', is_visible: true, url: paths.crm_activities })
+    user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'assigned refer reports', is_visible: true, url: paths.refer_reports })
+    user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'new refer reports ', is_visible: true, url: paths.new_refers })
     setFeatures(tmpfeatures)
+
   }, [user])
 
   return (
@@ -30,10 +34,10 @@ function CrmDashboard() {
           return (
             <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={feat.url} style={{ textDecoration: 'none' }}>
-                <Paper sx={{ p: 2, m: 0,  boxShadow: 2, borderRadius: 5, borderColor: 'white' }} >
+                <Paper sx={{ p: 2, m: 0, height: 80, bgcolor: feat.feature.includes('report') ? 'lightblue' : 'white', boxShadow: 2, borderRadius: 5, borderColor: 'white' }} >
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                    <ButtonLogo title="" height={40} width={40} />
-                    <Typography  variant="button" fontSize={15} component="div">
+                    <ButtonLogo title="" height={50} width={50} />
+                    <Typography variant="button" fontSize={15} component="div">
                       {feat.feature}
                     </Typography>
                   </Stack>

@@ -20,6 +20,11 @@ function ProductionDashboard() {
     user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: paths.machine_categories })
     user?.assigned_permissions.includes('dye_view') && tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: paths.dyes })
     user?.assigned_permissions.includes('shoe_weight_view') && tmpfeatures.push({ feature: 'shoe weight ', is_visible: true, url: paths.shoe_weight })
+    user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'Shoe Weight Difference report', is_visible: true, url: paths.shoe_weightdiffreport })
+    user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'Dye Status report', is_visible: true, url: paths.dye_statusrepot })
+    user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: true, url: paths.machine_wise_productionrepot })
+    user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'Category Wise Production report', is_visible: true, url: paths.category_wise_productionrepot }),
+      user?.assigned_permissions.includes('last_year_client_sale_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production report', is_visible: true, url: paths.thekedar_wise_productionrepot })
     setFeatures(tmpfeatures)
   }, [])
 
@@ -30,10 +35,10 @@ function ProductionDashboard() {
           return (
             <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={feat.url} style={{ textDecoration: 'none' }}>
-                <Paper sx={{ p: 2, m: 0,  boxShadow: 2, borderRadius: 5, borderColor: 'white' }} >
+                <Paper sx={{ p: 2, m: 0, height: 80, bgcolor: feat.feature.includes('report') ? 'lightblue' : 'white', boxShadow: 2, borderRadius: 5, borderColor: 'white' }} >
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                    <ButtonLogo title="" height={40} width={40} />
-                    <Typography  variant="button" fontSize={15} component="div">
+                    <ButtonLogo title="" height={50} width={50} />
+                    <Typography variant="button" fontSize={15} component="div">
                       {feat.feature}
                     </Typography>
                   </Stack>

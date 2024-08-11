@@ -17,8 +17,6 @@ function MainDashBoardPage() {
     user?.assigned_permissions.includes('crm_menu') && tmpfeatures.push({ feature: 'crm', url: paths.crm_dashboard }),
       user?.assigned_permissions.includes('production_menu') && tmpfeatures.push({ feature: 'productions', url: paths.production_dashboard }),
       user?.assigned_permissions.includes('erp_report_menu') && tmpfeatures.push({ feature: 'erp reports', url: paths.erp_reports_dashboard }),
-      user?.assigned_permissions.includes('erp_report_menu') && tmpfeatures.push({ feature: 'production reports', url: paths.production_reports_dashboard }),
-      user?.assigned_permissions.includes('erp_report_menu') && tmpfeatures.push({ feature: 'crm reports', url: paths.crm_reports_dashboard })
 
     // if (user?.is_admin) {
     //   tmpfeatures.push({ feature: Feature.todos, url: paths.todo_dashboard })
@@ -38,10 +36,10 @@ function MainDashBoardPage() {
           return (
             <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
               <Link to={feat.url} style={{ textDecoration: 'none' }}>
-                <Paper sx={{ p: 2,m:0, boxShadow: 2,  borderRadius: 5, borderColor: 'white' }} >
+                <Paper sx={{ p: 2, m: 0, height: 80, bgcolor: feat.feature.includes('report') ? 'lightblue' : 'white', boxShadow: 2, borderRadius: 5, borderColor: 'white' }} >
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
-                    <ButtonLogo title="" height={40} width={40} />
-                    <Typography color='black' variant="button" fontSize={15} component="div">
+                    <ButtonLogo title="" height={50} width={50} />
+                    <Typography variant="button" fontSize={15} component="div">
                       {feat.feature}
                     </Typography>
                   </Stack>

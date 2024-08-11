@@ -12,7 +12,7 @@ import moment from 'moment'
 import DBPagination from '../../components/pagination/DBpagination'
 import ActivitiesTable from '../../components/tables/crm/ActivitiesTable'
 
-function CrmActivitiesPage() {
+function CrmActivitiesReportPage() {
     const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
@@ -128,4 +128,4 @@ function CrmActivitiesPage() {
     )
 }
 
-export default CrmActivitiesPage
+export default CrmActivitiesReportPage

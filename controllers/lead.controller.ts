@@ -433,7 +433,7 @@ export const GetAllCRMCities = async (req: Request, res: Response, next: NextFun
     let result: { city: ICRMCity, users: { _id: string, username: string }[] }[] = []
     let state = req.query.state;
     let cities: ICRMCity[] = []
-    if (state)
+    if (state && state !== 'Select State')
         cities = await CRMCity.find({ state: state })
     else
         cities = await CRMCity.find()
@@ -3413,7 +3413,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
 
 export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state, gst, mobile } = body 
+    const { name, customer_name, city, state, gst, mobile } = body
     if (!name || !city || !state || !mobile || !gst) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -3440,8 +3440,8 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
         return res.status(400).json({ message: "bad mongo id" })
     let body = JSON.parse(req.body.body)
     console.log(body)
-    const { name, customer_name, city, state, mobile, gst } = body 
-    console.log(name,city,state,mobile,body.mobile)
+    const { name, customer_name, city, state, mobile, gst } = body
+    console.log(name, city, state, mobile, body.mobile)
     if (!name || !city || !state || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }

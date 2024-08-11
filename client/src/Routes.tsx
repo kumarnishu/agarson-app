@@ -26,14 +26,14 @@ import RefersPage from './pages/crm/RefersPage.tsx'
 import CrmLeadSourcesPage from './pages/crm/CrmSourcePage.tsx'
 import CrmStagesPage from './pages/crm/CrmStagesPage.tsx'
 import CrmTypesPage from './pages/crm/CrmleadTypesPage.tsx'
-import CrmActivitiesPage from './pages/crm/CrmActivitiesPage.tsx'
+import CrmActivitiesPage from './pages/crm/CrmActivitiesReportPage.tsx'
 import PartyTargetReportsPage from './pages/erp reports/PartyTargetReportPage.tsx'
 import SaleAnalysisReport from './pages/erp reports/SaleAnalysisReport.tsx'
 import ShoeWeightPage from './pages/production/ShoeWeightPage.tsx'
 import LoginPage from './pages/users/LoginPage.tsx'
 import UsersPage from './pages/users/UsersPage.tsx'
-import UpdateMachineCategoriesPage from './pages/production/UpdateMachineCategoriesPage.tsx'
-import ProductionAdminPage from './pages/production/ProductionAdminPage.tsx'
+import UpdateMachineCategoriesPage from './pages/production/MachineCategoriesPage.tsx'
+import ProductionAdminPage from './pages/production/ProductionPage.tsx'
 import DyePage from './pages/production/DyesPage.tsx'
 import ArticlePage from './pages/production/ArticlesPage.tsx'
 import ErpStatesPage from './pages/erp reports/StatesPage.tsx'
@@ -55,8 +55,14 @@ import LeadsPage from './pages/crm/LeadsPage.tsx'
 import ResetPasswordDialog from './components/dialogs/users/ResetPasswordDialog.tsx'
 import MachinePage from './pages/production/MachinesPage.tsx'
 import DyeLocationsPage from './pages/production/DyeLocationPage.tsx'
-import CrmReportsDashboard from './dashboards/CrmReportsDashboard.tsx'
-import ProductionReportsDashboard from './dashboards/ProductionReportsDashboard.tsx'
+import AssignedReferReportPage from './pages/crm/AssignedReferReportPage.tsx'
+import NewReferReportPage from './pages/crm/NewReferReportPage.tsx'
+import ShowWeightDifferenceReportPage from './pages/production/ShowWeightDifferenceReportPage.tsx'
+import MachineWiseProductionReportPage from './pages/production/MachineWiseProductionReportPage.tsx'
+import CategoryWiseProductionReportPage from './pages/production/CategoryWiseProductionReportPage.tsx'
+import ThekedarWiseProductionReportPage from './pages/production/ThekedarWiseProductionReportPage.tsx'
+import DyeStatusReportPage from './pages/production/DyeStatusReportPage.tsx'
+
 
 
 export enum paths {
@@ -68,15 +74,12 @@ export enum paths {
   checklist_dashboard = "/checklist_dashboard",
   visit_dashboard = "/visit_dashboard",
   todo_dashboard = "/todo_dashboard",
-  reports_dashboard="/reports/dashboard",
-  crm_reports_dashboard = "/crm_reports",
-  production_reports_dashboard="/production_reports",
   erp_reports_dashboard = "/erp_reports_dashboard",
 
   machine_wise_productionrepot = "machine_wise_productionrepot",
   thekedar_wise_productionrepot = "thekedar_wise_productionrepot",
   category_wise_productionrepot = "category_wise_productionrepot",
-  shoe_weight_productionreport = "shoe_weight_productionreport",
+  dye_statusrepot = "dye_statusrepot",
 
 
   refer_reports ="refer_reports",
@@ -113,6 +116,7 @@ export enum paths {
   dyes = "dyes",
   articles = "articles",
   shoe_weight = "shoe_weight",
+  shoe_weightdiffreport = "shoe_weightdiffreport",
   dye_location = "dye_location",
   greetings = "greetings",
   templates = "templates",
@@ -217,6 +221,31 @@ function AppRoutes() {
                    <ArticlePage />
                 }
               />
+              <Route
+                path={paths.thekedar_wise_productionrepot} element={
+                  <ThekedarWiseProductionReportPage />
+                }
+              />
+              <Route
+                path={paths.category_wise_productionrepot} element={
+                  <CategoryWiseProductionReportPage />
+                }
+              />
+              <Route
+                path={paths.machine_wise_productionrepot} element={
+                  <MachineWiseProductionReportPage />
+                }
+              />  
+              <Route
+                path={paths.shoe_weightdiffreport} element={
+                  <ShowWeightDifferenceReportPage />
+                }
+              />
+              <Route
+                path={paths.dye_statusrepot} element={
+                  <DyeStatusReportPage />
+                }
+              />
             
             </Route>}
           
@@ -268,6 +297,15 @@ function AppRoutes() {
                 <CrmTypesPage />
               }
               />
+              <Route path={paths.refer_reports} element={
+                <AssignedReferReportPage />
+              }
+              />
+              <Route path={paths.new_refers} element={
+                <NewReferReportPage />
+              }
+              />
+              
 
             </Route>}
 
@@ -330,74 +368,6 @@ function AppRoutes() {
               />
             </Route>}
 
-          {user?.assigned_permissions.includes('erp_report_menu') &&
-            < Route path={paths.production_reports_dashboard} element={<PasswordNavbar />
-            }>
-              <Route
-                index element={
-                  <ProductionReportsDashboard />
-                }
-              />
-              <Route path={paths.production_reports_dashboard} element={
-                < ProductionReportsDashboard />
-              }
-              />
-              <Route
-                path={paths.states} element={
-                  <ErpStatesPage />
-                }
-              />
-              <Route path={paths.machine_wise_productionrepot} element={
-
-                < PendingOrdersReport />
-
-              }
-              /> <Route path={paths.category_wise_productionrepot} element={
-
-                < ClientSaleReportsPage />
-
-
-              }
-              />
-              <Route path={paths.thekedar_wise_productionrepot} element={
-
-                < ClientSaleLastYearReportsPage />
-
-
-              }
-              />
-              <Route path={paths.shoe_weight_productionreport} element={
-
-                < BillsAgingReportPage />
-
-
-              }
-              />
-            </Route>}
-          {user?.assigned_permissions.includes('erp_report_menu') &&
-            < Route path={paths.crm_reports_dashboard} element={<PasswordNavbar />
-            }>
-              <Route
-                index element={
-                  <CrmReportsDashboard />
-                }
-              />
-              <Route path={paths.crm_reports_dashboard} element={
-                < CrmReportsDashboard />
-              }
-              />
-              <Route
-                path={paths.crm_activities} element={
-                  <ErpStatesPage />
-                }
-              />
-              <Route path={paths.new_refers} element={
-
-                < PendingOrdersReport />
-
-              }
-              /> 
-            </Route>}
           { user?.assigned_permissions.includes('visits_menu') &&
             < Route path={paths.visit_dashboard} element={<VisitNavBar />}>
               <Route index
