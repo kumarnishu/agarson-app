@@ -5,7 +5,7 @@ function PopUp({ element }: { element: JSX.Element }) {
     const [popup, setPopup] = useState<any | null>(null);
     return (
         <div>
-            <span style={{fontSize:'13px'}} onClick={(e) => setPopup(e.currentTarget)}>
+            <span style={{fontSize:'11px'}} onClick={(e) => setPopup(e.currentTarget)}>
                 🔁 actions
             </span>
             <Popover
