@@ -15,7 +15,7 @@ import ActivitiesTable from '../../components/tables/crm/ActivitiesTable'
 function CrmActivitiesReportPage() {
     const { user } = useContext(UserContext)
     const [users, setUsers] = useState<IUser[]>([])
-    const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+    const [paginationData, setPaginationData] = useState({ limit: 200, page: 1, total: 1 });
     const [remark, setRemark] = useState<IRemark>()
     const [remarks, setRemarks] = useState<IRemark[]>([])
     const [userId, setUserId] = useState<string>()

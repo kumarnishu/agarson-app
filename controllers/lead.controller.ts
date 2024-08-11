@@ -3732,7 +3732,42 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
 
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        if (!id) {
+        if (req.user?.is_admin && !id) {
+            {
+                remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('created_by').populate('updated_by').populate({
+                    path: 'lead',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'referred_party',
+                            model: 'ReferredParty'
+                        },
+                        {
+                            path: 'remarks',
+                            populate: [
+                                {
+                                    path: 'created_by',
+                                    model: 'User'
+                                },
+                                {
+                                    path: 'updated_by',
+                                    model: 'User'
+                                }
+                            ]
+                        }
+                    ]
+                }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+                count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
+            }
+        }
+        else if (!id) {
             remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
                 path: 'lead',
                 populate: [
@@ -3767,7 +3802,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
         }
 
 
-        if (id) {
+        else {
             remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('created_by').populate('updated_by').populate({
                 path: 'lead',
                 populate: [
