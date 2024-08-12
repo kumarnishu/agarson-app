@@ -1123,9 +1123,9 @@ export const GetShoeWeightDifferenceReports = async (req: Request, res: Response
             size: weight.dye.size,
             st_weight: weight.dye.stdshoe_weight || 0,
             machine: weight.machine.display_name,
-            d1: weight.shoe_weight1 ? (weight.shoe_weight1 || 0 - weight.upper_weight1 || 0 - weight.dye.stdshoe_weight) : 0,
-            d2: weight.shoe_weight2 ? (weight.shoe_weight2 || 0 - weight.upper_weight2 || 0 - weight.dye.stdshoe_weight) : 0,
-            d3: weight.shoe_weight3 ? (weight.shoe_weight3 || 0 - weight.upper_weight3 || 0 - weight.dye.stdshoe_weight) : 0,
+            d1: weight.shoe_weight1 && weight.upper_weight1 ? (weight.shoe_weight1 - weight.upper_weight1  - weight.dye.stdshoe_weight) : 0,
+            d2: weight.shoe_weight2 && weight.upper_weight2 ? (weight.shoe_weight2 - weight.upper_weight2  - weight.dye.stdshoe_weight) : 0,
+            d3: weight.shoe_weight3 && weight.upper_weight3 ? (weight.shoe_weight3  - weight.upper_weight3  - weight.dye.stdshoe_weight) : 0,
             person: weight.created_by.username
         }
     })
