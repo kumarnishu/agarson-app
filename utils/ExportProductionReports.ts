@@ -71,7 +71,7 @@ async function CreateReports(client: Client) {
             total += result
         }
         TableRow.push({ text: String(total), style: { bold: true } })
-        Table.push(TableRow)
+        Table.push(TableRow)    
         TableRow = []
     }
     //footer

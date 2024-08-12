@@ -645,9 +645,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
             }).populate('updated_by').populate('created_by').populate({
                 path: 'remarks'
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({
-                stage: stage, state: { $in: states }, city: { $in: cities }
-            }).countDocuments()
+            count = leads.length
         }
         else if (showonlycardleads) {
             leads = await Lead.find({
@@ -665,9 +663,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({
-                has_card: showonlycardleads, state: { $in: states }
-            }).countDocuments()
+            count = leads.length
         }
         else {
             leads = await Lead.find({
@@ -685,9 +681,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Lead.find({
-                stage: 'open', state: { $in: states }, city: { $in: cities }
-            }).countDocuments()
+            count = leads.length
         }
 
         return res.status(200).json({
@@ -3723,13 +3717,14 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let id = req.query.id
+    let stage = req.query.stage
     let start_date = req.query.start_date
     let end_date = req.query.end_date
     let remarks: IRemark[] = []
     let count = 0
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
-
+    let ids = req.user?.assigned_users.map((id) => { return id._id })
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (req.user?.is_admin && !id) {
@@ -3764,7 +3759,42 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                         }
                     ]
                 }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-                count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
+                count = remarks.length
+            }
+        }
+        else if (ids && ids.length > 0 && !id) {
+            {
+                remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: ids } }).populate('created_by').populate('updated_by').populate({
+                    path: 'lead',
+                    populate: [
+                        {
+                            path: 'created_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'updated_by',
+                            model: 'User'
+                        },
+                        {
+                            path: 'referred_party',
+                            model: 'ReferredParty'
+                        },
+                        {
+                            path: 'remarks',
+                            populate: [
+                                {
+                                    path: 'created_by',
+                                    model: 'User'
+                                },
+                                {
+                                    path: 'updated_by',
+                                    model: 'User'
+                                }
+                            ]
+                        }
+                    ]
+                }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+                count = remarks.length
             }
         }
         else if (!id) {
@@ -3798,9 +3828,8 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
+            count = remarks.length
         }
-
 
         else {
             remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('created_by').populate('updated_by').populate({
@@ -3829,9 +3858,12 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
+            count = remarks.length
         }
-
+        if (stage !== 'undefined') {
+            remarks = remarks.filter((r) => { return r.lead.stage == stage })
+            count = remarks.length;
+        }
         return res.status(200).json({
             remarks,
             total: Math.ceil(count / limit),
@@ -3910,4 +3942,42 @@ export const FindUnknownCrmCities = async (req: Request, res: Response, next: Ne
     await Lead.updateMany({ city: { $nin: cityvalues } }, { city: 'unknown', state: 'unknown' });
     await ReferredParty.updateMany({ city: { $nin: cityvalues } }, { city: 'unknown', state: 'unknown' });
     return res.status(200).json({ message: "successfull" })
+}
+
+export const GetNewRefers = async (req: Request, res: Response, next: NextFunction) => {
+
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let dt1 = new Date(String(start_date))
+    let dt2 = new Date(String(end_date))
+    let parties: IReferredParty[] = []
+    parties = await ReferredParty.find({ created_at: { $gte: dt1, $lt: dt2 }, convertedfromlead: true }).populate('created_by').populate('updated_by').sort('name')
+    return res.status(200).json(parties)
+}
+
+export const GetAssignedRefers = async (req: Request, res: Response, next: NextFunction) => {
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let remarks: IRemark[] = []
+    let dt1 = new Date(String(start_date))
+    let dt2 = new Date(String(end_date))
+
+    remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('created_by').populate('updated_by').populate({
+        path: 'lead',
+        populate: [
+            {
+                path: 'created_by',
+                model: 'User'
+            },
+            {
+                path: 'updated_by',
+                model: 'User'
+            },
+            {
+                path: 'referred_party',
+                model: 'ReferredParty'
+            }
+        ]
+    }).sort('referred_party.name')
+    return res.status(200).json(remarks)
 }

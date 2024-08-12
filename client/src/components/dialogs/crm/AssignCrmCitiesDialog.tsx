@@ -18,7 +18,7 @@ import { AssignCRMCitiesToUsers } from '../../../services/LeadsServices';
 function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag: number }) {
 
     const [users, setUsers] = useState<IUser[]>([])
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission:'crm_menu'}))
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission:'crm_menu',show_assigned_only:true}))
 
 
 

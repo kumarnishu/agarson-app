@@ -18,7 +18,7 @@ type Props = {
     remarks: IRemark[]
 }
 
-function ActivitiesTable({ remarks }: Props) {
+function RemindersTable({ remarks }: Props) {
     const [data, setData] = useState<IRemark[]>(remarks)
     const [lead, setLead] = useState<ILead>();
     const { setChoice } = useContext(ChoiceContext)
@@ -276,7 +276,7 @@ function ActivitiesTable({ remarks }: Props) {
                                         <TableCell style={{ padding: '0px' }}>
 
                                             <Stack direction="row" gap={1} px={1}>
-                                                {user?.assigned_permissions.includes('activities_view') && <Tooltip title="view remarks">
+                                                {user?.assigned_permissions.includes('reminders_view') && <Tooltip title="view remarks">
                                                     <IconButton size="small" color="primary"
 
                                                         onClick={() => {
@@ -290,7 +290,7 @@ function ActivitiesTable({ remarks }: Props) {
                                                         <Visibility />
                                                     </IconButton>
                                                 </Tooltip>}
-                                                {user?.assigned_permissions.includes('activities_create') && <Tooltip title="Add Remark">
+                                                {user?.assigned_permissions.includes('reminders_create') && <Tooltip title="Add Remark">
                                                     <IconButton size="small"
 
                                                         color="success"
@@ -466,4 +466,4 @@ function ActivitiesTable({ remarks }: Props) {
     )
 }
 
-export default ActivitiesTable
+export default RemindersTable

@@ -16,7 +16,7 @@ import { toTitleCase } from '../../../utils/TitleCase';
 
 function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser | undefined>> }) {
     const [users, setUsers] = useState<IUser[]>(user.assigned_users)
-    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false' }))
+    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {

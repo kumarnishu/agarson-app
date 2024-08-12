@@ -12,6 +12,7 @@ import { destroyFile } from "../utils/destroyFile.util"
 import { DyeLocation } from "../models/production/dye.location.model"
 import isMongoId from "validator/lib/isMongoId"
 import { DyeStatus, IDyeStatus } from "../models/production/dye.status.model"
+import moment from "moment"
 
 //get
 export const GetMachineCategories = async (req: Request, res: Response, next: NextFunction) => {
@@ -70,19 +71,19 @@ export const GetProductions = async (req: Request, res: Response, next: NextFunc
         if (!id) {
             if (user_ids.length > 0) {
                 productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: { $in: user_ids } }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('date').skip((page - 1) * limit).limit(limit)
-                count = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: { $in: user_ids } }).countDocuments()
+                count = productions.length
             }
 
             else {
                 productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: req.user?._id }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('date').skip((page - 1) * limit).limit(limit)
-                count = await Production.find({ date: { $gte: dt1, $lt: dt2 } }).countDocuments()
+                count = productions.length
             }
         }
 
 
         if (id) {
             productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: id }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('date').skip((page - 1) * limit).limit(limit)
-            count = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: id }).countDocuments()
+            count = productions.length
         }
 
         return res.status(200).json({
@@ -643,19 +644,19 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
         if (!id) {
             if (user_ids.length > 0) {
                 weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
-                count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
+                count = weights.length
             }
 
             else {
                 weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
-                count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 } }).countDocuments()
+                count = weights.length
             }
         }
 
 
         if (id) {
             weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
-            count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
+            count = weights.length
         }
 
         return res.status(200).json({
@@ -1067,4 +1068,191 @@ export const DeleteDyeStatus = async (req: Request, res: Response, next: NextFun
         await destroyFile(status.dye_photo._id)
     await status.remove()
     return res.status(200).json(status)
+}
+
+export interface IColumn {
+    key: string;
+    header: string,
+    type: string
+}
+export interface IRowData {
+    [key: string]: any; // Type depends on your data
+}
+
+export interface IColumnRowData {
+    columns: IColumn[];
+    rows: IRowData[];
+}
+
+export interface ICategoryWiseProductionReport {
+    date: string,
+    total: number,
+    verticalpluslympha: number,
+    pu: number,
+    gumboot: number
+}
+export interface IShoeWeightDiffReport {
+    date: string,
+    dye_no: number,
+    article: string,
+    size: string,
+    st_weight: number,
+    machine: string,
+    d1: number,
+    d2: number,
+    d3: number,
+    person: string
+}
+export const GetShoeWeightDifferenceReports = async (req: Request, res: Response, next: NextFunction) => {
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let weights: IShoeWeight[] = []
+    let reports: IShoeWeightDiffReport[] = []
+    let dt1 = new Date(String(start_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    let dt2 = new Date(String(end_date))
+    dt2.setHours(0)
+    dt2.setMinutes(0)
+    weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("dye.dye_number")
+    reports = weights.map((weight) => {
+        return {
+            date: moment(weight.created_at).format("DD/MM/YYYY"),
+            dye_no: weight.dye.dye_number,
+            article: weight.article.display_name,
+            size: weight.dye.size,
+            st_weight: weight.dye.stdshoe_weight || 0,
+            machine: weight.machine.display_name,
+            d1: weight.shoe_weight1 ? weight.shoe_weight1 || 0 - weight.upper_weight1 || 0 - weight.dye.stdshoe_weight : 0,
+            d2: weight.shoe_weight2 ? weight.shoe_weight2 || 0 - weight.upper_weight2 || 0 - weight.dye.stdshoe_weight : 0,
+            d3: weight.shoe_weight3 ? weight.shoe_weight3 || 0 - weight.upper_weight3 || 0 - weight.dye.stdshoe_weight : 0,
+            person: weight.created_by.username
+        }
+    })
+    return res.status(400).json(reports)
+}
+
+export const GetThekedarWiseProductionReports = async (req: Request, res: Response, next: NextFunction) => {
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let production: IColumnRowData = {
+        columns: [],
+        rows: []
+    };
+    let dt1 = new Date(String(start_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    let dt2 = new Date(String(end_date))
+    dt2.setHours(0)
+    dt2.setMinutes(0)
+    const oneDay = 24 * 60 * 60 * 1000;
+    let users = await User.find().sort("username")
+    //columns
+    production.columns.push({ key: 'date', header: 'Date', type: 'date' });
+    users.filter((u) => { return u.assigned_permissions.includes('') })
+    for (let k = 0; k < users.length; k++) {
+        let user = users[k]
+        production.columns.push({ key: user.username, header: String(user.username).toUpperCase(), type: 'number' })
+    }
+    production.columns.push({ key: 'total', header: 'Total', type: 'number' });
+    while (dt1 <= dt2) {
+        //rows
+        let total = 0
+        let obj: IRowData = {}
+        obj['date'] = moment(dt1).format("DD/MM/YYYY")
+        for (let k = 0; k < users.length; k++) {
+            let user = users[k]
+            let data = await Production.find({ date: { $gte: dt1, $lt: new Date(dt1.getTime() + oneDay) }, thekedar: user._id })
+            let result = data.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+            if (result === 0)
+                obj[users[k].username] = result;
+            else
+                obj[users[k].username] = result;
+            total += result
+        }
+        obj['total'] = total
+        production.rows.push(obj);
+        dt1 = new Date(dt1.getTime() + oneDay);
+    }
+
+
+    return res.status(200).json(production)
+}
+
+export const GetMachineWiseProductionReports = async (req: Request, res: Response, next: NextFunction) => {
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let production: IColumnRowData = {
+        columns: [],
+        rows: []
+    };
+    let dt1 = new Date(String(start_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    let dt2 = new Date(String(end_date))
+    dt2.setHours(0)
+    dt2.setMinutes(0)
+    const oneDay = 24 * 60 * 60 * 1000;
+    let machines = await Machine.find({ active: true }).sort('serial_no')
+    //columns
+    production.columns.push({ key: 'date', header: 'Date', type: 'date' });
+    for (let k = 0; k < machines.length; k++) {
+        production.columns.push({ key: machines[k].name, header: String(machines[k].display_name).toUpperCase(), type: 'number' })
+    }
+    production.columns.push({ key: 'total', header: 'Total', type: 'number' });
+
+    //rows
+    while (dt1 <= dt2) {
+        let total = 0
+        let obj: IRowData = {}
+        obj['date'] = moment(dt1).format("DD/MM/YYYY")
+        for (let k = 0; k < machines.length; k++) {
+            let data = await Production.find({ date: { $gte: dt1, $lt: new Date(dt1.getTime() + oneDay) }, machine: machines[k]._id })
+            let result = data.reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+            if (result === 0)
+                obj[machines[k].name] = result;
+            else
+                obj[machines[k].name] = result;
+            total += result
+        }
+        obj['total'] = total
+        production.rows.push(obj);
+        dt1 = new Date(dt1.getTime() + oneDay);
+    }
+
+    return res.status(200).json(production)
+}
+
+
+export const GetCategoryWiseProductionReports = async (req: Request, res: Response, next: NextFunction) => {
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let productions: ICategoryWiseProductionReport[] = [];
+    let dt1 = new Date(String(start_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    let dt2 = new Date(String(end_date))
+    dt2.setHours(0)
+    dt2.setMinutes(0)
+    const oneDay = 24 * 60 * 60 * 1000;
+
+    while (dt1 <= dt2) {
+
+        let data = await Production.find({ date: { $gte: dt1, $lt: new Date(dt1.getTime() + oneDay) } }).populate('machine')
+
+        let verpluslymphaprod = data.filter((prod) => { return prod.machine.category === "vertical" || prod.machine.category === "lympha" }).reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+
+        let puprod = data.filter((prod) => { return prod.machine.category === "pu" }).reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+        let gumbootprod = data.filter((prod) => { return prod.machine.category === "gumboot" }).reduce((a, b) => { return Number(a) + Number(b.production) }, 0)
+        let total = verpluslymphaprod + puprod + gumbootprod;
+        productions.push({
+            date: moment(dt1).format("DD/MM/YYYY"),
+            total: total,
+            verticalpluslympha: verpluslymphaprod,
+            pu: puprod,
+            gumboot: gumbootprod
+        })
+        dt1 = new Date(dt1.getTime() + oneDay);
+    }
+    return res.status(200).json(productions)
 }

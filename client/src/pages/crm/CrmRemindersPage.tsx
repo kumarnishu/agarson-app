@@ -7,7 +7,7 @@ import { BackendError } from '../..'
 import { Box,  DialogTitle,  LinearProgress, Paper, Stack, Typography } from '@mui/material'
 
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import ActivitiesTable from '../../components/tables/crm/ActivitiesTable'
+import RemindersTable from '../../components/tables/crm/RemindersTable'
 
 function CrmReminderPage() {
   const [remarks, setRemarks] = useState<IRemark[]>([])
@@ -92,7 +92,7 @@ function CrmReminderPage() {
                   )
                 })}
               </Box > :
-              <ActivitiesTable remark={remark} remarks={remarks} setRemark={setRemark} />
+              <RemindersTable remark={remark} remarks={remarks} setRemark={setRemark} />
             }
           </Box >
           

@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages, CreateCRMCity, AssignCRMCitiesToUsers, FindUnknownCrmCities, AssignedReferrals, FuzzySearchOkOnlyLeads } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages, CreateCRMCity, AssignCRMCitiesToUsers, FindUnknownCrmCities, AssignedReferrals, FuzzySearchOkOnlyLeads, GetNewRefers, GetAssignedRefers } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
@@ -64,5 +64,7 @@ router.route("/refers/:id").delete(isAuthenticatedUser, DeleteReferParty)
 router.route("/update/refers/bulk").put(isAuthenticatedUser, upload.single('file'), BulkReferUpdateFromExcel)
 
 router.route("/reminder/remarks").get(isAuthenticatedUser, GetReminderRemarks)
+router.route("/new/refers").get(isAuthenticatedUser, GetNewRefers)
+router.route("/assigned/refers").get(isAuthenticatedUser, GetAssignedRefers)
 
 export default router

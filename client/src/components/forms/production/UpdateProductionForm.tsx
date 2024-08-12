@@ -17,7 +17,7 @@ import moment from 'moment';
 
 function UpdateProductionForm({ production }: { production: IProduction }) {
     const { user } = useContext(UserContext)
-    const { data: users } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'production_menu' }))
+    const { data: users } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'production_menu', show_assigned_only: true }))
     const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
     const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
     const { mutate, isLoading, isSuccess, isError, error } = useMutation

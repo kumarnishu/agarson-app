@@ -41,7 +41,7 @@ const ProductionSchema = new mongoose.Schema<IProduction, mongoose.Model<IProduc
         }
     ],
     date: { type: Date, required: true },
-    production_hours: Number ,
+    production_hours: Number,
     manpower: Number,
     production: Number,
     big_repair: Number,

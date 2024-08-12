@@ -12,7 +12,16 @@ import { FetchAllPermissions, IMenu } from '../utils/fillAllPermissions';
 export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
     let showhidden = req.query.hidden
     let perm = req.query.permission
-    let users = await User.find({ is_active: showhidden == 'false' }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+    let show_assigned_only = req.query.show_assigned_only
+    let users: IUser[] = [];
+
+    if (show_assigned_only == 'true') {
+        let ids = req.user?.assigned_users.map((id) => { return id._id })
+        users = await User.find({ is_active: true, _id: { $in: ids } }).populate("created_by").populate("updated_by").sort('username')
+    }
+    else {
+        users = await User.find({ is_active: showhidden == 'false' }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+    }
     if (perm) {
         users = users.filter((u) => { return u.assigned_permissions.includes(String(perm)) })
     }

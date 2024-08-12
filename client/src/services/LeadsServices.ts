@@ -42,11 +42,11 @@ export const ConvertLeadToRefer = async ({ id }: { id: string }) => {
   return await apiClient.patch(`leads/torefer/${id}`)
 }
 
-export const GetRemarks = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+export const GetRemarks = async({ stage, limit, page, start_date, end_date, id }: { stage:string, limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
   if (id)
-    return await apiClient.get(`remarks/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+    return await apiClient.get(`remarks/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&stage=${stage}`)
   else
-    return await apiClient.get(`remarks/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+    return await apiClient.get(`remarks/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&stage=${stage}`)
 }
 
 

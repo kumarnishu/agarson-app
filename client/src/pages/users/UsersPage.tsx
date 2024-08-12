@@ -42,7 +42,7 @@ export default function UsersPage() {
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IUser[]>, BackendError>(["users",hidden], async () => GetUsers({ hidden: hidden, permission: undefined }))
+    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IUser[]>, BackendError>(["users", hidden], async () => GetUsers({ hidden: hidden, permission: undefined, show_assigned_only: false }))
 
 
     function handleExcel() {

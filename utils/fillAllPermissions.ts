@@ -219,7 +219,7 @@ export function FetchAllPermissions() {
                 ]
             },
             {
-                label: 'Shoe Weight Report',
+                label: 'Shoe Weight Difference Report',
                 permissions: [
                     {
                         value: 'shoe_weight_report_view',
@@ -408,7 +408,7 @@ export function FetchAllPermissions() {
                 ]
             },
             {
-                label: 'Activities',
+                label: 'Activities Reports',
                 permissions: [
                     {
                         value: 'activities_view',
@@ -428,6 +428,56 @@ export function FetchAllPermissions() {
                     },
                     {
                         value: 'activities_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
+                label: 'Assigned Refer Reports',
+                permissions: [
+                    {
+                        value: 'assignedrefer_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'assignedrefer_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'assignedrefer_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'assignedrefer_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'assignedrefer_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
+                label: 'New Refer Reports',
+                permissions: [
+                    {
+                        value: 'newrefer_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'newrefer_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'newrefer_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'newrefer_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'newrefer_export',
                         label: 'export'
                     }
                 ]

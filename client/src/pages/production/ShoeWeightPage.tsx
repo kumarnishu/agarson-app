@@ -38,7 +38,7 @@ export default function ShoeWeightAdminPage() {
     start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(new Date().getDate()+1)).format("YYYY-MM-DD")
   })
-  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'shoe_weight_view' }))
+  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'shoe_weight_view', show_assigned_only: true }))
 
   const { data, isLoading, refetch: ReftechShoeWeights } = useQuery<AxiosResponse<{ weights: IShoeWeight[], page: number, total: number, limit: number }>, BackendError>(["shoe_weights", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetShoeWeights({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
@@ -201,7 +201,7 @@ export default function ShoeWeightAdminPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          ShoeWeight
+          ShoeWeight 
         </Typography>
         {/* filter dates and person */}
         <Stack direction="row" gap={2}>

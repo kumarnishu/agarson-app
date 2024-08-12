@@ -6,7 +6,7 @@ export const CreateMachine = async (body: { name: string, display_name: string, 
 };
 
 
-export const UpdateMachine = async ({ body, id }: { body: { name: string, serial_no: number, display_name: string ,category: string }, id: string }) => {
+export const UpdateMachine = async ({ body, id }: { body: { name: string, serial_no: number, display_name: string, category: string }, id: string }) => {
     return await apiClient.put(`machines/${id}`, body);
 };
 
@@ -21,7 +21,7 @@ export const GetMachines = async (hidden?: string) => {
     return await apiClient.get(`machines`);
 };
 
-export const CreateDye = async (body: { dye_number: number, size: string, article_ids: string[], st_weight:number }) => {
+export const CreateDye = async (body: { dye_number: number, size: string, article_ids: string[], st_weight: number }) => {
     return await apiClient.post(`dyes`, body);
 };
 
@@ -47,7 +47,7 @@ export const CreateArticle = async (body: { name: string, display_name: string }
     return await apiClient.post(`articles`, body);
 };
 
-export const UpdateArticle = async ({ body, id }: { body: { name: string, display_name: string}, id: string }) => {
+export const UpdateArticle = async ({ body, id }: { body: { name: string, display_name: string }, id: string }) => {
     return await apiClient.put(`articles/${id}`, body);
 };
 
@@ -143,6 +143,7 @@ export const GetShoeWeights = async ({ limit, page, start_date, end_date, id }: 
 
 }
 
+
 export const BulkUploadMachines = async (body: FormData) => {
     return await apiClient.put(`machines/upload/bulk`, body);
 }
@@ -168,7 +169,8 @@ export const GetAllDyeLocations = async () => {
 export const CreateOrEditDyeLocation = async ({ body, id }: {
     body: {
         name: string,
-        display_name: string }
+        display_name: string
+    }
     id?: string
 }) => {
     if (id) {
@@ -191,4 +193,17 @@ export const CreateDyeStatus = async ({ body }: { body: FormData }) => {
 }
 export const DeleteDyeStatus = async (id: string) => {
     return await apiClient.delete(`dye/status/${id}`);
+}
+
+export const GetproductionMachineWise = async ({ start_date, end_date }: {  start_date?: string, end_date?: string }) => {
+    return await apiClient.get(`production/machinewise/?start_date=${start_date}&end_date=${end_date}`)
+}
+export const GetproductionThekedarWise = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
+    return await apiClient.get(`production/thekedarwise/?start_date=${start_date}&end_date=${end_date}`)
+}
+export const GetproductioncategoryWise = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
+    return await apiClient.get(`production/categorywise/?start_date=${start_date}&end_date=${end_date}`)
+}
+export const GetShoeWeightDiffReports = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
+    return await apiClient.get(`shoeweight/diffreports/?start_date=${start_date}&end_date=${end_date}`)
 }

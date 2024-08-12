@@ -13,6 +13,28 @@ export type IDye = {
     created_by: IUser,
     updated_by: IUser
 }
+interface IColumn {
+    key: string;
+    header: string,
+    type:string
+}
+
+interface IRowData {
+    [key: string]: string; // Type depends on your data
+}
+
+export interface IColumnRowData {
+    columns: IColumn[];
+    rows: IRowData[];
+}
+
+export interface ICategoryWiseProductionReport {
+    date: string,
+    total: number,
+    verticalpluslympha: number,
+    pu: number,
+    gumboot: number
+}
 
 export type IShoeWeight = {
     _id: string,

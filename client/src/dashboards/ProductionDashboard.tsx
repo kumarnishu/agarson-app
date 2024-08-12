@@ -22,9 +22,9 @@ function ProductionDashboard() {
     user?.assigned_permissions.includes('shoe_weight_view') && tmpfeatures.push({ feature: 'shoe weight ', is_visible: true, url: paths.shoe_weight })
     user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'Shoe Weight Difference report', is_visible: true, url: paths.shoe_weightdiffreport })
     user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'Dye Status report', is_visible: true, url: paths.dye_statusrepot })
-    user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: true, url: paths.machine_wise_productionrepot })
-    user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'Category Wise Production report', is_visible: true, url: paths.category_wise_productionrepot }),
-      user?.assigned_permissions.includes('last_year_client_sale_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production report', is_visible: true, url: paths.thekedar_wise_productionrepot })
+    user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: true, url: paths.machine_wise_productionrepot })
+    user?.assigned_permissions.includes('machine_category_wise_production_report_view') && tmpfeatures.push({ feature: 'Category Wise Production report', is_visible: true, url: paths.category_wise_productionrepot }),
+      user?.assigned_permissions.includes('thekedar_wise_production_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production report', is_visible: true, url: paths.thekedar_wise_productionrepot })
     setFeatures(tmpfeatures)
   }, [])
 

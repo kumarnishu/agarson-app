@@ -38,7 +38,7 @@ export default function VisitAdminPage() {
         start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
         , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
     })
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({hidden:'false'}))
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
 
     const { data, isLoading, refetch: ReftechVisits } = useQuery<AxiosResponse<{ visits: IVisitReport[], page: number, total: number, limit: number }>, BackendError>(["visits", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetVisits({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 

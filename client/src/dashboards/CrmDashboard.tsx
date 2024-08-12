@@ -1,4 +1,4 @@
-import {  Grid, Paper, Stack, Typography } from "@mui/material"
+import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { paths } from "../Routes"
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
@@ -13,16 +13,16 @@ function CrmDashboard() {
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     user?.assigned_permissions.includes('leads_view') && tmpfeatures.push({ feature: 'leads ', is_visible: true, url: paths.leads })
-    user?.assigned_permissions.includes('refer_view') &&tmpfeatures.push({ feature: 'refers', is_visible: true, url: paths.refers })
-    user?.assigned_permissions.includes('reminders_view') &&tmpfeatures.push({ feature: 'reminders', is_visible: true, url: paths.crm_reminders })
-    user?.assigned_permissions.includes('states_view') &&tmpfeatures.push({ feature: 'states', is_visible: true, url: paths.crm_states })
-    user?.assigned_permissions.includes('city_view') &&tmpfeatures.push({ feature: 'cities', is_visible: true, url: paths.crm_cities })
-    user?.assigned_permissions.includes('leadtype_view') &&tmpfeatures.push({ feature: 'Lead Type', is_visible: true, url: paths.crm_leadtypes })
-    user?.assigned_permissions.includes('lead_source_view') &&tmpfeatures.push({ feature: 'Lead Source', is_visible: true, url: paths.crm_leadsources })
-    user?.assigned_permissions.includes('leadstage_view') &&tmpfeatures.push({ feature: 'Lead Stage', is_visible: true, url: paths.crm_stages })
-    user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'activities reports ', is_visible: true, url: paths.crm_activities })
-    user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'assigned refer reports', is_visible: true, url: paths.refer_reports })
-    user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'new refer reports ', is_visible: true, url: paths.new_refers })
+    user?.assigned_permissions.includes('refer_view') && tmpfeatures.push({ feature: 'refers', is_visible: true, url: paths.refers })
+    user?.assigned_permissions.includes('reminders_view') && tmpfeatures.push({ feature: 'reminders', is_visible: true, url: paths.crm_reminders })
+    user?.assigned_permissions.includes('states_view') && tmpfeatures.push({ feature: 'states', is_visible: true, url: paths.crm_states })
+    user?.assigned_permissions.includes('city_view') && tmpfeatures.push({ feature: 'cities', is_visible: true, url: paths.crm_cities })
+    user?.assigned_permissions.includes('leadtype_view') && tmpfeatures.push({ feature: 'Lead Type', is_visible: true, url: paths.crm_leadtypes })
+    user?.assigned_permissions.includes('lead_source_view') && tmpfeatures.push({ feature: 'Lead Source', is_visible: true, url: paths.crm_leadsources })
+    user?.assigned_permissions.includes('leadstage_view') && tmpfeatures.push({ feature: 'Lead Stage', is_visible: true, url: paths.crm_stages })
+    user?.assigned_permissions.includes('activities_view') && tmpfeatures.push({ feature: 'activities reports ', is_visible: true, url: paths.crm_activities })
+    user?.assigned_permissions.includes('assignedrefer_view') && tmpfeatures.push({ feature: 'assigned refer reports', is_visible: true, url: paths.refer_reports })
+    user?.assigned_permissions.includes('newrefer_view') && tmpfeatures.push({ feature: 'new refer reports ', is_visible: true, url: paths.new_refers })
     setFeatures(tmpfeatures)
 
   }, [user])
