@@ -7,7 +7,7 @@ import { BackendError } from '../..'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import moment from 'moment'
-import { GetproductioncategoryWise } from '../../services/ProductionServices'
+import { GetShoeWeightDiffReports } from '../../services/ProductionServices'
 
 
 export interface IShoeWeightDiffReport {
@@ -29,7 +29,7 @@ export default function ShowWeightDifferenceReportPage() {
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
   })
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IShoeWeightDiffReport[]>, BackendError>(["reports", dates.start_date, dates.end_date], async () => GetproductioncategoryWise({ start_date: dates.start_date, end_date: dates.end_date }))
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IShoeWeightDiffReport[]>, BackendError>(["reports", dates.start_date, dates.end_date], async () => GetShoeWeightDiffReports({ start_date: dates.start_date, end_date: dates.end_date }))
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
