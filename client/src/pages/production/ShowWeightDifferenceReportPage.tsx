@@ -123,7 +123,7 @@ export default function ShowWeightDifferenceReportPage() {
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
-        accessorKey: 'perosn',
+        accessorKey: 'person',
         header: 'Person',
         aggregationFn: 'count',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
