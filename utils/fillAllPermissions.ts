@@ -244,6 +244,31 @@ export function FetchAllPermissions() {
                 ]
             },
             {
+                label: 'Dye Status Report',
+                permissions: [
+                    {
+                        value: 'dye_status_report_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'dye_status_report_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'dye_status_report_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'dye_status_report_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'dye_status_report_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
                 label: 'Machine Wise Production Report',
                 permissions: [
                     {
