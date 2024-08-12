@@ -1129,7 +1129,7 @@ export const GetShoeWeightDifferenceReports = async (req: Request, res: Response
             person: weight.created_by.username
         }
     })
-    return res.status(400).json(reports)
+    return res.status(200).json(reports)
 }
 
 export const GetThekedarWiseProductionReports = async (req: Request, res: Response, next: NextFunction) => {
