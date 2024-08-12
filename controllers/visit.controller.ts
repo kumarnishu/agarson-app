@@ -24,12 +24,12 @@ export const GetVisitsAttendence = async (req: Request, res: Response, next: Nex
         if (!id) {
             if (user_ids.length > 0) {
                 visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-                count = visits.length
+                count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
             }
 
             else {
                 visits = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate("visit_reports").populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-                count = visits.length
+                count = await Visit.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
             }
         }
 
@@ -68,7 +68,7 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
         if (!id) {
             if (user_ids.length > 0) {
                 visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: { $in: user_ids } }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-                count = visits.length
+                count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: { $in: user_ids } }).countDocuments()
             }
 
             else {
@@ -80,7 +80,7 @@ export const getVisits = async (req: Request, res: Response, next: NextFunction)
 
         if (id) {
             visits = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: id }).populate('person').populate('visit').populate('created_by').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
-            count = visits.length
+            count = await VisitReport.find({ created_at: { $gte: dt1, $lt: dt2 }, person: id }).countDocuments()
         }
 
         return res.status(200).json({

@@ -645,7 +645,9 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
             }).populate('updated_by').populate('created_by').populate({
                 path: 'remarks'
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = leads.length
+            count = await Lead.find({
+                stage: stage, state: { $in: states }, city: { $in: cities }
+            }).countDocuments()
         }
         else if (showonlycardleads) {
             leads = await Lead.find({
@@ -663,7 +665,9 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = leads.length
+            count = await Lead.find({
+                has_card: showonlycardleads, state: { $in: states }, city: { $in: cities }
+            }).countDocuments()
         }
         else {
             leads = await Lead.find({
@@ -681,7 +685,9 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = leads.length
+            count = await Lead.find({
+                stage: 'open', state: { $in: states }, city: { $in: cities }
+            }).countDocuments()
         }
 
         return res.status(200).json({
@@ -3759,7 +3765,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                         }
                     ]
                 }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-                count = remarks.length
+                count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 } }).countDocuments()
             }
         }
         else if (ids && ids.length > 0 && !id) {
@@ -3794,7 +3800,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                         }
                     ]
                 }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-                count = remarks.length
+                count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: ids } }).countDocuments()
             }
         }
         else if (!id) {
@@ -3828,7 +3834,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = remarks.length
+            count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
         }
 
         else {
@@ -3858,7 +3864,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
-            count = remarks.length
+            count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
         if (stage !== 'undefined') {
             remarks = remarks.filter((r) => { return r.lead.stage == stage })
