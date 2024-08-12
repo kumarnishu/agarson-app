@@ -36,7 +36,7 @@ function DBPagination({ paginationData, setPaginationData }: Props) {
                         }}
                     >
                         {
-                            [100,200,500,1000,2000,5000].map(item => {
+                            [100,200,500,1000,2000,3000].map(item => {
                                 return (<option key={item} value={item}>
                                     {item}
                                 </option>)
