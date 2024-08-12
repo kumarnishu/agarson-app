@@ -667,7 +667,7 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
         })
     }
     else
-        return res.status(400).json({ message: "bad request" })
+        return res.status(200).json({ message: "bad request" })
 }
 
 export const CreateShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
