@@ -52,33 +52,33 @@ export default function BillsAgingReportPage() {
             {
                 accessorKey: 'plu70',
                 header: '>70',
-                aggregationFn: 'sum', 
+                aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.plu70) }, 0).toFixed(2)}</b>
             },
             {
                 accessorKey: 'in70to90',
                 header: '70-90',
-                aggregationFn: 'sum', 
+                aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.in70to90) }, 0).toFixed(2)}</b>
             },
             {
                 accessorKey: 'in90to120',
                 header: '90-120',
-                aggregationFn: 'sum', 
+                aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.in90to120) }, 0).toFixed(2)}</b>
             },
             {
                 accessorKey: 'plus120',
                 header: '>120',
-                aggregationFn: 'sum', 
+                aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.plus120) }, 0).toFixed(2)}</b>
             }
         ],
-        [reports],
+        [reports, data],
         //end
     );
 
@@ -177,14 +177,14 @@ export default function BillsAgingReportPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                  Bills Ageing {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
+                    Bills Ageing {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
-                   <>
+                    <>
 
-                        {user?.assigned_permissions.includes("bills_ageing_create") &&<UploadBillsAgingFromExcelButton  />}
+                        {user?.assigned_permissions.includes("bills_ageing_create") && <UploadBillsAgingFromExcelButton />}
 
-                        {user?.assigned_permissions.includes("bills_ageing_create") &&<Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
+                        {user?.assigned_permissions.includes("bills_ageing_create") && <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
                     </>
                 </Stack>
 

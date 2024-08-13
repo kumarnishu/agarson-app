@@ -1,14 +1,16 @@
-import { Box, LinearProgress, TextField, Typography } from '@mui/material'
+import { Box, Button, LinearProgress, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import moment from 'moment'
 import { GetShoeWeightDiffReports } from '../../services/ProductionServices'
-
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import ExportToExcel from '../../utils/ExportToExcel'
+import { UserContext } from '../../contexts/userContext'
 
 export interface IShoeWeightDiffReport {
   date: string,
@@ -17,6 +19,12 @@ export interface IShoeWeightDiffReport {
   size: string,
   st_weight: number,
   machine: string,
+  w1: number,
+  w2: number,
+  w3: number,
+  u1: number,
+  u2: number,
+  u3: number,
   d1: number,
   d2: number,
   d3: number,
@@ -26,13 +34,13 @@ export interface IShoeWeightDiffReport {
 export default function ShowWeightDifferenceReportPage() {
   const [reports, setReports] = useState<IShoeWeightDiffReport[]>([])
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-    start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
-    , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
+    start_date: moment(new Date()).format("YYYY-MM-DD")
+    , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
   })
   const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IShoeWeightDiffReport[]>, BackendError>(["reports", dates.start_date, dates.end_date], async () => GetShoeWeightDiffReports({ start_date: dates.start_date, end_date: dates.end_date }))
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
-
+  const { user } = useContext(UserContext)
   const columns = useMemo<MRT_ColumnDef<IShoeWeightDiffReport>[]>(
     //column definitions...
     () => reports && [
@@ -105,14 +113,50 @@ export default function ShowWeightDifferenceReportPage() {
         }).filter(onlyUnique)
       },
       {
+        accessorKey: 'w1',
+        header: 'Weight1',
+        aggregationFn: 'sum',
+        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+      },
+      {
+        accessorKey: 'u1',
+        header: 'Upper1',
+        aggregationFn: 'sum',
+        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+      },
+      {
         accessorKey: 'd1',
         header: 'Diff-1',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
+        accessorKey: 'w2',
+        header: 'Weight2',
+        aggregationFn: 'sum',
+        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+      },
+      {
+        accessorKey: 'u2',
+        header: 'Upper2',
+        aggregationFn: 'sum',
+        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+      },
+      {
         accessorKey: 'd2',
         header: 'Diff-2',
+        aggregationFn: 'sum',
+        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+      },
+      {
+        accessorKey: 'w3',
+        header: 'Weight3',
+        aggregationFn: 'sum',
+        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+      },
+      {
+        accessorKey: 'u3',
+        header: 'Upper3',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
@@ -168,6 +212,38 @@ export default function ShowWeightDifferenceReportPage() {
       },
     }),
     initialState: { density: 'comfortable' },
+    renderTopToolbarCustomActions: ({ table }) => (
+      <Box
+        sx={{
+          display: 'flex',
+          gap: '16px',
+          padding: '8px',
+          flexWrap: 'wrap',
+        }}
+      >
+        {user?.assigned_permissions.includes("shoe_weight_report_export") && <Button
+          //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+          onClick={() => {
+            ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "shoe_weight_difference")
+          }}
+          startIcon={<FileDownloadIcon />}
+        >
+          Export All Data
+        </Button>}
+
+
+        {user?.assigned_permissions.includes("shoe_weight_report_export") && <Button
+          disabled={
+            !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+          }
+          //only export selected rows
+          onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "shoe_weight_difference")}
+          startIcon={<FileDownloadIcon />}
+        >
+          Export Selected Rows
+        </Button>}
+      </Box>
+    ),
     enableGrouping: true,
     enableRowSelection: true,
     enableGlobalFilterModes: true,
