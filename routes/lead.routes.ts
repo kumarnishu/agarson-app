@@ -64,7 +64,7 @@ router.route("/refers/:id").delete(isAuthenticatedUser, DeleteReferParty)
 router.route("/update/refers/bulk").put(isAuthenticatedUser, upload.single('file'), BulkReferUpdateFromExcel)
 
 router.route("/reminder/remarks").get(isAuthenticatedUser, GetReminderRemarks)
-router.route("/new/refers").get(isAuthenticatedUser, GetNewRefers)
-router.route("/assigned/refers").get(isAuthenticatedUser, GetAssignedRefers)
+router.route("/assigned/refers/report").get(isAuthenticatedUser, GetAssignedRefers)
+router.route("/new/refers/report").get(isAuthenticatedUser, GetNewRefers)
 
 export default router

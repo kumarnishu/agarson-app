@@ -264,3 +264,11 @@ export const AssignCRMCitiesToUsers = async ({ body }: {
 }) => {
   return await apiClient.patch(`crm/cities/assign`, body)
 }
+
+export const GetAssignedRefers = async ({  start_date, end_date }: {start_date?: string, end_date?: string}) => {
+  return await apiClient.get(`assigned/refers/report/?start_date=${start_date}&end_date=${end_date}`)
+}
+
+export const GetNewRefers = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
+  return await apiClient.get(`new/refers/report/?start_date=${start_date}&end_date=${end_date}`)
+}

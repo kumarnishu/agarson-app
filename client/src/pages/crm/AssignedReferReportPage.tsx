@@ -1,81 +1,57 @@
-import { Box, Button, LinearProgress, Typography } from '@mui/material'
+import { Box, LinearProgress, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import { GetBillsAgingReports } from '../../services/ErpServices'
-import { UserContext } from '../../contexts/userContext'
-import { Download } from '@mui/icons-material'
-import ExportToExcel from '../../utils/ExportToExcel'
-import AlertBar from '../../components/snacks/AlertBar'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
-import UploadBillsAgingFromExcelButton from '../../components/buttons/UploadBillsAgingButton'
+import { IRemark } from '../../types/crm.types'
+import moment from 'moment'
+import { GetAssignedRefers } from '../../services/LeadsServices'
 
 
-export type IBillsAgingReportTemplate = {
-  report_owner: string
-  account: string,
-  plu70: number,
-  in70to90: number,
-  in90to120: number,
-  plus120: number
-  status?: string
-}
 export default function AssignedReferReportPage() {
-  const [reports, setReports] = useState<IBillsAgingReportTemplate[]>([])
-  const { user } = useContext(UserContext)
-  const [sent, setSent] = useState(false)
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IBillsAgingReportTemplate[]>, BackendError>("reports", GetBillsAgingReports)
+  const [reports, setReports] = useState<IRemark[]>([])
+  const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
+    start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
+    , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
+  })
+
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IRemark[]>, BackendError>(["assign_refer_reports", dates.start_date, dates.end_date], async () => GetAssignedRefers({ start_date: dates.start_date, end_date: dates.end_date }))
+
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-  const columns = useMemo<MRT_ColumnDef<IBillsAgingReportTemplate>[]>(
+  const columns = useMemo<MRT_ColumnDef<IRemark>[]>(
     //column definitions...
     () => [
       {
-        accessorKey: 'report_owner',
-        header: 'State',
-        size: 150,
-        filterVariant: 'multi-select',
-        filterSelectOptions: reports.map((i) => { return i.report_owner }).filter(onlyUnique)
+        accessorKey: 'remark',
+        header: 'Remark',
+        size: 150
       },
       {
-        accessorKey: 'account',
-        header: 'Account',
+        accessorKey: 'lead.name',
+        header: 'Lead',
         size: 350,
         filterVariant: 'multi-select',
-        filterSelectOptions: reports.map((i) => { return i.account }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return i.lead.name }).filter(onlyUnique)
 
       },
       {
-        accessorKey: 'plu70',
-        header: '>70',
-        aggregationFn: 'sum',
-        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.plu70) }, 0).toFixed(2)}</b>
+        accessorKey: 'lead.referred_party_name',
+        header: 'Refer Party',
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.lead.name }).filter(onlyUnique)
       },
       {
-        accessorKey: 'in70to90',
-        header: '70-90',
-        aggregationFn: 'sum',
-        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.in70to90) }, 0).toFixed(2)}</b>
-      },
-      {
-        accessorKey: 'in90to120',
-        header: '90-120',
-        aggregationFn: 'sum',
-        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.in90to120) }, 0).toFixed(2)}</b>
-      },
-      {
-        accessorKey: 'plus120',
-        header: '>120',
-        aggregationFn: 'sum',
-        AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.plus120) }, 0).toFixed(2)}</b>
+        accessorKey: 'lead.referred_date',
+        header: 'Refer Date',
+        filterVariant: 'multi-select',
+        //@ts-ignore
+        Cell: (val) => <span>{moment(val.cell.getValue()).format("DD/MM/YYYY")}</span>,
+        filterSelectOptions: reports.map((i) => { return moment(i.lead.referred_date).format("DD/MM/YYYY") }).filter(onlyUnique)
       }
     ],
     [reports],
@@ -83,26 +59,6 @@ export default function AssignedReferReportPage() {
   );
 
 
-  function handleExcel() {
-    try {
-      let data: IBillsAgingReportTemplate[] = [
-        {
-          report_owner: "Goa",
-          account: "agarson safety",
-          plu70: 0,
-          in70to90: 0,
-          in90to120: 0,
-          plus120: 0
-        }
-      ]
-      ExportToExcel(data, "bills_ageing_template")
-      setSent(true)
-    }
-    catch (err) {
-      console.log(err)
-      setSent(false)
-    }
-  }
 
   useEffect(() => {
     if (typeof window !== 'undefined' && isSuccess) {
@@ -162,9 +118,6 @@ export default function AssignedReferReportPage() {
       {
         isLoading && <LinearProgress />
       }
-
-      {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-
       <Stack
         spacing={2}
         padding={1}
@@ -177,16 +130,45 @@ export default function AssignedReferReportPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Bills Ageing {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
+          Assigned Refers : {reports && reports.length}
         </Typography>
-        <Stack direction={'row'} gap={2} alignItems={'center'}>
-          <>
-
-            {user?.assigned_permissions.includes("bills_ageing_create") && <UploadBillsAgingFromExcelButton />}
-
-            {user?.assigned_permissions.includes("bills_ageing_create") && <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
-          </>
+        <Stack direction="row" gap={2}>
+          < TextField
+            size="small"
+            type="date"
+            id="start_date"
+            label="Start Date"
+            fullWidth
+            value={dates.start_date}
+            focused
+            onChange={(e) => {
+              if (e.currentTarget.value) {
+                setDates({
+                  ...dates,
+                  start_date: moment(e.target.value).format("YYYY-MM-DD")
+                })
+              }
+            }}
+          />
+          < TextField
+            size="small"
+            type="date"
+            id="end_date"
+            label="End Date"
+            focused
+            value={dates.end_date}
+            fullWidth
+            onChange={(e) => {
+              if (e.currentTarget.value) {
+                setDates({
+                  ...dates,
+                  end_date: moment(e.target.value).format("YYYY-MM-DD")
+                })
+              }
+            }}
+          />
         </Stack>
+
 
 
       </Stack >

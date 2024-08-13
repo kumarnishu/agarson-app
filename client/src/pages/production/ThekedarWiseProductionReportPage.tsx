@@ -18,7 +18,7 @@ export default function ThekedarWiseProductionReportPage() {
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
   })
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IColumnRowData>, BackendError>(["reports", dates.start_date, dates.end_date], async () => GetproductionThekedarWise({ start_date: dates.start_date, end_date: dates.end_date }))
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IColumnRowData>, BackendError>(["thekedarwisereports", dates.start_date, dates.end_date], async () => GetproductionThekedarWise({ start_date: dates.start_date, end_date: dates.end_date }))
 
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);

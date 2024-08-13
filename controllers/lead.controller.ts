@@ -3968,7 +3968,7 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
 
-    remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('created_by').populate('updated_by').populate({
+    remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }}).populate('created_by').populate('updated_by').populate({
         path: 'lead',
         populate: [
             {
@@ -3978,12 +3978,12 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
             {
                 path: 'updated_by',
                 model: 'User'
-            },
-            {
-                path: 'referred_party',
-                model: 'ReferredParty'
             }
         ]
-    }).sort('referred_party.name')
+    }).sort('lead.referred_party_name')
+    remarks = remarks.filter((r) => {
+        if (r.lead && r.lead.referred_party_name)
+            return r
+    })
     return res.status(200).json(remarks)
 }

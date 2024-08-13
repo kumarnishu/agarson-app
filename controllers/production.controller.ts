@@ -1101,9 +1101,9 @@ export interface IShoeWeightDiffReport {
     w1: number,
     w2: number,
     w3: number,
-   u1: number,
-   u2: number,
-   u3: number,
+    u1: number,
+    u2: number,
+    u3: number,
     d1: number,
     d2: number,
     d3: number,
@@ -1130,14 +1130,14 @@ export const GetShoeWeightDifferenceReports = async (req: Request, res: Response
             st_weight: weight.dye.stdshoe_weight || 0,
             machine: weight.machine.display_name,
             w1: weight.shoe_weight1 || 0,
-            w2: weight.shoe_weight2||0,
+            w2: weight.shoe_weight2 || 0,
             w3: weight.shoe_weight3 || 0,
             u1: weight.upper_weight1 || 0,
             u2: weight.upper_weight2 || 0,
             u3: weight.upper_weight3 || 0,
-            d1: weight.shoe_weight1 && weight.upper_weight1 ? (weight.shoe_weight1 - weight.upper_weight1  - weight.dye.stdshoe_weight) : 0,
-            d2: weight.shoe_weight2 && weight.upper_weight2 ? (weight.shoe_weight2 - weight.upper_weight2  - weight.dye.stdshoe_weight) : 0,
-            d3: weight.shoe_weight3 && weight.upper_weight3 ? (weight.shoe_weight3  - weight.upper_weight3  - weight.dye.stdshoe_weight) : 0,
+            d1: weight.shoe_weight1 && weight.upper_weight1 ? (weight.shoe_weight1 - weight.upper_weight1 - weight.dye.stdshoe_weight) : 0,
+            d2: weight.shoe_weight2 && weight.upper_weight2 ? (weight.shoe_weight2 - weight.upper_weight2 - weight.dye.stdshoe_weight) : 0,
+            d3: weight.shoe_weight3 && weight.upper_weight3 ? (weight.shoe_weight3 - weight.upper_weight3 - weight.dye.stdshoe_weight) : 0,
             person: weight.created_by.username
         }
     })
@@ -1161,7 +1161,7 @@ export const GetThekedarWiseProductionReports = async (req: Request, res: Respon
     let users = await User.find().sort("username")
     //columns
     production.columns.push({ key: 'date', header: 'Date', type: 'date' });
-    users.filter((u) => { return u.assigned_permissions.includes('production_view') })
+    users = users.filter((u) => { return u.assigned_permissions.includes('production_view') })
     for (let k = 0; k < users.length; k++) {
         let user = users[k]
         production.columns.push({ key: user.username, header: String(user.username).toUpperCase(), type: 'number' })

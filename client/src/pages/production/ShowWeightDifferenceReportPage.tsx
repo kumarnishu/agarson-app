@@ -37,7 +37,7 @@ export default function ShowWeightDifferenceReportPage() {
     start_date: moment(new Date()).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
   })
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IShoeWeightDiffReport[]>, BackendError>(["reports", dates.start_date, dates.end_date], async () => GetShoeWeightDiffReports({ start_date: dates.start_date, end_date: dates.end_date }))
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IShoeWeightDiffReport[]>, BackendError>(["shoeweight_diffreports", dates.start_date, dates.end_date], async () => GetShoeWeightDiffReports({ start_date: dates.start_date, end_date: dates.end_date }))
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const { user } = useContext(UserContext)
