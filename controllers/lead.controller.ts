@@ -3968,7 +3968,7 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
     let dt2 = new Date(String(end_date))
 
     let leads = await Lead.find({
-        created_at: { $gte: dt1, $lt: dt2 }, stage: 'refer'
+        created_at: { $gte: dt1, $lt: dt2 }
     }).populate('updated_by').populate('created_by').populate({
         path: 'remarks',
         populate: [
