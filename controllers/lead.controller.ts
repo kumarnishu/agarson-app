@@ -3964,12 +3964,13 @@ export const GetNewRefers = async (req: Request, res: Response, next: NextFuncti
 export const GetAssignedRefers = async (req: Request, res: Response, next: NextFunction) => {
     let start_date = req.query.start_date
     let end_date = req.query.end_date
-    let remarks: IRemark[] = []
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
 
-    remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }}).populate('created_by').populate('updated_by').populate({
-        path: 'lead',
+    let leads = await Lead.find({
+        created_at: { $gte: dt1, $lt: dt2 }, stage: 'refer'
+    }).populate('updated_by').populate('created_by').populate({
+        path: 'remarks',
         populate: [
             {
                 path: 'created_by',
@@ -3980,10 +3981,11 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
                 model: 'User'
             }
         ]
-    }).sort('lead.referred_party_name')
-    remarks = remarks.filter((r) => {
-        if (r.lead && r.lead.referred_party_name)
+    }).sort('-updated_at')
+    leads = leads.filter((r) => {
+        if (r.referred_party_name)
             return r
     })
-    return res.status(200).json(remarks)
+    return res.status(200).json(leads)
 }
+

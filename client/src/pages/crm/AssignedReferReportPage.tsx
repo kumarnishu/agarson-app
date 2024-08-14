@@ -6,52 +6,61 @@ import { useQuery } from 'react-query'
 import { BackendError } from '../..'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
-import { IRemark } from '../../types/crm.types'
+import { ILead } from '../../types/crm.types'
 import moment from 'moment'
 import { GetAssignedRefers } from '../../services/LeadsServices'
 
 
 export default function AssignedReferReportPage() {
-  const [reports, setReports] = useState<IRemark[]>([])
+  const [reports, setReports] = useState<ILead[]>([])
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
   })
 
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IRemark[]>, BackendError>(["assign_refer_reports", dates.start_date, dates.end_date], async () => GetAssignedRefers({ start_date: dates.start_date, end_date: dates.end_date }))
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ILead[]>, BackendError>(["assign_refer_reports", dates.start_date, dates.end_date], async () => GetAssignedRefers({ start_date: dates.start_date, end_date: dates.end_date }))
 
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-  const columns = useMemo<MRT_ColumnDef<IRemark>[]>(
+  const columns = useMemo<MRT_ColumnDef<ILead>[]>(
     //column definitions...
     () => [
       {
-        accessorKey: 'remark',
-        header: 'Remark',
-        size: 150
-      },
-      {
-        accessorKey: 'lead.name',
+        accessorKey: 'name',
         header: 'Lead',
         size: 350,
         filterVariant: 'multi-select',
-        filterSelectOptions: reports.map((i) => { return i.lead.name }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return i.name }).filter(onlyUnique)
 
       },
       {
-        accessorKey: 'lead.referred_party_name',
-        header: 'Refer Party',
+        accessorKey: 'mobile',
+        header: 'Lead Mobile',
+        size: 350,
         filterVariant: 'multi-select',
-        filterSelectOptions: reports.map((i) => { return i.lead.name }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return i.mobile }).filter(onlyUnique)
+
       },
       {
-        accessorKey: 'lead.referred_date',
+        accessorKey: 'referred_party_name',
+        header: 'Refer Party',
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.referred_party_name || "" }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'referred_party_mobile',
+        header: 'Refer Party Mobile',
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.referred_party_mobile || "" }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'referred_date',
         header: 'Refer Date',
         filterVariant: 'multi-select',
         //@ts-ignore
         Cell: (val) => <span>{moment(val.cell.getValue()).format("DD/MM/YYYY")}</span>,
-        filterSelectOptions: reports.map((i) => { return moment(i.lead.referred_date).format("DD/MM/YYYY") }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return moment(i.referred_date).format("DD/MM/YYYY") }).filter(onlyUnique)
       }
     ],
     [reports],
