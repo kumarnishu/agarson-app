@@ -9,6 +9,7 @@ import { ChoiceContext, UserChoiceActions } from '../../../contexts/dialogContex
 import CreateOrEditErpStateDialog from '../../dialogs/erp/CreateOrEditErpStateDialog'
 import { IState } from '../../../types/erp_report.types'
 import DeleteErpStateDialog from '../../dialogs/erp/DeleteErpStateDialog'
+import { UserContext } from '../../../contexts/userContext'
 
 
 
@@ -24,6 +25,7 @@ type Props = {
 function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
     const [data, setData] = useState<{ state: IState, users: IUser[] }[]>(states)
     const { setChoice } = useContext(ChoiceContext)
+    const {user}=useContext(UserContext)
     useEffect(() => {
         if (data)
             setData(states)
@@ -202,7 +204,7 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
                                                     <Stack direction="row">
                                                         <>
                                                           
-                                                                <Tooltip title="delete">
+                                                            {user?.assigned_permissions.includes('erp_state_delete')&&<Tooltip title="delete">
                                                                     <IconButton color="error"
                                                                         onClick={() => {
                                                                             setChoice({ type: UserChoiceActions.delete_erp_state })
@@ -212,10 +214,10 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
                                                                     >
                                                                         <Delete />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                </Tooltip>}
                                                             
 
-                                                          <Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes('erp_state_edit') &&<Tooltip title="edit">
                                                                 <IconButton
                                                                     onClick={() => {
                                                                         setState(state)
@@ -225,7 +227,7 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
                                                                 >
                                                                     <Edit />
                                                                 </IconButton>
-                                                            </Tooltip>
+                                                            </Tooltip>}
 
                                                         </>
 

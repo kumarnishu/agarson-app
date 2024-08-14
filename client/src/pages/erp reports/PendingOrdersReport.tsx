@@ -261,7 +261,7 @@ export default function PendingOrdersReport() {
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             }
         ],
-        [reports,],
+        [reports],
         //end
     );
 

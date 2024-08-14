@@ -177,7 +177,7 @@ export default function CrmStatesPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('') && <MenuItem
+              {LoggedInUser?.assigned_permissions.includes('states_create') && <MenuItem
              
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {

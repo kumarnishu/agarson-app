@@ -561,7 +561,7 @@ export const AssignErpStatesToUsers = async (req: Request, res: Response, next: 
                 }
             }
 
-            user.assigned_crm_states = assigned_states
+            user.assigned_states = assigned_states
             await user.save();
         }
 

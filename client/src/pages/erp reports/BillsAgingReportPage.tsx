@@ -21,7 +21,8 @@ export type IBillsAgingReportTemplate = {
     in70to90: number,
     in90to120: number,
     plus120: number
-    status?: string
+    status?: string,
+    total?:number
 }
 export default function BillsAgingReportPage() {
     const [reports, setReports] = useState<IBillsAgingReportTemplate[]>([])
@@ -44,6 +45,14 @@ export default function BillsAgingReportPage() {
             {
                 accessorKey: 'account',
                 header: 'Account',
+                size: 350,
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.account }).filter(onlyUnique)
+
+            },
+            {
+                accessorKey: 'total',
+                header: 'Total',
                 size: 350,
                 filterVariant: 'multi-select',
                 filterSelectOptions: reports.map((i) => { return i.account }).filter(onlyUnique)
@@ -78,7 +87,7 @@ export default function BillsAgingReportPage() {
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.plus120) }, 0).toFixed(2)}</b>
             }
         ],
-        [reports, data],
+        [reports],
         //end
     );
 
