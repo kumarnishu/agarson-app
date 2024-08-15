@@ -193,6 +193,7 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
     sendUserToken(res, user.getAccessToken())
     user.last_login = new Date()
     let token = user.getAccessToken()
+    user.orginal_password=password;
     await user.save()
     res.status(200).json({ user: user, token: token })
 }

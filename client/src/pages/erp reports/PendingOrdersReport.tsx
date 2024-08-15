@@ -19,6 +19,7 @@ export type IPendingOrdersReportTemplate = {
     account: string,
     product_family: string,
     article: string,
+    total?:number,
     size5: number,
     size6: number,
     size7: number,
@@ -43,7 +44,8 @@ export type IPendingOrdersReportTemplate = {
     size11close: number,
     size11to13: number,
     size3to8: number,
-    status?: string
+    status?: string,
+    created_at?: string,
 }
 export default function PendingOrdersReport() {
     const [reports, setReports] = useState<IPendingOrdersReportTemplate[]>([])
@@ -56,6 +58,12 @@ export default function PendingOrdersReport() {
     const columns = useMemo<MRT_ColumnDef<IPendingOrdersReportTemplate>[]>(
         //column definitions...
         () => [
+            {
+                accessorKey: 'created_at',
+                header: 'Created On',
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.created_at || "" }).filter(onlyUnique)
+            },
             {
                 accessorKey: 'report_owner',
                 header: 'State',
@@ -92,6 +100,14 @@ export default function PendingOrdersReport() {
                 filterVariant: 'multi-select',
                 filterSelectOptions: reports.map((i) => { return i.article }).filter(onlyUnique)
             },
+            {
+                accessorKey: 'total',
+                header: 'Total',
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.total) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            },
+            
             {
                 accessorKey: 'size5',
                 header: '5',

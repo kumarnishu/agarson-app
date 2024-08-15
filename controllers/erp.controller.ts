@@ -1,19 +1,18 @@
 import { NextFunction, Request, Response } from "express"
 import xlsx from "xlsx";
-import { BillsAgingReport, IBillsAgingReport } from "../models/erp_reports/bills_aging_model";
+import { BillsAgingReport } from "../models/erp_reports/bills_aging_model";
 import { IState, State } from "../models/erp_reports/state.model";
-import { IPendingOrdersReport, PendingOrdersReport } from "../models/erp_reports/pending_orders.model";
+import { PendingOrdersReport } from "../models/erp_reports/pending_orders.model";
 import { IUser, User } from "../models/users/user.model";
 import { ClientSaleLastYearReport, ClientSaleReport } from "../models/erp_reports/client_sale.model";
 import { IPartyTargetReport, PartyTargetReport } from "../models/erp_reports/partytarget.model";
-import { ClientSaleReportTemplate, IBillsAgingReportTemplate, IErpStateTemplate, IPartyTargetReportTemplate, IPendingOrdersReportTemplate, ISaleAnalysisReportTemplate } from "../types/template.type";
+import { IErpStateTemplate, IPartyTargetReportTemplate, ISaleAnalysisReportTemplate } from "../types/template.type";
 import isMongoId from "validator/lib/isMongoId";
 import mongoose from "mongoose";
 import { GetLastYearlyachievementBystate, GetMonthlyachievementBystate, GetMonthlytargetBystate, GetYearlyachievementBystate } from "../utils/ErpUtils";
+import moment from "moment";
 
 //get
-
-
 export const GetAllStates = async (req: Request, res: Response, next: NextFunction) => {
     let result: { state: IState, users: IUser[] }[] = []
     let states = await State.find()
@@ -68,6 +67,356 @@ export const DeleteErpState = async (req: Request, res: Response, next: NextFunc
     }
     await state.remove();
     return res.status(200).json({ message: "state deleted successfully" })
+}
+
+
+export type IBillsAgingReportTemplate = {
+    report_owner: string
+    account: string,
+    total: number,
+    plu70: number,
+    in70to90: number,
+    in90to120: number,
+    plus120: number
+    status?: string,
+    created_at?: string,
+}
+
+export const GetBillsAgingReports = async (req: Request, res: Response, next: NextFunction) => {
+    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
+    let reports: IBillsAgingReportTemplate[] = (await BillsAgingReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
+        return {
+            report_owner: i.report_owner.state,
+            account: i.account,
+            total: i.plu70 + i.in70to90 + i.in90to120 + i.plus120,
+            plu70: i.plu70,
+            in70to90: i.in70to90,
+            in90to120: i.in90to120,
+            plus120: i.plus120,
+            created_at: moment(i.created_at).format("DD/MM/YYYY")
+        }
+    })
+    return res.status(200).json(reports);
+}
+
+export type IPendingOrdersReportTemplate = {
+    report_owner: string
+    account: string,
+    product_family: string,
+    article: string,
+    total: number,
+    size5: number,
+    size6: number,
+    size7: number,
+    size8: number,
+    size9: number,
+    size10: number,
+    size11: number,
+    size12_24pairs: number,
+    size13: number,
+    size11x12: number,
+    size3: number,
+    size4: number,
+    size6to10: number,
+    size7to10: number,
+    size8to10: number,
+    size4to8: number,
+    size6to9: number,
+    size5to8: number,
+    size6to10A: number,
+    size7to10B: number,
+    size6to9A: number,
+    size11close: number,
+    size11to13: number,
+    size3to8: number,
+    status?: string, created_at?: string,
+}
+export const GetPendingOrderReports = async (req: Request, res: Response, next: NextFunction) => {
+    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
+    let reports: IPendingOrdersReportTemplate[] = (await PendingOrdersReport.find({ report_owner: { $in: state_ids } }).populate("report_owner")).map((i) => {
+        return {
+            report_owner: i.report_owner.state,
+            account: i.account,
+            product_family: i.product_family,
+            article: i.article,
+            total: (i.size5
+                + i.size6
+                + i.size7
+                + i.size8
+                + i.size9
+                + i.size10
+                + i.size11
+                + i.size12_24pairs
+                + i.size13
+                + i.size11x12
+                + i.size3
+                + i.size4
+                + i.size6to10
+                + i.size7to10
+                + i.size8to10
+                + i.size4to8
+                + i.size6to9
+                + i.size5to8
+                + i.size6to10A
+                + i.size7to10B
+                + i.size6to9A
+                + i.size11close
+                + i.size11to13
+                + i.size3to8),
+            size5: i.size5,
+            size6: i.size6,
+            size7: i.size7,
+            size8: i.size8,
+            size9: i.size9,
+            size10: i.size10,
+            size11: i.size11,
+            size12_24pairs: i.size12_24pairs,
+            size13: i.size13,
+            size11x12: i.size11x12,
+            size3: i.size3,
+            size4: i.size4,
+            size6to10: i.size6to10,
+            size7to10: i.size7to10,
+            size8to10: i.size8to10,
+            size4to8: i.size4to8,
+            size6to9: i.size6to9,
+            size5to8: i.size5to8,
+            size6to10A: i.size6to10A,
+            size7to10B: i.size7to10B,
+            size6to9A: i.size6to9A,
+            size11close: i.size11close,
+            size11to13: i.size11to13,
+            size3to8: i.size3to8,
+            created_at: moment(i.created_at).format("DD/MM/YYYY")
+        }
+    })
+    return res.status(200).json(reports);
+}
+
+export type ClientSaleReportTemplate = {
+    report_owner: string,
+    account: string,
+    article: string,
+    oldqty: number,
+    newqty: number,
+    total: number,
+    apr: number,
+    may: number,
+    jun: number,
+    jul: number,
+    aug: number,
+    sep: number,
+    oct: number,
+    nov: number,
+    dec: number,
+    jan: number,
+    feb: number,
+    mar: number,
+    status?: string,
+    created_at?: string,
+}
+export const GetClientSaleReportsForLastYear = async (req: Request, res: Response, next: NextFunction) => {
+    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
+    let data: ClientSaleReportTemplate[] = (await ClientSaleLastYearReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
+        return {
+            report_owner: i.report_owner.state,
+            account: i.account,
+            article: i.article,
+            oldqty: i.oldqty,
+            newqty: i.newqty,
+            total: (i.apr +
+                i.may +
+                i.jun +
+                i.jul +
+                i.aug +
+                i.sep +
+                i.oct +
+                i.nov +
+                i.dec +
+                i.jan +
+                i.feb +
+                i.mar),
+            apr: i.apr,
+            may: i.may,
+            jun: i.jun,
+            jul: i.jul,
+            aug: i.aug,
+            sep: i.sep,
+            oct: i.oct,
+            nov: i.nov,
+            dec: i.dec,
+            jan: i.jan,
+            feb: i.feb,
+            mar: i.mar, created_at: moment(i.created_at).format("DD/MM/YYYY")
+        }
+    })
+
+    return res.status(200).json(data)
+}
+export const GetClientSaleReports = async (req: Request, res: Response, next: NextFunction) => {
+    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
+    let data: ClientSaleReportTemplate[] = (await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
+        console.log(i)
+        return {
+            report_owner: i.report_owner.state,
+            account: i.account,
+            article: i.article,
+            oldqty: i.oldqty,
+            newqty: i.newqty,
+            total: (i.apr +
+                i.may +
+                i.jun +
+                i.jul +
+                i.aug +
+                i.sep +
+                i.oct +
+                i.nov +
+                i.dec +
+                i.jan +
+                i.feb +
+                i.mar),
+            apr: i.apr,
+            may: i.may,
+            jun: i.jun,
+            jul: i.jul,
+            aug: i.aug,
+            sep: i.sep,
+            oct: i.oct,
+            nov: i.nov,
+            dec: i.dec,
+            jan: i.jan,
+            feb: i.feb,
+            mar: i.mar, created_at: moment(i.created_at).format("DD/MM/YYYY")
+        }
+    });
+    return res.status(200).json(data)
+}
+export const GetPartyTargetReports = async (req: Request, res: Response, next: NextFunction) => {
+
+    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
+
+    let reports: IPartyTargetReportTemplate[] = (await PartyTargetReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((item) => {
+        return {
+            slno: item.slno,
+            PARTY: item.PARTY,
+            Create_Date: item.Create_Date,
+            STATION: item.STATION,
+            SALES_OWNER: item.SALES_OWNER,
+            report_owner: item.report_owner.state,
+            All_TARGET: item.All_TARGET,
+            TARGET: item.TARGET,
+            PROJECTION: item.PROJECTION,
+            GROWTH: item.GROWTH,
+            TARGET_ACHIEVE: item.TARGET_ACHIEVE,
+            TOTAL_SALE_OLD: item.TOTAL_SALE_OLD,
+            TOTAL_SALE_NEW: item.TOTAL_SALE_NEW,
+            Last_Apr: item.Last_Apr,
+            Cur_Apr: item.Cur_Apr,
+            Last_May: item.Last_May,
+            Cur_May: item.Cur_May,
+            Last_Jun: item.Last_Jun,
+            Cur_Jun: item.Cur_Jun,
+            Last_Jul: item.Last_Jul,
+            Cur_Jul: item.Cur_Jul,
+            Last_Aug: item.Last_Aug,
+            Cur_Aug: item.Cur_Aug,
+            Last_Sep: item.Last_Sep,
+            Cur_Sep: item.Cur_Sep,
+            Last_Oct: item.Last_Oct,
+            Cur_Oct: item.Cur_Oct,
+            Last_Nov: item.Last_Nov,
+            Cur_Nov: item.Cur_Nov,
+            Last_Dec: item.Last_Dec,
+            Cur_Dec: item.Cur_Dec,
+            Last_Jan: item.Last_Jan,
+            Cur_Jan: item.Cur_Jan,
+            Last_Feb: item.Last_Feb,
+            Cur_Feb: item.Cur_Feb,
+            Last_Mar: item.Last_Mar,
+            Cur_Mar: item.Cur_Mar,
+        }
+    })
+
+    return res.status(200).json(reports)
+}
+export const GetSaleAnalysisReport = async (req: Request, res: Response, next: NextFunction) => {
+    let month = Number(req.params.month)
+    if (req.user) {
+        let result: ISaleAnalysisReportTemplate[] = []
+        let user = await User.findById(req.user._id).populate('assigned_states');
+        if (user) {
+            let states = user.assigned_states;
+            for (let i = 0; i < states.length; i++) {
+                let reports = await PartyTargetReport.find({ report_owner: states[i]._id })
+                let antarget = states[i].apr + states[i].may + states[i].jun + states[i].jul + states[i].aug + states[i].sep + states[i].oct + states[i].nov + states[i].dec + states[i].jan + states[i].feb + states[i].mar;
+
+                if (reports && reports.length > 0)
+                    result.push({
+                        state: states[i].state,
+                        monthly_target: GetMonthlytargetBystate(states[i], month),
+                        monthly_achivement: GetMonthlyachievementBystate(reports, month),
+                        monthly_percentage: (Math.round((GetMonthlyachievementBystate(reports, 6) / GetMonthlytargetBystate(states[i], month)) * 10000) / 100),
+                        annual_target: antarget,
+                        annual_achivement: GetYearlyachievementBystate(reports),
+                        annual_percentage: (Math.round((GetYearlyachievementBystate(reports) / antarget) * 10000) / 100),
+                        last_year_sale: GetLastYearlyachievementBystate(reports),
+                        last_year_sale_percentage_comparison: (Math.round((GetLastYearlyachievementBystate(reports) / antarget) * 10000) / 100)
+                    })
+            }
+        }
+        return res.status(200).json(result)
+    }
+    else
+        return res.status(403).json({ message: "not authorized" })
+
+}
+
+
+export const AssignErpStatesToUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const { state_ids, user_ids, flag } = req.body as {
+        user_ids: string[],
+        state_ids: string[],
+        flag: number
+    }
+    if (state_ids && state_ids.length === 0)
+        return res.status(400).json({ message: "please select one state " })
+    if (user_ids && user_ids.length === 0)
+        return res.status(400).json({ message: "please select one state owner" })
+
+    let owners = user_ids
+
+    if (flag == 0) {
+        for (let i = 0; i < owners.length; i++) {
+            let owner = await User.findById(owners[i]).populate('assigned_states');
+            if (owner) {
+                let oldstates = owner.assigned_states.map((item) => { return item._id.valueOf() });
+                oldstates = oldstates.filter((item) => { return !state_ids.includes(item) });
+                console.log(oldstates)
+                await User.findByIdAndUpdate(owner._id, {
+                    assigned_states: oldstates
+                })
+            }
+        }
+    }
+    else for (let k = 0; k < owners.length; k++) {
+        const user = await User.findById(owners[k]).populate('assigned_states')
+        if (user) {
+            let assigned_states = user.assigned_states;
+            for (let i = 0; i <= state_ids.length; i++) {
+                if (!assigned_states.map(i => { return i._id.valueOf() }).includes(state_ids[i])) {
+                    let state = await State.findById(state_ids[i]);
+                    if (state)
+                        assigned_states.push(state)
+                }
+            }
+
+            user.assigned_states = assigned_states
+            await user.save();
+        }
+
+    }
+
+    return res.status(200).json({ message: "successfull" })
 }
 
 export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: Response, next: NextFunction) => {
@@ -164,59 +513,6 @@ export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: R
     }
     return res.status(200).json(result);
 }
-
-
-export const GetBillsAgingReports = async (req: Request, res: Response, next: NextFunction) => {
-    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-    let reports: IBillsAgingReportTemplate[] = (await BillsAgingReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
-        return {
-            report_owner: i.report_owner.state,
-            account: i.account,
-            plu70: i.plu70,
-            in70to90: i.in70to90,
-            in90to120: i.in90to120,
-            plus120: i.plus120,
-        }
-    })
-    return res.status(200).json(reports);
-}
-export const GetPendingOrderReports = async (req: Request, res: Response, next: NextFunction) => {
-    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-    let reports: IPendingOrdersReportTemplate[] = (await PendingOrdersReport.find({ report_owner: { $in: state_ids } }).populate("report_owner")).map((i) => {
-        return {
-            report_owner: i.report_owner.state,
-            account: i.account,
-            product_family: i.product_family,
-            article: i.article,
-            size5: i.size5,
-            size6: i.size6,
-            size7: i.size7,
-            size8: i.size8,
-            size9: i.size9,
-            size10: i.size10,
-            size11: i.size11,
-            size12_24pairs: i.size12_24pairs,
-            size13: i.size13,
-            size11x12: i.size11x12,
-            size3: i.size3,
-            size4: i.size4,
-            size6to10: i.size6to10,
-            size7to10: i.size7to10,
-            size8to10: i.size8to10,
-            size4to8: i.size4to8,
-            size6to9: i.size6to9,
-            size5to8: i.size5to8,
-            size6to10A: i.size6to10A,
-            size7to10B: i.size7to10B,
-            size6to9A: i.size6to9A,
-            size11close: i.size11close,
-            size11to13: i.size11to13,
-            size3to8: i.size3to8,
-        }
-    })
-    return res.status(200).json(reports);
-}
-
 export const BulkPendingOrderReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {
     let result: IPendingOrdersReportTemplate[] = []
     if (!req.file)
@@ -326,139 +622,6 @@ export const BulkPendingOrderReportFromExcel = async (req: Request, res: Respons
     }
     return res.status(200).json(result);
 }
-export const GetClientSaleReportsForLastYear = async (req: Request, res: Response, next: NextFunction) => {
-    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-    let data: ClientSaleReportTemplate[] = (await ClientSaleLastYearReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
-        return {
-            report_owner: i.report_owner.state,
-            account: i.account,
-            article: i.article,
-            oldqty: i.oldqty,
-            newqty: i.newqty,
-            apr: i.apr,
-            may: i.may,
-            jun: i.jun,
-            jul: i.jul,
-            aug: i.aug,
-            sep: i.sep,
-            oct: i.oct,
-            nov: i.nov,
-            dec: i.dec,
-            jan: i.jan,
-            feb: i.feb,
-            mar: i.mar,
-        }
-    })
-
-    return res.status(200).json(data)
-}
-export const GetClientSaleReports = async (req: Request, res: Response, next: NextFunction) => {
-    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-    let data: ClientSaleReportTemplate[] = (await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
-        console.log(i)
-        return {
-            report_owner: i.report_owner.state,
-            account: i.account,
-            article: i.article,
-            oldqty: i.oldqty,
-            newqty: i.newqty,
-            apr: i.apr,
-            may: i.may,
-            jun: i.jun,
-            jul: i.jul,
-            aug: i.aug,
-            sep: i.sep,
-            oct: i.oct,
-            nov: i.nov,
-            dec: i.dec,
-            jan: i.jan,
-            feb: i.feb,
-            mar: i.mar,
-        }
-    });
-    return res.status(200).json(data)
-}
-export const GetPartyTargetReports = async (req: Request, res: Response, next: NextFunction) => {
-
-    let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
-
-    let reports: IPartyTargetReportTemplate[] = (await PartyTargetReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((item) => {
-        return {
-            slno: item.slno,
-            PARTY: item.PARTY,
-            Create_Date: item.Create_Date,
-            STATION: item.STATION,
-            SALES_OWNER: item.SALES_OWNER,
-            report_owner: item.report_owner.state,
-            All_TARGET: item.All_TARGET,
-            TARGET: item.TARGET,
-            PROJECTION: item.PROJECTION,
-            GROWTH: item.GROWTH,
-            TARGET_ACHIEVE: item.TARGET_ACHIEVE,
-            TOTAL_SALE_OLD: item.TOTAL_SALE_OLD,
-            TOTAL_SALE_NEW: item.TOTAL_SALE_NEW,
-            Last_Apr: item.Last_Apr,
-            Cur_Apr: item.Cur_Apr,
-            Last_May: item.Last_May,
-            Cur_May: item.Cur_May,
-            Last_Jun: item.Last_Jun,
-            Cur_Jun: item.Cur_Jun,
-            Last_Jul: item.Last_Jul,
-            Cur_Jul: item.Cur_Jul,
-            Last_Aug: item.Last_Aug,
-            Cur_Aug: item.Cur_Aug,
-            Last_Sep: item.Last_Sep,
-            Cur_Sep: item.Cur_Sep,
-            Last_Oct: item.Last_Oct,
-            Cur_Oct: item.Cur_Oct,
-            Last_Nov: item.Last_Nov,
-            Cur_Nov: item.Cur_Nov,
-            Last_Dec: item.Last_Dec,
-            Cur_Dec: item.Cur_Dec,
-            Last_Jan: item.Last_Jan,
-            Cur_Jan: item.Cur_Jan,
-            Last_Feb: item.Last_Feb,
-            Cur_Feb: item.Cur_Feb,
-            Last_Mar: item.Last_Mar,
-            Cur_Mar: item.Cur_Mar,
-        }
-    })
-
-    return res.status(200).json(reports)
-}
-export const GetSaleAnalysisReport = async (req: Request, res: Response, next: NextFunction) => {
-    let month = Number(req.params.month)
-    if (req.user) {
-        let result: ISaleAnalysisReportTemplate[] = []
-        let user = await User.findById(req.user._id).populate('assigned_states');
-        if (user) {
-            let states = user.assigned_states;
-            for (let i = 0; i < states.length; i++) {
-                let reports = await PartyTargetReport.find({ report_owner: states[i]._id })
-                let antarget = states[i].apr + states[i].may + states[i].jun + states[i].jul + states[i].aug + states[i].sep + states[i].oct + states[i].nov + states[i].dec + states[i].jan + states[i].feb + states[i].mar;
-
-                if (reports && reports.length > 0)
-                    result.push({
-                        state: states[i].state,
-                        monthly_target: GetMonthlytargetBystate(states[i], month),
-                        monthly_achivement: GetMonthlyachievementBystate(reports, month),
-                        monthly_percentage: (Math.round((GetMonthlyachievementBystate(reports, 6) / GetMonthlytargetBystate(states[i], month)) * 10000) / 100),
-                        annual_target: antarget,
-                        annual_achivement: GetYearlyachievementBystate(reports),
-                        annual_percentage: (Math.round((GetYearlyachievementBystate(reports) / antarget) * 10000) / 100),
-                        last_year_sale: GetLastYearlyachievementBystate(reports),
-                        last_year_sale_percentage_comparison: (Math.round((GetLastYearlyachievementBystate(reports) / antarget) * 10000) / 100)
-                    })
-            }
-        }
-        return res.status(200).json(result)
-    }
-    else
-        return res.status(403).json({ message: "not authorized" })
-
-}
-
-
 export const BulkCreateBillsAgingReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {
     let result: IBillsAgingReportTemplate[] = []
     if (!req.file)
@@ -522,55 +685,6 @@ export const BulkCreateBillsAgingReportFromExcel = async (req: Request, res: Res
     }
     return res.status(200).json(result);
 }
-
-export const AssignErpStatesToUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const { state_ids, user_ids, flag } = req.body as {
-        user_ids: string[],
-        state_ids: string[],
-        flag: number
-    }
-    if (state_ids && state_ids.length === 0)
-        return res.status(400).json({ message: "please select one state " })
-    if (user_ids && user_ids.length === 0)
-        return res.status(400).json({ message: "please select one state owner" })
-
-    let owners = user_ids
-
-    if (flag == 0) {
-        for (let i = 0; i < owners.length; i++) {
-            let owner = await User.findById(owners[i]).populate('assigned_states');
-            if (owner) {
-                let oldstates = owner.assigned_states.map((item) => { return item._id.valueOf() });
-                oldstates = oldstates.filter((item) => { return !state_ids.includes(item) });
-                console.log(oldstates)
-                await User.findByIdAndUpdate(owner._id, {
-                    assigned_states: oldstates
-                })
-            }
-        }
-    }
-    else for (let k = 0; k < owners.length; k++) {
-        const user = await User.findById(owners[k]).populate('assigned_states')
-        if (user) {
-            let assigned_states = user.assigned_states;
-            for (let i = 0; i <= state_ids.length; i++) {
-                if (!assigned_states.map(i => { return i._id.valueOf() }).includes(state_ids[i])) {
-                    let state = await State.findById(state_ids[i]);
-                    if (state)
-                        assigned_states.push(state)
-                }
-            }
-
-            user.assigned_states = assigned_states
-            await user.save();
-        }
-
-    }
-
-    return res.status(200).json({ message: "successfull" })
-}
-
-
 export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {
     let result: ClientSaleReportTemplate[] = []
     if (!req.file)
@@ -657,7 +771,6 @@ export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Res
     return res.status(200).json(result);
 }
 
-
 export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Request, res: Response, next: NextFunction) => {
     let result: ClientSaleReportTemplate[] = []
     if (!req.file)
@@ -742,7 +855,6 @@ export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Reques
     }
     return res.status(200).json(result);
 }
-
 
 
 export const BulkCreatePartyTargetReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {

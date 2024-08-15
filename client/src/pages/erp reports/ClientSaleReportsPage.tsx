@@ -20,6 +20,7 @@ export type ClientSaleReportTemplate = {
     article: string,
     oldqty: number,
     newqty: number,
+    total?:number,
     apr: number,
     may: number,
     jun: number,
@@ -31,7 +32,7 @@ export type ClientSaleReportTemplate = {
     dec: number,
     jan: number,
     feb: number,
-    mar: number
+    mar: number, created_at?: string,
 }
 export default function ClientSaleReportsPage() {
     const [reports, setClientSaleReports] = useState<ClientSaleReportTemplate[]>([])
@@ -44,6 +45,12 @@ export default function ClientSaleReportsPage() {
     const columns = useMemo<MRT_ColumnDef<ClientSaleReportTemplate>[]>(
         //column definitions...
         () => [
+            {
+                accessorKey: 'created_at',
+                header: 'Created On',
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.created_at || "" }).filter(onlyUnique)
+            },
             {
                 accessorKey: 'report_owner',
                 header: 'State',
@@ -84,6 +91,12 @@ export default function ClientSaleReportsPage() {
                 accessorKey: 'newqty',
                 header: 'New Qty',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.newqty) }, 0).toFixed()}</b>,
+                aggregationFn: 'sum',
+                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
+            }, {
+                accessorKey: 'total',
+                header: 'Total',
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.total) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },

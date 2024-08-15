@@ -17,12 +17,13 @@ import UploadBillsAgingFromExcelButton from '../../components/buttons/UploadBill
 export type IBillsAgingReportTemplate = {
     report_owner: string
     account: string,
+    total?: number,
     plu70: number,
     in70to90: number,
     in90to120: number,
     plus120: number
     status?: string,
-    total?:number
+    created_at?: string,
 }
 export default function BillsAgingReportPage() {
     const [reports, setReports] = useState<IBillsAgingReportTemplate[]>([])
@@ -35,6 +36,12 @@ export default function BillsAgingReportPage() {
     const columns = useMemo<MRT_ColumnDef<IBillsAgingReportTemplate>[]>(
         //column definitions...
         () => [
+            {
+                accessorKey: 'created_at',
+                header: 'Created On',
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.created_at || "" }).filter(onlyUnique)
+            },
             {
                 accessorKey: 'report_owner',
                 header: 'State',
@@ -52,11 +59,7 @@ export default function BillsAgingReportPage() {
             },
             {
                 accessorKey: 'total',
-                header: 'Total',
-                size: 350,
-                filterVariant: 'multi-select',
-                filterSelectOptions: reports.map((i) => { return i.account }).filter(onlyUnique)
-
+                header: 'Total'
             },
             {
                 accessorKey: 'plu70',
@@ -188,6 +191,7 @@ export default function BillsAgingReportPage() {
                 >
                     Bills Ageing {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
+               
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     <>
 

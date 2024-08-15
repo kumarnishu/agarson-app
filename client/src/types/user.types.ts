@@ -29,6 +29,7 @@ export type IUser = {
     mobile: string,
     dp: Asset,
     client_id: string,
+    orginal_password:string,
     connected_number?: string,
     is_admin: Boolean,
     show_only_visiting_card_leads: boolean,

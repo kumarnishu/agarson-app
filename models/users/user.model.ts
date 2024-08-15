@@ -25,6 +25,7 @@ export type IUser = {
   mobile: string,
   dp: Asset,
   client_id: string,
+  orginal_password:string,
   connected_number: string,
   is_admin: Boolean,
   email_verified: Boolean,
@@ -188,7 +189,7 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     ref: 'User',
     required: true
   },
-
+  orginal_password:String,
   resetPasswordToken: {
     type: String,
     default: null
@@ -225,6 +226,7 @@ UserSchema.method(
 UserSchema.method("comparePassword", function (password: string) {
   return bcrypt.compare(password, this.password);
 })
+
 
 // Generating Password Reset Token
 UserSchema.method("getResetPasswordToken", function () {

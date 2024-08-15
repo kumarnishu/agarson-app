@@ -44,7 +44,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
         <>
             <Box sx={{
                 overflow: "auto",
-                height:'75vh'
+                height: '75vh'
             }}>
                 <STable
 
@@ -97,6 +97,12 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                             <STableHeadCell
                             >
 
+                                Password
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
                                 Roles
 
                             </STableHeadCell>
@@ -106,7 +112,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                 Permissions
 
                             </STableHeadCell>
-                           
+
                             <STableHeadCell
                             >
 
@@ -433,6 +439,9 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                             }
                                         </STableCell>
                                         <STableCell>
+                                            {user.orginal_password || ""}
+                                        </STableCell>
+                                        <STableCell>
                                             {
                                                 user.is_admin ?
                                                     <>
@@ -451,7 +460,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                                             }
                                         </STableCell>
 
-                                     
+
                                         <STableCell>
                                             {user.show_only_visiting_card_leads ? "only lead with cards" : "all Leads"}
                                         </STableCell>
@@ -510,7 +519,7 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
                         <UpdateUsePasswordDialog user={user} />
                         <AssignUsersDialog user={user} setUser={setUser} />
                         <ToogleVisitingcardShowDialog user={user} />
-                        <AssignPermissionsToOneUserDialog user={user}/>
+                        <AssignPermissionsToOneUserDialog user={user} />
                     </>
                     : null
             }
