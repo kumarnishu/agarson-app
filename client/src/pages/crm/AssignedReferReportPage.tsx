@@ -45,6 +45,7 @@ export default function AssignedReferReportPage() {
       {
         accessorKey: 'referred_party_name',
         header: 'Refer Party',
+        size: 350,
         filterVariant: 'multi-select',
         filterSelectOptions: reports.map((i) => { return i.referred_party_name || "" }).filter(onlyUnique)
       },

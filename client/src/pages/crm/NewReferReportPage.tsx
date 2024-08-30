@@ -29,14 +29,13 @@ export default function NewReferReportPage() {
       {
         accessorKey: 'name',
         header: 'Name',
-        size: 150,
+        size: 350,
         filterVariant: 'multi-select',
         filterSelectOptions: reports.map((i) => { return i.name }).filter(onlyUnique)
       },
       {
         accessorKey: 'customer_name',
         header: 'Customer',
-        size: 350,
         filterVariant: 'multi-select',
         filterSelectOptions: reports.map((i) => { return i.customer_name }).filter(onlyUnique)
 

@@ -29,7 +29,7 @@ function ViewRemarksDialog({ lead }: { lead: ILead }) {
             <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Remarks history</DialogTitle>
             <DialogContent>
                 <Stack direction="column" gap={2} >
-                    {lead.remarks.reverse().map((item, index) => {
+                    {lead.remarks.map((item, index) => {
                         return (
 
                           <>

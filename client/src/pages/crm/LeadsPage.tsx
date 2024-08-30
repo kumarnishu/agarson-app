@@ -19,6 +19,7 @@ import { ILead, IStage } from '../../types/crm.types'
 import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
 import { toTitleCase } from '../../utils/TitleCase'
 import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
+import MergeTwoLeadsDialog from '../../components/dialogs/crm/MergeTwoLeadsDialog'
 
 
 let template: ILeadTemplate[] = [
@@ -331,13 +332,21 @@ export default function LeadsPage() {
 
 
               > Add New</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('leads_edit') && <MenuItem
+                onClick={() => {
+                  setChoice({ type: LeadChoiceActions.merge_leads })
+                  setLead(undefined);
+                  setAnchorEl(null)
+                }}
+              > Merge Leads</MenuItem>}
               {LoggedInUser?.assigned_permissions.includes('leads_export') && < MenuItem onClick={handleExcel}
 
               >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditLeadDialog lead={undefined} />
-            {selectedLeads && selectedLeads.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
+            {selectedLeads && selectedLeads.length > 0 &&<MergeTwoLeadsDialog leads={selectedLeads} />}
+            {selectedLeads && selectedLeads.length ==2 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
           </>
         </Stack >
       </Stack >
