@@ -364,6 +364,7 @@ export function FetchAllPermissions() {
                         value: 'leads_create',
                         label: 'create'
                     },
+                    
                     {
                         value: 'leads_edit',
                         label: 'edit'
@@ -375,6 +376,10 @@ export function FetchAllPermissions() {
                     {
                         value: 'show_leads_useless',
                         label: 'Show Useless Leads'
+                    },
+                    {
+                        value: 'leads_merge',
+                        label: 'Merge Leads'
                     },
                     {
                         value: 'leads_export',

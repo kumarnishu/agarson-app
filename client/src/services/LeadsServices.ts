@@ -1,3 +1,4 @@
+import { IleadReqBody } from "../components/dialogs/crm/MergeTwoLeadsDialog"
 import { ICRMCity, ICRMState, ILead, ILeadSource, ILeadType, IReferredParty, IStage } from "../types/crm.types"
 import { IUser } from "../types/user.types"
 import { apiClient } from "./utils/AxiosInterceptor"
@@ -42,7 +43,7 @@ export const ConvertLeadToRefer = async ({ id }: { id: string }) => {
   return await apiClient.patch(`leads/torefer/${id}`)
 }
 
-export const GetRemarks = async({ stage, limit, page, start_date, end_date, id }: { stage:string, limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+export const GetRemarks = async ({ stage, limit, page, start_date, end_date, id }: { stage: string, limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
   if (id)
     return await apiClient.get(`remarks/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&stage=${stage}`)
   else
@@ -79,7 +80,9 @@ export const DeleteCrmItem = async ({ refer, lead, state, city, type, source, st
 export const BulkLeadUpdateFromExcel = async (body: FormData) => {
   return await apiClient.put(`update/leads/bulk`, body)
 }
-
+export const MergeTwoLeads = async ({ id, body }: { id: string, body: IleadReqBody }) => {
+  return await apiClient.put(`merge/leads/${id}`, body)
+}
 //remarks
 export const CreateOrEditRemark = async ({ body, lead_id, remark_id }: {
   body: {
@@ -265,7 +268,7 @@ export const AssignCRMCitiesToUsers = async ({ body }: {
   return await apiClient.patch(`crm/cities/assign`, body)
 }
 
-export const GetAssignedRefers = async ({  start_date, end_date }: {start_date?: string, end_date?: string}) => {
+export const GetAssignedRefers = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
   return await apiClient.get(`assigned/refers/report/?start_date=${start_date}&end_date=${end_date}`)
 }
 

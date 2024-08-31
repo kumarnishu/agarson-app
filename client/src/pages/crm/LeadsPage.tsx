@@ -332,7 +332,7 @@ export default function LeadsPage() {
 
 
               > Add New</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('leads_edit') && <MenuItem
+              {LoggedInUser?.assigned_permissions.includes('leads_merge') && <MenuItem
                 onClick={() => {
                   if (selectedLeads.length == 2){
                     setChoice({ type: LeadChoiceActions.merge_leads })

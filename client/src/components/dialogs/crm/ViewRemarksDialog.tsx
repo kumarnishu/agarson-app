@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, IconButton, DialogTitle, Stack } from '@mui/material'
 import { useContext, useState } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { Cancel} from '@mui/icons-material'
+import { Cancel } from '@mui/icons-material'
 import { ILead, IRemark } from '../../../types/crm.types'
 import DeleteRemarkDialog from './DeleteRemarkDialog'
 import CreateOrEditRemarkDialog from './CreateOrEditRemarkDialog'
@@ -32,31 +32,29 @@ function ViewRemarksDialog({ lead }: { lead: ILead }) {
                     {lead.remarks.map((item, index) => {
                         return (
 
-                          <>
-                                <div key={index} style={{ borderRadius: '1px 10px', padding: '10px', background: 'whitesmoke', paddingLeft: '20px', border: '1px solid grey' }}>
-                                    <p>{toTitleCase(item.created_by.username)} : {item.remark} </p>
-                                    <p>{item.remind_date && `Remind Date : ${new Date(item.remind_date).toLocaleDateString() }`} </p>
-                                    <br></br>
-                                    <p>{new Date(item.created_at).toLocaleString()}</p>
-                                    {
-                                        user && item.remark && user?.username === item.created_by.username && new Date(item.created_at) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
-                                            {user?.assigned_permissions.includes('reminders_delete') &&<IconButton size="small" color="error" onClick={() => {
+                            <div key={index} style={{ borderRadius: '1px 10px', padding: '10px', background: 'whitesmoke', paddingLeft: '20px', border: '1px solid grey' }}>
+                                <p>{toTitleCase(item.created_by.username)} : {item.remark} </p>
+                                <p>{item.remind_date && `Remind Date : ${new Date(item.remind_date).toLocaleDateString()}`} </p>
+                                <br></br>
+                                <p>{new Date(item.created_at).toLocaleString()}</p>
+                                {
+                                    user && item.remark && user?.username === item.created_by.username && new Date(item.created_at) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
+                                        {user?.assigned_permissions.includes('reminders_delete') && <IconButton size="small" color="error" onClick={() => {
+                                            setRemark(item)
+                                            setDisplay(true)
+                                        }}>
+                                            Delete</IconButton>}
+                                        {user?.assigned_permissions.includes('reminders_edit') && <IconButton size="small" color="success"
+                                            onClick={() => {
                                                 setRemark(item)
-                                                setDisplay(true)
-                                            }}>
-                                                Delete</IconButton>}
-                                    {user?.assigned_permissions.includes('reminders_edit')&& <IconButton size="small" color="success"
-                                                onClick={() => {
-                                                    setRemark(item)
-                                                    setDisplay2(true)
-                                                    
-                                                }}
-                                            >Edit</IconButton>}
-                                        </Stack>
-                                    }
-                                </div>
-                               
-                          </>
+                                                setDisplay2(true)
+
+                                            }}
+                                        >Edit</IconButton>}
+                                    </Stack>
+                                }
+                            </div>
+
                         )
                     })}
                 </Stack>

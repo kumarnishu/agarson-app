@@ -169,7 +169,7 @@ export default function CrmStatesPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {LoggedInUser?.assigned_permissions.includes('states_edit') &&<MenuItem
+              {LoggedInUser?.assigned_permissions.includes('states_create') &&<MenuItem
              
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_state })
@@ -177,7 +177,7 @@ export default function CrmStatesPage() {
                   setAnchorEl(null)
                 }}
               > Add New</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('states_create') && <MenuItem
+              {LoggedInUser?.assigned_permissions.includes('states_edit') && <MenuItem
              
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {
@@ -191,7 +191,7 @@ export default function CrmStatesPage() {
                   setAnchorEl(null)
                 }}
               > Assign States</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('states_create') &&<MenuItem
+              {LoggedInUser?.assigned_permissions.includes('states_edit') &&<MenuItem
              
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {

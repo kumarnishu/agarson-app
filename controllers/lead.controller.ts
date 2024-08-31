@@ -25,8 +25,51 @@ export const GetAllCRMLeadTypes = async (req: Request, res: Response, next: Next
 }
 
 export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunction) => {
-    let types = await LeadType.find()
-    return res.status(200).json(types)
+    const id = req.params.id;
+    const { name, mobiles, city, stage, state, email, alternate_email, address, merge_refer, merge_remarks, source_lead_id, refer_id } = req.body as {
+        name: string,
+        mobiles: string[],
+        city: string,
+        state: string,
+        stage: string,
+        email: string,
+        alternate_email: string,
+        address: string,
+        merge_refer: boolean,
+        merge_remarks: boolean,
+        source_lead_id: string,
+        refer_id: string
+    }
+    let lead = await Lead.findById(id);
+    let sourcelead = await Lead.findById(source_lead_id);
+
+    if (!lead || !sourcelead)
+        return res.status(404).json({ message: "leads not found" })
+    let remarks = lead.remarks;
+    if (merge_remarks == true)
+        sourcelead?.remarks.forEach((item) => { remarks.push(item) });
+    await Lead.findByIdAndUpdate(id, {
+        name: name,
+        mobiles: mobiles,
+        city: city,
+        state: state,
+        stage: stage,
+        email: email,
+        alternate_email: alternate_email,
+        address: address,
+        remarks: remarks
+    });
+    if (merge_refer && refer_id) {
+        let refer = await ReferredParty.findById(refer_id);
+        if (refer) {
+            lead.referred_party = refer;
+            lead.referred_party_name = refer.name;
+            lead.referred_party_mobile = refer.mobile;
+            lead.referred_date = sourcelead.referred_date;
+            await lead.save();
+        }
+    }
+    return res.status(200).json(lead)
 }
 
 
