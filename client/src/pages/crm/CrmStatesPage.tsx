@@ -205,7 +205,7 @@ export default function CrmStatesPage() {
                   setAnchorEl(null)
                 }}
               > Remove States</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('states_edit') &&<MenuItem
+              {LoggedInUser?.assigned_permissions.includes('states_create') &&<MenuItem
                 sx={{ color: 'red' }}
              
                 onClick={() => {

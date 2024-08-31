@@ -251,7 +251,7 @@ export default function CrmCitiesPage() {
                 }}
 
               > Remove Cities</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('city_edit') && <MenuItem
+              {LoggedInUser?.assigned_permissions.includes('city_create') && <MenuItem
                 sx={{ color: 'red' }}
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.find_unknown_cities })

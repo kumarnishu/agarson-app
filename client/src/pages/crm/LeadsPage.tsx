@@ -334,10 +334,13 @@ export default function LeadsPage() {
               > Add New</MenuItem>}
               {LoggedInUser?.assigned_permissions.includes('leads_edit') && <MenuItem
                 onClick={() => {
-                  setChoice({ type: LeadChoiceActions.merge_leads })
-                  setLead(undefined);
-                  setAnchorEl(null)
-                }}
+                  if (selectedLeads.length == 2){
+                    setChoice({ type: LeadChoiceActions.merge_leads })
+                    setLead(undefined);
+                    setAnchorEl(null)
+                  }
+                }
+                }
               > Merge Leads</MenuItem>}
               {LoggedInUser?.assigned_permissions.includes('leads_export') && < MenuItem onClick={handleExcel}
 
@@ -345,8 +348,8 @@ export default function LeadsPage() {
 
             </Menu >
             <CreateOrEditLeadDialog lead={undefined} />
-            {selectedLeads && selectedLeads.length > 0 &&<MergeTwoLeadsDialog leads={selectedLeads} />}
-            {selectedLeads && selectedLeads.length ==2 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
+            {selectedLeads && selectedLeads.length == 2 &&<MergeTwoLeadsDialog leads={selectedLeads} />}
+            {selectedLeads && selectedLeads.length >0 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
           </>
         </Stack >
       </Stack >

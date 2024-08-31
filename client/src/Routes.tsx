@@ -422,7 +422,7 @@ function AppRoutes() {
 
             </Route>}
 
-          { user?.assigned_permissions.includes('checklists_menu') &&
+          { 
             < Route path={paths.checklist_dashboard} element={<CheckListNavBar />
             }>
               <Route
@@ -447,8 +447,7 @@ function AppRoutes() {
             
 
             </Route>}
-          { user?.assigned_permissions.includes('todo_menu') &&
-            < Route path={paths.todo_dashboard} element={<TodoNavBar />
+          { < Route path={paths.todo_dashboard} element={<TodoNavBar />
             }>
               <Route
                 index element={
