@@ -1,12 +1,14 @@
 import mongoose from "mongoose"
 import { IUser } from "../users/user.model"
 import { ILead } from "./lead.model"
+import { IReferredParty } from "./referred.model"
 
     
 export type IRemark = {
     _id: string,
     remark: string,
     lead: ILead,
+    refer:IReferredParty,
     created_at: Date,
     remind_date: Date,
     updated_at: Date,

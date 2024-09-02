@@ -7,17 +7,20 @@ import isMongoId from "validator/lib/isMongoId";
 import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
 import { FetchAllPermissions, IMenu } from '../utils/fillAllPermissions';
+import { AssignPermissionForMultipleUserDto, AssignPermissionForOneUserDto, AssignUsersDto, createOrEditUserDto, GetUserDto, LoginDto, ResetPasswordDto, UpdatePasswordDto, UpdateProfileDto, VerifyEmailDto } from '../dtos/users/user.dto';
+import moment from 'moment';
 
 
 export const GetUsers = async (req: Request, res: Response, next: NextFunction) => {
     let showhidden = req.query.hidden
     let perm = req.query.permission
     let show_assigned_only = req.query.show_assigned_only
+    let result: GetUserDto[] = []
     let users: IUser[] = [];
 
     if (show_assigned_only == 'true') {
         let ids = req.user?.assigned_users.map((id) => { return id._id })
-        users = await User.find({ is_active: true, _id: { $in: ids } }).populate("created_by").populate("updated_by").sort('username')
+        users = await User.find({ is_active: true, _id: { $in: ids } }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
     }
     else {
         users = await User.find({ is_active: showhidden == 'false' }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
@@ -25,24 +28,84 @@ export const GetUsers = async (req: Request, res: Response, next: NextFunction) 
     if (perm) {
         users = users.filter((u) => { return u.assigned_permissions.includes(String(perm)) })
     }
-    return res.status(200).json(users)
+    result = users.map((u) => {
+        return {
+            _id: u._id,
+            username: u.username,
+            email: u.email,
+            mobile: u.mobile,
+            dp: u.dp?.public_url || "",
+            orginal_password: u.orginal_password,
+            is_admin: u.is_admin,
+            email_verified: u.email_verified,
+            mobile_verified: u.mobile_verified,
+            show_only_visiting_card_leads: u.show_only_visiting_card_leads,
+            is_active: u.is_active,
+            last_login: moment(u.last_login).calendar(),
+            is_multi_login: u.is_multi_login,
+            assigned_users: u.assigned_users.map((u) => {
+                return {
+                    id: u._id, label: u.username, value: u.username
+                }
+            }),
+            assigned_states: u.assigned_states.length || 0,
+            assigned_crm_states: u.assigned_crm_states.length || 0,
+            assigned_crm_cities: u.assigned_crm_cities.length || 0,
+            assigned_permissions: u.assigned_permissions,
+            created_at: moment(u.created_at).format("DD/MM/YYYY") ,
+            updated_at: moment(u.updated_at).format("DD/MM/YYYY"), 
+            created_by: { id: u.created_by._id, label: u.created_by.username, value: u.created_by.username },
+            updated_by: { id: u.updated_by._id, label: u.updated_by.username, value: u.updated_by.username },
+        }
+    })
+    return res.status(200).json(result)
 }
 
 
 export const GetProfile = async (req: Request, res: Response, next: NextFunction) => {
-    let id = req.user?._id
-    const user = await User.findById(id).populate("created_by").populate("updated_by").populate('assigned_users')
-    res.status(200).json({ user: user, token: req.cookies.accessToken })
+    let result: GetUserDto | null = null;
+    const user = await User.findById(req.user?._id).populate("created_by").populate("updated_by").populate('assigned_users')
+    if (user)
+        return {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            mobile: user.mobile,
+            dp: user.dp?.public_url || "",
+            orginal_password: user.orginal_password,
+            is_admin: user.is_admin,
+            email_verified: user.email_verified,
+            mobile_verified: user.mobile_verified,
+            show_only_visiting_card_leads: user.show_only_visiting_card_leads,
+            is_active: user.is_active,
+            last_login: moment(user.last_login).calendar(),
+            is_multi_login: user.is_multi_login,
+            assigned_users: user.assigned_users.map((u) => {
+                return {
+                    id: user._id, label: user.username, value: user.username
+                }
+            }),
+            assigned_states: user.assigned_states.length || 0,
+            assigned_crm_states: user.assigned_crm_states.length || 0,
+            assigned_crm_cities: user.assigned_crm_cities.length || 0,
+            assigned_permissions: user.assigned_permissions,
+            created_at: moment(user.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(user.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: user.created_by._id, label: user.created_by.username, value: user.created_by.username },
+            updated_by: { id: user.updated_by._id, label: user.updated_by.username, value: user.updated_by.username },
+        }
+    res.status(200).json({ user: result, token: req.cookies.accessToken })
 }
 
 
 //post/put/patch/delete
 export const SignUp = async (req: Request, res: Response, next: NextFunction) => {
+    let result: GetUserDto | null = null;
     let users = await User.find()
     if (users.length > 0)
         return res.status(400).json({ message: "not allowed" })
 
-    let { username, email, password, mobile } = req.body as Request['body'] & IUser
+    let { username, email, password, mobile } = req.body as createOrEditUserDto
     // validations
     if (!username || !email || !password || !mobile)
         return res.status(400).json({ message: "fill all the required fields" });
@@ -90,13 +153,41 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
     owner.updated_at = new Date()
     sendUserToken(res, owner.getAccessToken())
     await owner.save()
-    owner = await User.findById(owner._id).populate("created_by").populate("updated_by") || owner
+    owner = await User.findById(owner._id).populate("created_by").populate('assigned_users').populate("updated_by") || owner
     let token = owner.getAccessToken()
-    res.status(201).json({ user: owner, token: token })
+    result= {
+            _id: owner._id,
+            username: owner.username,
+            email: owner.email,
+            mobile: owner.mobile,
+            dp: owner.dp?.public_url || "",
+            orginal_password: owner.orginal_password,
+            is_admin: owner.is_admin,
+            email_verified: owner.email_verified,
+            mobile_verified: owner.mobile_verified,
+            show_only_visiting_card_leads: owner.show_only_visiting_card_leads,
+            is_active: owner.is_active,
+            last_login: moment(owner.last_login).calendar(),
+            is_multi_login: owner.is_multi_login,
+            assigned_users: owner.assigned_users.map((u) => {
+                return {
+                    id: owner._id, label: owner.username, value: owner.username
+                }
+            }),
+            assigned_states: owner.assigned_states.length || 0,
+            assigned_crm_states: owner.assigned_crm_states.length || 0,
+            assigned_crm_cities: owner.assigned_crm_cities.length || 0,
+            assigned_permissions: owner.assigned_permissions,
+            created_at: moment(owner.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(owner.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: owner.created_by._id, label: owner.created_by.username, value: owner.created_by.username },
+            updated_by: { id: owner.updated_by._id, label: owner.updated_by.username, value: owner.updated_by.username },
+        }
+    res.status(201).json({ user: result, token: token })
 }
 
 export const NewUser = async (req: Request, res: Response, next: NextFunction) => {
-    let { username, email, password, mobile } = req.body as Request['body'] & IUser
+    let { username, email, password, mobile } = req.body as createOrEditUserDto;
     // validations
     if (!username || !email || !password || !mobile)
         return res.status(400).json({ message: "fill all the required fields" });
@@ -146,13 +237,12 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
     user.updated_at = new Date()
 
     await user.save()
-    user = await User.findById(user._id).populate("created_by").populate("updated_by") || user
-    res.status(201).json(user)
+    res.status(201).json({message:"success"})
 }
 
 
 export const Login = async (req: Request, res: Response, next: NextFunction) => {
-    const { username, password, multi_login_token } = req.body as Request['body'] & IUser
+    const { username, password, multi_login_token } = req.body as LoginDto
     if (!username)
         return res.status(400).json({ message: "please enter username or email" })
     if (!password)
@@ -193,9 +283,37 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
     sendUserToken(res, user.getAccessToken())
     user.last_login = new Date()
     let token = user.getAccessToken()
-    user.orginal_password=password;
-    await user.save()
-    res.status(200).json({ user: user, token: token })
+    user.orginal_password = password;
+    await user.save();
+    let result: GetUserDto | null = {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        mobile: user.mobile,
+        dp: user.dp?.public_url || "",
+        orginal_password: user.orginal_password,
+        is_admin: user.is_admin,
+        email_verified: user.email_verified,
+        mobile_verified: user.mobile_verified,
+        show_only_visiting_card_leads: user.show_only_visiting_card_leads,
+        is_active: user.is_active,
+        last_login: moment(user.last_login).calendar(),
+        is_multi_login: user.is_multi_login,
+        assigned_users: user.assigned_users.map((u) => {
+            return {
+                id: user._id, label: user.username, value: user.username
+            }
+        }),
+        assigned_states: user.assigned_states.length || 0,
+        assigned_crm_states: user.assigned_crm_states.length || 0,
+        assigned_crm_cities: user.assigned_crm_cities.length || 0,
+        assigned_permissions: user.assigned_permissions,
+        created_at: moment(user.created_at).format("DD/MM/YYYY"), 
+        updated_at: moment(user.updated_at).format("DD/MM/YYYY"), 
+        created_by: { id: user.created_by._id, label: user.created_by.username, value: user.created_by.username },
+        updated_by: { id: user.updated_by._id, label: user.updated_by.username, value: user.updated_by.username },
+    }
+    res.status(200).json({ user: result,token:token})
 }
 
 export const Logout = async (req: Request, res: Response, next: NextFunction) => {
@@ -210,7 +328,7 @@ export const Logout = async (req: Request, res: Response, next: NextFunction) =>
 
 export const AssignUsers = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const { ids } = req.body as { ids: string[] }
+    const { ids } = req.body as AssignUsersDto
     if (!isMongoId(id)) return res.status(400).json({ message: "user id not valid" })
     let user = await User.findById(id)
     if (!user) {
@@ -239,7 +357,7 @@ export const UpdateUser = async (req: Request, res: Response, next: NextFunction
     if (!user) {
         return res.status(404).json({ message: "user not found" })
     }
-    let { email, username, mobile } = req.body as Request['body'] & IUser;
+    let { email, username, mobile } = req.body as createOrEditUserDto;
     if (!username || !email || !mobile)
         return res.status(400).json({ message: "fill all the required fields" });
     //check username
@@ -302,7 +420,7 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
     if (!user) {
         return res.status(404).json({ message: "user not found" })
     }
-    let { email, mobile } = req.body as Request['body'] & IUser;
+    let { email, mobile } = req.body as UpdateProfileDto
     if (!email || !mobile) {
         return res.status(400).json({ message: "please fill required fields" })
     }
@@ -356,7 +474,7 @@ export const UpdateProfile = async (req: Request, res: Response, next: NextFunct
 }
 
 export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
-    const { oldPassword, newPassword, confirmPassword } = req.body as Request['body'] & IUser & { oldPassword: string, newPassword: string, confirmPassword: string };
+    const { oldPassword, newPassword, confirmPassword } = req.body as UpdatePasswordDto
     if (!oldPassword || !newPassword || !confirmPassword)
         return res.status(400).json({ message: "please fill required fields" })
     if (confirmPassword == oldPassword)
@@ -377,7 +495,7 @@ export const updatePassword = async (req: Request, res: Response, next: NextFunc
 }
 
 export const resetUserPassword = async (req: Request, res: Response, next: NextFunction) => {
-    const { newPassword, confirmPassword } = req.body as Request['body'] & IUser & { oldPassword: string, newPassword: string, confirmPassword: string };
+    const { newPassword, confirmPassword } = req.body as ResetPasswordDto
     if (!newPassword || !confirmPassword)
         return res.status(400).json({ message: "please fill required fields" })
     if (newPassword !== confirmPassword)
@@ -426,29 +544,6 @@ export const ToogleShowvisitingcard = async (req: Request, res: Response, next: 
     }
     await user.save();
     res.status(200).json({ message: "changed successfully" });
-}
-
-
-export const AssignUserstoManager = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    const { ids } = req.body as { ids: string[] }
-    if (!isMongoId(id)) return res.status(400).json({ message: "manager id not valid" })
-    let user = await User.findById(id)
-    if (!user) {
-        return res.status(404).json({ message: "manager not found" })
-    }
-    let users: IUser[] = []
-    ids.forEach(async (_id) => {
-        let _user = await User.findById(_id)
-        if (_user)
-            users.push(_user)
-    })
-    user.assigned_users = users
-    if (req.user) {
-        user.updated_by = user
-    }
-    await user.save();
-    res.status(200).json({ message: "assigned users successfully" });
 }
 
 export const AllowMultiLogin = async (req: Request, res: Response, next: NextFunction) => {
@@ -543,7 +638,7 @@ export const RemoveAdmin = async (req: Request, res: Response, next: NextFunctio
 }
 
 export const SendPasswordResetMail = async (req: Request, res: Response, next: NextFunction) => {
-    const email = req.body.email;
+    const {email} = req.body as VerifyEmailDto
     if (!email) return res.status(400).json({ message: "please provide email id" })
     const userEmail = String(email).toLowerCase().trim();
     if (!isEmail(userEmail))
@@ -580,7 +675,7 @@ export const SendPasswordResetMail = async (req: Request, res: Response, next: N
 }
 export const ResetPassword = async (req: Request, res: Response, next: NextFunction) => {
     let resetPasswordToken = req.params.token;
-    const { newPassword, confirmPassword } = req.body;
+    const { newPassword, confirmPassword } = req.body as ResetPasswordDto;
     if (!newPassword || !confirmPassword)
         return res.status(400).json({ message: "Please fill all required fields " })
     if (newPassword !== confirmPassword)
@@ -599,7 +694,7 @@ export const ResetPassword = async (req: Request, res: Response, next: NextFunct
     res.status(200).json({ message: "password updated" });
 }
 export const SendVerifyEmail = async (req: Request, res: Response, next: NextFunction) => {
-    const email = req.body.email;
+    const {email} = req.body as VerifyEmailDto
     if (!email)
         return res.status(400).json({ message: "please provide your email id" })
     const userEmail = String(email).toLowerCase().trim();
@@ -650,10 +745,7 @@ export const VerifyEmail = async (req: Request, res: Response, next: NextFunctio
     });
 }
 export const AssignPermissionsToOneUser = async (req: Request, res: Response, next: NextFunction) => {
-    const { permissions, user_id } = req.body as {
-        permissions: string[],
-        user_id: string
-    }
+    const { permissions, user_id } = req.body as AssignPermissionForOneUserDto
 
     if (permissions && permissions.length === 0)
         return res.status(400).json({ message: "please select one permission " })
@@ -670,10 +762,7 @@ export const AssignPermissionsToOneUser = async (req: Request, res: Response, ne
 }
 
 export const AssignPermissionsToUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const { permissions, user_ids } = req.body as {
-        permissions: string[],
-        user_ids: string[]
-    }
+    const { permissions, user_ids } = req.body as AssignPermissionForMultipleUserDto
 
     if (permissions && permissions.length === 0)
         return res.status(400).json({ message: "please select one permission " })

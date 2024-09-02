@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { IRemark } from "./remark.model";
 import { Asset, IUser } from "../users/user.model";
 import { IReferredParty } from "./referred.model";
 
@@ -24,14 +23,8 @@ export type ILead = {
     lead_type: string
     stage: string
     lead_source: string
-    remarks: IRemark[]
     visiting_card: Asset,
-    is_customer: boolean,
-    last_whatsapp: Date,
-    is_sent: boolean,
     referred_party?: IReferredParty,
-    referred_party_name?: string,
-    referred_party_mobile?: string,
     referred_date?: Date,
     created_at: Date,
     updated_at: Date,
@@ -141,13 +134,8 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         lowercase: true,
         default:"internet"
     },
-    is_sent: { type: Boolean, default: false },
     has_card: { type: Boolean, default: false },
-    last_whatsapp: Date,
-    remarks: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Remark'
-    }],
+   
     visiting_card: {
         _id: { type: String },
         filename: { type: String },
@@ -157,31 +145,14 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         bucket: { type: String },
         created_at: Date
     },
-    is_customer: {
-        type: Boolean,
-        default: false,
-        required: true,
-    },
+  
     referred_party: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'IReferredParty'
     },
-    referred_party_name: {
-        type: String,
-        trim: true,
-        index: true,
-        lowercase: true,
-    },
-    referred_party_mobile: {
-        type: String,
-        trim: true,
-        index: true,
-        lowercase: true,
-    },
     referred_date: {
         type: Date
     },
-
     created_at: {
         type: Date,
         default: new Date(),

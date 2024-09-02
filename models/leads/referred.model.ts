@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import { IUser } from "../users/user.model"
+import { IRemark } from "./remark.model"
 
 
 export type IReferredParty = {
@@ -7,6 +8,9 @@ export type IReferredParty = {
     name: string,
     customer_name: string,
     mobile: string,
+    mobile2: string,
+    mobile3: string,
+    address: string,
     gst: string,
     city: string,
     state: string,
@@ -47,10 +51,27 @@ const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<I
         index: true,
         lowercase: true
     },
-
+    mobile2: {
+        type: String,
+        trim: true,
+        index: true,
+        lowercase: true
+    },
+    mobile3: {
+        type: String,
+        trim: true,
+        index: true,
+        lowercase: true
+    },
     city: {
         type: String,
         required: true,
+        trim: true,
+        index: true,
+        lowercase: true,
+    },
+    address: {
+        type: String,
         trim: true,
         index: true,
         lowercase: true,

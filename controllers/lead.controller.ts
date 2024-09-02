@@ -16,38 +16,30 @@ import { LeadType } from "../models/leads/crm.leadtype.model.js"
 import { LeadSource } from "../models/leads/crm.source.model.js"
 import { IStage, Stage } from "../models/leads/crm.stage.model.js"
 import { HandleCRMCitiesAssignment } from "../utils/AssignCitiesToUsers.js"
+import { CreateOrEditReferDto, CreateOrEditReferFromExcelDto, CreateOrEditRemarkDto, GetActivitiesOrRemindersDto, GetAssignedReferDto, GetLeadDto, GetMergeLeadsDto, GetNewReferDto, GetReferDto } from "../dtos/crm/crm.dto.js"
+import moment from "moment"
+import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dto.js"
 
 
 //lead types
 export const GetAllCRMLeadTypes = async (req: Request, res: Response, next: NextFunction) => {
+    let result: DropDownDto[] = []
     let types = await LeadType.find()
-    return res.status(200).json(types)
+    result = types.map((t) => {
+        return { id: t._id, value: t.type, label: t.type }
+    })
+    return res.status(200).json(result)
 }
 
 export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const { name, mobiles, city, stage, state, email, alternate_email, address, merge_refer, merge_remarks, source_lead_id, refer_id } = req.body as {
-        name: string,
-        mobiles: string[],
-        city: string,
-        state: string,
-        stage: string,
-        email: string,
-        alternate_email: string,
-        address: string,
-        merge_refer: boolean,
-        merge_remarks: boolean,
-        source_lead_id: string,
-        refer_id: string
-    }
+    const { name, mobiles, city, stage, state, email, alternate_email, address, merge_refer, merge_remarks, source_lead_id, refer_id } = req.body as GetMergeLeadsDto
     let lead = await Lead.findById(id);
     let sourcelead = await Lead.findById(source_lead_id);
 
     if (!lead || !sourcelead)
         return res.status(404).json({ message: "leads not found" })
-    let remarks = lead.remarks;
-    if (merge_remarks == true)
-        sourcelead?.remarks.forEach((item) => { remarks.push(item) });
+ 
     await Lead.findByIdAndUpdate(id, {
         name: name,
         mobiles: mobiles,
@@ -56,65 +48,58 @@ export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunct
         stage: stage,
         email: email,
         alternate_email: alternate_email,
-        address: address,
-        remarks: remarks
+        address: address
     });
     if (merge_refer && refer_id) {
         let refer = await ReferredParty.findById(refer_id);
         if (refer) {
             lead.referred_party = refer;
-            lead.referred_party_name = refer.name;
-            lead.referred_party_mobile = refer.mobile;
             lead.referred_date = sourcelead.referred_date;
             await lead.save();
         }
     }
-    return res.status(200).json(lead)
+    return res.status(200).json({message:"merge leads successfully"})
 }
 
 
 export const CreateCRMLeadTypes = async (req: Request, res: Response, next: NextFunction) => {
-    const { type } = req.body as {
-        type: string
-    }
-    if (!type) {
+    const { key } = req.body as CreateOrEditDropDownDto
+    if (!key) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
-    if (await LeadType.findOne({ type: type.toLowerCase() }))
+    if (await LeadType.findOne({ type: key.toLowerCase() }))
         return res.status(400).json({ message: "already exists this type" })
     let result = await new LeadType({
-        type: type,
+        type: key,
         updated_at: new Date(),
         created_by: req.user,
         updated_by: req.user
     }).save()
-    return res.status(201).json(result)
+    return res.status(201).json({message:"success"})
 
 }
 
 export const UpdateCRMLeadTypes = async (req: Request, res: Response, next: NextFunction) => {
-    const { type } = req.body as {
-        type: string
-    }
-    if (!type) {
+    const { key } = req.body as  CreateOrEditDropDownDto
+    if (!key) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     const id = req.params.id
     let oldtype = await LeadType.findById(id)
     if (!oldtype)
         return res.status(404).json({ message: "type not found" })
-    if (type !== oldtype.type)
-        if (await LeadType.findOne({ type: type.toLowerCase() }))
+    if (key !== oldtype.type)
+        if (await LeadType.findOne({ type: key.toLowerCase() }))
             return res.status(400).json({ message: "already exists this type" })
     let prevtype = oldtype.type
-    oldtype.type = type
+    oldtype.type = key
     oldtype.updated_at = new Date()
     if (req.user)
         oldtype.updated_by = req.user
-    await Lead.updateMany({ type: prevtype }, { type: type })
-    await ReferredParty.updateMany({ type: prevtype }, { type: type })
+    await Lead.updateMany({ type: prevtype }, { type: key })
+    await ReferredParty.updateMany({ type: prevtype }, { type: key })
     await oldtype.save()
-    return res.status(200).json(oldtype)
+    return res.status(200).json({message:"updated"})
 
 }
 export const DeleteCRMLeadType = async (req: Request, res: Response, next: NextFunction) => {
@@ -3287,9 +3272,9 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
     let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
+    let result: GetReferDto[] = []
     if (!key)
         return res.status(500).json({ message: "bad request" })
-    let result: IReferredParty[] = []
     let parties: IReferredParty[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (key.length == 1 || key.length > 4) {
@@ -3456,7 +3441,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
 
 export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state, gst, mobile } = body
+    const { name, customer_name, city, state, gst, mobile } = body as CreateOrEditReferDto
     if (!name || !city || !state || !mobile || !gst) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -3482,8 +3467,7 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
     if (!isMongoId(id))
         return res.status(400).json({ message: "bad mongo id" })
     let body = JSON.parse(req.body.body)
-    console.log(body)
-    const { name, customer_name, city, state, mobile, gst } = body
+    const { name, customer_name, city, state, mobile, gst } = body as CreateOrEditReferDto
     console.log(name, city, state, mobile, body.mobile)
     if (!name || !city || !state || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
@@ -3544,7 +3528,7 @@ export const BulkDeleteUselessLeads = async (req: Request, res: Response, next: 
 }
 
 export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next: NextFunction) => {
-    let result: IReferTemplate[] = []
+    let result: CreateOrEditReferFromExcelDto[] = []
     let statusText: string = ""
     if (!req.file)
         return res.status(400).json({
@@ -3558,7 +3542,7 @@ export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: IReferTemplate[] = xlsx.utils.sheet_to_json(
+        let workbook_response: CreateOrEditReferFromExcelDto[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         if (workbook_response.length > 3000) {
@@ -3684,7 +3668,7 @@ export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next
 
 //remarks apis
 export const UpdateRemark = async (req: Request, res: Response, next: NextFunction) => {
-    const { remark, remind_date } = req.body as { remark: string, remind_date: string }
+    const { remark, remind_date } = req.body as CreateOrEditRemarkDto
     if (!remark) return res.status(403).json({ message: "please fill required fields" })
 
     const user = await User.findById(req.user?._id)
@@ -3706,7 +3690,7 @@ export const UpdateRemark = async (req: Request, res: Response, next: NextFuncti
 export const DeleteRemark = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "lead id not valid" })
-    let rremark = await Remark.findById(id).populate('lead')
+    let rremark = await Remark.findById(id)
     if (!rremark) {
         return res.status(404).json({ message: "remark not found" })
     }
@@ -3714,55 +3698,73 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
     return res.status(200).json({ message: " remark deleted successfully" })
 }
 
-export const GetReminderRemarks = async (req: Request, res: Response, next: NextFunction) => {
+export const GetMyReminders = async (req: Request, res: Response, next: NextFunction) => {
     let previous_date = new Date()
     let day = previous_date.getDate() - 7
     previous_date.setDate(day)
 
     let leads = await Lead.find({ updated_at: { $lte: new Date(), $gt: previous_date } }).populate('remarks')
 
-    let remarkids: string[] = []
+    let result: GetActivitiesOrRemindersDto[] = []
 
-    leads.forEach((lead) => {
-        let remark = lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1];
-        if (remark && remark.remind_date) {
-            remarkids.push(remark._id)
+    leads.forEach(async (lead) => {
+        let rem = await Remark.findOne({ lead: lead._id, remind_date: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
+            path: 'lead',
+            populate: [
+                {
+                    path: 'created_by',
+                    model: 'User'
+                },
+                {
+                    path: 'updated_by',
+                    model: 'User'
+                },
+                {
+                    path: 'referred_party',
+                    model: 'ReferredParty'
+                }
+            ]
+        }).sort('-remind_date')
+        if (rem && rem.lead) {
+            result.push({
+                _id: rem._id,
+                remark: rem.remark,
+                created_at: rem.created_at && moment(rem.created_at).format("DD/MM/YYYY"),
+                remind_date: rem.remind_date && moment(rem.remind_date).format("DD/MM/YYYY"),
+                created_by: { id: rem.created_by._id, value: rem.created_by.username, label: rem.created_by.username },
+                lead_id: rem.lead._id,
+                name: rem.lead.name,
+                customer_name: rem.lead.customer_name,
+                customer_designation: rem.lead.customer_designation,
+                mobile: rem.lead.mobile,
+                gst: rem.lead.gst,
+                has_card: rem.lead.has_card,
+                email: rem.lead.email,
+                city: rem.lead.city,
+                state: rem.lead.state,
+                country: rem.lead.country,
+                address: rem.lead.address,
+                work_description: rem.lead.work_description,
+                turnover: rem.lead.turnover,
+                alternate_mobile1: rem.lead.alternate_mobile1,
+                alternate_mobile2: rem.lead.alternate_mobile2,
+                alternate_email: rem.lead.alternate_email,
+                lead_type: rem.lead.lead_type,
+                stage: rem.lead.stage,
+                lead_source: rem.lead.lead_source,
+                visiting_card: rem.lead.visiting_card?.public_url || "",
+                referred_party_name: rem.lead.referred_party?.name || "",
+                referred_party_mobile: rem.lead.referred_party?.mobile || "",
+                referred_date: rem.lead.referred_party?.name || "",
+
+            })
         }
+
     })
-    let reminders = await Remark.find({ _id: { $in: remarkids }, remind_date: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
-        path: 'lead',
-        populate: [
-            {
-                path: 'created_by',
-                model: 'User'
-            },
-            {
-                path: 'updated_by',
-                model: 'User'
-            },
-            {
-                path: 'referred_party',
-                model: 'ReferredParty'
-            },
-            {
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }
-        ]
-    }).sort('-remind_date')
-    return res.status(200).json(reminders)
+    return res.status(200).json(result)
 }
 
-export const GetRemarks = async (req: Request, res: Response, next: NextFunction) => {
+export const GetActivities = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let id = req.query.id
@@ -3774,6 +3776,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
     let ids = req.user?.assigned_users.map((id) => { return id._id })
+    let result: GetActivitiesOrRemindersDto[] = []
 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (req.user?.is_admin && !id) {
@@ -3792,19 +3795,6 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                         {
                             path: 'referred_party',
                             model: 'ReferredParty'
-                        },
-                        {
-                            path: 'remarks',
-                            populate: [
-                                {
-                                    path: 'created_by',
-                                    model: 'User'
-                                },
-                                {
-                                    path: 'updated_by',
-                                    model: 'User'
-                                }
-                            ]
                         }
                     ]
                 }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
@@ -3827,19 +3817,6 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                         {
                             path: 'referred_party',
                             model: 'ReferredParty'
-                        },
-                        {
-                            path: 'remarks',
-                            populate: [
-                                {
-                                    path: 'created_by',
-                                    model: 'User'
-                                },
-                                {
-                                    path: 'updated_by',
-                                    model: 'User'
-                                }
-                            ]
                         }
                     ]
                 }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
@@ -3861,19 +3838,6 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                     {
                         path: 'referred_party',
                         model: 'ReferredParty'
-                    },
-                    {
-                        path: 'remarks',
-                        populate: [
-                            {
-                                path: 'created_by',
-                                model: 'User'
-                            },
-                            {
-                                path: 'updated_by',
-                                model: 'User'
-                            }
-                        ]
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
@@ -3893,17 +3857,8 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
                         model: 'User'
                     },
                     {
-                        path: 'remarks',
-                        populate: [
-                            {
-                                path: 'created_by',
-                                model: 'User'
-                            },
-                            {
-                                path: 'updated_by',
-                                model: 'User'
-                            }
-                        ]
+                        path: 'referred_party',
+                        model: 'ReferredParty'
                     }
                 ]
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
@@ -3911,8 +3866,44 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
         }
         if (stage !== 'undefined') {
             remarks = remarks.filter((r) => { return r.lead.stage == stage })
-            count = remarks.length;
+
         }
+
+        result = remarks.map((rem) => {
+            return {
+                _id: rem._id,
+                remark: rem.remark,
+                created_at: rem.created_at && moment(rem.created_at).format("DD/MM/YYYY"),
+                remind_date: rem.remind_date && moment(rem.remind_date).format("DD/MM/YYYY"),
+                created_by: { id: rem.created_by._id, value: rem.created_by.username, label: rem.created_by.username },
+                lead_id: rem.lead._id,
+                name: rem.lead.name,
+                customer_name: rem.lead.customer_name,
+                customer_designation: rem.lead.customer_designation,
+                mobile: rem.lead.mobile,
+                gst: rem.lead.gst,
+                has_card: rem.lead.has_card,
+                email: rem.lead.email,
+                city: rem.lead.city,
+                state: rem.lead.state,
+                country: rem.lead.country,
+                address: rem.lead.address,
+                work_description: rem.lead.work_description,
+                turnover: rem.lead.turnover,
+                alternate_mobile1: rem.lead.alternate_mobile1,
+                alternate_mobile2: rem.lead.alternate_mobile2,
+                alternate_email: rem.lead.alternate_email,
+                lead_type: rem.lead.lead_type,
+                stage: rem.lead.stage,
+                lead_source: rem.lead.lead_source,
+                visiting_card: rem.lead.visiting_card?.public_url || "",
+                referred_party_name: rem.lead.referred_party?.name || "",
+                referred_party_mobile: rem.lead.referred_party?.mobile || "",
+                referred_date: rem.lead.referred_party?.name || "",
+
+            }
+        })
+        count = result.length;
         return res.status(200).json({
             remarks,
             total: Math.ceil(count / limit),
@@ -3925,10 +3916,7 @@ export const GetRemarks = async (req: Request, res: Response, next: NextFunction
 }
 
 export const NewRemark = async (req: Request, res: Response, next: NextFunction) => {
-    const { remark, remind_date, has_card, stage } = req.body as {
-        remark: string, remind_date: string, stage: string,
-        has_card: boolean
-    }
+    const { remark, remind_date, has_card, stage } = req.body as CreateOrEditRemarkDto
     if (!remark) return res.status(403).json({ message: "please fill required fields" })
 
     const user = await User.findById(req.user?._id)
@@ -3953,9 +3941,7 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
     if (remind_date)
         new_remark.remind_date = new Date(remind_date)
     await new_remark.save()
-    let updatedRemarks = lead.remarks
-    updatedRemarks.push(new_remark)
-    lead.remarks = updatedRemarks
+
     if (has_card)
         lead.has_card = true
     else
@@ -3994,14 +3980,33 @@ export const FindUnknownCrmCities = async (req: Request, res: Response, next: Ne
 }
 
 export const GetNewRefers = async (req: Request, res: Response, next: NextFunction) => {
-
+    let result: GetNewReferDto[] = [];
     let start_date = req.query.start_date
     let end_date = req.query.end_date
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
     let parties: IReferredParty[] = []
-    parties = await ReferredParty.find({ created_at: { $gte: dt1, $lt: dt2 }, convertedfromlead: true }).populate('created_by').populate('updated_by').sort('name')
-    return res.status(200).json(parties)
+    parties = await ReferredParty.find({ created_at: { $gte: dt1, $lt: dt2 }, convertedfromlead: true }).populate('created_by').populate('updated_by').sort('name');
+    result = parties.map((refer) => {
+        return {
+            _id: refer._id,
+            name: refer.name,
+            customer_name: refer.customer_name,
+            mobile: refer.mobile,
+            mobile2: refer.mobile2,
+            mobile3: refer.mobile3,
+            address: refer.address,
+            gst: refer.gst,
+            city: refer.city,
+            state: refer.state,
+            convertedfromlead: refer.convertedfromlead,
+            created_at: moment(refer.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(refer.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: refer.created_by._id, value: refer.created_by.username, label: refer.created_by.username },
+            updated_by: { id: refer.updated_by._id, value: refer.updated_by.username, label: refer.updated_by.username }
+        }
+    })
+    return res.status(200).json(result)
 }
 
 export const GetAssignedRefers = async (req: Request, res: Response, next: NextFunction) => {
@@ -4009,26 +4014,24 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
     let end_date = req.query.end_date
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
-
+    let result: GetAssignedReferDto[] = []
     let leads = await Lead.find({
-        created_at: { $gte: dt1, $lt: dt2 }
-    }).populate('updated_by').populate('created_by').populate({
-        path: 'remarks',
-        populate: [
-            {
-                path: 'created_by',
-                model: 'User'
-            },
-            {
-                path: 'updated_by',
-                model: 'User'
-            }
-        ]
-    }).sort('-updated_at')
-    leads = leads.filter((r) => {
-        if (r.referred_party_name)
-            return r
+        created_at: { $gte: dt1, $lt: dt2 }, referred_party: { $ne: undefined }
+    }).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
+
+    result = leads.map((lead) => {
+        return {
+            lead: { id: lead._id, value: lead.name, label: lead.name },
+            lead_mobile1: lead.mobile,
+            lead_mobile2: lead.alternate_mobile1,
+            lead_mobile3: lead.alternate_mobile2,
+            refer: lead.referred_party && { id: lead._id, value: lead.name, label: lead.name },
+            refer_mobile1: lead.referred_party && lead.referred_party.mobile,
+            refer_mobile2: lead.referred_party && lead.referred_party.mobile2,
+            refer_mobile3: lead.referred_party && lead.referred_party.mobile3,
+            refer_date: lead.referred_party && moment(lead.referred_date).format("DD/MM/YYYY")
+        }
     })
-    return res.status(200).json(leads)
+    return res.status(200).json(result)
 }
 
