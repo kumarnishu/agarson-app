@@ -130,7 +130,7 @@ export type CreateOrEditLeadDto = {
     lead_source: string,
 }
 export type CreateOrRemoveReferForLeadDto = {
-    party_id: string, remark: string
+    party_id: string, remark: string, remind_date:string
 }
 
 export type GetMergeLeadsDto = {
@@ -150,6 +150,8 @@ export type GetMergeLeadsDto = {
 export type GetReferDto = {
     _id: string,
     name: string,
+    remark: string,
+    refers: number,
     customer_name: string,
     mobile: string,
     mobile2: string,
@@ -248,6 +250,7 @@ export type GetAssignedReferDto = {
     lead_mobile1: string,
     lead_mobile2: string,
     lead_mobile3: string,
+    remark: string,
     refer?: DropDownDto,
     refer_mobile1?: string,
     refer_mobile2?: string,
@@ -263,6 +266,7 @@ export type GetNewReferDto = {
     mobile2: string,
     mobile3: string,
     address: string,
+    remark: string,
     gst: string,
     city: string,
     state: string,

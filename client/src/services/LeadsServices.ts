@@ -10,7 +10,7 @@ export const GetLeads = async ({ limit, page, stage }: { limit: number | undefin
 }
 
 export const GetReminderRemarks = async () => {
-  return await apiClient.get(`reminder/remarks`)
+  return await apiClient.get(`reminders`)
 }
 
 export const BulkDeleteUselessLeads = async (body: { leads_ids: string[] }) => {
@@ -146,7 +146,7 @@ export const GetAllStates = async () => {
 
 
 export const CreateOrEditState = async ({ body, id }: {
-  body: { state: string }
+  body: { key: string }
   id?: string
 }) => {
   if (id) {
@@ -201,7 +201,7 @@ export const GetAllStages = async () => {
 
 
 export const CreateOrEditStage = async ({ body, id }: {
-  body: { stage: string }
+  body: { key: string }
   id?: string
 }) => {
   if (id) {
@@ -218,7 +218,7 @@ export const GetAllSources = async () => {
 
 
 export const CreateOrEditSource = async ({ body, id }: {
-  body: { source: string }
+  body: { key: string }
   id?: string
 }) => {
   if (id) {
@@ -236,7 +236,7 @@ export const GetAllLeadTypes = async () => {
 
 
 export const CreateOrEditLeadType = async ({ body, id }: {
-  body: { type: string }
+  body: { key: string }
   id?: string
 }) => {
   if (id) {
@@ -246,7 +246,7 @@ export const CreateOrEditLeadType = async ({ body, id }: {
 }
 
 
-export const ReferLead = async ({ id, body }: { id: string, body: { party_id: string, remark: string } }) => {
+export const ReferLead = async ({ id, body }: { id: string, body: { party_id: string, remark: string, remind_date?: string } }) => {
   return await apiClient.post(`refers/leads/${id}`, body)
 }
 export const RemoveReferLead = async ({ id, body }: { id: string, body: { remark: string } }) => {

@@ -308,38 +308,8 @@ function AllReferralPageDialog({ refer }: { refer: GetReferDto }) {
                                 </STableHeadCell>
 
 
-                                <STableHeadCell
-                                >
+                              
 
-                                    Updated At
-
-                                </STableHeadCell>
-                                <STableHeadCell
-                                >
-
-                                    Created By
-
-                                </STableHeadCell>
-
-
-                                <STableHeadCell
-                                >
-
-                                    Updated By
-
-                                </STableHeadCell>
-                                <STableHeadCell
-                                >
-
-                                    Whatsapp Status
-
-                                </STableHeadCell>
-                                <STableHeadCell
-                                >
-
-                                    Last whatsapp
-
-                                </STableHeadCell>
                                 <STableHeadCell
                                 >
 

@@ -12,7 +12,7 @@ import { GetActivitiesOrRemindersDto } from '../../dtos/crm/crm.dto'
 function CrmReminderPage() {
   const [remarks, setRemarks] = useState<GetActivitiesOrRemindersDto[]>([])
   const [remark, setRemark] = useState<GetActivitiesOrRemindersDto>()
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetActivitiesOrRemindersDto[]>, BackendError>("reminderremarks", GetReminderRemarks)
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetActivitiesOrRemindersDto[]>, BackendError>("reminders", GetReminderRemarks)
 
   let previous_date = new Date()
   let day = previous_date.getDate() - 1

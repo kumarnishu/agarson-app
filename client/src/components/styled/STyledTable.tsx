@@ -3,8 +3,8 @@ import styled from "styled-components"
 export const STable = styled.table`
   border-collapse: collapse;
    width:100%;
-   padding: 0px;
-`
+   padding:5px;
+  `
 
 export const STableBody = styled.tbody`
   
@@ -23,19 +23,17 @@ export const STableRow = styled.tr`
 export const STableCell = styled.td`
   text-align: left;
   padding-left:3px;
-  padding: 3px;
   border: 1px solid #ddd;
   white-space: nowrap;
   text-transform: capitalize;
-  max-width:350px;
   overflow: hidden;
+  max-width:350px;
   text-overflow: ellipsis;
 `
 export const STableHeadCell = styled.th`
   position:sticky;
   z-index: 1;
-  padding-left:3px;
-  padding: 3px;
+  padding:5px;
   text-align: left;
   letter-spacing: 0.5px;
   text-transform: capitalize;

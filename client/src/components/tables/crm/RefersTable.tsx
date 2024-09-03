@@ -81,13 +81,42 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                 Refer Name
 
               </STableHeadCell>
-              <STableHeadCell
-              >
+                <STableHeadCell
+                >
 
-                Customer Name
+                  Refers
 
-              </STableHeadCell>
+                </STableHeadCell>
+                
+                <STableHeadCell
+                >
 
+                  Remark
+
+                </STableHeadCell>
+                <STableHeadCell
+                >
+
+                  Customer Name
+                </STableHeadCell>
+                <STableHeadCell
+                >
+
+                  Mobile1
+
+                </STableHeadCell>
+                <STableHeadCell
+                >
+
+                  Mobile2
+
+                </STableHeadCell>
+                <STableHeadCell
+                >
+
+                  Mobile3
+
+                </STableHeadCell>
               <STableHeadCell
               >
 
@@ -101,23 +130,23 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
 
                 State
 
-              </STableHeadCell>
-
-
-              <STableHeadCell
-              >
-
-                Mobile
-
-              </STableHeadCell>
+                </STableHeadCell>
+             
 
               <STableHeadCell
               >
 
                 GST
 
-              </STableHeadCell>
+            
+                </STableHeadCell>
 
+                <STableHeadCell
+                >
+
+                  Address
+
+                </STableHeadCell>
 
               <STableHeadCell
               >
@@ -126,26 +155,10 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
 
               </STableHeadCell>
 
-
-              <STableHeadCell
-              >
-
-                Updated At
-
-              </STableHeadCell>
-
-
               <STableHeadCell
               >
 
                 Created By
-
-              </STableHeadCell>
-
-              <STableHeadCell
-              >
-
-                Updated By
 
               </STableHeadCell>
             </STableRow>
@@ -248,11 +261,25 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                     <STableCell >
                       {refer.name}
                     </STableCell>
+                    <STableCell >
+                      {refer.refers}
+                    </STableCell>
+                    <STableCell >
+                      {refer.remark}
+                    </STableCell>
 
                     <STableCell>
                       {refer.customer_name}
                     </STableCell>
-
+                    <STableCell>
+                      {refer.mobile}
+                    </STableCell>
+                    <STableCell>
+                      {refer.mobile2}
+                    </STableCell>
+                    <STableCell>
+                      {refer.mobile3}
+                    </STableCell>
                     <STableCell>
                       {refer.city}
                     </STableCell>
@@ -261,9 +288,10 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                     </STableCell>
 
                     <STableCell>
-                      {refer.mobile}
-                    </STableCell>
 
+                      {refer.address}
+
+                    </STableCell>
 
 
                     <STableCell>
@@ -273,25 +301,12 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                     </STableCell>
 
                     <STableCell>
-                      {new Date(refer.created_at).toLocaleString()}
+                      {refer.created_at}
 
                     </STableCell>
-
-
-                    <STableCell>
-                      {new Date(refer.updated_at).toLocaleString()}
-
-                    </STableCell>
-
 
                     <STableCell>
                       {refer.created_by.label}
-                    </STableCell>
-
-
-                    <STableCell>
-                      {refer.updated_by.label}
-
                     </STableCell>
 
                   </STableRow>

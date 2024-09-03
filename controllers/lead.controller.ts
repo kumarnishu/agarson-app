@@ -743,7 +743,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         return res.status(400).json({ message: "bad request" })
 }
 export const ReferLead = async (req: Request, res: Response, next: NextFunction) => {
-    const { party_id, remark } = req.body as CreateOrRemoveReferForLeadDto
+    const { party_id, remark, remind_date } = req.body as CreateOrRemoveReferForLeadDto
     if (!party_id)
         return res.status(400).json({ message: "fill required field" })
     const id = req.params.id
@@ -765,6 +765,8 @@ export const ReferLead = async (req: Request, res: Response, next: NextFunction)
             updated_at: new Date(),
             updated_by: req.user
         })
+        if (remind_date)
+            new_remark.remind_date = new Date(remind_date)
         await new_remark.save()
     }
 
@@ -2985,6 +2987,8 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
         return {
             _id: r._id,
             name: r.name,
+            remark: "",
+            refers: 0,
             customer_name: r.customer_name,
             mobile: r.mobile,
             mobile2: r.mobile2,
@@ -3016,10 +3020,15 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
         parties = await ReferredParty.find({ state: { $in: states }, city: { $in: cities } }).populate('created_by').populate('updated_by').sort('name')
         let count = parties.length
         parties = parties.slice((page - 1) * limit, limit * page)
-        result = parties.map((r) => {
-            return {
+        for (let i = 0; i < parties.length; i++) {
+            let r = parties[i];
+            let remark = await Remark.findOne({ refer: r._id }).sort('-created_at');
+            let refers = await Lead.find({ referred_party: r._id }).countDocuments()
+            result.push({
                 _id: r._id,
                 name: r.name,
+                refers: refers,
+                remark: remark?.remark || "",
                 customer_name: r.customer_name,
                 mobile: r.mobile,
                 mobile2: r.mobile2,
@@ -3033,8 +3042,8 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
                 updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
                 created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
                 updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
-            }
-        })
+            })
+        }
         return res.status(200).json({
             result: result,
             total: Math.ceil(count / limit),
@@ -3206,10 +3215,15 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
 
         let count = parties.length
         parties = parties.slice((page - 1) * limit, limit * page)
-        result = parties.map((r) => {
-            return {
+        for (let i = 0; i < parties.length; i++) {
+            let r = parties[i];
+            let remark = await Remark.findOne({ refer: r._id }).sort('-created_at');
+            let refers = await Lead.find({ referred_party: r._id }).countDocuments()
+            result.push({
                 _id: r._id,
                 name: r.name,
+                refers: refers,
+                remark: remark?.remark || "",
                 customer_name: r.customer_name,
                 mobile: r.mobile,
                 mobile2: r.mobile2,
@@ -3223,8 +3237,8 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
                 created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
                 updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
-            }
-        })
+            })
+        }
         return res.status(200).json({
             result: result,
             total: Math.ceil(count / limit),
@@ -3503,33 +3517,17 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     let day = previous_date.getDate() - 7
     previous_date.setDate(day)
 
-    let leads = await Lead.find({ updated_at: { $lte: new Date(), $gt: previous_date } }).populate('remarks')
+    let leads = await Lead.find({ updated_at: { $lte: new Date(), $gt: previous_date } }).populate('referred_party')
 
     let result: GetActivitiesOrRemindersDto[] = []
-
-    leads.forEach(async (lead) => {
-        let rem = await Remark.findOne({ lead: lead._id, remind_date: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
-            path: 'lead',
-            populate: [
-                {
-                    path: 'created_by',
-                    model: 'User'
-                },
-                {
-                    path: 'updated_by',
-                    model: 'User'
-                },
-                {
-                    path: 'referred_party',
-                    model: 'ReferredParty'
-                }
-            ]
-        }).sort('-remind_date')
+    for (let i = 0; i < leads.length; i++) {
+        let lead = leads[i]
+        let rem = await Remark.findOne({ lead: lead._id, remind_date: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').sort('-remind_date').sort('-created_at')
         if (rem && rem.lead) {
             result.push({
                 _id: rem._id,
                 remark: rem.remark,
-                created_at: rem.created_at && moment(rem.created_at).format("DD/MM/YYYY"),
+                created_at: rem.created_at && moment(rem.created_at).format("LT"),
                 remind_date: rem.remind_date && moment(rem.remind_date).format("DD/MM/YYYY"),
                 created_by: { id: rem.created_by._id, value: rem.created_by.username, label: rem.created_by.username },
                 lead_id: rem.lead._id,
@@ -3559,9 +3557,32 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
 
             })
         }
-
-    })
+    }
     return res.status(200).json(result)
+}
+export const GetReferRemarkHistory = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(400).json({ message: "refer id not valid" })
+    let refer = await ReferredParty.findById(id);
+    if (!refer) {
+        return res.status(404).json({ message: "refer not found" })
+    }
+    let remarks: IRemark[] = []
+    let result: GetRemarksDto[] = []
+    remarks = await Remark.find({ refer: refer._id }).populate('created_by').populate('updated_by').sort('-created_at')
+    result = remarks.map((r) => {
+        return {
+            _id: r._id,
+            remark: r.remark,
+            refer_id: refer?._id,
+            refer_name: refer?.name,
+            refer_mobile: refer?.mobile,
+            remind_date: r.remind_date && moment(r.remind_date).format("DD/MM/YYYY"),
+            created_date: moment(r.created_at).format("DD/MM/YYYY"),
+            created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username }
+        }
+    })
+    return res.json(result)
 }
 export const GetRemarkHistory = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
@@ -3593,11 +3614,11 @@ export const GetRemarkHistory = async (req: Request, res: Response, next: NextFu
         return {
             _id: r._id,
             remark: r.remark,
-            lead_id: lead._id,
-            lead_name: lead.name,
-            lead_mobile: lead.mobile,
+            lead_id: lead?._id,
+            lead_name: lead?.name,
+            lead_mobile: lead?.mobile,
             remind_date: r.remind_date && moment(r.remind_date).format("DD/MM/YYYY"),
-            created_date: r.created_at && moment(r.created_at).format("DD/MM/YYYY"),
+            created_date: r.created_at.toString(),
             created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username }
         }
     })
@@ -3712,7 +3733,7 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
             return {
                 _id: rem._id,
                 remark: rem.remark,
-                created_at: rem.created_at && moment(rem.created_at).format("DD/MM/YYYY"),
+                created_at: rem.created_at && moment(rem.created_at).format("LT"),
                 remind_date: rem.remind_date && moment(rem.remind_date).format("DD/MM/YYYY"),
                 created_by: { id: rem.created_by._id, value: rem.created_by.username, label: rem.created_by.username },
                 lead_id: rem.lead._id,
@@ -3826,8 +3847,12 @@ export const GetNewRefers = async (req: Request, res: Response, next: NextFuncti
     let dt2 = new Date(String(end_date))
     let parties: IReferredParty[] = []
     parties = await ReferredParty.find({ created_at: { $gte: dt1, $lt: dt2 }, convertedfromlead: true }).populate('created_by').populate('updated_by').sort('name');
-    result = parties.map((refer) => {
-        return {
+
+    for (let i = 0; i < parties.length; i++) {
+        let refer = parties[i]
+        let remark = await Remark.findOne({ refer: refer._id }).sort('-created_at');
+        console.log(remark)
+        result.push({
             _id: refer._id,
             name: refer.name,
             customer_name: refer.customer_name,
@@ -3835,6 +3860,7 @@ export const GetNewRefers = async (req: Request, res: Response, next: NextFuncti
             mobile2: refer.mobile2,
             mobile3: refer.mobile3,
             address: refer.address,
+            remark: remark?.remark || "",
             gst: refer.gst,
             city: refer.city,
             state: refer.state,
@@ -3843,8 +3869,8 @@ export const GetNewRefers = async (req: Request, res: Response, next: NextFuncti
             updated_at: moment(refer.updated_at).format("DD/MM/YYYY"),
             created_by: { id: refer.created_by._id, value: refer.created_by.username, label: refer.created_by.username },
             updated_by: { id: refer.updated_by._id, value: refer.updated_by.username, label: refer.updated_by.username }
-        }
-    })
+        })
+    }
     return res.status(200).json(result)
 }
 
@@ -3857,20 +3883,22 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
     let leads = await Lead.find({
         created_at: { $gte: dt1, $lt: dt2 }, referred_party: { $ne: undefined }
     }).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
-
-    result = leads.map((lead) => {
-        return {
+    for (let i = 0; i < leads.length; i++) {
+        let lead = leads[i];
+        let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
+        result.push({
             lead: { id: lead._id, value: lead.name, label: lead.name },
             lead_mobile1: lead.mobile,
             lead_mobile2: lead.alternate_mobile1,
             lead_mobile3: lead.alternate_mobile2,
             refer: lead.referred_party && { id: lead._id, value: lead.name, label: lead.name },
+            remark: remark?.remark || "",
             refer_mobile1: lead.referred_party && lead.referred_party.mobile,
             refer_mobile2: lead.referred_party && lead.referred_party.mobile2,
             refer_mobile3: lead.referred_party && lead.referred_party.mobile3,
             refer_date: lead.referred_party && moment(lead.referred_date).format("DD/MM/YYYY")
-        }
-    })
+        })
+    }
     return res.status(200).json(result)
 }
 

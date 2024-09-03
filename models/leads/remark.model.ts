@@ -51,8 +51,11 @@ const RemarkSchema = new mongoose.Schema<IRemark, mongoose.Model<IRemark, {}, {}
     },
     lead: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Lead',
-        required: true
+        ref: 'Lead'
+    },
+    refer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ReferredParty'
     }
 })
 

@@ -15,7 +15,7 @@ function CreateOrEditStateForm({ state }: { state?: GetCrmStateDto}) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: {
-                state: string
+                key: string
             },
             id?: string
         }>
@@ -42,7 +42,7 @@ function CreateOrEditStateForm({ state }: { state?: GetCrmStateDto}) {
             mutate({
                 id:state?.state?.id,
                 body: {
-                    state: values.state
+                    key: values.state
                 }
             })
         }

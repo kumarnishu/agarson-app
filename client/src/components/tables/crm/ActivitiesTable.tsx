@@ -31,7 +31,7 @@ function ActivitiesTable({ remarks }: Props) {
         <>
             <Box sx={{
                 overflow: "auto",
-                height: '65vh'
+                height: '62vh'
             }}>
                 <STable
                 >
@@ -241,7 +241,7 @@ function ActivitiesTable({ remarks }: Props) {
                             </STableHeadCell>
 
 
-                
+
                             <STableHeadCell
                             >
 
@@ -309,7 +309,7 @@ function ActivitiesTable({ remarks }: Props) {
                                             {remark && remark.stage && remark.stage}
                                         </STableCell>
                                         <STableCell>
-                                            {remark.remind_date|| "na"}
+                                            {remark.remind_date || "na"}
                                         </STableCell>
                                         <STableCell>
                                             {remark && remark.has_card ? 'Visiting card available' : "na"}
@@ -419,7 +419,7 @@ function ActivitiesTable({ remarks }: Props) {
                                         </STableCell>
 
 
-                                      
+
                                         <STableCell
                                             title="double click to download"
                                             onDoubleClick={() => {
@@ -439,7 +439,10 @@ function ActivitiesTable({ remarks }: Props) {
                 </STable>
             </Box >
             {lead && <ViewRemarksDialog id={lead.lead_id} />}
-            {/* {lead && <CreateOrEditRemarkDialog lead={lead} />} */}
+            {lead && <CreateOrEditRemarkDialog lead={lead ? {
+                _id: lead.lead_id,
+                has_card: lead.has_card
+            } : undefined} />}
         </>
     )
 }

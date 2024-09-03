@@ -12,7 +12,7 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { toTitleCase } from '../../../utils/TitleCase';
 import { IState } from '../../../types/erp_report.types';
-import { GetCrmCityDto, GetLeadDto } from '../../../dtos/crm/crm.dto';
+import { GetCrmCityDto, GetCrmStateDto, GetLeadDto } from '../../../dtos/crm/crm.dto';
 import { GetUserDto } from '../../../dtos/users/user.dto';
 import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
@@ -39,7 +39,7 @@ export type TformData = {
 }
 
 function CreateOrEditLeadForm({ lead }: { lead?: GetLeadDto }) {
-    const [states, setStates] = useState<{ state: IState, users: GetUserDto[] }[]>([])
+    const [states, setStates] = useState<GetCrmStateDto[]>([])
     const [cities, setCities] = useState<GetCrmCityDto[]>([])
     const [state, setState] = useState<string>();
     const [types, setTypes] = useState<DropDownDto[]>([])
@@ -56,7 +56,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: GetLeadDto }) {
 
     const { data: sourcedata, isSuccess: isSourceSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_sources", GetAllSources)
 
-    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: IState, users: GetUserDto[] }[]>, BackendError>("crm_states", GetAllStates)
+    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>("crm_states", GetAllStates)
     const { data: citydata, isSuccess: isCitySuccess } = useQuery<AxiosResponse<GetCrmCityDto[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
 
 
@@ -417,8 +417,8 @@ function CreateOrEditLeadForm({ lead }: { lead?: GetLeadDto }) {
                     </option>
                     {
                         states.map(state => {
-                            return (<option key={state.state._id} value={state.state.state}>
-                                {toTitleCase(state.state.state)}
+                            return (<option key={state.state.id} value={state.state.value}>
+                                {toTitleCase(state.state.label)}
                             </option>)
                         })
                     }

@@ -3,9 +3,13 @@ import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
 import CreateOrEditRemarkForm from '../../forms/crm/CreateOrEditRemarkForm'
-import {  GetLeadDto, GetRemarksDto } from '../../../dtos/crm/crm.dto'
+import {  GetRemarksDto } from '../../../dtos/crm/crm.dto'
 
-function CreateOrEditRemarkDialog({ lead, remark, display, setDisplay }: { lead?: GetLeadDto, remark?: GetRemarksDto, display?: boolean, setDisplay?: React.Dispatch<React.SetStateAction<boolean>> }) {
+function CreateOrEditRemarkDialog({ lead, remark, display, setDisplay }: {
+    lead?: {
+        _id: string;
+        has_card?: boolean;
+    }, remark?: GetRemarksDto, display?: boolean, setDisplay?: React.Dispatch<React.SetStateAction<boolean>> }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     
     return (

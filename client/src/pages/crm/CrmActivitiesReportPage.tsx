@@ -33,7 +33,7 @@ function CrmActivitiesReportPage() {
     let day = previous_date.getDate() - 1
     previous_date.setDate(day)
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'crm_menu', show_assigned_only: true }))
-    const { data, isLoading, refetch: ReftechRemarks } = useQuery<AxiosResponse<{ result: GetActivitiesOrRemindersDto[], page: number, total: number, limit: number }>, BackendError>(["remarks", stage, paginationData, userId, dates?.start_date, dates?.end_date], async () => GetRemarks({ stage: stage, limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+    const { data, isLoading, refetch: ReftechRemarks } = useQuery<AxiosResponse<{ result: GetActivitiesOrRemindersDto[], page: number, total: number, limit: number }>, BackendError>(["activities", stage, paginationData, userId, dates?.start_date, dates?.end_date], async () => GetRemarks({ stage: stage, limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
     useEffect(() => {
         if (stageSuccess)
@@ -66,7 +66,7 @@ function CrmActivitiesReportPage() {
                         <span
                             key={index}
                         >
-                            <span key={stage.id} style={{ paddingLeft: '10px' }}>{toTitleCase(stage.label)} : {remarks.filter((r) => r.stage == stage.value.toLowerCase()).length || 0}</span>
+                            <span key={stage.id} style={{ paddingLeft: '25px' }}>{toTitleCase(stage.label)} : {remarks.filter((r) => r.stage == stage.value.toLowerCase()).length || 0}</span>
                         </span>
                     ))}
 

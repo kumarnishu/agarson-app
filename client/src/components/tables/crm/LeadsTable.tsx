@@ -87,6 +87,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               </STableHeadCell>
 
 
+
               <STableHeadCell
               >
 
@@ -283,7 +284,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 Updated By
 
               </STableHeadCell>
-            
+
               <STableHeadCell
               >
 
@@ -590,7 +591,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       {lead.updated_by.label}
 
                     </STableCell>
-                  
+
                     <STableCell
                       title="double click to download"
                       onDoubleClick={() => {
@@ -614,7 +615,10 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
       {
         lead ?
           <>
-            <CreateOrEditRemarkDialog lead={lead} />
+            <CreateOrEditRemarkDialog lead={lead ? {
+              _id: lead._id,
+              has_card: lead.has_card
+            } : undefined} />
             <DeleteCrmItemDialog lead={lead} />
             <ViewRemarksDialog id={lead._id} />
             <ReferLeadDialog lead={lead} />

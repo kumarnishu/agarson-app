@@ -17,8 +17,13 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: GetRemark
     <AxiosResponse<any>, BackendError, string>
     (DeleteRemark, {
       onSuccess: () => {
+        
         queryClient.invalidateQueries('leads')
-        queryClient.invalidateQueries('remarks')
+        queryClient.invalidateQueries('reminders')
+        queryClient.invalidateQueries('refers')
+        queryClient.invalidateQueries('activities')
+        queryClient.resetQueries('remarks')
+        
       }
     })
 

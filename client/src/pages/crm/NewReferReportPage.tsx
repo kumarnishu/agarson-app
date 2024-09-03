@@ -8,22 +8,22 @@ import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState
 import { onlyUnique } from '../../utils/UniqueArray'
 import moment from 'moment'
 import {GetNewRefers } from '../../services/LeadsServices'
-import { GetReferDto } from '../../dtos/crm/crm.dto'
+import { GetNewReferDto } from '../../dtos/crm/crm.dto'
 
 
 export default function NewReferReportPage() {
-  const [reports, setReports] = useState<GetReferDto[]>([])
+  const [reports, setReports] = useState<GetNewReferDto[]>([])
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
   })
 
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetReferDto[]>, BackendError>(["new_refer_reports", dates.start_date, dates.end_date], async () => GetNewRefers({ start_date: dates.start_date, end_date: dates.end_date }))
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetNewReferDto[]>, BackendError>(["new_refer_reports", dates.start_date, dates.end_date], async () => GetNewRefers({ start_date: dates.start_date, end_date: dates.end_date }))
 
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-  const columns = useMemo<MRT_ColumnDef<GetReferDto>[]>(
+  const columns = useMemo<MRT_ColumnDef<GetNewReferDto>[]>(
     //column definitions...
     () => [
       {
@@ -41,10 +41,28 @@ export default function NewReferReportPage() {
 
       },
       {
+        accessorKey: 'remark',
+        header: 'Remark',
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.remark }).filter(onlyUnique)
+      },
+      {
         accessorKey: 'mobile',
         header: 'Mobile',
         filterVariant: 'multi-select',
         filterSelectOptions: reports.map((i) => { return i.mobile }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'mobile2',
+        header: 'Mobile2',
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.mobile2 }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'mobile3',
+        header: 'Mobile3',
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.mobile3 }).filter(onlyUnique)
       },
       {
         accessorKey: 'city',
@@ -53,10 +71,16 @@ export default function NewReferReportPage() {
         filterSelectOptions: reports.map((i) => { return i.city }).filter(onlyUnique)
       },
       {
-        accessorKey: 'State',
-        header: 'Mobile',
+        accessorKey: 'state',
+        header: 'State',
         filterVariant: 'multi-select',
         filterSelectOptions: reports.map((i) => { return i.state }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'address',
+        header: 'Address',
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.address }).filter(onlyUnique)
       },
       {
         accessorKey: 'created_by.username',
@@ -109,7 +133,6 @@ export default function NewReferReportPage() {
     }),
     muiTableBodyCellProps: () => ({
       sx: {
-        fontSize: '13px',
         border: '1px solid #ddd;'
       },
     }),

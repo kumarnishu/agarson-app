@@ -8,60 +8,95 @@ import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState
 import { onlyUnique } from '../../utils/UniqueArray'
 import moment from 'moment'
 import { GetAssignedRefers } from '../../services/LeadsServices'
-import { GetLeadDto } from '../../dtos/crm/crm.dto'
+import { GetAssignedReferDto } from '../../dtos/crm/crm.dto'
 
 
 export default function AssignedReferReportPage() {
-  const [reports, setReports] = useState<GetLeadDto[]>([])
+  const [reports, setReports] = useState<GetAssignedReferDto[]>([])
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
   })
 
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetLeadDto[]>, BackendError>(["assign_refer_reports", dates.start_date, dates.end_date], async () => GetAssignedRefers({ start_date: dates.start_date, end_date: dates.end_date }))
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetAssignedReferDto[]>, BackendError>(["assign_refer_reports", dates.start_date, dates.end_date], async () => GetAssignedRefers({ start_date: dates.start_date, end_date: dates.end_date }))
 
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-  const columns = useMemo<MRT_ColumnDef<GetLeadDto>[]>(
+  const columns = useMemo<MRT_ColumnDef<GetAssignedReferDto>[]>(
     //column definitions...
     () => [
       {
-        accessorKey: 'name',
+        accessorKey: 'lead.value',
         header: 'Lead',
         size: 350,
         filterVariant: 'multi-select',
-        filterSelectOptions: reports.map((i) => { return i.name }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return i.lead.label }).filter(onlyUnique)
 
       },
       {
-        accessorKey: 'mobile',
-        header: 'Lead Mobile',
+        accessorKey: 'remark',
+        header: 'Remark',
         size: 350,
         filterVariant: 'multi-select',
-        filterSelectOptions: reports.map((i) => { return i.mobile }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return i.remark }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'lead_mobile1',
+        header: 'Mobile1',
+        size: 300,
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.lead_mobile1 }).filter(onlyUnique)
 
       },
       {
-        accessorKey: 'referred_party_name',
+        accessorKey: 'lead_mobile2',
+        header: 'Mobile2',
+        size: 300,
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.lead_mobile2 }).filter(onlyUnique)
+
+      },
+      {
+        accessorKey: 'lead_mobile3',
+        header: 'Mobile3',
+        size: 300,
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.lead_mobile3 }).filter(onlyUnique)
+
+      },
+      {
+        accessorKey: 'refer.value',
         header: 'Refer Party',
-        size: 350,
+        size: 300,
         filterVariant: 'multi-select',
-        filterSelectOptions: reports.map((i) => { return i.referred_party_name || "" }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return i.refer?.value || "" }).filter(onlyUnique)
       },
       {
-        accessorKey: 'referred_party_mobile',
-        header: 'Refer Party Mobile',
+        accessorKey: 'refer_mobile1',
+        header: 'Refer Mobile',
         filterVariant: 'multi-select',
-        filterSelectOptions: reports.map((i) => { return i.referred_party_mobile || "" }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return i.refer_mobile1 || "" }).filter(onlyUnique)
       },
       {
-        accessorKey: 'referred_date',
+        accessorKey: 'refer_mobile2',
+        header: 'Refer Mobile',
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.refer_mobile2 || "" }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'refer_mobile3',
+        header: 'Refer Mobile2',
+        filterVariant: 'multi-select',
+        filterSelectOptions: reports.map((i) => { return i.refer_mobile3 || "" }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'refer_date',
         header: 'Refer Date',
         filterVariant: 'multi-select',
         //@ts-ignore
         Cell: (val) => <span>{moment(val.cell.getValue()).format("DD/MM/YYYY")}</span>,
-        filterSelectOptions: reports.map((i) => { return moment(i.referred_date).format("DD/MM/YYYY") }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return moment(i.refer_date).format("DD/MM/YYYY") }).filter(onlyUnique)
       }
     ],
     [reports],
@@ -100,7 +135,6 @@ export default function AssignedReferReportPage() {
     }),
     muiTableBodyCellProps: () => ({
       sx: {
-        fontSize: '13px',
         border: '1px solid #ddd;'
       },
     }),

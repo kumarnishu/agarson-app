@@ -132,17 +132,19 @@ function RemindersTable({ remarks }: Props) {
                             <STableHeadCell
                             >
 
+                                Gst
+
+                            </STableHeadCell>
+
+                            <STableHeadCell
+                            >
+
                                 Lead Type
 
                             </STableHeadCell>
 
 
-                            <STableHeadCell
-                            >
 
-                                Lead Owners
-
-                            </STableHeadCell>
 
 
                             <STableHeadCell
@@ -223,16 +225,6 @@ function RemindersTable({ remarks }: Props) {
                             </STableHeadCell>
 
 
-
-
-                            <STableHeadCell
-                            >
-
-                                Remark Source
-
-                            </STableHeadCell>
-
-
                             <STableHeadCell
                             >
 
@@ -241,20 +233,6 @@ function RemindersTable({ remarks }: Props) {
                             </STableHeadCell>
 
 
-                            <STableHeadCell
-                            >
-
-                                Created At
-
-                            </STableHeadCell>
-
-
-                            <STableHeadCell
-                            >
-
-                                Updated At
-
-                            </STableHeadCell>
                             <STableHeadCell
                             >
 
@@ -314,7 +292,7 @@ function RemindersTable({ remarks }: Props) {
                                             {remark.created_by.value.slice(0, 50)}
 
                                         </STableCell>
-                                        <STableCell title={remark.created_at }>
+                                        <STableCell title={remark.created_at}>
                                             {remark.created_at}
 
                                         </STableCell>
@@ -358,7 +336,9 @@ function RemindersTable({ remarks }: Props) {
                                             {remark && remark.gst && remark.gst}
                                         </STableCell>
 
-
+                                        <STableCell>
+                                            {remark.lead_type ? remark.lead_type : 'na'}
+                                        </STableCell>
                                         <STableCell>
                                             {remark.turnover ? remark.turnover : 'na'}
                                         </STableCell>
@@ -389,7 +369,7 @@ function RemindersTable({ remarks }: Props) {
 
                                         <STableCell>
                                             {remark.referred_date &&
-                                                new Date(remark.referred_date).toLocaleString()
+                                                remark.referred_date
                                             }
                                         </STableCell>
 
@@ -433,8 +413,11 @@ function RemindersTable({ remarks }: Props) {
                     </STableBody>
                 </STable>
             </Box >
-            {lead && <ViewRemarksDialog id={lead._id} />}
-            {lead && <CreateOrEditRemarkDialog lead={lead} />}
+            {lead && <ViewRemarksDialog id={lead.lead_id} />}
+            {lead && <CreateOrEditRemarkDialog lead={lead ? {
+                _id: lead.lead_id,
+                has_card: lead.has_card
+            } : undefined} />}
         </>
     )
 }

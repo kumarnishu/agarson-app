@@ -33,7 +33,7 @@ let template: IReferTemplate[] = [
 
 
 export default function RefersPage() {
-  const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+  const [paginationData, setPaginationData] = useState({ limit: 20, page: 1, total: 1 });
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [refer, setRefer] = useState<GetReferDto>()
@@ -41,7 +41,7 @@ export default function RefersPage() {
   const [selectAll, setSelectAll] = useState(false)
 
   const [preFilteredData, setPreFilteredData] = useState<GetReferDto[]>([])
-  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 20, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedRefers, setSelectedRefers] = useState<GetReferDto[]>([])
 
@@ -171,7 +171,7 @@ export default function RefersPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Refers {selectedRefers.length > 0 ? <span>(checked : {selectedRefers.length})</span> : `- ${refers.length}`}
+          Refers
         </Typography>
 
         <TextField

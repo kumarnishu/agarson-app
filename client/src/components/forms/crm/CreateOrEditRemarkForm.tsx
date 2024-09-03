@@ -10,11 +10,11 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { toTitleCase } from '../../../utils/TitleCase';
-import {  GetLeadDto, GetRemarksDto } from '../../../dtos/crm/crm.dto';
+import { GetRemarksDto } from '../../../dtos/crm/crm.dto';
 import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
 
-function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: GetLeadDto, remark?: GetRemarksDto, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
+function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: string, has_card?: boolean }, remark?: GetRemarksDto, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [display, setDisplay] = useState(false)
     const [card, setCard] = useState(Boolean(lead?.has_card))
     const [stages, setStages] = useState<DropDownDto[]>([])
@@ -31,9 +31,11 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: GetLeadD
         }>
         (CreateOrEditRemark, {
             onSuccess: () => {
-                queryClient.invalidateQueries('leads')
+                queryClient.resetQueries('leads')
+                queryClient.resetQueries('reminders')
+                queryClient.resetQueries('refers')
+                queryClient.resetQueries('activities')
                 queryClient.invalidateQueries('remarks')
-                queryClient.invalidateQueries('reminderremarks')
             }
         })
     const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)

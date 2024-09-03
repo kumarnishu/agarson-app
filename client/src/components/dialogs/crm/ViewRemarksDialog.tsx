@@ -11,6 +11,7 @@ import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { BackendError } from '../../..'
 import { GetRemarksHistory } from '../../../services/LeadsServices'
+import moment from 'moment'
 
 
 function ViewRemarksDialog({ id }: { id: string }) {
@@ -40,8 +41,8 @@ function ViewRemarksDialog({ id }: { id: string }) {
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>
-                <h1>{remarks && remarks[0] && remarks[0]?.lead_name || "Remarks History"}</h1>
-                <p>{remarks && remarks[0] && remarks[0]?.lead_mobile}</p>
+                <p>{remarks && remarks[0] && remarks[0]?.lead_name && remarks[0]?.lead_name.slice(0, 25).toString() || "Remarks History"}</p>
+                <span style={{ fontSize: '14px' }}>{remarks && remarks[0] && remarks[0]?.lead_mobile}</span>
             </DialogTitle>
             <DialogContent>
                 <Stack direction="column" gap={2} >
@@ -52,7 +53,7 @@ function ViewRemarksDialog({ id }: { id: string }) {
                                 <p>{toTitleCase(item.created_by.value)} : {item.remark} </p>
                                 <p>{item.remind_date && `Remind Date : ${item.remind_date}`} </p>
                                 <br></br>
-                                <p>{item.created_date}</p>
+                                <p>{`Created On : ${moment(item.created_date).format("DD/MM/YYYY")}`}</p>
                                 {
                                     user && item.remark && user?.username === item.created_by.value && new Date(item.created_date) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
                                         {user?.assigned_permissions.includes('reminders_delete') && <IconButton size="small" color="error" onClick={() => {

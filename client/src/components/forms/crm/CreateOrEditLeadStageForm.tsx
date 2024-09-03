@@ -15,7 +15,7 @@ function CreateOrEditLeadStageForm({ stage }: { stage?: DropDownDto}) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: {
-                stage: string
+                key: string
             },
             id?: string
         }>
@@ -42,7 +42,7 @@ function CreateOrEditLeadStageForm({ stage }: { stage?: DropDownDto}) {
             mutate({
                 id:stage?.id,
                 body: {
-                    stage: values.stage
+                    key: values.stage
                 }
             })
         }

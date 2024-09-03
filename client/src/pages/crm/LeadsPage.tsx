@@ -48,14 +48,14 @@ let template: CreateAndUpdatesLeadFromExcelDto[] = [
 
 
 export default function LeadsPage() {
-  const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+  const [paginationData, setPaginationData] = useState({ limit: 20, page: 1, total: 1 });
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<GetLeadDto>()
   const [leads, setLeads] = useState<GetLeadDto[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const [preFilteredData, setPreFilteredData] = useState<GetLeadDto[]>([])
-  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 20, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
   const [selectedLeads, setSelectedLeads] = useState<GetLeadDto[]>([])
   const [stage, setStage] = useState<string>();

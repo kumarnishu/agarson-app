@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Button, Checkbox, CircularProgress, FormControlLabel, FormGroup, Stack, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useContext, useState } from 'react';
@@ -14,8 +14,9 @@ import { GetLeadDto, GetReferDto } from '../../../dtos/crm/crm.dto';
 
 
 function ReferLeadForm({ lead }: { lead: GetLeadDto }) {
+    const [display, setDisplay] = useState(false)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<GetReferDto>, BackendError, { id: string, body: { party_id: string, remark: string } }>
+        <AxiosResponse<GetReferDto>, BackendError, { id: string, body: { party_id: string, remark: string, remind_date?: string } }>
         (ReferLead, {
             onSuccess: () => {
                 queryClient.invalidateQueries('refers')
@@ -30,18 +31,28 @@ function ReferLeadForm({ lead }: { lead: GetLeadDto }) {
         initialValues: {
             remark: "",
             party_id: "",
+            remind_date: undefined
         },
         validationSchema: Yup.object({
             remark: Yup.string()
                 .required('Required field'),
             party_id: Yup.string().required("Required"),
-
+            remind_date: Yup.string().test(() => {
+                if (display && !formik.values.remind_date)
+                    return false
+                else
+                    return true
+            })
 
         }),
         onSubmit: (values) => {
             mutate({
                 id: lead._id,
-                body: values
+                body: {
+                    remark: values.remark,
+                    party_id: values.party_id,
+                    remind_date: values.remind_date
+                }
             })
         }
     });
@@ -82,7 +93,27 @@ function ReferLeadForm({ lead }: { lead: GetLeadDto }) {
                     }
                     {...formik.getFieldProps('remark')}
                 />
-
+                {lead && <>
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox
+                            checked={Boolean(display)}
+                            onChange={() => setDisplay(!display)}
+                        />} label="Make Reminder" />
+                    </FormGroup></>}
+                {display && < TextField
+                    type="date"
+                    error={
+                        formik.touched.remind_date && formik.errors.remind_date ? true : false
+                    }
+                    focused
+                    id="remind_date"
+                    label="Remind Date"
+                    fullWidth
+                    helperText={
+                        formik.touched.remind_date && formik.errors.remind_date ? formik.errors.remind_date : ""
+                    }
+                    {...formik.getFieldProps('remind_date')}
+                />}
                 < TextField
                     select
                     required

@@ -15,7 +15,7 @@ function CreateOrEditLeadTypeForm({ type }: { type?: DropDownDto}) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: {
-                type: string
+                key: string
             },
             id?: string
         }>
@@ -42,7 +42,7 @@ function CreateOrEditLeadTypeForm({ type }: { type?: DropDownDto}) {
             mutate({
                 id:type?.id,
                 body: {
-                    type: values.type
+                    key: values.type
                 }
             })
         }
