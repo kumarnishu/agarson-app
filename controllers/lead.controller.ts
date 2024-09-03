@@ -9,16 +9,16 @@ import { Types } from "mongoose"
 import { destroyFile } from "../utils/destroyFile.util.js"
 import { IReferredParty, ReferredParty } from "../models/leads/referred.model.js"
 import { CRMState, ICRMState } from "../models/leads/crm.state.model.js"
-import { ICRMCityTemplate, ICRMStateTemplate, ILeadTemplate, IReferTemplate } from "../types/template.type.js"
 import { SaveLeadMobilesToExcel, SaveLeadsToExcel } from "../utils/ExportToExcel.js"
 import { CRMCity, ICRMCity } from "../models/leads/crm.city.model.js"
 import { LeadType } from "../models/leads/crm.leadtype.model.js"
 import { LeadSource } from "../models/leads/crm.source.model.js"
 import { IStage, Stage } from "../models/leads/crm.stage.model.js"
 import { HandleCRMCitiesAssignment } from "../utils/AssignCitiesToUsers.js"
-import { CreateOrEditReferDto, CreateOrEditReferFromExcelDto, CreateOrEditRemarkDto, GetActivitiesOrRemindersDto, GetAssignedReferDto, GetLeadDto, GetMergeLeadsDto, GetNewReferDto, GetReferDto } from "../dtos/crm/crm.dto.js"
+import { AssignOrRemoveCrmCityDto, AssignOrRemoveCrmStateDto, CreateAndUpdatesCityFromExcelDto, CreateAndUpdatesLeadFromExcelDto, CreateAndUpdatesStateFromExcelDto, CreateOrEditCrmCity, CreateOrEditLeadDto, CreateOrEditReferDto, CreateOrEditReferFromExcelDto, CreateOrEditRemarkDto, CreateOrRemoveReferForLeadDto, GetActivitiesOrRemindersDto, GetAssignedReferDto, GetCrmCityDto, GetCrmStateDto, GetLeadDto, GetMergeLeadsDto, GetNewReferDto, GetReferDto, GetRemarksDto } from "../dtos/crm/crm.dto.js"
 import moment from "moment"
 import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dto.js"
+
 
 
 //lead types
@@ -39,7 +39,7 @@ export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunct
 
     if (!lead || !sourcelead)
         return res.status(404).json({ message: "leads not found" })
- 
+
     await Lead.findByIdAndUpdate(id, {
         name: name,
         mobiles: mobiles,
@@ -58,7 +58,7 @@ export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunct
             await lead.save();
         }
     }
-    return res.status(200).json({message:"merge leads successfully"})
+    return res.status(200).json({ message: "merge leads successfully" })
 }
 
 
@@ -75,12 +75,12 @@ export const CreateCRMLeadTypes = async (req: Request, res: Response, next: Next
         created_by: req.user,
         updated_by: req.user
     }).save()
-    return res.status(201).json({message:"success"})
+    return res.status(201).json({ message: "success" })
 
 }
 
 export const UpdateCRMLeadTypes = async (req: Request, res: Response, next: NextFunction) => {
-    const { key } = req.body as  CreateOrEditDropDownDto
+    const { key } = req.body as CreateOrEditDropDownDto
     if (!key) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
@@ -99,7 +99,7 @@ export const UpdateCRMLeadTypes = async (req: Request, res: Response, next: Next
     await Lead.updateMany({ type: prevtype }, { type: key })
     await ReferredParty.updateMany({ type: prevtype }, { type: key })
     await oldtype.save()
-    return res.status(200).json({message:"updated"})
+    return res.status(200).json({ message: "updated" })
 
 }
 export const DeleteCRMLeadType = async (req: Request, res: Response, next: NextFunction) => {
@@ -116,22 +116,24 @@ export const DeleteCRMLeadType = async (req: Request, res: Response, next: NextF
 
 //source types
 export const GetAllCRMLeadSources = async (req: Request, res: Response, next: NextFunction) => {
+    let result: DropDownDto[] = []
     let sources = await LeadSource.find()
+    sources.map((i) => {
+        return { id: i._id, value: i.source, label: i.source }
+    })
     return res.status(200).json(sources)
 }
 
 
 export const CreateCRMLeadSource = async (req: Request, res: Response, next: NextFunction) => {
-    const { source } = req.body as {
-        source: string
-    }
-    if (!source) {
+    const { key } = req.body as CreateOrEditDropDownDto
+    if (!key) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
-    if (await LeadSource.findOne({ source: source.toLowerCase() }))
+    if (await LeadSource.findOne({ source: key.toLowerCase() }))
         return res.status(400).json({ message: "already exists this source" })
     let result = await new LeadSource({
-        source: source,
+        source: key,
         updated_at: new Date(),
         created_by: req.user,
         updated_by: req.user
@@ -141,26 +143,24 @@ export const CreateCRMLeadSource = async (req: Request, res: Response, next: Nex
 }
 
 export const UpdateCRMLeadSource = async (req: Request, res: Response, next: NextFunction) => {
-    const { source } = req.body as {
-        source: string
-    }
-    if (!source) {
+    const { key } = req.body as CreateOrEditDropDownDto
+    if (!key) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     const id = req.params.id
     let oldsource = await LeadSource.findById(id)
     if (!oldsource)
         return res.status(404).json({ message: "source not found" })
-    if (source !== oldsource.source)
-        if (await LeadSource.findOne({ source: source.toLowerCase() }))
+    if (key !== oldsource.source)
+        if (await LeadSource.findOne({ source: key.toLowerCase() }))
             return res.status(400).json({ message: "already exists this source" })
     let prevsource = oldsource.source
-    oldsource.source = source
+    oldsource.source = key
     oldsource.updated_at = new Date()
     if (req.user)
         oldsource.updated_by = req.user
-    await Lead.updateMany({ source: prevsource }, { source: source })
-    await ReferredParty.updateMany({ source: prevsource }, { source: source })
+    await Lead.updateMany({ source: prevsource }, { source: key })
+    await ReferredParty.updateMany({ source: prevsource }, { source: key })
     await oldsource.save()
     return res.status(200).json(oldsource)
 
@@ -179,23 +179,21 @@ export const DeleteCRMLeadSource = async (req: Request, res: Response, next: Nex
 
 //lead stages
 export const GetAllCRMLeadStages = async (req: Request, res: Response, next: NextFunction) => {
-    let stages: IStage[] = []
-    stages = await Stage.find()
+    let stages: DropDownDto[] = []
+    stages = await (await Stage.find()).map((i) => { return { id: i._id, label: i.stage, value: i.stage } });
     return res.status(200).json(stages)
 }
 
 
 export const CreateCRMLeadStages = async (req: Request, res: Response, next: NextFunction) => {
-    const { stage } = req.body as {
-        stage: string
-    }
-    if (!stage) {
+    const { key } = req.body as CreateOrEditDropDownDto
+    if (!key) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
-    if (await Stage.findOne({ stage: stage.toLowerCase() }))
+    if (await Stage.findOne({ stage: key.toLowerCase() }))
         return res.status(400).json({ message: "already exists this stage" })
     let result = await new Stage({
-        stage: stage,
+        stage: key,
         updated_at: new Date(),
         created_by: req.user,
         updated_by: req.user
@@ -205,26 +203,25 @@ export const CreateCRMLeadStages = async (req: Request, res: Response, next: Nex
 }
 
 export const UpdateCRMLeadStages = async (req: Request, res: Response, next: NextFunction) => {
-    const { stage } = req.body as {
-        stage: string
-    }
-    if (!stage) {
+    const { key } = req.body as CreateOrEditDropDownDto
+
+    if (!key) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     const id = req.params.id
     let oldstage = await Stage.findById(id)
     if (!oldstage)
         return res.status(404).json({ message: "stage not found" })
-    if (stage !== oldstage.stage)
-        if (await Stage.findOne({ stage: stage.toLowerCase() }))
+    if (key !== oldstage.stage)
+        if (await Stage.findOne({ stage: key.toLowerCase() }))
             return res.status(400).json({ message: "already exists this stage" })
     let prevstage = oldstage.stage
-    oldstage.stage = stage
+    oldstage.stage = key
     oldstage.updated_at = new Date()
     if (req.user)
         oldstage.updated_by = req.user
-    await Lead.updateMany({ stage: prevstage }, { stage: stage })
-    await ReferredParty.updateMany({ stage: prevstage }, { stage: stage })
+    await Lead.updateMany({ stage: prevstage }, { stage: key })
+    await ReferredParty.updateMany({ stage: prevstage }, { stage: key })
     await oldstage.save()
     return res.status(200).json(oldstage)
 
@@ -243,28 +240,26 @@ export const DeleteCRMLeadStage = async (req: Request, res: Response, next: Next
 
 //states apis
 export const GetAllCRMStates = async (req: Request, res: Response, next: NextFunction) => {
-    let result: { state: ICRMState, users: { _id: string, username: string }[] }[] = []
+    let result: GetCrmStateDto[] = []
     let states = await CRMState.find()
 
     for (let i = 0; i < states.length; i++) {
         let users = await (await User.find({ assigned_crm_states: states[i]._id })).map((i) => { return { _id: i._id.valueOf(), username: i.username } })
-        result.push({ state: states[i], users: users })
+        result.push({ state: { id: states[i]._id, label: states[i].state, value: states[i].state }, assigned_users: users.map((u) => { return { id: u._id, label: u.username, value: u.username } }) });
     }
     return res.status(200).json(result)
 }
 
 
 export const CreateCRMState = async (req: Request, res: Response, next: NextFunction) => {
-    const { state } = req.body as {
-        state: string
-    }
-    if (!state) {
+    const { key } = req.body as CreateOrEditDropDownDto
+    if (!key) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
-    if (await CRMState.findOne({ state: state.toLowerCase() }))
+    if (await CRMState.findOne({ state: key.toLowerCase() }))
         return res.status(400).json({ message: "already exists this state" })
     let result = await new CRMState({
-        state: state,
+        state: key,
         updated_at: new Date(),
         created_by: req.user,
         updated_by: req.user
@@ -274,11 +269,7 @@ export const CreateCRMState = async (req: Request, res: Response, next: NextFunc
 }
 
 export const AssignCRMCitiesToUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const { city_ids, user_ids, flag } = req.body as {
-        user_ids: string[],
-        city_ids: string[],
-        flag: number
-    }
+    const { city_ids, user_ids, flag } = req.body as AssignOrRemoveCrmCityDto
 
     if (city_ids && city_ids.length === 0)
         return res.status(400).json({ message: "please select one city " })
@@ -289,11 +280,7 @@ export const AssignCRMCitiesToUsers = async (req: Request, res: Response, next: 
 }
 
 export const AssignCRMStatesToUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const { state_ids, user_ids, flag } = req.body as {
-        user_ids: string[],
-        state_ids: string[],
-        flag: number
-    }
+    const { state_ids, user_ids, flag } = req.body as AssignOrRemoveCrmStateDto
     if (state_ids && state_ids.length === 0)
         return res.status(400).json({ message: "please select one state " })
     if (user_ids && user_ids.length === 0)
@@ -351,27 +338,25 @@ export const AssignCRMStatesToUsers = async (req: Request, res: Response, next: 
 
 
 export const UpdateCRMState = async (req: Request, res: Response, next: NextFunction) => {
-    const { state } = req.body as {
-        state: string
-    }
-    if (!state) {
+    const { key } = req.body as CreateOrEditDropDownDto
+    if (!key) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
     const id = req.params.id
     let oldstate = await CRMState.findById(id)
     if (!oldstate)
         return res.status(404).json({ message: "state not found" })
-    if (state !== oldstate.state)
-        if (await CRMState.findOne({ state: state.toLowerCase() }))
+    if (key !== oldstate.state)
+        if (await CRMState.findOne({ state: key.toLowerCase() }))
             return res.status(400).json({ message: "already exists this state" })
     let prevstate = oldstate.state
-    oldstate.state = state
+    oldstate.state = key
     oldstate.updated_at = new Date()
     if (req.user)
         oldstate.updated_by = req.user
 
-    await Lead.updateMany({ state: prevstate }, { state: state })
-    await ReferredParty.updateMany({ state: prevstate }, { state: state })
+    await Lead.updateMany({ state: prevstate }, { state: key })
+    await ReferredParty.updateMany({ state: prevstate }, { state: key })
 
     await oldstate.save()
     return res.status(200).json(oldstate)
@@ -384,15 +369,12 @@ export const DeleteCRMState = async (req: Request, res: Response, next: NextFunc
     if (!state) {
         return res.status(404).json({ message: "state not found" })
     }
-    // let remarks = await Remark.find({ lead: lead._id })
-    // remarks.map(async (remark) => {
-    //     await remark.remove()
-    // })
+
     await state.remove();
     return res.status(200).json({ message: "state deleted successfully" })
 }
 export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: Response, next: NextFunction) => {
-    let result: ICRMStateTemplate[] = []
+    let result: CreateAndUpdatesStateFromExcelDto[] = []
     let statusText: string = ""
     if (!req.file)
         return res.status(400).json({
@@ -458,7 +440,7 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
 
 //cities
 export const GetAllCRMCities = async (req: Request, res: Response, next: NextFunction) => {
-    let result: { city: ICRMCity, users: { _id: string, username: string }[] }[] = []
+    let result: GetCrmCityDto[] = []
     let state = req.query.state;
     let cities: ICRMCity[] = []
     if (state && state !== 'Select State')
@@ -466,18 +448,16 @@ export const GetAllCRMCities = async (req: Request, res: Response, next: NextFun
     else
         cities = await CRMCity.find()
     for (let i = 0; i < cities.length; i++) {
-        let users = await (await User.find({ assigned_crm_cities: cities[i]._id })).map((i) => { return { _id: i._id.valueOf(), username: i.username } })
-        result.push({ city: cities[i], users: users })
+        let users = await (await User.find({ assigned_crm_cities: cities[i]._id })).
+            map((i) => { return { _id: i._id.valueOf(), username: i.username } })
+        result.push({ city: { id: cities[i]._id, label: cities[i].city, value: cities[i].city }, assigned_users: users.map((u) => { return { id: u._id, label: u.username, value: u.username } }) });
     }
     return res.status(200).json(result)
 }
 
 
 export const CreateCRMCity = async (req: Request, res: Response, next: NextFunction) => {
-    const { state, city } = req.body as {
-        state: string,
-        city: string
-    }
+    const { state, city } = req.body as CreateOrEditCrmCity
     if (!state || !city) {
         return res.status(400).json({ message: "please provide required fields" })
     }
@@ -502,10 +482,7 @@ export const CreateCRMCity = async (req: Request, res: Response, next: NextFunct
 }
 
 export const UpdateCRMCity = async (req: Request, res: Response, next: NextFunction) => {
-    const { state, city } = req.body as {
-        state: string,
-        city: string
-    }
+    const { state, city } = req.body as CreateOrEditCrmCity
     if (!state || !city) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
@@ -550,7 +527,7 @@ export const DeleteCRMCity = async (req: Request, res: Response, next: NextFunct
 }
 export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Response, next: NextFunction) => {
     let state = req.params.state
-    let result: ICRMCityTemplate[] = []
+    let result: CreateAndUpdatesCityFromExcelDto[] = []
     let statusText: string = ""
     if (!req.file)
         return res.status(400).json({
@@ -564,7 +541,7 @@ export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Res
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: ICRMCityTemplate[] = xlsx.utils.sheet_to_json(
+        let workbook_response: CreateAndUpdatesCityFromExcelDto[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         if (!state || !await CRMState.findOne({ state: state }))
@@ -629,7 +606,7 @@ export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Res
     return res.status(200).json(result);
 }
 
-export const AssignedReferrals = async (req: Request, res: Response, next: NextFunction) => {
+export const GetAssignedReferrals = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     if (!isMongoId(id))
         return res.status(400).json({ message: "bad mongo id" })
@@ -638,20 +615,45 @@ export const AssignedReferrals = async (req: Request, res: Response, next: NextF
     if (!party)
         return res.status(404).json({ message: "party not found" })
     let leads: ILead[]
-    leads = await Lead.find({ referred_party: party._id }).populate('updated_by').populate('created_by').populate({
-        path: 'remarks',
-        populate: [
-            {
-                path: 'created_by',
-                model: 'User'
-            },
-            {
-                path: 'updated_by',
-                model: 'User'
-            }
-        ]
-    }).sort('-updated_at')
-    return res.status(200).json(leads);
+    let result: GetLeadDto[] = []
+    leads = await Lead.find({ referred_party: party._id }).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
+    for (let i = 0; i < leads.length; i++) {
+        let lead = leads[0];
+        let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
+        result.push({
+            _id: lead._id,
+            name: lead.name,
+            customer_name: lead.customer_name,
+            customer_designation: lead.customer_designation,
+            mobile: lead.mobile,
+            gst: lead.gst,
+            has_card: lead.has_card,
+            email: lead.email,
+            city: lead.city,
+            state: lead.state,
+            country: lead.country,
+            address: lead.address,
+            work_description: lead.work_description,
+            turnover: lead.turnover,
+            alternate_mobile1: lead.alternate_mobile1,
+            alternate_mobile2: lead.alternate_mobile2,
+            alternate_email: lead.alternate_email,
+            lead_type: lead.lead_type,
+            stage: lead.stage,
+            lead_source: lead.lead_source,
+            visiting_card: lead.visiting_card?.public_url || "",
+            referred_party_name: lead.referred_party && lead.referred_party.name,
+            referred_party_mobile: lead.referred_party && lead.referred_party.mobile,
+            referred_date: lead.referred_party && moment(lead.referred_date).format("DD/MM/YYYY"),
+            remark: remark?.remark || "",
+            created_at: moment(lead.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(lead.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: lead.created_by._id, value: lead.created_by.username, label: lead.created_by.username },
+            updated_by: { id: lead.updated_by._id, value: lead.updated_by.username, label: lead.updated_by.username },
+        })
+    }
+
+    return res.status(200).json(result);
 }
 
 // leads apis
@@ -661,7 +663,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     let stage = req.query.stage
     let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let showonlycardleads = Boolean(user?.show_only_visiting_card_leads)
-
+    let result: GetLeadDto[] = []
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
@@ -670,7 +672,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         if (stage != "undefined") {
             leads = await Lead.find({
                 stage: stage, state: { $in: states }, city: { $in: cities }
-            }).populate('updated_by').populate('created_by').populate({
+            }).populate('updated_by').populate('referred_party').populate('created_by').populate({
                 path: 'remarks'
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
@@ -680,19 +682,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         else if (showonlycardleads) {
             leads = await Lead.find({
                 has_card: showonlycardleads, state: { $in: states }, city: { $in: cities }
-            }).populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            }).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
                 has_card: showonlycardleads, state: { $in: states }, city: { $in: cities }
             }).countDocuments()
@@ -700,26 +690,48 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         else {
             leads = await Lead.find({
                 stage: 'open', state: { $in: states }, city: { $in: cities }
-            }).populate('updated_by').populate('created_by').populate({
-                path: 'remarks',
-                populate: [
-                    {
-                        path: 'created_by',
-                        model: 'User'
-                    },
-                    {
-                        path: 'updated_by',
-                        model: 'User'
-                    }
-                ]
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            }).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
                 stage: 'open', state: { $in: states }, city: { $in: cities }
             }).countDocuments()
         }
-
+        for (let i = 0; i < leads.length; i++) {
+            let lead = leads[0];
+            let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
+            result.push({
+                _id: lead._id,
+                name: lead.name,
+                customer_name: lead.customer_name,
+                customer_designation: lead.customer_designation,
+                mobile: lead.mobile,
+                gst: lead.gst,
+                has_card: lead.has_card,
+                email: lead.email,
+                city: lead.city,
+                state: lead.state,
+                country: lead.country,
+                address: lead.address,
+                work_description: lead.work_description,
+                turnover: lead.turnover,
+                alternate_mobile1: lead.alternate_mobile1,
+                alternate_mobile2: lead.alternate_mobile2,
+                alternate_email: lead.alternate_email,
+                lead_type: lead.lead_type,
+                stage: lead.stage,
+                lead_source: lead.lead_source,
+                visiting_card: lead.visiting_card?.public_url || "",
+                referred_party_name: lead.referred_party && lead.referred_party.name,
+                referred_party_mobile: lead.referred_party && lead.referred_party.mobile,
+                referred_date: lead.referred_party && moment(lead.referred_date).format("DD/MM/YYYY"),
+                remark: remark?.remark || "",
+                created_at: moment(lead.created_at).format("DD/MM/YYYY"),
+                updated_at: moment(lead.updated_at).format("DD/MM/YYYY"),
+                created_by: { id: lead.created_by._id, value: lead.created_by.username, label: lead.created_by.username },
+                updated_by: { id: lead.updated_by._id, value: lead.updated_by.username, label: lead.updated_by.username },
+            })
+        }
         return res.status(200).json({
-            leads,
+            result,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
@@ -729,7 +741,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         return res.status(400).json({ message: "bad request" })
 }
 export const ReferLead = async (req: Request, res: Response, next: NextFunction) => {
-    const { party_id, remark } = req.body as { party_id: string, remark: string }
+    const { party_id, remark } = req.body as CreateOrRemoveReferForLeadDto
     if (!party_id)
         return res.status(400).json({ message: "fill required field" })
     const id = req.params.id
@@ -743,7 +755,6 @@ export const ReferLead = async (req: Request, res: Response, next: NextFunction)
         return res.status(404).json({ message: "referred party not found" })
 
     if (remark) {
-        let remarks = lead.remarks
         let new_remark = new Remark({
             remark,
             lead: lead,
@@ -753,14 +764,10 @@ export const ReferLead = async (req: Request, res: Response, next: NextFunction)
             updated_by: req.user
         })
         await new_remark.save()
-        remarks.push(new_remark)
-        lead.remarks = remarks
     }
 
     lead.referred_party = party
     lead.stage = "refer"
-    lead.referred_party_mobile = party.mobile
-    lead.referred_party_name = party.name
     lead.referred_date = new Date()
     await lead.save()
     return res.status(200).json({ message: "party referred successfully" })
@@ -768,14 +775,13 @@ export const ReferLead = async (req: Request, res: Response, next: NextFunction)
 
 export const RemoveLeadReferral = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
-    const { remark } = req.body as { remark: string }
+    const { remark } = req.body as CreateOrRemoveReferForLeadDto
     if (!isMongoId(id))
         return res.status(400).json({ message: "bad mongo id" })
     let lead = await Lead.findById(id)
     if (!lead)
         return res.status(404).json({ message: "lead not found" })
     if (remark) {
-        let remarks = lead.remarks
         let new_remark = new Remark({
             remark,
             lead: lead,
@@ -785,12 +791,8 @@ export const RemoveLeadReferral = async (req: Request, res: Response, next: Next
             updated_by: req.user
         })
         await new_remark.save()
-        remarks.push(new_remark)
-        lead.remarks = remarks
     }
     lead.referred_party = undefined
-    lead.referred_party_mobile = undefined
-    lead.referred_party_name = undefined
     lead.referred_date = undefined
     lead.stage = "open"
     await lead.save()
@@ -829,7 +831,7 @@ export const ConvertLeadToRefer = async (req: Request, res: Response, next: Next
 export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
-
+    let result: GetLeadDto[] = []
     let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let showonlycardleads = Boolean(user?.show_only_visiting_card_leads)
     let states = user?.assigned_crm_states.map((item) => { return item.state })
@@ -868,19 +870,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ]
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at')
             }
             if (key.length == 2) {
 
@@ -935,19 +925,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at')
 
             }
             if (key.length == 3) {
@@ -1025,19 +1003,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at')
 
             }
             if (key.length == 4) {
@@ -1137,19 +1103,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at')
 
             }
         }
@@ -1180,19 +1134,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ]
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at')
 
             }
             if (key.length == 2) {
@@ -1248,19 +1190,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at')
 
             }
             if (key.length == 3) {
@@ -1338,19 +1268,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at')
 
             }
             if (key.length == 4) {
@@ -1450,19 +1368,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at')
 
             }
         }
@@ -1493,19 +1399,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ]
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at')
 
             }
             if (key.length == 2) {
@@ -1561,19 +1455,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at')
 
             }
             if (key.length == 3) {
@@ -1651,19 +1533,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
             if (key.length == 4) {
@@ -1763,19 +1633,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
 
@@ -1783,8 +1641,43 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
 
         let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
+        for (let i = 0; i < leads.length; i++) {
+            let lead = leads[0];
+            let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
+            result.push({
+                _id: lead._id,
+                name: lead.name,
+                customer_name: lead.customer_name,
+                customer_designation: lead.customer_designation,
+                mobile: lead.mobile,
+                gst: lead.gst,
+                has_card: lead.has_card,
+                email: lead.email,
+                city: lead.city,
+                state: lead.state,
+                country: lead.country,
+                address: lead.address,
+                work_description: lead.work_description,
+                turnover: lead.turnover,
+                alternate_mobile1: lead.alternate_mobile1,
+                alternate_mobile2: lead.alternate_mobile2,
+                alternate_email: lead.alternate_email,
+                lead_type: lead.lead_type,
+                stage: lead.stage,
+                lead_source: lead.lead_source,
+                visiting_card: lead.visiting_card?.public_url || "",
+                referred_party_name: lead.referred_party && lead.referred_party.name,
+                referred_party_mobile: lead.referred_party && lead.referred_party.mobile,
+                referred_date: lead.referred_party && moment(lead.referred_date).format("DD/MM/YYYY"),
+                remark: remark?.remark || "",
+                created_at: moment(lead.referred_date).format("DD/MM/YYYY"),
+                updated_at: moment(lead.referred_date).format("DD/MM/YYYY"),
+                created_by: { id: lead.created_by._id, value: lead.created_by.username, label: lead.created_by.username },
+                updated_by: { id: lead.updated_by._id, value: lead.updated_by.username, label: lead.updated_by.username },
+            })
+        }
         return res.status(200).json({
-            leads,
+            result,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
@@ -1798,7 +1691,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
 export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
-
+    let result: GetLeadDto[] = []
     let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let showonlycardleads = Boolean(user?.show_only_visiting_card_leads)
     let states = user?.assigned_crm_states.map((item) => { return item.state })
@@ -1837,19 +1730,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ]
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
             }
             if (key.length == 2) {
 
@@ -1904,19 +1785,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
             if (key.length == 3) {
@@ -1994,19 +1863,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
             if (key.length == 4) {
@@ -2106,19 +1963,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
         }
@@ -2149,19 +1994,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ]
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
             if (key.length == 2) {
@@ -2217,19 +2050,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
             if (key.length == 3) {
@@ -2307,19 +2128,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
             if (key.length == 4) {
@@ -2419,19 +2228,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
         }
@@ -2462,19 +2259,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ]
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
             if (key.length == 2) {
@@ -2531,19 +2316,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
             if (key.length == 3) {
@@ -2622,19 +2395,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
             if (key.length == 4) {
@@ -2735,19 +2496,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
                     ,
 
                 }
-                ).populate('updated_by').populate('created_by').populate({
-                    path: 'remarks',
-                    populate: [
-                        {
-                            path: 'created_by',
-                            model: 'User'
-                        },
-                        {
-                            path: 'updated_by',
-                            model: 'User'
-                        }
-                    ]
-                }).sort('-updated_at')
+                ).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
 
             }
 
@@ -2755,8 +2504,43 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
 
         let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
+        for (let i = 0; i < leads.length; i++) {
+            let lead = leads[0];
+            let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
+            result.push({
+                _id: lead._id,
+                name: lead.name,
+                customer_name: lead.customer_name,
+                customer_designation: lead.customer_designation,
+                mobile: lead.mobile,
+                gst: lead.gst,
+                has_card: lead.has_card,
+                email: lead.email,
+                city: lead.city,
+                state: lead.state,
+                country: lead.country,
+                address: lead.address,
+                work_description: lead.work_description,
+                turnover: lead.turnover,
+                alternate_mobile1: lead.alternate_mobile1,
+                alternate_mobile2: lead.alternate_mobile2,
+                alternate_email: lead.alternate_email,
+                lead_type: lead.lead_type,
+                stage: lead.stage,
+                lead_source: lead.lead_source,
+                visiting_card: lead.visiting_card?.public_url || "",
+                referred_party_name: lead.referred_party && lead.referred_party.name,
+                referred_party_mobile: lead.referred_party && lead.referred_party.mobile,
+                referred_date: lead.referred_party && moment(lead.referred_date).format("DD/MM/YYYY"),
+                remark: remark?.remark || "",
+                created_at: moment(lead.referred_date).format("DD/MM/YYYY"),
+                updated_at: moment(lead.referred_date).format("DD/MM/YYYY"),
+                created_by: { id: lead.created_by._id, value: lead.created_by.username, label: lead.created_by.username },
+                updated_by: { id: lead.updated_by._id, value: lead.updated_by.username, label: lead.updated_by.username },
+            })
+        }
         return res.status(200).json({
-            leads,
+            result,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
@@ -2770,7 +2554,6 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
 
 export const BackUpAllLeads = async (req: Request, res: Response, next: NextFunction) => {
     const value = String(req.query.value)
-    console.log(value)
     let fileName = "blank.xlsx"
     let leads = await Lead.find().populate('created_by').populate('updated_by')
     if (value === "leads" || value === "mobiles") {
@@ -2792,7 +2575,7 @@ export const BackUpAllLeads = async (req: Request, res: Response, next: NextFunc
 
 export const CreateLead = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    let { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as Request['body'] & ILead & { remark: string }
+    let { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as CreateOrEditLeadDto
 
     // validations
     if (!mobile)
@@ -2835,8 +2618,15 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
             return res.status(500).json({ message: "file uploading error" })
         }
     }
+    let state = "unknown";
+    if (body.state && body.state != "") state = state
+    let city = "unknown";
+    if (body.city && body.city != "") city = city
     let lead = new Lead({
         ...body,
+        stage: 'open',
+        state: state,
+        city: city,
         visiting_card: visiting_card,
         mobile: uniqueNumbers[0] || null,
         alternate_mobile1: uniqueNumbers[1] || null,
@@ -2856,7 +2646,6 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
             updated_by: req.user
         })
         await new_remark.save()
-        lead.remarks = [new_remark]
     }
 
     await lead.save()
@@ -2867,7 +2656,8 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
 
 export const UpdateLead = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as Request['body'] & ILead & { remark: string }
+    const { mobile, remark, alternate_mobile1, alternate_mobile2 } = body as CreateOrEditLeadDto
+
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
     let lead = await Lead.findById(id);
@@ -2945,16 +2735,20 @@ export const UpdateLead = async (req: Request, res: Response, next: NextFunction
             updated_at: new Date(),
             updated_by: req.user
         }).save()
-
+    let state = "unknown";
+    if (body.state && body.state != "") state = state
+    let city = "unknown";
+    if (body.city && body.city != "") city = city
     await Lead.findByIdAndUpdate(lead._id, {
         ...body,
+        city: city,
+        state: state,
         mobile: uniqueNumbers[0] || null,
         alternate_mobile1: uniqueNumbers[1] || null,
         alternate_mobile2: uniqueNumbers[2] || null,
         visiting_card: visiting_card,
         updated_by: req.user,
-        updated_at: new Date(Date.now()),
-        remarks: lead.remarks
+        updated_at: new Date(Date.now())
     })
 
     return res.status(200).json({ message: "lead updated" })
@@ -2980,7 +2774,7 @@ export const DeleteLead = async (req: Request, res: Response, next: NextFunction
 }
 
 export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next: NextFunction) => {
-    let result: ILeadTemplate[] = []
+    let result: CreateAndUpdatesLeadFromExcelDto[] = []
     let statusText: string = ""
     if (!req.file)
         return res.status(400).json({
@@ -2994,7 +2788,7 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: ILeadTemplate[] = xlsx.utils.sheet_to_json(
+        let workbook_response: CreateAndUpdatesLeadFromExcelDto[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         if (workbook_response.length > 3000) {
@@ -3123,41 +2917,19 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
             if (validated && uniqueNumbers.length > 0) {
                 //update and create new nead
                 if (lead._id && isMongoId(String(lead._id))) {
-                    let targetLead = await Lead.findById(lead._id).populate('remarks')
-                    let remark = targetLead?.remarks && targetLead.remarks.length > 0 && targetLead.remarks[targetLead.remarks.length - 1].remark || ""
-                    console.log(remark)
-                    console.log(lead.remarks)
-                    if (targetLead) {
-                        if (remark !== lead.remarks) {
-                            let new_remarks = targetLead.remarks
-                            let new_remark = new Remark({
-                                remark: lead.remarks,
-                                lead: lead,
-                                created_at: new Date(),
-                                created_by: req.user,
-                                updated_at: new Date(),
-                                updated_by: req.user
-                            })
-                            await new_remark.save()
-                            new_remarks.push(new_remark)
-                            targetLead.remarks = new_remarks
-                        }
-
-                        await Lead.findByIdAndUpdate(lead._id, {
-                            ...lead,
-                            stage: stage ? stage : "unknown",
-                            lead_type: leadtype ? leadtype : "unknown",
-                            lead_source: source ? source : "unknown",
-                            city: city ? city : "unknown",
-                            state: state ? state : "unknown",
-                            remarks: targetLead.remarks,
-                            mobile: uniqueNumbers[0],
-                            alternate_mobile1: uniqueNumbers[1] || null,
-                            alternate_mobile2: uniqueNumbers[2] || null,
-                            updated_by: req.user,
-                            updated_at: new Date(Date.now())
-                        })
-                    }
+                    await Lead.findByIdAndUpdate(lead._id, {
+                        ...lead,
+                        stage: stage ? stage : "unknown",
+                        lead_type: leadtype ? leadtype : "unknown",
+                        lead_source: source ? source : "unknown",
+                        city: city ? city : "unknown",
+                        state: state ? state : "unknown",
+                        mobile: uniqueNumbers[0],
+                        alternate_mobile1: uniqueNumbers[1] || null,
+                        alternate_mobile2: uniqueNumbers[2] || null,
+                        updated_by: req.user,
+                        updated_at: new Date(Date.now())
+                    })
                     statusText = "updated"
                 }
                 if (!lead._id || !isMongoId(String(lead._id))) {
@@ -3175,21 +2947,9 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
                         created_by: req.user,
                         updated_by: req.user,
                         updated_at: new Date(Date.now()),
-                        created_at: new Date(Date.now()),
-                        remarks: undefined
+                        created_at: new Date(Date.now())
                     })
-                    if (lead.remarks) {
-                        let new_remark = new Remark({
-                            remark: lead.remarks,
-                            lead: newlead,
-                            created_at: new Date(),
-                            created_by: req.user,
-                            updated_at: new Date(),
-                            updated_by: req.user
-                        })
-                        await new_remark.save()
-                        newlead.remarks = [new_remark]
-                    }
+
                     await newlead.save()
                     statusText = "created"
                 }
@@ -3208,42 +2968,38 @@ export const BulkLeadUpdateFromExcel = async (req: Request, res: Response, next:
 //refer apis
 export const GetRefers = async (req: Request, res: Response, next: NextFunction) => {
     let refers: IReferredParty[] = []
+    let result: GetReferDto[] = []
     let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     refers = await ReferredParty.find({ 'state': { $in: states }, 'city': { $in: cities } }).sort('name')
+    result = refers.map((r) => {
+        return {
+            _id: r._id,
+            name: r.name,
+            customer_name: r.customer_name,
+            mobile: r.mobile,
+            mobile2: r.mobile2,
+            mobile3: r.mobile3,
+            address: r.address,
+            gst: r.gst,
+            city: r.city,
+            state: r.state,
+            convertedfromlead: r.convertedfromlead,
+            created_at: moment(r.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
+            updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
+        }
+    })
     return res.status(200).json(refers);
 }
 
-export const GetAllReferralsById = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    if (!isMongoId(id))
-        return res.status(400).json({ message: "bad mongo id" })
-    let party = await ReferredParty.findById(id)
-
-    if (!party)
-        return res.status(404).json({ message: "party not found" })
-
-    let leads: ILead[] = []
-    leads = await Lead.find({ referred_party: party._id }).populate('updated_by').populate('created_by').populate({
-        path: 'remarks',
-        populate: [
-            {
-                path: 'created_by',
-                model: 'User'
-            },
-            {
-                path: 'updated_by',
-                model: 'User'
-            }
-        ]
-    }).sort('name')
-    return res.status(200).json(leads);
-}
 
 export const GetPaginatedRefers = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
+    let result: GetReferDto[] = []
     let user = await User.findById(req.user).populate('assigned_crm_states').populate('assigned_crm_cities');
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
@@ -3252,9 +3008,27 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
         parties = await ReferredParty.find({ state: { $in: states }, city: { $in: cities } }).populate('created_by').populate('updated_by').sort('name')
         let count = parties.length
         parties = parties.slice((page - 1) * limit, limit * page)
-
+        result = parties.map((r) => {
+            return {
+                _id: r._id,
+                name: r.name,
+                customer_name: r.customer_name,
+                mobile: r.mobile,
+                mobile2: r.mobile2,
+                mobile3: r.mobile3,
+                address: r.address,
+                gst: r.gst,
+                city: r.city,
+                state: r.state,
+                convertedfromlead: r.convertedfromlead,
+                created_at: moment(r.created_at).format("DD/MM/YYYY"),
+                updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
+                created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
+                updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
+            }
+        })
         return res.status(200).json({
-            result: parties,
+            result: result,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
@@ -3424,9 +3198,27 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
 
         let count = parties.length
         parties = parties.slice((page - 1) * limit, limit * page)
-
+        result = parties.map((r) => {
+            return {
+                _id: r._id,
+                name: r.name,
+                customer_name: r.customer_name,
+                mobile: r.mobile,
+                mobile2: r.mobile2,
+                mobile3: r.mobile3,
+                address: r.address,
+                gst: r.gst,
+                city: r.city,
+                state: r.state,
+                convertedfromlead: r.convertedfromlead,
+                created_at: moment(r.created_at).format("DD/MM/YYYY"),
+                updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
+                created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
+                updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
+            }
+        })
         return res.status(200).json({
-            result: parties,
+            result: result,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
@@ -3755,7 +3547,7 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
                 visiting_card: rem.lead.visiting_card?.public_url || "",
                 referred_party_name: rem.lead.referred_party?.name || "",
                 referred_party_mobile: rem.lead.referred_party?.mobile || "",
-                referred_date: rem.lead.referred_party?.name || "",
+                referred_date: rem.lead.referred_date && moment(rem.lead.referred_date).format("DD/MM/YYYY") || "",
 
             })
         }
@@ -3763,7 +3555,43 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     })
     return res.status(200).json(result)
 }
-
+export const GetRemarkHistory = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
+    let lead = await Lead.findById(id);
+    if (!lead) {
+        return res.status(404).json({ message: "lead not found" })
+    }
+    let remarks: IRemark[] = []
+    let result: GetRemarksDto[] = []
+    remarks = await Remark.find({ lead: lead._id }).populate('created_by').populate('updated_by').populate({
+        path: 'lead',
+        populate: [
+            {
+                path: 'created_by',
+                model: 'User'
+            },
+            {
+                path: 'updated_by',
+                model: 'User'
+            },
+            {
+                path: 'referred_party',
+                model: 'ReferredParty'
+            }
+        ]
+    }).sort('-created_at')
+    result = remarks.map((r) => {
+        return {
+            _id: r._id,
+            remark: r.remark,
+            remind_date: r.remind_date && moment(r.remind_date).format("DD/MM/YYYY"),
+            created_date: r.created_at && moment(r.created_at).format("DD/MM/YYYY"),
+            created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username }
+        }
+    })
+    return res.json(result)
+}
 export const GetActivities = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
@@ -3905,7 +3733,7 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
         })
         count = result.length;
         return res.status(200).json({
-            remarks,
+            result,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit

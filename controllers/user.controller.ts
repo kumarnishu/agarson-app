@@ -52,8 +52,8 @@ export const GetUsers = async (req: Request, res: Response, next: NextFunction) 
             assigned_crm_states: u.assigned_crm_states.length || 0,
             assigned_crm_cities: u.assigned_crm_cities.length || 0,
             assigned_permissions: u.assigned_permissions,
-            created_at: moment(u.created_at).format("DD/MM/YYYY") ,
-            updated_at: moment(u.updated_at).format("DD/MM/YYYY"), 
+            created_at: moment(u.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(u.updated_at).format("DD/MM/YYYY"),
             created_by: { id: u.created_by._id, label: u.created_by.username, value: u.created_by.username },
             updated_by: { id: u.updated_by._id, label: u.updated_by.username, value: u.updated_by.username },
         }
@@ -155,34 +155,34 @@ export const SignUp = async (req: Request, res: Response, next: NextFunction) =>
     await owner.save()
     owner = await User.findById(owner._id).populate("created_by").populate('assigned_users').populate("updated_by") || owner
     let token = owner.getAccessToken()
-    result= {
-            _id: owner._id,
-            username: owner.username,
-            email: owner.email,
-            mobile: owner.mobile,
-            dp: owner.dp?.public_url || "",
-            orginal_password: owner.orginal_password,
-            is_admin: owner.is_admin,
-            email_verified: owner.email_verified,
-            mobile_verified: owner.mobile_verified,
-            show_only_visiting_card_leads: owner.show_only_visiting_card_leads,
-            is_active: owner.is_active,
-            last_login: moment(owner.last_login).calendar(),
-            is_multi_login: owner.is_multi_login,
-            assigned_users: owner.assigned_users.map((u) => {
-                return {
-                    id: owner._id, label: owner.username, value: owner.username
-                }
-            }),
-            assigned_states: owner.assigned_states.length || 0,
-            assigned_crm_states: owner.assigned_crm_states.length || 0,
-            assigned_crm_cities: owner.assigned_crm_cities.length || 0,
-            assigned_permissions: owner.assigned_permissions,
-            created_at: moment(owner.created_at).format("DD/MM/YYYY"),
-            updated_at: moment(owner.updated_at).format("DD/MM/YYYY"),
-            created_by: { id: owner.created_by._id, label: owner.created_by.username, value: owner.created_by.username },
-            updated_by: { id: owner.updated_by._id, label: owner.updated_by.username, value: owner.updated_by.username },
-        }
+    result = {
+        _id: owner._id,
+        username: owner.username,
+        email: owner.email,
+        mobile: owner.mobile,
+        dp: owner.dp?.public_url || "",
+        orginal_password: owner.orginal_password,
+        is_admin: owner.is_admin,
+        email_verified: owner.email_verified,
+        mobile_verified: owner.mobile_verified,
+        show_only_visiting_card_leads: owner.show_only_visiting_card_leads,
+        is_active: owner.is_active,
+        last_login: moment(owner.last_login).calendar(),
+        is_multi_login: owner.is_multi_login,
+        assigned_users: owner.assigned_users.map((u) => {
+            return {
+                id: owner._id, label: owner.username, value: owner.username
+            }
+        }),
+        assigned_states: owner.assigned_states.length || 0,
+        assigned_crm_states: owner.assigned_crm_states.length || 0,
+        assigned_crm_cities: owner.assigned_crm_cities.length || 0,
+        assigned_permissions: owner.assigned_permissions,
+        created_at: moment(owner.created_at).format("DD/MM/YYYY"),
+        updated_at: moment(owner.updated_at).format("DD/MM/YYYY"),
+        created_by: { id: owner.created_by._id, label: owner.created_by.username, value: owner.created_by.username },
+        updated_by: { id: owner.updated_by._id, label: owner.updated_by.username, value: owner.updated_by.username },
+    }
     res.status(201).json({ user: result, token: token })
 }
 
@@ -237,7 +237,7 @@ export const NewUser = async (req: Request, res: Response, next: NextFunction) =
     user.updated_at = new Date()
 
     await user.save()
-    res.status(201).json({message:"success"})
+    res.status(201).json({ message: "success" })
 }
 
 
@@ -301,19 +301,19 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
         is_multi_login: user.is_multi_login,
         assigned_users: user.assigned_users.map((u) => {
             return {
-                id: user._id, label: user.username, value: user.username
+                id: u._id, label: u.username, value: u.username
             }
         }),
         assigned_states: user.assigned_states.length || 0,
         assigned_crm_states: user.assigned_crm_states.length || 0,
         assigned_crm_cities: user.assigned_crm_cities.length || 0,
         assigned_permissions: user.assigned_permissions,
-        created_at: moment(user.created_at).format("DD/MM/YYYY"), 
-        updated_at: moment(user.updated_at).format("DD/MM/YYYY"), 
+        created_at: moment(user.created_at).format("DD/MM/YYYY"),
+        updated_at: moment(user.updated_at).format("DD/MM/YYYY"),
         created_by: { id: user.created_by._id, label: user.created_by.username, value: user.created_by.username },
         updated_by: { id: user.updated_by._id, label: user.updated_by.username, value: user.updated_by.username },
     }
-    res.status(200).json({ user: result,token:token})
+    res.status(200).json({ user: result, token: token })
 }
 
 export const Logout = async (req: Request, res: Response, next: NextFunction) => {
@@ -638,7 +638,7 @@ export const RemoveAdmin = async (req: Request, res: Response, next: NextFunctio
 }
 
 export const SendPasswordResetMail = async (req: Request, res: Response, next: NextFunction) => {
-    const {email} = req.body as VerifyEmailDto
+    const { email } = req.body as VerifyEmailDto
     if (!email) return res.status(400).json({ message: "please provide email id" })
     const userEmail = String(email).toLowerCase().trim();
     if (!isEmail(userEmail))
@@ -694,7 +694,7 @@ export const ResetPassword = async (req: Request, res: Response, next: NextFunct
     res.status(200).json({ message: "password updated" });
 }
 export const SendVerifyEmail = async (req: Request, res: Response, next: NextFunction) => {
-    const {email} = req.body as VerifyEmailDto
+    const { email } = req.body as VerifyEmailDto
     if (!email)
         return res.status(400).json({ message: "please provide your email id" })
     const userEmail = String(email).toLowerCase().trim();

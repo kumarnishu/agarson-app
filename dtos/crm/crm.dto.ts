@@ -16,11 +16,11 @@ export type MergeTwoLeadsDto = {
 }
 
 export type GetCrmCityDto = {
-    state: string;
+    city: DropDownDto;
     assigned_users: DropDownDto[];
 }
 export type GetCrmStateDto = {
-    city: string;
+    state: DropDownDto;
     assigned_users: DropDownDto[];
 }
 
@@ -31,7 +31,7 @@ export type AssignOrRemoveCrmCityDto = {
 }
 export type AssignOrRemoveCrmStateDto = {
     user_ids: string[],
-    city_ids: string[],
+    state_ids: string[],
     flag: number
 }
 
@@ -46,6 +46,10 @@ export type CreateAndUpdatesCityFromExcelDto = {
     city: string,
     users?: string,
     status?: string
+}
+export type CreateOrEditCrmCity = {
+    state: string,
+    city: string
 }
 export type CreateAndUpdatesLeadFromExcelDto = {
     _id: string,
@@ -64,7 +68,6 @@ export type CreateAndUpdatesLeadFromExcelDto = {
     alternate_mobile1: string,
     alternate_mobile2: string,
     alternate_email: string,
-    remarks: string,
     lead_type: string
     stage: string
     lead_source: string
@@ -185,6 +188,14 @@ export type CreateOrEditReferFromExcelDto = {
     status?:string
 }
 
+export type GetRemarksDto={
+    _id:string,
+    remark:string,
+    remind_date:string,
+    created_date:string,
+    created_by:DropDownDto
+
+}
 export type GetActivitiesOrRemindersDto = {
     _id: string,
     remark: string,

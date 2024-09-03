@@ -1,6 +1,6 @@
 import { utils, writeFileXLSX } from "xlsx";
-import { ILeadTemplate } from "../types/template.type";
 import { ILead } from "../models/leads/lead.model";
+import { CreateAndUpdatesLeadFromExcelDto } from "../dtos/crm/crm.dto";
 
 export function SaveToExcel(data: any[]) {
     const ws = utils.json_to_sheet(data);
@@ -9,7 +9,7 @@ export function SaveToExcel(data: any[]) {
     writeFileXLSX(wb, `file`);
 }
 export function SaveLeadsToExcel(leads: ILead[]) {
-    let result: ILeadTemplate[] = []
+    let result: CreateAndUpdatesLeadFromExcelDto[] = []
     if (leads) {
         leads && leads.map((lead) => {
             return result.push(
@@ -33,8 +33,7 @@ export function SaveLeadsToExcel(leads: ILead[]) {
                     alternate_email: lead.alternate_email,
                     lead_type: lead.lead_type,
                     stage: lead.stage,
-                    lead_source: lead.lead_source,
-                    remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || ""
+                    lead_source: lead.lead_source
 
                 })
         })

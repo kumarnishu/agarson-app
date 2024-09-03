@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, GetReminderRemarks, UpdateRemark, DeleteRemark, GetRemarks, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages, CreateCRMCity, AssignCRMCitiesToUsers, FindUnknownCrmCities, AssignedReferrals, FuzzySearchOkOnlyLeads, GetNewRefers, GetAssignedRefers } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers,  UpdateRemark, DeleteRemark,  GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages, CreateCRMCity, AssignCRMCitiesToUsers, FindUnknownCrmCities,  FuzzySearchOkOnlyLeads, GetNewRefers, GetAssignedRefers, GetMyReminders, GetAssignedReferrals, GetRemarkHistory, GetActivities } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
@@ -34,7 +34,8 @@ router.route("/crm/cities/:id").put(isAuthenticatedUser, UpdateCRMCity).delete(i
 router.patch("/crm/cities/assign", isAuthenticatedUser, AssignCRMCitiesToUsers)
 //leads
 router.route("/leads").get(isAuthenticatedUser, GetLeads).post(isAuthenticatedUser, upload.single('visiting_card'), CreateLead)
-router.route("/remarks").get(isAuthenticatedUser, GetRemarks)
+router.route("/remarks/:id").get(isAuthenticatedUser, GetRemarkHistory)
+router.route("/activities/:id").get(isAuthenticatedUser, GetActivities)
 router.route("/leads/:id").put(isAuthenticatedUser, upload.single('visiting_card'), UpdateLead).delete(isAuthenticatedUser, DeleteLead)
 router.route("/update/leads/bulk").put(isAuthenticatedUser, upload.single('file'), BulkLeadUpdateFromExcel)
 router.route("/remarks/leads/:id").patch(isAuthenticatedUser, NewRemark)
@@ -49,7 +50,7 @@ router.post("/bulk/leads/delete/useless", isAuthenticatedUser, BulkDeleteUseless
 router.route("/find/crm/states/unknown").post(isAuthenticatedUser, FindUnknownCrmSates);
 router.route("/find/crm/stages/unknown").post(isAuthenticatedUser, FindUnknownCrmStages);
 router.route("/find/crm/cities/unknown").post(isAuthenticatedUser, FindUnknownCrmCities);
-router.get("/assigned/referrals/:id", isAuthenticatedUser, AssignedReferrals)
+router.get("/assigned/referrals/:id", isAuthenticatedUser, GetAssignedReferrals)
 
 
 //refers
@@ -63,7 +64,7 @@ router.route("/refers/:id").put(isAuthenticatedUser, upload.none(), UpdateReferP
 router.route("/refers/:id").delete(isAuthenticatedUser, DeleteReferParty)
 router.route("/update/refers/bulk").put(isAuthenticatedUser, upload.single('file'), BulkReferUpdateFromExcel)
 
-router.route("/reminder/remarks").get(isAuthenticatedUser, GetReminderRemarks)
+router.route("/reminders").get(isAuthenticatedUser, GetMyReminders)
 router.route("/assigned/refers/report").get(isAuthenticatedUser, GetAssignedRefers)
 router.route("/new/refers/report").get(isAuthenticatedUser, GetNewRefers)
 
