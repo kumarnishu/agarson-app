@@ -4,17 +4,17 @@ import { Cancel } from '@mui/icons-material';
 import { AxiosResponse } from 'axios';
 import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
-import { IUser } from '../../../types/user.types';
 import { useMutation } from 'react-query';
 import AlertBar from '../../snacks/AlertBar';
 import { IShoeWeight } from '../../../types/production.types';
 import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
 import { DeleteShoeWeight } from '../../../services/ProductionServices';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 function DeleteShoeWeightDialog({ weight }: { weight: IShoeWeight }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, string>
+        <AxiosResponse<GetUserDto>, BackendError, string>
         (DeleteShoeWeight, {
             onSuccess: () => {
                 queryClient.invalidateQueries('shoe_weights')

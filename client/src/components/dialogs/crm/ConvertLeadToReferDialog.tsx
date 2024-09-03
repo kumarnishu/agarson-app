@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Button, CircularProgress } from '@mui/material'
 import { useContext, useEffect } from 'react';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { ILead, IReferredParty } from '../../../types/crm.types';
 import { Cancel } from '@mui/icons-material';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';
@@ -9,12 +8,13 @@ import { ConvertLeadToRefer } from '../../../services/LeadsServices';
 import { queryClient } from '../../../main';
 import { useMutation } from 'react-query';
 import AlertBar from '../../snacks/AlertBar';
+import { GetLeadDto, GetReferDto } from '../../../dtos/crm/crm.dto';
 
 
-function ConvertLeadToReferDialog({ lead }: { lead: ILead }) {
+function ConvertLeadToReferDialog({ lead }: { lead: GetLeadDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IReferredParty>, BackendError, { id: string }>
+        <AxiosResponse<GetReferDto>, BackendError, { id: string }>
         (ConvertLeadToRefer, {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')

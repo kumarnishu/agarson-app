@@ -6,15 +6,15 @@ import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogConte
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types/user.types';
 import { StartMyDay } from '../../../services/VisitServices';
 import UploadFileButton from '../../buttons/UploadFileButton';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 function StartMydayForm() {
     const [location, setLocation] = useState<{ latitude: string, longitude: string, timestamp: Date }>()
     const [file, setFile] = useState<File>()
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, FormData>
+        <AxiosResponse<GetUserDto>, BackendError, FormData>
         (StartMyDay, {
             onSuccess: () => {
                 queryClient.invalidateQueries('visit')

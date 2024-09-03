@@ -10,14 +10,14 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IArticle, IMachine, IProduction } from '../../../types/production.types';
 import { CreateProduction, GetArticles, GetMachines } from '../../../services/ProductionServices';
-import { IUser } from '../../../types/user.types';
 import { GetUsers } from '../../../services/UserServices';
 import { UserContext } from '../../../contexts/userContext';
 import moment from 'moment';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 function NewProductionForm() {
     const { user } = useContext(UserContext)
-    const { data: users } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'production_menu', show_assigned_only: true }))
+    const { data: users } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'production_menu', show_assigned_only: true }))
     const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
     const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
     const { mutate, isLoading, isSuccess, isError, error } = useMutation

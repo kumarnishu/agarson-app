@@ -1,8 +1,6 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, LinearProgress } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { ILead, IReferredParty } from '../../../types/crm.types'
-import { ILeadTemplate } from '../../../types/template.type'
 import { UserContext } from '../../../contexts/userContext'
 import AlertBar from '../../snacks/AlertBar'
 import ExportToExcel from '../../../utils/ExportToExcel'
@@ -13,15 +11,16 @@ import { GetAllReferrals } from '../../../services/LeadsServices'
 import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { BackendError } from '../../..'
+import { CreateAndUpdatesLeadFromExcelDto, GetActivitiesOrRemindersDto, GetReferDto } from '../../../dtos/crm/crm.dto'
 
-function AllReferralPageDialog({ refer }: { refer: IReferredParty }) {
-    const [selectedData, setSelectedData] = useState<ILeadTemplate[]>([])
+function AllReferralPageDialog({ refer }: { refer: GetReferDto }) {
+    const [selectedData, setSelectedData] = useState<CreateAndUpdatesLeadFromExcelDto[]>([])
     const { user: LoggedInUser } = useContext(UserContext)
     const [sent, setSent] = useState(false)
     const { choice, setChoice } = useContext(ChoiceContext)
-    const [leads, setLeads] = useState<ILead[]>([])
+    const [leads, setLeads] = useState<GetActivitiesOrRemindersDto[]>([])
 
-    const { data, isLoading, isSuccess, refetch } = useQuery<AxiosResponse<ILead[]>, BackendError>(["assigned_leads", refer], async () => GetAllReferrals({ refer: refer }))
+    const { data, isLoading, isSuccess, refetch } = useQuery<AxiosResponse<GetActivitiesOrRemindersDto[]>, BackendError>(["assigned_leads", refer], async () => GetAllReferrals({ refer: refer }))
 
 
     function handleExcel() {
@@ -48,7 +47,7 @@ function AllReferralPageDialog({ refer }: { refer: IReferredParty }) {
 
 
     useEffect(() => {
-        let tmpdata: ILeadTemplate[] = []
+        let tmpdata: CreateAndUpdatesLeadFromExcelDto[] = []
         tmpdata = leads.map((lead) => {
             return (
                 {
@@ -70,10 +69,7 @@ function AllReferralPageDialog({ refer }: { refer: IReferredParty }) {
                     alternate_email: lead.alternate_email,
                     lead_type: lead.lead_type,
                     stage: lead.stage,
-                    lead_source: lead.lead_source,
-                    remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
-                    created_at: lead.created_at,
-                    updated_at: lead.updated_at
+                    lead_source: lead.lead_source
                 })
         })
         setSelectedData(tmpdata)
@@ -355,168 +351,148 @@ function AllReferralPageDialog({ refer }: { refer: IReferredParty }) {
                         <STableBody >
                             {
 
-                                leads && leads.map((lead, index) => {
+                                leads && leads.map((remark, index) => {
                                     return (
                                         <STableRow key={index}>
                                             <STableCell>
-                                                {lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark.slice(0, 50) || ""}
+                                                {remark.remark}
 
                                             </STableCell>
                                             <STableCell>
-                                                {lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].created_at && new Date(lead.remarks[lead.remarks.length - 1].created_at).toLocaleDateString() || ""}
+                                                {remark.created_at}
 
                                             </STableCell>
                                             <STableCell>
-                                                {lead.stage}
+                                                {remark.stage}
                                             </STableCell>
                                             <STableCell>
-                                                {lead.has_card ? "Has visiting card" : "na"}
+                                                {remark.has_card ? "Has visiting card" : "na"}
                                             </STableCell>
 
-                                            <STableCell style={{ fontWeight: lead.visiting_card && lead.visiting_card.public_url && 'bold' }} title={lead.visiting_card && lead.visiting_card.public_url && 'This number has Visitng card Uploaded'}>
-                                                {lead.name}
-                                            </STableCell>
-
-
-
-
-
-
-
-                                            <STableCell>
-                                                {lead.mobile}
+                                            <STableCell style={{ fontWeight: remark.visiting_card && remark.visiting_card && 'bold' }} title={remark.visiting_card && remark.visiting_card && 'This number has Visitng card Uploaded'}>
+                                                {remark.name}
                                             </STableCell>
 
 
-                                            <STableCell>
-                                                {lead.alternate_mobile1}
-                                            </STableCell>
 
-
-                                            <STableCell>
-                                                {lead.alternate_mobile2}
-                                            </STableCell>
-                                            <STableCell>
-                                                {lead.city}
-                                            </STableCell>
-
-
-                                            <STableCell>
-                                                {lead.state}
-                                            </STableCell>
-
-                                            <STableCell>
-
-                                                {lead.gst}
-
-                                            </STableCell>
-                                            <STableCell>
-                                                {lead.lead_type}
-                                            </STableCell>
-
-                                            <STableCell>
-                                                {lead.turnover ? lead.turnover : 'na'}
-                                            </STableCell>
-
-
-                                            <STableCell>
-                                                {lead.work_description ? lead.work_description.slice(0, 50) : ""}
-                                            </STableCell>
-
-
-                                            <STableCell>
-                                                {lead.customer_name}
-                                            </STableCell>
-
-
-                                            <STableCell>
-                                                {lead.customer_designation}
-                                            </STableCell>
 
 
 
 
                                             <STableCell>
-                                                {lead.referred_party_name && lead.referred_party_name}
-
-                                            </STableCell>
-                                            <STableCell>
-
-                                                {lead.referred_party_mobile && lead.referred_party_mobile}
-
+                                                {remark.mobile}
                                             </STableCell>
 
 
                                             <STableCell>
-                                                {lead.referred_date &&
-                                                    new Date(lead.referred_date).toLocaleString()}
+                                                {remark.alternate_mobile1}
+                                            </STableCell>
+
+
+                                            <STableCell>
+                                                {remark.alternate_mobile2}
+                                            </STableCell>
+                                            <STableCell>
+                                                {remark.city}
+                                            </STableCell>
+
+
+                                            <STableCell>
+                                                {remark.state}
+                                            </STableCell>
+
+                                            <STableCell>
+
+                                                {remark.gst}
+
+                                            </STableCell>
+                                            <STableCell>
+                                                {remark.lead_type}
+                                            </STableCell>
+
+                                            <STableCell>
+                                                {remark.turnover ? remark.turnover : 'na'}
+                                            </STableCell>
+
+
+                                            <STableCell>
+                                                {remark.work_description ? remark.work_description.slice(0, 50) : ""}
+                                            </STableCell>
+
+
+                                            <STableCell>
+                                                {remark.customer_name}
+                                            </STableCell>
+
+
+                                            <STableCell>
+                                                {remark.customer_designation}
+                                            </STableCell>
+
+
+
+
+                                            <STableCell>
+                                                {remark.referred_party_name && remark.referred_party_name}
+
+                                            </STableCell>
+                                            <STableCell>
+
+                                                {remark.referred_party_mobile && remark.referred_party_mobile}
+
+                                            </STableCell>
+
+
+                                            <STableCell>
+                                                {remark.referred_date &&
+                                                    new Date(remark.referred_date).toLocaleString()}
 
                                             </STableCell>
 
 
 
                                             <STableCell>
-                                                {lead.email}
+                                                {remark.email}
                                             </STableCell>
 
                                             <STableCell>
-                                                {lead.alternate_email}
+                                                {remark.alternate_email}
                                             </STableCell>
 
 
 
                                             <STableCell >
-                                                {lead.address ? lead.address.slice(0, 50) : "..."}
+                                                {remark.address ? remark.address.slice(0, 50) : "..."}
 
                                             </STableCell>
                                             <STableCell>
-                                                {lead.lead_source}
-
-                                            </STableCell>
-
-
-                                            <STableCell>
-                                                {lead.country}
-
-                                            </STableCell>
-
-
-
-                                            <STableCell>
-                                                {new Date(lead.created_at).toLocaleString()}
+                                                {remark.lead_source}
 
                                             </STableCell>
 
 
                                             <STableCell>
-                                                {new Date(lead.updated_at).toLocaleString()}
+                                                {remark.country}
 
                                             </STableCell>
+
 
 
                                             <STableCell>
-                                                {lead.created_by.username}
+                                                {new Date(remark.created_at).toLocaleString()}
+
                                             </STableCell>
 
 
-                                            <STableCell>
-                                                {lead.updated_by.username}
-
-                                            </STableCell>
-                                            <STableCell>
-                                                {lead.is_sent ? "Sent" : "Pending"}
-                                            </STableCell>
-                                            <STableCell>
-                                                {new Date(lead.last_whatsapp).toLocaleString()}
-                                            </STableCell>
+                                        
                                             <STableCell
                                                 title="double click to download"
                                                 onDoubleClick={() => {
-                                                    if (lead.visiting_card && lead.visiting_card?.public_url) {
-                                                        DownloadFile(lead.visiting_card.public_url, lead.visiting_card.filename)
+                                                    if (remark.visiting_card && remark.visiting_card) {
+                                                        DownloadFile(remark.visiting_card, "visiting card")
                                                     }
                                                 }}>
-                                                {lead.visiting_card && lead.visiting_card.public_url ? < img height="20" width="55" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" /> : "na"}
+                                                {remark.visiting_card && remark.visiting_card ? < img height="20" width="55" src={remark.visiting_card && remark.visiting_card} alt="visiting card" /> : "na"}
                                             </STableCell>
                                         </STableRow>
                                     )

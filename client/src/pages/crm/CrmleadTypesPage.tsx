@@ -12,10 +12,10 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import CreateOrEditLeadTypeDialog from '../../components/dialogs/crm/CreateOrEditLeadTypeDialog'
-import { ILeadType } from '../../types/crm.types'
 import LeadsTypeTable from '../../components/tables/crm/LeadsTypesTable'
 import { GetAllLeadTypes } from '../../services/LeadsServices'
 import { UserContext } from '../../contexts/userContext'
+import { DropDownDto } from '../../dtos/common/dropdown.dto'
 
 type ITemplate = {
   _id: string,
@@ -29,13 +29,13 @@ let template: ITemplate[] = [
 ]
 
 export default function CrmTypesPage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<ILeadType[]>, BackendError>("crm_types", GetAllLeadTypes)
-  const [type, setLeadType] = useState<ILeadType>()
-  const [types, setTypes] = useState<ILeadType[]>([])
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_types", GetAllLeadTypes)
+  const [type, setLeadType] = useState<DropDownDto>()
+  const [types, setTypes] = useState<DropDownDto[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => types, [types])
-  const [preFilteredData, setPreFilteredData] = useState<ILeadType[]>([])
-  const [selectedTypes, setSelectedTypes] = useState<ILeadType[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<DropDownDto[]>([])
+  const [selectedTypes, setSelectedTypes] = useState<DropDownDto[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const [selectedData, setSelectedData] = useState<ITemplate[]>(template)
   const [sent, setSent] = useState(false)
@@ -63,8 +63,8 @@ export default function CrmTypesPage() {
     let data: ITemplate[] = []
     selectedTypes.map((type) => {
       return data.push({
-        _id: type._id,
-        type: type.type,
+        _id: type.id,
+        type: type.value,
       })
     })
     if (data.length > 0)

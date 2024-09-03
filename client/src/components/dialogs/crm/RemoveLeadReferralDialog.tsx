@@ -2,11 +2,11 @@ import { Dialog, DialogContent, DialogTitle, Typography, IconButton } from '@mui
 import { useContext } from 'react';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
-import { ILead } from '../../../types/crm.types';
 import RemoveLeadReferForm from '../../forms/crm/RemoveLeadReferForm';
+import { GetLeadDto } from '../../../dtos/crm/crm.dto';
 
 
-function RemoveLeadReferralDialog({ lead }: { lead: ILead }) {
+function RemoveLeadReferralDialog({ lead }: { lead: GetLeadDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
         <Dialog open={choice === LeadChoiceActions.remove_referral ? true : false}

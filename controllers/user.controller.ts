@@ -6,8 +6,8 @@ import { Asset, IUser, User } from '../models/users/user.model';
 import isMongoId from "validator/lib/isMongoId";
 import { destroyFile } from "../utils/destroyFile.util";
 import { sendEmail } from '../utils/sendEmail.util';
-import { FetchAllPermissions, IMenu } from '../utils/fillAllPermissions';
-import { AssignPermissionForMultipleUserDto, AssignPermissionForOneUserDto, AssignUsersDto, createOrEditUserDto, GetUserDto, LoginDto, ResetPasswordDto, UpdatePasswordDto, UpdateProfileDto, VerifyEmailDto } from '../dtos/users/user.dto';
+import { FetchAllPermissions } from '../utils/fillAllPermissions';
+import { AssignPermissionForMultipleUserDto, AssignPermissionForOneUserDto, AssignUsersDto, createOrEditUserDto, GetUserDto, IMenu, LoginDto, ResetPasswordDto, UpdatePasswordDto, UpdateProfileDto, VerifyEmailDto } from '../dtos/users/user.dto';
 import moment from 'moment';
 
 
@@ -66,7 +66,7 @@ export const GetProfile = async (req: Request, res: Response, next: NextFunction
     let result: GetUserDto | null = null;
     const user = await User.findById(req.user?._id).populate("created_by").populate("updated_by").populate('assigned_users')
     if (user)
-        return {
+    result = {
             _id: user._id,
             username: user.username,
             email: user.email,

@@ -2,10 +2,10 @@ import { Dialog, DialogContent, DialogActions, Typography, IconButton, DialogTit
 import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
-import { ILead, IRemark } from '../../../types/crm.types'
 import CreateOrEditRemarkForm from '../../forms/crm/CreateOrEditRemarkForm'
+import {  GetLeadDto, GetRemarksDto } from '../../../dtos/crm/crm.dto'
 
-function CreateOrEditRemarkDialog({ lead, remark,display,setDisplay }: { lead?: ILead, remark?: IRemark, display?: boolean, setDisplay?: React.Dispatch<React.SetStateAction<boolean>> }) {
+function CreateOrEditRemarkDialog({ lead, remark, display, setDisplay }: { lead?: GetLeadDto, remark?: GetRemarksDto, display?: boolean, setDisplay?: React.Dispatch<React.SetStateAction<boolean>> }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     
     return (

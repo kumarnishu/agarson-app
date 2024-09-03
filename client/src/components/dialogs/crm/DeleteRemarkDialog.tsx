@@ -4,14 +4,14 @@ import { useContext, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { DeleteRemark } from '../../../services/LeadsServices';
-import { IRemark } from '../../../types/crm.types';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
+import {  GetRemarksDto } from '../../../dtos/crm/crm.dto';
 
 
-function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: IRemark, display: boolean, setDisplay: React.Dispatch<React.SetStateAction<boolean>> }) {
+function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: GetRemarksDto, display: boolean, setDisplay: React.Dispatch<React.SetStateAction<boolean>> }) {
   const { choice, setChoice } = useContext(ChoiceContext)
   const { mutate, isLoading, isSuccess, error, isError } = useMutation
     <AxiosResponse<any>, BackendError, string>

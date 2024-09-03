@@ -2,10 +2,10 @@ import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
-import {  IReferredParty } from '../../../types/crm.types';
 import CreateOrEditReferForm from '../../forms/crm/CreateOrEditReferForm';
+import { GetReferDto } from '../../../dtos/crm/crm.dto';
 
-function CreateOrEditReferDialog({refer}:{refer?:IReferredParty}) {
+function CreateOrEditReferDialog({refer}:{refer?:GetReferDto}) {
   const { choice, setChoice } = useContext(ChoiceContext);
   return (
     <>

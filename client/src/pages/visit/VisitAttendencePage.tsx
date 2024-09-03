@@ -10,17 +10,17 @@ import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
 import { IVisit } from '../../types/visit.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
 import AttendenceTable from '../../components/tables/visits/AttendenceTable'
+import { GetUserDto } from '../../dtos/users/user.dto'
 
 export default function VisitAttendencePage() {
     const { user } = useContext(UserContext)
-    const [users, setUsers] = useState<IUser[]>([])
+    const [users, setUsers] = useState<GetUserDto[]>([])
     const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const [filter, setFilter] = useState<string | undefined>()
     const [visit, setVisit] = useState<IVisit>()
@@ -36,7 +36,7 @@ export default function VisitAttendencePage() {
         start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
         , end_date: moment(new Date().setDate(new Date().getDate()+1)).format("YYYY-MM-DD")
     })
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
 
     const { data, isLoading, refetch: ReftechVisits } = useQuery<AxiosResponse<{
         visits: IVisit[], page: number, total: number, limit: number

@@ -2,7 +2,6 @@ import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Stack, Butt
 import { useContext, useEffect, useState } from 'react';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
-import { IUser } from '../../../types/user.types';
 import { AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
 import { BackendError } from '../../..';
@@ -12,11 +11,13 @@ import AlertBar from '../../snacks/AlertBar';
 import { useFormik } from 'formik';
 import * as Yup from "yup"
 import { toTitleCase } from '../../../utils/TitleCase';
+import { GetUserDto } from '../../../dtos/users/user.dto';
+import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
 
-function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Dispatch<React.SetStateAction<IUser | undefined>> }) {
-    const [users, setUsers] = useState<IUser[]>(user.assigned_users)
-    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: false }))
+function AssignUsersDialog({ user, setUser }: { user: GetUserDto, setUser: React.Dispatch<React.SetStateAction<GetUserDto | undefined>> }) {
+    const [users, setUsers] = useState<DropDownDto[]>(user.assigned_users)
+    const { data, isSuccess: isUserSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: false }))
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
@@ -34,7 +35,7 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
         ids: string[]
     }>({
         initialValues: {
-            ids: user.assigned_users.map((u) => { return u._id })
+            ids: user.assigned_users.map((u) => { return u.id })
         },
         validationSchema: Yup.object({
             ids: Yup.array()
@@ -55,7 +56,7 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
 
     useEffect(() => {
         if (isUserSuccess) {
-            setUsers(data?.data)
+            setUsers(data?.data.map((u)=>{return{id:u._id,value:u.username,label:u.username}}))
         }
     }, [isUserSuccess, data])
 
@@ -105,9 +106,9 @@ function AssignUsersDialog({ user, setUser }: { user: IUser, setUser: React.Disp
                                     <MenuItem
                                         
                                         key={index}
-                                        value={user._id}
+                                        value={user.id}
                                     >
-                                        {toTitleCase(user.username)}
+                                        {toTitleCase(user.label)}
                                     </MenuItem>
                                 ))}
                             </Select>

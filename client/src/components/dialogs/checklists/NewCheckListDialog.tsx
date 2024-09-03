@@ -2,17 +2,17 @@ import { Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { ChoiceContext, CheckListChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
-import { IUser } from '../../../types/user.types';
 import { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
 import { BackendError } from '../../..';
 import { GetUsers } from '../../../services/UserServices';
 import NewCheckListForm from '../../forms/checklists/NewCheckListForm';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 function NewCheckListDialog() {
     const { choice, setChoice } = useContext(ChoiceContext)
-    const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
+    const [users, setUsers] = useState<GetUserDto[]>([])
+    const { data, isSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
 
     useEffect(() => {
         if (isSuccess)

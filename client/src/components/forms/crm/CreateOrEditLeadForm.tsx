@@ -10,10 +10,11 @@ import { Countries } from '../../../utils/countries';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { ICRMCity, ILead, ILeadSource, ILeadType } from '../../../types/crm.types';
-import {  IUser } from '../../../types/user.types';
 import { toTitleCase } from '../../../utils/TitleCase';
 import { IState } from '../../../types/erp_report.types';
+import { GetCrmCityDto, GetLeadDto } from '../../../dtos/crm/crm.dto';
+import { GetUserDto } from '../../../dtos/users/user.dto';
+import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
 export type TformData = {
     name: string,
@@ -37,26 +38,26 @@ export type TformData = {
     visiting_card: string | Blob | File
 }
 
-function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
-    const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
-    const [cities, setCities] = useState<{ city: ICRMCity, users: IUser[] }[]>([])
+function CreateOrEditLeadForm({ lead }: { lead?: GetLeadDto }) {
+    const [states, setStates] = useState<{ state: IState, users: GetUserDto[] }[]>([])
+    const [cities, setCities] = useState<GetCrmCityDto[]>([])
     const [state, setState] = useState<string>();
-    const [types, setTypes] = useState<ILeadType[]>([])
-    const [sources, setSources] = useState<ILeadSource[]>([])
+    const [types, setTypes] = useState<DropDownDto[]>([])
+    const [sources, setSources] = useState<DropDownDto[]>([])
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<ILead>, BackendError, { body: FormData, id?: string }>
+        <AxiosResponse<GetLeadDto>, BackendError, { body: FormData, id?: string }>
         (CreateOrUpdateLead, {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')
             }
         })
 
-    const { data: typesdata, isSuccess: isTypeSuccess } = useQuery<AxiosResponse<ILeadType[]>, BackendError>("crm_types", GetAllLeadTypes)
+    const { data: typesdata, isSuccess: isTypeSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_types", GetAllLeadTypes)
 
-    const { data: sourcedata, isSuccess: isSourceSuccess } = useQuery<AxiosResponse<ILeadSource[]>, BackendError>("crm_sources", GetAllSources)
+    const { data: sourcedata, isSuccess: isSourceSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_sources", GetAllSources)
 
-    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
-    const { data: citydata, isSuccess: isCitySuccess } = useQuery<AxiosResponse<{ city: ICRMCity, users: IUser[] }[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
+    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: IState, users: GetUserDto[] }[]>, BackendError>("crm_states", GetAllStates)
+    const { data: citydata, isSuccess: isCitySuccess } = useQuery<AxiosResponse<GetCrmCityDto[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
 
 
     const { setChoice } = useContext(ChoiceContext)
@@ -72,7 +73,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
             state: lead ? lead.state : "",
             country: lead ? lead.country : "India",
             address: lead ? lead.address : "",
-            remark: lead && lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
+            remark: lead && lead.remark || "",
             work_description: lead ? lead.work_description : "",
             turnover: lead ? lead.turnover : "",
             lead_type: lead ? lead.lead_type : "",
@@ -80,7 +81,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
             alternate_mobile2: lead ? lead.alternate_mobile2 : "",
             alternate_email: lead ? lead.alternate_email : "",
             lead_source: lead ? lead.lead_source : "internet",
-            visiting_card: lead && lead.visiting_card && lead.visiting_card.public_url || ""
+            visiting_card: lead && lead.visiting_card && lead.visiting_card || ""
         },
         validationSchema: Yup.object({
             name: Yup.string(),
@@ -449,8 +450,8 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     </option>
                     {
                         cities.map((city, index) => {
-                            return (<option key={index} value={city.city.city.toLowerCase()}>
-                                {toTitleCase(city.city.city)}
+                            return (<option key={index} value={city.city.value.toLowerCase()}>
+                                {toTitleCase(city.city.label)}
                             </option>)
                         })
                     }
@@ -484,8 +485,8 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     </option>
                     {
                         types.map(type => {
-                            return (<option key={type._id} value={type.type}>
-                                {toTitleCase(type.type)}
+                            return (<option key={type.id} value={type.value}>
+                                {toTitleCase(type.label)}
                             </option>)
                         })
                     }
@@ -516,8 +517,8 @@ function CreateOrEditLeadForm({ lead }: { lead?: ILead }) {
                     </option>
                     {
                         sources.map(source => {
-                            return (<option key={source._id} value={source.source}>
-                                {toTitleCase(source.source)}
+                            return (<option key={source.id} value={source.value}>
+                                {toTitleCase(source.label)}
                             </option>)
                         })
                     }

@@ -12,18 +12,18 @@ import { ChoiceContext, CheckListChoiceActions } from '../../contexts/dialogCont
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import { IChecklist } from '../../types/checklist.types'
-import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
 import { UserContext } from '../../contexts/userContext'
 import NewCheckListDialog from '../../components/dialogs/checklists/NewCheckListDialog'
 import CheckListTable from '../../components/tables/checklists/CheckListTable'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import { GetUserDto } from '../../dtos/users/user.dto'
 
 
 export default function CheckListAdminPage() {
   const { user } = useContext(UserContext)
-  const [users, setUsers] = useState<IUser[]>([])
+  const [users, setUsers] = useState<GetUserDto[]>([])
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filter, setFilter] = useState<string | undefined>()
   const [checklist, setCheckList] = useState<IChecklist>()
@@ -39,7 +39,7 @@ export default function CheckListAdminPage() {
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(30)).format("YYYY-MM-DD")
   })
-  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
+  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
 
   const { data, isLoading, refetch: ReftechCheckLists } = useQuery<AxiosResponse<{ checklists: IChecklist[], page: number, total: number, limit: number }>, BackendError>(["checklists", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetCheckLists({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 

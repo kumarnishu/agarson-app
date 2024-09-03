@@ -6,10 +6,10 @@ import { useMutation } from 'react-query';
 import * as Yup from "yup"
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { UpdateUser } from '../../../services/UserServices';
-import { IUser } from '../../../types/user.types';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
 type TformData = {
@@ -19,11 +19,11 @@ type TformData = {
   dp: string | Blob | File
 }
 type Props = {
-  user: IUser
+  user: GetUserDto
 }
 function UpdateUserForm({ user }: Props) {
   const { mutate, isLoading, isSuccess, isError, error } = useMutation
-    <AxiosResponse<IUser>, BackendError, { id: string, body: FormData }>
+    <AxiosResponse<GetUserDto>, BackendError, { id: string, body: FormData }>
     (UpdateUser, {
       onSuccess: () => {
         queryClient.invalidateQueries('users')
@@ -35,7 +35,7 @@ function UpdateUserForm({ user }: Props) {
       username: user.username || "",
       email: user?.email || "",
       mobile: String(user.mobile) || "",
-      dp: user.dp?.public_url || ""
+      dp: user.dp || ""
     },
     validationSchema: Yup.object({
       username: Yup.string()

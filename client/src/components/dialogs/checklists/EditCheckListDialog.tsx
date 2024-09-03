@@ -3,17 +3,17 @@ import { useContext, useEffect, useState } from 'react';
 import { ChoiceContext, CheckListChoiceActions } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
 import {  IChecklist } from '../../../types/checklist.types';
-import { IUser } from '../../../types/user.types';
 import { useQuery } from 'react-query';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';
 import { GetUsers } from '../../../services/UserServices';
 import EditCheckListForm from '../../forms/checklists/EditCheckListForm';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 function EditCheckListDialog({ checklist }: { checklist: IChecklist }) {
     const { choice, setChoice } = useContext(ChoiceContext)
-    const [users, setUsers] = useState<IUser[]>([])
-    const { data, isSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only :true}))
+    const [users, setUsers] = useState<GetUserDto[]>([])
+    const { data, isSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only :true}))
 
     useEffect(() => {
         if (isSuccess)

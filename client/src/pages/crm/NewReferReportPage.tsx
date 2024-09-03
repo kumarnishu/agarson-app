@@ -8,22 +8,22 @@ import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState
 import { onlyUnique } from '../../utils/UniqueArray'
 import moment from 'moment'
 import {GetNewRefers } from '../../services/LeadsServices'
-import { IReferredParty } from '../../types/crm.types'
+import { GetReferDto } from '../../dtos/crm/crm.dto'
 
 
 export default function NewReferReportPage() {
-  const [reports, setReports] = useState<IReferredParty[]>([])
+  const [reports, setReports] = useState<GetReferDto[]>([])
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
   })
 
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IReferredParty[]>, BackendError>(["new_refer_reports", dates.start_date, dates.end_date], async () => GetNewRefers({ start_date: dates.start_date, end_date: dates.end_date }))
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetReferDto[]>, BackendError>(["new_refer_reports", dates.start_date, dates.end_date], async () => GetNewRefers({ start_date: dates.start_date, end_date: dates.end_date }))
 
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-  const columns = useMemo<MRT_ColumnDef<IReferredParty>[]>(
+  const columns = useMemo<MRT_ColumnDef<GetReferDto>[]>(
     //column definitions...
     () => [
       {
@@ -62,7 +62,7 @@ export default function NewReferReportPage() {
         accessorKey: 'created_by.username',
         header: 'Creator',
         filterVariant: 'multi-select',
-        filterSelectOptions: reports.map((i) => { return i.created_by.username }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return i.created_by.value }).filter(onlyUnique)
       },
       {
         accessorKey: 'created_at',

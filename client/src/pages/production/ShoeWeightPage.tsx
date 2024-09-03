@@ -8,7 +8,6 @@ import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import { IUser } from '../../types/user.types'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
@@ -18,12 +17,13 @@ import { GetShoeWeights } from '../../services/ProductionServices'
 import { IShoeWeight } from '../../types/production.types'
 import NewShoeWeightDialog from '../../components/dialogs/production/CreateShoeWeightDialog'
 import ShoeWeightsTable from '../../components/tables/production/ShoeWeightsTable'
+import { GetUserDto } from '../../dtos/users/user.dto'
 
 
 export default function ShoeWeightAdminPage() {
   const { user } = useContext(UserContext)
   const { setChoice } = useContext(ChoiceContext)
-  const [users, setUsers] = useState<IUser[]>([])
+  const [users, setUsers] = useState<GetUserDto[]>([])
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filter] = useState<string | undefined>()
   const [weight, setShoeWeight] = useState<IShoeWeight>()
@@ -38,7 +38,7 @@ export default function ShoeWeightAdminPage() {
     start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(new Date().getDate()+1)).format("YYYY-MM-DD")
   })
-  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'shoe_weight_view', show_assigned_only: true }))
+  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'shoe_weight_view', show_assigned_only: true }))
 
   const { data, isLoading, refetch: ReftechShoeWeights } = useQuery<AxiosResponse<{ weights: IShoeWeight[], page: number, total: number, limit: number }>, BackendError>(["shoe_weights", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetShoeWeights({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 

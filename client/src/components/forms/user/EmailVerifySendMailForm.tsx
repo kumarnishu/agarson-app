@@ -75,7 +75,7 @@ function EmailVerifySendMailForm() {
             type="email"
             variant="filled"
             fullWidth
-            disabled={user?.created_by._id !== user?._id}
+            disabled={user?.created_by.id !== user?._id}
             required
             error={
               formik.touched.email && formik.errors.email ? true : false

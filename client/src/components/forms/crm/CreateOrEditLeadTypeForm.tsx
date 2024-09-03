@@ -8,10 +8,10 @@ import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContex
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { ILeadType } from '../../../types/crm.types';
 import * as yup from 'yup';
+import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
-function CreateOrEditLeadTypeForm({ type }: { type?: ILeadType}) {
+function CreateOrEditLeadTypeForm({ type }: { type?: DropDownDto}) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: {
@@ -31,7 +31,7 @@ function CreateOrEditLeadTypeForm({ type }: { type?: ILeadType}) {
         type: string
     }>({
         initialValues: {
-            type: type ? type.type : ""
+            type: type ? type.value : ""
         },
         validationSchema:yup.object({
             type:yup.string().required()
@@ -40,7 +40,7 @@ function CreateOrEditLeadTypeForm({ type }: { type?: ILeadType}) {
             type: string,
         }) => {
             mutate({
-                id:type?._id,
+                id:type?.id,
                 body: {
                     type: values.type
                 }

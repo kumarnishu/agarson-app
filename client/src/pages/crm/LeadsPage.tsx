@@ -14,15 +14,15 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
-import { ILeadTemplate } from '../../types/template.type'
-import { ILead, IStage } from '../../types/crm.types'
 import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
 import { toTitleCase } from '../../utils/TitleCase'
 import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
 import MergeTwoLeadsDialog from '../../components/dialogs/crm/MergeTwoLeadsDialog'
+import { CreateAndUpdatesLeadFromExcelDto, GetLeadDto } from '../../dtos/crm/crm.dto'
+import { DropDownDto } from '../../dtos/common/dropdown.dto'
 
 
-let template: ILeadTemplate[] = [
+let template: CreateAndUpdatesLeadFromExcelDto[] = [
   {
     _id: "",
     name: "",
@@ -42,7 +42,6 @@ let template: ILeadTemplate[] = [
     lead_type: "wholesale+retail",
     stage: "useless",
     lead_source: "cold calling",
-    remarks: "remarks",
     gst: ""
   }
 ]
@@ -52,24 +51,24 @@ export default function LeadsPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
-  const [lead, setLead] = useState<ILead>()
-  const [leads, setLeads] = useState<ILead[]>([])
+  const [lead, setLead] = useState<GetLeadDto>()
+  const [leads, setLeads] = useState<GetLeadDto[]>([])
   const [selectAll, setSelectAll] = useState(false)
-  const [preFilteredData, setPreFilteredData] = useState<ILead[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<GetLeadDto[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
-  const [selectedLeads, setSelectedLeads] = useState<ILead[]>([])
+  const [selectedLeads, setSelectedLeads] = useState<GetLeadDto[]>([])
   const [stage, setStage] = useState<string>();
-  const [stages, setStages] = useState<IStage[]>([])
+  const [stages, setStages] = useState<DropDownDto[]>([])
 
-  const { data, isLoading, refetch } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
+  const { data, isLoading, refetch } = useQuery<AxiosResponse<{ result: GetLeadDto[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
 
-  const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
+  const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ leads: ILead[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter, LoggedInUser], async () => FuzzySearchLeads({ user: LoggedInUser, searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ result: GetLeadDto[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter, LoggedInUser], async () => FuzzySearchLeads({ user: LoggedInUser, searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
     enabled: false
   })
-  const [selectedData, setSelectedData] = useState<ILeadTemplate[]>(template)
+  const [selectedData, setSelectedData] = useState<CreateAndUpdatesLeadFromExcelDto[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -91,7 +90,7 @@ export default function LeadsPage() {
 
   // refine data
   useEffect(() => {
-    let data: ILeadTemplate[] = []
+    let data: CreateAndUpdatesLeadFromExcelDto[] = []
     selectedLeads.map((lead) => {
       return data.push(
 
@@ -115,7 +114,6 @@ export default function LeadsPage() {
           lead_type: lead.lead_type,
           stage: lead.stage,
           lead_source: lead.lead_source,
-          remarks: lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark || "",
 
         })
     })
@@ -130,12 +128,12 @@ export default function LeadsPage() {
         setStages(stagedata.data)
       }
       else {
-        let stagess = stagedata.data.filter((stage) => { return stage.stage !== 'useless' })
+        let stagess = stagedata.data.filter((stage) => { return stage.value !== 'useless' })
         setStages(stagess)
       }
 
     }
-  }, [stageSuccess, stages, stagedata])
+  }, [stageSuccess])
 
   useEffect(() => {
 
@@ -160,8 +158,8 @@ export default function LeadsPage() {
 
   useEffect(() => {
     if (data && !filter) {
-      setLeads(data.data.leads)
-      setPreFilteredData(data.data.leads)
+      setLeads(data.data.result)
+      setPreFilteredData(data.data.result)
       setPreFilteredPaginationData({
         ...paginationData,
         page: data.data.page,
@@ -179,7 +177,7 @@ export default function LeadsPage() {
 
   useEffect(() => {
     if (fuzzyleads && filter) {
-      setLeads(fuzzyleads.data.leads)
+      setLeads(fuzzyleads.data.result)
       let count = filterCount
       if (count === 0)
         setPaginationData({
@@ -216,7 +214,7 @@ export default function LeadsPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Leads {selectedLeads.length > 0 ? <span>(checked : {selectedLeads.length})</span> : `- ${leads.length}`}
+          Leads 
         </Typography>
 
         <TextField
@@ -252,11 +250,11 @@ export default function LeadsPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            {LoggedInUser?._id === LoggedInUser?.created_by._id && LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="Delete Selected Leads">
+            {LoggedInUser?._id === LoggedInUser?.created_by.id && LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="Delete Selected Leads">
               <IconButton color="error"
 
                 onClick={() => {
-                  let data: ILead[] = [];
+                  let data: GetLeadDto[] = [];
                   data = selectedLeads.filter((lead) => { return lead.stage === 'useless' })
                   if (data.length == 0)
                     alert("select some useless leads")
@@ -287,9 +285,9 @@ export default function LeadsPage() {
               {stages.map((stage, index) => (
                 <MenuItem
                   key={index}
-                  value={stage.stage}
+                  value={stage.value}
                 >
-                  {toTitleCase(stage.stage)}
+                  {toTitleCase(stage.label)}
                 </MenuItem>
               ))}
             </Select>
@@ -334,7 +332,7 @@ export default function LeadsPage() {
               > Add New</MenuItem>}
               {LoggedInUser?.assigned_permissions.includes('leads_merge') && <MenuItem
                 onClick={() => {
-                  if (selectedLeads.length == 2){
+                  if (selectedLeads.length == 2) {
                     setChoice({ type: LeadChoiceActions.merge_leads })
                     setLead(undefined);
                     setAnchorEl(null)
@@ -348,8 +346,8 @@ export default function LeadsPage() {
 
             </Menu >
             <CreateOrEditLeadDialog lead={undefined} />
-            {selectedLeads && selectedLeads.length == 2 &&<MergeTwoLeadsDialog leads={selectedLeads} />}
-            {selectedLeads && selectedLeads.length >0 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
+            {selectedLeads && selectedLeads.length == 2 && <MergeTwoLeadsDialog leads={selectedLeads} />}
+            {selectedLeads && selectedLeads.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
           </>
         </Stack >
       </Stack >

@@ -10,12 +10,12 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import NewUserDialog from '../../components/dialogs/users/NewUserDialog'
 import AlertBar from '../../components/snacks/AlertBar'
-import { IUser } from '../../types/user.types'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import UsersSTable from '../../components/tables/users/UsersTable'
 import { GetUsers } from '../../services/UserServices'
 import FuzzySearch from 'fuzzy-search'
 import AssignPermissionsToUsersDialog from '../../components/dialogs/users/AssignPermissionsToUsersDialog'
+import { GetUserDto } from '../../dtos/users/user.dto'
 
 type SelectedData = {
     username?: string,
@@ -33,16 +33,16 @@ type SelectedData = {
 export default function UsersPage() {
     const [hidden, setHidden] = useState('false')
     const [filter, setFilter] = useState<string | undefined>()
-    const [user, setUser] = useState<IUser>()
-    const [users, setUsers] = useState<IUser[]>([])
-    const [preFilteredData, setPreFilteredData] = useState<IUser[]>([])
+    const [user, setUser] = useState<GetUserDto>()
+    const [users, setUsers] = useState<GetUserDto[]>([])
+    const [preFilteredData, setPreFilteredData] = useState<GetUserDto[]>([])
     const [selectAll, setSelectAll] = useState(false)
-    const [selectedUsers, setSelectedUsers] = useState<IUser[]>([])
+    const [selectedUsers, setSelectedUsers] = useState<GetUserDto[]>([])
     const [selectedData, setSelectedData] = useState<SelectedData[]>([])
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IUser[]>, BackendError>(["users", hidden], async () => GetUsers({ hidden: hidden, permission: undefined, show_assigned_only: false }))
+    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>(["users", hidden], async () => GetUsers({ hidden: hidden, permission: undefined, show_assigned_only: false }))
 
 
     function handleExcel() {
@@ -76,7 +76,7 @@ export default function UsersPage() {
             return data.push({
                 username: user.username,
                 email: user.email,
-                dp: user.dp?.public_url,
+                dp: user.dp,
                 email_verified: user.email_verified,
                 is_active: user.is_active,
                 last_login: lastlogin,

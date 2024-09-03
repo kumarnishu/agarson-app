@@ -1,6 +1,7 @@
 import { IleadReqBody } from "../components/dialogs/crm/MergeTwoLeadsDialog"
-import { ICRMCity, ICRMState, ILead, ILeadSource, ILeadType, IReferredParty, IStage } from "../types/crm.types"
-import { IUser } from "../types/user.types"
+import { DropDownDto } from "../dtos/common/dropdown.dto"
+import { GetReferDto } from "../dtos/crm/crm.dto"
+import { GetUserDto } from "../dtos/users/user.dto"
 import { apiClient } from "./utils/AxiosInterceptor"
 
 //leads
@@ -30,7 +31,7 @@ export const FindUnknownCrmCities = async () => {
 }
 
 
-export const FuzzySearchLeads = async ({ user, searchString, limit, page, stage }: { user?: IUser, searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
+export const FuzzySearchLeads = async ({ user, searchString, limit, page, stage }: { user?: GetUserDto, searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
   if (user && user.assigned_permissions.includes("show_leads_useless")) {
     return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
   }
@@ -45,9 +46,9 @@ export const ConvertLeadToRefer = async ({ id }: { id: string }) => {
 
 export const GetRemarks = async ({ stage, limit, page, start_date, end_date, id }: { stage: string, limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
   if (id)
-    return await apiClient.get(`remarks/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&stage=${stage}`)
+    return await apiClient.get(`activities/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&stage=${stage}`)
   else
-    return await apiClient.get(`remarks/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&stage=${stage}`)
+    return await apiClient.get(`activities/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&stage=${stage}`)
 }
 
 
@@ -59,20 +60,20 @@ export const CreateOrUpdateLead = async ({ id, body }: { body: FormData, id?: st
 }
 
 
-export const DeleteCrmItem = async ({ refer, lead, state, city, type, source, stage }: { refer?: IReferredParty, lead?: ILead, state?: ICRMState, city?: ICRMCity, type?: ILeadType, source?: ILeadSource, stage?: IStage }) => {
+export const DeleteCrmItem = async ({ refer, lead, state, city, type, source, stage }: { refer?: DropDownDto, lead?: DropDownDto, state?: DropDownDto, city?: DropDownDto, type?: DropDownDto, source?: DropDownDto, stage?: DropDownDto }) => {
   if (refer)
-    return await apiClient.delete(`refers/${refer._id}`)
+    return await apiClient.delete(`refers/${refer.id}`)
   if (state)
-    return await apiClient.delete(`crm/states/${state._id}`)
+    return await apiClient.delete(`crm/states/${state.id}`)
   if (lead)
-    return await apiClient.delete(`leads/${lead._id}`)
+    return await apiClient.delete(`leads/${lead.id}`)
   if (source)
-    return await apiClient.delete(`crm/sources/${source._id}`)
+    return await apiClient.delete(`crm/sources/${source.id}`)
   if (type)
-    return await apiClient.delete(`crm/leadtypes/${type._id}`)
+    return await apiClient.delete(`crm/leadtypes/${type.id}`)
   if (city)
-    return await apiClient.delete(`crm/cities/${city._id}`)
-  return await apiClient.delete(`crm/stages/${stage ? stage._id : ""}`)
+    return await apiClient.delete(`crm/cities/${city.id}`)
+  return await apiClient.delete(`crm/stages/${stage ? stage.id : ""}`)
 
 }
 
@@ -113,6 +114,9 @@ export const GetPaginatedRefers = async ({ limit, page }: { limit: number | unde
 }
 export const GetRefers = async () => {
   return await apiClient.get(`refers`)
+}
+export const GetRemarksHistory = async ({ id }: { id: string }) => {
+  return await apiClient.get(`remarks/${id}`)
 }
 
 export const FuzzySearchRefers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
@@ -167,7 +171,7 @@ export const GetAllCities = async ({ state }: { state?: string }) => {
   return await apiClient.get(`crm/cities`)
 }
 
-export const GetAllReferrals = async ({ refer }: { refer: IReferredParty }) => {
+export const GetAllReferrals = async ({ refer }: { refer: GetReferDto }) => {
   return await apiClient.get(`assigned/referrals/${refer._id}`)
 }
 

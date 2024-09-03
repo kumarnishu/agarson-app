@@ -2,7 +2,6 @@ import { Dialog, DialogContent, DialogActions, IconButton, DialogTitle, Stack, C
 import { useContext, useEffect, useState } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
-import { ILead } from '../../../types/crm.types'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import { MergeTwoLeads } from '../../../services/LeadsServices'
 import { AxiosResponse } from 'axios'
@@ -10,6 +9,7 @@ import { useMutation } from 'react-query'
 import { BackendError } from '../../..'
 import { queryClient } from '../../../main'
 import AlertBar from '../../snacks/AlertBar'
+import { GetLeadDto } from '../../../dtos/crm/crm.dto'
 
 export type IleadReqBody = {
     name: string,
@@ -25,7 +25,7 @@ export type IleadReqBody = {
     source_lead_id: string,
     refer_id?: string
 }
-function MergeTwoLeadsDialog({ leads }: { leads: ILead[] }) {
+function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const [mobiles, setMobiles] = useState<string[]>([]);
     const [targetLead, setTartgetLead] = useState<IleadReqBody>({
@@ -43,7 +43,7 @@ function MergeTwoLeadsDialog({ leads }: { leads: ILead[] }) {
     })
 
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<ILead>, BackendError, { body: IleadReqBody, id: string }>
+        <AxiosResponse<GetLeadDto>, BackendError, { body: IleadReqBody, id: string }>
         (MergeTwoLeads, {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')
@@ -348,7 +348,7 @@ function MergeTwoLeadsDialog({ leads }: { leads: ILead[] }) {
                                         else {
                                             setTartgetLead({ ...targetLead, merge_refer: false })
                                         }
-                                    }} disabled={!leads[1].referred_party} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!leads[1].referred_party_name} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
                                         size="small" /> Merge Refer Data
                                 </STableCell>
@@ -368,7 +368,7 @@ function MergeTwoLeadsDialog({ leads }: { leads: ILead[] }) {
                                         else {
                                             setTartgetLead({ ...targetLead, merge_remarks: false })
                                         }
-                                    }} disabled={leads[1].remarks.length > 0 ? false : true} sx={{ width: 16, height: 16 }}
+                                    }} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
                                         size="small" /> Merge Remarks Data
                                 </STableCell>
@@ -397,8 +397,8 @@ function MergeTwoLeadsDialog({ leads }: { leads: ILead[] }) {
                     onClick={() => {
                         let lead = targetLead;
                         lead.mobiles = mobiles;
-                        if (targetLead.merge_refer && leads[1].referred_party)
-                            targetLead.refer_id = leads[1].referred_party?._id;
+                        if (targetLead.merge_refer && leads[1].referred_party_name)
+                            targetLead.refer_id = leads[1].referred_party_name;
                         if (mobiles.length == 0) {
                             alert("one mobile is required at least")
                         }

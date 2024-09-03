@@ -8,11 +8,11 @@ import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialog
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types/user.types';
 import {  GetDyeById, GetDyes, GetMachines,  UpdateShoeWeight3 } from '../../../services/ProductionServices';
 import { IArticle, IDye, IMachine, IShoeWeight } from '../../../types/production.types';
 import { months } from '../../../utils/months';
 import UploadFileButton from '../../buttons/UploadFileButton';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
 type TformData = {
@@ -33,7 +33,7 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
     const [articles, setArticles] = useState<IArticle[]>([])
     const { data: dyedata, refetch: refetchDye } = useQuery<AxiosResponse<IDye>, BackendError>(["dye", dyeid], async () => GetDyeById(dyeid), { enabled: false })
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, {
+        <AxiosResponse<GetUserDto>, BackendError, {
             id: string,
             body: FormData
         }>

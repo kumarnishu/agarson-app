@@ -13,7 +13,6 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { GetUsers } from '../../services/UserServices'
-import { IUser } from '../../types/user.types'
 import { ITodo, ITodoTemplate } from '../../types/todo.types'
 import { GetTodos } from '../../services/TodoServices'
 import FuzzySearch from 'fuzzy-search'
@@ -22,6 +21,7 @@ import StartAllTodoDialog from '../../components/dialogs/todos/StartAllTodoDialo
 import StopAllTodoDialog from '../../components/dialogs/todos/StopAllTodoDialog'
 import { queryClient } from '../../main'
 import DeleteAllTodosDialog from '../../components/dialogs/todos/DeleteAllTodosDialog'
+import { GetUserDto } from '../../dtos/users/user.dto'
 
 const template: ITodoTemplate[] = [
     {
@@ -46,7 +46,7 @@ const template: ITodoTemplate[] = [
 
 
 export default function TodosAdminPage() {
-    const [users, setUsers] = useState<IUser[]>([])
+    const [users, setUsers] = useState<GetUserDto[]>([])
     const [type, setType] = useState<string>('visible')
     const [stopped, setStopped] = useState(false)
     const [mobile, setMobile] = useState<string>()
@@ -62,7 +62,7 @@ export default function TodosAdminPage() {
     const [selectedData, setSelectedData] = useState<ITodoTemplate[]>(template)
     const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["todos", type, stopped, mobile], async () => GetTodos({ type: type, mobile: mobile, stopped: stopped }))
 
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
 
     const [sent, setSent] = useState(false)
     const { setChoice } = useContext(ChoiceContext)

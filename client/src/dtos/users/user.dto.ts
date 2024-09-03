@@ -60,15 +60,15 @@ export type UpdatePasswordDto = {
     newPassword: string,
     confirmPassword: string
 }
-export type ResetPasswordDto = {
+export type ResetPasswordDto={
     newPassword: string,
     confirmPassword: string
 }
 export type VerifyEmailDto = {
-    email: string
+   email:string
 }
 
-export type AssignPermissionForOneUserDto = {
+export type AssignPermissionForOneUserDto={
     permissions: string[],
     user_id: string
 }

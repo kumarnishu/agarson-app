@@ -1,26 +1,26 @@
 import { Box, IconButton, Stack, TableCell, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
-import { ILead, IRemark } from '../../../types/crm.types'
 import { DownloadFile } from '../../../utils/DownloadFile'
 import ViewRemarksDialog from '../../dialogs/crm/ViewRemarksDialog'
 import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
 import { Comment, Visibility } from '@mui/icons-material'
 import CreateOrEditRemarkDialog from '../../dialogs/crm/CreateOrEditRemarkDialog'
 import { UserContext } from '../../../contexts/userContext'
+import { GetActivitiesOrRemindersDto } from '../../../dtos/crm/crm.dto'
 
 
 
 
 type Props = {
-    remark: IRemark | undefined
-    setRemark: React.Dispatch<React.SetStateAction<IRemark | undefined>>,
-    remarks: IRemark[]
+    remark: GetActivitiesOrRemindersDto | undefined
+    setRemark: React.Dispatch<React.SetStateAction<GetActivitiesOrRemindersDto | undefined>>,
+    remarks: GetActivitiesOrRemindersDto[]
 }
 
 function ActivitiesTable({ remarks }: Props) {
-    const [data, setData] = useState<IRemark[]>(remarks)
-    const [lead, setLead] = useState<ILead>();
+    const [data, setData] = useState<GetActivitiesOrRemindersDto[]>(remarks)
+    const [lead, setLead] = useState<GetActivitiesOrRemindersDto>();
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
 
@@ -241,20 +241,7 @@ function ActivitiesTable({ remarks }: Props) {
                             </STableHeadCell>
 
 
-                            <STableHeadCell
-                            >
-
-                                Created At
-
-                            </STableHeadCell>
-
-
-                            <STableHeadCell
-                            >
-
-                                Updated At
-
-                            </STableHeadCell>
+                
                             <STableHeadCell
                             >
 
@@ -282,7 +269,7 @@ function ActivitiesTable({ remarks }: Props) {
                                                         onClick={() => {
 
                                                             setChoice({ type: LeadChoiceActions.view_remarks })
-                                                            setLead(remark.lead)
+                                                            setLead(remark)
 
 
                                                         }}
@@ -297,7 +284,7 @@ function ActivitiesTable({ remarks }: Props) {
                                                         onClick={() => {
 
                                                             setChoice({ type: LeadChoiceActions.create_or_edt_remark })
-                                                            setLead(remark.lead)
+                                                            setLead(remark)
 
                                                         }}
                                                     >
@@ -310,8 +297,8 @@ function ActivitiesTable({ remarks }: Props) {
                                             {remark.remark.slice(0, 50)}
 
                                         </STableCell>
-                                        <STableCell title={remark.created_by.username}>
-                                            {remark.created_by.username.slice(0, 50)}
+                                        <STableCell title={remark.created_by.value}>
+                                            {remark.created_by.value.slice(0, 50)}
 
                                         </STableCell>
                                         <STableCell title={remark.created_at && new Date(remark.created_at).toDateString()}>
@@ -319,100 +306,100 @@ function ActivitiesTable({ remarks }: Props) {
 
                                         </STableCell>
                                         <STableCell>
-                                            {remark.lead && remark.lead.stage && remark.lead.stage}
+                                            {remark && remark.stage && remark.stage}
                                         </STableCell>
                                         <STableCell>
                                             {remark.remind_date ? new Date(remark.remind_date).toLocaleDateString() : "na"}
                                         </STableCell>
                                         <STableCell>
-                                            {remark.lead && remark.lead.has_card ? 'Visiting card available' : "na"}
+                                            {remark && remark.has_card ? 'Visiting card available' : "na"}
                                         </STableCell>
                                         <STableCell>
-                                            {remark.lead.name}
+                                            {remark.name}
                                         </STableCell>
                                         <STableCell>
-                                            {remark.lead.mobile}
-
-                                        </STableCell>
-
-                                        <STableCell>
-                                            {remark.lead.alternate_mobile1}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {remark.lead.alternate_mobile2}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {remark.lead.city}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {remark.lead.state}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {remark.lead.lead_type}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {remark.lead && remark.lead.gst && remark.lead.gst}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {remark.lead.turnover ? remark.lead.turnover : 'na'}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {remark.lead.work_description ? remark.lead.work_description.slice(0, 50) : ""}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {remark.lead.customer_name}
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {remark.lead.customer_designation}
-                                        </STableCell>
-
-                                        <STableCell>
-                                            {remark.lead.referred_party_name && remark.lead.referred_party_name}
-
-                                        </STableCell>
-                                        <STableCell>
-                                            {remark.lead.referred_party_mobile && remark.lead.referred_party_mobile}
+                                            {remark.mobile}
 
                                         </STableCell>
 
                                         <STableCell>
-                                            {remark.lead.referred_date &&
-                                                new Date(remark.lead.referred_date).toLocaleString()
+                                            {remark.alternate_mobile1}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {remark.alternate_mobile2}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {remark.city}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {remark.state}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {remark.lead_type}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {remark && remark.gst && remark.gst}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {remark.turnover ? remark.turnover : 'na'}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {remark.work_description ? remark.work_description.slice(0, 50) : ""}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {remark.customer_name}
+                                        </STableCell>
+
+
+                                        <STableCell>
+                                            {remark.customer_designation}
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {remark.referred_party_name && remark.referred_party_name}
+
+                                        </STableCell>
+                                        <STableCell>
+                                            {remark.referred_party_mobile && remark.referred_party_mobile}
+
+                                        </STableCell>
+
+                                        <STableCell>
+                                            {remark.referred_date &&
+                                                new Date(remark.referred_date).toLocaleString()
                                             }
                                         </STableCell>
 
 
 
                                         <STableCell>
-                                            {remark.lead.email}
+                                            {remark.email}
                                         </STableCell>
 
 
                                         <STableCell>
-                                            {remark.lead.alternate_email}
+                                            {remark.alternate_email}
                                         </STableCell>
 
 
-                                        <STableCell title={remark.lead.address}>
-                                            {remark.lead.address ? remark.lead.address.slice(0, 50) : "..."}
+                                        <STableCell title={remark.address}>
+                                            {remark.address ? remark.address.slice(0, 50) : "..."}
 
                                         </STableCell>
 
@@ -421,35 +408,26 @@ function ActivitiesTable({ remarks }: Props) {
 
 
                                         <STableCell>
-                                            {remark.lead.lead_source}
-
-                                        </STableCell>
-
-
-                                        <STableCell>
-                                            {remark.lead.country}
+                                            {remark.lead_source}
 
                                         </STableCell>
 
 
                                         <STableCell>
-                                            {new Date(remark.lead.created_at).toLocaleString()}
+                                            {remark.country}
 
                                         </STableCell>
 
 
-                                        <STableCell>
-                                            {new Date(remark.lead.updated_at).toLocaleString()}
-
-                                        </STableCell>
+                                      
                                         <STableCell
                                             title="double click to download"
                                             onDoubleClick={() => {
-                                                if (remark.lead.visiting_card && remark.lead.visiting_card?.public_url) {
-                                                    DownloadFile(remark.lead.visiting_card.public_url, remark.lead.visiting_card.filename)
+                                                if (remark.visiting_card && remark.visiting_card) {
+                                                    DownloadFile(remark.visiting_card, "visiting card")
                                                 }
                                             }}>
-                                            <img height="50" width="75" src={remark.lead.visiting_card && remark.lead.visiting_card.public_url} alt="visiting card" />
+                                            <img height="50" width="75" src={remark.visiting_card && remark.visiting_card} alt="visiting card" />
                                         </STableCell>
 
                                     </STableRow>
@@ -460,8 +438,8 @@ function ActivitiesTable({ remarks }: Props) {
                     </STableBody>
                 </STable>
             </Box >
-            {lead && <ViewRemarksDialog lead={lead} />}
-            {lead && <CreateOrEditRemarkDialog lead={lead} />}
+            {lead && <ViewRemarksDialog id={lead.lead_id} />}
+            {/* {lead && <CreateOrEditRemarkDialog lead={lead} />} */}
         </>
     )
 }

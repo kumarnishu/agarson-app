@@ -9,16 +9,16 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { useFormik } from 'formik';
 import * as Yup from "yup"
-import { IUser } from '../../../types/user.types';
-import { ICRMState } from '../../../types/crm.types';
 import { GetUsers } from '../../../services/UserServices';
 import { AssignErpStatesToUsers } from '../../../services/ErpServices';
+import { IState } from '../../../types/erp_report.types';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
-function AssignErpCrmStatesDialog({ states, flag }: { states: ICRMState[], flag: number }) {
+function AssignErpCrmStatesDialog({ states, flag }: { states: IState[], flag: number }) {
 
-    const [users, setUsers] = useState<IUser[]>([])
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'erp_report_menu', show_assigned_only: true }))
+    const [users, setUsers] = useState<GetUserDto[]>([])
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'erp_report_menu', show_assigned_only: true }))
 
 
 

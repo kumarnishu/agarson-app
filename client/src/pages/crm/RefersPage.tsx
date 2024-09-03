@@ -17,7 +17,7 @@ import RefersTable from '../../components/tables/crm/RefersTable'
 import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServices'
 import { IReferTemplate } from '../../types/template.type'
 import UploadRefersExcelButton from '../../components/buttons/UploadRefersExcelButton'
-import { IReferredParty } from '../../types/crm.types'
+import { GetReferDto } from '../../dtos/crm/crm.dto'
 
 let template: IReferTemplate[] = [
   {
@@ -36,22 +36,22 @@ export default function RefersPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
-  const [refer, setRefer] = useState<IReferredParty>()
-  const [refers, setRefers] = useState<IReferredParty[]>([])
+  const [refer, setRefer] = useState<GetReferDto>()
+  const [refers, setRefers] = useState<GetReferDto[]>([])
   const [selectAll, setSelectAll] = useState(false)
 
-  const [preFilteredData, setPreFilteredData] = useState<IReferredParty[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<GetReferDto[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
-  const [selectedRefers, setSelectedRefers] = useState<IReferredParty[]>([])
+  const [selectedRefers, setSelectedRefers] = useState<GetReferDto[]>([])
 
   const { data, isLoading } = useQuery<AxiosResponse<{
-    result: IReferredParty[], page: number, total: number, limit: number
+    result: GetReferDto[], page: number, total: number, limit: number
   }>, BackendError>(["refers", paginationData], async () => GetPaginatedRefers({ limit: paginationData?.limit, page: paginationData?.page }))
 
 
   const { data: fuzzyrefers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{
-    result: IReferredParty[], page: number, total: number, limit: number
+    result: GetReferDto[], page: number, total: number, limit: number
   }>, BackendError>(["fuzzyrefers", filter], async () => FuzzySearchRefers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
   })

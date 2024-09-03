@@ -8,13 +8,13 @@ import {  ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogConte
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { ILead, IReferredParty } from '../../../types/crm.types';
 import { RemoveReferLead } from '../../../services/LeadsServices';
+import { GetLeadDto, GetReferDto } from '../../../dtos/crm/crm.dto';
 
 
-function RemoveLeadReferForm({ lead }: { lead: ILead }) {
+function RemoveLeadReferForm({ lead }: { lead: GetLeadDto }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IReferredParty>, BackendError, { id: string, body: { remark: string } }>
+        <AxiosResponse<GetReferDto>, BackendError, { id: string, body: { remark: string } }>
         (RemoveReferLead, {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')

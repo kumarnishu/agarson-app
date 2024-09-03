@@ -8,9 +8,9 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types/user.types';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
-function ToogleVisitingcardShowDialog({ user }: { user: IUser }) {
+function ToogleVisitingcardShowDialog({ user }: { user: GetUserDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
         <AxiosResponse<any>, BackendError, string>

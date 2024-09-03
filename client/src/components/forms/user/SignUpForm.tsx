@@ -11,8 +11,8 @@ import { UserContext } from '../../../contexts/userContext';
 import { paths } from '../../../Routes';
 import { Signup } from '../../../services/UserServices';
 import { BackendError, Target } from '../../..';
-import { IUser } from '../../../types/user.types';
 import AlertBar from '../../snacks/AlertBar';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 type TFormData = {
   username: string,
@@ -26,7 +26,7 @@ function OwnerSignUpForm() {
   const goto = useNavigate()
   const { setUser } = useContext(UserContext)
   const { mutate, data, isLoading, isSuccess, isError, error } = useMutation
-    <AxiosResponse<{ user: IUser, token: string }>, BackendError, FormData>
+    <AxiosResponse<{ user: GetUserDto, token: string }>, BackendError, FormData>
     (Signup)
   const { setChoice } = useContext(ChoiceContext)
 

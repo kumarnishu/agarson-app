@@ -8,10 +8,10 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
-import { ILead } from '../../../types/crm.types';
+import { GetLeadDto } from '../../../dtos/crm/crm.dto';
 
 
-function BulkDeleteUselessLeadsDialog({ selectedLeads }: { selectedLeads: ILead[] }) {
+function BulkDeleteUselessLeadsDialog({ selectedLeads }: { selectedLeads: GetLeadDto[] }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const [leadsIds, setLeadsIds] = useState<string[]>()
     const { mutate, isLoading, isSuccess, error, isError } = useMutation

@@ -1,11 +1,11 @@
 import React, { createContext, useState } from "react";
-import { IUser } from "../types/user.types";
+import { GetUserDto } from "../dtos/users/user.dto";
 
 
 // usercontext
 type Context = {
-  user: IUser | undefined;
-  setUser: React.Dispatch<React.SetStateAction<IUser | undefined>>;
+  user: GetUserDto | undefined;
+  setUser: React.Dispatch<React.SetStateAction<GetUserDto | undefined>>;
 };
 export const UserContext = createContext<Context>({
   user: undefined,
@@ -15,7 +15,7 @@ export const UserContext = createContext<Context>({
 
 // user provider
 export function UserProvider(props: { children: JSX.Element }) {
-  const [user, setUser] = useState<IUser>();
+  const [user, setUser] = useState<GetUserDto>();
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {props.children}

@@ -3,9 +3,9 @@ import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
 import CreateOrEditCityForm from '../../forms/crm/CreateOrEditCityForm'
-import { ICRMCity } from '../../../types/crm.types'
+import { DropDownDto } from '../../../dtos/common/dropdown.dto'
 
-function CreateOrEditCityDialog({ city }: { city?: ICRMCity }) {
+function CreateOrEditCityDialog({ city }: { city?: DropDownDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
 
     return (

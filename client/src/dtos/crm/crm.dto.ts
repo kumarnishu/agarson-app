@@ -49,7 +49,7 @@ export type CreateAndUpdatesCityFromExcelDto = {
     status?: string
 }
 export type CreateOrEditCrmCity = {
-    id: string,
+    id:string,
     state: string,
     city: string
 }
@@ -133,7 +133,7 @@ export type CreateOrRemoveReferForLeadDto = {
     party_id: string, remark: string
 }
 
-export type GetMergeLeadsDto = {
+export type GetMergeLeadsDto={
     name: string,
     mobiles: string[],
     city: string,
@@ -188,15 +188,15 @@ export type CreateOrEditReferFromExcelDto = {
     gst: string,
     city: string,
     state: string,
-    status?: string
+    status?:string
 }
 
-export type GetRemarksDto = {
-    _id: string,
-    remark: string,
-    remind_date: string,
-    created_date: string,
-    created_by: DropDownDto
+export type GetRemarksDto={
+    _id:string,
+    remark:string,
+    remind_date:string,
+    created_date:string,
+    created_by:DropDownDto
 
 }
 export type GetActivitiesOrRemindersDto = {
@@ -229,7 +229,7 @@ export type GetActivitiesOrRemindersDto = {
     referred_party_name?: string,
     referred_party_mobile?: string,
     referred_date?: string
-
+    
 }
 
 export type CreateOrEditRemarkDto = {
@@ -243,11 +243,11 @@ export type GetAssignedReferDto = {
     lead_mobile1: string,
     lead_mobile2: string,
     lead_mobile3: string,
-    refer?: DropDownDto,
+    refer?:DropDownDto,
     refer_mobile1?: string,
-    refer_mobile2?: string,
+    refer_mobile2?:string,
     refer_mobile3?: string,
-    refer_date?: string
+    refer_date?:string
 
 }
 export type GetNewReferDto = {

@@ -7,7 +7,6 @@ import { UserContext } from '../../contexts/userContext';
 import { paths } from '../../Routes';
 import AgarsonLogo from '../logo/Agarson';
 import ProfileLogo from '../logo/ProfileLogo';
-import RefreshWhatsappButton from '../buttons/RefreshWhatsappButton';
 
 export const StyledLink = styled(Link)`
     text-decoration: none;
@@ -59,7 +58,6 @@ export default function DashBoardNavBar() {
                                     alignItems="center"
                                     gap={1}
                                 >
-                                    {user._id === user.created_by._id && <RefreshWhatsappButton />}
                                     <ProfileLogo />
                                 </Stack>
                             </>

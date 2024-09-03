@@ -6,10 +6,10 @@ import { UpdateProfile } from '../../../services/UserServices';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { useContext, useEffect } from 'react';
 import { AxiosResponse } from 'axios';
-import { IUser } from '../../../types/user.types';
 import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
 type TformData = {
@@ -18,9 +18,9 @@ type TformData = {
   dp: string | Blob | File
 }
 
-function UpdateProfileForm({ user }: { user: IUser }) {
+function UpdateProfileForm({ user }: { user: GetUserDto }) {
   const { mutate, isLoading, isSuccess, isError, error } = useMutation
-    <AxiosResponse<IUser>, BackendError, FormData>
+    <AxiosResponse<GetUserDto>, BackendError, FormData>
     (UpdateProfile, {
       onSuccess: () => {
         queryClient.invalidateQueries('users')
@@ -32,7 +32,7 @@ function UpdateProfileForm({ user }: { user: IUser }) {
     initialValues: {
       email: user.email,
       mobile: String(user.mobile),
-      dp: user.dp?.public_url || ""
+      dp: user.dp || ""
     },
     validationSchema: Yup.object({
       mobile: Yup.string()

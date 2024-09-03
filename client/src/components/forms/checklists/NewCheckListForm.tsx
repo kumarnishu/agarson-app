@@ -10,9 +10,9 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import moment from 'moment'
 import { CreateCheckList } from '../../../services/CheckListServices';
-import { IUser } from '../../../types/user.types';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
-function NewCheckListForm({ users }: { users: IUser[] }) {
+function NewCheckListForm({ users }: { users: GetUserDto[] }) {
     const [personId, setPersonId] = useState<string>()
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {

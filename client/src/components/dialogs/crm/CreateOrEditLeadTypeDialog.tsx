@@ -2,10 +2,10 @@ import { Dialog, DialogContent, IconButton, DialogTitle } from '@mui/material'
 import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
-import {  ILeadType } from '../../../types/crm.types'
 import CreateOrEditLeadTypeForm from '../../forms/crm/CreateOrEditLeadTypeForm'
+import { DropDownDto } from '../../../dtos/common/dropdown.dto'
 
-function CreateOrEditLeadTypeDialog({ type }: { type?: ILeadType
+function CreateOrEditLeadTypeDialog({ type }: { type?: DropDownDto
 }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     

@@ -8,9 +8,9 @@ import { ChoiceContext,  VisitChoiceActions } from '../../../contexts/dialogCont
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types/user.types';
 import { AddAnkitInput } from '../../../services/VisitServices';
 import { IVisitReport } from '../../../types/visit.types';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
 type TformData = {
@@ -19,7 +19,7 @@ type TformData = {
 
 function AddAnkitInputForm({ visit }: { visit: IVisitReport }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, {
+        <AxiosResponse<GetUserDto>, BackendError, {
             id: string;
             body: {
                 input: string;

@@ -3,9 +3,9 @@ import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import ReferLeadForm from '../../forms/crm/ReferLeadForm'
 import { Cancel } from '@mui/icons-material'
-import { ILead } from '../../../types/crm.types'
+import { GetLeadDto } from '../../../dtos/crm/crm.dto'
 
-function ReferLeadDialog({ lead }: { lead: ILead }) {
+function ReferLeadDialog({ lead }: { lead: GetLeadDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
         <Dialog fullScreen={Boolean(window.screen.width < 500)}

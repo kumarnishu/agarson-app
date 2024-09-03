@@ -115,7 +115,7 @@ function ProfileLogo() {
                 >
                     <Avatar
                         sx={{ width: 34, height: 34 }}
-                        alt="img1" src={user?.dp?.public_url} />
+                        alt="img1" src={user?.dp} />
                 </IconButton>
             </Tooltip>
             <ProfileMenu />

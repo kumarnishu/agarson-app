@@ -450,7 +450,11 @@ export const GetAllCRMCities = async (req: Request, res: Response, next: NextFun
     for (let i = 0; i < cities.length; i++) {
         let users = await (await User.find({ assigned_crm_cities: cities[i]._id })).
             map((i) => { return { _id: i._id.valueOf(), username: i.username } })
-        result.push({ city: { id: cities[i]._id, label: cities[i].city, value: cities[i].city }, assigned_users: users.map((u) => { return { id: u._id, label: u.username, value: u.username } }) });
+        result.push({
+            city: { id: cities[i]._id, label: cities[i].city, value: cities[i].city },
+            state: cities[0].state,
+            assigned_users: users.map((u) => { return { id: u._id, label: u.username, value: u.username } })
+        });
     }
     return res.status(200).json(result)
 }

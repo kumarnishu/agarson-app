@@ -9,8 +9,8 @@ import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import { GetCategories, UpdateTemplate } from '../../../services/TemplateServices';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types/user.types';
 import { IMessageTemplate, ITemplateCategoryField } from '../../../types/template.type';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
 type TformData = {
@@ -25,7 +25,7 @@ function UpdateTemplateForm({ template }: { template: IMessageTemplate }) {
     const [fileUrl, setFileUrl] = useState<string | undefined>(template.media?.public_url)
 
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, { id: string, body: FormData }>
+        <AxiosResponse<GetUserDto>, BackendError, { id: string, body: FormData }>
         (UpdateTemplate, {
             onSuccess: () => {
                 queryClient.invalidateQueries('templates')

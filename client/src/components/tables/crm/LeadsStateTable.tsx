@@ -7,21 +7,21 @@ import { Delete, Edit } from '@mui/icons-material'
 import { UserContext } from '../../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import CreateOrEditStateDialog from '../../dialogs/crm/CreateOrEditStateDialog'
-import { ICRMState } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import { GetCrmStateDto } from '../../../dtos/crm/crm.dto'
 
 
 type Props = {
-    state: { state: ICRMState, users: { _id: string, username: string }[] } | undefined,
-    setState: React.Dispatch<React.SetStateAction<{ state: ICRMState, users: { _id: string, username: string }[] } | undefined>>,
+    state: GetCrmStateDto | undefined,
+    setState: React.Dispatch<React.SetStateAction<GetCrmStateDto | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    states: { state: ICRMState, users: { _id: string, username: string }[] }[],
-    selectedStates: { state: ICRMState, users: { _id: string, username: string }[] }[]
-    setSelectedStates: React.Dispatch<React.SetStateAction<{ state: ICRMState, users: { _id: string, username: string }[] }[]>>,
+    states: GetCrmStateDto[],
+    selectedStates: GetCrmStateDto[]
+    setSelectedStates: React.Dispatch<React.SetStateAction<GetCrmStateDto[]>>,
 }
 function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
-    const [data, setData] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }[]>(states)
+    const [data, setData] = useState<GetCrmStateDto[]>(states)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
@@ -88,7 +88,7 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                             states && states.map((state, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedStates.length > 0 && selectedStates.find((t) => t.state._id === state.state._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedStates.length > 0 && selectedStates.find((t) => t.state.id === state.state.id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
@@ -115,7 +115,7 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
                                                         }
                                                         if (!e.target.checked) {
                                                             setSelectedStates((states) => states.filter((item) => {
-                                                                return item.state._id !== state.state._id
+                                                                return item.state.id !== state.state.id
                                                             }))
                                                         }
                                                     }}
@@ -168,10 +168,10 @@ function LeadsStateTable({ state, selectAll, states, setSelectAll, setState, sel
 
                                         </STableCell>
                                         <STableCell style={{ width: '200px' }}>
-                                            {state.state.state}
+                                            {state.state.label}
                                         </STableCell>
                                         <STableCell>
-                                            {state.users.map((u) => { return u.username }).toString()}
+                                            {state.assigned_users.map((u) => { return u.value }).toString()}
                                         </STableCell>
 
                                     </STableRow>

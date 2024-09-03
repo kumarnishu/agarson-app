@@ -9,23 +9,23 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { GetRefers, ReferLead } from '../../../services/LeadsServices';
 import AlertBar from '../../snacks/AlertBar';
-import { ILead, IReferredParty } from '../../../types/crm.types';
+import { GetLeadDto, GetReferDto } from '../../../dtos/crm/crm.dto';
 
 
 
-function ReferLeadForm({ lead }: { lead: ILead }) {
+function ReferLeadForm({ lead }: { lead: GetLeadDto }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IReferredParty>, BackendError, { id: string, body: { party_id: string, remark: string } }>
+        <AxiosResponse<GetReferDto>, BackendError, { id: string, body: { party_id: string, remark: string } }>
         (ReferLead, {
             onSuccess: () => {
                 queryClient.invalidateQueries('refers')
                 queryClient.invalidateQueries('leads')
             }
         })
-    const { data, isSuccess: isReferSuccess } = useQuery<AxiosResponse<IReferredParty[]>, BackendError>("refers", GetRefers)
+    const { data, isSuccess: isReferSuccess } = useQuery<AxiosResponse<GetReferDto[]>, BackendError>("refers", GetRefers)
 
     const { setChoice } = useContext(ChoiceContext)
-    const [refers, setRefers] = useState<IReferredParty[]>()
+    const [refers, setRefers] = useState<GetReferDto[]>()
     const formik = useFormik({
         initialValues: {
             remark: "",

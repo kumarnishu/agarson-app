@@ -12,10 +12,10 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import CreateOrEditLeadSourceDialog from '../../components/dialogs/crm/CreateOrEditLeadSourceDialog'
-import { ILeadSource } from '../../types/crm.types'
 import { GetAllSources } from '../../services/LeadsServices'
 import LeadsLeadSourceTable from '../../components/tables/crm/LeadsSourceTable'
 import { UserContext } from '../../contexts/userContext'
+import { DropDownDto } from '../../dtos/common/dropdown.dto'
 
 type ITemplate = {
   _id: string,
@@ -29,13 +29,13 @@ let template: ITemplate[] = [
 ]
 
 export default function CrmLeadSourcesPage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<ILeadSource[]>, BackendError>("crm_sources", GetAllSources)
-  const [source, setLeadSource] = useState<ILeadSource>()
-  const [sources, setLeadSources] = useState<ILeadSource[]>([])
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_sources", GetAllSources)
+  const [source, setLeadSource] = useState<DropDownDto>()
+  const [sources, setLeadSources] = useState<DropDownDto[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => sources, [sources])
-  const [preFilteredData, setPreFilteredData] = useState<ILeadSource[]>([])
-  const [selectedLeadSources, setSelectedLeadSources] = useState<ILeadSource[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<DropDownDto[]>([])
+  const [selectedLeadSources, setSelectedLeadSources] = useState<DropDownDto[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const [selectedData, setSelectedData] = useState<ITemplate[]>(template)
   const [sent, setSent] = useState(false)
@@ -63,8 +63,8 @@ export default function CrmLeadSourcesPage() {
     let data: ITemplate[] = []
     selectedLeadSources.map((source) => {
       return data.push({
-        _id: source._id,
-        source: source.source,
+        _id: source.id,
+        source: source.value,
       })
     })
     if (data.length > 0)

@@ -9,16 +9,16 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { useFormik } from 'formik';
 import * as Yup from "yup"
-import { IUser } from '../../../types/user.types';
-import { ICRMState } from '../../../types/crm.types';
 import { GetUsers } from '../../../services/UserServices';
 import { AssignCRMStatesToUsers } from '../../../services/LeadsServices';
+import { DropDownDto } from '../../../dtos/common/dropdown.dto';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
-function AssignCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:number }) {
+function AssignCrmStatesDialog({ states, flag }: { states: DropDownDto[], flag:number }) {
 
-    const [users, setUsers] = useState<IUser[]>([])
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'crm_menu', show_assigned_only: true }))
+    const [users, setUsers] = useState<GetUserDto[]>([])
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'crm_menu', show_assigned_only: true }))
 
 
 
@@ -42,7 +42,7 @@ function AssignCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:num
     }>({
         initialValues: {
             user_ids: [],
-            state_ids: states.map((item) => { return item._id })
+            state_ids: states.map((item) => { return item.id })
         },
         validationSchema: Yup.object({
             user_ids: Yup.array()
@@ -57,7 +57,7 @@ function AssignCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:num
             mutate({
                 body: {
                     user_ids: values.user_ids,
-                    state_ids: states.map((item) => { return item._id }),
+                    state_ids: states.map((item) => { return item.id }),
                     flag:flag
                 }
             })
@@ -105,7 +105,7 @@ function AssignCrmStatesDialog({ states, flag }: { states: ICRMState[], flag:num
                         {flag === 0&&`Warning ! This will remove  ${states.length} States from  ${formik.values.user_ids.length} Users.`}
 
                     </Typography>
-                    <Button onClick={() => formik.setValues({ user_ids: [], state_ids: states.map((item) => { return item._id }) })}>Remove Selection</Button>
+                    <Button onClick={() => formik.setValues({ user_ids: [], state_ids: states.map((item) => { return item.id }) })}>Remove Selection</Button>
                     <form onSubmit={formik.handleSubmit}>
                         < TextField
                             select

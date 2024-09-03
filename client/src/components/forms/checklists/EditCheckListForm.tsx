@@ -9,10 +9,10 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { EditCheckList } from '../../../services/CheckListServices';
-import { IUser } from '../../../types/user.types';
 import { IChecklist } from '../../../types/checklist.types';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
-function EditCheckListForm({ checklist, users }: { checklist: IChecklist, users: IUser[] }) {
+function EditCheckListForm({ checklist, users }: { checklist: IChecklist, users: GetUserDto[] }) {
     const [personId, setPersonId] = useState<string>(checklist.owner._id)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {

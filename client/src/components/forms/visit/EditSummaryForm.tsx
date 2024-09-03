@@ -8,9 +8,9 @@ import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogConte
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types/user.types';
 import { EditVisitSummary } from '../../../services/VisitServices';
 import { IVisitReport } from '../../../types/visit.types';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
 type TformData = {
@@ -25,7 +25,7 @@ type TformData = {
 
 function EditSummaryForm({ visit }: { visit: IVisitReport }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, {
+        <AxiosResponse<GetUserDto>, BackendError, {
             id: string;
             body: {
                 summary: string;

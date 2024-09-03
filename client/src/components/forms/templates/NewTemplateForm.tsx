@@ -9,8 +9,8 @@ import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import { CreateTemplate, GetCategories } from '../../../services/TemplateServices';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types/user.types';
 import { ITemplateCategoryField } from '../../../types/template.type';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
 type TformData = {
@@ -24,7 +24,7 @@ type TformData = {
 function NewtemplateForm() {
     const [file, setFile] = useState<File>()
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, FormData>
+        <AxiosResponse<GetUserDto>, BackendError, FormData>
         (CreateTemplate, {
             onSuccess: () => {
                 queryClient.invalidateQueries('templates')

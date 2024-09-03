@@ -6,24 +6,24 @@ import { useQuery } from 'react-query'
 import { BackendError } from '../..'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
-import { ILead } from '../../types/crm.types'
 import moment from 'moment'
 import { GetAssignedRefers } from '../../services/LeadsServices'
+import { GetLeadDto } from '../../dtos/crm/crm.dto'
 
 
 export default function AssignedReferReportPage() {
-  const [reports, setReports] = useState<ILead[]>([])
+  const [reports, setReports] = useState<GetLeadDto[]>([])
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
   })
 
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ILead[]>, BackendError>(["assign_refer_reports", dates.start_date, dates.end_date], async () => GetAssignedRefers({ start_date: dates.start_date, end_date: dates.end_date }))
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetLeadDto[]>, BackendError>(["assign_refer_reports", dates.start_date, dates.end_date], async () => GetAssignedRefers({ start_date: dates.start_date, end_date: dates.end_date }))
 
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-  const columns = useMemo<MRT_ColumnDef<ILead>[]>(
+  const columns = useMemo<MRT_ColumnDef<GetLeadDto>[]>(
     //column definitions...
     () => [
       {

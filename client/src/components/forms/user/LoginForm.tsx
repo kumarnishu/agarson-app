@@ -11,15 +11,15 @@ import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContex
 import { UserContext } from '../../../contexts/userContext';
 import { paths } from '../../../Routes';
 import { Login } from '../../../services/UserServices';
-import { IUser } from '../../../types/user.types';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
 import { Navigate } from "react-router-dom";
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 function LoginForm() {
   const goto = useNavigate()
   const { mutate, data, isSuccess, isLoading, isError, error } = useMutation
-    <AxiosResponse<{ user: IUser, token: string }>,
+    <AxiosResponse<{ user: GetUserDto, token: string }>,
       BackendError,
       { username: string, password: string, multi_login_token?: string }
     >(Login)

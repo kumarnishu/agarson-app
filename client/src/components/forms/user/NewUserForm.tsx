@@ -8,9 +8,9 @@ import * as Yup from "yup"
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { NewUser } from '../../../services/UserServices';
 import { BackendError, Target } from '../../..';
-import { IUser } from '../../../types/user.types';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
 type TformData = {
@@ -23,7 +23,7 @@ type TformData = {
 
 function NewUserForm() {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, FormData>
+        <AxiosResponse<GetUserDto>, BackendError, FormData>
         (NewUser,{
             onSuccess: () => {
                 queryClient.invalidateQueries('users')

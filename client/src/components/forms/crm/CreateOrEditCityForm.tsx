@@ -8,14 +8,13 @@ import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContex
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import {  ICRMCity, ICRMState } from '../../../types/crm.types';
 import * as yup from 'yup';
-import { IUser } from '../../../types/user.types';
 import { toTitleCase } from '../../../utils/TitleCase';
+import { CreateOrEditCrmCity, GetCrmCityDto } from '../../../dtos/crm/crm.dto';
 
-function CreateOrEditCityForm({ city }: { city?: ICRMCity }) {
-    const [states, setStates] = useState<{ state: ICRMState, users: IUser[] }[]>([])
-    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: ICRMState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
+function CreateOrEditCityForm({ city }: { city?: CreateOrEditCrmCity }) {
+    const [states, setStates] = useState<GetCrmCityDto[]>([])
+    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<GetCrmCityDto[]>, BackendError>("crm_states", GetAllStates)
 
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
@@ -51,7 +50,7 @@ function CreateOrEditCityForm({ city }: { city?: ICRMCity }) {
             state: string,
         }) => {
             mutate({
-                id: city?._id,
+                id: city?.id,
                 body: {
                     city: values.city,
                     state: values.state
@@ -120,8 +119,8 @@ function CreateOrEditCityForm({ city }: { city?: ICRMCity }) {
                     </option>
                     {
                         states.map(state => {
-                            return (<option key={state.state._id} value={state.state.state}>
-                                {toTitleCase(state.state.state)}
+                            return (<option key={state.state.id} value={state.state.value}>
+                                {toTitleCase(state.state.label)}
                             </option>)
                         })
                     }

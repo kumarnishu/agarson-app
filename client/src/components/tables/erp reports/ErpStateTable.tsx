@@ -4,26 +4,26 @@ import { useContext, useEffect, useState } from 'react'
 import PopUp from '../../popup/PopUp'
 import { Delete, Edit } from '@mui/icons-material'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
-import { IUser } from '../../../types/user.types'
 import { ChoiceContext, UserChoiceActions } from '../../../contexts/dialogContext'
 import CreateOrEditErpStateDialog from '../../dialogs/erp/CreateOrEditErpStateDialog'
 import { IState } from '../../../types/erp_report.types'
 import DeleteErpStateDialog from '../../dialogs/erp/DeleteErpStateDialog'
 import { UserContext } from '../../../contexts/userContext'
+import { GetUserDto } from '../../../dtos/users/user.dto'
 
 
 
 type Props = {
-    state: { state: IState, users: IUser[] } | undefined,
-    setState: React.Dispatch<React.SetStateAction<{ state: IState, users: IUser[] } | undefined>>,
+    state: { state: IState, users: GetUserDto[] } | undefined,
+    setState: React.Dispatch<React.SetStateAction<{ state: IState, users: GetUserDto[] } | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    states: { state: IState, users: IUser[] }[],
-    selectedStates: { state: IState, users: IUser[] }[]
-    setSelectedStates: React.Dispatch<React.SetStateAction<{ state: IState, users: IUser[] }[]>>,
+    states: { state: IState, users: GetUserDto[] }[],
+    selectedStates: { state: IState, users: GetUserDto[] }[]
+    setSelectedStates: React.Dispatch<React.SetStateAction<{ state: IState, users: GetUserDto[] }[]>>,
 }
 function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
-    const [data, setData] = useState<{ state: IState, users: IUser[] }[]>(states)
+    const [data, setData] = useState<{ state: IState, users: GetUserDto[] }[]>(states)
     const { setChoice } = useContext(ChoiceContext)
     const {user}=useContext(UserContext)
     useEffect(() => {

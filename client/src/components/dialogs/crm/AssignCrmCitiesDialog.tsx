@@ -9,16 +9,16 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { useFormik } from 'formik';
 import * as Yup from "yup"
-import { IUser } from '../../../types/user.types';
-import { ICRMCity } from '../../../types/crm.types';
 import { GetUsers } from '../../../services/UserServices';
 import { AssignCRMCitiesToUsers } from '../../../services/LeadsServices';
+import { DropDownDto } from '../../../dtos/common/dropdown.dto';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
-function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag: number }) {
+function AssignCrmCitiesDialog({ cities, flag }: { cities: DropDownDto[], flag: number }) {
 
-    const [users, setUsers] = useState<IUser[]>([])
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission:'crm_menu',show_assigned_only:true}))
+    const [users, setUsers] = useState<GetUserDto[]>([])
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission:'crm_menu',show_assigned_only:true}))
 
 
 
@@ -42,7 +42,7 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag: num
     }>({
         initialValues: {
             user_ids: [],
-            city_ids: cities.map((item) => { return item._id })
+            city_ids: cities.map((item) => { return item.id })
         },
         validationSchema: Yup.object({
             user_ids: Yup.array()
@@ -57,7 +57,7 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag: num
             mutate({
                 body: {
                     user_ids: values.user_ids,
-                    city_ids: cities.map((item) => { return item._id }),
+                    city_ids: cities.map((item) => { return item.id }),
                     flag: flag
                 }
             })
@@ -105,7 +105,7 @@ function AssignCrmCitiesDialog({ cities, flag }: { cities: ICRMCity[], flag: num
                         {flag === 0 && `Warning ! This will remove  ${cities.length} States from  ${formik.values.user_ids.length} Users.`}
 
                     </Typography>
-                    <Button onClick={() => formik.setValues({ user_ids: [], city_ids: cities.map((item) => { return item._id }) })}>Remove Selection</Button>
+                    <Button onClick={() => formik.setValues({ user_ids: [], city_ids: cities.map((item) => { return item.id }) })}>Remove Selection</Button>
                     <form onSubmit={formik.handleSubmit}>
                         < TextField
                             select

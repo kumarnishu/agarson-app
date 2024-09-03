@@ -12,19 +12,18 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { ICRMCityTemplate } from '../../types/template.type'
 import LeadsCityTable from '../../components/tables/crm/LeadsCityTable'
 import { GetAllCities, GetAllStates } from '../../services/LeadsServices'
 import CreateOrEditCityDialog from '../../components/dialogs/crm/CreateOrEditCityDialog'
 import UploadCRMCitiesFromExcelButton from '../../components/buttons/UploadCRMCitiesFromExcelButton'
 // import AssignCrmCitiesDialog from '../../components/dialogs/crm/AssignCrmCitiesDialog'
-import { ICRMCity, ICRMState } from '../../types/crm.types'
 import { toTitleCase } from '../../utils/TitleCase'
 import AssignCrmCitiesDialog from '../../components/dialogs/crm/AssignCrmCitiesDialog'
 import FindUknownCrmCitiesDialog from '../../components/dialogs/crm/FindUknownCrmCitiesDialog'
+import { CreateAndUpdatesCityFromExcelDto, GetCrmCityDto, GetCrmStateDto } from '../../dtos/crm/crm.dto'
 
 
-let template: ICRMCityTemplate[] = [
+let template: CreateAndUpdatesCityFromExcelDto[] = [
   {
     _id: "",
     city: "chawri"
@@ -34,23 +33,23 @@ let template: ICRMCityTemplate[] = [
 export default function CrmCitiesPage() {
   const [flag, setFlag] = useState(1);
   const [state, setState] = useState<string | undefined>();
-  const [states, setStates] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }[]>([])
+  const [states, setStates] = useState<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>([])
 
-  const { data: citiesdata, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
-  const [city, setCity] = useState<{ city: ICRMCity, users: { _id: string, username: string }[] }>()
-  const [cities, setCities] = useState<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>([])
+  const { data: citiesdata, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<GetCrmCityDto[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
+  const [city, setCity] = useState<GetCrmCityDto>()
+  const [cities, setCities] = useState<GetCrmCityDto[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => cities, [cities])
-  const [preFilteredData, setPreFilteredData] = useState<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>([])
-  const [selectedCities, setSelectedCities] = useState<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<GetCrmCityDto[]>([])
+  const [selectedCities, setSelectedCities] = useState<GetCrmCityDto[]>([])
   const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<ICRMCityTemplate[]>(template)
+  const [selectedData, setSelectedData] = useState<CreateAndUpdatesCityFromExcelDto[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const { user: LoggedInUser } = useContext(UserContext)
 
-  const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: ICRMState, users: { _id: string, username: string }[] }[]>, BackendError>("crm_states", GetAllStates)
+  const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>, BackendError>("crm_states", GetAllStates)
 
   function handleExcel() {
     setAnchorEl(null)
@@ -69,12 +68,12 @@ export default function CrmCitiesPage() {
 
   // refine data
   useEffect(() => {
-    let data: ICRMCityTemplate[] = []
+    let data: CreateAndUpdatesCityFromExcelDto[] = []
     selectedCities.map((city) => {
       return data.push({
-        _id: city.city._id,
-        city: city.city && city.city.city,
-        users: city.users.map((u) => { return u.username }).toString()
+        _id: city.city.id,
+        city: city.city && city.city.value,
+        users: city.assigned_users.map((u) => { return u.value }).toString()
       })
     })
     if (data.length > 0)
@@ -184,8 +183,8 @@ export default function CrmCitiesPage() {
               </option>
               {
                 states.map(state => {
-                  return (<option key={state.state._id} value={state.state.state}>
-                    {toTitleCase(state.state.state)}
+                  return (<option key={state.state.state.id} value={state.state.state.value}>
+                    {toTitleCase(state.state.state.label)}
                   </option>)
                 })
               }

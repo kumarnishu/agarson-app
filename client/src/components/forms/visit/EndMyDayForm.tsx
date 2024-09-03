@@ -6,10 +6,10 @@ import { ChoiceContext, VisitChoiceActions } from '../../../contexts/dialogConte
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types/user.types';
 import { EndMyDay } from '../../../services/VisitServices';
 import { IVisit } from '../../../types/visit.types';
 import UploadFileButton from '../../buttons/UploadFileButton';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
 
@@ -17,7 +17,7 @@ function EndMydayForm({ visit }: { visit: IVisit }) {
     const [location, setLocation] = useState<{ latitude: string, longitude: string, timestamp: Date }>()
     const [file, setFile] = useState<File>()
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, {
+        <AxiosResponse<GetUserDto>, BackendError, {
             id: string;
             body: FormData;
         }>

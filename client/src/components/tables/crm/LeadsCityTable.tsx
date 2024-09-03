@@ -7,21 +7,21 @@ import { Delete, Edit } from '@mui/icons-material'
 import { UserContext } from '../../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import CreateOrEditCityDialog from '../../dialogs/crm/CreateOrEditCityDialog'
-import { ICRMCity } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import { GetCrmCityDto } from '../../../dtos/crm/crm.dto'
 
 
 type Props = {
-    city: { city: ICRMCity, users: { _id: string, username: string }[] } | undefined,
-    setCity: React.Dispatch<React.SetStateAction<{ city: ICRMCity, users: { _id: string, username: string }[] } | undefined>>,
+    city: GetCrmCityDto | undefined,
+    setCity: React.Dispatch<React.SetStateAction<GetCrmCityDto | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    cities: { city: ICRMCity, users: { _id: string, username: string }[] }[],
-    selectedCities: { city: ICRMCity, users: { _id: string, username: string }[] }[]
-    setSelectedCities: React.Dispatch<React.SetStateAction<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>>,
+    cities: GetCrmCityDto[],
+    selectedCities: GetCrmCityDto[]
+    setSelectedCities: React.Dispatch<React.SetStateAction<GetCrmCityDto[]>>,
 }
 function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, selectedCities, setSelectedCities }: Props) {
-    const [data, setData] = useState<{ city: ICRMCity, users: { _id: string, username: string }[] }[]>(cities)
+    const [data, setData] = useState<GetCrmCityDto[]>(cities)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
@@ -89,7 +89,7 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                             cities && cities.map((city, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedCities.length > 0 && selectedCities.find((t) => t.city._id === city.city._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedCities.length > 0 && selectedCities.find((t) => t.city.id === city.city.id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
@@ -116,7 +116,7 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                                                         }
                                                         if (!e.target.checked) {
                                                             setSelectedCities((cities) => cities.filter((item) => {
-                                                                return item.city._id !== city.city._id
+                                                                return item.city.id !== city.city.id
                                                             }))
                                                         }
                                                     }}
@@ -171,10 +171,10 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
 
                                         </STableCell>
                                         <STableCell style={{ width: '200px' }}>
-                                            {city.city.city}
+                                            {city.city.label}
                                         </STableCell>
                                         <STableCell>
-                                            {city.users.map((u) => { return u.username }).toString()}
+                                            {city.assigned_users.map((u) => { return u.label }).toString()}
                                         </STableCell>
 
                                     </STableRow>

@@ -12,7 +12,6 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { IUser } from '../../types/user.types'
 import { IErpStateTemplate } from '../../types/template.type'
 import { GetStates } from '../../services/ErpServices'
 import CreateOrEditErpStateDialog from '../../components/dialogs/erp/CreateOrEditErpStateDialog'
@@ -20,6 +19,7 @@ import AssignErpCrmStatesDialog from '../../components/dialogs/erp/AssignErpStat
 import ErpStateTable from '../../components/tables/erp reports/ErpStateTable'
 import UploadStatesFromExcelButton from '../../components/buttons/UploadStatesButton'
 import { IState } from '../../types/erp_report.types'
+import { GetUserDto } from '../../dtos/users/user.dto'
 
 
 let template: IErpStateTemplate[] = [
@@ -43,13 +43,13 @@ let template: IErpStateTemplate[] = [
 
 export default function ErpStatesPage() {
   const [flag, setFlag] = useState(1);
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: IState, users: IUser[] }[]>, BackendError>("erp_states", GetStates)
-  const [state, setState] = useState<{ state: IState, users: IUser[] }>()
-  const [states, setStates] = useState<{ state: IState, users: IUser[] }[]>([])
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: IState, users: GetUserDto[] }[]>, BackendError>("erp_states", GetStates)
+  const [state, setState] = useState<{ state: IState, users: GetUserDto[] }>()
+  const [states, setStates] = useState<{ state: IState, users: GetUserDto[] }[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => states, [states])
-  const [preFilteredData, setPreFilteredData] = useState<{ state: IState, users: IUser[] }[]>([])
-  const [selectedStates, setSelectedStates] = useState<{ state: IState, users: IUser[] }[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<{ state: IState, users: GetUserDto[] }[]>([])
+  const [selectedStates, setSelectedStates] = useState<{ state: IState, users: GetUserDto[] }[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const [selectedData, setSelectedData] = useState<IErpStateTemplate[]>(template)
   const [sent, setSent] = useState(false)

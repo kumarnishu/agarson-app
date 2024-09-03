@@ -14,9 +14,9 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import LeadsStageTable from '../../components/tables/crm/LeadsStageTable'
 import {  GetAllStages } from '../../services/LeadsServices'
 import CreateOrEditStageDialog from '../../components/dialogs/crm/CreateOrEditStageDialog'
-import { IStage } from '../../types/crm.types'
 import FindUknownCrmStagesDialog from '../../components/dialogs/crm/FindUknownCrmStagesDialog'
 import { UserContext } from '../../contexts/userContext'
+import { DropDownDto } from '../../dtos/common/dropdown.dto'
 
 type ITemplate = {
   _id: string,
@@ -30,13 +30,13 @@ let template: ITemplate[] = [
 ]
 
 export default function CrmStagesPage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
-  const [stage, setStage] = useState<IStage>()
-  const [stages, setStages] = useState<IStage[]>([])
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
+  const [stage, setStage] = useState<DropDownDto>()
+  const [stages, setStages] = useState<DropDownDto[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => stages, [stages])
-  const [preFilteredData, setPreFilteredData] = useState<IStage[]>([])
-  const [selectedStages, setSelectedStages] = useState<IStage[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<DropDownDto[]>([])
+  const [selectedStages, setSelectedStages] = useState<DropDownDto[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const [selectedData, setSelectedData] = useState<ITemplate[]>(template)
   const [sent, setSent] = useState(false)
@@ -64,8 +64,8 @@ export default function CrmStagesPage() {
     let data: ITemplate[] = []
     selectedStages.map((stage) => {
       return data.push({
-        _id: stage._id,
-        stage: stage.stage,
+        _id: stage.id,
+        stage: stage.value,
       })
     })
     if (data.length > 0)

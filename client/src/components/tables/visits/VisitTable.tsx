@@ -296,7 +296,7 @@ function VisitSTable({ visit, visits, setVisit, selectAll, sorted, setSorted, se
                                                                     </IconButton>
                                                                 </Tooltip>
 
-                                                                {user?.assigned_users && user?.assigned_users.find((user) => user._id === visit.created_by._id) &&
+                                                                {user?.assigned_users && user?.assigned_users.find((user) => user.id === visit.created_by._id) &&
                                                                     <>
 
                                                                         {!visit.visit_validated  && <Tooltip title="validate">

@@ -9,11 +9,11 @@ import * as Yup from 'yup';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { UpdateUserPassword } from '../../../services/UserServices';
 import { BackendError } from '../../..';
-import { IUser } from '../../../types/user.types';
 import AlertBar from '../../snacks/AlertBar';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
-function UpdateUserPasswordForm({ user }: { user: IUser }) {
+function UpdateUserPasswordForm({ user }: { user: GetUserDto }) {
     const { mutate, isSuccess, isLoading, isError, error } = useMutation
         <AxiosResponse<string>,
             BackendError,

@@ -7,21 +7,21 @@ import { Delete, Edit } from '@mui/icons-material'
 import { UserContext } from '../../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import CreateOrEditStageDialog from '../../dialogs/crm/CreateOrEditStageDialog'
-import { IStage } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import { DropDownDto } from '../../../dtos/common/dropdown.dto'
 
 
 type Props = {
-    stage: IStage | undefined,
-    setStage: React.Dispatch<React.SetStateAction<IStage | undefined>>,
+    stage: DropDownDto | undefined,
+    setStage: React.Dispatch<React.SetStateAction<DropDownDto | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    stages: IStage[],
-    selectedStages: IStage[]
-    setSelectedStages: React.Dispatch<React.SetStateAction<IStage[]>>,
+    stages: DropDownDto[],
+    selectedStages: DropDownDto[]
+    setSelectedStages: React.Dispatch<React.SetStateAction<DropDownDto[]>>,
 }
 function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, selectedStages, setSelectedStages }: Props) {
-    const [data, setData] = useState<IStage[]>(stages)
+    const [data, setData] = useState<DropDownDto[]>(stages)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
@@ -83,7 +83,7 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                             stages && stages.map((stage, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedStages.length > 0 && selectedStages.find((t) => t._id === stage._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedStages.length > 0 && selectedStages.find((t) => t.id === stage.id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
@@ -104,7 +104,7 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
 
                                                 <Checkbox sx={{ width: 16, height: 16 }} 
                                                 size="small"
-                                                    checked={selectedStages.length > 0 && selectedStages.find((t) => t._id === stage._id) ? true : false}
+                                                    checked={selectedStages.length > 0 && selectedStages.find((t) => t.id === stage.id) ? true : false}
                                                     onChange={(e) => {
                                                         setStage(stage)
                                                         if (e.target.checked) {
@@ -112,7 +112,7 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
                                                         }
                                                         if (!e.target.checked) {
                                                             setSelectedStages((stages) => stages.filter((item) => {
-                                                                return item._id !== stage._id
+                                                                return item.id !== stage.id
                                                             }))
                                                         }
                                                     }}
@@ -166,7 +166,7 @@ function LeadsStageTable({ stage, selectAll, stages, setSelectAll, setStage, sel
 
                                             </STableCell>
                                         <STableCell style={{ width: '200px' }}>
-                                            {stage.stage}
+                                            {stage.label}
                                         </STableCell>
                                        
 

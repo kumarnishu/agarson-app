@@ -7,25 +7,25 @@ import { UserContext } from '../../../contexts/userContext'
 import PopUp from '../../popup/PopUp'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import CreateOrEditReferDialog from '../../dialogs/crm/CreateOrEditReferDialog'
-import { IReferredParty } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 import AllReferralPageDialog from '../../dialogs/crm/AllReferralPageDialog'
+import { GetReferDto } from '../../../dtos/crm/crm.dto'
 
 
 type Props = {
-  refer: IReferredParty | undefined
-  setRefer: React.Dispatch<React.SetStateAction<IReferredParty | undefined>>,
-  refers: IReferredParty[],
+  refer: GetReferDto | undefined
+  setRefer: React.Dispatch<React.SetStateAction<GetReferDto | undefined>>,
+  refers: GetReferDto[],
   selectAll: boolean,
   setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-  selectedRefers: IReferredParty[]
-  setSelectedRefers: React.Dispatch<React.SetStateAction<IReferredParty[]>>,
+  selectedRefers: GetReferDto[]
+  setSelectedRefers: React.Dispatch<React.SetStateAction<GetReferDto[]>>,
 }
 
 function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selectedRefers, setSelectedRefers }: Props) {
   const { setChoice } = useContext(ChoiceContext)
   const { user } = useContext(UserContext)
-  const [data, setData] = useState<IReferredParty[]>(refers)
+  const [data, setData] = useState<GetReferDto[]>(refers)
 
   useEffect(() => {
     setData(refers)
@@ -285,12 +285,12 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
 
 
                     <STableCell>
-                      {refer.created_by.username}
+                      {refer.created_by.label}
                     </STableCell>
 
 
                     <STableCell>
-                      {refer.updated_by.username}
+                      {refer.updated_by.label}
 
                     </STableCell>
 

@@ -10,11 +10,11 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { GetUsers } from '../../services/UserServices'
-import { IUser } from '../../types/user.types'
 import { ITodo } from '../../types/todo.types'
 import FuzzySearch from 'fuzzy-search'
 import { GetMyTodos } from '../../services/TodoServices'
 import MyTodosTable from '../../components/tables/todos/MyTodosTable'
+import { GetUserDto } from '../../dtos/users/user.dto'
 
 
 type ITodoTemplate = {
@@ -24,7 +24,7 @@ type ITodoTemplate = {
 }
 
 export default function TodosPage() {
-  const [users, setUsers] = useState<IUser[]>([])
+  const [users, setUsers] = useState<GetUserDto[]>([])
   const [hidden, setHidden] = useState(false)
   const [filter, setFilter] = useState<string | undefined>()
   const [todo, setTodo] = useState<ITodo>()
@@ -36,7 +36,7 @@ export default function TodosPage() {
   const [selectedData, setSelectedData] = useState<ITodoTemplate[]>([])
   const { data, isLoading } = useQuery<AxiosResponse<ITodo[]>, BackendError>(["my_todos", hidden], async () => GetMyTodos({ hidden: hidden }))
 
-  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<IUser[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
+  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
 
   const [sent, setSent] = useState(false)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);

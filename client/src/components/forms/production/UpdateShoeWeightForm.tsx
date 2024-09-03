@@ -8,11 +8,11 @@ import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialog
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IUser } from '../../../types/user.types';
 import {  GetDyeById, GetDyes, GetMachines, UpdateShoeWeight1 } from '../../../services/ProductionServices';
 import { IArticle, IDye, IMachine, IShoeWeight } from '../../../types/production.types';
 import { months } from '../../../utils/months';
 import UploadFileButton from '../../buttons/UploadFileButton';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
 type TformData = {
@@ -34,7 +34,7 @@ function UpdateShoeWeightForm({ shoe_weight }: { shoe_weight: IShoeWeight }) {
     const [file, setFile] = useState<File>()
     
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, {
+        <AxiosResponse<GetUserDto>, BackendError, {
             id: string,
             body: FormData
         }>

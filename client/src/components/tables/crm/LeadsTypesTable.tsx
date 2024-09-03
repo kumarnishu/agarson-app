@@ -6,22 +6,22 @@ import PopUp from '../../popup/PopUp'
 import { Delete, Edit } from '@mui/icons-material'
 import { UserContext } from '../../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
-import { ILeadType } from '../../../types/crm.types'
 import CreateOrEditLeadTypeDialog from '../../dialogs/crm/CreateOrEditLeadTypeDialog'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import { DropDownDto } from '../../../dtos/common/dropdown.dto'
 
 
 type Props = {
-    type: ILeadType | undefined,
-    setType: React.Dispatch<React.SetStateAction<ILeadType | undefined>>,
+    type: DropDownDto | undefined,
+    setType: React.Dispatch<React.SetStateAction<DropDownDto | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    types: ILeadType[],
-    selectedTypes: ILeadType[]
-    setSelectedTypes: React.Dispatch<React.SetStateAction<ILeadType[]>>,
+    types: DropDownDto[],
+    selectedTypes: DropDownDto[]
+    setSelectedTypes: React.Dispatch<React.SetStateAction<DropDownDto[]>>,
 }
 function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selectedTypes, setSelectedTypes }: Props) {
-    const [data, setData] = useState<ILeadType[]>(types)
+    const [data, setData] = useState<DropDownDto[]>(types)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
@@ -83,7 +83,7 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                             types && types.map((type, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedTypes.length > 0 && selectedTypes.find((t) => t._id === type._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedTypes.length > 0 && selectedTypes.find((t) => t.id === type.id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
@@ -104,7 +104,7 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
 
                                                 <Checkbox sx={{ width: 16, height: 16 }} 
                                                 size="small"
-                                                    checked={selectedTypes.length > 0 && selectedTypes.find((t) => t._id === type._id) ? true : false}
+                                                    checked={selectedTypes.length > 0 && selectedTypes.find((t) => t.id === type.id) ? true : false}
                                                     onChange={(e) => {
                                                         setType(type)
                                                         if (e.target.checked) {
@@ -112,7 +112,7 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
                                                         }
                                                         if (!e.target.checked) {
                                                             setSelectedTypes((types) => types.filter((item) => {
-                                                                return item._id !== type._id
+                                                                return item.id !== type.id
                                                             }))
                                                         }
                                                     }}
@@ -166,7 +166,7 @@ function LeadsTypeTable({ type, selectAll, types, setSelectAll, setType, selecte
 
                                             </STableCell>
                                         <STableCell style={{ width: '200px' }}>
-                                            {type.type}
+                                            {type.label}
                                         </STableCell>
                                      
 

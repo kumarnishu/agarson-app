@@ -35,7 +35,7 @@ router.patch("/crm/cities/assign", isAuthenticatedUser, AssignCRMCitiesToUsers)
 //leads
 router.route("/leads").get(isAuthenticatedUser, GetLeads).post(isAuthenticatedUser, upload.single('visiting_card'), CreateLead)
 router.route("/remarks/:id").get(isAuthenticatedUser, GetRemarkHistory)
-router.route("/activities/:id").get(isAuthenticatedUser, GetActivities)
+router.route("/activities").get(isAuthenticatedUser, GetActivities)
 router.route("/leads/:id").put(isAuthenticatedUser, upload.single('visiting_card'), UpdateLead).delete(isAuthenticatedUser, DeleteLead)
 router.route("/update/leads/bulk").put(isAuthenticatedUser, upload.single('file'), BulkLeadUpdateFromExcel)
 router.route("/remarks/leads/:id").patch(isAuthenticatedUser, NewRemark)

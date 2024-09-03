@@ -8,7 +8,6 @@ import BackHandIcon from '@mui/icons-material/BackHand';
 import { DownloadFile } from '../../../utils/DownloadFile'
 import PopUp from '../../popup/PopUp'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
-import { ILead } from '../../../types/crm.types'
 import CreateOrEditLeadDialog from '../../dialogs/crm/CreateOrEditLeadDialog'
 import CreateOrEditRemarkDialog from '../../dialogs/crm/CreateOrEditRemarkDialog'
 import ViewRemarksDialog from '../../dialogs/crm/ViewRemarksDialog'
@@ -16,22 +15,23 @@ import ReferLeadDialog from '../../dialogs/crm/ReferLeadDialog'
 import RemoveLeadReferralDialog from '../../dialogs/crm/RemoveLeadReferralDialog'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 import ConvertLeadToReferDialog from '../../dialogs/crm/ConvertLeadToReferDialog'
+import { GetLeadDto } from '../../../dtos/crm/crm.dto'
 
 
 type Props = {
-  lead: ILead | undefined
-  setLead: React.Dispatch<React.SetStateAction<ILead | undefined>>,
-  leads: ILead[],
+  lead: GetLeadDto | undefined
+  setLead: React.Dispatch<React.SetStateAction<GetLeadDto | undefined>>,
+  leads: GetLeadDto[],
   selectAll: boolean,
   setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-  selectedLeads: ILead[]
-  setSelectedLeads: React.Dispatch<React.SetStateAction<ILead[]>>,
+  selectedLeads: GetLeadDto[]
+  setSelectedLeads: React.Dispatch<React.SetStateAction<GetLeadDto[]>>,
 }
 
 function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLeads, setSelectedLeads }: Props) {
   const { setChoice } = useContext(ChoiceContext)
   const { user } = useContext(UserContext)
-  const [data, setData] = useState<ILead[]>(leads)
+  const [data, setData] = useState<GetLeadDto[]>(leads)
 
   useEffect(() => {
     setData(leads)
@@ -283,18 +283,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                 Updated By
 
               </STableHeadCell>
-              <STableHeadCell
-              >
-
-                Whatsapp Status
-
-              </STableHeadCell>
-              <STableHeadCell
-              >
-
-                Last whatsapp
-
-              </STableHeadCell>
+            
               <STableHeadCell
               >
 
@@ -354,7 +343,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                         element={
                           <Stack direction="row" spacing={1}>
 
-                            {lead.referred_party && user?.assigned_permissions.includes('leads_edit') &&
+                            {lead.referred_party_name && user?.assigned_permissions.includes('leads_edit') &&
                               <Tooltip title="Remove Refrerral">
                                 <IconButton color="error"
 
@@ -368,7 +357,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                   <BackHandIcon />
                                 </IconButton>
                               </Tooltip>}
-                            {!lead.referred_party && user?.assigned_permissions.includes('leads_edit') &&
+                            {!lead.referred_party_name && user?.assigned_permissions.includes('leads_edit') &&
                               <Tooltip title="refer">
                                 <IconButton color="primary"
 
@@ -383,7 +372,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                                 </IconButton>
                               </Tooltip>}
 
-                            {!lead.referred_party && user?.assigned_permissions.includes('leads_edit') &&
+                            {!lead.referred_party_name && user?.assigned_permissions.includes('leads_edit') &&
                               <Tooltip title="convert to refer">
                                 <IconButton color="primary"
 
@@ -466,7 +455,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
                       />
                     </STableCell>
 
-                    <STableCell style={{ fontWeight: lead.visiting_card && lead.visiting_card.public_url && 'bold' }} title={lead.visiting_card && lead.visiting_card.public_url && 'This number has Visitng card Uploaded'}>
+                    <STableCell style={{ fontWeight: lead.visiting_card && lead.visiting_card && 'bold' }} title={lead.visiting_card && lead.visiting_card && 'This number has Visitng card Uploaded'}>
                       {lead.name}
                     </STableCell>
 
@@ -530,7 +519,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
 
                     <STableCell>
-                      {lead.remarks && lead.remarks.length > 0 && lead.remarks[lead.remarks.length - 1].remark.slice(0, 50) || ""}
+                      {lead.remark && lead.remark.slice(0, 50) || ""}
 
                     </STableCell>
 
@@ -593,28 +582,23 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
 
                     <STableCell>
-                      {lead.created_by.username}
+                      {lead.created_by.label}
                     </STableCell>
 
 
                     <STableCell>
-                      {lead.updated_by.username}
+                      {lead.updated_by.label}
 
                     </STableCell>
-                    <STableCell>
-                      {lead.is_sent ? "Sent" : "Pending"}
-                    </STableCell>
-                    <STableCell>
-                      {new Date(lead.last_whatsapp).toLocaleString()}
-                    </STableCell>
+                  
                     <STableCell
                       title="double click to download"
                       onDoubleClick={() => {
-                        if (lead.visiting_card && lead.visiting_card?.public_url) {
-                          DownloadFile(lead.visiting_card.public_url, lead.visiting_card.filename)
+                        if (lead.visiting_card && lead.visiting_card) {
+                          DownloadFile(lead.visiting_card, 'visiting card')
                         }
                       }}>
-                      {lead.visiting_card && lead.visiting_card.public_url ? < img height="20" width="55" src={lead.visiting_card && lead.visiting_card.public_url} alt="visiting card" /> : "na"}
+                      {lead.visiting_card && lead.visiting_card ? < img height="20" width="55" src={lead.visiting_card && lead.visiting_card} alt="visiting card" /> : "na"}
                     </STableCell>
                   </STableRow>
                 )
@@ -632,7 +616,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
           <>
             <CreateOrEditRemarkDialog lead={lead} />
             <DeleteCrmItemDialog lead={lead} />
-            <ViewRemarksDialog lead={lead} />
+            <ViewRemarksDialog id={lead._id} />
             <ReferLeadDialog lead={lead} />
             <RemoveLeadReferralDialog lead={lead} />
             <ConvertLeadToReferDialog lead={lead} />

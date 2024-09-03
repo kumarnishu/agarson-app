@@ -7,8 +7,8 @@ import { useMutation, useQuery } from 'react-query';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IMenu, IPermission } from '../../../types/user.types';
 import { AssignPermissionsToUsers, GetPermissions } from '../../../services/UserServices';
+import { IMenu, IPermission } from '../../../dtos/users/user.dto';
 
 
 function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {

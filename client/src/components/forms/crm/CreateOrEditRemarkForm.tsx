@@ -9,14 +9,15 @@ import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContex
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { ILead, IRemark, IStage } from '../../../types/crm.types';
 import { toTitleCase } from '../../../utils/TitleCase';
+import {  GetLeadDto, GetRemarksDto } from '../../../dtos/crm/crm.dto';
+import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
 
-function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: ILead, remark?: IRemark, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
+function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: GetLeadDto, remark?: GetRemarksDto, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [display, setDisplay] = useState(false)
     const [card, setCard] = useState(Boolean(lead?.has_card))
-    const [stages, setStages] = useState<IStage[]>([])
+    const [stages, setStages] = useState<DropDownDto[]>([])
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             lead_id?: string,
@@ -35,7 +36,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: ILead, r
                 queryClient.invalidateQueries('reminderremarks')
             }
         })
-    const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<IStage[]>, BackendError>("crm_stages", GetAllStages)
+    const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
 
     const { setChoice } = useContext(ChoiceContext)
 
@@ -173,11 +174,11 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: ILead, r
                         </option>
                         {
                             stages.map(stage => {
-                                if (stage.stage === "refer")
+                                if (stage.value === "refer")
                                     return null
                                 else
-                                    return (<option key={stage._id} value={stage.stage}>
-                                        {toTitleCase(stage.stage)}
+                                    return (<option key={stage.id} value={stage.value}>
+                                        {toTitleCase(stage.label)}
                                     </option>)
                             })
                         }

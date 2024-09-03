@@ -9,10 +9,9 @@ import { CreateOrUpdateRefer, GetAllCities, GetAllStates } from '../../../servic
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { ICRMCity, ICRMState, IReferredParty } from '../../../types/crm.types';
 import { UserContext } from '../../../contexts/userContext';
 import { toTitleCase } from '../../../utils/TitleCase';
-import {  IUser } from '../../../types/user.types';
+import { GetCrmCityDto, GetCrmStateDto, GetReferDto } from '../../../dtos/crm/crm.dto';
 
 export type TformData = {
     name: string,
@@ -23,17 +22,17 @@ export type TformData = {
     state: string,
 }
 
-function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
+function CreateOrEditReferForm({ refer }: { refer?: GetReferDto }) {
     const { user } = useContext(UserContext);
-    const [states, setStates] = useState<{ state: ICRMState, users: IUser[] }[]>([])
-    const [cities, setCities] = useState<{ city: ICRMCity, users: IUser[] }[]>([])
+    const [states, setStates] = useState<GetCrmStateDto[]>([])
+    const [cities, setCities] = useState<GetCrmCityDto[]>([])
     const [state, setState] = useState<string>();
 
-    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: ICRMState, users: IUser[] }[]>, BackendError>("crm_states", GetAllStates)
-    const { data: citydata, isSuccess: isCitySuccess } = useQuery<AxiosResponse<{ city: ICRMCity, users: IUser[] }[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
+    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>("crm_states", GetAllStates)
+    const { data: citydata, isSuccess: isCitySuccess } = useQuery<AxiosResponse<GetCrmCityDto[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
 
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IReferredParty>, BackendError, { body: FormData, id?: string }>
+        <AxiosResponse<GetReferDto>, BackendError, { body: FormData, id?: string }>
         (CreateOrUpdateRefer, {
             onSuccess: () => {
                 queryClient.invalidateQueries('refers')
@@ -212,8 +211,8 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
                     </option>
                     {
                         states.map(state => {
-                            return (<option key={state.state._id} value={state.state.state}>
-                                {toTitleCase(state.state.state)}
+                            return (<option key={state.state.id} value={state.state.value}>
+                                {toTitleCase(state.state.label)}
                             </option>)
                         })
                     }
@@ -242,8 +241,8 @@ function CreateOrEditReferForm({ refer }: { refer?: IReferredParty }) {
                     </option>
                     {
                         cities.map((city, index) => {
-                            return (<option key={index} value={city.city.city.toLowerCase()}>
-                                {toTitleCase(city.city.city)}
+                            return (<option key={index} value={city.city.value.toLowerCase()}>
+                                {toTitleCase(city.city.label)}
                             </option>)
                         })
                     }

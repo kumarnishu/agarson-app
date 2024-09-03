@@ -2,10 +2,10 @@ import { Dialog, DialogContent, DialogTitle,  DialogActions, Typography, Avatar,
 import { Stack } from '@mui/system'
 import { useContext } from 'react'
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { IUser } from "../../../types/user.types"
 import { Cancel } from '@mui/icons-material'
+import { GetUserDto } from '../../../dtos/users/user.dto'
 
-function ProfileDialog({ profile }: { profile: IUser }) {
+function ProfileDialog({ profile }: { profile: GetUserDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
         <Dialog open={choice === UserChoiceActions.view_profile ? true : false}
@@ -21,7 +21,7 @@ function ProfileDialog({ profile }: { profile: IUser }) {
             <DialogContent>
                 <Box>
                     <Stack p={2} justifyContent="center" alignItems="center">
-                        <Avatar src={profile?.dp?.public_url} sx={{ height: "150px", width: "150px" }} alt="profile pic" />
+                        <Avatar src={profile.dp} sx={{ height: "150px", width: "150px" }} alt="profile pic" />
                     </Stack>
                     <Stack direction="column" justifyContent="center" alignItems="center">
                         <Typography variant="h4" component="h2">

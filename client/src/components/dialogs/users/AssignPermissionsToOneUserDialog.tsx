@@ -7,8 +7,8 @@ import { useMutation, useQuery } from 'react-query';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IMenu, IPermission, IUser } from '../../../types/user.types';
 import { AssignPermissionsToOneUser, GetPermissions } from '../../../services/UserServices';
+import { GetUserDto, IMenu, IPermission } from '../../../dtos/users/user.dto';
 
 
 
@@ -49,7 +49,7 @@ function RenderTree({ permissiontree, permissions, setPermissions }: { permissio
     else return null
 }
 
-function AssignPermissionsToOneUserDialog({ user }: { user: IUser }) {
+function AssignPermissionsToOneUserDialog({ user }: { user: GetUserDto }) {
     const [permissiontree, setPermissiontree] = useState<IMenu>()
     const [permissions, setPermissions] = useState<string[]>(user.assigned_permissions)
     const { choice, setChoice } = useContext(ChoiceContext)

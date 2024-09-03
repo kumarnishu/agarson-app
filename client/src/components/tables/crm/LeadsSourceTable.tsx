@@ -7,21 +7,21 @@ import { Delete, Edit } from '@mui/icons-material'
 import { UserContext } from '../../../contexts/userContext'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import CreateOrEditLeadSourceDialog from '../../dialogs/crm/CreateOrEditLeadSourceDialog'
-import { ILeadSource } from '../../../types/crm.types'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
+import { DropDownDto } from '../../../dtos/common/dropdown.dto'
 
 
 type Props = {
-    source: ILeadSource | undefined,
-    setLeadSource: React.Dispatch<React.SetStateAction<ILeadSource | undefined>>,
+    source: DropDownDto | undefined,
+    setLeadSource: React.Dispatch<React.SetStateAction<DropDownDto | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    sources: ILeadSource[],
-    selectedLeadSources: ILeadSource[]
-    setSelectedLeadSources: React.Dispatch<React.SetStateAction<ILeadSource[]>>,
+    sources: DropDownDto[],
+    selectedLeadSources: DropDownDto[]
+    setSelectedLeadSources: React.Dispatch<React.SetStateAction<DropDownDto[]>>,
 }
 function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLeadSource, selectedLeadSources, setSelectedLeadSources }: Props) {
-    const [data, setData] = useState<ILeadSource[]>(sources)
+    const [data, setData] = useState<DropDownDto[]>(sources)
     const { setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
     useEffect(() => {
@@ -83,7 +83,7 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                             sources && sources.map((source, index) => {
                                 return (
                                     <STableRow
-                                        style={{ backgroundColor: selectedLeadSources.length > 0 && selectedLeadSources.find((t) => t._id === source._id) ? "lightgrey" : "white" }}
+                                        style={{ backgroundColor: selectedLeadSources.length > 0 && selectedLeadSources.find((t) => t.id === source.id) ? "lightgrey" : "white" }}
                                         key={index}
                                     >
                                         {selectAll ?
@@ -104,7 +104,7 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
 
                                                 <Checkbox sx={{ width: 16, height: 16 }}
                                                     size="small"
-                                                    checked={selectedLeadSources.length > 0 && selectedLeadSources.find((t) => t._id === source._id) ? true : false}
+                                                    checked={selectedLeadSources.length > 0 && selectedLeadSources.find((t) => t.id === source.id) ? true : false}
                                                     onChange={(e) => {
                                                         setLeadSource(source)
                                                         if (e.target.checked) {
@@ -112,7 +112,7 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
                                                         }
                                                         if (!e.target.checked) {
                                                             setSelectedLeadSources((sources) => sources.filter((item) => {
-                                                                return item._id !== source._id
+                                                                return item.id !== source.id
                                                             }))
                                                         }
                                                     }}
@@ -164,7 +164,7 @@ function LeadsLeadSourceTable({ source, selectAll, sources, setSelectAll, setLea
 
                                         </STableCell>
                                         <STableCell style={{ width: '200px' }}>
-                                            {source.source}
+                                            {source.label}
                                         </STableCell>
 
 

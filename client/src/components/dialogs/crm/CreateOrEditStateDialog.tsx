@@ -2,10 +2,10 @@ import { Dialog, DialogContent, IconButton, DialogTitle } from '@mui/material'
 import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
-import { ICRMState } from '../../../types/crm.types'
 import CreateOrEditStateForm from '../../forms/crm/CreateOrEditStateForm'
+import { DropDownDto } from '../../../dtos/common/dropdown.dto'
 
-function CreateOrEditStateDialog({ state }: { state?: ICRMState}) {
+function CreateOrEditCrmStateDialog({ state }: { state?: DropDownDto}) {
     const { choice, setChoice } = useContext(ChoiceContext)
     
     return (
@@ -26,4 +26,4 @@ function CreateOrEditStateDialog({ state }: { state?: ICRMState}) {
     )
 }
 
-export default CreateOrEditStateDialog
+export default CreateOrEditCrmStateDialog

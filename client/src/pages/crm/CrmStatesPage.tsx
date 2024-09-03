@@ -12,17 +12,16 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { ICRMStateTemplate } from '../../types/template.type'
 import LeadsStateTable from '../../components/tables/crm/LeadsStateTable'
 import { GetAllStates } from '../../services/LeadsServices'
 import CreateOrEditStateDialog from '../../components/dialogs/crm/CreateOrEditStateDialog'
 import AssignCrmStatesDialog from '../../components/dialogs/crm/AssignCrmStatesDialog'
 import FindUknownCrmStatesDialog from '../../components/dialogs/crm/FindUknownCrmStatesDialog'
-import { ICRMState } from '../../types/crm.types'
 import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
+import { CreateAndUpdatesStateFromExcelDto, GetCrmStateDto } from '../../dtos/crm/crm.dto'
 
 
-let template: ICRMStateTemplate[] = [
+let template: CreateAndUpdatesStateFromExcelDto[] = [
   {
     _id: "",
     state: "delhi"
@@ -31,15 +30,15 @@ let template: ICRMStateTemplate[] = [
 
 export default function CrmStatesPage() {
   const [flag, setFlag] = useState(1);
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: ICRMState, users: { _id: string, username: string }[] }[]>, BackendError>("crm_states", GetAllStates)
-  const [state, setState] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }>()
-  const [states, setStates] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }[]>([])
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>, BackendError>("crm_states", GetAllStates)
+  const [state, setState] = useState<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }>()
+  const [states, setStates] = useState<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => states, [states])
-  const [preFilteredData, setPreFilteredData] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }[]>([])
-  const [selectedStates, setSelectedStates] = useState<{ state: ICRMState, users: { _id: string, username: string }[] }[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>([])
+  const [selectedStates, setSelectedStates] = useState<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>([])
   const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<ICRMStateTemplate[]>(template)
+  const [selectedData, setSelectedData] = useState<CreateAndUpdatesStateFromExcelDto[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -63,11 +62,11 @@ export default function CrmStatesPage() {
 
   // refine data
   useEffect(() => {
-    let data: ICRMStateTemplate[] = []
+    let data: CreateAndUpdatesStateFromExcelDto[] = []
     selectedStates.map((state) => {
       return data.push({
-        _id: state.state._id,
-        state: state.state.state,
+        _id: state.state.state.id,
+        state: state.state.state.value,
         users: state.users.map((u) => { return u.username }).toString()
       })
     })

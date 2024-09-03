@@ -1,11 +1,11 @@
 import { Dialog, DialogContent, DialogTitle,  IconButton } from '@mui/material'
 import { useContext } from 'react'
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { IUser } from "../../../types/user.types"
 import UpdateUserForm from '../../forms/user/UpdateUserForm'
 import { Cancel } from '@mui/icons-material'
+import { GetUserDto } from '../../../dtos/users/user.dto'
 
-function UpdateUserDialog({ user }: { user: IUser }) {
+function UpdateUserDialog({ user }: { user: GetUserDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
 
     return (

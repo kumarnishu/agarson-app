@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 import { AxiosResponse } from 'axios';
 import { BackendError } from '../../..';
 import {  GetPermissions } from '../../../services/UserServices';
-import { IMenu } from '../../../types/user.types';
+import { IMenu } from '../../../dtos/users/user.dto';
 
 
 

@@ -1,24 +1,37 @@
 import { Dialog, DialogContent, IconButton, DialogTitle, Stack } from '@mui/material'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
-import { ILead, IRemark } from '../../../types/crm.types'
 import DeleteRemarkDialog from './DeleteRemarkDialog'
 import CreateOrEditRemarkDialog from './CreateOrEditRemarkDialog'
 import { UserContext } from '../../../contexts/userContext'
 import { toTitleCase } from '../../../utils/TitleCase'
+import { GetActivitiesOrRemindersDto, GetRemarksDto } from '../../../dtos/crm/crm.dto'
+import { AxiosResponse } from 'axios'
+import { useQuery } from 'react-query'
+import { BackendError } from '../../..'
+import { GetRemarksHistory } from '../../../services/LeadsServices'
 
 
-function ViewRemarksDialog({ lead }: { lead: ILead }) {
+function ViewRemarksDialog({ id }: { id: string }) {
     const [display, setDisplay] = useState<boolean>(false)
     const [display2, setDisplay2] = useState<boolean>(false)
     const { choice, setChoice } = useContext(ChoiceContext)
-    const [remark, setRemark] = useState<IRemark>()
+    const [remark, setRemark] = useState<GetRemarksDto>()
+    const [remarks, setRemarks] = useState<GetRemarksDto[]>()
+
+    const { data, isSuccess } = useQuery<AxiosResponse<[]>, BackendError>(["remarks", id], async () => GetRemarksHistory({ id: id }))
+
+
     const { user } = useContext(UserContext)
     let previous_date = new Date()
     let day = previous_date.getDate() - 1
     previous_date.setDate(day)
 
+    useEffect(() => {
+        if (isSuccess && data)
+            setRemarks(data?.data)
+    }, [isSuccess])
     return (
         <Dialog fullScreen={Boolean(window.screen.width < 500)}
             open={choice === LeadChoiceActions.view_remarks ? true : false}
@@ -29,16 +42,16 @@ function ViewRemarksDialog({ lead }: { lead: ILead }) {
             <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Remarks history</DialogTitle>
             <DialogContent>
                 <Stack direction="column" gap={2} >
-                    {lead.remarks.map((item, index) => {
+                    {remarks && remarks.map((item, index) => {
                         return (
 
                             <div key={index} style={{ borderRadius: '1px 10px', padding: '10px', background: 'whitesmoke', paddingLeft: '20px', border: '1px solid grey' }}>
-                                <p>{toTitleCase(item.created_by.username)} : {item.remark} </p>
-                                <p>{item.remind_date && `Remind Date : ${new Date(item.remind_date).toLocaleDateString()}`} </p>
+                                <p>{toTitleCase(item.created_by.value)} : {item.remark} </p>
+                                <p>{item.remind_date && `Remind Date : ${item.remind_date}`} </p>
                                 <br></br>
-                                <p>{new Date(item.created_at).toLocaleString()}</p>
+                                <p>{item.created_date}</p>
                                 {
-                                    user && item.remark && user?.username === item.created_by.username && new Date(item.created_at) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
+                                    user && item.remark && user?.username === item.created_by.value && new Date(item.created_date) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
                                         {user?.assigned_permissions.includes('reminders_delete') && <IconButton size="small" color="error" onClick={() => {
                                             setRemark(item)
                                             setDisplay(true)

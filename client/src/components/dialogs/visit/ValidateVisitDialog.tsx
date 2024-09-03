@@ -7,14 +7,14 @@ import { ValidateVisit } from '../../../services/VisitServices';
 import { AxiosResponse } from 'axios';
 import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
-import { IUser } from '../../../types/user.types';
 import { useMutation } from 'react-query';
 import AlertBar from '../../snacks/AlertBar';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 function ValidateVisitDialog({ visit }: { visit: IVisitReport }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IUser>, BackendError, string>
+        <AxiosResponse<GetUserDto>, BackendError, string>
         (ValidateVisit, {
             onSuccess: () => {
                 queryClient.invalidateQueries('visits')

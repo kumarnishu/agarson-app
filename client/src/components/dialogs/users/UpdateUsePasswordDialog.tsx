@@ -2,11 +2,11 @@ import { Dialog, DialogContent, DialogTitle,  IconButton } from '@mui/material'
 import { useContext } from 'react';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import UpdateUserPasswordForm from '../../forms/user/UpdateUserPasswordForm';
-import { IUser } from "../../../types/user.types"
 import { Cancel } from '@mui/icons-material';
+import { GetUserDto } from '../../../dtos/users/user.dto';
 
 
-function UpdateUsePasswordDialog({ user }: { user: IUser }) {
+function UpdateUsePasswordDialog({ user }: { user: GetUserDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
         <>

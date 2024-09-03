@@ -8,10 +8,10 @@ import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContex
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { ICRMState } from '../../../types/crm.types';
 import * as yup from 'yup';
+import { GetCrmStateDto } from '../../../dtos/crm/crm.dto';
 
-function CreateOrEditStateForm({ state }: { state?: ICRMState}) {
+function CreateOrEditStateForm({ state }: { state?: GetCrmStateDto}) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: {
@@ -31,7 +31,7 @@ function CreateOrEditStateForm({ state }: { state?: ICRMState}) {
         state: string
     }>({
         initialValues: {
-            state: state ? state.state : ""
+            state: state ? state.state.value : ""
         },
         validationSchema:yup.object({
             state:yup.string().required()
@@ -40,7 +40,7 @@ function CreateOrEditStateForm({ state }: { state?: ICRMState}) {
             state: string,
         }) => {
             mutate({
-                id:state?._id,
+                id:state?.state?.id,
                 body: {
                     state: values.state
                 }
