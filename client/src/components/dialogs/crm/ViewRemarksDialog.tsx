@@ -6,7 +6,7 @@ import DeleteRemarkDialog from './DeleteRemarkDialog'
 import CreateOrEditRemarkDialog from './CreateOrEditRemarkDialog'
 import { UserContext } from '../../../contexts/userContext'
 import { toTitleCase } from '../../../utils/TitleCase'
-import { GetActivitiesOrRemindersDto, GetRemarksDto } from '../../../dtos/crm/crm.dto'
+import { GetRemarksDto } from '../../../dtos/crm/crm.dto'
 import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { BackendError } from '../../..'
@@ -39,7 +39,10 @@ function ViewRemarksDialog({ id }: { id: string }) {
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
                 <Cancel fontSize='large' />
             </IconButton>
-            <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Remarks history</DialogTitle>
+            <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>
+                <h1>{remarks && remarks[0] && remarks[0]?.lead_name || "Remarks History"}</h1>
+                <p>{remarks && remarks[0] && remarks[0]?.lead_mobile}</p>
+            </DialogTitle>
             <DialogContent>
                 <Stack direction="column" gap={2} >
                     {remarks && remarks.map((item, index) => {

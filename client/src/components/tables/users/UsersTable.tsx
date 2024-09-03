@@ -487,11 +487,11 @@ function UsersSTable({ user, selectAll, users, setSelectAll, setUser, selectedUs
 
 
                                         <STableCell>
-                                            {new Date(user.last_login).toLocaleString()}
+                                            {user.last_login}
                                         </STableCell>
 
                                         <STableCell>
-                                            {new Date(user.updated_at).toLocaleDateString()}
+                                            {user.updated_at}
                                         </STableCell>
 
                                         <STableCell>

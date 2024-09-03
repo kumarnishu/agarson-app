@@ -190,10 +190,15 @@ export type CreateOrEditReferFromExcelDto = {
     state: string,
     status?: string
 }
-
 export type GetRemarksDto = {
     _id: string,
     remark: string,
+    lead_id?: string,
+    lead_name?: string,
+    lead_mobile?: string,
+    refer_id?: string,
+    refer_name?: string,
+    refer_mobile?: string,
     remind_date: string,
     created_date: string,
     created_by: DropDownDto

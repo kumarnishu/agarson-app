@@ -118,10 +118,10 @@ export const DeleteCRMLeadType = async (req: Request, res: Response, next: NextF
 export const GetAllCRMLeadSources = async (req: Request, res: Response, next: NextFunction) => {
     let result: DropDownDto[] = []
     let sources = await LeadSource.find()
-    sources.map((i) => {
+    result = sources.map((i) => {
         return { id: i._id, value: i.source, label: i.source }
     })
-    return res.status(200).json(sources)
+    return res.status(200).json(result)
 }
 
 
@@ -622,7 +622,7 @@ export const GetAssignedReferrals = async (req: Request, res: Response, next: Ne
     let result: GetLeadDto[] = []
     leads = await Lead.find({ referred_party: party._id }).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
     for (let i = 0; i < leads.length; i++) {
-        let lead = leads[0];
+        let lead = leads[i];
         let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
         result.push({
             _id: lead._id,
@@ -676,9 +676,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         if (stage != "undefined") {
             leads = await Lead.find({
                 stage: stage, state: { $in: states }, city: { $in: cities }
-            }).populate('updated_by').populate('referred_party').populate('created_by').populate({
-                path: 'remarks'
-            }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
+            }).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
                 stage: stage, state: { $in: states }, city: { $in: cities }
             }).countDocuments()
@@ -700,7 +698,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
             }).countDocuments()
         }
         for (let i = 0; i < leads.length; i++) {
-            let lead = leads[0];
+            let lead = leads[i];
             let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
             result.push({
                 _id: lead._id,
@@ -773,6 +771,9 @@ export const ReferLead = async (req: Request, res: Response, next: NextFunction)
     lead.referred_party = party
     lead.stage = "refer"
     lead.referred_date = new Date()
+    lead.updated_at = new Date()
+    if (req.user)
+        lead.updated_by = req.user
     await lead.save()
     return res.status(200).json({ message: "party referred successfully" })
 }
@@ -799,6 +800,9 @@ export const RemoveLeadReferral = async (req: Request, res: Response, next: Next
     lead.referred_party = undefined
     lead.referred_date = undefined
     lead.stage = "open"
+    lead.updated_at = new Date()
+    if (req.user)
+        lead.updated_by = req.user
     await lead.save()
     return res.status(200).json({ message: "referrals removed successfully" })
 }
@@ -1646,7 +1650,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
         for (let i = 0; i < leads.length; i++) {
-            let lead = leads[0];
+            let lead = leads[i];
             let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
             result.push({
                 _id: lead._id,
@@ -2509,7 +2513,7 @@ export const FuzzySearchOkOnlyLeads = async (req: Request, res: Response, next: 
         let count = leads.length
         leads = leads.slice((page - 1) * limit, limit * page)
         for (let i = 0; i < leads.length; i++) {
-            let lead = leads[0];
+            let lead = leads[i];
             let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
             result.push({
                 _id: lead._id,
@@ -3589,6 +3593,9 @@ export const GetRemarkHistory = async (req: Request, res: Response, next: NextFu
         return {
             _id: r._id,
             remark: r.remark,
+            lead_id: lead._id,
+            lead_name: lead.name,
+            lead_mobile: lead.mobile,
             remind_date: r.remind_date && moment(r.remind_date).format("DD/MM/YYYY"),
             created_date: r.created_at && moment(r.created_at).format("DD/MM/YYYY"),
             created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username }

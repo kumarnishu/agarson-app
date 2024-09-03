@@ -314,8 +314,8 @@ function RemindersTable({ remarks }: Props) {
                                             {remark.created_by.value.slice(0, 50)}
 
                                         </STableCell>
-                                        <STableCell title={remark.created_at && new Date(remark.created_at).toDateString()}>
-                                            {remark.created_at && new Date(remark.created_at).toLocaleTimeString()}
+                                        <STableCell title={remark.created_at }>
+                                            {remark.created_at}
 
                                         </STableCell>
                                         <STableCell>
@@ -433,7 +433,7 @@ function RemindersTable({ remarks }: Props) {
                     </STableBody>
                 </STable>
             </Box >
-            {lead && <ViewRemarksDialog lead={lead} />}
+            {lead && <ViewRemarksDialog id={lead._id} />}
             {lead && <CreateOrEditRemarkDialog lead={lead} />}
         </>
     )

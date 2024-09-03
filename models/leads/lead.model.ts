@@ -148,7 +148,7 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
   
     referred_party: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'IReferredParty'
+        ref: 'ReferredParty'
     },
     referred_date: {
         type: Date

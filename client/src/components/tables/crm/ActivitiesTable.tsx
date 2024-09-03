@@ -302,14 +302,14 @@ function ActivitiesTable({ remarks }: Props) {
 
                                         </STableCell>
                                         <STableCell title={remark.created_at && new Date(remark.created_at).toDateString()}>
-                                            {remark.created_at && new Date(remark.created_at).toLocaleTimeString()}
+                                            {remark.created_at}
 
                                         </STableCell>
                                         <STableCell>
                                             {remark && remark.stage && remark.stage}
                                         </STableCell>
                                         <STableCell>
-                                            {remark.remind_date ? new Date(remark.remind_date).toLocaleDateString() : "na"}
+                                            {remark.remind_date|| "na"}
                                         </STableCell>
                                         <STableCell>
                                             {remark && remark.has_card ? 'Visiting card available' : "na"}

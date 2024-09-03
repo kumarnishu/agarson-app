@@ -33,7 +33,7 @@ let template: CreateAndUpdatesCityFromExcelDto[] = [
 export default function CrmCitiesPage() {
   const [flag, setFlag] = useState(1);
   const [state, setState] = useState<string | undefined>();
-  const [states, setStates] = useState<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>([])
+  const [states, setStates] = useState<GetCrmStateDto[]>([])
 
   const { data: citiesdata, isSuccess, isLoading, refetch } = useQuery<AxiosResponse<GetCrmCityDto[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
   const [city, setCity] = useState<GetCrmCityDto>()
@@ -49,7 +49,7 @@ export default function CrmCitiesPage() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const { user: LoggedInUser } = useContext(UserContext)
 
-  const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>, BackendError>("crm_states", GetAllStates)
+  const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>("crm_states", GetAllStates)
 
   function handleExcel() {
     setAnchorEl(null)
@@ -183,8 +183,8 @@ export default function CrmCitiesPage() {
               </option>
               {
                 states.map(state => {
-                  return (<option key={state.state.state.id} value={state.state.state.value}>
-                    {toTitleCase(state.state.state.label)}
+                  return (<option key={state.state.id} value={state.state.value}>
+                    {toTitleCase(state.state.label)}
                   </option>)
                 })
               }

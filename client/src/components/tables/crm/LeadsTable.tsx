@@ -570,13 +570,13 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
 
 
                     <STableCell>
-                      {new Date(lead.created_at).toLocaleString()}
+                      {lead.created_at}
 
                     </STableCell>
 
 
                     <STableCell>
-                      {new Date(lead.updated_at).toLocaleString()}
+                      {lead.updated_at}
 
                     </STableCell>
 
