@@ -30,13 +30,13 @@ let template: CreateAndUpdatesStateFromExcelDto[] = [
 
 export default function CrmStatesPage() {
   const [flag, setFlag] = useState(1);
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>, BackendError>("crm_states", GetAllStates)
-  const [state, setState] = useState<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }>()
-  const [states, setStates] = useState<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>([])
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>("crm_states", GetAllStates)
+  const [state, setState] = useState<GetCrmStateDto>()
+  const [states, setStates] = useState<GetCrmStateDto[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => states, [states])
-  const [preFilteredData, setPreFilteredData] = useState<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>([])
-  const [selectedStates, setSelectedStates] = useState<{ state: GetCrmStateDto, users: { _id: string, username: string }[] }[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<GetCrmStateDto[]>([])
+  const [selectedStates, setSelectedStates] = useState<GetCrmStateDto[]>([])
   const [filter, setFilter] = useState<string | undefined>()
   const [selectedData, setSelectedData] = useState<CreateAndUpdatesStateFromExcelDto[]>(template)
   const [sent, setSent] = useState(false)
@@ -65,9 +65,9 @@ export default function CrmStatesPage() {
     let data: CreateAndUpdatesStateFromExcelDto[] = []
     selectedStates.map((state) => {
       return data.push({
-        _id: state.state.state.id,
-        state: state.state.state.value,
-        users: state.users.map((u) => { return u.username }).toString()
+        _id: state.state.id,
+        state: state.state.value,
+        users: state.assigned_users.map((u) => { return u.value }).toString()
       })
     })
     if (data.length > 0)
@@ -142,7 +142,7 @@ export default function CrmStatesPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.assigned_permissions.includes('states_create')&&<UploadCRMStatesFromExcelButton  />}
+            {LoggedInUser?.assigned_permissions.includes('states_create') && <UploadCRMStatesFromExcelButton />}
           </Stack >
           <>
 
@@ -168,8 +168,8 @@ export default function CrmStatesPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {LoggedInUser?.assigned_permissions.includes('states_create') &&<MenuItem
-             
+              {LoggedInUser?.assigned_permissions.includes('states_create') && <MenuItem
+
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_state })
                   setState(undefined)
@@ -177,7 +177,7 @@ export default function CrmStatesPage() {
                 }}
               > Add New</MenuItem>}
               {LoggedInUser?.assigned_permissions.includes('states_edit') && <MenuItem
-             
+
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {
                     alert("select some states")
@@ -190,8 +190,8 @@ export default function CrmStatesPage() {
                   setAnchorEl(null)
                 }}
               > Assign States</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('states_edit') &&<MenuItem
-             
+              {LoggedInUser?.assigned_permissions.includes('states_edit') && <MenuItem
+
                 onClick={() => {
                   if (selectedStates && selectedStates.length == 0) {
                     alert("select some states")
@@ -204,9 +204,9 @@ export default function CrmStatesPage() {
                   setAnchorEl(null)
                 }}
               > Remove States</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('states_create') &&<MenuItem
+              {LoggedInUser?.assigned_permissions.includes('states_create') && <MenuItem
                 sx={{ color: 'red' }}
-             
+
                 onClick={() => {
                   setChoice({ type: LeadChoiceActions.find_unknown_states })
                   setState(undefined)
@@ -214,14 +214,14 @@ export default function CrmStatesPage() {
                 }}
               > Find Unknown States</MenuItem>}
 
-              {LoggedInUser?.assigned_permissions.includes('states_export') &&< MenuItem onClick={handleExcel}
-             
+              {LoggedInUser?.assigned_permissions.includes('states_export') && < MenuItem onClick={handleExcel}
+
               >Export To Excel</MenuItem>}
 
             </Menu >
             <CreateOrEditStateDialog />
             {LoggedInUser?.is_admin && <FindUknownCrmStatesDialog />}
-            {<AssignCrmStatesDialog flag={flag} states={selectedStates.map((item) => { return item.state })} />}
+            {<AssignCrmStatesDialog flag={flag} states={selectedStates.map((item) => { return { id: item.state.id, label: item.state.label, value: item.state.value } })} />}
           </>
         </Stack >
       </Stack >

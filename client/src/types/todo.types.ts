@@ -1,4 +1,5 @@
-import { IUser } from "./user.types"
+import { GetUserDto } from "../dtos/users/user.dto"
+
 
 export type ITodoTemplate = {
     _id: string,
@@ -33,7 +34,7 @@ export type ITodo = {
     }[],
     replies: {
         reply: string,
-        created_by: IUser,
+        created_by: GetUserDto,
         timestamp: Date
     }[],
     todo_type: string,
@@ -44,11 +45,11 @@ export type ITodo = {
     months: string,
     weekdays: string,
     years: string,
-    connected_user: IUser,
+    connected_user: GetUserDto,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 
 export type ITodoBody = Request['body'] & ITodo;

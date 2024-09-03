@@ -1,5 +1,6 @@
+import { GetUserDto } from "../dtos/users/user.dto";
 import { Asset } from "./asset.types"
-import { IUser } from "./user.types"
+
 
 export type IDye = {
     _id: string,
@@ -10,8 +11,8 @@ export type IDye = {
     stdshoe_weight: number,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 interface IColumn {
     key: string;
@@ -57,16 +58,16 @@ export type IShoeWeight = {
     shoe_photo3: Asset,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 export type IMachineCategory={
     _id: string,
     categories: string[],
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 export type IMachine = {
     _id: string,
@@ -77,8 +78,8 @@ export type IMachine = {
     display_name: string,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 
 export type IArticle = {
@@ -88,8 +89,8 @@ export type IArticle = {
     display_name: string,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 export type IDyeLocation = {
     _id: string,
@@ -97,8 +98,8 @@ export type IDyeLocation = {
     display_name: string,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 
 export type IDyeStatus = {
@@ -112,14 +113,14 @@ export type IDyeStatus = {
     location: IDyeLocation,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 
 export type IProduction = {
     _id: string,
     machine: IMachine,
-    thekedar: IUser,
+    thekedar: GetUserDto,
     articles: IArticle[],
     manpower: number,
     production: number,
@@ -130,6 +131,6 @@ export type IProduction = {
     production_hours: number,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }

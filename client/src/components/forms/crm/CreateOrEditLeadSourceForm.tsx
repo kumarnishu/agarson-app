@@ -15,7 +15,7 @@ function CreateOrEditLeadSourceForm({ source }: { source?: DropDownDto}) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: {
-                source: string
+                key: string
             },
             id?: string
         }>
@@ -42,7 +42,7 @@ function CreateOrEditLeadSourceForm({ source }: { source?: DropDownDto}) {
             mutate({
                 id:source?.id,
                 body: {
-                    source: values.source
+                    key: values.source
                 }
             })
         }

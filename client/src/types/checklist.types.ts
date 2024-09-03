@@ -1,4 +1,4 @@
-import { IUser } from "./user.types"
+import { GetUserDto } from "../dtos/users/user.dto";
 
 export type IChecklist = {
     _id: string,
@@ -9,11 +9,11 @@ export type IChecklist = {
         desired_date: Date,
         actual_date?: Date,
     }[],
-    owner: IUser,
+    owner: GetUserDto,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 
 

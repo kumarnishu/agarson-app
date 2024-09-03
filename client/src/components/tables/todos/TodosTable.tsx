@@ -256,9 +256,7 @@ function TodosTable({ todo, todos, setTodo, selectAll, setSelectAll, selectedTod
                                         <STableCell title={todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply || ""}>
                                             {todo.replies && todo.replies.length > 0 && todo.replies[todo.replies.length - 1].reply.slice(0, 20) || ""}
                                         </STableCell>
-                                        <STableCell>
-                                            {todo.connected_user && todo.connected_user.connected_number && todo.connected_user.connected_number.replace("@c.us", "")}
-                                        </STableCell>
+                                      
                                         <STableCell>
                                             {todo.start_time && todo.start_time}
                                         </STableCell>

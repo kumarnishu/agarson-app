@@ -1,5 +1,5 @@
+import { GetUserDto } from "../dtos/users/user.dto"
 import { Asset } from "./asset.types"
-import { IUser } from "./user.types"
 
 export type IVisitReport = {
     _id: string,
@@ -15,7 +15,7 @@ export type IVisitReport = {
         timestamp: Date,
         address: string
     },
-    person: IUser,
+    person: GetUserDto,
     party_name: string,
     mobile: string,
     city: string,
@@ -28,14 +28,14 @@ export type IVisitReport = {
     turnover: string,
     visit_in_photo: Asset,
     visit_samples_photo:Asset
-    ankit_input: { input: string, created_by: IUser, timestamp: Date },
-    brijesh_input: { input: string, created_by: IUser, timestamp: Date },
+    ankit_input: { input: string, created_by: GetUserDto, timestamp: Date },
+    brijesh_input: { input: string, created_by: GetUserDto, timestamp: Date },
     visit_validated: boolean,
     visit: IVisit,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 export type IVisit = {
     _id: string,
@@ -58,8 +58,8 @@ export type IVisit = {
     visit_reports: IVisitReport[]
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 
 export type IVisitBody = Request['body'] & IVisit;

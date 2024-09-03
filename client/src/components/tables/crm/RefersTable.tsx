@@ -35,59 +35,59 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
     <>
       {refers && refers.length == 0 ? <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>
         :
-      <Box sx={{
-        overflow: "auto",
-        height: '76vh'
-      }}>
-        <STable>
-          <STableHead style={{
+        <Box sx={{
+          overflow: "auto",
+          height: '76vh'
+        }}>
+          <STable>
+            <STableHead style={{
 
-          }}>
-            <STableRow>
-              <STableHeadCell
-              >
+            }}>
+              <STableRow>
+                <STableHeadCell
+                >
 
-                <Checkbox
-                  indeterminate={selectAll ? true : false}
-                  checked={Boolean(selectAll)}
-                  size="small"
-                  sx={{ width: 10, height: 10 }}
-                  onChange={(e) => {
-                    if (e.currentTarget.checked) {
-                      setSelectedRefers(refers)
-                      setSelectAll(true)
-                    }
-                    if (!e.currentTarget.checked) {
-                      setSelectedRefers([])
-                      setSelectAll(false)
-                    }
-                  }} />
+                  <Checkbox
+                    indeterminate={selectAll ? true : false}
+                    checked={Boolean(selectAll)}
+                    size="small"
+                    sx={{ width: 10, height: 10 }}
+                    onChange={(e) => {
+                      if (e.currentTarget.checked) {
+                        setSelectedRefers(refers)
+                        setSelectAll(true)
+                      }
+                      if (!e.currentTarget.checked) {
+                        setSelectedRefers([])
+                        setSelectAll(false)
+                      }
+                    }} />
 
-              </STableHeadCell>
+                </STableHeadCell>
 
-              <STableHeadCell
-              >
+                <STableHeadCell
+                >
 
-                Actions
+                  Actions
 
-              </STableHeadCell>
-
-
+                </STableHeadCell>
 
 
-              <STableHeadCell
-              >
 
-                Refer Name
 
-              </STableHeadCell>
+                <STableHeadCell
+                >
+
+                  Refer Name
+
+                </STableHeadCell>
                 <STableHeadCell
                 >
 
                   Refers
 
                 </STableHeadCell>
-                
+
                 <STableHeadCell
                 >
 
@@ -117,28 +117,28 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                   Mobile3
 
                 </STableHeadCell>
-              <STableHeadCell
-              >
+                <STableHeadCell
+                >
 
-                City
-
-              </STableHeadCell>
-
-
-              <STableHeadCell
-              >
-
-                State
+                  City
 
                 </STableHeadCell>
-             
 
-              <STableHeadCell
-              >
 
-                GST
+                <STableHeadCell
+                >
 
-            
+                  State
+
+                </STableHeadCell>
+
+
+                <STableHeadCell
+                >
+
+                  GST
+
+
                 </STableHeadCell>
 
                 <STableHeadCell
@@ -148,89 +148,89 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
 
                 </STableHeadCell>
 
-              <STableHeadCell
-              >
+                <STableHeadCell
+                >
 
-                Created At
+                  Created At
 
-              </STableHeadCell>
+                </STableHeadCell>
 
-              <STableHeadCell
-              >
+                <STableHeadCell
+                >
 
-                Created By
+                  Created By
 
-              </STableHeadCell>
-            </STableRow>
-          </STableHead>
-          <STableBody >
-            {
+                </STableHeadCell>
+              </STableRow>
+            </STableHead>
+            <STableBody >
+              {
 
-              data && data.map((refer, index) => {
-                return (
-                  <STableRow
-                    style={{ backgroundColor: selectedRefers.length > 0 && selectedRefers.find((t) => t._id === refer._id) ? "lightgrey" : "white" }}
-                    key={index}>
-                    {selectAll ?
+                data && data.map((refer, index) => {
+                  return (
+                    <STableRow
+                      style={{ backgroundColor: selectedRefers.length > 0 && selectedRefers.find((t) => t._id === refer._id) ? "lightgrey" : "white" }}
+                      key={index}>
+                      {selectAll ?
 
-                      <STableCell>
-
-
-                        <Checkbox sx={{ width: 10, height: 10 }} size="small"
-                          checked={Boolean(selectAll)}
-                        />
+                        <STableCell>
 
 
-                      </STableCell>
-                      :
-                      null
-                    }
-                    {!selectAll ?
+                          <Checkbox sx={{ width: 10, height: 10 }} size="small"
+                            checked={Boolean(selectAll)}
+                          />
 
-                      <STableCell>
 
-                        <Checkbox sx={{ width: 10, height: 10 }} size="small"
-                          checked={selectedRefers.length > 0 && selectedRefers.find((t) => t._id === refer._id) ? true : false}
-                          onChange={(e) => {
-                            setRefer(refer)
-                            if (e.target.checked) {
-                              setSelectedRefers([...selectedRefers, refer])
-                            }
-                            if (!e.target.checked) {
-                              setSelectedRefers((refers) => refers.filter((item) => {
-                                return item._id !== refer._id
-                              }))
-                            }
-                          }}
-                        />
+                        </STableCell>
+                        :
+                        null
+                      }
+                      {!selectAll ?
 
-                      </STableCell>
-                      :
-                      null
-                    }
+                        <STableCell>
 
-                    <STableCell style={{ zIndex: -1 }}>
-                      <PopUp
-                        element={
-                          <Stack direction="row" spacing={1}>
+                          <Checkbox sx={{ width: 10, height: 10 }} size="small"
+                            checked={selectedRefers.length > 0 && selectedRefers.find((t) => t._id === refer._id) ? true : false}
+                            onChange={(e) => {
+                              setRefer(refer)
+                              if (e.target.checked) {
+                                setSelectedRefers([...selectedRefers, refer])
+                              }
+                              if (!e.target.checked) {
+                                setSelectedRefers((refers) => refers.filter((item) => {
+                                  return item._id !== refer._id
+                                }))
+                              }
+                            }}
+                          />
 
-                            {user?.is_admin && user.assigned_permissions.includes('refer_delete')&&
-                              <Tooltip title="delete">
-                                <IconButton color="error"
-                                 
-                                  onClick={() => {
-                                    setChoice({ type: LeadChoiceActions.delete_crm_item })
-                                    setRefer(refer)
+                        </STableCell>
+                        :
+                        null
+                      }
 
-                                  }}
-                                >
-                                  <Delete />
-                                </IconButton>
-                              </Tooltip>
-                            }
-                            {user?.assigned_permissions.includes('refer_edit')&&<Tooltip title="edit">
+                      <STableCell style={{ zIndex: -1 }}>
+                        <PopUp
+                          element={
+                            <Stack direction="row" spacing={1}>
+
+                              {user?.is_admin && user.assigned_permissions.includes('refer_delete') &&
+                                <Tooltip title="delete">
+                                  <IconButton color="error"
+
+                                    onClick={() => {
+                                      setChoice({ type: LeadChoiceActions.delete_crm_item })
+                                      setRefer(refer)
+
+                                    }}
+                                  >
+                                    <Delete />
+                                  </IconButton>
+                                </Tooltip>
+                              }
+                              {user?.assigned_permissions.includes('refer_edit') && <Tooltip title="edit">
                                 <IconButton color="secondary"
-                                 
+
                                   onClick={() => {
 
                                     setChoice({ type: LeadChoiceActions.create_or_edit_refer })
@@ -243,87 +243,87 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                               </Tooltip>}
 
 
-                            {user?.assigned_permissions.includes('refer_view') &&<Tooltip title="view all refer refers">
-                              <IconButton color="primary"
-                               
-                                onClick={() => {
-                                  setChoice({ type: LeadChoiceActions.view_referrals })
-                                  setRefer(refer)
-                                }}
-                              >
-                                <Visibility />
-                              </IconButton>
-                            </Tooltip>}
+                              {user?.assigned_permissions.includes('refer_view') && <Tooltip title="view all refer refers">
+                                <IconButton color="primary"
 
-                          </Stack>}
-                      />
-                    </STableCell>
-                    <STableCell >
-                      {refer.name}
-                    </STableCell>
-                    <STableCell >
-                      {refer.refers}
-                    </STableCell>
-                    <STableCell >
-                      {refer.remark}
-                    </STableCell>
+                                  onClick={() => {
+                                    setChoice({ type: LeadChoiceActions.view_referrals })
+                                    setRefer(refer)
+                                  }}
+                                >
+                                  <Visibility />
+                                </IconButton>
+                              </Tooltip>}
 
-                    <STableCell>
-                      {refer.customer_name}
-                    </STableCell>
-                    <STableCell>
-                      {refer.mobile}
-                    </STableCell>
-                    <STableCell>
-                      {refer.mobile2}
-                    </STableCell>
-                    <STableCell>
-                      {refer.mobile3}
-                    </STableCell>
-                    <STableCell>
-                      {refer.city}
-                    </STableCell>
-                    <STableCell>
-                      {refer.state}
-                    </STableCell>
+                            </Stack>}
+                        />
+                      </STableCell>
+                      <STableCell >
+                        {refer.name}
+                      </STableCell>
+                      <STableCell >
+                        {refer.refers}
+                      </STableCell>
+                      <STableCell >
+                        {refer.remark}
+                      </STableCell>
 
-                    <STableCell>
+                      <STableCell>
+                        {refer.customer_name}
+                      </STableCell>
+                      <STableCell>
+                        {refer.mobile}
+                      </STableCell>
+                      <STableCell>
+                        {refer.mobile2}
+                      </STableCell>
+                      <STableCell>
+                        {refer.mobile3}
+                      </STableCell>
+                      <STableCell>
+                        {refer.city}
+                      </STableCell>
+                      <STableCell>
+                        {refer.state}
+                      </STableCell>
 
-                      {refer.address}
+                      <STableCell>
 
-                    </STableCell>
+                        {refer.address}
+
+                      </STableCell>
 
 
-                    <STableCell>
+                      <STableCell>
 
-                      {refer.gst}
+                        {refer.gst}
 
-                    </STableCell>
+                      </STableCell>
 
-                    <STableCell>
-                      {refer.created_at}
+                      <STableCell>
+                        {refer.created_at}
 
-                    </STableCell>
+                      </STableCell>
 
-                    <STableCell>
-                      {refer.created_by.label}
-                    </STableCell>
+                      <STableCell>
+                        {refer.created_by.label}
+                      </STableCell>
 
-                  </STableRow>
-                )
-              })
+                    </STableRow>
+                  )
+                })
 
-            }
-          </STableBody>
-        </STable>
-      </Box >}
+              }
+            </STableBody>
+          </STable>
+        </Box >}
       <CreateOrEditReferDialog refer={refer} />
 
       {
         refer ?
           <>
 
-            <DeleteCrmItemDialog refer={refer} />
+            <DeleteCrmItemDialog refer={refer ? { id: refer._id, label: refer.name, value: refer.name } : undefined} />
             <AllReferralPageDialog refer={refer} />
 
           </>

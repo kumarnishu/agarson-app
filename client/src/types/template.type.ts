@@ -1,6 +1,7 @@
+import { GetUserDto } from "../dtos/users/user.dto"
 import { Asset } from "./asset.types"
 import { IState } from "./erp_report.types"
-import { IUser } from "./user.types"
+
 
 export type ILeadTemplate = {
     _id: string,
@@ -106,8 +107,8 @@ export type ITemplateCategoryField = {
     categories: string[],
     updated_at: Date,
     created_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 
 export type IMessageTemplate = {
@@ -119,8 +120,8 @@ export type IMessageTemplate = {
     category: string,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 
 export type IMessageTemplateBody = Request['body'] & IMessageTemplate;

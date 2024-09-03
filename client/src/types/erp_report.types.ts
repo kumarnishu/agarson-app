@@ -1,4 +1,4 @@
-import { IUser } from "./user.types"
+import { GetUserDto } from "../dtos/users/user.dto"
 
 
 export type IState = {
@@ -18,8 +18,8 @@ export type IState = {
     mar: number,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 }
 export type StateTarget = {
     state: IState,
@@ -37,8 +37,8 @@ export type StateTarget = {
     mar: number,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser
+    created_by: GetUserDto,
+    updated_by: GetUserDto
 
 }
 
@@ -52,8 +52,8 @@ export type IBillsAgingReport = {
     plus120: Number
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser,
+    created_by: GetUserDto,
+    updated_by: GetUserDto,
     status?: string
 }
 
@@ -78,8 +78,8 @@ export type IClientSaleReport = {
     mar: string,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser,
+    created_by: GetUserDto,
+    updated_by: GetUserDto,
     status?: string
 }
 
@@ -115,8 +115,8 @@ export type IPendingOrdersReport = {
     size3to8: number,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser,
+    created_by: GetUserDto,
+    updated_by: GetUserDto,
     status?: string
 }
 
@@ -162,7 +162,7 @@ export type IPartyTargetReport = {
     Cur_Mar: number,
     created_at: Date,
     updated_at: Date,
-    created_by: IUser,
-    updated_by: IUser,
+    created_by: GetUserDto,
+    updated_by: GetUserDto,
     status?: string
 }

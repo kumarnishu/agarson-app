@@ -3,9 +3,9 @@ import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
 import CreateOrEditCityForm from '../../forms/crm/CreateOrEditCityForm'
-import { DropDownDto } from '../../../dtos/common/dropdown.dto'
+import { CreateOrEditCrmCity } from '../../../dtos/crm/crm.dto'
 
-function CreateOrEditCityDialog({ city }: { city?: DropDownDto }) {
+function CreateOrEditCityDialog({ city }: { city?: CreateOrEditCrmCity }) {
     const { choice, setChoice } = useContext(ChoiceContext)
 
     return (
@@ -20,7 +20,11 @@ function CreateOrEditCityDialog({ city }: { city?: DropDownDto }) {
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>{!city ? "New City" : "Edit City "}</DialogTitle>
             <DialogContent>
-                <CreateOrEditCityForm city={city} />
+                <CreateOrEditCityForm city={city ? {
+                    id: city.id,
+                    state: city.state,
+                    city: city.city
+                } : undefined} />
             </DialogContent>
         </Dialog>
     )

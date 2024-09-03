@@ -619,7 +619,7 @@ function LeadsTable({ lead, leads, setLead, selectAll, setSelectAll, selectedLea
               _id: lead._id,
               has_card: lead.has_card
             } : undefined} />
-            <DeleteCrmItemDialog lead={lead} />
+            <DeleteCrmItemDialog lead={lead ? { id: lead._id, value: lead.name, label: lead.name } : undefined} />
             <ViewRemarksDialog id={lead._id} />
             <ReferLeadDialog lead={lead} />
             <RemoveLeadReferralDialog lead={lead} />

@@ -34,7 +34,7 @@ function UpdateProfileDialog() {
                     !isEditing && user ?
                         <Box>
                             <Stack p={2} justifyContent="center" alignItems="center">
-                                <Avatar src={user?.dp?.public_url} sx={{ height: "150px", width: "150px" }} alt="profile pic" />
+                                <Avatar src={user?.dp} sx={{ height: "150px", width: "150px" }} alt="profile pic" />
                             </Stack>
                             <Stack direction="column" justifyContent="center" alignItems="center">
                                 <Typography variant="h6" component="h2">

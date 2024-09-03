@@ -10,11 +10,11 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import * as yup from 'yup';
 import { toTitleCase } from '../../../utils/TitleCase';
-import { CreateOrEditCrmCity, GetCrmCityDto } from '../../../dtos/crm/crm.dto';
+import { CreateOrEditCrmCity, GetCrmStateDto } from '../../../dtos/crm/crm.dto';
 
 function CreateOrEditCityForm({ city }: { city?: CreateOrEditCrmCity }) {
-    const [states, setStates] = useState<GetCrmCityDto[]>([])
-    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<GetCrmCityDto[]>, BackendError>("crm_states", GetAllStates)
+    const [states, setStates] = useState<GetCrmStateDto[]>([])
+    const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>("crm_states", GetAllStates)
 
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {

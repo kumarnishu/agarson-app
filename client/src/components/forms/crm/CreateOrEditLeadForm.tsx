@@ -11,9 +11,7 @@ import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { toTitleCase } from '../../../utils/TitleCase';
-import { IState } from '../../../types/erp_report.types';
 import { GetCrmCityDto, GetCrmStateDto, GetLeadDto } from '../../../dtos/crm/crm.dto';
-import { GetUserDto } from '../../../dtos/users/user.dto';
 import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
 export type TformData = {

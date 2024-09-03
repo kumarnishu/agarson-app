@@ -135,10 +135,10 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                                                 element={
                                                     <Stack direction="row">
                                                         <>
-                                                            {user?.is_admin && user.assigned_permissions.includes('city_delete')&&
+                                                            {user?.is_admin && user.assigned_permissions.includes('city_delete') &&
                                                                 <Tooltip title="delete">
                                                                     <IconButton color="error"
-                                                                       
+
 
                                                                         onClick={() => {
                                                                             setChoice({ type: LeadChoiceActions.delete_crm_item })
@@ -151,9 +151,9 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                                                                 </Tooltip>
                                                             }
 
-                                                            {user?.assigned_permissions.includes('city_edit') &&<Tooltip title="edit">
+                                                            {user?.assigned_permissions.includes('city_edit') && <Tooltip title="edit">
                                                                 <IconButton
-                                                                   
+
                                                                     onClick={() => {
                                                                         setCity(city)
                                                                         setChoice({ type: LeadChoiceActions.create_or_edit_city })
@@ -182,7 +182,7 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
                             })}
                     </STableBody>
                 </STable>
-                <CreateOrEditCityDialog city={city?.city} />
+                <CreateOrEditCityDialog city={city ? { id: city.city.id, city: city.city.value, state: city.state } : undefined} />
                 <DeleteCrmItemDialog city={city?.city} />
             </Box>}
         </>
