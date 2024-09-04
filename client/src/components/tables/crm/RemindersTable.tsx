@@ -300,7 +300,7 @@ function RemindersTable({ remarks }: Props) {
                                             {remark && remark.stage && remark.stage}
                                         </STableCell>
                                         <STableCell>
-                                            {remark.remind_date ? new Date(remark.remind_date).toLocaleDateString() : "na"}
+                                            {remark.remind_date || "na"}
                                         </STableCell>
                                         <STableCell>
                                             {remark && remark.has_card ? 'Visiting card available' : "na"}

@@ -83,10 +83,10 @@ export default function NewReferReportPage() {
         filterSelectOptions: reports.map((i) => { return i.address }).filter(onlyUnique)
       },
       {
-        accessorKey: 'created_by.username',
+        accessorKey: 'created_by.label',
         header: 'Creator',
         filterVariant: 'multi-select',
-        filterSelectOptions: reports.map((i) => { return i.created_by.value }).filter(onlyUnique)
+        filterSelectOptions: reports.map((i) => { return i.created_by.label }).filter(onlyUnique)
       },
       {
         accessorKey: 'created_at',

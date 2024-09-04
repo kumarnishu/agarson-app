@@ -98,7 +98,7 @@ export default function CrmCitiesPage() {
   useEffect(() => {
     if (filter) {
       if (cities) {
-        const searcher = new FuzzySearch(cities, ["city.city", "users.username"], {
+        const searcher = new FuzzySearch(cities, ["city.value", "assigned_users.value"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);

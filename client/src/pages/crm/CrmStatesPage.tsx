@@ -85,7 +85,7 @@ export default function CrmStatesPage() {
   useEffect(() => {
     if (filter) {
       if (states) {
-        const searcher = new FuzzySearch(states, ["state.state", "users.username"], {
+        const searcher = new FuzzySearch(states, ["state.value", "assigned_users.value"], {
           caseSensitive: false,
         });
         const result = searcher.search(filter);

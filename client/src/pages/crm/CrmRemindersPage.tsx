@@ -5,7 +5,6 @@ import { GetReminderRemarks } from '../../services/LeadsServices'
 import { BackendError } from '../..'
 import { Box,  DialogTitle,  LinearProgress, Paper, Stack, Typography } from '@mui/material'
 
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import RemindersTable from '../../components/tables/crm/RemindersTable'
 import { GetActivitiesOrRemindersDto } from '../../dtos/crm/crm.dto'
 
@@ -29,14 +28,12 @@ function CrmReminderPage() {
       {
         isLoading && <LinearProgress />
       }
-      <DialogTitle sx={{ textAlign: 'center' }}>Reminders - 7 Days</DialogTitle>
-      {isLoading && <TableSkeleton />}
-      {!isLoading &&
+      <DialogTitle sx={{ textAlign: 'center' }}>Reminders - 3 Days</DialogTitle>
+     
         <Stack direction={"column"}>
           <Box>
             <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
             </Typography>
-            {isLoading && <TableSkeleton />}
             {!isLoading &&
               window.screen.width < 500 ?
               <Box>
@@ -94,7 +91,7 @@ function CrmReminderPage() {
             }
           </Box >
           
-        </Stack >}
+        </Stack >
     </Box >
   )
 }

@@ -106,7 +106,12 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                     Source
 
                                 </STableHeadCell>
+                                <STableHeadCell style={{ width: '200px', backgroundColor: 'green', color: 'white' }}
+                                >
 
+                                    Result
+
+                                </STableHeadCell>
 
 
 
@@ -134,6 +139,9 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         indeterminate={false}
                                         size="small" />{leads[1].name}
                                 </STableCell>
+                                <STableCell title='lead name' style={{ width: '200px' }}>
+                                    {targetLead.name}
+                                </STableCell>
                             </STableRow>
                             <STableRow
                                 key={2}
@@ -141,19 +149,19 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
 
 
                                 <STableCell title='lead mobiles' style={{ width: '200px' }}>
-                                    {leads[0].mobile},
-                                    {leads[0].alternate_mobile1},
-                                    {leads[0].alternate_mobile2}
+                                    {leads[0].mobile}
+                                    {leads[0].alternate_mobile1 ? ` | ${leads[0].alternate_mobile1}` : ""}
+                                    {leads[0].alternate_mobile2 ? ` | ${leads[0].alternate_mobile2}` : ""}
                                 </STableCell>
                                 <STableCell title='lead mobiles' style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         var tmp = mobiles;
 
                                         if (e.target.checked) {
-                                            if (mobiles.length == 3)
-                                                return;
-                                            tmp.push(leads[1].mobile)
-                                            setMobiles(tmp);
+                                            if (tmp.length <= 3) {
+                                                tmp.push(leads[1].mobile)
+                                                setMobiles(tmp);
+                                            }
                                         }
                                         else {
                                             tmp = tmp.filter(e => {
@@ -168,10 +176,10 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         var tmp = mobiles;
 
                                         if (e.target.checked) {
-                                            if (mobiles.length == 3)
-                                                return;
-                                            tmp.push(leads[1].alternate_mobile1)
-                                            setMobiles(tmp);
+                                            if (tmp.length <= 3) {
+                                                tmp.push(leads[1].alternate_mobile1)
+                                                setMobiles(tmp);
+                                            }
                                         }
                                         else {
                                             tmp = tmp.filter(e => {
@@ -187,10 +195,10 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         var tmp = mobiles;
 
                                         if (e.target.checked) {
-                                            if (mobiles.length == 3)
-                                                return;
-                                            tmp.push(leads[1].alternate_mobile2)
-                                            setMobiles(tmp);
+                                            if (tmp.length <= 3) {
+                                                tmp.push(leads[1].alternate_mobile2)
+                                                setMobiles(tmp);
+                                            }
                                         }
                                         else {
                                             tmp = tmp.filter(e => {
@@ -203,6 +211,9 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         size="small" />{leads[1].alternate_mobile2}
 
 
+                                </STableCell>
+                                <STableCell title='lead mobiles' style={{ width: '200px' }}>
+                                    {mobiles.toString()}
                                 </STableCell>
                             </STableRow>
 
@@ -223,9 +234,12 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         else {
                                             setTartgetLead({ ...targetLead, city: leads[0].city })
                                         }
-                                    }} disabled={!leads[0].city} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!leads[1].city} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
                                         size="small" />{leads[1].city}
+                                </STableCell>
+                                <STableCell title='city' style={{ width: '200px' }}>
+                                    {targetLead.city}
                                 </STableCell>
                             </STableRow>
                             <STableRow
@@ -244,9 +258,12 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         else {
                                             setTartgetLead({ ...targetLead, state: leads[0].state })
                                         }
-                                    }} disabled={!leads[0].state} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!leads[1].state} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
                                         size="small" />{leads[1].state}
+                                </STableCell>
+                                <STableCell title='state' style={{ width: '200px' }}>
+                                    {targetLead.state}
                                 </STableCell>
                             </STableRow>
                             <STableRow
@@ -265,9 +282,12 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         else {
                                             setTartgetLead({ ...targetLead, stage: leads[0].stage })
                                         }
-                                    }} disabled={!leads[0].stage} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!leads[1].stage} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
                                         size="small" />{leads[1].stage}
+                                </STableCell>
+                                <STableCell title='lead stage' style={{ width: '200px' }}>
+                                    {targetLead.stage}
                                 </STableCell>
                             </STableRow> <STableRow
                                 key={6}
@@ -285,9 +305,12 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         else {
                                             setTartgetLead({ ...targetLead, email: leads[0].email })
                                         }
-                                    }} disabled={!leads[0].email} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!leads[1].email} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
                                         size="small" />{leads[1].email}
+                                </STableCell>
+                                <STableCell title='email' style={{ width: '200px' }}>
+                                    {targetLead.email}
                                 </STableCell>
                             </STableRow>
                             <STableRow
@@ -306,9 +329,12 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         else {
                                             setTartgetLead({ ...targetLead, alternate_email: leads[0].alternate_email })
                                         }
-                                    }} disabled={!leads[0].alternate_email} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!leads[1].alternate_email} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
                                         size="small" />{leads[1].alternate_email}
+                                </STableCell>
+                                <STableCell title='email' style={{ width: '200px' }}>
+                                    {targetLead.alternate_email}
                                 </STableCell>
                             </STableRow>
 
@@ -318,7 +344,7 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                             >
 
                                 <STableCell title='address' style={{ width: '200px' }}>
-                                    {leads[0].address.slice(20).toString()}
+                                    {leads[0].address && leads[0].address.slice(20).toString()}
                                 </STableCell>
                                 <STableCell title='address' style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
@@ -328,19 +354,25 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         else {
                                             setTartgetLead({ ...targetLead, address: leads[0].address })
                                         }
-                                    }} disabled={!leads[0].address} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!leads[1].address} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
-                                        size="small" />{leads[1].address.slice(20).toString()}
+                                        size="small" />{leads[1].address && leads[1].address.slice(20).toString()}
+                                </STableCell>
+                                <STableCell title='address' style={{ width: '200px' }}>
+                                    {targetLead.address && targetLead.address.slice(20).toString()}
                                 </STableCell>
                             </STableRow>
 
                             <STableRow key={9}>
 
 
-                                <STableCell style={{ width: '200px', fontWeight: 'bold' }}>
+                                <STableCell style={{ width: '200px' }}>
 
                                 </STableCell>
-                                <STableCell style={{ width: '200px', fontWeight: 'bold' }}>
+                                <STableCell style={{ width: '200px' }}>
+
+                                </STableCell>
+                                <STableCell style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         if (e.target.checked) {
                                             setTartgetLead({ ...targetLead, merge_refer: true })
@@ -357,10 +389,13 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                             <STableRow key={10}>
 
 
-                                <STableCell style={{ width: '200px', fontWeight: 'bold' }}>
+                                <STableCell style={{ width: '200px' }}>
 
                                 </STableCell>
-                                <STableCell style={{ width: '200px', fontWeight: 'bold' }}>
+                                <STableCell style={{ width: '200px' }}>
+
+                                </STableCell>
+                                <STableCell style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         if (e.target.checked) {
                                             setTartgetLead({ ...targetLead, merge_remarks: true })
@@ -373,21 +408,10 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                                         size="small" /> Merge Remarks Data
                                 </STableCell>
                             </STableRow>
-                            <STableRow key={11}>
-
-
-                                <STableCell style={{ width: '200px', fontWeight: 'bold' }}>
-                                    Merged Mobiles
-                                </STableCell>
-                                <STableCell style={{ width: '200px', fontWeight: 'bold' }}>
-                                    {mobiles.toString()}
-                                </STableCell>
-                            </STableRow>
 
                         </STableBody>
 
                     </STable>
-                    {JSON.stringify(targetLead)}
                 </Stack>
 
             </DialogContent>

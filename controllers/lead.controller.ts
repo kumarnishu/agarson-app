@@ -3514,7 +3514,7 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
 
 export const GetMyReminders = async (req: Request, res: Response, next: NextFunction) => {
     let previous_date = new Date()
-    let day = previous_date.getDate() - 7
+    let day = previous_date.getDate() - 3
     previous_date.setDate(day)
 
     let leads = await Lead.find({ updated_at: { $lte: new Date(), $gt: previous_date } }).populate('referred_party')
@@ -3522,38 +3522,38 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     let result: GetActivitiesOrRemindersDto[] = []
     for (let i = 0; i < leads.length; i++) {
         let lead = leads[i]
-        let rem = await Remark.findOne({ lead: lead._id, remind_date: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').sort('-remind_date').sort('-created_at')
-        if (rem && rem.lead) {
+        let rem = await Remark.findOne({ lead: lead._id, created_at: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').sort('-created_at')
+        if (rem &&  rem.remind_date) {
             result.push({
                 _id: rem._id,
                 remark: rem.remark,
                 created_at: rem.created_at && moment(rem.created_at).format("LT"),
                 remind_date: rem.remind_date && moment(rem.remind_date).format("DD/MM/YYYY"),
                 created_by: { id: rem.created_by._id, value: rem.created_by.username, label: rem.created_by.username },
-                lead_id: rem.lead._id,
-                name: rem.lead.name,
-                customer_name: rem.lead.customer_name,
-                customer_designation: rem.lead.customer_designation,
-                mobile: rem.lead.mobile,
-                gst: rem.lead.gst,
-                has_card: rem.lead.has_card,
-                email: rem.lead.email,
-                city: rem.lead.city,
-                state: rem.lead.state,
-                country: rem.lead.country,
-                address: rem.lead.address,
-                work_description: rem.lead.work_description,
-                turnover: rem.lead.turnover,
-                alternate_mobile1: rem.lead.alternate_mobile1,
-                alternate_mobile2: rem.lead.alternate_mobile2,
-                alternate_email: rem.lead.alternate_email,
-                lead_type: rem.lead.lead_type,
-                stage: rem.lead.stage,
-                lead_source: rem.lead.lead_source,
-                visiting_card: rem.lead.visiting_card?.public_url || "",
-                referred_party_name: rem.lead.referred_party?.name || "",
-                referred_party_mobile: rem.lead.referred_party?.mobile || "",
-                referred_date: rem.lead.referred_date && moment(rem.lead.referred_date).format("DD/MM/YYYY") || "",
+                lead_id: lead._id,
+                name: lead.name,
+                customer_name: lead.customer_name,
+                customer_designation: lead.customer_designation,
+                mobile: lead.mobile,
+                gst: lead.gst,
+                has_card: lead.has_card,
+                email: lead.email,
+                city: lead.city,
+                state: lead.state,
+                country: lead.country,
+                address: lead.address,
+                work_description: lead.work_description,
+                turnover: lead.turnover,
+                alternate_mobile1: lead.alternate_mobile1,
+                alternate_mobile2: lead.alternate_mobile2,
+                alternate_email: lead.alternate_email,
+                lead_type: lead.lead_type,
+                stage: lead.stage,
+                lead_source: lead.lead_source,
+                visiting_card: lead.visiting_card?.public_url || "",
+                referred_party_name: lead.referred_party?.name || "",
+                referred_party_mobile: lead.referred_party?.mobile || "",
+                referred_date: lead.referred_date && moment(lead.referred_date).format("DD/MM/YYYY") || "",
 
             })
         }

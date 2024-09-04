@@ -88,20 +88,20 @@ function AllReferralPageDialog({ refer }: { refer: GetReferDto }) {
             }}>
                 <Cancel fontSize='large' />
             </IconButton>
-            <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Referrals</DialogTitle>
-            <DialogContent>
+            <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Referrals
 
+                {LoggedInUser?.is_admin && <Button variant="text" color="success"
+                    onClick={() => {
+                        handleExcel()
+                    }}
+                >     Export To Excel</Button>}
+            </DialogTitle>
+            <DialogContent>
+            
 
                 {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
-                <Box>
-                    {LoggedInUser?.is_admin && <Button fullWidth variant="outlined" color="success"
-                        onClick={() => {
-                            handleExcel()
-                        }}
-                    >Export To Excel</Button>}
-
-                </Box >
+             
                 <Box sx={{
                     overflow: "auto",
                     height: '70vh'
