@@ -2,7 +2,7 @@ import { Search } from '@mui/icons-material'
 import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import  { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { UserContext } from '../../contexts/userContext'
 import DBPagination from '../../components/pagination/DBpagination';
@@ -206,7 +206,7 @@ export default function RefersPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2}>
-            {LoggedInUser?.assigned_permissions.includes('refer_create')&&<UploadRefersExcelButton />}
+            {LoggedInUser?.assigned_permissions.includes('refer_create') && <UploadRefersExcelButton />}
           </Stack >
           <>
 
@@ -232,16 +232,16 @@ export default function RefersPage() {
               }}
               sx={{ borderRadius: 2 }}
             >
-              {LoggedInUser?.assigned_permissions.includes('refer_create') &&<MenuItem
-                 onClick={() => {
+              {LoggedInUser?.assigned_permissions.includes('refer_create') && <MenuItem
+                onClick={() => {
                   setChoice({ type: LeadChoiceActions.create_or_edit_refer })
                   setRefer(undefined);
                   setAnchorEl(null)
                 }}
-            
+
               > Add New</MenuItem>}
               {LoggedInUser?.assigned_permissions.includes('refer_export') && < MenuItem onClick={handleExcel}
-            
+
               >Export To Excel</MenuItem>}
 
             </Menu >
@@ -262,9 +262,9 @@ export default function RefersPage() {
           setSelectAll={setSelectAll}
           refers={refers}
         />
+        <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
       </>
       }
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
     </>
 
   )

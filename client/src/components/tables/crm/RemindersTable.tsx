@@ -31,7 +31,7 @@ function RemindersTable({ remarks }: Props) {
         <>
             <Box sx={{
                 overflow: "auto",
-                height: '65vh'
+                height: '75vh'
             }}>
                 <STable
                 >

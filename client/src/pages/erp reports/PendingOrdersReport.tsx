@@ -410,7 +410,7 @@ export default function PendingOrdersReport() {
             </Stack >
             <Box sx={{
                 overflow: "auto",
-                height: '80vh'
+                height: '75vh'
             }}
             >
                 {/* table */}

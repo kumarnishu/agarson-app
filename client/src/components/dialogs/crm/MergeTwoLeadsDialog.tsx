@@ -46,7 +46,7 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
         <AxiosResponse<GetLeadDto>, BackendError, { body: IleadReqBody, id: string }>
         (MergeTwoLeads, {
             onSuccess: () => {
-                queryClient.invalidateQueries('leads')
+                queryClient.resetQueries('leads')
             }
         })
 
@@ -427,6 +427,7 @@ function MergeTwoLeadsDialog({ leads }: { leads: GetLeadDto[] }) {
                             alert("one mobile is required at least")
                         }
                         mutate({ id: leads[0]._id, body: targetLead })
+                        setChoice({ type: LeadChoiceActions.close_lead })
                     }} fullWidth variant='contained'>
                     Save
                 </Button>

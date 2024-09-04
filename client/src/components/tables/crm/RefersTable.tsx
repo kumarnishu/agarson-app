@@ -261,7 +261,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                       <STableCell >
                         {refer.name}
                       </STableCell>
-                      <STableCell >
+                      <STableCell style={{textAlign:"center"}} >
                         {refer.refers}
                       </STableCell>
                       <STableCell >

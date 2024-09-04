@@ -256,7 +256,6 @@ export const GetClientSaleReportsForLastYear = async (req: Request, res: Respons
 export const GetClientSaleReports = async (req: Request, res: Response, next: NextFunction) => {
     let state_ids = req.user?.assigned_states.map((state: IState) => { return state }) || []
     let data: ClientSaleReportTemplate[] = (await ClientSaleReport.find({ report_owner: { $in: state_ids } }).populate('report_owner')).map((i) => {
-        console.log(i)
         return {
             report_owner: i.report_owner.state,
             account: i.account,
@@ -391,7 +390,6 @@ export const AssignErpStatesToUsers = async (req: Request, res: Response, next: 
             if (owner) {
                 let oldstates = owner.assigned_states.map((item) => { return item._id.valueOf() });
                 oldstates = oldstates.filter((item) => { return !state_ids.includes(item) });
-                console.log(oldstates)
                 await User.findByIdAndUpdate(owner._id, {
                     assigned_states: oldstates
                 })
@@ -437,7 +435,6 @@ export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: R
         let workbook_response: IErpStateTemplate[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
-        console.log(workbook_response.length)
         if (workbook_response.length > 3000) {
             return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
@@ -739,7 +736,6 @@ export const BulkCreateClientSaleReportFromExcel = async (req: Request, res: Res
 
             if (validated) {
                 let owner = await State.findOne({ state: report.report_owner })
-                console.log("state", owner?.state, i)
                 if (owner) {
                     await new ClientSaleReport({
                         report_owner: owner,
@@ -811,7 +807,6 @@ export const BulkCreateClientSaleReportFromExcelForLastYear = async (req: Reques
             let feb: number | null = report.feb
             let mar: number | null = report.mar
             let validated = true
-            console.log("running")
             if (!report_owner) {
                 validated = false
                 statusText = "report owner required"
@@ -879,7 +874,6 @@ export const BulkCreatePartyTargetReportFromExcel = async (req: Request, res: Re
 
         for (let i = 0; i < workbook_response.length; i++) {
             let report = workbook_response[i]
-            console.log(report)
             let slno: string | null = String(report.slno)
             let PARTY: string | null = String(report.PARTY)
             let Create_Date: string | null = report.Create_Date
@@ -932,7 +926,6 @@ export const BulkCreatePartyTargetReportFromExcel = async (req: Request, res: Re
 
             if (validated) {
                 let owner = await State.findOne({ state: report.report_owner })
-                console.log("state", owner?.state, i)
                 if (owner) {
                     await new PartyTargetReport({
                         report_owner: owner,

@@ -41,7 +41,7 @@ export const GetUsers = async (req: Request, res: Response, next: NextFunction) 
             mobile_verified: u.mobile_verified,
             show_only_visiting_card_leads: u.show_only_visiting_card_leads,
             is_active: u.is_active,
-            last_login: moment(u.last_login).calendar(),
+            last_login: moment(u.last_login).format("lll"),
             is_multi_login: u.is_multi_login,
             assigned_users: u.assigned_users.map((u) => {
                 return {

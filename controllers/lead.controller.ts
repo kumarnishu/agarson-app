@@ -42,14 +42,17 @@ export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunct
 
     await Lead.findByIdAndUpdate(id, {
         name: name,
-        mobiles: mobiles,
         city: city,
         state: state,
+        mobile: mobiles[0] || null,
+        alternate_mobile1: mobiles[1] || null,
+        alternate_mobile2: mobiles[2] || null,
         stage: stage,
         email: email,
         alternate_email: alternate_email,
         address: address
     });
+
     if (merge_refer && refer_id) {
         let refer = await ReferredParty.findById(refer_id);
         if (refer) {
@@ -58,6 +61,10 @@ export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunct
             await lead.save();
         }
     }
+    if (merge_remarks) {
+        await Remark.updateMany({ lead: source_lead_id }, { lead: id });
+    }
+    await Lead.findByIdAndDelete(source_lead_id);
     return res.status(200).json({ message: "merge leads successfully" })
 }
 
@@ -2629,9 +2636,9 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
         }
     }
     let state = "unknown";
-    if (body.state && body.state != "") state = state
+    if (body.state && body.state != "") state = body.state
     let city = "unknown";
-    if (body.city && body.city != "") city = city
+    if (body.city && body.city != "") city = body.city
     let lead = new Lead({
         ...body,
         stage: 'open',
@@ -2746,9 +2753,9 @@ export const UpdateLead = async (req: Request, res: Response, next: NextFunction
             updated_by: req.user
         }).save()
     let state = "unknown";
-    if (body.state && body.state != "") state = state
+    if (body.state && body.state != "") state = body.state
     let city = "unknown";
-    if (body.city && body.city != "") city = city
+    if (body.city && body.city != "") city = body.city
     await Lead.findByIdAndUpdate(lead._id, {
         ...body,
         city: city,
@@ -3705,7 +3712,7 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
         }
 
         else {
-            remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('created_by').populate('updated_by').populate({
+            remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
                 path: 'lead',
                 populate: [
                     {
@@ -3725,7 +3732,10 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
             count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
         if (stage !== 'undefined') {
-            remarks = remarks.filter((r) => { return r.lead.stage == stage })
+            remarks = remarks.filter((r) => {
+                if (r.lead)
+                    return r.lead.stage == stage
+            })
 
         }
 
@@ -3736,30 +3746,30 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
                 created_at: rem.created_at && moment(rem.created_at).format("LT"),
                 remind_date: rem.remind_date && moment(rem.remind_date).format("DD/MM/YYYY"),
                 created_by: { id: rem.created_by._id, value: rem.created_by.username, label: rem.created_by.username },
-                lead_id: rem.lead._id,
-                name: rem.lead.name,
-                customer_name: rem.lead.customer_name,
-                customer_designation: rem.lead.customer_designation,
-                mobile: rem.lead.mobile,
-                gst: rem.lead.gst,
-                has_card: rem.lead.has_card,
-                email: rem.lead.email,
-                city: rem.lead.city,
-                state: rem.lead.state,
-                country: rem.lead.country,
-                address: rem.lead.address,
-                work_description: rem.lead.work_description,
-                turnover: rem.lead.turnover,
-                alternate_mobile1: rem.lead.alternate_mobile1,
-                alternate_mobile2: rem.lead.alternate_mobile2,
-                alternate_email: rem.lead.alternate_email,
-                lead_type: rem.lead.lead_type,
-                stage: rem.lead.stage,
-                lead_source: rem.lead.lead_source,
-                visiting_card: rem.lead.visiting_card?.public_url || "",
-                referred_party_name: rem.lead.referred_party?.name || "",
-                referred_party_mobile: rem.lead.referred_party?.mobile || "",
-                referred_date: rem.lead.referred_party?.name || "",
+                lead_id: rem.lead && rem.lead._id,
+                name: rem.lead && rem.lead.name,
+                customer_name: rem.lead && rem.lead.customer_name,
+                customer_designation: rem.lead && rem.lead.customer_designation,
+                mobile: rem.lead && rem.lead.mobile,
+                gst: rem.lead && rem.lead.gst,
+                has_card: rem.lead && rem.lead.has_card,
+                email: rem.lead && rem.lead.email,
+                city: rem.lead && rem.lead.city,
+                state: rem.lead && rem.lead.state,
+                country: rem.lead && rem.lead.country,
+                address: rem.lead && rem.lead.address,
+                work_description: rem.lead && rem.lead.work_description,
+                turnover: rem.lead && rem.lead.turnover,
+                alternate_mobile1: rem.lead && rem.lead.alternate_mobile1,
+                alternate_mobile2: rem.lead && rem.lead.alternate_mobile2,
+                alternate_email: rem.lead && rem.lead.alternate_email,
+                lead_type: rem.lead && rem.lead.lead_type,
+                stage: rem.lead && rem.lead.stage,
+                lead_source: rem.lead && rem.lead.lead_source,
+                visiting_card: rem.lead && rem.lead.visiting_card?.public_url || "",
+                referred_party_name: rem.lead && rem.lead.referred_party?.name || "",
+                referred_party_mobile: rem.lead && rem.lead.referred_party?.mobile || "",
+                referred_date: rem.lead && rem.lead.referred_party?.name || "",
 
             }
         })

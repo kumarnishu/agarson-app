@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers,  UpdateRemark, DeleteRemark,  GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages, CreateCRMCity, AssignCRMCitiesToUsers, FindUnknownCrmCities,  FuzzySearchOkOnlyLeads, GetNewRefers, GetAssignedRefers, GetMyReminders, GetAssignedReferrals, GetRemarkHistory, GetActivities, GetReferRemarkHistory } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, UpdateRemark, DeleteRemark, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages, CreateCRMCity, AssignCRMCitiesToUsers, FindUnknownCrmCities, FuzzySearchOkOnlyLeads, GetNewRefers, GetAssignedRefers, GetMyReminders, GetAssignedReferrals, GetRemarkHistory, GetActivities, GetReferRemarkHistory, MergeTwoLeads } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
@@ -67,6 +67,7 @@ router.route("/refers/:id").delete(isAuthenticatedUser, DeleteReferParty)
 router.route("/update/refers/bulk").put(isAuthenticatedUser, upload.single('file'), BulkReferUpdateFromExcel)
 
 router.route("/reminders").get(isAuthenticatedUser, GetMyReminders)
+router.route("/merge/leads/:id").put(isAuthenticatedUser, MergeTwoLeads)
 router.route("/assigned/refers/report").get(isAuthenticatedUser, GetAssignedRefers)
 router.route("/new/refers/report").get(isAuthenticatedUser, GetNewRefers)
 
