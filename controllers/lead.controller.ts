@@ -3522,8 +3522,8 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     let result: GetActivitiesOrRemindersDto[] = []
     for (let i = 0; i < leads.length; i++) {
         let lead = leads[i]
-        let rem = await Remark.findOne({ lead: lead._id, remind_date: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').sort('-created_at')
-        if (rem && rem.remind_date && new Date(rem.remind_date).getDate() === new Date().getDate()) {
+        let rem = await Remark.findOne({ lead: lead._id, created_at: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').sort('-created_at')
+        if (rem && rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate()) {
             result.push({
                 _id: rem._id,
                 remark: rem.remark,

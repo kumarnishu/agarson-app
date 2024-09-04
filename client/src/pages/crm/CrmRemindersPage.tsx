@@ -28,7 +28,7 @@ function CrmReminderPage() {
       {
         isLoading && <LinearProgress />
       }
-      <DialogTitle sx={{ textAlign: 'center' }}>Reminders - 3 Days</DialogTitle>
+      <DialogTitle sx={{ textAlign: 'center' }}>Last 3 Days Reminders</DialogTitle>
      
         <Stack direction={"column"}>
           <Box>
