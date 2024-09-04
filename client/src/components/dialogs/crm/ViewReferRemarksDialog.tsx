@@ -2,29 +2,22 @@ import { Dialog, DialogContent, IconButton, DialogTitle, Stack } from '@mui/mate
 import { useContext, useEffect, useState } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
-import DeleteRemarkDialog from './DeleteRemarkDialog'
-import CreateOrEditRemarkDialog from './CreateOrEditRemarkDialog'
-import { UserContext } from '../../../contexts/userContext'
 import { toTitleCase } from '../../../utils/TitleCase'
 import { GetRemarksDto } from '../../../dtos/crm/crm.dto'
 import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { BackendError } from '../../..'
-import { GetRemarksHistory } from '../../../services/LeadsServices'
+import { GetReferRemarksHistory } from '../../../services/LeadsServices'
 import moment from 'moment'
 
 
-function ViewRemarksDialog({ id }: { id: string }) {
-    const [display, setDisplay] = useState<boolean>(false)
-    const [display2, setDisplay2] = useState<boolean>(false)
+function ViewReferRemarksDialog({ id }: { id: string }) {
     const { choice, setChoice } = useContext(ChoiceContext)
-    const [remark, setRemark] = useState<GetRemarksDto>()
     const [remarks, setRemarks] = useState<GetRemarksDto[]>()
 
-    const { data, isSuccess } = useQuery<AxiosResponse<[]>, BackendError>(["remarks", id], async () => GetRemarksHistory({ id: id }))
+    const { data, isSuccess } = useQuery<AxiosResponse<[]>, BackendError>(["remarks", id], async () => GetReferRemarksHistory({ id: id }))
 
 
-    const { user } = useContext(UserContext)
     let previous_date = new Date()
     let day = previous_date.getDate() - 1
     previous_date.setDate(day)
@@ -35,7 +28,7 @@ function ViewRemarksDialog({ id }: { id: string }) {
     }, [isSuccess])
     return (
         <Dialog fullScreen={Boolean(window.screen.width < 500)}
-            open={choice === LeadChoiceActions.view_remarks ? true : false}
+            open={choice === LeadChoiceActions.view_refer_remarks ? true : false}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
                 <Cancel fontSize='large' />
@@ -54,33 +47,16 @@ function ViewRemarksDialog({ id }: { id: string }) {
                                 <p>{item.remind_date && `Remind Date : ${item.remind_date}`} </p>
                                 <br></br>
                                 <p>{moment(item.created_date).format("lll")}</p>
-                                {
-                                    user && item.remark && user?.username === item.created_by.value && new Date(item.created_date) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
-                                        {user?.assigned_permissions.includes('reminders_delete') && <IconButton size="small" color="error" onClick={() => {
-                                            setRemark(item)
-                                            setDisplay(true)
-                                        }}>
-                                            Delete</IconButton>}
-                                        {user?.assigned_permissions.includes('reminders_edit') && <IconButton size="small" color="success"
-                                            onClick={() => {
-                                                setRemark(item)
-                                                setDisplay2(true)
-
-                                            }}
-                                        >Edit</IconButton>}
-                                    </Stack>
-                                }
+                               
                             </div>
 
                         )
                     })}
                 </Stack>
-                {remark && <DeleteRemarkDialog display={display} setDisplay={setDisplay} remark={remark} />}
-                {remark && <CreateOrEditRemarkDialog remark={remark} display={display2} setDisplay={setDisplay2} />}
             </DialogContent>
 
         </Dialog>
     )
 }
 
-export default ViewRemarksDialog
+export default ViewReferRemarksDialog

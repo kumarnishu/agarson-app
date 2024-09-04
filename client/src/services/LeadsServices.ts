@@ -118,6 +118,10 @@ export const GetRefers = async () => {
 export const GetRemarksHistory = async ({ id }: { id: string }) => {
   return await apiClient.get(`remarks/${id}`)
 }
+export const GetReferRemarksHistory = async ({ id }: { id: string }) => {
+  return await apiClient.get(`remarks/refers/${id}`)
+}
+
 
 export const FuzzySearchRefers = async ({ searchString, limit, page }: { searchString?: string, limit: number | undefined, page: number | undefined }) => {
   return await apiClient.get(`search/refers?key=${searchString}&limit=${limit}&page=${page}`)

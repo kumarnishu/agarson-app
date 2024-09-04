@@ -10,6 +10,7 @@ import CreateOrEditReferDialog from '../../dialogs/crm/CreateOrEditReferDialog'
 import DeleteCrmItemDialog from '../../dialogs/crm/DeleteCrmItemDialog'
 import AllReferralPageDialog from '../../dialogs/crm/AllReferralPageDialog'
 import { GetReferDto } from '../../../dtos/crm/crm.dto'
+import ViewReferRemarksDialog from '../../dialogs/crm/ViewReferRemarksDialog'
 
 
 type Props = {
@@ -244,10 +245,21 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
 
 
                               {user?.assigned_permissions.includes('refer_view') && <Tooltip title="view all refer refers">
-                                <IconButton color="primary"
+                                <IconButton color="inherit"
 
                                   onClick={() => {
                                     setChoice({ type: LeadChoiceActions.view_referrals })
+                                    setRefer(refer)
+                                  }}
+                                >
+                                  <Visibility />
+                                </IconButton>
+                              </Tooltip>}
+                              {user?.assigned_permissions.includes('refer_view') && <Tooltip title="view remarks">
+                                <IconButton color="primary"
+
+                                  onClick={() => {
+                                    setChoice({ type: LeadChoiceActions.view_refer_remarks })
                                     setRefer(refer)
                                   }}
                                 >
@@ -261,7 +273,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                       <STableCell >
                         {refer.name}
                       </STableCell>
-                      <STableCell style={{textAlign:"center"}} >
+                      <STableCell style={{ textAlign: "center" }} >
                         {refer.refers}
                       </STableCell>
                       <STableCell >
@@ -286,7 +298,11 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                       <STableCell>
                         {refer.state}
                       </STableCell>
+                      <STableCell>
 
+                        {refer.gst}
+
+                      </STableCell>
                       <STableCell>
 
                         {refer.address}
@@ -294,11 +310,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
                       </STableCell>
 
 
-                      <STableCell>
-
-                        {refer.gst}
-
-                      </STableCell>
+                    
 
                       <STableCell>
                         {refer.created_at}
@@ -325,7 +337,7 @@ function RefersTable({ refer, refers, setRefer, selectAll, setSelectAll, selecte
 
             <DeleteCrmItemDialog refer={refer ? { id: refer._id, label: refer.name, value: refer.name } : undefined} />
             <AllReferralPageDialog refer={refer} />
-
+            <ViewReferRemarksDialog id={refer._id} />
           </>
           : null
       }

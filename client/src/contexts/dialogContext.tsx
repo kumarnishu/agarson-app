@@ -15,7 +15,7 @@ type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_ch
 
 
 type LeadChoices = "create_or_edit_refer" |"create_or_edit_leadtype"| "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_city" | "bulk_assign_crm_cities" | "find_unknown_stages" | "delete_refer" | "convert_lead_to_refer" | "bulk_delete_useless_leads" | "view_referrals" | "delete_crm_state" |"find_unknown_cities"|
-  "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "find_unknown_states" | "merge_leads" | "merge_leads_to_refer"
+  "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "find_unknown_states" | "merge_leads" | "view_refer_remarks"
 
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "view_shoe_photo2" | "view_shoe_photo3" | "create_shoe_weight" | "delete_production" | "update_shoe_weight1" | "create_production" | "update_production" | "delete_weight" | "create_or_edit_location" | "delete_dye_location" | "update_shoe_weight2" | "update_shoe_weight3"
@@ -147,7 +147,7 @@ export enum LeadChoiceActions {
   bulk_assign_crm_states = "bulk_assign_crm_states",
   find_unknown_states = "find_unknown_states",
   merge_leads ="merge_leads",
-  merge_leads_to_refer="merge_leads_to_refer"
+  view_refer_remarks="view_refer_remarks"
 }
 
 export enum UserChoiceActions {
@@ -252,7 +252,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.find_unknown_states: return type
     case LeadChoiceActions.delete_crm_state: return type
     case LeadChoiceActions.merge_leads: return type
-    case LeadChoiceActions.merge_leads_to_refer: return type
+    case LeadChoiceActions.view_refer_remarks: return type
 
     //production choice actios
     case ProductionChoiceActions.create_machine: return type

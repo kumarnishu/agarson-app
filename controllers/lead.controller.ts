@@ -830,16 +830,21 @@ export const ConvertLeadToRefer = async (req: Request, res: Response, next: Next
         return res.status(400).json({ message: "already exists this mobile number in refers" })
     }
 
-    await new ReferredParty({
-        name: lead.name, customer_name: lead.customer_name, city: lead.city, state: lead.state, mobile: lead.mobile, gst: "erertyujhtyuiop",
+    const refer = await new ReferredParty({
+        name: lead.name, customer_name: lead.customer_name, city: lead.city, state: lead.state,
+        mobile: lead.mobile,
+        mobile2: lead.alternate_mobile1 || undefined,
+        mobile3: lead.alternate_mobile2 || undefined,
+        address: lead.address,
+        gst: "erertyujhtyuiop",
         convertedfromlead: true,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
         updated_by: req.user
-    }).save();
-
-    await Remark.deleteMany({ lead: lead._id });
+    })
+    await Remark.updateMany({ lead: lead._id }, { lead: undefined, refer: refer._id });
+    await refer.save()
     await Lead.findByIdAndDelete(lead._id);
     return res.status(200).json({ message: "new refer created" })
 }
@@ -3530,7 +3535,7 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     for (let i = 0; i < leads.length; i++) {
         let lead = leads[i]
         let rem = await Remark.findOne({ lead: lead._id, created_at: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').sort('-created_at')
-        if (rem && rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate()) {
+        if (rem && rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate() && new Date(rem.remind_date).getMonth() <= new Date().getMonth()) {
             result.push({
                 _id: rem._id,
                 remark: rem.remark,
@@ -3625,7 +3630,7 @@ export const GetRemarkHistory = async (req: Request, res: Response, next: NextFu
             lead_name: lead?.name,
             lead_mobile: lead?.mobile,
             remind_date: r.remind_date && moment(r.remind_date).format("DD/MM/YYYY"),
-            created_date: r.created_at.toString(),
+            created_date: moment(r.created_at).format("lll"),
             created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username }
         }
     })
