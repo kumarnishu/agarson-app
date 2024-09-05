@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { GetReminderRemarks } from '../../services/LeadsServices'
 import { BackendError } from '../..'
-import { Box, DialogTitle, LinearProgress,Stack, Typography } from '@mui/material'
+import { Box, DialogTitle, LinearProgress, Stack, Typography } from '@mui/material'
 
 import RemindersTable from '../../components/tables/crm/RemindersTable'
 import { GetActivitiesOrRemindersDto } from '../../dtos/crm/crm.dto'
@@ -34,9 +34,7 @@ function CrmReminderPage() {
         <Box>
           <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold', textAlign: "center", borderRadius: 1 }}>
           </Typography>
-          {!isLoading &&
-            <RemindersTable remark={remark} remarks={remarks} setRemark={setRemark} />
-          }
+          <RemindersTable remark={remark} remarks={remarks} setRemark={setRemark} />
         </Box >
 
       </Stack >

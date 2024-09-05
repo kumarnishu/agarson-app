@@ -3717,7 +3717,7 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
         }
 
         else {
-            remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
+            remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('created_by').populate('updated_by').populate({
                 path: 'lead',
                 populate: [
                     {
@@ -3736,6 +3736,7 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
+        console.log(stage)
         if (stage !== 'undefined') {
             remarks = remarks.filter((r) => {
                 if (r.lead)
@@ -3743,7 +3744,6 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
             })
 
         }
-
         result = remarks.map((rem) => {
             return {
                 _id: rem._id,
@@ -3778,7 +3778,6 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
 
             }
         })
-        count = result.length;
         return res.status(200).json({
             result,
             total: Math.ceil(count / limit),

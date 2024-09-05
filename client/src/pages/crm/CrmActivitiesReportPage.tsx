@@ -130,7 +130,7 @@ function CrmActivitiesReportPage() {
                             value={stage.value}
                         >
                             {toTitleCase(stage.label)}
-                        </MenuItem>
+                        </MenuItem> 
                     ))}
                 </Select>}
 

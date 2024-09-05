@@ -336,6 +336,11 @@ export default function LeadsPage() {
                     setChoice({ type: LeadChoiceActions.merge_leads })
                     setLead(undefined);
                     setAnchorEl(null)
+                  }else{
+                    alert("please select two leads");
+                    setLead(undefined);
+                    setAnchorEl(null)
+                    return;
                   }
                 }
                 }
@@ -346,7 +351,7 @@ export default function LeadsPage() {
 
             </Menu >
             <CreateOrEditLeadDialog lead={undefined} />
-            {selectedLeads && selectedLeads.length == 2 && <MergeTwoLeadsDialog leads={selectedLeads} />}
+            {selectedLeads && selectedLeads.length == 2 && <MergeTwoLeadsDialog leads={selectedLeads} setSelectedLeads={setSelectedLeads}/>}
             {selectedLeads && selectedLeads.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={selectedLeads} />}
           </>
         </Stack >
