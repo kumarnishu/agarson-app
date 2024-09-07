@@ -46,8 +46,6 @@ import VisitAttendencePage from './pages/visit/VisitAttendencePage.tsx'
 import VisitAdminPage from './pages/visit/VisitAdminPage.tsx'
 import TemplatesPage from './pages/templates/TemplatesPage.tsx'
 import UpdateTemplateCategoriesPage from './pages/templates/UpdateTemplateCategoriesPage.tsx.tsx'
-import CheckListPage from './pages/checklists/CheckListPage.tsx'
-import CheckListAdminPage from './pages/checklists/CheckListAdminPage.tsx'
 import TodosPage from './pages/todos/MyTodoPage.tsx'
 import TodosAdminPage from './pages/todos/TodosAdminPage.tsx'
 import EmailVerifyPage from './pages/users/EmailVerifyPage.tsx'
@@ -62,6 +60,8 @@ import MachineWiseProductionReportPage from './pages/production/MachineWiseProdu
 import CategoryWiseProductionReportPage from './pages/production/CategoryWiseProductionReportPage.tsx'
 import ThekedarWiseProductionReportPage from './pages/production/ThekedarWiseProductionReportPage.tsx'
 import DyeStatusReportPage from './pages/production/DyeStatusReportPage.tsx'
+import ChecklistCategoriesPage from './pages/checklists/CategoriesPage.tsx'
+import CheckListPage from './pages/checklists/CheckListPage.tsx'
 
 
 
@@ -99,7 +99,7 @@ export enum paths {
   sale_analysis ="sale_analysis",
   party_target ="party_target",
   checklists = "checklists",
-  checklist_admin_page = "checklist_admin_page",
+  checklistscategories = "checklistscategories",
   crm = "crm",
   crm_reminders = "crm_reminders",
   crm_states = "crm_states",
@@ -440,8 +440,8 @@ function AppRoutes() {
               />
 
               <Route
-                path={paths.checklist_admin_page} element={
-                   <CheckListAdminPage />
+                path={paths.checklistscategories} element={
+                  <ChecklistCategoriesPage />
                 }
               />
             

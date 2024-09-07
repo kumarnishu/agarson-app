@@ -10,8 +10,8 @@ function ChecklistDashboard() {
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-    tmpfeatures.push({ feature: 'my checklists ', is_visible: true, url: paths.checklists })
-    tmpfeatures.push({ feature: 'checklists admin', is_visible: true, url: paths.checklist_admin_page })
+    tmpfeatures.push({ feature: 'checklists ', is_visible: true, url: paths.checklists })
+    tmpfeatures.push({ feature: 'category', is_visible: true, url: paths.checklistscategories })
     setFeatures(tmpfeatures)
   }, [])
 
