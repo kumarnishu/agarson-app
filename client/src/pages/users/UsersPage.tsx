@@ -224,7 +224,7 @@ export default function UsersPage() {
 
             {/*  table */}
             {isLoading && <TableSkeleton />}
-            {!isLoading && users.length > 0 &&
+            {users &&
                 <UsersSTable
                     user={user}
                     selectAll={selectAll}

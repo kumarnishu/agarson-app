@@ -29,163 +29,160 @@ function LeadsCityTable({ city, selectAll, cities, setSelectAll, setCity, select
             setData(cities)
     }, [cities, data])
     return (
-        <> {cities && cities.length == 0 ? <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>
-            :
-            <Box sx={{
-                overflow: "auto",
-                height: '80vh'
-            }}>
-                <STable
+        <Box sx={{
+            overflow: "auto",
+            height: '80vh'
+        }}>
+            <STable
+            >
+                <STableHead
                 >
-                    <STableHead
-                    >
-                        <STableRow>
-                            <STableHeadCell style={{ width: '50px' }}
-                            >
+                    <STableRow>
+                        <STableHeadCell style={{ width: '50px' }}
+                        >
 
 
-                                <Checkbox sx={{ width: 16, height: 16 }}
-                                    indeterminate={selectAll ? true : false}
-                                    checked={Boolean(selectAll)}
-                                    size="small" onChange={(e) => {
-                                        if (e.currentTarget.checked) {
-                                            setSelectedCities(cities)
-                                            setSelectAll(true)
-                                        }
-                                        if (!e.currentTarget.checked) {
-                                            setSelectedCities([])
-                                            setSelectAll(false)
-                                        }
-                                    }} />
+                            <Checkbox sx={{ width: 16, height: 16 }}
+                                indeterminate={selectAll ? true : false}
+                                checked={Boolean(selectAll)}
+                                size="small" onChange={(e) => {
+                                    if (e.currentTarget.checked) {
+                                        setSelectedCities(cities)
+                                        setSelectAll(true)
+                                    }
+                                    if (!e.currentTarget.checked) {
+                                        setSelectedCities([])
+                                        setSelectAll(false)
+                                    }
+                                }} />
 
-                            </STableHeadCell>
+                        </STableHeadCell>
 
-                            <STableHeadCell style={{ width: '50px' }}
-                            >
+                        <STableHeadCell style={{ width: '50px' }}
+                        >
 
-                                Actions
+                            Actions
 
-                            </STableHeadCell>
-                            <STableHeadCell style={{ width: '200px' }}
-                            >
+                        </STableHeadCell>
+                        <STableHeadCell style={{ width: '200px' }}
+                        >
 
-                                City
+                            City
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
+                        </STableHeadCell>
+                        <STableHeadCell
+                        >
 
-                                Assigned Users
+                            Assigned Users
 
-                            </STableHeadCell>
+                        </STableHeadCell>
 
 
 
 
-                        </STableRow>
-                    </STableHead>
-                    <STableBody >
-                        {
-                            cities && cities.map((city, index) => {
-                                return (
-                                    <STableRow
-                                        style={{ backgroundColor: selectedCities.length > 0 && selectedCities.find((t) => t.city.id === city.city.id) ? "lightgrey" : "white" }}
-                                        key={index}
-                                    >
-                                        {selectAll ?
-                                            <STableCell style={{ width: '50px' }}>
+                    </STableRow>
+                </STableHead>
+                <STableBody >
+                    {
+                        cities && cities.map((city, index) => {
+                            return (
+                                <STableRow
+                                    style={{ backgroundColor: selectedCities.length > 0 && selectedCities.find((t) => t.city.id === city.city.id) ? "lightgrey" : "white" }}
+                                    key={index}
+                                >
+                                    {selectAll ?
+                                        <STableCell style={{ width: '50px' }}>
 
 
-                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
-                                                    checked={Boolean(selectAll)}
-                                                />
+                                            <Checkbox sx={{ width: 16, height: 16 }} size="small"
+                                                checked={Boolean(selectAll)}
+                                            />
 
 
-                                            </STableCell>
-                                            :
-                                            null
-                                        }
-                                        {!selectAll ?
-                                            <STableCell style={{ width: '50px' }}>
+                                        </STableCell>
+                                        :
+                                        null
+                                    }
+                                    {!selectAll ?
+                                        <STableCell style={{ width: '50px' }}>
 
-                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
-                                                    onChange={(e) => {
-                                                        setCity(city)
-                                                        if (e.target.checked) {
-                                                            setSelectedCities([...selectedCities, city])
-                                                        }
-                                                        if (!e.target.checked) {
-                                                            setSelectedCities((cities) => cities.filter((item) => {
-                                                                return item.city.id !== city.city.id
-                                                            }))
-                                                        }
-                                                    }}
-                                                />
-
-                                            </STableCell>
-                                            :
-                                            null
-                                        }
-
-
-                                        {/* actions */}
-
-                                        <STableCell style={{ width: '50' }}>
-                                            <PopUp
-                                                element={
-                                                    <Stack direction="row">
-                                                        <>
-                                                            {user?.is_admin && user.assigned_permissions.includes('city_delete') &&
-                                                                <Tooltip title="delete">
-                                                                    <IconButton color="error"
-
-
-                                                                        onClick={() => {
-                                                                            setChoice({ type: LeadChoiceActions.delete_crm_item })
-                                                                            setCity(city)
-
-                                                                        }}
-                                                                    >
-                                                                        <Delete />
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                            }
-
-                                                            {user?.assigned_permissions.includes('city_edit') && <Tooltip title="edit">
-                                                                <IconButton
-
-                                                                    onClick={() => {
-                                                                        setCity(city)
-                                                                        setChoice({ type: LeadChoiceActions.create_or_edit_city })
-                                                                    }}
-
-                                                                >
-                                                                    <Edit />
-                                                                </IconButton>
-                                                            </Tooltip>}
-
-                                                        </>
-
-                                                    </Stack>}
+                                            <Checkbox sx={{ width: 16, height: 16 }} size="small"
+                                                onChange={(e) => {
+                                                    setCity(city)
+                                                    if (e.target.checked) {
+                                                        setSelectedCities([...selectedCities, city])
+                                                    }
+                                                    if (!e.target.checked) {
+                                                        setSelectedCities((cities) => cities.filter((item) => {
+                                                            return item.city.id !== city.city.id
+                                                        }))
+                                                    }
+                                                }}
                                             />
 
                                         </STableCell>
-                                        <STableCell style={{ width: '200px' }}>
-                                            {city.city.label}
-                                        </STableCell>
-                                        <STableCell>
-                                            {city.assigned_users.map((u) => { return u.label }).toString()}
-                                        </STableCell>
+                                        :
+                                        null
+                                    }
 
-                                    </STableRow>
-                                )
-                            })}
-                    </STableBody>
-                </STable>
-                <CreateOrEditCityDialog city={city ? { id: city.city.id, city: city.city.value, state: city.state } : undefined} />
-                <DeleteCrmItemDialog city={city?.city} />
-            </Box>}
-        </>
+
+                                    {/* actions */}
+
+                                    <STableCell style={{ width: '50' }}>
+                                        <PopUp
+                                            element={
+                                                <Stack direction="row">
+                                                    <>
+                                                        {user?.is_admin && user.assigned_permissions.includes('city_delete') &&
+                                                            <Tooltip title="delete">
+                                                                <IconButton color="error"
+
+
+                                                                    onClick={() => {
+                                                                        setChoice({ type: LeadChoiceActions.delete_crm_item })
+                                                                        setCity(city)
+
+                                                                    }}
+                                                                >
+                                                                    <Delete />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        }
+
+                                                        {user?.assigned_permissions.includes('city_edit') && <Tooltip title="edit">
+                                                            <IconButton
+
+                                                                onClick={() => {
+                                                                    setCity(city)
+                                                                    setChoice({ type: LeadChoiceActions.create_or_edit_city })
+                                                                }}
+
+                                                            >
+                                                                <Edit />
+                                                            </IconButton>
+                                                        </Tooltip>}
+
+                                                    </>
+
+                                                </Stack>}
+                                        />
+
+                                    </STableCell>
+                                    <STableCell style={{ width: '200px' }}>
+                                        {city.city.label}
+                                    </STableCell>
+                                    <STableCell>
+                                        {city.assigned_users.map((u) => { return u.label }).toString()}
+                                    </STableCell>
+
+                                </STableRow>
+                            )
+                        })}
+                </STableBody>
+            </STable>
+            <CreateOrEditCityDialog city={city ? { id: city.city.id, city: city.city.value, state: city.state } : undefined} />
+            <DeleteCrmItemDialog city={city?.city} />
+        </Box>
     )
 }
 
