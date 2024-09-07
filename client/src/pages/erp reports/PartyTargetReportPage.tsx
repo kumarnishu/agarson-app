@@ -1,4 +1,4 @@
-import { Box, Button, LinearProgress, Typography } from '@mui/material'
+import {  Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -428,8 +428,14 @@ export default function PartyTargetReportPage() {
         enableGrouping: true,
         enableRowSelection: true,
         enableGlobalFilterModes: true,
-        enablePagination: false,
-        enableColumnPinning: true,
+        enablePagination: false, enableStickyFooter: true,
+        enableColumnPinning: true, muiTableFooterRowProps: () => ({
+            sx: {
+                backgroundColor: 'whitesmoke',
+                color: 'white',
+                paddingBottom: 2
+            }
+        }),
         enableTableFooter: true,
         enableRowNumbers: false,
         enableRowVirtualization: true,
@@ -473,14 +479,9 @@ export default function PartyTargetReportPage() {
 
 
             </Stack >
-            <Box sx={{
-                overflow: "auto",
-                height: '75vh'
-            }}
-            >
+          
                 {/* table */}
                 {!isLoading && data && <MaterialReactTable table={table} />}
-            </Box>
         </>
 
     )

@@ -129,7 +129,6 @@ export default function ErpStatesPage() {
         spacing={2}
         padding={1}
         direction="row"
-        justifyContent="space-between"
 
       >
 

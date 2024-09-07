@@ -18,6 +18,7 @@ export type IChecklist = {
     details2: string,
     user: IUser,
     frequency: string,
+    end_date: Date,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
@@ -44,8 +45,8 @@ const ChecklistCategorySchema = new mongoose.Schema<IChecklistCategory, mongoose
         default: new Date(),
         required: true,
 
-    },
-
+    }, 
+   
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -85,6 +86,12 @@ const ChecklistSchema = new mongoose.Schema<IChecklist, mongoose.Model<IChecklis
     details2: {
         type: String,
     },
+    end_date: {
+        type: Date,
+        default: new Date(),
+        required: true
+    }
+    ,
     category:
     {
         type: mongoose.Schema.Types.ObjectId,

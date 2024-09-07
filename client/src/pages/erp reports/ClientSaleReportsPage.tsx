@@ -1,4 +1,4 @@
-import { Box, Button, LinearProgress, Typography } from '@mui/material'
+import {  Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -20,7 +20,7 @@ export type ClientSaleReportTemplate = {
     article: string,
     oldqty: number,
     newqty: number,
-    total?:number,
+    total?: number,
     apr: number,
     may: number,
     jun: number,
@@ -243,12 +243,19 @@ export default function ClientSaleReportsPage() {
         defaultDisplayColumn: { enableResizing: true },
         enableBottomToolbar: false,
         enableColumnResizing: true,
+        enableStickyFooter: true,
         enableColumnVirtualization: true,
         muiTableHeadRowProps: () => ({
             sx: {
                 backgroundColor: 'whitesmoke',
                 color: 'white'
             },
+        }), muiTableFooterRowProps: () => ({
+            sx: {
+                backgroundColor: 'whitesmoke',
+                color: 'white',
+                paddingBottom: 2
+            }
         }),
         muiTableBodyCellProps: () => ({
             sx: {
@@ -297,9 +304,9 @@ export default function ClientSaleReportsPage() {
                     Client Sale {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
-                  <>
+                    <>
 
-                        {user?.assigned_permissions.includes("client_sale_report_create") &&<UploadClientSalesButton />}
+                        {user?.assigned_permissions.includes("client_sale_report_create") && <UploadClientSalesButton />}
 
                         {user?.assigned_permissions.includes("client_sale_report_create") && <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
                     </>
@@ -307,14 +314,8 @@ export default function ClientSaleReportsPage() {
 
 
             </Stack >
-            <Box sx={{
-                overflow: "auto",
-                height: '75vh'
-            }}
-            >
-                {/* table */}
-                {!isLoading && data && <MaterialReactTable table={table} />}
-            </Box>
+            {/* table */}
+            {!isLoading && data && <MaterialReactTable table={table} />}
         </>
 
     )

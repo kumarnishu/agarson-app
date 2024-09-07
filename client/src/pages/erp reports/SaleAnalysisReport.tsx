@@ -1,4 +1,4 @@
-import { Box, LinearProgress, TextField, Typography } from '@mui/material'
+import {  LinearProgress, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -130,6 +130,13 @@ export default function SaleAnalysisReport() {
         color: 'white'
       },
     }),
+    muiTableFooterRowProps:()=>({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        paddingBottom:2
+      }
+    }),
     muiTableBodyCellProps: () => ({
       sx: {
         fontSize: '13px',
@@ -137,7 +144,7 @@ export default function SaleAnalysisReport() {
       },
     }), initialState: { density: 'compact' },
     enableGrouping: true,
-    enableRowSelection: true,
+    enableRowSelection: true, enableStickyFooter: true,
     enableGlobalFilterModes: true,
     enablePagination: false,
     enableColumnPinning: true,
@@ -205,14 +212,9 @@ export default function SaleAnalysisReport() {
 
 
       </Stack >
-      <Box sx={{
-        overflow: "auto",
-        height: '75vh'
-      }}
-      >
+     
         {/* table */}
         {!isLoading && data && <MaterialReactTable table={table} />}
-      </Box>
     </>
 
   )

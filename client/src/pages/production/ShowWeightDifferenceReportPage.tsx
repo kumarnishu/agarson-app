@@ -198,7 +198,14 @@ export default function ShowWeightDifferenceReportPage() {
     defaultDisplayColumn: { enableResizing: true },
     enableBottomToolbar: false,
     enableColumnResizing: true,
-    enableColumnVirtualization: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        paddingBottom: 2
+      }
+    }),
     muiTableHeadRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
@@ -320,14 +327,9 @@ export default function ShowWeightDifferenceReportPage() {
           />
         </Stack>
       </Stack >
-      <Box sx={{
-        overflow: "auto",
-        height: '80vh'
-      }}
-      >
+   
         {/* table */}
         {!isLoading && data && <MaterialReactTable table={table} />}
-      </Box>
     </>
 
   )

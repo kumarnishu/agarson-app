@@ -1,4 +1,4 @@
-import { Box, LinearProgress, TextField, Typography } from '@mui/material'
+import {  LinearProgress, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -124,7 +124,14 @@ export default function NewReferReportPage() {
     defaultDisplayColumn: { enableResizing: true },
     enableBottomToolbar: false,
     enableColumnResizing: true,
-    enableColumnVirtualization: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        paddingBottom: 2
+      }
+    }),
     muiTableHeadRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
@@ -214,14 +221,9 @@ export default function NewReferReportPage() {
 
 
       </Stack >
-      <Box sx={{
-        overflow: "auto",
-        height: '80vh'
-      }}
-      >
+    
         {/* table */}
         {!isLoading && data && <MaterialReactTable table={table} />}
-      </Box>
     </>
 
   )

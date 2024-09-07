@@ -1,4 +1,4 @@
-import { Box, Button, LinearProgress, Typography } from '@mui/material'
+import {  Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -138,6 +138,14 @@ export default function BillsAgingReportPage() {
         enableBottomToolbar: false,
         enableColumnResizing: true,
         enableColumnVirtualization: true,
+         enableStickyFooter: true,
+        muiTableFooterRowProps: () => ({
+            sx: {
+                backgroundColor: 'whitesmoke',
+                color: 'white',
+                paddingBottom: 2
+            }
+        }),
         muiTableHeadRowProps: () => ({
             sx: {
                 backgroundColor: 'whitesmoke',
@@ -203,14 +211,9 @@ export default function BillsAgingReportPage() {
 
 
             </Stack >
-            <Box sx={{
-                overflow: "auto",
-                height: '75vh'
-            }}
-            >
+           
                 {/* table */}
                 {!isLoading && data && <MaterialReactTable table={table} />}
-            </Box>
         </>
 
     )

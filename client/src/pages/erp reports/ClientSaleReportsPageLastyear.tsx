@@ -1,4 +1,4 @@
-import { Box, Button, LinearProgress, Typography } from '@mui/material'
+import {  Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -261,9 +261,15 @@ export default function ClientSaleLastYearReportsPage() {
         enableRowSelection: true,
         enableGlobalFilterModes: true,
         enablePagination: false,
-        enableColumnPinning: true,
+        enableColumnPinning: true, enableStickyFooter: true,
         enableTableFooter: true,
-        enableRowNumbers: true,
+        enableRowNumbers: true, muiTableFooterRowProps: () => ({
+            sx: {
+                backgroundColor: 'whitesmoke',
+                color: 'white',
+                paddingBottom: 2
+            }
+        }),
         enableRowVirtualization: true,
         muiTableContainerProps: { sx: { maxHeight: '450px' } },
         onSortingChange: setSorting,
@@ -306,14 +312,9 @@ export default function ClientSaleLastYearReportsPage() {
 
 
             </Stack >
-            <Box sx={{
-                overflow: "auto",
-                height: '75vh'
-            }}
-            >
+            
                 {/* table */}
                 {!isLoading && data && <MaterialReactTable table={table} />}
-            </Box>
         </>
 
     )

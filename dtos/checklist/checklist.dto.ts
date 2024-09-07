@@ -3,8 +3,8 @@ import { DropDownDto } from "../common/dropdown.dto"
 export type GetChecklistCategoryDto = {
     _id: string,
     category: string,
-    created_at: Date,
-    updated_at: Date,
+    created_at: string,
+    updated_at: string,
     created_by: DropDownDto,
     updated_by: DropDownDto
 }
@@ -20,9 +20,11 @@ export type GetChecklistDto = {
     details1: string,
     details2: string,
     user: DropDownDto,
+    end_date: string,
     frequency: string,
-    created_at: Date,
-    updated_at: Date,
+    boxes:GetChecklistBoxDto[],
+    created_at: string,
+    updated_at: string,
     created_by: DropDownDto,
     updated_by: DropDownDto
 }
@@ -30,18 +32,14 @@ export type CreateOrEditChecklistDto={
     category: string,
     work_title: string,
     details1: string,
+    end_date:string,
     details2: string,
-    user: string,
+    user_id: string,
     frequency: string,
 }
 
 export type GetChecklistBoxDto = {
     _id: string,
-    date: Date,
-    checked: boolean,
-    checklist: DropDownDto,
-    created_at: Date,
-    updated_at: Date,
-    created_by: DropDownDto,
-    updated_by: DropDownDto
+    date: string,
+    checked: boolean
 }
