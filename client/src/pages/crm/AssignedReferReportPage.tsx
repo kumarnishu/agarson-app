@@ -1,4 +1,4 @@
-import {  LinearProgress, TextField, Typography } from '@mui/material'
+import { LinearProgress, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -95,8 +95,8 @@ export default function AssignedReferReportPage() {
         header: 'Refer Date',
         filterVariant: 'multi-select',
         //@ts-ignore
-        Cell: (val) => <span>{moment(val.cell.getValue()).format("DD/MM/YYYY")}</span>,
-        filterSelectOptions: reports.map((i) => { return moment(i.refer_date).format("DD/MM/YYYY") }).filter(onlyUnique)
+        Cell: (val) => <span>{val.cell.getValue()}</span>,
+        filterSelectOptions: reports.map((i) => { return i.refer_date || "" }).filter(onlyUnique)
       }
     ],
     [reports],
@@ -223,9 +223,9 @@ export default function AssignedReferReportPage() {
 
 
       </Stack >
-    
-        {/* table */}
-        {!isLoading && data && <MaterialReactTable table={table} />}
+
+      {/* table */}
+      {!isLoading && data && <MaterialReactTable table={table} />}
     </>
 
   )

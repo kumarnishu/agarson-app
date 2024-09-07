@@ -381,9 +381,7 @@ function ActivitiesTable({ remarks }: Props) {
                                         </STableCell>
 
                                         <STableCell>
-                                            {remark.referred_date &&
-                                                new Date(remark.referred_date).toLocaleString()
-                                            }
+                                            {remark.referred_date}                                           
                                         </STableCell>
 
 

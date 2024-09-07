@@ -398,7 +398,6 @@ export const BulkCreateAndUpdateCRMStatesFromExcel = async (req: Request, res: R
         let workbook_response: ICRMState[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
-        console.log(workbook_response.length)
         if (workbook_response.length > 3000) {
             return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
@@ -486,7 +485,6 @@ export const CreateCRMCity = async (req: Request, res: Response, next: NextFunct
         updated_by: req.user
     }).save()
     let users = await User.find({ assigned_crm_states: STate });
-    console.log(users.length)
     await HandleCRMCitiesAssignment(users.map((i) => { return i._id.valueOf() }), [result._id.valueOf()], 1);
     return res.status(201).json(result)
 
@@ -530,7 +528,6 @@ export const DeleteCRMCity = async (req: Request, res: Response, next: NextFunct
     let STate = await CRMState.findOne({ state: city.state });
     if (STate) {
         let users = await User.find({ assigned_crm_states: STate });
-        console.log(users.length)
         await HandleCRMCitiesAssignment(users.map((i) => { return i._id.valueOf() }), [city._id.valueOf()], 1);
     }
     await city.remove();
@@ -557,7 +554,6 @@ export const BulkCreateAndUpdateCRMCityFromExcel = async (req: Request, res: Res
         );
         if (!state || !await CRMState.findOne({ state: state }))
             return res.status(400).json({ message: "provide a state first" })
-        console.log(workbook_response.length)
         if (workbook_response.length > 3000) {
             return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
@@ -3029,7 +3025,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     let parties: IReferredParty[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
-        parties = await ReferredParty.find({ state: { $in: states }, city: { $in: cities } }).populate('created_by').populate('updated_by').sort('name')
+        parties = await ReferredParty.find({ state: { $in: states }, city: { $in: cities } }).populate('created_by').populate('updated_by').sort('-updated_at')
         let count = parties.length
         parties = parties.slice((page - 1) * limit, limit * page)
         for (let i = 0; i < parties.length; i++) {
@@ -3294,7 +3290,6 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
         return res.status(400).json({ message: "bad mongo id" })
     let body = JSON.parse(req.body.body)
     const { name, customer_name, city, state, mobile, gst } = body as CreateOrEditReferDto
-    console.log(name, city, state, mobile, body.mobile)
     if (!name || !city || !state || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -3424,7 +3419,6 @@ export const BulkReferUpdateFromExcel = async (req: Request, res: Response, next
                 if (refer._id && isMongoId(String(refer._id))) {
                     let targetLead = await ReferredParty.findById(refer._id)
                     if (targetLead) {
-                        console.log("got it")
                         if (targetLead.mobile != String(mobile).toLowerCase().trim() || targetLead.gst !== String(gst).toLowerCase().trim()) {
                             let refertmp = await ReferredParty.findOne({ mobile: String(mobile).toLowerCase().trim() })
                             let refertmp2 = await ReferredParty.findOne({ gst: String(gst).toLowerCase().trim() })
@@ -3736,7 +3730,6 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
             }).sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
-        console.log(stage)
         if (stage !== 'undefined') {
             remarks = remarks.filter((r) => {
                 if (r.lead)
@@ -3774,7 +3767,7 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
                 visiting_card: rem.lead && rem.lead.visiting_card?.public_url || "",
                 referred_party_name: rem.lead && rem.lead.referred_party?.name || "",
                 referred_party_mobile: rem.lead && rem.lead.referred_party?.mobile || "",
-                referred_date: rem.lead && rem.lead.referred_party?.name || "",
+                referred_date: rem.lead && rem.lead.referred_party && moment(rem.lead.referred_date).format("DD/MM/YYYY") || "",
 
             }
         })
@@ -3860,12 +3853,11 @@ export const GetNewRefers = async (req: Request, res: Response, next: NextFuncti
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
     let parties: IReferredParty[] = []
-    parties = await ReferredParty.find({ created_at: { $gte: dt1, $lt: dt2 }, convertedfromlead: true }).populate('created_by').populate('updated_by').sort('name');
+    parties = await ReferredParty.find({ created_at: { $gte: dt1, $lt: dt2 }, convertedfromlead: true }).populate('created_by').populate('updated_by').sort('-created_at');
 
     for (let i = 0; i < parties.length; i++) {
         let refer = parties[i]
         let remark = await Remark.findOne({ refer: refer._id }).sort('-created_at');
-        console.log(remark)
         result.push({
             _id: refer._id,
             name: refer.name,
@@ -3894,25 +3886,45 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
     let result: GetAssignedReferDto[] = []
-    let leads = await Lead.find({
-        created_at: { $gte: dt1, $lt: dt2 }, referred_party: { $ne: undefined }
-    }).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
-    for (let i = 0; i < leads.length; i++) {
-        let lead = leads[i];
-        let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
-        result.push({
-            lead: { id: lead._id, value: lead.name, label: lead.name },
-            lead_mobile1: lead.mobile,
-            lead_mobile2: lead.alternate_mobile1,
-            lead_mobile3: lead.alternate_mobile2,
-            refer: lead.referred_party && { id: lead._id, value: lead.name, label: lead.name },
-            remark: remark?.remark || "",
-            refer_mobile1: lead.referred_party && lead.referred_party.mobile,
-            refer_mobile2: lead.referred_party && lead.referred_party.mobile2,
-            refer_mobile3: lead.referred_party && lead.referred_party.mobile3,
-            refer_date: lead.referred_party && moment(lead.referred_date).format("DD/MM/YYYY")
-        })
-    }
+    let remarks: IRemark[] = []
+    remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('created_by').populate('updated_by').populate({
+        path: 'lead',
+        populate: [
+            {
+                path: 'created_by',
+                model: 'User'
+            },
+            {
+                path: 'updated_by',
+                model: 'User'
+            },
+            {
+                path: 'referred_party',
+                model: 'ReferredParty'
+            }
+        ]
+    }).sort('-updated_at')
+
+    remarks = remarks.filter((r) => {
+        if (r.lead)
+            return r.lead.stage == 'refer'
+    })
+
+    result = remarks.map((rem) => {
+        return {
+            lead: { id: rem.lead._id, value: rem.lead.name, label: rem.lead.name },
+            lead_mobile1: rem.lead.mobile,
+            lead_mobile2: rem.lead.alternate_mobile1,
+            lead_mobile3: rem.lead.alternate_mobile2,
+            refer: { id: rem.lead._id, value: rem.lead.referred_party && rem.lead.referred_party.name || "", label: rem.lead.referred_party && rem.lead.referred_party.name || "" },
+            remark: rem.remark || "",
+            refer_mobile1: rem.lead.referred_party && rem.lead.referred_party.mobile,
+            refer_mobile2: rem.lead.referred_party && rem.lead.referred_party.mobile2,
+            refer_mobile3: rem.lead.referred_party && rem.lead.referred_party.mobile3,
+            refer_date: rem.lead.referred_party && moment(rem.lead.referred_date).format("DD/MM/YYYY")
+        }
+    })
+
     return res.status(200).json(result)
 }
 
