@@ -11,7 +11,7 @@ type VisitChoices = "start_day" | "end_day" | "visit_in" | "visit_out" | "close_
 
 type TodoChoices = "delete_bulk_todo" | "bulk_start_todo" | "close_todo" | "bulk_stop_todo" | "add_reply" | "view_replies" | "view_contacts"
 
-type CheckListChoices = "create_checklist" | "add_more_check_boxes" | "delete_checklist" | "close_checklist" | "edit_checklist" | "view_checklist_boxes" | "check_my_boxes"
+type CheckListChoices = "create_or_edit_checklist" | "create_or_edit_checklist_category" | "delete_checklist" | "close_checklist" | "edit_checklist" | "delete_checklist_category" | "toogle_checklist"
 
 
 type LeadChoices = "create_or_edit_refer" |"create_or_edit_leadtype"| "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_city" | "bulk_assign_crm_cities" | "find_unknown_stages" | "delete_refer" | "convert_lead_to_refer" | "bulk_delete_useless_leads" | "view_referrals" | "delete_crm_state" |"find_unknown_cities"|
@@ -97,13 +97,13 @@ export enum VisitChoiceActions {
 }
 
 export enum CheckListChoiceActions {
-  create_checklist = "create_checklist",
-  add_more_check_boxes = "add_more_check_boxes",
+  create_or_edit_checklist = "create_or_edit_checklist",
+  create_or_edit_checklist_category = "create_or_edit_checklist_category",
   delete_checklist = "delete_checklist",
   close_checklist = "close_checklist",
   edit_checklist = "edit_checklist",
-  view_checklist_boxes = "view_checklist_boxes",
-  check_my_boxes = "check_my_boxes"
+  delete_checklist_category = "delete_checklist_category",
+  toogle_checklist = "toogle_checklist"
 }
 
 
@@ -324,13 +324,13 @@ function reducer(state: ChoiceState | null, action: Action) {
 
 
     // checklist actions
-    case CheckListChoiceActions.create_checklist: return type
-    case CheckListChoiceActions.add_more_check_boxes: return type
+    case CheckListChoiceActions.create_or_edit_checklist: return type
+    case CheckListChoiceActions.create_or_edit_checklist_category: return type
     case CheckListChoiceActions.delete_checklist: return type
     case CheckListChoiceActions.close_checklist: return type
     case CheckListChoiceActions.edit_checklist: return type
-    case CheckListChoiceActions.view_checklist_boxes: return type
-    case CheckListChoiceActions.check_my_boxes: return type
+    case CheckListChoiceActions.delete_checklist_category: return type
+    case CheckListChoiceActions.toogle_checklist: return type
     default: return state
   }
 }

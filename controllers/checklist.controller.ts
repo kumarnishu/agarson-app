@@ -3,13 +3,15 @@ import { User } from "../models/users/user.model";
 import isMongoId from "validator/lib/isMongoId";
 import { isvalidDate } from "../utils/isValidDate";
 import { Checklist, ChecklistBox, ChecklistCategory, IChecklist } from "../models/checklist/checklist.model";
-import { CreateOrEditDropDownDto } from "../dtos/common/dropdown.dto";
-import { CreateOrEditChecklistDto, GetChecklistBoxDto, GetChecklistDto } from "../dtos/checklist/checklist.dto";
+import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dto";
+import { CreateOrEditChecklistDto, GetChecklistDto } from "../dtos/checklist/checklist.dto";
 
 
 export const GetAllChecklistCategory = async (req: Request, res: Response, next: NextFunction) => {
     let result = await ChecklistCategory.find();
-    return res.status(200).json(result)
+    let data: DropDownDto[];
+    data = result.map((r) => { return { id: r._id, label: r.category, value: r.category } });
+    return res.status(200).json(data)
 }
 
 export const CreateChecklistCategory = async (req: Request, res: Response, next: NextFunction) => {
@@ -40,8 +42,9 @@ export const UpdateChecklistCategory = async (req: Request, res: Response, next:
     let oldlocation = await ChecklistCategory.findById(id)
     if (!oldlocation)
         return res.status(404).json({ message: "category not found" })
+    console.log(key, oldlocation.category)
     if (key !== oldlocation.category)
-        if (await ChecklistCategory.findOne({ name: key.toLowerCase() }))
+        if (await ChecklistCategory.findOne({ category: key.toLowerCase() }))
             return res.status(400).json({ message: "already exists this category" })
     oldlocation.category = key
     oldlocation.updated_at = new Date()
@@ -66,7 +69,7 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let id = req.query.id
-    let stage = req.query.stage
+    let category = req.query.category
     let start_date = req.query.start_date
     let end_date = req.query.end_date
     let checklists: IChecklist[] = []
@@ -99,24 +102,29 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
             count = await Checklist.find({ created_by: id }).countDocuments()
         }
 
+        if (category != 'undefined')
+            checklists = checklists.filter((ch) => { return ch.category._id.valueOf() === category })
+
         for (let i = 0; i < checklists.length; i++) {
             let ch = checklists[i];
-            let boxes = await ChecklistBox.find({ checklist: ch._id });
-            result.push({
-                _id: ch._id,
-                work_title: ch.work_title,
-                details1: ch.details1,
-                details2: ch.details2,
-                end_date: ch.end_date.toString(),
-                category: { id: ch.category._id, label: ch.category.category, value: ch.category.category },
-                frequency: ch.frequency,
-                user: { id: ch.user._id, label: ch.user.username, value: ch.user.username },
-                created_at: ch.created_at.toString(),
-                updated_at: ch.updated_at.toString(),
-                boxes: boxes.map((b) => { return { _id: b._id, checked: b.checked, date: b.date.toString() } }),
-                created_by: { id: ch.created_by._id, value: ch.created_by.username, label: ch.created_by.username },
-                updated_by: { id: ch.updated_by._id, value: ch.updated_by.username, label: ch.updated_by.username }
-            })
+            if (ch && ch.category) {
+                let boxes = await ChecklistBox.find({ checklist: ch._id }).sort('-date');
+                result.push({
+                    _id: ch._id,
+                    work_title: ch.work_title,
+                    details1: ch.details1,
+                    details2: ch.details2,
+                    end_date: ch.end_date.toString(),
+                    category: { id: ch.category._id, label: ch.category.category, value: ch.category.category },
+                    frequency: ch.frequency,
+                    user: { id: ch.user._id, label: ch.user.username, value: ch.user.username },
+                    created_at: ch.created_at.toString(),
+                    updated_at: ch.updated_at.toString(),
+                    boxes: boxes.map((b) => { return { _id: b._id, checked: b.checked, date: b.date.toString() } }),
+                    created_by: { id: ch.created_by._id, value: ch.created_by.username, label: ch.created_by.username },
+                    updated_by: { id: ch.updated_by._id, value: ch.updated_by.username, label: ch.updated_by.username }
+                })
+            }
         }
 
         return res.status(200).json({
@@ -141,6 +149,7 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
         user_id,
         frequency,
         end_date } = req.body as CreateOrEditChecklistDto
+    console.log(req.body)
     if (!category || !work_title || !user_id || !frequency || !end_date)
         return res.status(400).json({ message: "please provide all required fields" })
 
@@ -158,7 +167,7 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
         details1: details1,
         end_date: new Date(end_date),
         details2: details2,
-        user_id: user_id,
+        user: user._id,
         frequency: frequency,
         created_at: new Date(),
         updated_at: new Date(),

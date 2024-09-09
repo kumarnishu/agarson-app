@@ -136,15 +136,15 @@ export default function UsersPage() {
                 >
 
                     < Stack direction="row" spacing={2}>
-                       <Stack direction={'row'} alignItems={'center'}>
+                        <Stack direction={'row'} alignItems={'center'}>
                             <input type='checkbox' onChange={(e) => {
                                 if (e.target.checked) {
                                     setHidden('true')
                                 }
                                 else
                                     setHidden('false')
-                            }} /> <span style={{paddingLeft:'5px'}}>Blocked</span>
-                       </Stack >
+                            }} /> <span style={{ paddingLeft: '5px' }}>Blocked</span>
+                        </Stack >
                         <TextField
                             fullWidth
                             size="small"
@@ -224,7 +224,7 @@ export default function UsersPage() {
 
             {/*  table */}
             {isLoading && <TableSkeleton />}
-            {users &&
+            {!isLoading &&
                 <UsersSTable
                     user={user}
                     selectAll={selectAll}

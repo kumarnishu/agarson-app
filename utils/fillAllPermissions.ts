@@ -814,9 +814,69 @@ export function FetchAllPermissions() {
             }
         ]
     }
+    let checklistMenu: IMenu = {
+        label: 'Checklist',
+        permissions: [{
+            value: 'checklist_menu',
+            label: 'Checklist Button'
+        }],
+        menues: [
+            {
+                label: 'Checklists',
+                permissions: [
+                    {
+                        value: 'checklist_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'checklist_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'checklist_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'checklist_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'checklist_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
+                label: 'Checklist Category',
+                permissions: [
+                    {
+                        value: 'checklist_category_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'checklist_category_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'checklist_category_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'checklist_category_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'checklist_category_export',
+                        label: 'export'
+                    }
+                ]
+            }
+        ]
+    }
     
     permissions.push(productionMenu)
     permissions.push(crmMenu)
     permissions.push(erpreportMenu)
+    permissions.push(checklistMenu)
     return permissions;
 }

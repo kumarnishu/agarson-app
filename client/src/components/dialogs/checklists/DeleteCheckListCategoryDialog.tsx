@@ -6,17 +6,17 @@ import AlertBar from '../../snacks/AlertBar';
 import { useMutation } from 'react-query';
 import { BackendError } from '../../..';
 import { AxiosResponse } from 'axios';
-import { DeleteCheckList } from '../../../services/CheckListServices';
+import {  DeleteChecklistCategory } from '../../../services/CheckListServices';
 import { queryClient } from '../../../main';
-import { GetChecklistDto } from '../../../dtos/checklist/checklist.dto';
+import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
-function DeleteCheckListDialog({ checklist }: { checklist: GetChecklistDto }) {
+function DeleteCheckListCategoryDialog({ category }: { category: DropDownDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
         <AxiosResponse<any>, BackendError, string>
-        (DeleteCheckList, {
+        (DeleteChecklistCategory, {
             onSuccess: () => {
-                queryClient.invalidateQueries('checklists')
+                queryClient.invalidateQueries('check_categories')
             }
         })
 
@@ -27,7 +27,7 @@ function DeleteCheckListDialog({ checklist }: { checklist: GetChecklistDto }) {
 
     return (
         <>
-            <Dialog fullWidth open={choice === CheckListChoiceActions.delete_checklist ? true : false}
+            <Dialog fullWidth open={choice === CheckListChoiceActions.delete_checklist_category ? true : false}
                 onClose={() => setChoice({ type: CheckListChoiceActions.close_checklist })}
             >
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: CheckListChoiceActions.close_checklist })}>
@@ -35,7 +35,7 @@ function DeleteCheckListDialog({ checklist }: { checklist: GetChecklistDto }) {
                 </IconButton>
 
                 <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-                    Delete CheckList
+                    Delete Category
                 </DialogTitle>
                 {
                     isError ? (
@@ -44,13 +44,13 @@ function DeleteCheckListDialog({ checklist }: { checklist: GetChecklistDto }) {
                 }
                 {
                     isSuccess ? (
-                        <AlertBar message=" deleted checklist" color="success" />
+                        <AlertBar message=" deleted checklist category" color="success" />
                     ) : null
                 }
 
                 <DialogContent>
                     <Typography variant="body1" color="error">
-                        {`Warning ! This will delete  ${checklist.work_title}`}
+                        {`Warning ! This will delete  ${category.label}`}
 
                     </Typography>
                 </DialogContent>
@@ -64,12 +64,12 @@ function DeleteCheckListDialog({ checklist }: { checklist: GetChecklistDto }) {
                     <Button fullWidth variant="outlined" color="error"
                         onClick={() => {
                             setChoice({ type: CheckListChoiceActions.delete_checklist })
-                            mutate(checklist._id)
+                            mutate(category.id)
                         }}
                         disabled={isLoading}
                     >
                         {isLoading ? <CircularProgress /> :
-                            "Delete CheckList"}
+                            "Delete Category"}
                     </Button>
                 </Stack >
             </Dialog>
@@ -77,4 +77,4 @@ function DeleteCheckListDialog({ checklist }: { checklist: GetChecklistDto }) {
     )
 }
 
-export default DeleteCheckListDialog
+export default DeleteCheckListCategoryDialog

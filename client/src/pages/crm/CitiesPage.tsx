@@ -272,7 +272,7 @@ export default function CrmCitiesPage() {
       </Stack >
       {/*  table */}
       {isLoading && <TableSkeleton />}
-      { MemoData  &&
+      {!isLoading && MemoData &&
         <LeadsCityTable
           city={city}
           selectAll={selectAll}
