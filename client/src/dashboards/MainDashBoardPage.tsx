@@ -19,7 +19,7 @@ function MainDashBoardPage() {
     user?.assigned_permissions.includes('erp_report_menu') && tmpfeatures.push({ feature: 'erp reports', url: paths.erp_reports_dashboard })
     user?.is_admin && tmpfeatures.push({ feature: 'Todos', url: paths.todo_dashboard })
     // tmpfeatures.push({ feature: 'Visit', url: paths.visit_dashboard })
-    user?.assigned_permissions.includes('checklist_menu') && tmpfeatures.push({ feature: 'Checklist', url: paths.checklist_dashboard })
+    user?.assigned_permissions.includes('checklist_menu') && tmpfeatures.push({ feature: 'Checklists', url: paths.checklist_dashboard })
     // tmpfeatures.push({ feature: 'Templates', url: paths.templates_dashboard })
     // tmpfeatures.push({ feature: 'BackUp', url: paths.backup_dashboard })
     setFeatures(tmpfeatures)

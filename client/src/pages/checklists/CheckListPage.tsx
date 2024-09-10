@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import { Box,  Fade, IconButton, LinearProgress, Menu, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
+import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { UserContext } from '../../contexts/userContext'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
@@ -16,19 +16,21 @@ import { GetChecklistDto } from '../../dtos/checklist/checklist.dto'
 import CheckListsTable from '../../components/tables/checklists/CheckListsTable'
 import { CheckListChoiceActions, ChoiceContext } from '../../contexts/dialogContext'
 import CreateOrEditCheckListDialog from '../../components/dialogs/checklists/CreateOrEditCheckListDialog'
+import FuzzySearch from 'fuzzy-search'
 
 function CheckListPage() {
   const { user } = useContext(UserContext)
   const [users, setUsers] = useState<GetUserDto[]>([])
   const [checklist, setChecklist] = useState<GetChecklistDto>()
   const [checklists, setChecklists] = useState<GetChecklistDto[]>([])
+  const [preFilteredChecklists, setPreFilteredChecklists] = useState<GetChecklistDto[]>([])
   const [paginationData, setPaginationData] = useState({ limit: 500, page: 1, total: 1 });
   const [category, setCategory] = useState<string>('undefined');
   const [categories, setCategories] = useState<DropDownDto[]>([])
   const [userId, setUserId] = useState<string>()
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-    start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
-    , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
+    start_date: moment(new Date().setDate(new Date().getDate() - 3)).format("YYYY-MM-DD")
+    , end_date: moment(new Date().setDate(new Date().getDate() + 4)).format("YYYY-MM-DD")
   })
   const { data: categorydata, isSuccess: categorySuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("checklist_categories", GetAllCheckCategories)
   const { setChoice } = useContext(ChoiceContext)
@@ -37,8 +39,22 @@ function CheckListPage() {
   let day = previous_date.getDate() - 1
   previous_date.setDate(day)
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'checklist_menu', show_assigned_only: true }))
-  const { data, isLoading, refetch: ReftechChecklists } = useQuery<AxiosResponse<{ result: GetChecklistDto[], page: number, total: number, limit: number }>, BackendError>(["checklists", category, paginationData, userId, dates?.start_date, dates?.end_date], async () => GetChecklists({ category: category, limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+  const { data, isLoading, refetch: ReftechChecklists } = useQuery<AxiosResponse<{ result: GetChecklistDto[], page: number, total: number, limit: number }>, BackendError>(["checklists", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetChecklists({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+
+  useEffect(() => {
+    if (category != 'undefined') {
+      const searcher = new FuzzySearch(checklists, ["category.value"], {
+        caseSensitive: false,
+      });
+      const result = searcher.search(category);
+      setChecklists(result)
+    }
+    if (!category)
+      setChecklists(preFilteredChecklists)
+
+  }, [category])
 
   useEffect(() => {
     if (categorySuccess)
@@ -53,6 +69,7 @@ function CheckListPage() {
   useEffect(() => {
     if (data) {
       setChecklists(data.data.result)
+      setPreFilteredChecklists(data.data.result)
       setPaginationData({
         ...paginationData,
         page: data.data.page,
@@ -86,8 +103,7 @@ function CheckListPage() {
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
-            <Stack sx={{ flexDirection: 'row',alignItems:'center' }}>
-              <span key={0} style={{ paddingLeft: '10px' }}>Activities : {checklists.length}</span>
+            <Stack sx={{ flexDirection: 'row', alignItems: 'center' }}>
               {categories.map((category, index) => (
                 <span
                   key={index}
@@ -187,7 +203,7 @@ function CheckListPage() {
           {categories.map((category, index) => (
             <MenuItem
               key={index}
-              value={category.id}
+              value={category.value}
             >
               {toTitleCase(category.label)}
             </MenuItem>

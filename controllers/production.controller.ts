@@ -679,6 +679,12 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
         upper_weight: number,
         month: number,
     }
+
+    let dt1 = new Date()
+    let dt2 = new Date()
+    dt2.setDate(new Date(dt2).getDate() + 1)
+    dt1.setHours(0)
+    dt1.setMinutes(0)
     let { machine, dye, article, weight, month, upper_weight } = body
 
     if (!machine || !dye || !article || !weight || !upper_weight)
@@ -689,6 +695,12 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     let art1 = await Article.findById(article)
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
+
+    let weightcheck = await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } });
+
+    if (weightcheck) {
+        return res.status(400).json({ message: "sorry ! dye is not available" })
+    }
     let shoe_weight = new ShoeWeight({
         machine: m1, dye: d1, article: art1, shoe_weight1: weight, month: month, upper_weight1: upper_weight
     })

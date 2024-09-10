@@ -27,7 +27,7 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
         })
 
 
-    const { data: userData, isSuccess: userSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true }))
+    const { data: userData, isSuccess: userSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true, permission:'checklist_menu' }))
     const { data: categoriesData, isSuccess: categorySuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("check_categories", GetAllCheckCategories)
     const { setChoice } = useContext(ChoiceContext)
 
@@ -105,7 +105,7 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
                     {...formik.getFieldProps('work_title')}
                 />
                 <TextField
-                    required
+                    
                     multiline
                     minRows={2}
                     error={
@@ -120,7 +120,7 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
                     {...formik.getFieldProps('details1')}
                 />
                 <TextField
-                    required
+                    
                     multiline
                     minRows={2}
                     error={

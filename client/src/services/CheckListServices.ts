@@ -30,17 +30,16 @@ export const CreateOrEditCheckList = async ({ body, id }: { body: CreateOrEditCh
 
 
 
-export const GetChecklists = async ({ category, limit, page, start_date, end_date, id }: {category:string,limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+export const GetChecklists = async ({  limit, page, start_date, end_date, id }: {limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
     if (id)
-        return await apiClient.get(`checklists/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&category=${category}`)
+        return await apiClient.get(`checklists/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
     else
-        return await apiClient.get(`checklists/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&category=${category}`)
+        return await apiClient.get(`checklists/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
 }
 
 
 
-
-export const ToogleMyCheckLists = async ({ id }: { id: string}) => {
+export const ToogleMyCheckLists = async ( id: string) => {
     return await apiClient.patch(`checklists/toogle/${id}`)
 }
 

@@ -102,13 +102,13 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
             count = await Checklist.find({ created_by: id }).countDocuments()
         }
 
-        if (category != 'undefined')
-            checklists = checklists.filter((ch) => { return ch.category._id.valueOf() === category })
+
 
         for (let i = 0; i < checklists.length; i++) {
             let ch = checklists[i];
             if (ch && ch.category) {
-                let boxes = await ChecklistBox.find({ checklist: ch._id }).sort('-date');
+                let boxes = await ChecklistBox.find({ checklist: ch._id, date: { $gte: dt1, $lt: dt2 } }).sort('date');
+                let dtoboxes = boxes.map((b) => { return { _id: b._id, checked: b.checked, date: b.date.toString() } });
                 result.push({
                     _id: ch._id,
                     work_title: ch.work_title,
@@ -120,7 +120,7 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
                     user: { id: ch.user._id, label: ch.user.username, value: ch.user.username },
                     created_at: ch.created_at.toString(),
                     updated_at: ch.updated_at.toString(),
-                    boxes: boxes.map((b) => { return { _id: b._id, checked: b.checked, date: b.date.toString() } }),
+                    boxes: dtoboxes,
                     created_by: { id: ch.created_by._id, value: ch.created_by.username, label: ch.created_by.username },
                     updated_by: { id: ch.updated_by._id, value: ch.updated_by.username, label: ch.updated_by.username }
                 })
@@ -177,7 +177,7 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
     await checklist.save();
 
     if (end_date && frequency == "daily") {
-        let current_date = new Date(end_date)
+        let current_date = new Date()
         current_date.setDate(1)
         while (current_date <= new Date(end_date)) {
             await new ChecklistBox({
@@ -193,7 +193,7 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
         }
     }
     if (end_date && frequency == "weekly") {
-        let current_date = new Date(end_date)
+        let current_date = new Date()
         current_date.setDate(1)
         while (current_date <= new Date(end_date)) {
             await new ChecklistBox({
@@ -256,7 +256,6 @@ export const DeleteChecklist = async (req: Request, res: Response, next: NextFun
 
 export const ToogleChecklist = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    let date = new Date(String(req.query.date))
     if (!isMongoId(id)) return res.status(400).json({ message: " id not valid" })
 
     let checklist = await ChecklistBox.findById(id)
@@ -264,6 +263,6 @@ export const ToogleChecklist = async (req: Request, res: Response, next: NextFun
         return res.status(404).json({ message: "Checklist box not found" })
     }
 
-    await ChecklistBox.findOneAndUpdate({ _id: id, date: date }, { checked: !checklist.checked })
+    await ChecklistBox.findByIdAndUpdate(id, { checked: !checklist.checked })
     return res.status(200).json("successfully marked")
 }
