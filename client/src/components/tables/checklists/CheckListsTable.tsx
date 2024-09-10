@@ -43,10 +43,10 @@ function CheckBoxComponent({ checklist }: { checklist: GetChecklistBoxDto }) {
                 <AlertBar message="Marked Successfully" color="success" />
             ) : null
         }
-        <Button sx={{ ml: 2 }} onClick={() => {
+        <Button sx={{ m: 0.5, borderRadius: 5 }} onClick={() => {
             if (checklist)
                 mutate(checklist._id)
-        }} size="small" disabled={new Date(checklist.date).getDate() > new Date().getDate()} variant={checklist.checked ? 'outlined' : 'contained'} color={checklist.checked ? 'success' : 'error'}>{isLoading ? <CircularProgress /> : new Date(checklist.date).getDate()}</Button>
+        }} size="small" disabled={new Date(checklist.date).getDate() > new Date().getDate()} variant={'contained'} color={checklist.checked ? 'success' : 'error'}>{isLoading ? <CircularProgress size={"small"} /> : new Date(checklist.date).getDate()}</Button>
     </>
 }
 
@@ -71,12 +71,12 @@ function CheckListsTable({ checklists }: Props) {
                     <STableHead
                     >
                         <STableRow>
-                            <STableHeadCell
+                            {user?.assigned_permissions.includes('checklist_edit') && <STableHeadCell
                             >
 
                                 Actions
 
-                            </STableHeadCell>
+                            </STableHeadCell>}
 
                             <STableHeadCell
                             >
@@ -127,7 +127,7 @@ function CheckListsTable({ checklists }: Props) {
                                         key={index}
                                     >
 
-                                        <TableCell style={{ padding: '0px' }}>
+                                        {user?.assigned_permissions.includes('checklist_edit') &&<TableCell style={{ padding: '0px' }}>
 
                                             <Stack direction="row" gap={1} px={1}>
                                                 {user?.assigned_permissions.includes('checklist_delete') && <Tooltip title="view checklists">
@@ -159,7 +159,7 @@ function CheckListsTable({ checklists }: Props) {
                                                     </IconButton>
                                                 </Tooltip>}
                                             </Stack>
-                                        </TableCell>
+                                        </TableCell>}
 
                                         <STableCell title={checklist.work_title}>
                                             {checklist.work_title.slice(0, 50)}

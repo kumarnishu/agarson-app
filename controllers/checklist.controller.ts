@@ -69,7 +69,6 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
     let id = req.query.id
-    let category = req.query.category
     let start_date = req.query.start_date
     let end_date = req.query.end_date
     let checklists: IChecklist[] = []
@@ -88,18 +87,18 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
         }
         else if (ids && ids.length > 0 && !id) {
             {
-                checklists = await Checklist.find({ created_by: { $in: ids } }).populate('created_by').populate('updated_by').populate('category').populate('user').sort('updated_at').skip((page - 1) * limit).limit(limit)
-                count = await Checklist.find({ created_by: { $in: ids } }).countDocuments()
+                checklists = await Checklist.find({ user: { $in: ids } }).populate('created_by').populate('updated_by').populate('category').populate('user').sort('updated_at').skip((page - 1) * limit).limit(limit)
+                count = await Checklist.find({ user: { $in: ids } }).countDocuments()
             }
         }
         else if (!id) {
-            checklists = await Checklist.find({ created_by: req.user?._id }).populate('created_by').populate('updated_by').populate('category').populate('user').sort('updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Checklist.find({ created_by: req.user?._id }).countDocuments()
+            checklists = await Checklist.find({ user: req.user?._id }).populate('created_by').populate('updated_by').populate('category').populate('user').sort('updated_at').skip((page - 1) * limit).limit(limit)
+            count = await Checklist.find({ user: req.user?._id }).countDocuments()
         }
 
         else {
-            checklists = await Checklist.find({ created_by: id }).populate('created_by').populate('updated_by').populate('category').populate('user').sort('updated_at').skip((page - 1) * limit).limit(limit)
-            count = await Checklist.find({ created_by: id }).countDocuments()
+            checklists = await Checklist.find({ user: id }).populate('created_by').populate('updated_by').populate('category').populate('user').sort('updated_at').skip((page - 1) * limit).limit(limit)
+            count = await Checklist.find({ user: id }).countDocuments()
         }
 
 

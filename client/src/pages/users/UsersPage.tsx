@@ -151,7 +151,7 @@ export default function UsersPage() {
                             onChange={(e) => {
                                 setFilter(e.target.value)
                             }}
-
+                            autoFocus
                             placeholder={`${users?.length} records...`}
                             style={{
                                 fontSize: '1.1rem',

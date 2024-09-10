@@ -3520,9 +3520,10 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
 
 export const GetMyReminders = async (req: Request, res: Response, next: NextFunction) => {
     let previous_date = new Date()
-    let day = previous_date.getDate() - 3
+    let day = previous_date.getDate() - 7
     previous_date.setDate(day)
-
+    previous_date.setHours(0)
+    previous_date.setMinutes(0)
     let leads = await Lead.find({ updated_at: { $lte: new Date(), $gt: previous_date } }).populate('referred_party')
 
     let result: GetActivitiesOrRemindersDto[] = []

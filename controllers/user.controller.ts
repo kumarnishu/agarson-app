@@ -20,10 +20,10 @@ export const GetUsers = async (req: Request, res: Response, next: NextFunction) 
 
     if (show_assigned_only == 'true') {
         let ids = req.user?.assigned_users.map((id) => { return id._id })
-        users = await User.find({ is_active: true, _id: { $in: ids } }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+        users = await User.find({ is_active: true, _id: { $in: ids } }).populate("created_by").populate("updated_by").populate('assigned_users').sort('-last_login')
     }
     else {
-        users = await User.find({ is_active: showhidden == 'false' }).populate("created_by").populate("updated_by").populate('assigned_users').sort('username')
+        users = await User.find({ is_active: showhidden == 'false' }).populate("created_by").populate("updated_by").populate('assigned_users').sort('-last_login')
     }
     if (perm) {
         users = users.filter((u) => { return u.assigned_permissions.includes(String(perm)) })
