@@ -29,8 +29,8 @@ function CheckListPage() {
   const [categories, setCategories] = useState<DropDownDto[]>([])
   const [userId, setUserId] = useState<string>()
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-    start_date: moment(new Date().setDate(new Date().getDate() - 3)).format("YYYY-MM-DD")
-    , end_date: moment(new Date().setDate(new Date().getDate() + 4)).format("YYYY-MM-DD")
+    start_date: moment(new Date().setDate(new Date().getDate() - 2)).format("YYYY-MM-DD")
+    , end_date: moment(new Date().setDate(new Date().getDate() + 5)).format("YYYY-MM-DD")
   })
   const { data: categorydata, isSuccess: categorySuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("checklist_categories", GetAllCheckCategories)
   const { setChoice } = useContext(ChoiceContext)
