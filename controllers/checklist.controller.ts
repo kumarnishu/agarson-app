@@ -107,7 +107,7 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
             let ch = checklists[i];
             if (ch && ch.category) {
                 let boxes = await ChecklistBox.find({ checklist: ch._id, date: { $gte: dt1, $lt: dt2 } }).sort('date');
-                let dtoboxes = boxes.map((b) => { return { _id: b._id, checked: b.checked, date: b.date.toString() } });
+                let dtoboxes = boxes.map((b) => { return { _id: b._id, checked: b.checked, date: b.date.toString(), remarks: b.remarks } });
                 result.push({
                     _id: ch._id,
                     work_title: ch.work_title,
@@ -255,13 +255,13 @@ export const DeleteChecklist = async (req: Request, res: Response, next: NextFun
 
 export const ToogleChecklist = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
+    const { remarks } = req.body
     if (!isMongoId(id)) return res.status(400).json({ message: " id not valid" })
 
     let checklist = await ChecklistBox.findById(id)
     if (!checklist) {
         return res.status(404).json({ message: "Checklist box not found" })
     }
-
-    await ChecklistBox.findByIdAndUpdate(id, { checked: !checklist.checked })
+    await ChecklistBox.findByIdAndUpdate(id, { checked: !checklist.checked, remarks: remarks })
     return res.status(200).json("successfully marked")
 }

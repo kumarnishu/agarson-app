@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, IconButton, Stack, TableCell, Tooltip } from '@mui/material'
+import { Box, Button, IconButton, Stack, TableCell, Tooltip } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import { ChoiceContext, CheckListChoiceActions } from '../../../contexts/dialogContext'
@@ -7,14 +7,7 @@ import { UserContext } from '../../../contexts/userContext'
 import { GetChecklistBoxDto, GetChecklistDto } from '../../../dtos/checklist/checklist.dto'
 import CreateOrEditCheckListDialog from '../../dialogs/checklists/CreateOrEditCheckListDialog'
 import DeleteCheckListDialog from '../../dialogs/checklists/DeleteCheckListDialog'
-import { useMutation } from 'react-query'
-import { AxiosResponse } from 'axios'
-import { BackendError } from '../../..'
-import { ToogleMyCheckLists } from '../../../services/CheckListServices'
-import { queryClient } from '../../../main'
-import AlertBar from '../../snacks/AlertBar'
-
-
+import ToogleMyCheckListDialog from '../../forms/checklists/ToogleMyCheckListDialog'
 
 
 type Props = {
@@ -23,39 +16,14 @@ type Props = {
     checklists: GetChecklistDto[]
 }
 
-function CheckBoxComponent({ checklist }: { checklist: GetChecklistBoxDto }) {
-    const { mutate, isLoading, isError, error, isSuccess } = useMutation
-        <AxiosResponse<any>, BackendError, string>
-        (ToogleMyCheckLists, {
-            onSuccess: () => {
-                queryClient.invalidateQueries('checklists')
-            }
-        })
 
-    return <>
-        {
-            isError ? (
-                <AlertBar message={error?.response.data.message} color="error" />
-            ) : null
-        }
-        {
-            isSuccess ? (
-                <AlertBar message="Marked Successfully" color="success" />
-            ) : null
-        }
-        <Button sx={{ m: 0.5, borderRadius: 5 }} onClick={() => {
-            if (checklist)
-                mutate(checklist._id)
-        }} size="small" disabled={new Date(checklist.date).getDate() > new Date().getDate()} variant={'contained'} color={checklist.checked ? 'success' : 'error'}>{isLoading ? <CircularProgress size={"small"} /> : new Date(checklist.date).getDate()}</Button>
-    </>
-}
 
 function CheckListsTable({ checklists }: Props) {
     const [data, setData] = useState<GetChecklistDto[]>(checklists)
     const [checklist, setChecklist] = useState<GetChecklistDto>();
-    const { setChoice } = useContext(ChoiceContext)
+    const { choice, setChoice } = useContext(ChoiceContext)
     const { user } = useContext(UserContext)
-
+    const [checklistBox, setChecklistBox] = useState<GetChecklistBoxDto>()
     useEffect(() => {
         setData(checklists)
     }, [checklists])
@@ -77,11 +45,28 @@ function CheckListsTable({ checklists }: Props) {
                                 Actions
 
                             </STableHeadCell>}
+                            <STableHeadCell
+                            >
 
+                                Checklists Dates
+
+                            </STableHeadCell>
                             <STableHeadCell
                             >
 
                                 Work Title
+
+                            </STableHeadCell>
+
+
+
+                            <STableHeadCell>
+                                Detail 1
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Detail 2
 
                             </STableHeadCell>
                             <STableHeadCell
@@ -98,22 +83,6 @@ function CheckListsTable({ checklists }: Props) {
                                 Person
 
                             </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Checklists Dates
-
-                            </STableHeadCell>
-
-                            <STableHeadCell>
-                                Detail 1
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
-
-                                Detail 2
-
-                            </STableHeadCell>
 
                         </STableRow>
                     </STableHead>
@@ -127,7 +96,7 @@ function CheckListsTable({ checklists }: Props) {
                                         key={index}
                                     >
 
-                                        {user?.assigned_permissions.includes('checklist_edit') &&<TableCell style={{ padding: '0px' }}>
+                                        {user?.assigned_permissions.includes('checklist_edit') && <TableCell style={{ padding: '0px' }}>
 
                                             <Stack direction="row" gap={1} px={1}>
                                                 {user?.assigned_permissions.includes('checklist_delete') && <Tooltip title="view checklists">
@@ -160,23 +129,29 @@ function CheckListsTable({ checklists }: Props) {
                                                 </Tooltip>}
                                             </Stack>
                                         </TableCell>}
+                                        <STableCell>
+                                            {checklist.boxes.map((b) => {
+                                                return <Tooltip title={b.remarks}>
+                                                    <Button sx={{ borderRadius: 5, minWidth: '10px', m: 0.3, pl: 0.3 }} onClick={() => {
+                                                        if (b) {
+                                                            setChecklistBox(b)
+                                                            setChoice({ type: CheckListChoiceActions.toogle_checklist })
+                                                        }
 
+                                                    }} size="small" disabled={new Date(b.date).getDate() > new Date().getDate()} variant={'contained'} color={b.checked ? 'success' : 'error'}>
+
+
+                                                        {new Date(b.date).getDate().toString()}
+                                                    </Button>
+                                                </Tooltip>
+                                            })}
+                                        </STableCell>
                                         <STableCell title={checklist.work_title}>
                                             {checklist.work_title.slice(0, 50)}
 
                                         </STableCell>
-                                        <STableCell >
-                                            {checklist.frequency}
 
-                                        </STableCell>
-                                        <STableCell>
-                                            {checklist.user.label}
-                                        </STableCell>
-                                        <STableCell>
-                                            {checklist.boxes.map((b) => {
-                                                return <CheckBoxComponent key={b._id} checklist={b} />
-                                            })}
-                                        </STableCell>
+
 
                                         <STableCell title={checklist.details1}>
                                             {checklist.details1.slice(0, 50)}
@@ -186,7 +161,13 @@ function CheckListsTable({ checklists }: Props) {
                                             {checklist.details2.slice(0, 50)}
 
                                         </STableCell>
+                                        <STableCell >
+                                            {checklist.frequency}
 
+                                        </STableCell>
+                                        <STableCell>
+                                            {checklist.user.label}
+                                        </STableCell>
                                     </STableRow>
                                 )
                             })
@@ -197,6 +178,7 @@ function CheckListsTable({ checklists }: Props) {
             </Box >
             {checklist && <DeleteCheckListDialog checklist={checklist} />}
             {checklist && <CreateOrEditCheckListDialog checklist={checklist} />}
+            {choice === CheckListChoiceActions.toogle_checklist && checklistBox && <ToogleMyCheckListDialog box={checklistBox} />}
         </>
     )
 }

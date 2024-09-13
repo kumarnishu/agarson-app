@@ -34,5 +34,6 @@ export type CreateOrEditChecklistDto={
 export type GetChecklistBoxDto = {
     _id: string,
     date: string,
-    checked: boolean
+    checked: boolean,
+    remarks: string,
 }

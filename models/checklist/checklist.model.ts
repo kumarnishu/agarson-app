@@ -27,6 +27,7 @@ export type IChecklist = {
 export type IChecklistBox = {
     _id: string,
     date: Date,
+    remarks:string,
     checked: boolean,
     checklist: IChecklist,
     created_at: Date,
@@ -137,6 +138,7 @@ export const Checklist = mongoose.model<IChecklist, mongoose.Model<IChecklist, {
 const ChecklistBoxSchema = new mongoose.Schema<IChecklistBox, mongoose.Model<IChecklistBox, {}, {}>, {}>({
     date: { type: Date, required: true },
     checked: { type: Boolean, default: false },
+    remarks:String,
     checklist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Checklist',
