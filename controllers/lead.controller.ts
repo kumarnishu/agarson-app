@@ -3524,47 +3524,63 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     previous_date.setDate(day)
     previous_date.setHours(0)
     previous_date.setMinutes(0)
-    let leads = await Lead.find({ updated_at: { $lte: new Date(), $gt: previous_date } }).populate('referred_party')
+    let remarks = await Remark.find({ updated_at: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
+        path: 'lead',
+        populate: [
+            {
+                path: 'created_by',
+                model: 'User'
+            },
+            {
+                path: 'updated_by',
+                model: 'User'
+            },
+            {
+                path: 'referred_party',
+                model: 'ReferredParty'
+            }
+        ]
+    }).sort('created_at')
 
     let result: GetActivitiesOrRemindersDto[] = []
-    for (let i = 0; i < leads.length; i++) {
-        let lead = leads[i]
-        let rem = await Remark.findOne({ lead: lead._id, created_at: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').sort('-created_at')
+    remarks = remarks.filter((rem) => {
         if (rem && rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate() && new Date(rem.remind_date).getMonth() <= new Date().getMonth()) {
-            result.push({
-                _id: rem._id,
-                remark: rem.remark,
-                created_at: rem.created_at && moment(rem.created_at).format("LT"),
-                remind_date: rem.remind_date && moment(rem.remind_date).format("DD/MM/YYYY"),
-                created_by: { id: rem.created_by._id, value: rem.created_by.username, label: rem.created_by.username },
-                lead_id: lead._id,
-                name: lead.name,
-                customer_name: lead.customer_name,
-                customer_designation: lead.customer_designation,
-                mobile: lead.mobile,
-                gst: lead.gst,
-                has_card: lead.has_card,
-                email: lead.email,
-                city: lead.city,
-                state: lead.state,
-                country: lead.country,
-                address: lead.address,
-                work_description: lead.work_description,
-                turnover: lead.turnover,
-                alternate_mobile1: lead.alternate_mobile1,
-                alternate_mobile2: lead.alternate_mobile2,
-                alternate_email: lead.alternate_email,
-                lead_type: lead.lead_type,
-                stage: lead.stage,
-                lead_source: lead.lead_source,
-                visiting_card: lead.visiting_card?.public_url || "",
-                referred_party_name: lead.referred_party?.name || "",
-                referred_party_mobile: lead.referred_party?.mobile || "",
-                referred_date: lead.referred_date && moment(lead.referred_date).format("DD/MM/YYYY") || "",
-
-            })
+            return rem;
         }
-    }
+    })
+    result = remarks.map((rem) => {
+        return {
+            _id: rem._id,
+            remark: rem.remark,
+            created_at: rem.created_at && moment(rem.created_at).format("LT"),
+            remind_date: rem.remind_date && moment(rem.remind_date).format("DD/MM/YYYY"),
+            created_by: { id: rem.created_by._id, value: rem.created_by.username, label: rem.created_by.username },
+            lead_id: rem.lead && rem.lead._id,
+            name: rem.lead && rem.lead.name,
+            customer_name: rem.lead && rem.lead.customer_name,
+            customer_designation: rem.lead && rem.lead.customer_designation,
+            mobile: rem.lead && rem.lead.mobile,
+            gst: rem.lead && rem.lead.gst,
+            has_card: rem.lead && rem.lead.has_card,
+            email: rem.lead && rem.lead.email,
+            city: rem.lead && rem.lead.city,
+            state: rem.lead && rem.lead.state,
+            country: rem.lead && rem.lead.country,
+            address: rem.lead && rem.lead.address,
+            work_description: rem.lead && rem.lead.work_description,
+            turnover: rem.lead && rem.lead.turnover,
+            alternate_mobile1: rem.lead && rem.lead.alternate_mobile1,
+            alternate_mobile2: rem.lead && rem.lead.alternate_mobile2,
+            alternate_email: rem.lead && rem.lead.alternate_email,
+            lead_type: rem.lead && rem.lead.lead_type,
+            stage: rem.lead && rem.lead.stage,
+            lead_source: rem.lead && rem.lead.lead_source,
+            visiting_card: rem.lead && rem.lead.visiting_card?.public_url || "",
+            referred_party_name: rem.lead && rem.lead.referred_party?.name || "",
+            referred_party_mobile: rem.lead && rem.lead.referred_party?.mobile || "",
+            referred_date: rem.lead && rem.lead.referred_date && moment(rem.lead && rem.lead.referred_date).format("DD/MM/YYYY") || "",
+        }
+    })
     return res.status(200).json(result)
 }
 export const GetReferRemarkHistory = async (req: Request, res: Response, next: NextFunction) => {
@@ -3887,45 +3903,27 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
     let result: GetAssignedReferDto[] = []
-    let remarks: IRemark[] = []
-    remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('created_by').populate('updated_by').populate({
-        path: 'lead',
-        populate: [
-            {
-                path: 'created_by',
-                model: 'User'
-            },
-            {
-                path: 'updated_by',
-                model: 'User'
-            },
-            {
-                path: 'referred_party',
-                model: 'ReferredParty'
-            }
-        ]
-    }).sort('-updated_at')
+    let leads: ILead[] = []
 
-    remarks = remarks.filter((r) => {
-        if (r.lead)
-            return r.lead.stage == 'refer'
-    })
-
-    result = remarks.map((rem) => {
-        return {
-            lead: { id: rem.lead._id, value: rem.lead.name, label: rem.lead.name },
-            lead_mobile1: rem.lead.mobile,
-            lead_mobile2: rem.lead.alternate_mobile1,
-            lead_mobile3: rem.lead.alternate_mobile2,
-            refer: { id: rem.lead._id, value: rem.lead.referred_party && rem.lead.referred_party.name || "", label: rem.lead.referred_party && rem.lead.referred_party.name || "" },
-            remark: rem.remark || "",
-            refer_mobile1: rem.lead.referred_party && rem.lead.referred_party.mobile,
-            refer_mobile2: rem.lead.referred_party && rem.lead.referred_party.mobile2,
-            refer_mobile3: rem.lead.referred_party && rem.lead.referred_party.mobile3,
-            refer_date: rem.lead.referred_party && moment(rem.lead.referred_date).format("DD/MM/YYYY")
+    leads = await Lead.find({ referred_date: { $gte: dt1, $lt: dt2 } }).populate('created_by').populate('updated_by').populate('referred_party').sort('-referred_date')
+    for (let i = 0; i < leads.length; i++) {
+        let lead = leads[i];
+        let remark = await Remark.findOne({ lead: lead._id }).sort("-created_at");
+        if (remark && lead.referred_party) {
+            result.push({
+                lead: { id: lead._id, value: lead.name, label: lead.name },
+                lead_mobile1: lead.mobile,
+                lead_mobile2: lead.alternate_mobile1,
+                lead_mobile3: lead.alternate_mobile2,
+                refer: { id: lead._id, value: lead.referred_party && lead.referred_party.name || "", label: lead.referred_party && lead.referred_party.name || "" },
+                remark: remark.remark || "",
+                refer_mobile1: lead.referred_party && lead.referred_party.mobile,
+                refer_mobile2: lead.referred_party && lead.referred_party.mobile2,
+                refer_mobile3: lead.referred_party && lead.referred_party.mobile3,
+                refer_date: lead.referred_party && moment(lead.referred_date).format("DD/MM/YYYY")
+            })
         }
-    })
-
+    }
     return res.status(200).json(result)
 }
 

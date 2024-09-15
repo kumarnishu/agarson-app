@@ -48,27 +48,21 @@ function CheckListsTable({ checklists }: Props) {
                             <STableHeadCell
                             >
 
-                                Checklists Dates
+                                Work
 
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Work Title
-
-                            </STableHeadCell>
-
-
-
-                            <STableHeadCell>
-                                Detail 1
+                                Responsible
                             </STableHeadCell>
                             <STableHeadCell
                             >
 
-                                Detail 2
+                                Category
 
                             </STableHeadCell>
+                           
                             <STableHeadCell
                             >
 
@@ -76,13 +70,14 @@ function CheckListsTable({ checklists }: Props) {
 
                             </STableHeadCell>
 
-
                             <STableHeadCell
                             >
 
-                                Person
+                                Dates
 
                             </STableHeadCell>
+
+
 
                         </STableRow>
                     </STableHead>
@@ -129,6 +124,29 @@ function CheckListsTable({ checklists }: Props) {
                                                 </Tooltip>}
                                             </Stack>
                                         </TableCell>}
+                                        <STableCell title={checklist.work_title} >
+                                            <a href={checklist.link} target='_blank' style={{ color: checklist.link ? "blue" : "black", textDecoration: 'none', fontSize: 13, fontWeight: '400' }}>
+                                                {checklist.work_title.slice(0, 50)}
+
+                                            </a>
+
+
+                                        </STableCell>
+                                        <STableCell>
+                                            {checklist.user.label}
+                                        </STableCell>
+                                        <STableCell title={checklist.category.label}>
+                                            {checklist.category.label}
+
+                                        </STableCell>
+                                        <STableCell >
+                                            {checklist.frequency}
+
+                                        </STableCell>
+                                       
+
+                                      
+
                                         <STableCell>
                                             {checklist.boxes.map((b) => {
                                                 return <Tooltip title={b.remarks}>
@@ -138,35 +156,13 @@ function CheckListsTable({ checklists }: Props) {
                                                             setChoice({ type: CheckListChoiceActions.toogle_checklist })
                                                         }
 
-                                                    }} size="small" disabled={new Date(b.date).getDate() > new Date().getDate()} variant={'contained'} color={b.checked ? 'success' : 'error'}>
+                                                    }} size="small" disabled={new Date(b.date).getDate() > new Date().getDate() || user?._id !== checklist.user?.id} variant={'contained'} color={b.checked ? 'success' : 'error'}>
 
 
                                                         {new Date(b.date).getDate().toString()}
                                                     </Button>
                                                 </Tooltip>
                                             })}
-                                        </STableCell>
-                                        <STableCell title={checklist.work_title}>
-                                            {checklist.work_title.slice(0, 50)}
-
-                                        </STableCell>
-
-
-
-                                        <STableCell title={checklist.details1}>
-                                            {checklist.details1.slice(0, 50)}
-
-                                        </STableCell>
-                                        <STableCell title={checklist.details2}>
-                                            {checklist.details2.slice(0, 50)}
-
-                                        </STableCell>
-                                        <STableCell >
-                                            {checklist.frequency}
-
-                                        </STableCell>
-                                        <STableCell>
-                                            {checklist.user.label}
                                         </STableCell>
                                     </STableRow>
                                 )

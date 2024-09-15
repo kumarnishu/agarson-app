@@ -29,8 +29,8 @@ function CheckListPage() {
   const [categories, setCategories] = useState<DropDownDto[]>([])
   const [userId, setUserId] = useState<string>()
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-    start_date: moment(new Date().setDate(new Date().getDate() - 2)).format("YYYY-MM-DD")
-    , end_date: moment(new Date().setDate(new Date().getDate() + 5)).format("YYYY-MM-DD")
+    start_date: moment(new Date().setDate(new Date().getDate() - 6)).format("YYYY-MM-DD")
+    , end_date: moment(new Date().setDate(new Date().getDate() + 4)).format("YYYY-MM-DD")
   })
   const { data: categorydata, isSuccess: categorySuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("checklist_categories", GetAllCheckCategories)
   const { setChoice } = useContext(ChoiceContext)
@@ -45,13 +45,13 @@ function CheckListPage() {
 
   useEffect(() => {
     if (category != 'undefined') {
-      const searcher = new FuzzySearch(checklists, ["category.value"], {
+      const searcher = new FuzzySearch(preFilteredChecklists, ["category.value"], {
         caseSensitive: false,
       });
       const result = searcher.search(category);
       setChecklists(result)
     }
-    if (!category)
+    if (category=='undefined')
       setChecklists(preFilteredChecklists)
 
   }, [category])

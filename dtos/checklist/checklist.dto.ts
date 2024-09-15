@@ -10,8 +10,7 @@ export type GetChecklistDto = {
     _id: string,
     category: DropDownDto,
     work_title: string,
-    details1: string,
-    details2: string,
+    link: string,
     user: DropDownDto,
     end_date: string,
     frequency: string,
@@ -24,9 +23,8 @@ export type GetChecklistDto = {
 export type CreateOrEditChecklistDto={
     category: string,
     work_title: string,
-    details1: string,
+    link: string,
     end_date:string,
-    details2: string,
     user_id: string,
     frequency: string,
 }

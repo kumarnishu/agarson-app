@@ -14,3 +14,7 @@ input[type=file]::file-selector-button {
   display: none;
   cursor: pointer;
 }
+
+td{
+  text-transform: capitalize;
+}

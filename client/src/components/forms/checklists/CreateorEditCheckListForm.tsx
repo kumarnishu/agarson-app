@@ -35,9 +35,8 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
         initialValues: {
             category: checklist ? checklist.category.id : "",
             work_title: checklist ? checklist.work_title : "",
-            details1: checklist ? checklist.details1 : "",
+            link: checklist ? checklist.link : "",
             end_date: checklist ? moment(checklist.end_date).format("YYYY-MM-DD")  : "",
-            details2: checklist ? checklist.details2 : "",
             user_id: checklist ? checklist.user.id : "",
             frequency: checklist ? checklist.frequency : "daily",
         },
@@ -109,32 +108,17 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
                     multiline
                     minRows={2}
                     error={
-                        formik.touched.details1 && formik.errors.details1 ? true : false
+                        formik.touched.link && formik.errors.link ? true : false
                     }
-                    id="details1"
-                    label="Detail1"
+                    id="link"
+                    label="Link"
                     fullWidth
                     helperText={
-                        formik.touched.details1 && formik.errors.details1 ? formik.errors.details1 : ""
+                        formik.touched.link && formik.errors.link ? formik.errors.link : ""
                     }
-                    {...formik.getFieldProps('details1')}
+                    {...formik.getFieldProps('link')}
                 />
-                <TextField
-                    
-                    multiline
-                    minRows={2}
-                    error={
-                        formik.touched.details2 && formik.errors.details2 ? true : false
-                    }
-                    id="details2"
-                    label="Details 2"
-                    fullWidth
-                    helperText={
-                        formik.touched.details2 && formik.errors.details2 ? formik.errors.details2 : ""
-                    }
-                    {...formik.getFieldProps('details2')}
-                />
-
+               
                 < TextField
                     select
                     SelectProps={{

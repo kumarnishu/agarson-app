@@ -12,6 +12,7 @@ export type IChecklistCategory = {
 
 export type IChecklist = {
     _id: string,
+    link:string,
     category: IChecklistCategory,
     work_title: string,
     details1: string,
@@ -76,16 +77,13 @@ const ChecklistSchema = new mongoose.Schema<IChecklist, mongoose.Model<IChecklis
         lowercase: true,
         required: true
     },
+    link: {
+        type: String,
+    },
     frequency: {
         type: String,
         lowercase: true,
         required: true
-    },
-    details1: {
-        type: String,
-    },
-    details2: {
-        type: String,
     },
     end_date: {
         type: Date,

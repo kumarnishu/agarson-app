@@ -111,8 +111,7 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
                 result.push({
                     _id: ch._id,
                     work_title: ch.work_title,
-                    details1: ch.details1,
-                    details2: ch.details2,
+                    link: ch.link,
                     end_date: ch.end_date.toString(),
                     category: { id: ch.category._id, label: ch.category.category, value: ch.category.category },
                     frequency: ch.frequency,
@@ -143,8 +142,7 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
 export const CreateChecklist = async (req: Request, res: Response, next: NextFunction) => {
     const { category,
         work_title,
-        details1,
-        details2,
+        link,
         user_id,
         frequency,
         end_date } = req.body as CreateOrEditChecklistDto
@@ -163,9 +161,8 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
     let checklist = new Checklist({
         category: category,
         work_title: work_title,
-        details1: details1,
+        link: link,
         end_date: new Date(end_date),
-        details2: details2,
         user: user._id,
         frequency: frequency,
         created_at: new Date(),
@@ -213,8 +210,7 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
 export const EditChecklist = async (req: Request, res: Response, next: NextFunction) => {
     const {
         work_title,
-        details1,
-        details2,
+        link,
         user_id } = req.body as CreateOrEditChecklistDto
     if (!work_title || !user_id)
         return res.status(400).json({ message: "please provide all required fields" })
@@ -231,8 +227,7 @@ export const EditChecklist = async (req: Request, res: Response, next: NextFunct
             checklist.user = user
     }
     checklist.work_title = work_title
-    checklist.details1 = details1
-    checklist.details2 = details2
+    checklist.link = link
 
     await checklist.save()
     return res.status(200).json({ message: `Checklist updated` });
