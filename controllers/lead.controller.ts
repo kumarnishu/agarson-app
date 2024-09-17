@@ -3524,7 +3524,7 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     previous_date.setDate(day)
     previous_date.setHours(0)
     previous_date.setMinutes(0)
-    let remarks = await Remark.find({ updated_at: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
+    let remarks = await Remark.find({ created_at: { $lte: new Date(), $gt: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
         path: 'lead',
         populate: [
             {
@@ -3540,11 +3540,13 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
                 model: 'ReferredParty'
             }
         ]
-    }).sort('created_at')
+    }).sort('-created_at')
 
     let result: GetActivitiesOrRemindersDto[] = []
+    let ids: string[] = []
     remarks = remarks.filter((rem) => {
-        if (rem && rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate() && new Date(rem.remind_date).getMonth() <= new Date().getMonth()) {
+        if (rem && rem.lead && !ids.includes(rem.lead._id) && rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate() && new Date(rem.remind_date).getMonth() <= new Date().getMonth()) {
+            ids.push(rem.lead._id)
             return rem;
         }
     })
