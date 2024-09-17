@@ -3554,7 +3554,7 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
         return {
             _id: rem._id,
             remark: rem.remark,
-            created_at: rem.created_at && moment(rem.created_at).format("LT"),
+            created_at: rem.created_at && moment(rem.created_at).calendar(),
             remind_date: rem.remind_date && moment(rem.remind_date).format("DD/MM/YYYY"),
             created_by: { id: rem.created_by._id, value: rem.created_by.username, label: rem.created_by.username },
             lead_id: rem.lead && rem.lead._id,
