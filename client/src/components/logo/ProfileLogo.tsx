@@ -12,9 +12,12 @@ import UpdatePasswordDialog from '../dialogs/users/UpdatePasswordDialog';
 import { Logout } from '../../services/UserServices';
 import { UserContext } from '../../contexts/userContext';
 import ProfileDialog from '../dialogs/users/ProfileDialog';
+import { FeatureContext } from '../../contexts/featureContext';
 
 
 function ProfileMenu() {
+    const navigate = useNavigate()
+    const { setFeature } = useContext(FeatureContext)
     const { menu, setMenu } = useContext(MenuContext)
     const { user, setUser } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
@@ -41,6 +44,8 @@ function ProfileMenu() {
                     onClick={() => {
                         goto(paths.dashboard)
                         setMenu({ type: UserMenuActions.close_user_menu, anchorEl: null })
+                        setFeature({ feature: "Dashboard", url: "/" })
+                        navigate(paths.dashboard)
                     }
                     }
                 >Dashboard</MenuItem>
@@ -109,7 +114,7 @@ function ProfileLogo() {
         <>
             <Tooltip title={user?.username || "open settings"}>
                 <IconButton
-                    sx={{ border: 2, p: 0,mr:1, borderColor: 'white' }}
+                    sx={{ border: 2, p: 0, mr: 1, borderColor: 'white' }}
                     onClick={(e) => setMenu({ type: UserMenuActions.profile_menu, anchorEl: e.currentTarget })
                     }
                 >

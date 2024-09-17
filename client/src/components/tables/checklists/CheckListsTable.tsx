@@ -125,7 +125,7 @@ function CheckListsTable({ checklists }: Props) {
                                             </Stack>
                                         </TableCell>}
                                         <STableCell title={checklist.work_title} >
-                                            <a href={checklist.link} target='_blank' style={{ color: checklist.link ? "blue" : "black", textDecoration: 'none', fontSize: 13, fontWeight: '400' }}>
+                                            <a href={checklist.link} target='_blank' style={{ color: checklist.link ? "red" : "black", textDecoration: 'none', fontSize: 13, fontWeight: '400' }}>
                                                 {checklist.work_title.slice(0, 50)}
 
                                             </a>
