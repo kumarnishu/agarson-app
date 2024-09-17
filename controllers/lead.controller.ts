@@ -3545,7 +3545,7 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     let result: GetActivitiesOrRemindersDto[] = []
     let ids: string[] = []
     remarks = remarks.filter((rem) => {
-        if (rem && rem.lead && !ids.includes(rem.lead._id) && rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate() && new Date(rem.remind_date).getMonth() <= new Date().getMonth()) {
+        if (rem && rem.lead && !ids.includes(rem.lead._id) && rem.lead.stage != 'useless' && rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate() && new Date(rem.remind_date).getMonth() <= new Date().getMonth()) {
             ids.push(rem.lead._id)
             return rem;
         }
