@@ -3541,16 +3541,18 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
             }
         ]
     }).sort('-created_at')
-
     let result: GetActivitiesOrRemindersDto[] = []
     let ids: string[] = []
-    remarks = remarks.filter((rem) => {
-        if (rem && rem.lead && !ids.includes(rem.lead._id) && rem.lead.stage != 'useless' && rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate() && new Date(rem.remind_date).getMonth() <= new Date().getMonth()) {
-            ids.push(rem.lead._id)
-            return rem;
+    let filteredRemarks: IRemark[] = []
+    remarks.forEach((rem) => {
+        if (rem && rem.lead && !ids.includes(rem.lead._id)) {
+            ids.push(rem.lead._id);
+            if (rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate() && new Date(rem.remind_date).getMonth() <= new Date().getMonth())
+                filteredRemarks.push(rem);
         }
     })
-    result = remarks.map((rem) => {
+
+    result = filteredRemarks.map((rem) => {
         return {
             _id: rem._id,
             remark: rem.remark,
@@ -3583,6 +3585,8 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
             referred_date: rem.lead && rem.lead.referred_date && moment(rem.lead && rem.lead.referred_date).format("DD/MM/YYYY") || "",
         }
     })
+
+
     return res.status(200).json(result)
 }
 export const GetReferRemarkHistory = async (req: Request, res: Response, next: NextFunction) => {
@@ -3660,6 +3664,10 @@ export const GetActivities = async (req: Request, res: Response, next: NextFunct
     let count = 0
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    dt2.setHours(0)
+    dt2.setMinutes(0)
     let ids = req.user?.assigned_users.map((id) => { return id._id })
     let result: GetActivitiesOrRemindersDto[] = []
 

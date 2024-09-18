@@ -11,7 +11,7 @@ import AlertBar from '../../snacks/AlertBar';
 import { GetLeadDto } from '../../../dtos/crm/crm.dto';
 
 
-function BulkDeleteUselessLeadsDialog({ selectedLeads }: { selectedLeads: GetLeadDto[] }) {
+function BulkDeleteUselessLeadsDialog({ selectedLeads, removeSelectedLeads }: { selectedLeads: GetLeadDto[], removeSelectedLeads: () => void }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const [leadsIds, setLeadsIds] = useState<string[]>()
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
@@ -19,6 +19,7 @@ function BulkDeleteUselessLeadsDialog({ selectedLeads }: { selectedLeads: GetLea
         (BulkDeleteUselessLeads, {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')
+                removeSelectedLeads()
             }
         })
 

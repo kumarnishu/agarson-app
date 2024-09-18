@@ -17,7 +17,7 @@ function App() {
       createTheme({
         palette: {
           mode: globalTheme.palette.mode,
-          primary: globalTheme.palette.error,
+          primary: globalTheme.palette.primary,
           info: {
             main: globalTheme.palette.error.light,
           },

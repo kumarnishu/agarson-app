@@ -25,7 +25,7 @@ export type IleadReqBody = {
     source_lead_id: string,
     refer_id?: string
 }
-function MergeTwoLeadsDialog({ leads, setSelectedLeads }: { leads: GetLeadDto[], setSelectedLeads: React.Dispatch<React.SetStateAction<GetLeadDto[]>> }) {
+function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto[], removeSelectedLeads: () => void }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const [mobiles, setMobiles] = useState<string[]>([]);
     const [targetLead, setTartgetLead] = useState<IleadReqBody>({
@@ -47,7 +47,7 @@ function MergeTwoLeadsDialog({ leads, setSelectedLeads }: { leads: GetLeadDto[],
         (MergeTwoLeads, {
             onSuccess: () => {
                 queryClient.resetQueries('leads')
-                setSelectedLeads([])
+                removeSelectedLeads()
             }
         },)
 

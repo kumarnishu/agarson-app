@@ -1,121 +1,366 @@
-import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Avatar, Fade, IconButton, LinearProgress, Menu, MenuItem, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
-import ExportToExcel from '../../utils/ExportToExcel'
-import { Menu as MenuIcon } from '@mui/icons-material';
-import NewUserDialog from '../../components/dialogs/users/NewUserDialog'
-import AlertBar from '../../components/snacks/AlertBar'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import UsersSTable from '../../components/tables/users/UsersTable'
-import { GetUsers } from '../../services/UserServices'
-import FuzzySearch from 'fuzzy-search'
-import AssignPermissionsToUsersDialog from '../../components/dialogs/users/AssignPermissionsToUsersDialog'
+import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { onlyUnique } from '../../utils/UniqueArray'
+import { Assignment, Block, DeviceHubOutlined, Edit, GroupAdd, GroupRemove, Key, KeyOffOutlined, RemoveCircle, RemoveRedEye, Restore } from '@mui/icons-material'
 import { GetUserDto } from '../../dtos/users/user.dto'
+import { UserContext } from '../../contexts/userContext'
+import { Menu as MenuIcon } from '@mui/icons-material';
+import { DownloadFile } from '../../utils/DownloadFile'
+import { GetUsers } from '../../services/UserServices'
+import NewUserDialog from '../../components/dialogs/users/NewUserDialog'
+import AssignPermissionsToUsersDialog from '../../components/dialogs/users/AssignPermissionsToUsersDialog'
+import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
+import PopUp from '../../components/popup/PopUp'
+import UpdateUserDialog from '../../components/dialogs/users/UpdateUserDialog'
+import ResetMultiLoginDialog from '../../components/dialogs/users/ResetMultiLogin'
+import BlockMultiLoginDialog from '../../components/dialogs/users/BlockMultiLoginDialog'
+import UpdatePasswordDialog from '../../components/dialogs/users/UpdatePasswordDialog'
+import BlockUserDialog from '../../components/dialogs/users/BlockUserDialog'
+import UnBlockUserDialog from '../../components/dialogs/users/UnBlockUserDialog'
+import MakeAdminDialog from '../../components/dialogs/users/MakeAdminDialog'
+import RemoveAdminDialog from '../../components/dialogs/users/RemoveAdminDialog'
+import UpdateUsePasswordDialog from '../../components/dialogs/users/UpdateUsePasswordDialog'
+import ToogleVisitingcardShowDialog from '../../components/dialogs/users/ToogleVisitingcardShowDialog'
+import AssignUsersDialog from '../../components/dialogs/users/AssignUsersDialog'
+import AssignPermissionsToOneUserDialog from '../../components/dialogs/users/AssignPermissionsToOneUserDialog'
+import ExportToExcel from '../../utils/ExportToExcel'
 
-type SelectedData = {
-    username?: string,
-    email?: string,
-    dp?: string,
-    email_verified?: Boolean,
-    is_active?: Boolean,
-    last_login?: string,
-    roles?: string,
-    created_at?: string,
-    createdBy?: string
-}
-
-// react component
 export default function UsersPage() {
     const [hidden, setHidden] = useState('false')
-    const [filter, setFilter] = useState<string | undefined>()
     const [user, setUser] = useState<GetUserDto>()
     const [users, setUsers] = useState<GetUserDto[]>([])
-    const [preFilteredData, setPreFilteredData] = useState<GetUserDto[]>([])
-    const [selectAll, setSelectAll] = useState(false)
-    const [selectedUsers, setSelectedUsers] = useState<GetUserDto[]>([])
-    const [selectedData, setSelectedData] = useState<SelectedData[]>([])
-    const [sent, setSent] = useState(false)
+    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>(["users", hidden], async () => GetUsers({ hidden: hidden, permission: undefined, show_assigned_only: false }))
+    const [sorting, setSorting] = useState<MRT_SortingState>([]);
+    const { user: LoggedInUser } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>(["users", hidden], async () => GetUsers({ hidden: hidden, permission: undefined, show_assigned_only: false }))
+
+    const columns = useMemo<MRT_ColumnDef<GetUserDto>[]>(
+        //column definitions...
+        () => users && [
+            {
+                accessorKey: 'actions',
+                header: '',
+                maxSize: 50,
+                Footer: <b></b>,
+                Cell: ({ cell }) => <PopUp
+                    element={
+                        <Stack direction="row">
+
+                            {/* edit icon */}
+                            {LoggedInUser?._id === cell.row.original._id ?
+                                <Tooltip title="edit">
+                                    <IconButton
+                                        color="success"
+                                        size="medium"
+                                        onClick={() => {
+                                            setChoice({ type: UserChoiceActions.update_user })
+                                            setUser(user)
+                                        }}>
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip> :
+                                <Tooltip title="edit">
+                                    <IconButton
+                                        disabled={cell.row.original?.created_by.id === cell.row.original._id}
+                                        color="success"
+                                        size="medium"
+                                        onClick={() => {
+                                            setChoice({ type: UserChoiceActions.update_user })
+                                            setUser(cell.row.original)
+                                        }}>
+                                        <Edit />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                            {/* assign user */}
+                            {LoggedInUser?._id === cell.row.original._id ?
+                                <Tooltip title="assign users">
+                                    <IconButton
+                                        color="success"
+                                        size="medium"
+                                        onClick={() => {
+                                            setChoice({ type: UserChoiceActions.assign_users })
+                                            setUser(cell.row.original)
+                                        }}>
+                                        <Assignment />
+                                    </IconButton>
+                                </Tooltip> :
+                                <Tooltip title="assign users">
+                                    <IconButton
+                                        disabled={cell.row.original?.created_by.id === cell.row.original._id}
+                                        color="success"
+                                        size="medium"
+                                        onClick={() => {
+                                            setChoice({ type: UserChoiceActions.assign_users })
+                                            setUser(cell.row.original)
+                                        }}>
+                                        <Assignment />
+                                    </IconButton>
+                                </Tooltip>}
+                            {/* admin icon */}
+                            {LoggedInUser?.created_by.id === cell.row.original._id ?
+                                null
+                                :
+                                <>
+                                    {cell.row.original.is_admin ?
+                                        < Tooltip title="Remove admin"><IconButton size="medium"
+                                            disabled={cell.row.original?.created_by.id === cell.row.original._id}
+                                            color="error"
+                                            onClick={() => {
+                                                setChoice({ type: UserChoiceActions.remove_admin })
+                                                setUser(cell.row.original)
+
+                                            }}>
+                                            <GroupRemove />
+                                        </IconButton>
+                                        </Tooltip>
+                                        :
+                                        <Tooltip title="make admin"><IconButton size="medium"
+                                            disabled={cell.row.original?.created_by.id === cell.row.original._id}
+                                            onClick={() => {
+                                                setChoice({ type: UserChoiceActions.make_admin })
+                                                setUser(cell.row.original)
+
+                                            }}>
+                                            <GroupAdd />
+                                        </IconButton>
+                                        </Tooltip>}
+                                </>
+                            }
+                            {/* multi login */}
+
+                            {LoggedInUser?.created_by.id === cell.row.original._id ?
+                                null :
+                                <>
+                                    {
+                                        cell.row.original.is_multi_login ?
+                                            <Tooltip title="Block multi login"><IconButton
+                                                size="medium"
+                                                color="error"
+                                                disabled={cell.row.original?.created_by.id === cell.row.original._id}
+                                                onClick={() => {
+                                                    setChoice({ type: UserChoiceActions.block_multi_login })
+                                                    setUser(cell.row.original)
+
+                                                }}
+                                            >
+                                                <DeviceHubOutlined />
+                                            </IconButton>
+                                            </Tooltip> :
+                                            <Tooltip title="Reset multi login">
+                                                <IconButton
+                                                    disabled={cell.row.original?.created_by.id === cell.row.original._id}
+                                                    size="medium"
+                                                    onClick={() => {
+                                                        setChoice({ type: UserChoiceActions.reset_multi_login })
+                                                        setUser(cell.row.original)
+
+                                                    }}
+                                                >
+                                                    <Restore />
+                                                </IconButton>
+                                            </Tooltip>
+                                    }
+                                </>
+                            }
+                            <Tooltip title="Manage Leads View">
+                                <IconButton
+                                    color="success"
+                                    size="medium"
+                                    onClick={() => {
+                                        setChoice({ type: UserChoiceActions.toogle_show_visitingcard })
+                                        setUser(cell.row.original)
+
+                                    }}
+                                >
+                                    <RemoveRedEye />
+                                </IconButton>
+                            </Tooltip>
 
 
-    function handleExcel() {
-        setAnchorEl(null)
-        try {
-            if (selectedData.length === 0)
-                return alert("please select some rows")
-            ExportToExcel(selectedData, "users_data")
-            setSent(true)
-            setSelectAll(false)
-            setSelectedData([])
-            setSelectedUsers([])
-        }
-        catch (err) {
-            console.log(err)
-            setSent(false)
-        }
+                            {/*  block login */}
+                            {LoggedInUser?.created_by.id === cell.row.original._id ?
+                                null :
+                                <>
+                                    {cell.row.original?.is_active ?
+                                        <Tooltip title="block"><IconButton
+                                            size="medium"
+                                            disabled={cell.row.original?.created_by.id === cell.row.original._id}
+                                            onClick={() => {
+                                                setChoice({ type: UserChoiceActions.block_user })
+                                                setUser(cell.row.original)
 
-    }
+                                            }}
+                                        >
+                                            <Block />
+                                        </IconButton>
+                                        </Tooltip>
+                                        :
+                                        < Tooltip title="unblock">
+                                            <IconButton
+                                                color="warning"
+                                                disabled={cell.row.original?.created_by.id === cell.row.original._id}
+                                                size="medium"
+                                                onClick={() => {
+                                                    setChoice({ type: UserChoiceActions.unblock_user })
+                                                    setUser(cell.row.original)
+
+                                                }}>
+                                                <RemoveCircle />
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
+                                </>
+                            }
+
+                            {LoggedInUser?.created_by.id === cell.row.original._id ?
+                                null
+                                :
+                                <Tooltip title="Change Password for this user">
+                                    <IconButton
+                                        disabled={cell.row.original?.created_by.id === cell.row.original._id} size="medium"
+                                        onClick={() => {
+                                            setChoice({ type: UserChoiceActions.update_user_password })
+                                            setUser(cell.row.original)
+
+                                        }}>
+                                        <Key />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                            <Tooltip title="Change Permissions for this user">
+                                <IconButton
+                                    color="info"
+                                    onClick={() => {
+                                        setChoice({ type: UserChoiceActions.assign_permissions })
+                                        setUser(cell.row.original)
+
+                                    }}>
+                                    <KeyOffOutlined />
+                                </IconButton>
+                            </Tooltip>
+
+                        </Stack>} />
+
+            },
+            {
+                accessorKey: 'username',
+                header: 'Name',
+                size: 150,
+                filterVariant: 'multi-select',
+                filterSelectOptions: data && users.map((i) => { return i.username.toString() }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'dp',
+                header: 'DP',
+                size: 50,
+                filterVariant: 'multi-select',
+                Cell: (cell) => <Avatar
+                    title="double click to download"
+                    sx={{ width: 16, height: 16 }}
+                    onDoubleClick={() => {
+                        if (cell.row.original.dp && cell.row.original.dp) {
+                            DownloadFile(cell.row.original.dp, "profile")
+                        }
+                    }}
+
+                    alt="display picture" src={cell.row.original && cell.row.original.dp} />,
+                filterSelectOptions: data && users.map((i) => {
+                    if (i.is_active) return "active"
+                    return "blocked"
+                }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'is_admin',
+                header: 'Role',
+                size: 150,
+                filterVariant: 'multi-select',
+                Cell: (cell) => <>{cell.row.original.is_admin ? "admin" : "user"}</>,
+                filterSelectOptions: data && users.map((i) => {
+                    if (i.is_admin) return "admin"
+                    return "user"
+                }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'is_active',
+                header: 'Status',
+                size: 150,
+                filterVariant: 'multi-select',
+                Cell: (cell) => <>{cell.row.original.is_active ? "active" : "blocked"}</>,
+                filterSelectOptions: data && users.map((i) => {
+                    if (i.is_active) return "active"
+                    return "blocked"
+                }).filter(onlyUnique)
+            },
+
+        ],
+        [users],
+        //end
+    );
 
 
-    useEffect(() => {
-        let data: SelectedData[] = []
-        selectedUsers.map((user) => {
-            let lastlogin = undefined
-            let created_at = undefined
-            if (user.last_login && user.created_at) {
-                lastlogin = new Date(user.last_login).toLocaleDateString()
-                created_at = new Date(user.created_at).toLocaleDateString()
+
+    const table = useMaterialReactTable({
+        columns,
+        data: users, //10,000 rows       
+        enableColumnResizing: true,
+        enableColumnVirtualization: true, enableStickyFooter: true,
+        muiTableFooterRowProps: () => ({
+            sx: {
+                backgroundColor: 'whitesmoke',
+                color: 'white',
+                fontSize: '14px'
             }
-            return data.push({
-                username: user.username,
-                email: user.email,
-                dp: user.dp,
-                email_verified: user.email_verified,
-                is_active: user.is_active,
-                last_login: lastlogin,
-                roles: user?.is_admin ? "admin" : "user",
-                created_at: created_at
-            })
-        })
-        setSelectedData(data)
-    }, [selectedUsers])
+        }),
+        muiTableContainerProps: (table) => ({
+            sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+        }),
+        muiTableHeadRowProps: () => ({
+            sx: {
+                backgroundColor: 'whitesmoke',
+                color: 'white'
+            },
+        }),
+        muiTableBodyCellProps: () => ({
+            sx: {
+                border: '1px solid #c2beba;',
+                fontSize: '12px'
+            },
+        }),
+        muiPaginationProps: {
+            rowsPerPageOptions: [100, 200, 500, 1000],
+            shape: 'rounded',
+            variant: 'outlined',
+        },
+        initialState: {
+            density: 'compact', showGlobalFilter: true, pagination: { pageIndex: 0, pageSize: 100 }
+        },
+        enableGrouping: true,
+        enableRowSelection: true,
+        manualPagination: false,
+        enablePagination: true,
+        enableRowNumbers: true,
+        enableColumnPinning: true,
+        enableTableFooter: true,
+        enableRowVirtualization: true,
+        onSortingChange: setSorting,
+        state: { isLoading, sorting }
+    });
 
     useEffect(() => {
         if (isSuccess && data) {
             setUsers(data.data)
-            setPreFilteredData(data.data)
         }
     }, [isSuccess, data])
 
-    useEffect(() => {
-        if (filter) {
-            if (users) {
-                const searcher = new FuzzySearch(users, ["username"], {
-                    caseSensitive: false,
-                });
-                const result = searcher.search(filter);
-                setUsers(result)
-            }
-        }
-        if (!filter)
-            setUsers(preFilteredData)
-
-    }, [filter])
-
     return (
         <>
-            {
-                isLoading && <LinearProgress />
-            }
-
-            {/*heading, search bar and table menu */}
             <Stack
                 spacing={2}
                 padding={1}
@@ -145,32 +390,10 @@ export default function UsersPage() {
                                     setHidden('false')
                             }} /> <span style={{ paddingLeft: '5px' }}>Blocked</span>
                         </Stack >
-                        <TextField
-                            fullWidth
-                            size="small"
-                            onChange={(e) => {
-                                setFilter(e.target.value)
-                            }}
-                            autoFocus
-                            placeholder={`${users?.length} records...`}
-                            style={{
-                                fontSize: '1.1rem',
-                                border: '0',
-                            }}
-
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Search />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
 
                     </Stack >
                     {/* user menu */}
                     <>
-                        {sent && <AlertBar message="File Exported Successfuly" color="success" />}
                         <IconButton size="small" color="primary"
                             onClick={(e) => setAnchorEl(e.currentTarget)
                             }
@@ -178,7 +401,6 @@ export default function UsersPage() {
                         >
                             <MenuIcon />
                         </IconButton>
-
                         <Menu
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
@@ -199,44 +421,55 @@ export default function UsersPage() {
                                 >New User</MenuItem>}
 
 
-                            <MenuItem onClick={() => {
-                                setChoice({ type: UserChoiceActions.close_user })
-                                if (selectedUsers && selectedUsers.length == 0) {
-                                    alert("select some users")
-                                }
-                                else {
-                                    setChoice({ type: UserChoiceActions.bulk_assign_permissions })
-                                }
-                                setAnchorEl(null)
-                            }}
+                            <MenuItem
+
+                                onClick={() => {
+                                    setChoice({ type: UserChoiceActions.close_user })
+                                    if (!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()) {
+                                        alert("select some users")
+                                    }
+                                    else {
+                                        setChoice({ type: UserChoiceActions.bulk_assign_permissions })
+                                    }
+                                    setAnchorEl(null)
+                                }}
                             >Assign Permissions</MenuItem>
 
-                            <MenuItem onClick={handleExcel}
-                            >Export To Excel</MenuItem>
+                            <MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+                            >Export All</MenuItem>
+                            <MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+                            >Export Selected</MenuItem>
                         </Menu>
                         <NewUserDialog />
-                        <AssignPermissionsToUsersDialog user_ids={selectedUsers.map((I) => { return I._id })} />
+                        <AssignPermissionsToUsersDialog user_ids={table.getSelectedRowModel().rows.map((I) => { return I.original._id })} />
                     </>
-                </Stack>
-            </Stack>
+                </Stack >
+            </Stack >
+            {
+                isLoading && <LinearProgress />
+            }
 
-
-
-            {/*  table */}
-            {isLoading && <TableSkeleton />}
-            {!isLoading &&
-                <UsersSTable
-                    user={user}
-                    selectAll={selectAll}
-                    selectedUsers={selectedUsers}
-                    setSelectedUsers={setSelectedUsers}
-                    setSelectAll={setSelectAll}
-                    users={users}
-                    setUser={setUser}
-                />}
+            {!isLoading && data && <MaterialReactTable table={table} />}
+            {
+                user ?
+                    <>
+                        <UpdateUserDialog user={user} />
+                        <ResetMultiLoginDialog id={user._id} />
+                        <BlockMultiLoginDialog id={user._id} />
+                        <UpdatePasswordDialog />
+                        <BlockUserDialog id={user._id} />
+                        <UnBlockUserDialog id={user._id} />
+                        <MakeAdminDialog id={user._id} />
+                        <RemoveAdminDialog id={user._id} />
+                        <UpdateUsePasswordDialog user={user} />
+                        <AssignUsersDialog user={user} setUser={setUser} />
+                        <ToogleVisitingcardShowDialog user={user} />
+                        <AssignPermissionsToOneUserDialog user={user} />
+                    </>
+                    : null
+            }
         </>
 
     )
 
 }
-

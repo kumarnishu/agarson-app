@@ -7,10 +7,10 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import { Box, IconButton, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Box, IconButton, InputAdornment, Paper, Stack, TextField, Typography } from '@mui/material';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { paths } from '../Routes';
-import { Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, Search } from '@mui/icons-material';
 import { toTitleCase } from '../utils/TitleCase';
 import FuzzySearch from 'fuzzy-search';
 import { UserContext } from '../contexts/userContext';
@@ -103,7 +103,7 @@ function MainDashBoardPage() {
   return (
     <>
 
-      <Box sx={{ bgcolor: 'red', width: '100%' }}>
+      <Box sx={{ bgcolor: 'rgba(0,0,255,0.7)', width: '100%' }}>
         {/* parent stack */}
         <Stack direction="row" sx={{
           justifyContent: "space-between", alignItems: "center"
@@ -123,8 +123,16 @@ function MainDashBoardPage() {
               size='small'
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Search sx={{ cursor: 'pointer' }} />
+                  </InputAdornment>
+                ),
+              }}
               sx={{ backgroundColor: 'whitesmoke', border: 2, borderColor: 'white', borderRadius: 2 }}
             />
+
             {search != "" && features.length > 0 && <Box style={{ position: 'absolute', backgroundColor: 'white', top: 48, width: '270px', borderRadius: 2, border: '5px', zIndex: 5 }}>
               <List>
                 {features.map((feat, index) => (
