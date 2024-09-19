@@ -8,7 +8,6 @@ import { MulterError } from 'multer';
 import { connectDatabase } from './config/db';
 import UserRoutes from "./routes/user.routes";
 import LeadRoutes from "./routes/lead.routes";
-import WaTemplateRoutes from "./routes/watemplate.routes";
 import CheckListkRoutes from "./routes/checklist.routes";
 import VisitRoutes from "./routes/visit.routes";
 import ErpRoutes from "./routes/erp.routes";
@@ -116,7 +115,6 @@ export const ReportManager = new CronJobManager()
 //server routes
 app.use("/api/v1", UserRoutes)
 app.use("/api/v1", LeadRoutes)
-app.use("/api/v1", WaTemplateRoutes)
 app.use("/api/v1", CheckListkRoutes)
 app.use("/api/v1", VisitRoutes)
 app.use("/api/v1", ErpRoutes)
