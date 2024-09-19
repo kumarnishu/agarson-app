@@ -1,10 +1,10 @@
-import {  Button, LinearProgress, Typography } from '@mui/material'
+import { Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import {   GetPartyTargetReports } from '../../services/ErpServices'
+import { GetPartyTargetReports } from '../../services/ErpServices'
 import { UserContext } from '../../contexts/userContext'
 import { Download } from '@mui/icons-material'
 import ExportToExcel from '../../utils/ExportToExcel'
@@ -12,57 +12,19 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import UploadPartyTargetButton from '../../components/buttons/UploadPartyTargetButton'
+import { GetPartyTargetReportFromExcelDto } from '../../dtos/erp reports/erp.reports.dto'
 
 
-export type IPartyTargetReportTemplate = {
-    slno: string,
-    PARTY: string,
-    Create_Date: string,
-    STATION: string,
-    SALES_OWNER: string,
-    report_owner: string
-    All_TARGET: string,
-    TARGET: number,
-    PROJECTION: number,
-    GROWTH: number,
-    TARGET_ACHIEVE: number,
-    TOTAL_SALE_OLD: number,
-    TOTAL_SALE_NEW: number,
-    Last_Apr: number,
-    Cur_Apr: number,
-    Last_May: number,
-    Cur_May: number,
-    Last_Jun: number,
-    Cur_Jun: number,
-    Last_Jul: number,
-    Cur_Jul: number,
-    Last_Aug: number,
-    Cur_Aug: number,
-    Last_Sep: number,
-    Cur_Sep: number,
-    Last_Oct: number,
-    Cur_Oct: number,
-    Last_Nov: number,
-    Cur_Nov: number,
-    Last_Dec: number,
-    Cur_Dec: number,
-    Last_Jan: number,
-    Cur_Jan: number,
-    Last_Feb: number,
-    Cur_Feb: number,
-    Last_Mar: number,
-    Cur_Mar: number,
-    status?: string
-}
+
 export default function PartyTargetReportPage() {
-    const [reports, setReports] = useState<IPartyTargetReportTemplate[]>([])
+    const [reports, setReports] = useState<GetPartyTargetReportFromExcelDto[]>([])
     const { user } = useContext(UserContext)
     const [sent, setSent] = useState(false)
-    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IPartyTargetReportTemplate[]>, BackendError>("party_target_reports", GetPartyTargetReports)
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetPartyTargetReportFromExcelDto[]>, BackendError>("party_target_reports", GetPartyTargetReports)
     const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-    const columns = useMemo<MRT_ColumnDef<IPartyTargetReportTemplate>[]>(
+    const columns = useMemo<MRT_ColumnDef<GetPartyTargetReportFromExcelDto>[]>(
         //column definitions...
         () => [
             {
@@ -71,7 +33,7 @@ export default function PartyTargetReportPage() {
                 size: 50,
                 aggregationFn: 'count',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                
+
             },
             {
                 accessorKey: 'PARTY',
@@ -85,7 +47,7 @@ export default function PartyTargetReportPage() {
             {
                 accessorKey: 'Create_Date',
                 header: 'Create Date',
-                Footer: <b>Total</b>, 
+                Footer: <b>Total</b>,
                 filterVariant: 'multi-select',
                 filterSelectOptions: reports.map((i) => { return i.PARTY }).filter(onlyUnique),
                 aggregationFn: 'count',
@@ -127,7 +89,7 @@ export default function PartyTargetReportPage() {
                 header: 'TARGET',
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => {return Number(a) + Number(b.original.TARGET)}, 0).toFixed()}</b>
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TARGET) }, 0).toFixed()}</b>
             },
             {
                 accessorKey: 'PROJECTION',
@@ -340,7 +302,7 @@ export default function PartyTargetReportPage() {
 
     function handleExcel() {
         try {
-            let data: IPartyTargetReportTemplate[] = [
+            let data: GetPartyTargetReportFromExcelDto[] = [
                 {
                     slno: "1",
                     PARTY: "agarson shoes",
@@ -468,20 +430,20 @@ export default function PartyTargetReportPage() {
                     component={'h1'}
                     sx={{ pl: 1 }}
                 >
-                   PARTY TARGET {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
+                    PARTY TARGET {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
-                  <>
-                        {user?.assigned_permissions.includes("party_target_create") &&<UploadPartyTargetButton />}
+                    <>
+                        {user?.assigned_permissions.includes("party_target_create") && <UploadPartyTargetButton />}
                         {user?.assigned_permissions.includes("party_target_create") && <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
                     </>
                 </Stack>
 
 
             </Stack >
-          
-                {/* table */}
-                {!isLoading && data && <MaterialReactTable table={table} />}
+
+            {/* table */}
+            {!isLoading && data && <MaterialReactTable table={table} />}
         </>
 
     )

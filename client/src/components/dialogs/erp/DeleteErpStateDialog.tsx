@@ -7,14 +7,14 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
-import { IState } from '../../../types/erp_report.types';
 import { DeleteErpState } from '../../../services/ErpServices';
+import { GetErpStateDto } from '../../../dtos/erp reports/erp.reports.dto';
 
 
-function DeleteErpStateDialog({ state }: { state: IState}) {
+function DeleteErpStateDialog({ state }: { state: GetErpStateDto}) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
-        <AxiosResponse<any>, BackendError, { state: IState }>
+        <AxiosResponse<any>, BackendError, { state: GetErpStateDto }>
         (DeleteErpState, {
             onSuccess: () => {
                 queryClient.invalidateQueries('erp_states')

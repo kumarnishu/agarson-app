@@ -9,14 +9,13 @@ import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import * as yup from 'yup';
 import { CreateOreditErpState } from '../../../services/ErpServices';
-import { IState } from '../../../types/erp_report.types';
-import { IErpStateTemplate } from '../../../types/template.type';
+import { CreateOrEditErpStateDto, GetErpStateDto } from '../../../dtos/erp reports/erp.reports.dto';
 
-function CreateOrEditErpStateForm({ state }: { state?: IState }) {
+function CreateOrEditErpStateForm({ state }: { state?: GetErpStateDto }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
-            state?: IState | undefined;
-            body: IErpStateTemplate
+            state: GetErpStateDto | undefined;
+            body: CreateOrEditErpStateDto
         }>
         (CreateOreditErpState, {
             onSuccess: () => {
@@ -26,7 +25,7 @@ function CreateOrEditErpStateForm({ state }: { state?: IState }) {
 
     const { setChoice } = useContext(ChoiceContext)
 
-    const formik = useFormik<IErpStateTemplate>({
+    const formik = useFormik({
         initialValues: {
             state: state ? state.state : "",
             apr: state ? state.apr : 0,
@@ -45,7 +44,7 @@ function CreateOrEditErpStateForm({ state }: { state?: IState }) {
         validationSchema: yup.object({
             state: yup.string().required()
         }),
-        onSubmit: (values: IErpStateTemplate) => {
+        onSubmit: (values) => {
             mutate({
                 state: state,
                 body:  {

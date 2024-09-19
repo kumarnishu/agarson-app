@@ -6,26 +6,25 @@ import { Delete, Edit } from '@mui/icons-material'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
 import { ChoiceContext, UserChoiceActions } from '../../../contexts/dialogContext'
 import CreateOrEditErpStateDialog from '../../dialogs/erp/CreateOrEditErpStateDialog'
-import { IState } from '../../../types/erp_report.types'
 import DeleteErpStateDialog from '../../dialogs/erp/DeleteErpStateDialog'
 import { UserContext } from '../../../contexts/userContext'
-import { GetUserDto } from '../../../dtos/users/user.dto'
+import { GetErpStateDto } from '../../../dtos/erp reports/erp.reports.dto'
 
 
 
 type Props = {
-    state: { state: IState, users: GetUserDto[] } | undefined,
-    setState: React.Dispatch<React.SetStateAction<{ state: IState, users: GetUserDto[] } | undefined>>,
+    state: GetErpStateDto | undefined,
+    setState: React.Dispatch<React.SetStateAction<GetErpStateDto | undefined>>,
     selectAll: boolean,
     setSelectAll: React.Dispatch<React.SetStateAction<boolean>>,
-    states: { state: IState, users: GetUserDto[] }[],
-    selectedStates: { state: IState, users: GetUserDto[] }[]
-    setSelectedStates: React.Dispatch<React.SetStateAction<{ state: IState, users: GetUserDto[] }[]>>,
+    states: GetErpStateDto[],
+    selectedStates: GetErpStateDto[]
+    setSelectedStates: React.Dispatch<React.SetStateAction<GetErpStateDto[]>>,
 }
 function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selectedStates, setSelectedStates }: Props) {
-    const [data, setData] = useState<{ state: IState, users: GetUserDto[] }[]>(states)
+    const [data, setData] = useState<GetErpStateDto[]>(states)
     const { setChoice } = useContext(ChoiceContext)
-    const {user}=useContext(UserContext)
+    const { user } = useContext(UserContext)
     useEffect(() => {
         if (data)
             setData(states)
@@ -34,177 +33,177 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
         <>
             {states && states.length == 0 ? <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>
                 :
-            <Box sx={{
-                overflow: "auto",
-                height: '80vh'
-            }}>
-                <STable
-                >
-                    <STableHead
+                <Box sx={{
+                    overflow: "auto",
+                    height: '80vh'
+                }}>
+                    <STable
                     >
-                        <STableRow>
-                            <STableHeadCell style={{ width: '50px' }}
-                            >
+                        <STableHead
+                        >
+                            <STableRow>
+                                <STableHeadCell style={{ width: '50px' }}
+                                >
 
 
-                                <Checkbox sx={{ width: 16, height: 16 }}
-                                    indeterminate={selectAll ? true : false}
-                                    checked={Boolean(selectAll)}
-                                    size="small" onChange={(e) => {
-                                        if (e.currentTarget.checked) {
-                                            setSelectedStates(states)
-                                            setSelectAll(true)
-                                        }
-                                        if (!e.currentTarget.checked) {
-                                            setSelectedStates([])
-                                            setSelectAll(false)
-                                        }
-                                    }} />
+                                    <Checkbox sx={{ width: 16, height: 16 }}
+                                        indeterminate={selectAll ? true : false}
+                                        checked={Boolean(selectAll)}
+                                        size="small" onChange={(e) => {
+                                            if (e.currentTarget.checked) {
+                                                setSelectedStates(states)
+                                                setSelectAll(true)
+                                            }
+                                            if (!e.currentTarget.checked) {
+                                                setSelectedStates([])
+                                                setSelectAll(false)
+                                            }
+                                        }} />
 
-                            </STableHeadCell>
-                          
+                                </STableHeadCell>
+
                                 <STableHeadCell style={{ width: '50px' }}
                                 >
 
                                     Actions
 
                                 </STableHeadCell>
-                            <STableHeadCell style={{ width: '200px' }}
-                            >
+                                <STableHeadCell style={{ width: '200px' }}
+                                >
 
-                                State
+                                    State
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
+                                </STableHeadCell>
+                                <STableHeadCell
+                                >
 
-                                Assigned Users
+                                    Assigned Users
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
+                                </STableHeadCell>
+                                <STableHeadCell
+                                >
 
-                                APR
+                                    APR
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
+                                </STableHeadCell>
+                                <STableHeadCell
+                                >
 
-                                MAY
+                                    MAY
 
-                            </STableHeadCell>
+                                </STableHeadCell>
 
-                            <STableHeadCell
-                            >
+                                <STableHeadCell
+                                >
 
-                                JUN
+                                    JUN
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
+                                </STableHeadCell>
+                                <STableHeadCell
+                                >
 
-                                JUL
+                                    JUL
 
-                            </STableHeadCell> <STableHeadCell
-                            >
+                                </STableHeadCell> <STableHeadCell
+                                >
 
-                                AUG
+                                    AUG
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
+                                </STableHeadCell>
+                                <STableHeadCell
+                                >
 
-                                SEP
-                            </STableHeadCell> <STableHeadCell
-                            >
+                                    SEP
+                                </STableHeadCell> <STableHeadCell
+                                >
 
-                                OCT
+                                    OCT
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
+                                </STableHeadCell>
+                                <STableHeadCell
+                                >
 
-                                NOV
+                                    NOV
 
-                            </STableHeadCell> <STableHeadCell
-                            >
+                                </STableHeadCell> <STableHeadCell
+                                >
 
-                                DEC
+                                    DEC
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
+                                </STableHeadCell>
+                                <STableHeadCell
+                                >
 
-                                JAN
+                                    JAN
 
-                            </STableHeadCell> <STableHeadCell
-                            >
+                                </STableHeadCell> <STableHeadCell
+                                >
 
-                                FEB
+                                    FEB
 
-                            </STableHeadCell>
-                            <STableHeadCell
-                            >
+                                </STableHeadCell>
+                                <STableHeadCell
+                                >
 
-                                MAR
+                                    MAR
 
-                            </STableHeadCell>
+                                </STableHeadCell>
 
-                        </STableRow>
-                    </STableHead>
-                    <STableBody >
-                        {
-                            states && states.map((state, index) => {
-                                return (
-                                    <STableRow
-                                        style={{ backgroundColor: selectedStates.length > 0 && selectedStates.find((t) => t.state._id === state.state._id) ? "lightgrey" : "white" }}
-                                        key={index}
-                                    >
-                                        {selectAll ?
-                                            <STableCell style={{ width: '50px' }}>
-
-
-                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
-                                                    checked={Boolean(selectAll)}
-                                                />
+                            </STableRow>
+                        </STableHead>
+                        <STableBody >
+                            {
+                                states && states.map((state, index) => {
+                                    return (
+                                        <STableRow
+                                            style={{ backgroundColor: selectedStates.length > 0 && selectedStates.find((t) => t._id === state._id) ? "lightgrey" : "white" }}
+                                            key={index}
+                                        >
+                                            {selectAll ?
+                                                <STableCell style={{ width: '50px' }}>
 
 
-                                            </STableCell>
-                                            :
-                                            null
-                                        }
-                                        {!selectAll ?
-                                            <STableCell style={{ width: '50px' }}>
-
-                                                <Checkbox sx={{ width: 16, height: 16 }} size="small"
-                                                    onChange={(e) => {
-                                                        setState(state)
-                                                        if (e.target.checked) {
-                                                            setSelectedStates([...selectedStates, state])
-                                                        }
-                                                        if (!e.target.checked) {
-                                                            setSelectedStates((states) => states.filter((item) => {
-                                                                return item.state._id !== state.state._id
-                                                            }))
-                                                        }
-                                                    }}
-                                                />
-
-                                            </STableCell>
-                                            :
-                                            null
-                                        }
+                                                    <Checkbox sx={{ width: 16, height: 16 }} size="small"
+                                                        checked={Boolean(selectAll)}
+                                                    />
 
 
-                                        {/* actions */}
+                                                </STableCell>
+                                                :
+                                                null
+                                            }
+                                            {!selectAll ?
+                                                <STableCell style={{ width: '50px' }}>
 
-                                        <STableCell style={{ width: '50' }}>
-                                            <PopUp
-                                                element={
-                                                    <Stack direction="row">
-                                                        <>
-                                                          
-                                                            {user?.assigned_permissions.includes('erp_state_delete')&&<Tooltip title="delete">
+                                                    <Checkbox sx={{ width: 16, height: 16 }} size="small"
+                                                        onChange={(e) => {
+                                                            setState(state)
+                                                            if (e.target.checked) {
+                                                                setSelectedStates([...selectedStates, state])
+                                                            }
+                                                            if (!e.target.checked) {
+                                                                setSelectedStates((states) => states.filter((item) => {
+                                                                    return item._id !== state._id
+                                                                }))
+                                                            }
+                                                        }}
+                                                    />
+
+                                                </STableCell>
+                                                :
+                                                null
+                                            }
+
+
+                                            {/* actions */}
+
+                                            <STableCell style={{ width: '50' }}>
+                                                <PopUp
+                                                    element={
+                                                        <Stack direction="row">
+                                                            <>
+
+                                                                {user?.assigned_permissions.includes('erp_state_delete') && <Tooltip title="delete">
                                                                     <IconButton color="error"
                                                                         onClick={() => {
                                                                             setChoice({ type: UserChoiceActions.delete_erp_state })
@@ -215,78 +214,66 @@ function ErpStateTable({ state, selectAll, states, setSelectAll, setState, selec
                                                                         <Delete />
                                                                     </IconButton>
                                                                 </Tooltip>}
-                                                            
 
-                                                            {user?.assigned_permissions.includes('erp_state_edit') &&<Tooltip title="edit">
-                                                                <IconButton
-                                                                    onClick={() => {
-                                                                        setState(state)
-                                                                        setChoice({ type: UserChoiceActions.create_or_edit_erpstate })
-                                                                    }}
 
-                                                                >
-                                                                    <Edit />
-                                                                </IconButton>
-                                                            </Tooltip>}
+                                                                {user?.assigned_permissions.includes('erp_state_edit') && <Tooltip title="edit">
+                                                                    <IconButton
+                                                                        onClick={() => {
+                                                                            setState(state)
+                                                                            setChoice({ type: UserChoiceActions.create_or_edit_erpstate })
+                                                                        }}
 
-                                                        </>
+                                                                    >
+                                                                        <Edit />
+                                                                    </IconButton>
+                                                                </Tooltip>}
 
-                                                    </Stack>}
-                                            />
+                                                            </>
 
-                                        </STableCell>
-                                        <STableCell style={{ width: '200px' }}>
-                                            {state.state.state}
-                                        </STableCell>
-                                        <STableCell title={state.users.map((u) => { return u.username }).toString()}>
-                                            {state.users.map((u) => { return u.username }).toString()}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.apr == 0 ? "" :  state.state.apr}
-                                        </STableCell>
+                                                        </Stack>}
+                                                />
 
-                                        <STableCell>
-                                            {state.state && state.state.may == 0 ? "" :  state.state.may}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.jun == 0 ? "" :  state.state.jun}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.jul == 0 ? "" :  state.state.jul}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.aug == 0 ? "" :  state.state.aug}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.sep == 0 ? "" :  state.state.sep}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.oct == 0 ? "" :  state.state.oct}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.nov == 0 ? "" :  state.state.nov}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.dec == 0 ? "" :  state.state.dec}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.jan == 0 ? "" :  state.state.jan}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.feb == 0 ? "" :  state.state.feb}
-                                        </STableCell>
-                                        <STableCell>
-                                            {state.state && state.state.mar == 0 ? "" :  state.state.mar}
-                                        </STableCell>
+                                            </STableCell>
+                                            <STableCell style={{ width: '200px' }}>
+                                                {state.state}
+                                            </STableCell>
+                                            <STableCell title={state.assigned_users.map((u) => { return u.label }).toString()}>
+                                                {state.assigned_users.map((u) => { return u.label }).toString()}
+                                            </STableCell>
+                                            <STableCell>
+                                                {state.apr}                                        </STableCell>
 
-                                    </STableRow>
-                                )
-                            })}
-                    </STableBody>
-                </STable>
-                <CreateOrEditErpStateDialog state={state?.state} />
-                {state && <DeleteErpStateDialog state={state.state} />}
-            </Box>}
+                                            <STableCell>
+                                                {state.may}                                        </STableCell>
+                                            <STableCell>
+                                                {state.jun}                                        </STableCell>
+                                            <STableCell>
+                                                {state.jul}                                        </STableCell>
+                                            <STableCell>
+                                                {state.aug}                                        </STableCell>
+                                            <STableCell>
+                                                {state.sep}                                        </STableCell>
+                                            <STableCell>
+                                                {state.oct}                                        </STableCell>
+                                            <STableCell>
+                                                {state.nov}                                        </STableCell>
+                                            <STableCell>
+                                                {state.dec}                                        </STableCell>
+                                            <STableCell>
+                                                {state.jan}                                        </STableCell>
+                                            <STableCell>
+                                                {state.feb}                                        </STableCell>
+                                            <STableCell>
+                                                {state.mar}                                        </STableCell>
+
+                                        </STableRow>
+                                    )
+                                })}
+                        </STableBody>
+                    </STable>
+                    <CreateOrEditErpStateDialog state={state} />
+                    {state && <DeleteErpStateDialog state={state} />}
+                </Box>}
         </>
     )
 }

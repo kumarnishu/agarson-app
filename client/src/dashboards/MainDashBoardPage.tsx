@@ -103,7 +103,7 @@ function MainDashBoardPage() {
   return (
     <>
 
-      <Box sx={{ bgcolor: 'rgba(0,0,255,0.7)', width: '100%' }}>
+      <Box sx={{ bgcolor: 'rgba(0,0,255,0.8)', width: '100%' }}>
         {/* parent stack */}
         <Stack direction="row" sx={{
           justifyContent: "space-between", alignItems: "center"
@@ -113,47 +113,10 @@ function MainDashBoardPage() {
           <Stack direction="row" gap={2} pl={2} justifyContent={'center'} alignItems={'center'}>
 
             <ProfileLogo />
-
+         
           </Stack>
           {/* child stack2 */}
-          <Stack sx={{ direction: 'column', minWidth: '20%', gap: 2 }}>
-            <TextField
-              style={{ position: 'relative' }}
-              placeholder='Search Menu Items'
-              size='small'
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Search sx={{ cursor: 'pointer' }} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ backgroundColor: 'whitesmoke', border: 2, borderColor: 'white', borderRadius: 2 }}
-            />
-
-            {search != "" && features.length > 0 && <Box style={{ position: 'absolute', backgroundColor: 'white', top: 48, width: '270px', borderRadius: 2, border: '5px', zIndex: 5 }}>
-              <List>
-                {features.map((feat, index) => (
-                  <>
-                    <Link style={{ textDecoration: 'none', color: 'black' }} to={feat.url} onClick={() => {
-                      setFeature({ feature: feat.feature, url: feat.url })
-                      setSearch("")
-                    }}>
-                      <ListItem key={index} disablePadding>
-                        <ListItemButton>
-
-                          <ListItemText primary={toTitleCase(feat.feature)} />
-                        </ListItemButton>
-                      </ListItem>
-                    </Link>
-                    <Divider />
-                  </>
-                ))}
-              </List>
-            </Box>}
-          </Stack>
+       
           {/* child stack3 */}
           <Stack
             direction="row"
@@ -177,6 +140,43 @@ function MainDashBoardPage() {
                 </Stack>
               </Paper>
             </Link>
+            <Stack sx={{ direction: 'column', minWidth: '20%', gap: 2 }}>
+              <TextField
+                sx={{ position: 'relative', p: 0, m: 0, backgroundColor: 'whitesmoke', border: 2, borderColor: 'white', borderRadius: 2 }}
+                placeholder='Search Menu Items'
+                size='small'
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Search sx={{ cursor: 'pointer' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              {search != "" && features.length > 0 && <Box style={{ position: 'absolute', backgroundColor: 'white', top: 48, width: '270px', borderRadius: 2, border: '5px', zIndex: 5 }}>
+                <List>
+                  {features.map((feat, index) => (
+                    <>
+                      <Link style={{ textDecoration: 'none', color: 'black' }} to={feat.url} onClick={() => {
+                        setFeature({ feature: feat.feature, url: feat.url })
+                        setSearch("")
+                      }}>
+                        <ListItem key={index} disablePadding>
+                          <ListItemButton>
+
+                            <ListItemText primary={toTitleCase(feat.feature)} />
+                          </ListItemButton>
+                        </ListItem>
+                      </Link>
+                      <Divider />
+                    </>
+                  ))}
+                </List>
+              </Box>}
+            </Stack>
             <IconButton onClick={toggleDrawer(true)} size='large'>
               < MenuIcon sx={{ width: 35, height: 35, color: 'white' }} />
             </IconButton>

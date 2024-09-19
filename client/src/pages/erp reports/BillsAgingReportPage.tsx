@@ -1,4 +1,4 @@
-import {  Button, LinearProgress, Typography } from '@mui/material'
+import { Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -12,28 +12,19 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import UploadBillsAgingFromExcelButton from '../../components/buttons/UploadBillsAgingButton'
+import { GetBillsAgingReportFromExcelDto } from '../../dtos/erp reports/erp.reports.dto'
 
 
-export type IBillsAgingReportTemplate = {
-    report_owner: string
-    account: string,
-    total?: number,
-    plu70: number,
-    in70to90: number,
-    in90to120: number,
-    plus120: number
-    status?: string,
-    created_at?: string,
-}
+
 export default function BillsAgingReportPage() {
-    const [reports, setReports] = useState<IBillsAgingReportTemplate[]>([])
+    const [reports, setReports] = useState<GetBillsAgingReportFromExcelDto[]>([])
     const { user } = useContext(UserContext)
     const [sent, setSent] = useState(false)
-    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IBillsAgingReportTemplate[]>, BackendError>("reports", GetBillsAgingReports)
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetBillsAgingReportFromExcelDto[]>, BackendError>("reports", GetBillsAgingReports)
     const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-    const columns = useMemo<MRT_ColumnDef<IBillsAgingReportTemplate>[]>(
+    const columns = useMemo<MRT_ColumnDef<GetBillsAgingReportFromExcelDto>[]>(
         //column definitions...
         () => [
             {
@@ -97,7 +88,7 @@ export default function BillsAgingReportPage() {
 
     function handleExcel() {
         try {
-            let data: IBillsAgingReportTemplate[] = [
+            let data: GetBillsAgingReportFromExcelDto[] = [
                 {
                     report_owner: "Goa",
                     account: "agarson safety",
@@ -138,7 +129,7 @@ export default function BillsAgingReportPage() {
         enableBottomToolbar: false,
         enableColumnResizing: true,
         enableColumnVirtualization: true,
-         enableStickyFooter: true,
+        enableStickyFooter: true,
         muiTableFooterRowProps: () => ({
             sx: {
                 backgroundColor: 'whitesmoke',
@@ -199,7 +190,7 @@ export default function BillsAgingReportPage() {
                 >
                     Bills Ageing {new Date().getMonth() < 3 ? `${new Date().getFullYear() - 1}-${new Date().getFullYear()}` : `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
                 </Typography>
-               
+
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     <>
 
@@ -211,9 +202,9 @@ export default function BillsAgingReportPage() {
 
 
             </Stack >
-           
-                {/* table */}
-                {!isLoading && data && <MaterialReactTable table={table} />}
+
+            {/* table */}
+            {!isLoading && data && <MaterialReactTable table={table} />}
         </>
 
     )

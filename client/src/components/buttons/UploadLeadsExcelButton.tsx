@@ -7,16 +7,16 @@ import { BulkLeadUpdateFromExcel } from "../../services/LeadsServices"
 import { Button, Snackbar, Tooltip } from "@mui/material"
 import ExportToExcel from "../../utils/ExportToExcel"
 import { Upload } from "@mui/icons-material"
-import { ILeadTemplate } from "../../types/template.type"
+import { CreateAndUpdatesLeadFromExcelDto } from "../../dtos/crm/crm.dto"
 
 const FileInput = styled.input`
 background:none;
 color:blue;
 `
 function UploadLeadsExcelButton() {
-  const [leads, setLeads] = React.useState<ILeadTemplate[]>()
+  const [leads, setLeads] = React.useState<CreateAndUpdatesLeadFromExcelDto[]>()
   const { data, mutate, isLoading, isSuccess, isError, error } = useMutation
-    <AxiosResponse<ILeadTemplate[]>, BackendError, FormData>
+    <AxiosResponse<CreateAndUpdatesLeadFromExcelDto[]>, BackendError, FormData>
     (BulkLeadUpdateFromExcel)
   const [file, setFile] = React.useState<File | null>(null)
 

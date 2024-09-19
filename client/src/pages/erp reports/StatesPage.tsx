@@ -12,17 +12,15 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { IErpStateTemplate } from '../../types/template.type'
 import { GetStates } from '../../services/ErpServices'
 import CreateOrEditErpStateDialog from '../../components/dialogs/erp/CreateOrEditErpStateDialog'
 import AssignErpCrmStatesDialog from '../../components/dialogs/erp/AssignErpStatesDialog'
 import ErpStateTable from '../../components/tables/erp reports/ErpStateTable'
 import UploadStatesFromExcelButton from '../../components/buttons/UploadStatesButton'
-import { IState } from '../../types/erp_report.types'
-import { GetUserDto } from '../../dtos/users/user.dto'
+import { GetErpStateDto, GetErpStateFromExcelDto } from '../../dtos/erp reports/erp.reports.dto'
 
 
-let template: IErpStateTemplate[] = [
+let template: GetErpStateFromExcelDto[] = [
   {
     _id: "",
     state: "delhi",
@@ -43,15 +41,15 @@ let template: IErpStateTemplate[] = [
 
 export default function ErpStatesPage() {
   const [flag, setFlag] = useState(1);
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<{ state: IState, users: GetUserDto[] }[]>, BackendError>("erp_states", GetStates)
-  const [state, setState] = useState<{ state: IState, users: GetUserDto[] }>()
-  const [states, setStates] = useState<{ state: IState, users: GetUserDto[] }[]>([])
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetErpStateDto[]>, BackendError>("erp_states", GetStates)
+  const [state, setState] = useState<GetErpStateDto>()
+  const [states, setStates] = useState<GetErpStateDto[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const MemoData = React.useMemo(() => states, [states])
-  const [preFilteredData, setPreFilteredData] = useState<{ state: IState, users: GetUserDto[] }[]>([])
-  const [selectedStates, setSelectedStates] = useState<{ state: IState, users: GetUserDto[] }[]>([])
+  const [preFilteredData, setPreFilteredData] = useState<GetErpStateDto[]>([])
+  const [selectedStates, setSelectedStates] = useState<GetErpStateDto[]>([])
   const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<IErpStateTemplate[]>(template)
+  const [selectedData, setSelectedData] = useState<GetErpStateFromExcelDto[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -74,23 +72,23 @@ export default function ErpStatesPage() {
 
   // refine data
   useEffect(() => {
-    let data: IErpStateTemplate[] = []
+    let data: GetErpStateFromExcelDto[] = []
     selectedStates.map((state) => {
       return data.push({
-        _id: state.state._id,
-        state: state.state.state,
-        apr: state ? state.state.apr : 0,
-        may: state ? state.state.may : 0,
-        jun: state ? state.state.jun : 0,
-        jul: state ? state.state.jul : 0,
-        aug: state ? state.state.aug : 0,
-        sep: state ? state.state.sep : 0,
-        oct: state ? state.state.oct : 0,
-        nov: state ? state.state.nov : 0,
-        dec: state ? state.state.dec : 0,
-        jan: state ? state.state.jan : 0,
-        feb: state ? state.state.feb : 0,
-        mar: state ? state.state.mar : 0,
+        _id: state._id,
+        state: state.state,
+        apr: state ? state.apr : 0,
+        may: state ? state.may : 0,
+        jun: state ? state.jun : 0,
+        jul: state ? state.jul : 0,
+        aug: state ? state.aug : 0,
+        sep: state ? state.sep : 0,
+        oct: state ? state.oct : 0,
+        nov: state ? state.nov : 0,
+        dec: state ? state.dec : 0,
+        jan: state ? state.jan : 0,
+        feb: state ? state.feb : 0,
+        mar: state ? state.mar : 0,
       })
     })
     if (data.length > 0)
@@ -155,7 +153,7 @@ export default function ErpStatesPage() {
           placeholder={`Search States `}
           style={{
             fontSize: '1.1rem',
-            border: '0',
+            border: 0,
           }}
         />
         <Stack
@@ -227,7 +225,7 @@ export default function ErpStatesPage() {
 
             </Menu >
             <CreateOrEditErpStateDialog />
-            {<AssignErpCrmStatesDialog flag={flag} states={selectedStates.map((item) => { return item.state })} />}
+            {<AssignErpCrmStatesDialog flag={flag} states={selectedStates.map((item) => { return item })} />}
           </>
         </Stack >
       </Stack >

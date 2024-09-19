@@ -7,8 +7,16 @@ import { BackendError } from '../..'
 import AlertBar from '../../components/snacks/AlertBar'
 import { UserContext } from '../../contexts/userContext'
 import { GetMachineCategories, UpdateMachineCategories } from '../../services/ProductionServices'
-import { ITemplateCategoryField } from '../../types/template.type'
+import { GetUserDto } from '../../dtos/users/user.dto'
 
+export type ITemplateCategoryField = {
+    _id: string,
+    categories: string[],
+    updated_at: Date,
+    created_at: Date,
+    created_by: GetUserDto,
+    updated_by: GetUserDto
+}
 
 function UpdateMachineCategoriesPage() {
     const { user } = useContext(UserContext)

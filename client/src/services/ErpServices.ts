@@ -1,5 +1,4 @@
-import { IState } from "../types/erp_report.types";
-import { IErpStateTemplate } from "../types/template.type";
+import { CreateOrEditErpStateDto, GetErpStateDto } from "../dtos/erp reports/erp.reports.dto";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
@@ -10,7 +9,10 @@ export const GetStates = async () => {
 export const BulkCreateStateFromExcel = async (body: FormData) => {
     return await apiClient.put(`states`, body)
 }
-export const CreateOreditErpState = async ({ state, body }: { state?: IState, body: IErpStateTemplate }) => {
+export const CreateOreditErpState = async ({ state, body }: {
+    state?: GetErpStateDto | undefined;
+    body: CreateOrEditErpStateDto
+}) => {
     if (state)
         return await apiClient.put(`states/${state._id}`, body);
     return await apiClient.post(`states`, body);
@@ -76,6 +78,6 @@ export const AssignErpStatesToUsers = async ({ body }: {
 }
 
 
-export const DeleteErpState = async ({ state }: { state: IState }) => {
+export const DeleteErpState = async ({ state }: { state: GetErpStateDto }) => {
     return await apiClient.delete(`states/${state._id}`)
 }

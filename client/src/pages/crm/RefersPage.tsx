@@ -15,11 +15,10 @@ import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import CreateOrEditReferDialog from '../../components/dialogs/crm/CreateOrEditReferDialog'
 import RefersTable from '../../components/tables/crm/RefersTable'
 import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServices'
-import { IReferTemplate } from '../../types/template.type'
 import UploadRefersExcelButton from '../../components/buttons/UploadRefersExcelButton'
-import { GetReferDto } from '../../dtos/crm/crm.dto'
+import { CreateOrEditReferFromExcelDto, GetReferDto } from '../../dtos/crm/crm.dto'
 
-let template: IReferTemplate[] = [
+let template: CreateOrEditReferFromExcelDto[] = [
   {
     _id: "",
     name: "",
@@ -27,7 +26,10 @@ let template: IReferTemplate[] = [
     customer_name: "",
     mobile: "6787876765",
     city: "",
-    state: ""
+    state: "",
+    mobile2: "",
+    mobile3: "",
+    address: "",
   }
 ]
 
@@ -57,7 +59,7 @@ export default function RefersPage() {
   })
 
 
-  const [selectedData, setSelectedData] = useState<IReferTemplate[]>(template)
+  const [selectedData, setSelectedData] = useState<CreateOrEditReferFromExcelDto[]>(template)
   const [sent, setSent] = useState(false)
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -79,7 +81,7 @@ export default function RefersPage() {
 
   // refine data
   useEffect(() => {
-    let data: IReferTemplate[] = []
+    let data: CreateOrEditReferFromExcelDto[] = []
     selectedRefers.map((refer) => {
       return data.push(
 
@@ -90,7 +92,10 @@ export default function RefersPage() {
           mobile: refer.mobile,
           gst: refer.gst,
           city: refer.city,
-          state: refer.state
+          state: refer.state,
+          mobile2: refer.mobile2,
+          mobile3: refer.mobile3,
+          address: refer.address,
         })
     })
     if (data.length > 0)

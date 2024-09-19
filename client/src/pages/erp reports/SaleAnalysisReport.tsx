@@ -9,27 +9,18 @@ import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState
 import { onlyUnique } from '../../utils/UniqueArray'
 import { toTitleCase } from '../../utils/TitleCase'
 import { months } from '../../utils/months'
+import { GetSaleAnalysisReportDto } from '../../dtos/erp reports/erp.reports.dto'
 
 
-export type ISaleAnalysisReportTemplate = {
-  state: string,
-  monthly_target: number,
-  monthly_achivement: number,
-  monthly_percentage: number,
-  annual_target: number,
-  annual_achivement: number,
-  annual_percentage: number,
-  last_year_sale: number,
-  last_year_sale_percentage_comparison: number
-}
+
 export default function SaleAnalysisReport() {
-  const [reports, setReports] = useState<ISaleAnalysisReportTemplate[]>([])
+  const [reports, setReports] = useState<GetSaleAnalysisReportDto[]>([])
   const [month, setMonth] = useState(new Date().getMonth() + 1)
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ISaleAnalysisReportTemplate[]>, BackendError>(["sale_analysis_reports", month], async () => GetSaleAnalysisReports(month))
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetSaleAnalysisReportDto[]>, BackendError>(["sale_analysis_reports", month], async () => GetSaleAnalysisReports(month))
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-  const columns = useMemo<MRT_ColumnDef<ISaleAnalysisReportTemplate>[]>(
+  const columns = useMemo<MRT_ColumnDef<GetSaleAnalysisReportDto>[]>(
     //column definitions...
     () => [
       {

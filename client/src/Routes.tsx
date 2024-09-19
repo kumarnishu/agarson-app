@@ -5,7 +5,6 @@ import { UserContext } from './contexts/userContext'
 import MainDashBoardPage from './dashboards/MainDashBoardPage.tsx'
 import CrmDashboard from './dashboards/CrmDashboard.tsx'
 import ProductionDashboard from './dashboards/ProductionDashboard.tsx'
-import TemplatesDashboard from './dashboards/TemplatesDashboard.tsx'
 import ChecklistDashboard from './dashboards/ChecklistDashboard.tsx'
 import ErpReportsDashboard from './dashboards/ErpReportsDashboard.tsx'
 import TodoDashboard from './dashboards/TodoDashboard.tsx'
@@ -34,8 +33,6 @@ import BillsAgingReportPage from './pages/erp reports/BillsAgingReportPage.tsx'
 import MyVisitPage from './pages/visit/MyVisitPage.tsx'
 import VisitAttendencePage from './pages/visit/VisitAttendencePage.tsx'
 import VisitAdminPage from './pages/visit/VisitAdminPage.tsx'
-import TemplatesPage from './pages/templates/TemplatesPage.tsx'
-import UpdateTemplateCategoriesPage from './pages/templates/UpdateTemplateCategoriesPage.tsx.tsx'
 import TodosPage from './pages/todos/MyTodoPage.tsx'
 import TodosAdminPage from './pages/todos/TodosAdminPage.tsx'
 import EmailVerifyPage from './pages/users/EmailVerifyPage.tsx'
@@ -60,8 +57,6 @@ export enum paths {
   user_dashboard = "/user_dashboard",
   crm_dashboard = "/crm_dashboard",
   production_dashboard = "/production_dashboard",
-  templates_dashboard = "/templates_dashboard",
-  backup_dashboard = "/backup_dashboard",
   checklist_dashboard = "/checklist_dashboard",
   visit_dashboard = "/visit_dashboard",
   todo_dashboard = "/todo_dashboard",
@@ -110,8 +105,6 @@ export enum paths {
   shoe_weightdiffreport = "shoe_weightdiffreport",
   dye_location = "dye_location",
   greetings = "greetings",
-  templates = "templates",
-  template_categories = "template_categories",
   users = "users",
   feature_reports = "feature_reports",
   states = "states",
@@ -356,25 +349,7 @@ function AppRoutes() {
 
             </Route>}
 
-          {user?.assigned_permissions.includes('template_menu') &&
-            < Route path={paths.templates_dashboard} >
-
-              <Route
-                index element={
-                  <TemplatesDashboard />
-                }
-              />
-
-              <Route path={paths.templates} element={
-                < TemplatesPage />
-              }
-              />
-              <Route path={paths.template_categories} element={
-                < UpdateTemplateCategoriesPage />
-              }
-              />
-
-            </Route>}
+        
 
           {
             < Route path={paths.checklist_dashboard}>

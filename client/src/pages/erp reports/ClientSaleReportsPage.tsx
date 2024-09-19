@@ -1,4 +1,4 @@
-import {  Button, LinearProgress, Typography } from '@mui/material'
+import { Button, LinearProgress, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -12,37 +12,19 @@ import AlertBar from '../../components/snacks/AlertBar'
 import UploadClientSalesButton from '../../components/buttons/UploadClientSalesButton'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
+import { GetClientSaleReportFromExcelDto } from '../../dtos/erp reports/erp.reports.dto'
 
 
-export type ClientSaleReportTemplate = {
-    report_owner: string,
-    account: string,
-    article: string,
-    oldqty: number,
-    newqty: number,
-    total?: number,
-    apr: number,
-    may: number,
-    jun: number,
-    jul: number,
-    aug: number,
-    sep: number,
-    oct: number,
-    nov: number,
-    dec: number,
-    jan: number,
-    feb: number,
-    mar: number, created_at?: string,
-}
+
 export default function ClientSaleReportsPage() {
-    const [reports, setClientSaleReports] = useState<ClientSaleReportTemplate[]>([])
+    const [reports, setClientSaleReports] = useState<GetClientSaleReportFromExcelDto[]>([])
     const { user } = useContext(UserContext)
     const [sent, setSent] = useState(false)
-    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ClientSaleReportTemplate[]>, BackendError>("reports", GetClientSaleReports)
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetClientSaleReportFromExcelDto[]>, BackendError>("reports", GetClientSaleReports)
     const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-    const columns = useMemo<MRT_ColumnDef<ClientSaleReportTemplate>[]>(
+    const columns = useMemo<MRT_ColumnDef<GetClientSaleReportFromExcelDto>[]>(
         //column definitions...
         () => [
             {
@@ -192,11 +174,11 @@ export default function ClientSaleReportsPage() {
 
     function handleExcel() {
         try {
-            let data: ClientSaleReportTemplate[] = [
+            let data: GetClientSaleReportFromExcelDto[] = [
                 {
                     report_owner: "Goa",
                     account: "agarson safety",
-                    article: "34",
+                    article: "power",
                     oldqty: 3434,
                     newqty: 4343,
                     apr: 23,

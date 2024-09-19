@@ -7,16 +7,16 @@ import {  BulkReferUpdateFromExcel } from "../../services/LeadsServices"
 import { Button, Snackbar, Tooltip } from "@mui/material"
 import ExportToExcel from "../../utils/ExportToExcel"
 import { Upload } from "@mui/icons-material"
-import {  IReferTemplate } from "../../types/template.type"
+import { CreateOrEditReferFromExcelDto } from "../../dtos/crm/crm.dto"
 
 const FileInput = styled.input`
 background:none;
 color:blue;
 `
 function UploadRefersExcelButton() {
-  const [leads, setLeads] = React.useState<IReferTemplate[]>()
+  const [leads, setLeads] = React.useState<CreateOrEditReferFromExcelDto[]>()
   const { data, mutate, isLoading, isSuccess, isError, error } = useMutation
-    <AxiosResponse<IReferTemplate[]>, BackendError, FormData>
+    <AxiosResponse<CreateOrEditReferFromExcelDto[]>, BackendError, FormData>
     (BulkReferUpdateFromExcel)
   const [file, setFile] = React.useState<File | null>(null)
 

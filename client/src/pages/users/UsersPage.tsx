@@ -249,18 +249,11 @@ export default function UsersPage() {
                         </Stack>} />
 
             },
-            {
-                accessorKey: 'username',
-                header: 'Name',
-                size: 150,
-                filterVariant: 'multi-select',
-                filterSelectOptions: data && users.map((i) => { return i.username.toString() }).filter(onlyUnique)
-            },
+            
             {
                 accessorKey: 'dp',
                 header: 'DP',
                 size: 50,
-                filterVariant: 'multi-select',
                 Cell: (cell) => <Avatar
                     title="double click to download"
                     sx={{ width: 16, height: 16 }}
@@ -270,11 +263,14 @@ export default function UsersPage() {
                         }
                     }}
 
-                    alt="display picture" src={cell.row.original && cell.row.original.dp} />,
-                filterSelectOptions: data && users.map((i) => {
-                    if (i.is_active) return "active"
-                    return "blocked"
-                }).filter(onlyUnique)
+                    alt="display picture" src={cell.row.original && cell.row.original.dp} />
+            },
+            {
+                accessorKey: 'username',
+                header: 'Name',
+                size: 150,
+                filterVariant: 'multi-select',
+                filterSelectOptions: data && users.map((i) => { return i.username.toString() }).filter(onlyUnique)
             },
             {
                 accessorKey: 'is_admin',
@@ -297,6 +293,58 @@ export default function UsersPage() {
                     if (i.is_active) return "active"
                     return "blocked"
                 }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'password',
+                header: 'Status',
+                size: 150,
+                filterVariant: 'multi-select',
+                Cell: (cell) => <>{cell.row.original.orginal_password}</>,
+                filterSelectOptions: data && users.map((i) => {
+                    return i.orginal_password || ""
+                }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'assigned_permissions',
+                header: 'Permissions',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.assigned_permissions.length || 0}</>
+            },
+            {
+                accessorKey: 'show_only_visiting_card_leads',
+                header: 'Leads View',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.show_only_visiting_card_leads ? "All Leads" : "Only Having Cards"}</>
+            },
+            {
+                accessorKey: 'is_multi_login',
+                header: 'Multi Device',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.is_multi_login ? "Allowed" : "Blocked"}</>
+            },
+            {
+                accessorKey: 'assigned_users',
+                header: 'Assigned Users',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.assigned_users.length || 0}</>
+            },
+            {
+                accessorKey: 'email',
+                header: 'Email',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.email || ""}</>
+            },
+            {
+                accessorKey: 'mobile',
+                header: 'Mobile',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.mobile || ""}</>
+            },
+            {
+                accessorKey: 'last_login',
+                header: 'Last Active',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.last_login || ""}</>
             },
 
         ],

@@ -11,11 +11,11 @@ import { useFormik } from 'formik';
 import * as Yup from "yup"
 import { GetUsers } from '../../../services/UserServices';
 import { AssignErpStatesToUsers } from '../../../services/ErpServices';
-import { IState } from '../../../types/erp_report.types';
 import { GetUserDto } from '../../../dtos/users/user.dto';
+import { GetErpStateDto } from '../../../dtos/erp reports/erp.reports.dto';
 
 
-function AssignErpCrmStatesDialog({ states, flag }: { states: IState[], flag: number }) {
+function AssignErpCrmStatesDialog({ states, flag }: { states: GetErpStateDto[], flag: number }) {
 
     const [users, setUsers] = useState<GetUserDto[]>([])
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'erp_report_menu', show_assigned_only: true }))
