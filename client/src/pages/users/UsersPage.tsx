@@ -268,14 +268,14 @@ export default function UsersPage() {
             {
                 accessorKey: 'username',
                 header: 'Name',
-                size: 150,
+                size: 120,
                 filterVariant: 'multi-select',
                 filterSelectOptions: data && users.map((i) => { return i.username.toString() }).filter(onlyUnique)
             },
             {
                 accessorKey: 'is_admin',
                 header: 'Role',
-                size: 150,
+                size: 120,
                 filterVariant: 'multi-select',
                 Cell: (cell) => <>{cell.row.original.is_admin ? "admin" : "user"}</>,
                 filterSelectOptions: data && users.map((i) => {
@@ -286,7 +286,7 @@ export default function UsersPage() {
             {
                 accessorKey: 'is_active',
                 header: 'Status',
-                size: 150,
+                size: 120,
                 filterVariant: 'multi-select',
                 Cell: (cell) => <>{cell.row.original.is_active ? "active" : "blocked"}</>,
                 filterSelectOptions: data && users.map((i) => {
@@ -297,7 +297,7 @@ export default function UsersPage() {
             {
                 accessorKey: 'password',
                 header: 'Status',
-                size: 150,
+                size: 120,
                 filterVariant: 'multi-select',
                 Cell: (cell) => <>{cell.row.original.orginal_password}</>,
                 filterSelectOptions: data && users.map((i) => {
@@ -307,45 +307,45 @@ export default function UsersPage() {
             {
                 accessorKey: 'assigned_permissions',
                 header: 'Permissions',
-                size: 150,
+                size: 120,
                 Cell: (cell) => <>{cell.row.original.assigned_permissions.length || 0}</>
             },
             {
                 accessorKey: 'show_only_visiting_card_leads',
                 header: 'Leads View',
-                size: 150,
+                size: 120,
                 Cell: (cell) => <>{cell.row.original.show_only_visiting_card_leads ? "All Leads" : "Only Having Cards"}</>
             },
             {
                 accessorKey: 'is_multi_login',
                 header: 'Multi Device',
-                size: 150,
+                size: 120,
                 Cell: (cell) => <>{cell.row.original.is_multi_login ? "Allowed" : "Blocked"}</>
             },
             {
                 accessorKey: 'assigned_users',
                 header: 'Assigned Users',
-                size: 150,
+                size: 120,
                 Cell: (cell) => <>{cell.row.original.assigned_users.length || 0}</>
+            },
+            {
+                accessorKey: 'last_login',
+                header: 'Last Active',
+                size: 120,
+                Cell: (cell) => <>{cell.row.original.last_login || ""}</>
             },
             {
                 accessorKey: 'email',
                 header: 'Email',
-                size: 150,
+                size: 120,
                 Cell: (cell) => <>{cell.row.original.email || ""}</>
             },
             {
                 accessorKey: 'mobile',
                 header: 'Mobile',
-                size: 150,
+                size: 120,
                 Cell: (cell) => <>{cell.row.original.mobile || ""}</>
-            },
-            {
-                accessorKey: 'last_login',
-                header: 'Last Active',
-                size: 150,
-                Cell: (cell) => <>{cell.row.original.last_login || ""}</>
-            },
+            }
 
         ],
         [users],
@@ -378,7 +378,6 @@ export default function UsersPage() {
         muiTableBodyCellProps: () => ({
             sx: {
                 border: '1px solid #c2beba;',
-                fontSize: '12px'
             },
         }),
         muiPaginationProps: {

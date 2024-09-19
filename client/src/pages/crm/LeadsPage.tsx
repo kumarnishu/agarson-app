@@ -28,6 +28,7 @@ import ViewRemarksDialog from '../../components/dialogs/crm/ViewRemarksDialog'
 import RemoveLeadReferralDialog from '../../components/dialogs/crm/RemoveLeadReferralDialog'
 import ConvertLeadToReferDialog from '../../components/dialogs/crm/ConvertLeadToReferDialog'
 import ReferLeadDialog from '../../components/dialogs/crm/ReferLeadDialog'
+import { DownloadFile } from '../../utils/DownloadFile'
 
 export default function LeadsPage() {
   const [paginationData, setPaginationData] = useState({ limit: 20, page: 1, total: 1 });
@@ -54,14 +55,15 @@ export default function LeadsPage() {
 
   useEffect(() => {
     if (stageSuccess && stagedata.data) {
-      if (LoggedInUser?.assigned_permissions.includes('show_leads_useless')) {
-        setStages(stagedata.data)
-      }
-      else {
-        let stagess = stagedata.data.filter((stage) => { return stage.value !== 'useless' })
-        setStages(stagess)
-      }
+      let tmp: DropDownDto[] = stagedata.data;
 
+      if (!LoggedInUser?.assigned_permissions.includes('show_leads_useless')) {
+        tmp = tmp.filter((stage) => { return stage.value !== 'useless' })
+      }
+      if (!LoggedInUser?.assigned_permissions.includes('show_refer_leads')) {
+        tmp = tmp.filter((stage) => { return stage.value !== 'refer' })
+      }
+      setStages(tmp)
     }
   }, [stageSuccess])
 
@@ -128,6 +130,7 @@ export default function LeadsPage() {
         header: '',
         maxSize: 50,
         Footer: <b></b>,
+        size: 120,
         Cell: ({ cell }) => <PopUp
           element={
             <Stack direction="row" spacing={1}>
@@ -243,6 +246,7 @@ export default function LeadsPage() {
             </Stack>}
         />
       },
+
       {
         accessorKey: 'name',
         header: 'Name',
@@ -253,7 +257,159 @@ export default function LeadsPage() {
           return i.name;
         }).filter(onlyUnique)
       },
+      {
+        accessorKey: 'city',
+        header: 'City',
+        filterVariant: 'multi-select',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.city ? cell.row.original.city : ""}</>,
+        filterSelectOptions: leads && leads.map((i) => {
+          return i.city;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+        filterVariant: 'multi-select',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state : ""}</>,
+        filterSelectOptions: leads && leads.map((i) => {
+          return i.state;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'stage',
+        header: 'Stage',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.stage ? cell.row.original.stage : ""}</>
+      },
+      {
+        accessorKey: 'mobile',
+        header: 'Mobile1',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.mobile ? cell.row.original.mobile : ""}</>
+      }, {
+        accessorKey: 'alternate_mobile1',
+        header: 'Mobile2',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.alternate_mobile1 ? cell.row.original.alternate_mobile1 : ""}</>
+      }, {
+        accessorKey: 'alternate_mobile2',
+        header: 'Mobile3',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.alternate_mobile2 ? cell.row.original.alternate_mobile2 : ""}</>
+      },
+      {
+        accessorKey: 'remark',
+        header: 'Last Remark',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.remark ? cell.row.original.remark : ""}</>
+      },
+      {
+        accessorKey: 'customer_name',
+        header: 'Customer',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.customer_name ? cell.row.original.customer_name : ""}</>
+      }
+      , {
+        accessorKey: 'customer_designation',
+        header: 'Designitaion',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.customer_designation ? cell.row.original.customer_designation : ""}</>
+      },
+      {
+        accessorKey: 'referred_party_name',
+        header: 'Refer Party',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.referred_party_name ? cell.row.original.remark : ""}</>
+      },
+      {
+        accessorKey: 'referred_party_mobile',
+        header: 'Refer Mobile',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.referred_party_mobile ? cell.row.original.referred_party_mobile : ""}</>
+      },
+      {
+        accessorKey: 'referred_date',
+        header: 'Refer Date',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.referred_date ? cell.row.original.referred_date : ""}</>
+      }
+      ,
+      {
+        accessorKey: 'email',
+        header: 'Email',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.email ? cell.row.original.email : ""}</>
+      }
+      ,
+      {
+        accessorKey: 'alternate_email',
+        header: 'Email2',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.alternate_email ? cell.row.original.alternate_email : ""}</>
+      }
+      ,
 
+      {
+        accessorKey: 'address',
+        header: 'Address',
+        size: 320,
+        Cell: (cell) => <>{cell.row.original.address ? cell.row.original.address : ""}</>
+      },
+      {
+        accessorKey: 'source',
+        header: 'Lead Source',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.lead_source ? cell.row.original.lead_source : ""}</>
+      },
+      {
+        accessorKey: 'type',
+        header: 'Lead Type',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.lead_type ? cell.row.original.lead_type : ""}</>
+      },
+      {
+        accessorKey: 'country',
+        header: 'Country',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.country ? cell.row.original.country : ""}</>
+      },
+      {
+        accessorKey: 'created_at',
+        header: 'Created on',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.created_at ? cell.row.original.created_at : ""}</>
+      },
+      {
+        accessorKey: 'updated_at',
+        header: 'Updated on',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.updated_at ? cell.row.original.updated_at : ""}</>
+      },
+      {
+        accessorKey: 'created_by',
+        header: 'Creator',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.created_by.label ? cell.row.original.created_by.label : ""}</>
+      },
+      {
+        accessorKey: 'updated_by',
+        header: 'Updated By',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.updated_by.label ? cell.row.original.updated_by.label : ""}</>
+      },
+      {
+        accessorKey: 'visiting_card',
+        header: 'Visiting Card',
+        size: 120,
+        Cell: (cell) => <span onDoubleClick={() => {
+          if (cell.row.original.visiting_card && cell.row.original.visiting_card) {
+            DownloadFile(cell.row.original.visiting_card, 'visiting card')
+          }
+        }}>
+          {cell.row.original.visiting_card && cell.row.original.visiting_card ? < img height="20" width="55" src={cell.row.original.visiting_card && cell.row.original.visiting_card} alt="visiting card" /> : "na"}</span>
+      },
     ],
     [leads],
     //end

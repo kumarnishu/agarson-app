@@ -1,16 +1,16 @@
 import { IMenu } from "../dtos/users/user.dto";
 
 export function FetchAllPermissions() {
-    let permissions:IMenu[]=[];
+    let permissions: IMenu[] = [];
     let productionMenu: IMenu = {
         label: 'Production',
         permissions: [{
             value: 'production_menu',
             label: 'Production Button'
         }],
-        menues:[
+        menues: [
             {
-                label:'Production',
+                label: 'Production',
                 permissions: [
                     {
                         value: 'production_view',
@@ -334,7 +334,7 @@ export function FetchAllPermissions() {
                     }
                 ]
             },
-           
+
         ]
     }
     let crmMenu: IMenu = {
@@ -355,7 +355,7 @@ export function FetchAllPermissions() {
                         value: 'leads_create',
                         label: 'create'
                     },
-                    
+
                     {
                         value: 'leads_edit',
                         label: 'edit'
@@ -367,6 +367,10 @@ export function FetchAllPermissions() {
                     {
                         value: 'show_leads_useless',
                         label: 'Show Useless Leads'
+                    },
+                    {
+                        value: 'show_refer_leads',
+                        label: 'Show Referred Leads'
                     },
                     {
                         value: 'leads_merge',
@@ -873,7 +877,7 @@ export function FetchAllPermissions() {
             }
         ]
     }
-    
+
     permissions.push(productionMenu)
     permissions.push(crmMenu)
     permissions.push(erpreportMenu)
