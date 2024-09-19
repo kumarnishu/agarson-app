@@ -609,7 +609,7 @@ export default function LeadsPage() {
               >Export Selected</MenuItem>}
 
             </Menu >
-            <CreateOrEditLeadDialog lead={undefined} />
+            <CreateOrEditLeadDialog lead={lead} />
             {table.getSelectedRowModel().rows.length == 2 && <MergeTwoLeadsDialog leads={table.getSelectedRowModel().rows.map((l) => { return l.original })} removeSelectedLeads={() => { table.resetRowSelection() }} />}
             {table.getSelectedRowModel().rows && table.getSelectedRowModel().rows.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={table.getSelectedRowModel().rows.map((l) => { return l.original })} removeSelectedLeads={() => { table.resetRowSelection() }} />}
           </>
