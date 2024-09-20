@@ -1,7 +1,6 @@
 import { IleadReqBody } from "../components/dialogs/crm/MergeTwoLeadsDialog"
 import { DropDownDto } from "../dtos/common/dropdown.dto"
 import { GetReferDto } from "../dtos/crm/crm.dto"
-import { GetUserDto } from "../dtos/users/user.dto"
 import { apiClient } from "./utils/AxiosInterceptor"
 
 //leads
@@ -31,11 +30,8 @@ export const FindUnknownCrmCities = async () => {
 }
 
 
-export const FuzzySearchLeads = async ({ user, searchString, limit, page, stage }: { user?: GetUserDto, searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
-  if (user && user.assigned_permissions.includes("show_leads_useless")) {
-    return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
-  }
-  return await apiClient.get(`search/leads/ok?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
+export const FuzzySearchLeads = async ({ searchString, limit, page, stage }: { searchString?: string, limit: number | undefined, page: number | undefined, stage?: string }) => {
+  return await apiClient.get(`search/leads?key=${searchString}&limit=${limit}&page=${page}&stage=${stage}`)
 }
 
 

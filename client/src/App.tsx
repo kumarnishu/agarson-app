@@ -20,13 +20,7 @@ function App() {
           primary: globalTheme.palette.primary,
           info: {
             main: globalTheme.palette.error.light,
-          },
-          background: {
-            default:
-              globalTheme.palette.mode === 'light'
-                ? 'rgb(254,255,244)'
-                : '#000',
-          },
+          }
         },
         typography: {
           button: {

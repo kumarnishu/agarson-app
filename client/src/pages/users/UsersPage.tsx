@@ -296,7 +296,7 @@ export default function UsersPage() {
             },
             {
                 accessorKey: 'password',
-                header: 'Status',
+                header: 'Password',
                 size: 120,
                 filterVariant: 'multi-select',
                 Cell: (cell) => <>{cell.row.original.orginal_password}</>,
