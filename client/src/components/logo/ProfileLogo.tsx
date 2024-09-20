@@ -4,7 +4,6 @@ import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { UserMenuActions, MenuContext } from '../../contexts/menuContext';
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext';
-import { paths } from '../../Routes';
 import NewUserDialog from '../dialogs/users/NewUserDialog';
 import EmailVerifySendMailDialog from '../dialogs/users/EmailVerifySendMailDialog';
 import UpdateProfileDialog from '../dialogs/users/UpdateProfileDialog';
@@ -16,7 +15,6 @@ import { FeatureContext } from '../../contexts/featureContext';
 
 
 function ProfileMenu() {
-    const navigate = useNavigate()
     const { setFeature } = useContext(FeatureContext)
     const { menu, setMenu } = useContext(MenuContext)
     const { user, setUser } = useContext(UserContext)
@@ -28,7 +26,7 @@ function ProfileMenu() {
             setUser(undefined)
             setChoice({ type: UserChoiceActions.close_user })
             setMenu({ type: UserMenuActions.close_user_menu, anchorEl: null })
-            goto(paths.login)
+            goto("/Login")
         }
     }, [setUser, goto, setChoice, setMenu, isSuccess])
     return (
@@ -42,10 +40,9 @@ function ProfileMenu() {
             >
                 <MenuItem
                     onClick={() => {
-                        goto(paths.dashboard)
                         setMenu({ type: UserMenuActions.close_user_menu, anchorEl: null })
                         setFeature({ feature: "Dashboard", url: "/" })
-                        navigate(paths.dashboard)
+                        goto("/")
                     }
                     }
                 >Dashboard</MenuItem>

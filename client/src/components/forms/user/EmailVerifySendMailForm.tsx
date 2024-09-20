@@ -7,7 +7,6 @@ import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { paths } from '../../../Routes';
 import { SendVerifyEmail } from '../../../services/UserServices';
 import { UserContext } from '../../../contexts/userContext';
 import { queryClient } from '../../../main';
@@ -48,7 +47,7 @@ function EmailVerifySendMailForm() {
   useEffect(() => {
     if (isSuccess) {
       setChoice({ type: UserChoiceActions.close_user })
-      goto(paths.dashboard)
+      goto("/")
     }
   }, [setChoice, goto, isSuccess])
 

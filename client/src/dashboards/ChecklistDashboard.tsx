@@ -1,8 +1,8 @@
 import {  Grid, Paper, Stack, Typography } from "@mui/material"
-import { paths } from "../Routes"
 import { Link } from "react-router-dom";
 import {  useEffect, useState } from "react";
 import { ButtonLogo } from "../components/logo/Agarson";
+import { toTitleCase } from "../utils/TitleCase";
 
 function ChecklistDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
@@ -10,8 +10,9 @@ function ChecklistDashboard() {
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-    tmpfeatures.push({ feature: 'checklists ', is_visible: true, url: paths.checklists })
-    tmpfeatures.push({ feature: 'category', is_visible: true, url: paths.checklistscategories })
+    tmpfeatures.push({
+      feature: 'checklists ', is_visible: true, url: "/Checklist/CheckListPage" })
+    tmpfeatures.push({ feature: 'category', is_visible: true, url: "/Checklist/ChecklistCategoriesPage" })
     setFeatures(tmpfeatures)
   }, [])
 
@@ -26,7 +27,7 @@ function ChecklistDashboard() {
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                     <ButtonLogo title="" height={50} width={50} />
                     <Typography variant="button" fontSize={15} component="div">
-                      {feat.feature}
+                      {toTitleCase(feat.feature)}
                     </Typography>
                   </Stack>
                 </Paper>

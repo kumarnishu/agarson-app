@@ -8,7 +8,6 @@ import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { paths } from '../../../Routes';
 import { ResetPassword } from '../../../services/UserServices';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
@@ -67,7 +66,7 @@ function ResetPasswordForm({ token }: { token: string }) {
   useEffect(() => {
     if (isSuccess) {
       setChoice({ type: UserChoiceActions.close_user })
-      goto(paths.dashboard)
+      goto("/")
     }
   }, [goto, setChoice, isSuccess])
 

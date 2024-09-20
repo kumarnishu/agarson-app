@@ -388,13 +388,13 @@ export default function LeadsPage() {
         Cell: (cell) => <>{cell.row.original.updated_at ? cell.row.original.updated_at : ""}</>
       },
       {
-        accessorKey: 'created_by',
+        accessorKey: 'created_by.label',
         header: 'Creator',
         size: 120,
         Cell: (cell) => <>{cell.row.original.created_by.label ? cell.row.original.created_by.label : ""}</>
       },
       {
-        accessorKey: 'updated_by',
+        accessorKey: 'updated_by.label',
         header: 'Updated By',
         size: 120,
         Cell: (cell) => <>{cell.row.original.updated_by.label ? cell.row.original.updated_by.label : ""}</>
@@ -449,10 +449,9 @@ export default function LeadsPage() {
     onSortingChange: setSorting,
     enableTableFooter: true,
     enableRowVirtualization: true,
-    state: { isLoading, sorting },
+    state: {  sorting },
     enableBottomToolbar: false,
     enableGlobalFilter: false,
-    manualFiltering: true,
     manualPagination: true
   });
 
@@ -604,7 +603,7 @@ export default function LeadsPage() {
               {LoggedInUser?.assigned_permissions.includes('leads_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
               >Export All</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('leads_export') && < MenuItem onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+              {LoggedInUser?.assigned_permissions.includes('leads_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
               >Export Selected</MenuItem>}
 

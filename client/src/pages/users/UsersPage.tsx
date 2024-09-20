@@ -60,7 +60,7 @@ export default function UsersPage() {
                                         size="medium"
                                         onClick={() => {
                                             setChoice({ type: UserChoiceActions.update_user })
-                                            setUser(user)
+                                            setUser(cell.row.original)
                                         }}>
                                         <Edit />
                                     </IconButton>
@@ -249,7 +249,7 @@ export default function UsersPage() {
                         </Stack>} />
 
             },
-            
+
             {
                 accessorKey: 'dp',
                 header: 'DP',
@@ -378,6 +378,7 @@ export default function UsersPage() {
         muiTableBodyCellProps: () => ({
             sx: {
                 border: '1px solid #c2beba;',
+                fontSize: '13px'
             },
         }),
         muiPaginationProps: {
@@ -397,7 +398,7 @@ export default function UsersPage() {
         enableTableFooter: true,
         enableRowVirtualization: true,
         onSortingChange: setSorting,
-        state: { isLoading, sorting }
+        state: { sorting }
     });
 
     useEffect(() => {
@@ -482,7 +483,7 @@ export default function UsersPage() {
                                 }}
                             >Assign Permissions</MenuItem>
 
-                            <MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+                            <MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
                             >Export All</MenuItem>
                             <MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
                             >Export Selected</MenuItem>

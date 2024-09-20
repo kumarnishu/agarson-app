@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { UserContext } from './contexts/userContext'
-
 import MainDashBoardPage from './dashboards/MainDashBoardPage.tsx'
 import CrmDashboard from './dashboards/CrmDashboard.tsx'
 import ProductionDashboard from './dashboards/ProductionDashboard.tsx'
@@ -53,85 +52,21 @@ import VisitDashboard from './dashboards/VisitDashboard.tsx'
 
 
 
-export enum paths {
-  user_dashboard = "/user_dashboard",
-  crm_dashboard = "/crm_dashboard",
-  production_dashboard = "/production_dashboard",
-  checklist_dashboard = "/checklist_dashboard",
-  visit_dashboard = "/visit_dashboard",
-  todo_dashboard = "/todo_dashboard",
-  erp_reports_dashboard = "/erp_reports_dashboard",
-
-  machine_wise_productionrepot = "machine_wise_productionrepot",
-  thekedar_wise_productionrepot = "thekedar_wise_productionrepot",
-  category_wise_productionrepot = "category_wise_productionrepot",
-  dye_statusrepot = "dye_statusrepot",
-
-
-  refer_reports = "refer_reports",
-  new_refers = "new_refers",
-  crm_activities = "crm_activities",
-
-
-  visit = 'visit',
-  visit_admin = 'visit_admin',
-  visit_attendence = 'visit_attendence',
-  todo = 'todo',
-  todo_admin = 'todo_admin',
-  pending_orders = "pending_orders",
-  clients_sale = "clients_sale",
-  clients_sale_lastyear = "clients_sale_lastyear",
-  bill_aging_report = "bill_aging_report",
-  sale_analysis = "sale_analysis",
-  party_target = "party_target",
-  checklists = "checklists",
-  checklistscategories = "checklistscategories",
-  crm = "crm",
-  crm_reminders = "crm_reminders",
-  crm_states = "crm_states",
-  crm_cities = "crm_cities",
-  crm_stages = "crm_stages",
-  crm_leadtypes = "crm_leadtypes",
-  crm_leadsources = "crm_leadsources",
-  leads = "leads",
-  refers = "refers",
-  production = "production",
-  machine_categories = "machine_categories",
-  production_admin = "production_admin",
-  machines = "machines",
-  dyes = "dyes",
-  articles = "articles",
-  shoe_weight = "shoe_weight",
-  shoe_weightdiffreport = "shoe_weightdiffreport",
-  dye_location = "dye_location",
-  greetings = "greetings",
-  users = "users",
-  feature_reports = "feature_reports",
-  states = "states",
-  login = "/login",
-  dashboard = "/",
-  reset_password = "/password/reset/:token",
-  verify_email = "/email/verify/:token",
-  backup_page = "backup_page",
-
-
-}
-
 function AppRoutes() {
   const { user } = useContext(UserContext)
 
   return (
     <Routes >
       {
-        !user && <Route path={paths.login} element={<LoginPage />} />}
+        !user && <Route path="/Login" element={<LoginPage />} />}
       {
-        user && <Route path={paths.dashboard}
+        user && <Route path="/"
           element={
             <MainDashBoardPage />
           }>
 
           {user?.is_admin &&
-            < Route path={paths.user_dashboard}>
+            < Route path="Users">
               <Route index
                 element={
                   <UsersPage />
@@ -140,71 +75,71 @@ function AppRoutes() {
             </Route>}
 
           {user?.assigned_permissions.includes('production_menu') &&
-            < Route path={paths.production_dashboard}>
+            < Route path="Production">
               <Route index
                 element={
                   <ProductionDashboard />
                 }
               />
               <Route
-                path={paths.machine_categories} element={
+                path="UpdateMachineCategoriesPage" element={
                   <UpdateMachineCategoriesPage />
                 }
               />
               <Route
-                path={paths.production_admin} element={
+                path="ProductionAdminPage" element={
                   <ProductionAdminPage />
                 }
               />
 
 
               <Route
-                path={paths.shoe_weight} element={
+                path="ShoeWeightPage" element={
                   <ShoeWeightPage />
                 }
               />
               <Route
-                path={paths.dye_location} element={
+                path="DyeLocationsPage" element={
                   <DyeLocationsPage />
                 }
               />
               <Route
-                path={paths.machines} element={
+                path="MachinePage" element={
                   <MachinePage />
                 }
               />
               <Route
-                path={paths.dyes} element={
+                path="DyePage" element={
                   <DyePage />
                 }
               />
               <Route
-                path={paths.articles} element={
+                path="ArticlePage" element={
                   <ArticlePage />
                 }
               />
               <Route
-                path={paths.thekedar_wise_productionrepot} element={
+                path="ThekedarWiseProductionReportPage" element={
                   <ThekedarWiseProductionReportPage />
                 }
               />
               <Route
-                path={paths.category_wise_productionrepot} element={
+                path="CategoryWiseProductionReportPage" element={
                   <CategoryWiseProductionReportPage />
                 }
               />
               <Route
-                path={paths.machine_wise_productionrepot} element={
+                path="MachineWiseProductionReportPage" element={
                   <MachineWiseProductionReportPage />
                 }
               />
               <Route
-                path={paths.shoe_weightdiffreport} element={
+                path="ShowWeightDifferenceReportPage" element={
                   <ShowWeightDifferenceReportPage />
                 }
               />
               <Route
-                path={paths.dye_statusrepot} element={
+                path="DyeStatusReportPage" element={
                   <DyeStatusReportPage />
                 }
               />
@@ -213,53 +148,53 @@ function AppRoutes() {
 
 
           {user?.assigned_permissions.includes('crm_menu') &&
-            < Route path={paths.crm_dashboard} >
+            < Route path="Crm" >
               <Route index element={
                 <CrmDashboard />
               }
               />
 
-              <Route path={paths.leads} element={
+              <Route path="LeadsPage" element={
                 <LeadsPage />
               }
               />
-              <Route path={paths.refers} element={
+              <Route path="RefersPage" element={
                 <RefersPage />
               }
               />
-              <Route path={paths.crm_activities} element={
+              <Route path="CrmActivitiesPage" element={
                 <CrmActivitiesPage />
               }
               />
-              <Route path={paths.crm_reminders} element={
+              <Route path="RemindersPage" element={
                 < RemindersPage />
               }
               />
-              <Route path={paths.crm_cities} element={
+              <Route path="CitiesPage" element={
                 <CitiesPage />
               }
               />
-              <Route path={paths.crm_leadsources} element={
+              <Route path="LeadSourcesPage" element={
                 <CrmLeadSourcesPage />
               }
               />
-              <Route path={paths.crm_stages} element={
+              <Route path="StagesPage" element={
                 <CrmStagesPage />
               }
               />
-              <Route path={paths.crm_states} element={
+              <Route path='CrmStatesPage' element={
                 <CrmStatesPage />
               }
               />
-              <Route path={paths.crm_leadtypes} element={
+              <Route path='LeadTypesPage' element={
                 <CrmTypesPage />
               }
               />
-              <Route path={paths.refer_reports} element={
+              <Route path="AssignedReferReportPage" element={
                 <AssignedReferReportPage />
               }
               />
-              <Route path={paths.new_refers} element={
+              <Route path="NewReferReportPage" element={
                 <NewReferReportPage />
               }
               />
@@ -268,7 +203,7 @@ function AppRoutes() {
             </Route>}
 
           {user?.assigned_permissions.includes('erp_report_menu') &&
-            < Route path={paths.erp_reports_dashboard}
+            < Route path="ErpReports"
             >
               <Route
                 index element={
@@ -277,44 +212,44 @@ function AppRoutes() {
               />
 
               <Route
-                path={paths.states} element={
+                path="ErpStatesPage" element={
                   <ErpStatesPage />
                 }
               />
-              <Route path={paths.pending_orders} element={
+              <Route path="PendingOrdersReport" element={
 
                 < PendingOrdersReport />
 
               }
-              /> <Route path={paths.clients_sale} element={
+              /> <Route path="ClientSaleReportsPage" element={
 
                 < ClientSaleReportsPage />
 
 
               }
               />
-              <Route path={paths.clients_sale_lastyear} element={
+              <Route path="ClientSaleLastYearReportsPage" element={
 
                 < ClientSaleLastYearReportsPage />
 
 
               }
               />
-              <Route path={paths.bill_aging_report} element={
+              <Route path="BillsAgingReportPage" element={
 
                 < BillsAgingReportPage />
 
 
               }
               />
-              <Route path={paths.party_target} element={
+              <Route path="PartyTargetReportsPage" element={
 
                 < PartyTargetReportsPage />
 
 
               }
               />
-              <Route path={paths.sale_analysis} element={
+              <Route path="SaleAnalysisReport" element={
 
                 < SaleAnalysisReport />
 
@@ -324,7 +259,7 @@ function AppRoutes() {
             </Route>}
 
           {user?.assigned_permissions.includes('visits_menu') &&
-            < Route path={paths.visit_dashboard} >
+            < Route path="Visit" >
               <Route index
                 element={
                   <VisitDashboard />
@@ -332,60 +267,57 @@ function AppRoutes() {
               />
 
               <Route
-                path={paths.visit} element={
+                path="MyVisitPage" element={
                   <MyVisitPage />
                 }
               />
               <Route
-                path={paths.visit_attendence} element={
+                path="VisitAttendencePage" element={
                   <VisitAttendencePage />
                 }
               />
               <Route
-                path={paths.visit_admin} element={
+                path="VisitAdminPage" element={
                   <VisitAdminPage />
                 }
               />
 
             </Route>}
-
-        
-
           {
-            < Route path={paths.checklist_dashboard}>
+            < Route path="Checklist">
               <Route
                 index element={
                   <ChecklistDashboard />
                 }
               />
 
-              <Route path={paths.checklists} element={
+              <Route path="CheckListPage" element={
                 < CheckListPage />
               }
               />
 
               <Route
-                path={paths.checklistscategories} element={
+                path="ChecklistCategoriesPage" element={
                   <ChecklistCategoriesPage />
                 }
               />
 
 
             </Route>}
-          {< Route path={paths.todo_dashboard}>
+          {< Route path="Todo">
             <Route
               index element={
                 <TodoDashboard />
               }
             />
 
-            <Route path={paths.todo} element={
+            <Route path="TodosPage" element={
               < TodosPage />
             }
             />
 
             <Route
-              path={paths.todo_admin} element={
+              path="TodosAdminPage" element={
                 <TodosAdminPage />
               }
             />
@@ -395,10 +327,10 @@ function AppRoutes() {
         </Route>
       }
 
-      <Route path={paths.reset_password} element={<ResetPasswordDialog />} />
-      <Route path={paths.verify_email} element={<EmailVerifyPage />} />
-      {user && <Route path="*" element={<Navigate to={paths.dashboard} />} />}
-      <Route path="*" element={<Navigate to={paths.login} />} />
+      <Route path="/ResetPassword/:token" element={<ResetPasswordDialog />} />
+      <Route path="/VerifyEmail/:token" element={<EmailVerifyPage />} />
+      {user && <Route path="*" element={<Navigate to="/" />} />}
+      <Route path="*" element={<Navigate to="/Login" />} />
 
     </Routes >
 

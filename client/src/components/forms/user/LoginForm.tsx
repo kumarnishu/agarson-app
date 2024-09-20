@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { UserContext } from '../../../contexts/userContext';
-import { paths } from '../../../Routes';
 import { Login } from '../../../services/UserServices';
 import { BackendError } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
@@ -70,7 +69,7 @@ function LoginForm() {
 
   return (
     <>
-      {isSuccess && <Navigate to={paths.dashboard} replace={true} />}
+      {isSuccess && <Navigate to="/" replace={true} />}
       <form onSubmit={formik.handleSubmit}>
 
         <Stack

@@ -303,13 +303,13 @@ export default function AssignedReferReportPage() {
         Cell: (cell) => <>{cell.row.original.updated_at ? cell.row.original.updated_at : ""}</>
       },
       {
-        accessorKey: 'created_by',
+        accessorKey: 'created_by.label',
         header: 'Creator',
         size: 120,
         Cell: (cell) => <>{cell.row.original.created_by.label ? cell.row.original.created_by.label : ""}</>
       },
       {
-        accessorKey: 'updated_by',
+        accessorKey: 'updated_by.label',
         header: 'Updated By',
         size: 120,
         Cell: (cell) => <>{cell.row.original.updated_by.label ? cell.row.original.updated_by.label : ""}</>

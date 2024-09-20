@@ -1,8 +1,8 @@
 import { Grid, Paper, Stack, Typography } from "@mui/material"
-import { paths } from "../Routes"
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ButtonLogo } from "../components/logo/Agarson";
+import { toTitleCase } from "../utils/TitleCase";
 
 
 function VisitDashboard() {
@@ -11,9 +11,11 @@ function VisitDashboard() {
   //process feature and access
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-    tmpfeatures.push({ feature: 'my visit ', is_visible: true, url: paths.visit })
-    tmpfeatures.push({ feature: 'visit reports', is_visible: true, url: paths.visit_admin })
-    tmpfeatures.push({ feature: 'visit attendence', is_visible: true, url: paths.visit_attendence })
+    tmpfeatures.push({ feature: 'my visit ', is_visible: true, url: "/Visit/MyVisitPage" })
+    tmpfeatures.push({
+      feature: 'visit reports', is_visible: true, url: "/Visit/VisitAdminPage" })
+    tmpfeatures.push({
+      feature: 'visit attendence', is_visible: true, url: "Visit/VisitAttendencePage" })
     setFeatures(tmpfeatures)
   }, [])
 
@@ -28,7 +30,7 @@ function VisitDashboard() {
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                     <ButtonLogo title="" height={50} width={50} />
                     <Typography variant="button" fontSize={15} component="div">
-                      {feat.feature}
+                      {toTitleCase(feat.feature)}
                     </Typography>
                   </Stack>
                 </Paper>

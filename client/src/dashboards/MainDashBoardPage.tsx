@@ -9,14 +9,13 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { Box, IconButton, InputAdornment, Paper, Stack, TextField, Typography } from '@mui/material';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { paths } from '../Routes';
 import { Menu as MenuIcon, Search } from '@mui/icons-material';
 import { toTitleCase } from '../utils/TitleCase';
 import FuzzySearch from 'fuzzy-search';
 import { UserContext } from '../contexts/userContext';
 import { FeatureContext } from '../contexts/featureContext';
 import AgarsonLogo, { ButtonLogo } from '../components/logo/Agarson';
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LineChart, PieChart } from '@mui/x-charts';
 import ProfileLogo from '../components/logo/ProfileLogo';
 
@@ -35,11 +34,11 @@ function MainDashBoardPage() {
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <Stack direction={'row'} justifyContent={'center'} mr={4}>
-        <Link to={paths.dashboard} replace={true} onClick={() => {
+        <Link to="/" replace={true} onClick={() => {
           {
             setFeature({ feature: "Dashboard", url: "/" })
             setSearch("")
-            navigate(paths.dashboard)
+            navigate("/")
           }
         }}>
           <AgarsonLogo width={120} height={120} title='Go To Dashboard' />
@@ -47,11 +46,12 @@ function MainDashBoardPage() {
       </Stack>
       <List>
         {filteredfeatures.map((feat, index) => (
-          <>
+          <React.Fragment key={index}>
             {feat && feat.is_visible && < Link style={{ textDecoration: 'none', color: 'black' }} to={feat.url} onClick={() => {
               setFeature({ feature: feat.feature, url: feat.url })
               setSearch("")
             }}>
+              <Divider />
               <ListItem key={index} disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
@@ -61,8 +61,8 @@ function MainDashBoardPage() {
                 </ListItemButton>
               </ListItem>
             </Link >}
-            <Divider />
-          </>
+          </React.Fragment >
+
         ))}
       </List>
 
@@ -85,21 +85,69 @@ function MainDashBoardPage() {
 
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible?: boolean, url: string }[] = []
-    user?.is_admin && tmpfeatures.push({ feature: 'users', is_visible: true, url: paths.user_dashboard })
-    user?.assigned_permissions.includes('crm_menu') && tmpfeatures.push({ feature: 'crm', is_visible: true, url: paths.crm_dashboard })
-    user?.assigned_permissions.includes('production_menu') && tmpfeatures.push({ feature: 'productions', is_visible: true, url: paths.production_dashboard })
-    user?.assigned_permissions.includes('erp_report_menu') && tmpfeatures.push({ feature: 'erp reports', is_visible: true, url: paths.erp_reports_dashboard })
-    user?.is_admin && tmpfeatures.push({ feature: 'Todos', is_visible: true, url: paths.todo_dashboard })
-    // tmpfeatures.push({ feature: 'Visit',is_visible: true, url: paths.visit_dashboard })
-    user?.assigned_permissions.includes('checklist_menu') && tmpfeatures.push({ feature: 'Checklists', is_visible: true, url: paths.checklist_dashboard })
-    // tmpfeatures.push({ feature: 'Templates',is_visible: true, url: paths.templates_dashboard })
-    // tmpfeatures.push({ feature: 'BackUp',is_visible: true, url: paths.backup_dashboard })
-    user?.assigned_permissions.includes('leads_view') && tmpfeatures.push({ feature: 'leads ', is_visible: false, url: "/crm_dashboard/leads" })
+    user?.is_admin && tmpfeatures.push({ feature: 'users', is_visible: true, url: "/Users" })
+    user?.assigned_permissions.includes('crm_menu') && tmpfeatures.push({ feature: 'crm', is_visible: true, url: "/Crm" })
+    user?.assigned_permissions.includes('production_menu') && tmpfeatures.push({ feature: 'productions', is_visible: true, url: "/Production" })
+    user?.assigned_permissions.includes('erp_report_menu') && tmpfeatures.push({ feature: 'erp reports', is_visible: true, url: "/ErpReports" })
+    user?.is_admin && tmpfeatures.push({ feature: 'Todos', is_visible: true, url: "/Todo" })
+    user?.is_admin && tmpfeatures.push({ feature: 'Visits', is_visible: true, url: "/Visit" })
+    user?.assigned_permissions.includes('checklist_menu') && tmpfeatures.push({ feature: 'Checklists', is_visible: true, url: "/Checklist" })
+
+    //sub featrures
+    tmpfeatures.push({
+      feature: 'checklists ', is_visible: false, url: "/Checklist/CheckListPage"
+    })
+    tmpfeatures.push({ feature: 'category', is_visible: false, url: "/Checklist/ChecklistCategoriesPage" })
+    user?.assigned_permissions.includes('leads_view') && tmpfeatures.push({ feature: 'leads ', is_visible: false, url: "/Crm/LeadsPage" })
+    user?.assigned_permissions.includes('refer_view') && tmpfeatures.push({ feature: 'refers', is_visible: false, url: "/Crm/RefersPage" })
+    user?.assigned_permissions.includes('reminders_view') && tmpfeatures.push({ feature: 'reminders', is_visible: false, url: "/Crm/RemindersPage" })
+    user?.assigned_permissions.includes('states_view') && tmpfeatures.push({ feature: 'states', is_visible: false, url: "/Crm/CrmStatesPage" })
+    user?.assigned_permissions.includes('city_view') && tmpfeatures.push({ feature: 'cities', is_visible: false, url: "/Crm/CitiesPage" })
+    user?.assigned_permissions.includes('leadtype_view') && tmpfeatures.push({ feature: 'Lead Type', is_visible: false, url: "/Crm/LeadTypesPage" })
+    user?.assigned_permissions.includes('lead_source_view') && tmpfeatures.push({ feature: 'Lead Source', is_visible: false, url: "/Crm/LeadSourcesPage" })
+    user?.assigned_permissions.includes('leadstage_view') && tmpfeatures.push({ feature: 'Lead Stage', is_visible: false, url: "/Crm/StagesPage" })
+    user?.assigned_permissions.includes('activities_view') && tmpfeatures.push({ feature: 'activities reports ', is_visible: false, url: "/Crm/CrmActivitiesPage" })
+    user?.assigned_permissions.includes('assignedrefer_view') && tmpfeatures.push({ feature: 'assigned refer reports', is_visible: false, url: "/Crm/AssignedReferReportPage" })
+    user?.assigned_permissions.includes('newrefer_view') && tmpfeatures.push({ feature: 'new refer reports ', is_visible: false, url: "/Crm/NewReferReportPage" })
+    user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'pending orders report', is_visible: false, url: "/ErpReports/PendingOrdersReport" })
+    user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'bills aging  report', is_visible: false, url: "/ErpReports/BillsAgingReportPage" })
+    user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'Client Sale  report', is_visible: false, url: "/ErpReports/ClientSaleReportsPage" }),
+      user?.assigned_permissions.includes('last_year_client_sale_report_view') && tmpfeatures.push({ feature: 'Client Sale Last Year report', is_visible: false, url: "/ErpReports/ClientSaleLastYearReportsPage" }),
+      user?.assigned_permissions.includes('party_target_view') && tmpfeatures.push({ feature: 'Party Target report', is_visible: false, url: "/ErpReports/PartyTargetReportsPage" }),
+      user?.assigned_permissions.includes('sale_analysis_view') && tmpfeatures.push({ feature: 'Sale Analysis report', is_visible: false, url: "/ErpReports/SaleAnalysisReport" }),
+      user?.assigned_permissions.includes('erp_state_view') && tmpfeatures.push({ feature: 'states', is_visible: false, url: "/ErpReports/ErpStatesPage" })
+
+    user?.assigned_permissions.includes('production_view') && tmpfeatures.push({ feature: 'production ', is_visible: false, url: "/Production/ProductionAdminPage" })
+    user?.assigned_permissions.includes('dye_status_view') && tmpfeatures.push({ feature: 'Dye-Status ', is_visible: false, url: "/Production/DyeStatusReportPage" })
+    user?.assigned_permissions.includes('dye_location_view') && tmpfeatures.push({ feature: 'Location ', is_visible: false, url: "/Production/DyeLocationsPage" })
+    user?.assigned_permissions.includes('article_view') && tmpfeatures.push({ feature: 'articles', is_visible: false, url: "/Production/ArticlePage" })
+    user?.assigned_permissions.includes('machine_view') && tmpfeatures.push({ feature: 'machines ', is_visible: false, url: "/Production/MachinePage" })
+    user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: false, url: "/Production/UpdateMachineCategoriesPage" })
+    user?.assigned_permissions.includes('dye_view') && tmpfeatures.push({ feature: 'dyes ', is_visible: false, url: "/Production/DyePage" })
+    user?.assigned_permissions.includes('shoe_weight_view') && tmpfeatures.push({ feature: 'shoe weight ', is_visible: false, url: "/Production/ShoeWeightPage" })
+    user?.assigned_permissions.includes('shoe_weight_report_view') && tmpfeatures.push({ feature: 'Shoe Weight Difference report', is_visible: false, url: "/Production/ShowWeightDifferenceReportPage" })
+    user?.assigned_permissions.includes('dye_status_report_view') && tmpfeatures.push({ feature: 'Dye Status report', is_visible: false, url: "/Production/DyeStatusReportPage" })
+    user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: false, url: "/Production/MachineWiseProductionReportPage" })
+    user?.assigned_permissions.includes('machine_category_wise_production_report_view') && tmpfeatures.push({ feature: 'Category Wise Production report', is_visible: false, url: "/Production/CategoryWiseProductionReportPage" }),
+      user?.assigned_permissions.includes('thekedar_wise_production_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production report', is_visible: false, url: "/Production/ThekedarWiseProductionReportPage" })
+    tmpfeatures.push({
+      feature: 'my todos ', is_visible: false, url: "/Todo/TodosPage"
+    })
+    tmpfeatures.push({
+      feature: 'todos admin', is_visible: false, url: "/Todo/TodosAdminPage"
+    })
+    tmpfeatures.push({ feature: 'my visit ', is_visible: false, url: "/Visit/MyVisitPage" })
+    tmpfeatures.push({
+      feature: 'visit reports', is_visible: false, url: "/Visit/VisitAdminPage"
+    })
+    tmpfeatures.push({
+      feature: 'visit attendence', is_visible: false, url: "Visit/VisitAttendencePage"
+    })
+
     setFeatures(tmpfeatures)
     setFilteredFeatures(tmpfeatures)
 
   }, [user])
-
   return (
     <>
 
@@ -113,10 +161,10 @@ function MainDashBoardPage() {
           <Stack direction="row" gap={2} pl={2} justifyContent={'center'} alignItems={'center'}>
 
             <ProfileLogo />
-         
+
           </Stack>
           {/* child stack2 */}
-       
+
           {/* child stack3 */}
           <Stack
             direction="row"
@@ -128,7 +176,7 @@ function MainDashBoardPage() {
               {
                 setFeature({ feature: "Dashboard", url: "/" })
                 setSearch("")
-                navigate(paths.dashboard)
+                navigate("/")
               }
             }} replace={true} style={{ textDecoration: 'none' }}>
               <Paper sx={{ ml: 2, p: 1, bgcolor: 'white', boxShadow: 1, borderRadius: 1, borderColor: 'white' }}>

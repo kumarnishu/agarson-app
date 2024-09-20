@@ -1,8 +1,8 @@
-import {  Grid, Paper, Stack, Typography } from "@mui/material"
-import { paths } from "../Routes"
+import { Grid, Paper, Stack, Typography } from "@mui/material"
 import { Link } from "react-router-dom";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ButtonLogo } from "../components/logo/Agarson";
+import { toTitleCase } from "../utils/TitleCase";
 
 function TodoDashboard() {
     const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
@@ -10,10 +10,14 @@ function TodoDashboard() {
     //process feature and access
     useEffect(() => {
         let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
-        tmpfeatures.push({ feature: 'my todos ', is_visible: true, url: paths.todo })
-        tmpfeatures.push({ feature: 'todos admin', is_visible: true, url: paths.todo_admin })
+        tmpfeatures.push({
+            feature: 'my todos ', is_visible: true, url: "/Todo/TodosPage"
+        })
+        tmpfeatures.push({
+            feature: 'todos admin', is_visible: true, url: "/Todo/TodosAdminPage"
+        })
         setFeatures(tmpfeatures)
-        
+
     }, [])
 
     return (
@@ -27,7 +31,7 @@ function TodoDashboard() {
                                     <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                                         <ButtonLogo title="" height={50} width={50} />
                                         <Typography variant="button" fontSize={15} component="div">
-                                            {feat.feature}
+                                            {toTitleCase(feat.feature)}
                                         </Typography>
                                     </Stack>
                                 </Paper>

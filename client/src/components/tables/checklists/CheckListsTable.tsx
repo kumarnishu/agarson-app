@@ -62,7 +62,7 @@ function CheckListsTable({ checklists }: Props) {
                                 Category
 
                             </STableHeadCell>
-                           
+
                             <STableHeadCell
                             >
 
@@ -143,9 +143,9 @@ function CheckListsTable({ checklists }: Props) {
                                             {checklist.frequency}
 
                                         </STableCell>
-                                       
 
-                                      
+
+
 
                                         <STableCell>
                                             {checklist.boxes.map((b) => {
@@ -156,7 +156,7 @@ function CheckListsTable({ checklists }: Props) {
                                                             setChoice({ type: CheckListChoiceActions.toogle_checklist })
                                                         }
 
-                                                    }} size="small" disabled={new Date(b.date).getDate() > new Date().getDate() || user?._id !== checklist.user?.id} variant={'contained'} color={b.checked ? 'success' : 'error'}>
+                                                    }} size="small" disabled={new Date(b.date).getDate() > new Date().getDate()} variant={'contained'} color={b.checked ? 'success' : 'error'}>
 
 
                                                         {new Date(b.date).getDate().toString()}

@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup"
 import { UserChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { UserContext } from '../../../contexts/userContext';
-import { paths } from '../../../Routes';
 import { Signup } from '../../../services/UserServices';
 import { BackendError, Target } from '../../..';
 import AlertBar from '../../snacks/AlertBar';
@@ -108,7 +107,7 @@ function OwnerSignUpForm() {
     if (isSuccess) {
       setUser(data.data.user)
       setChoice({ type: UserChoiceActions.close_user })
-      goto(paths.dashboard)
+      goto("/")
     }
   }, [isSuccess, setUser, goto, data, setChoice])
 
