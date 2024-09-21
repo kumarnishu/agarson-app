@@ -18,6 +18,7 @@ import AgarsonLogo, { ButtonLogo } from '../components/logo/Agarson';
 import React, { useContext, useEffect, useState } from 'react';
 import { LineChart, PieChart } from '@mui/x-charts';
 import ProfileLogo from '../components/logo/ProfileLogo';
+import LogoutButton from '../components/buttons/LogoutButton';
 
 function MainDashBoardPage() {
   const navigate = useNavigate()
@@ -64,6 +65,10 @@ function MainDashBoardPage() {
           </React.Fragment >
 
         ))}
+        <ListItem sx={{ px: 1 }} key={'sojs'} disablePadding>
+
+          <LogoutButton />
+        </ListItem>
       </List>
 
     </Box >

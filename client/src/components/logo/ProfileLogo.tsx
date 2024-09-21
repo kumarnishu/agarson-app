@@ -1,6 +1,5 @@
-import { Avatar, Button, IconButton, Menu, MenuItem, Tooltip } from '@mui/material'
-import { useContext, useEffect } from 'react'
-import { useMutation } from 'react-query';
+import { Avatar, IconButton, Menu, MenuItem, Tooltip } from '@mui/material'
+import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserMenuActions, MenuContext } from '../../contexts/menuContext';
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext';
@@ -8,27 +7,19 @@ import NewUserDialog from '../dialogs/users/NewUserDialog';
 import EmailVerifySendMailDialog from '../dialogs/users/EmailVerifySendMailDialog';
 import UpdateProfileDialog from '../dialogs/users/UpdateProfileDialog';
 import UpdatePasswordDialog from '../dialogs/users/UpdatePasswordDialog';
-import { Logout } from '../../services/UserServices';
 import { UserContext } from '../../contexts/userContext';
 import ProfileDialog from '../dialogs/users/ProfileDialog';
 import { FeatureContext } from '../../contexts/featureContext';
+import LogoutButton from '../buttons/LogoutButton';
 
 
 function ProfileMenu() {
     const { setFeature } = useContext(FeatureContext)
     const { menu, setMenu } = useContext(MenuContext)
-    const { user, setUser } = useContext(UserContext)
+    const { user } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
-    const { mutate, isSuccess } = useMutation(Logout)
     const goto = useNavigate()
-    useEffect(() => {
-        if (isSuccess) {
-            setUser(undefined)
-            setChoice({ type: UserChoiceActions.close_user })
-            setMenu({ type: UserMenuActions.close_user_menu, anchorEl: null })
-            goto("/Login")
-        }
-    }, [setUser, goto, setChoice, setMenu, isSuccess])
+
     return (
         <>
             {/* new user dialog */}
@@ -83,16 +74,7 @@ function ProfileMenu() {
                         : null
                 }
                 <MenuItem>
-                    <Button fullWidth color="error" variant="outlined"
-                        onClick={
-                            () => {
-                                mutate()
-                                setMenu({ type: UserMenuActions.close_user_menu, anchorEl: null })
-                            }
-                        }
-                    >
-                        Logout
-                    </Button>
+                    <LogoutButton />
                 </MenuItem>
             </Menu>
             <EmailVerifySendMailDialog />

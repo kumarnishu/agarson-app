@@ -439,7 +439,8 @@ export default function LeadsPage() {
     }),
     muiTableBodyCellProps: () => ({
       sx: {
-        border: '1px solid #c2beba;'
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
       },
     }),
     initialState: { density: 'compact' },
