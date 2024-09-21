@@ -1,4 +1,3 @@
-import { CreateOrEditChecklistDto } from "../dtos/checklist/checklist.dto";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
@@ -22,7 +21,7 @@ export const DeleteChecklistCategory = async (id: string) => {
 
 
 
-export const CreateOrEditCheckList = async ({ body, id }: { body: CreateOrEditChecklistDto, id?: string }) => {
+export const CreateOrEditCheckList = async ({ body, id }: { body: FormData, id?: string }) => {
     if (id)
         return await apiClient.put(`checklists/${id}`, body);
     return await apiClient.post(`checklists`, body);

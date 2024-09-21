@@ -5,7 +5,7 @@ import { useEffect, useContext, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
 import { ChoiceContext, CheckListChoiceActions } from '../../../contexts/dialogContext';
-import { BackendError } from '../../..';
+import { BackendError, Target } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { CreateOrEditCheckList, GetAllCheckCategories } from '../../../services/CheckListServices';
@@ -19,7 +19,7 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
     const [categories, setCategories] = useState<DropDownDto[]>([])
     const [users, setUsers] = useState<GetUserDto[]>([])
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<string>, BackendError, { body: CreateOrEditChecklistDto, id?: string }>
+        <AxiosResponse<string>, BackendError, { body: FormData, id?: string }>
         (CreateOrEditCheckList, {
             onSuccess: () => {
                 queryClient.invalidateQueries('checklists')
@@ -27,7 +27,7 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
         })
 
 
-    const { data: userData, isSuccess: userSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true, permission:'checklist_menu' }))
+    const { data: userData, isSuccess: userSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', show_assigned_only: true, permission: 'checklist_menu' }))
     const { data: categoriesData, isSuccess: categorySuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("check_categories", GetAllCheckCategories)
     const { setChoice } = useContext(ChoiceContext)
 
@@ -36,9 +36,10 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
             category: checklist ? checklist.category.id : "",
             work_title: checklist ? checklist.work_title : "",
             link: checklist ? checklist.link : "",
-            end_date: checklist ? moment(checklist.end_date).format("YYYY-MM-DD")  : "",
+            end_date: checklist ? moment(checklist.end_date).format("YYYY-MM-DD") : "",
             user_id: checklist ? checklist.user.id : "",
             frequency: checklist ? checklist.frequency : "daily",
+            photo: checklist && checklist.photo && checklist.photo || ""
         },
         validationSchema: Yup.object({
             work_title: Yup.string().required("required field")
@@ -47,20 +48,52 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
             category: Yup.string().required("required field"),
             frequency: Yup.string().required("required"),
             user_id: Yup.string().required("required"),
-            end_date: Yup.date().required("required")
+            end_date: Yup.date().required("required"),
+            photo: Yup.mixed<File>()
+                .test("size", "size is allowed only less than 20mb",
+                    file => {
+                        if (file)
+                            if (!file.size) //file not provided
+                                return true
+                            else
+                                return Boolean(file.size <= 20 * 1024 * 1024)
+                        return true
+                    }
+                )
+                .test("type", " allowed only .jpg, .jpeg, .png, .gif .pdf .csv .xlsx .docs",
+                    file => {
+                        const Allowed = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"]
+                        if (file)
+                            if (!file.size) //file not provided
+                                return true
+                            else
+                                return Boolean(Allowed.includes(file.type))
+                        return true
+                    }
+                )
         }),
         onSubmit: (values: CreateOrEditChecklistDto) => {
-            if (checklist)
+            if (checklist) {
+                let formdata = new FormData()
+                formdata.append("body", JSON.stringify(values))
+                if (values.photo)
+                    formdata.append("photo", values.photo)
                 mutate({
                     id: checklist._id,
-                    body: values
-                })
-            else {
-                mutate({
-                    id: undefined,
-                    body: values
+                    body: formdata
                 })
             }
+            else {
+                let formdata = new FormData()
+                formdata.append("body", JSON.stringify(values))
+                if (values.photo)
+                    formdata.append("photo", values.photo)
+                mutate({
+                    id: undefined,
+                    body: formdata
+                })
+            }
+
         }
     });
 
@@ -104,7 +137,7 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
                     {...formik.getFieldProps('work_title')}
                 />
                 <TextField
-                    
+
                     multiline
                     minRows={2}
                     error={
@@ -118,7 +151,30 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
                     }
                     {...formik.getFieldProps('link')}
                 />
-               
+                <TextField
+                    fullWidth
+                    error={
+                        formik.touched.photo && formik.errors.photo ? true : false
+                    }
+                    helperText={
+                        formik.touched.photo && formik.errors.photo ? (formik.errors.photo) : ""
+                    }
+                    label="Photo"
+                    focused
+
+                    type="file"
+                    name="photo"
+                    onBlur={formik.handleBlur}
+                    onChange={(e) => {
+                        e.preventDefault()
+                        const target: Target = e.currentTarget
+                        let files = target.files
+                        if (files) {
+                            let file = files[0]
+                            formik.setFieldValue("photo", file)
+                        }
+                    }}
+                />
                 < TextField
                     select
                     SelectProps={{

@@ -8,6 +8,7 @@ import { GetChecklistBoxDto, GetChecklistDto } from '../../../dtos/checklist/che
 import CreateOrEditCheckListDialog from '../../dialogs/checklists/CreateOrEditCheckListDialog'
 import DeleteCheckListDialog from '../../dialogs/checklists/DeleteCheckListDialog'
 import ToogleMyCheckListDialog from '../../forms/checklists/ToogleMyCheckListDialog'
+import { DownloadFile } from '../../../utils/DownloadFile'
 
 
 type Props = {
@@ -69,14 +70,30 @@ function CheckListsTable({ checklists }: Props) {
                                 Frequency
 
                             </STableHeadCell>
-
                             <STableHeadCell
                             >
 
                                 Dates
 
                             </STableHeadCell>
+                            <STableHeadCell
+                            >
 
+                                Last Checked Date
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Next Check In Date
+
+                            </STableHeadCell>
+                            <STableHeadCell
+                            >
+
+                                Photo
+
+                            </STableHeadCell>
 
 
                         </STableRow>
@@ -164,6 +181,22 @@ function CheckListsTable({ checklists }: Props) {
                                                 </Tooltip>
                                             })}
                                         </STableCell>
+                                        <STableCell >
+                                            {checklist.done_date}
+
+                                        </STableCell>
+                                        <STableCell >
+                                            {checklist.next_date}
+
+                                        </STableCell>
+                                        <STableCell>
+                                            <span onDoubleClick={() => {
+                                                if (checklist.photo && checklist.photo) {
+                                                    DownloadFile(checklist.photo, 'checklist photo')
+                                                }
+                                            }}>
+                                                {checklist.photo && checklist.photo ? < img height="20" width="55" src={checklist.photo && checklist.photo} alt="checklist photo" /> : "na"}</span>
+                                        </STableCell>
                                     </STableRow>
                                 )
                             })
@@ -173,7 +206,7 @@ function CheckListsTable({ checklists }: Props) {
                 </STable>
             </Box >
             {checklist && <DeleteCheckListDialog checklist={checklist} />}
-            {checklist && <CreateOrEditCheckListDialog checklist={checklist} />}
+            {checklist && <CreateOrEditCheckListDialog checklist={checklist} setChecklist={setChecklist} />}
             {choice === CheckListChoiceActions.toogle_checklist && checklistBox && <ToogleMyCheckListDialog box={checklistBox} />}
         </>
     )

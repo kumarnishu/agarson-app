@@ -42,6 +42,7 @@ function CheckListPage() {
   const { data, isLoading, refetch: ReftechChecklists } = useQuery<AxiosResponse<{ result: GetChecklistDto[], page: number, total: number, limit: number }>, BackendError>(["checklists", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetChecklists({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
+  console.log(checklist)
 
   useEffect(() => {
     if (category != 'undefined') {
@@ -51,7 +52,7 @@ function CheckListPage() {
       const result = searcher.search(category);
       setChecklists(result)
     }
-    if (category=='undefined')
+    if (category == 'undefined')
       setChecklists(preFilteredChecklists)
 
   }, [category])
@@ -147,7 +148,7 @@ function CheckListPage() {
         </Stack >
       </Stack >
 
-      <CreateOrEditCheckListDialog />
+      <CreateOrEditCheckListDialog checklist={checklist} setChecklist={setChecklist} />
       <Stack sx={{ px: 2 }} direction='row' gap={1} pb={1} alignItems={'center'} justifyContent={'center'}>
         < TextField
           size="small"

@@ -8,7 +8,7 @@ import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { BackendError } from '../../..'
 import { GetReferRemarksHistory } from '../../../services/LeadsServices'
-import moment from 'moment'
+
 
 
 function ViewReferRemarksDialog({ id }: { id: string }) {
@@ -46,7 +46,7 @@ function ViewReferRemarksDialog({ id }: { id: string }) {
                                 <p>{toTitleCase(item.created_by.value)} : {item.remark} </p>
                                 <p>{item.remind_date && `Remind Date : ${item.remind_date}`} </p>
                                 <br></br>
-                                <p>{moment(item.created_date).format("lll")}</p>
+                                <p>{item.created_date}</p>
                                
                             </div>
 

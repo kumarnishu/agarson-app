@@ -75,7 +75,6 @@ function AllReferralPageDialog({ refer }: { refer: GetReferDto }) {
         setSelectedData(tmpdata)
     }, [])
 
-    console.log(refer)
 
     return (
         <Dialog fullScreen

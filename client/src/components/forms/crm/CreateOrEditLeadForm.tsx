@@ -14,27 +14,6 @@ import { toTitleCase } from '../../../utils/TitleCase';
 import { GetCrmCityDto, GetCrmStateDto, GetLeadDto } from '../../../dtos/crm/crm.dto';
 import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
-export type TformData = {
-    name: string,
-    customer_name: string,
-    customer_designation: string,
-    mobile: string,
-    email: string
-    gst: string
-    city: string,
-    state: string,
-    country: string,
-    address: string,
-    remark: string,
-    work_description: string,
-    turnover: string,
-    lead_type: string,
-    alternate_mobile1: string,
-    alternate_mobile2: string,
-    alternate_email: string,
-    lead_source: string,
-    visiting_card: string | Blob | File
-}
 
 function CreateOrEditLeadForm({ lead }: { lead?: GetLeadDto }) {
     const [states, setStates] = useState<GetCrmStateDto[]>([])
@@ -59,7 +38,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: GetLeadDto }) {
 
 
     const { setChoice } = useContext(ChoiceContext)
-    const formik = useFormik<TformData>({
+    const formik = useFormik({
         initialValues: {
             name: lead ? lead.name : "",
             customer_name: lead ? lead.customer_name : "",
@@ -138,7 +117,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: GetLeadDto }) {
                     }
                 )
         }),
-        onSubmit: (values: TformData) => {
+        onSubmit: (values) => {
             let leadData = {
                 customer_name: values.customer_name,
                 customer_designation: values.customer_designation,

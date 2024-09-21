@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from "express"
-import { User } from "../models/users/user.model";
+import { Asset, User } from "../models/users/user.model";
 import isMongoId from "validator/lib/isMongoId";
 import { isvalidDate } from "../utils/isValidDate";
 import { Checklist, ChecklistBox, ChecklistCategory, IChecklist } from "../models/checklist/checklist.model";
 import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dto";
 import { CreateOrEditChecklistDto, GetChecklistDto } from "../dtos/checklist/checklist.dto";
+import { uploadFileToCloud } from "../utils/uploadFile.util";
+import moment from "moment";
 
 
 export const GetAllChecklistCategory = async (req: Request, res: Response, next: NextFunction) => {
@@ -107,6 +109,12 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
             let ch = checklists[i];
             if (ch && ch.category) {
                 let boxes = await ChecklistBox.find({ checklist: ch._id, date: { $gte: dt1, $lt: dt2 } }).sort('date');
+                let lastcheckedbox = await ChecklistBox.findOne({ checklist: ch._id, checked: true }).sort('-date')
+                let nextcheckeddate = "";
+                if (lastcheckedbox) {
+                    let nextcheckedbox = await ChecklistBox.findOne({ date: { $gte: lastcheckedbox?.date }, checklist: ch._id, checked: false }).sort('date')
+                    nextcheckeddate = nextcheckedbox ? moment(nextcheckedbox.date).format('DD/MM/YYYY') : ""
+                }
                 let dtoboxes = boxes.map((b) => { return { _id: b._id, checked: b.checked, date: b.date.toString(), remarks: b.remarks } });
                 result.push({
                     _id: ch._id,
@@ -119,6 +127,9 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
                     created_at: ch.created_at.toString(),
                     updated_at: ch.updated_at.toString(),
                     boxes: dtoboxes,
+                    done_date: lastcheckedbox ? moment(lastcheckedbox.date).format('DD/MM/YYYY') : "",
+                    next_date: nextcheckeddate,
+                    photo: ch.photo?.public_url || "",
                     created_by: { id: ch.created_by._id, value: ch.created_by.username, label: ch.created_by.username },
                     updated_by: { id: ch.updated_by._id, value: ch.updated_by.username, label: ch.updated_by.username }
                 })
@@ -140,12 +151,14 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
 
 //post/put/delete/patch
 export const CreateChecklist = async (req: Request, res: Response, next: NextFunction) => {
+
+    let body = JSON.parse(req.body.body)
     const { category,
         work_title,
         link,
         user_id,
         frequency,
-        end_date } = req.body as CreateOrEditChecklistDto
+        end_date } = body as CreateOrEditChecklistDto
     console.log(req.body)
     if (!category || !work_title || !user_id || !frequency || !end_date)
         return res.status(400).json({ message: "please provide all required fields" })
@@ -157,6 +170,7 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
     let user = await User.findById(user_id)
     if (!user)
         return res.status(404).json({ message: 'user not exists' })
+
 
     let checklist = new Checklist({
         category: category,
@@ -170,6 +184,23 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
         created_by: req.user,
         updated_by: req.user
     })
+
+    let document: Asset = undefined
+    if (req.file) {
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+        const storageLocation = `checklist/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 20 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            document = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    checklist.photo = document;
     await checklist.save();
 
     if (end_date && frequency == "daily") {
@@ -208,10 +239,12 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
 }
 
 export const EditChecklist = async (req: Request, res: Response, next: NextFunction) => {
+
+    let body = JSON.parse(req.body.body)
     const {
         work_title,
         link,
-        user_id } = req.body as CreateOrEditChecklistDto
+        user_id } = body as CreateOrEditChecklistDto
     if (!work_title || !user_id)
         return res.status(400).json({ message: "please provide all required fields" })
 
@@ -228,7 +261,22 @@ export const EditChecklist = async (req: Request, res: Response, next: NextFunct
     }
     checklist.work_title = work_title
     checklist.link = link
-
+    let document: Asset = undefined
+    if (req.file) {
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+        const storageLocation = `checklist/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 20 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            document = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    checklist.photo = document;
     await checklist.save()
     return res.status(200).json({ message: `Checklist updated` });
 }

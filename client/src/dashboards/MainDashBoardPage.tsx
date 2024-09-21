@@ -100,7 +100,7 @@ function MainDashBoardPage() {
 
     //sub featrures
     tmpfeatures.push({
-      feature: 'checklists ', is_visible: false, url: "/Checklist/CheckListPage"
+      feature: 'checklists page', is_visible: false, url: "/Checklist/CheckListPage"
     })
     tmpfeatures.push({ feature: 'category', is_visible: false, url: "/Checklist/ChecklistCategoriesPage" })
     user?.assigned_permissions.includes('leads_view') && tmpfeatures.push({ feature: 'leads ', is_visible: false, url: "/Crm/LeadsPage" })

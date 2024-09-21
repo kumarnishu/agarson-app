@@ -207,6 +207,7 @@ export type GetRemarksDto = {
 
 }
 
+
 export type GetActivitiesTopBarDetailsDto = { stage: string, value: number }
 export type GetActivitiesOrRemindersDto = {
     _id: string,
@@ -239,6 +240,26 @@ export type GetActivitiesOrRemindersDto = {
     referred_party_mobile?: string,
     referred_date?: string
 
+}
+
+export type GetBillDto = {
+    _id: string,
+    remarks: string,
+    articles: { article: DropDownDto, qty: number, rate: number, mrp: number }[],
+    lead?: DropDownDto,
+    billphoto: string,
+    refer?: DropDownDto,
+    created_at: Date,
+    remind_date: Date,
+    updated_at: Date,
+    created_by: DropDownDto,
+    updated_by: DropDownDto
+
+}
+export type CreateOrEditBillDto = {
+    remark: string,
+    articles: { articleid: string, qty: number, rate: number, mrp: number }[],
+    billphoto: string
 }
 
 export type CreateOrEditRemarkDto = {

@@ -11,7 +11,6 @@ import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { BackendError } from '../../..'
 import { GetRemarksHistory } from '../../../services/LeadsServices'
-import moment from 'moment'
 
 
 function ViewRemarksDialog({ id }: { id: string }) {
@@ -33,6 +32,7 @@ function ViewRemarksDialog({ id }: { id: string }) {
         if (isSuccess && data)
             setRemarks(data?.data)
     }, [isSuccess])
+  
     return (
         <Dialog fullScreen={Boolean(window.screen.width < 500)}
             open={choice === LeadChoiceActions.view_remarks ? true : false}
@@ -53,7 +53,7 @@ function ViewRemarksDialog({ id }: { id: string }) {
                                 <p>{toTitleCase(item.created_by.value)} : {item.remark} </p>
                                 <p>{item.remind_date && `Remind Date : ${item.remind_date}`} </p>
                                 <br></br>
-                                <p>{moment(item.created_date).format("lll")}</p>
+                                <p>{item.created_date}</p>
                                 {
                                     user && item.remark && user?.username === item.created_by.value && new Date(item.created_date) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
                                         {user?.assigned_permissions.includes('reminders_delete') && <IconButton size="small" color="error" onClick={() => {

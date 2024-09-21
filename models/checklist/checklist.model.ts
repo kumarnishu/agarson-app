@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IUser } from "../users/user.model";
+import { Asset, IUser } from "../users/user.model";
 
 export type IChecklistCategory = {
     _id: string,
@@ -12,11 +12,12 @@ export type IChecklistCategory = {
 
 export type IChecklist = {
     _id: string,
-    link:string,
+    link: string,
     category: IChecklistCategory,
     work_title: string,
     details1: string,
     details2: string,
+    photo: Asset,
     user: IUser,
     frequency: string,
     end_date: Date,
@@ -28,7 +29,7 @@ export type IChecklist = {
 export type IChecklistBox = {
     _id: string,
     date: Date,
-    remarks:string,
+    remarks: string,
     checked: boolean,
     checklist: IChecklist,
     created_at: Date,
@@ -47,8 +48,8 @@ const ChecklistCategorySchema = new mongoose.Schema<IChecklistCategory, mongoose
         default: new Date(),
         required: true,
 
-    }, 
-   
+    },
+
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -89,8 +90,16 @@ const ChecklistSchema = new mongoose.Schema<IChecklist, mongoose.Model<IChecklis
         type: Date,
         default: new Date(),
         required: true
-    }
-    ,
+    },
+    photo: {
+        _id: { type: String },
+        filename: { type: String },
+        public_url: { type: String },
+        content_type: { type: String },
+        size: { type: String },
+        bucket: { type: String },
+        created_at: Date
+    },
     category:
     {
         type: mongoose.Schema.Types.ObjectId,
@@ -136,7 +145,7 @@ export const Checklist = mongoose.model<IChecklist, mongoose.Model<IChecklist, {
 const ChecklistBoxSchema = new mongoose.Schema<IChecklistBox, mongoose.Model<IChecklistBox, {}, {}>, {}>({
     date: { type: Date, required: true },
     checked: { type: Boolean, default: false },
-    remarks:String,
+    remarks: String,
     checklist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Checklist',
