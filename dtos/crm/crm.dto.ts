@@ -130,7 +130,7 @@ export type CreateOrEditLeadDto = {
     lead_source: string,
 }
 export type CreateOrRemoveReferForLeadDto = {
-    party_id: string, remark: string, remind_date:string
+    party_id: string, remark: string, remind_date: string
 }
 
 export type GetMergeLeadsDto = {
@@ -206,6 +206,8 @@ export type GetRemarksDto = {
     created_by: DropDownDto
 
 }
+
+export type GetActivitiesTopBarDetailsDto = { stage: string, value: number }
 export type GetActivitiesOrRemindersDto = {
     _id: string,
     remark: string,
@@ -245,34 +247,4 @@ export type CreateOrEditRemarkDto = {
     stage: string,
     has_card: boolean
 }
-export type GetAssignedReferDto = {
-    lead: DropDownDto,
-    lead_mobile1: string,
-    lead_mobile2: string,
-    lead_mobile3: string,
-    remark: string,
-    refer?: DropDownDto,
-    refer_mobile1?: string,
-    refer_mobile2?: string,
-    refer_mobile3?: string,
-    refer_date?: string
 
-}
-export type GetNewReferDto = {
-    _id: string,
-    name: string,
-    customer_name: string,
-    mobile: string,
-    mobile2: string,
-    mobile3: string,
-    address: string,
-    remark: string,
-    gst: string,
-    city: string,
-    state: string,
-    convertedfromlead: boolean,
-    created_at: string,
-    updated_at: string,
-    created_by: DropDownDto,
-    updated_by: DropDownDto
-}

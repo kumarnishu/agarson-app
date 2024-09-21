@@ -47,6 +47,13 @@ export const GetRemarks = async ({ stage, limit, page, start_date, end_date, id 
     return await apiClient.get(`activities/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}&stage=${stage}`)
 }
 
+export const GetActivitiesTopBarDeatils = async ({ start_date, end_date, id }: { start_date: string, end_date: string, id?: string }) => {
+  if (id) {
+    return await apiClient.get(`activities/topbar/?id=${id}&start_date=${start_date}&end_date=${end_date}`)
+  }
+  return await apiClient.get(`activities/topbar/?start_date=${start_date}&end_date=${end_date}`)
+
+}
 
 export const CreateOrUpdateLead = async ({ id, body }: { body: FormData, id?: string }) => {
   if (id) {

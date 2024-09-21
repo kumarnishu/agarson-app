@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, UpdateRemark, DeleteRemark, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages, CreateCRMCity, AssignCRMCitiesToUsers, FindUnknownCrmCities,  GetNewRefers, GetAssignedRefers, GetMyReminders, GetAssignedReferrals, GetRemarkHistory, GetActivities, GetReferRemarkHistory, MergeTwoLeads } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, UpdateRemark, DeleteRemark, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages, CreateCRMCity, AssignCRMCitiesToUsers, FindUnknownCrmCities,  GetNewRefers, GetAssignedRefers, GetMyReminders, GetAssignedReferrals, GetRemarkHistory, GetActivities, GetReferRemarkHistory, MergeTwoLeads, GetActivitiesTopBarDetails } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
@@ -52,7 +52,7 @@ router.route("/find/crm/states/unknown").post(isAuthenticatedUser, FindUnknownCr
 router.route("/find/crm/stages/unknown").post(isAuthenticatedUser, FindUnknownCrmStages);
 router.route("/find/crm/cities/unknown").post(isAuthenticatedUser, FindUnknownCrmCities);
 router.get("/assigned/referrals/:id", isAuthenticatedUser, GetAssignedReferrals)
-
+router.get("/activities/topbar", isAuthenticatedUser, GetActivitiesTopBarDetails)
 
 //refers
 router.route("/refers/leads/:id").post(isAuthenticatedUser, ReferLead)

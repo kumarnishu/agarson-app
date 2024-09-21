@@ -47,7 +47,7 @@ export default function LeadsPage() {
 
   const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ result: GetLeadDto[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter, LoggedInUser], async () => FuzzySearchLeads({  searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ result: GetLeadDto[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter, LoggedInUser], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
     enabled: false
   })
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
@@ -451,7 +451,7 @@ export default function LeadsPage() {
     onSortingChange: setSorting,
     enableTableFooter: true,
     enableRowVirtualization: true,
-    state: {  sorting },
+    state: { isLoading, sorting },
     enableBottomToolbar: false,
     enableGlobalFilter: false,
     manualPagination: true

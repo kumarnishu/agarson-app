@@ -1,38 +1,25 @@
-import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Delete, Edit, Search, Visibility } from '@mui/icons-material'
+import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { UserContext } from '../../contexts/userContext'
 import DBPagination from '../../components/pagination/DBpagination';
 import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import ExportToExcel from '../../utils/ExportToExcel'
-import AlertBar from '../../components/snacks/AlertBar'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import CreateOrEditReferDialog from '../../components/dialogs/crm/CreateOrEditReferDialog'
-import RefersTable from '../../components/tables/crm/RefersTable'
-import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServices'
 import UploadRefersExcelButton from '../../components/buttons/UploadRefersExcelButton'
-import { CreateOrEditReferFromExcelDto, GetReferDto } from '../../dtos/crm/crm.dto'
-
-let template: CreateOrEditReferFromExcelDto[] = [
-  {
-    _id: "",
-    name: "",
-    gst: "",
-    customer_name: "",
-    mobile: "6787876765",
-    city: "",
-    state: "",
-    mobile2: "",
-    mobile3: "",
-    address: "",
-  }
-]
-
+import { GetReferDto } from '../../dtos/crm/crm.dto'
+import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import PopUp from '../../components/popup/PopUp'
+import { onlyUnique } from '../../utils/UniqueArray'
+import DeleteCrmItemDialog from '../../components/dialogs/crm/DeleteCrmItemDialog'
+import AllReferralPageDialog from '../../components/dialogs/crm/AllReferralPageDialog'
+import ViewReferRemarksDialog from '../../components/dialogs/crm/ViewReferRemarksDialog'
+import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServices'
+import ExportToExcel from '../../utils/ExportToExcel'
 
 export default function RefersPage() {
   const [paginationData, setPaginationData] = useState({ limit: 20, page: 1, total: 1 });
@@ -40,12 +27,10 @@ export default function RefersPage() {
   const { user: LoggedInUser } = useContext(UserContext)
   const [refer, setRefer] = useState<GetReferDto>()
   const [refers, setRefers] = useState<GetReferDto[]>([])
-  const [selectAll, setSelectAll] = useState(false)
 
   const [preFilteredData, setPreFilteredData] = useState<GetReferDto[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 20, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
-  const [selectedRefers, setSelectedRefers] = useState<GetReferDto[]>([])
 
   const { data, isLoading } = useQuery<AxiosResponse<{
     result: GetReferDto[], page: number, total: number, limit: number
@@ -58,49 +43,9 @@ export default function RefersPage() {
     enabled: false
   })
 
-
-  const [selectedData, setSelectedData] = useState<CreateOrEditReferFromExcelDto[]>(template)
-  const [sent, setSent] = useState(false)
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-  function handleExcel() {
-    setAnchorEl(null)
-    try {
-      ExportToExcel(selectedData, "refers_data")
-      setSent(true)
-      setSelectAll(false)
-      setSelectedData([])
-      setSelectedRefers([])
-    }
-    catch (err) {
-      console.log(err)
-      setSent(false)
-    }
-  }
-
-  // refine data
-  useEffect(() => {
-    let data: CreateOrEditReferFromExcelDto[] = []
-    selectedRefers.map((refer) => {
-      return data.push(
-
-        {
-          _id: refer._id,
-          name: refer.name,
-          customer_name: refer.customer_name,
-          mobile: refer.mobile,
-          gst: refer.gst,
-          city: refer.city,
-          state: refer.state,
-          mobile2: refer.mobile2,
-          mobile3: refer.mobile3,
-          address: refer.address,
-        })
-    })
-    if (data.length > 0)
-      setSelectedData(data)
-  }, [selectedRefers])
 
 
   useEffect(() => {
@@ -151,7 +96,214 @@ export default function RefersPage() {
     }
   }, [fuzzyrefers])
 
+  const columns = useMemo<MRT_ColumnDef<GetReferDto>[]>(
+    //column definitions...
+    () => refers && [
+      {
+        accessorKey: 'actions',
+        header: '',
+        maxSize: 50,
+        Footer: <b></b>,
+        size: 120,
+        Cell: ({ cell }) => <PopUp
+          element={
+            <Stack direction="row" spacing={1}>
 
+              {LoggedInUser?.is_admin && LoggedInUser.assigned_permissions.includes('refer_delete') &&
+                <Tooltip title="delete">
+                  <IconButton color="error"
+
+                    onClick={() => {
+                      setChoice({ type: LeadChoiceActions.delete_crm_item })
+                      setRefer(cell.row.original)
+
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              }
+              {LoggedInUser?.assigned_permissions.includes('refer_edit') && <Tooltip title="edit">
+                <IconButton color="secondary"
+
+                  onClick={() => {
+
+                    setChoice({ type: LeadChoiceActions.create_or_edit_refer })
+                    setRefer(cell.row.original)
+                  }}
+
+                >
+                  <Edit />
+                </IconButton>
+              </Tooltip>}
+
+
+              {LoggedInUser?.assigned_permissions.includes('refer_view') && <Tooltip title="view all refer refers">
+                <IconButton color="inherit"
+
+                  onClick={() => {
+                    setChoice({ type: LeadChoiceActions.view_referrals })
+                    setRefer(cell.row.original)
+                  }}
+                >
+                  <Visibility />
+                </IconButton>
+              </Tooltip>}
+              {LoggedInUser?.assigned_permissions.includes('refer_view') && <Tooltip title="view remarks">
+                <IconButton color="primary"
+
+                  onClick={() => {
+                    setChoice({ type: LeadChoiceActions.view_refer_remarks })
+                    setRefer(cell.row.original)
+                  }}
+                >
+                  <Visibility />
+                </IconButton>
+              </Tooltip>}
+
+            </Stack>}
+        />
+      },
+
+      {
+        accessorKey: 'name',
+        header: 'Name',
+        size: 350,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.name ? cell.row.original.name : ""}</>,
+        filterSelectOptions: refers && refers.map((i) => {
+          return i.name;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'refers',
+        header: 'Refers',
+        size: 100,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.refers ? cell.row.original.refers.toString() : ""}</>,
+        filterSelectOptions: refers && refers.map((i) => {
+          return i.refers.toString();
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'customer_name',
+        header: 'Customer Name',
+        size: 120,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.customer_name ? cell.row.original.customer_name : ""}</>,
+        filterSelectOptions: refers && refers.map((i) => {
+          return i.customer_name;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'mobile',
+        header: 'Mobile1',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.mobile ? cell.row.original.mobile : ""}</>
+      }, {
+        accessorKey: 'mobile2',
+        header: 'Mobile2',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.mobile2 ? cell.row.original.mobile2 : ""}</>
+      }, {
+        accessorKey: 'mobile3',
+        header: 'Mobile3',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.mobile3 ? cell.row.original.mobile3 : ""}</>
+      },
+      {
+        accessorKey: 'city',
+        header: 'City',
+        filterVariant: 'multi-select',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.city ? cell.row.original.city : ""}</>,
+        filterSelectOptions: refers && refers.map((i) => {
+          return i.city;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+        filterVariant: 'multi-select',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state : ""}</>,
+        filterSelectOptions: refers && refers.map((i) => {
+          return i.state;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'gst',
+        header: 'GST',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.gst ? cell.row.original.gst : ""}</>
+      },
+
+      {
+        accessorKey: 'address',
+        header: 'Address',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.address ? cell.row.original.address : ""}</>
+      },
+
+      {
+        accessorKey: 'created_at',
+        header: 'Created on',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.created_at ? cell.row.original.created_at : ""}</>
+      },
+
+      {
+        accessorKey: 'created_by.label',
+        header: 'Creator',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.created_by.label ? cell.row.original.created_by.label : ""}</>
+      }
+    ],
+    [refers],
+    //end
+  );
+
+
+  const table = useMaterialReactTable({
+    columns,
+    data: refers, //10,000 rows       
+    enableColumnResizing: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        fontSize: '14px'
+      }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+    }),
+    muiTableHeadRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        border: '1px solid lightgrey;',
+      },
+    }),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        border: '1px solid lightgrey;',
+        fontSize: '13px'
+      },
+    }),
+    initialState: { density: 'compact' },
+    enableRowSelection: true,
+    enableRowNumbers: true,
+    enableColumnPinning: true,
+    onSortingChange: setSorting,
+    enableTableFooter: true,
+    enableRowVirtualization: true,
+    state: { isLoading, sorting },
+    enableBottomToolbar: false,
+    enableGlobalFilter: false,
+    manualPagination: true
+  });
   return (
     <>
 
@@ -214,10 +366,6 @@ export default function RefersPage() {
             {LoggedInUser?.assigned_permissions.includes('refer_create') && <UploadRefersExcelButton />}
           </Stack >
           <>
-
-            {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-
-
             <IconButton size="small" color="primary"
               onClick={(e) => setAnchorEl(e.currentTarget)
               }
@@ -245,31 +393,32 @@ export default function RefersPage() {
                 }}
 
               > Add New</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('refer_export') && < MenuItem onClick={handleExcel}
+              {LoggedInUser?.assigned_permissions.includes('refer_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
-              >Export To Excel</MenuItem>}
+              >Export All</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('refer_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+              >Export Selected</MenuItem>}
 
             </Menu >
-            <CreateOrEditReferDialog refer={undefined} />
           </>
         </Stack >
       </Stack >
-      {/* table */}
-      {isLoading && <TableSkeleton />}
-      {refers && refers.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && refers.length > 0 && <>
-        <RefersTable
-          refer={refer}
-          setRefer={setRefer}
-          selectAll={selectAll}
-          selectedRefers={selectedRefers}
-          setSelectedRefers={setSelectedRefers}
-          setSelectAll={setSelectAll}
-          refers={refers}
-        />
-        <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+      <CreateOrEditReferDialog refer={refer} />
+      <>
+        {
+          refer ?
+            <>
+
+              <DeleteCrmItemDialog refer={refer ? { id: refer._id, label: refer.name, value: refer.name } : undefined} />
+              <AllReferralPageDialog refer={refer} />
+              <ViewReferRemarksDialog id={refer._id} />
+            </>
+            : null
+        }
       </>
-      }
+      <MaterialReactTable table={table} />
+      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
     </>
 
   )

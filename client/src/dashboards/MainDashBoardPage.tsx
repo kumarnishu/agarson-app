@@ -49,7 +49,7 @@ function MainDashBoardPage() {
         {filteredfeatures.map((feat, index) => (
           <React.Fragment key={index}>
             {feat && feat.is_visible && < Link style={{ textDecoration: 'none', color: 'black' }} to={feat.url} onClick={() => {
-              setFeature({ feature: feat.feature, url: feat.url })
+              setFeature({ feature: feat.feature.toUpperCase(), url: feat.url })
               setSearch("")
             }}>
               <Divider />
@@ -198,6 +198,7 @@ function MainDashBoardPage() {
                 sx={{ position: 'relative', p: 0, m: 0, backgroundColor: 'whitesmoke', border: 2, borderColor: 'white', borderRadius: 2 }}
                 placeholder='Search Menu Items'
                 size='small'
+                autoFocus
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 InputProps={{
@@ -214,7 +215,7 @@ function MainDashBoardPage() {
                   {features.map((feat, index) => (
                     <>
                       <Link style={{ textDecoration: 'none', color: 'black' }} to={feat.url} onClick={() => {
-                        setFeature({ feature: feat.feature, url: feat.url })
+                        setFeature({ feature: feat.feature.toUpperCase(), url: feat.url })
                         setSearch("")
                       }}>
                         <ListItem key={index} disablePadding>

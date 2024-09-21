@@ -1,10 +1,10 @@
-import { IconButton, LinearProgress, TextField, Tooltip, Typography } from '@mui/material'
+import { Fade, IconButton, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import moment from 'moment'
 import { GetLeadDto } from '../../dtos/crm/crm.dto'
@@ -21,23 +21,25 @@ import DeleteCrmItemDialog from '../../components/dialogs/crm/DeleteCrmItemDialo
 import ReferLeadDialog from '../../components/dialogs/crm/ReferLeadDialog'
 import RemoveLeadReferralDialog from '../../components/dialogs/crm/RemoveLeadReferralDialog'
 import ConvertLeadToReferDialog from '../../components/dialogs/crm/ConvertLeadToReferDialog'
+import ExportToExcel from '../../utils/ExportToExcel'
+import { Menu as MenuIcon } from '@mui/icons-material';
 
 export default function AssignedReferReportPage() {
-  const [reports, setReports] = useState<GetLeadDto[]>([])
+  const [leads, setLeads] = useState<GetLeadDto[]>([])
+  const [lead, setLead] = useState<GetLeadDto>()
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
   })
-  const [lead, setLead] = useState<GetLeadDto>()
   const { setChoice } = useContext(ChoiceContext)
   const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetLeadDto[]>, BackendError>(["assign_refer_reports", dates.start_date, dates.end_date], async () => GetAssignedRefers({ start_date: dates.start_date, end_date: dates.end_date }))
   const { user: LoggedInUser } = useContext(UserContext)
-  const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const columns = useMemo<MRT_ColumnDef<GetLeadDto>[]>(
     //column definitions...
-    () => reports && [
+    () => leads && [
       {
         accessorKey: 'actions',
         header: '',
@@ -48,7 +50,7 @@ export default function AssignedReferReportPage() {
           element={
             <Stack direction="row" spacing={1}>
 
-              {cell.row.original.referred_party_name && LoggedInUser?.assigned_permissions.includes('leads_edit') &&
+              {cell.row.original.referred_party_name && LoggedInUser?.assigned_permissions.includes('assignedrefer_edit') &&
                 <Tooltip title="Remove Refrerral">
                   <IconButton color="error"
 
@@ -62,7 +64,7 @@ export default function AssignedReferReportPage() {
                     <BackHandIcon />
                   </IconButton>
                 </Tooltip>}
-              {!cell.row.original.referred_party_name && LoggedInUser?.assigned_permissions.includes('leads_edit') &&
+              {!cell.row.original.referred_party_name && LoggedInUser?.assigned_permissions.includes('assignedrefer_edit') &&
                 <Tooltip title="refer">
                   <IconButton color="primary"
 
@@ -77,7 +79,7 @@ export default function AssignedReferReportPage() {
                   </IconButton>
                 </Tooltip>}
 
-              {!cell.row.original.referred_party_name && LoggedInUser?.assigned_permissions.includes('leads_edit') &&
+              {!cell.row.original.referred_party_name && LoggedInUser?.assigned_permissions.includes('assignedrefer_edit') &&
                 <Tooltip title="convert to refer">
                   <IconButton color="primary"
 
@@ -93,7 +95,7 @@ export default function AssignedReferReportPage() {
                 </Tooltip>}
 
 
-              {LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="delete">
+              {LoggedInUser?.assigned_permissions.includes('assignedrefer_delete') && <Tooltip title="delete">
                 <IconButton color="error"
 
                   onClick={() => {
@@ -110,7 +112,7 @@ export default function AssignedReferReportPage() {
 
 
 
-              {LoggedInUser?.assigned_permissions.includes('leads_edit') &&
+              {LoggedInUser?.assigned_permissions.includes('assignedrefer_edit') &&
                 <Tooltip title="edit">
                   <IconButton color="secondary"
 
@@ -126,7 +128,7 @@ export default function AssignedReferReportPage() {
                 </Tooltip>}
 
 
-              {LoggedInUser?.assigned_permissions.includes('leads_view') && <Tooltip title="view remarks">
+              {LoggedInUser?.assigned_permissions.includes('assignedrefer_view') && <Tooltip title="view remarks">
                 <IconButton color="primary"
 
                   onClick={() => {
@@ -140,7 +142,7 @@ export default function AssignedReferReportPage() {
                   <Visibility />
                 </IconButton>
               </Tooltip>}
-              {LoggedInUser?.assigned_permissions.includes('leads_edit') &&
+              {LoggedInUser?.assigned_permissions.includes('assignedrefer_edit') &&
                 <Tooltip title="Add Remark">
                   <IconButton
 
@@ -166,20 +168,36 @@ export default function AssignedReferReportPage() {
         size: 350,
         filterVariant: 'multi-select',
         Cell: (cell) => <>{cell.row.original.name ? cell.row.original.name : ""}</>,
-        filterSelectOptions: reports && reports.map((i) => {
+        filterSelectOptions: leads && leads.map((i) => {
           return i.name;
         }).filter(onlyUnique)
       },
       {
-        accessorKey: 'remark',
-        header: 'Last Remark',
+        accessorKey: 'mobile',
+        header: 'Mobile1',
         size: 120,
+        Cell: (cell) => <>{cell.row.original.mobile ? cell.row.original.mobile : ""}</>
+      }, {
+        accessorKey: 'alternate_mobile1',
+        header: 'Mobile2',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.alternate_mobile1 ? cell.row.original.alternate_mobile1 : ""}</>
+      }, {
+        accessorKey: 'alternate_mobile2',
+        header: 'Mobile3',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.alternate_mobile2 ? cell.row.original.alternate_mobile2 : ""}</>
+      },
+      {
+        accessorKey: 'remark',
+        header: 'Remark',
+        size: 320,
         Cell: (cell) => <>{cell.row.original.remark ? cell.row.original.remark : ""}</>
       },
       {
         accessorKey: 'referred_party_name',
         header: 'Refer Party',
-        size: 120,
+        size: 320,
         Cell: (cell) => <>{cell.row.original.referred_party_name ? cell.row.original.referred_party_name : ""}</>
       },
       {
@@ -200,7 +218,7 @@ export default function AssignedReferReportPage() {
         filterVariant: 'multi-select',
         size: 120,
         Cell: (cell) => <>{cell.row.original.city ? cell.row.original.city : ""}</>,
-        filterSelectOptions: reports && reports.map((i) => {
+        filterSelectOptions: leads && leads.map((i) => {
           return i.city;
         }).filter(onlyUnique)
       },
@@ -210,7 +228,7 @@ export default function AssignedReferReportPage() {
         filterVariant: 'multi-select',
         size: 120,
         Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state : ""}</>,
-        filterSelectOptions: reports && reports.map((i) => {
+        filterSelectOptions: leads && leads.map((i) => {
           return i.state;
         }).filter(onlyUnique)
       },
@@ -220,22 +238,7 @@ export default function AssignedReferReportPage() {
         size: 120,
         Cell: (cell) => <>{cell.row.original.stage ? cell.row.original.stage : ""}</>
       },
-      {
-        accessorKey: 'mobile',
-        header: 'Mobile1',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.mobile ? cell.row.original.mobile : ""}</>
-      }, {
-        accessorKey: 'alternate_mobile1',
-        header: 'Mobile2',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.alternate_mobile1 ? cell.row.original.alternate_mobile1 : ""}</>
-      }, {
-        accessorKey: 'alternate_mobile2',
-        header: 'Mobile3',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.alternate_mobile2 ? cell.row.original.alternate_mobile2 : ""}</>
-      },
+
 
       {
         accessorKey: 'customer_name',
@@ -326,30 +329,22 @@ export default function AssignedReferReportPage() {
           {cell.row.original.visiting_card && cell.row.original.visiting_card ? < img height="20" width="55" src={cell.row.original.visiting_card && cell.row.original.visiting_card} alt="visiting card" /> : "na"}</span>
       },
     ],
-    [reports],
+    [leads],
     //end
   );
 
 
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && isSuccess) {
-      setReports(data.data);
+    if (isSuccess) {
+      setLeads(data.data);
     }
   }, [isSuccess]);
 
-  useEffect(() => {
-    //scroll to the top of the table when the sorting changes
-    try {
-      rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [sorting]);
 
   const table = useMaterialReactTable({
     columns,
-    data: reports, //10,000 rows       
+    data: leads, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
     muiTableFooterRowProps: () => ({
@@ -371,6 +366,7 @@ export default function AssignedReferReportPage() {
     muiTableBodyCellProps: () => ({
       sx: {
         border: '1px solid #c2beba;',
+        fontSize: '13px'
       },
     }),
     muiPaginationProps: {
@@ -396,9 +392,6 @@ export default function AssignedReferReportPage() {
   return (
     <>
 
-      {
-        isLoading && <LinearProgress />
-      }
       <Stack
         spacing={2}
         padding={1}
@@ -411,7 +404,7 @@ export default function AssignedReferReportPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Assigned Refers : {reports && reports.length}
+          Assigned Refers : {leads && leads.length}
         </Typography>
         <Stack direction="row" gap={2}>
           < TextField
@@ -449,27 +442,57 @@ export default function AssignedReferReportPage() {
             }}
           />
         </Stack>
+        <>
+          <IconButton size="small" color="primary"
+            onClick={(e) => setAnchorEl(e.currentTarget)
+            }
+            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)
+            }
+            TransitionComponent={Fade}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+            sx={{ borderRadius: 2 }}
+          >
+            {LoggedInUser?.assigned_permissions.includes('assignedrefer_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+            >Export All</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('assignedrefer_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+            >Export Selected</MenuItem>}
+
+          </Menu >
+
+        </>
 
 
-        {
-          lead ?
-            <>
-              <CreateOrEditRemarkDialog lead={lead ? {
-                _id: lead._id,
-                has_card: lead.has_card
-              } : undefined} />
-              <DeleteCrmItemDialog lead={lead ? { id: lead._id, value: lead.name, label: lead.name } : undefined} />
-              <ViewRemarksDialog id={lead._id} />
-              <ReferLeadDialog lead={lead} />
-              <RemoveLeadReferralDialog lead={lead} />
-              <ConvertLeadToReferDialog lead={lead} />
-            </>
-            : null
-        }
       </Stack >
 
+      {
+        lead ?
+          <>
+            <CreateOrEditRemarkDialog lead={lead ? {
+              _id: lead._id,
+              has_card: lead.has_card
+            } : undefined} />
+            <DeleteCrmItemDialog lead={lead ? { id: lead._id, value: lead.name, label: lead.name } : undefined} />
+            <ViewRemarksDialog id={lead._id} />
+            <ReferLeadDialog lead={lead} />
+            <RemoveLeadReferralDialog lead={lead} />
+            <ConvertLeadToReferDialog lead={lead} />
+          </>
+          : null
+      }
       {/* table */}
-      {!isLoading && data && <MaterialReactTable table={table} />}
+    <MaterialReactTable table={table} />
     </>
 
   )

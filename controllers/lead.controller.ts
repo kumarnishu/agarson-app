@@ -15,7 +15,7 @@ import { LeadType } from "../models/leads/crm.leadtype.model.js"
 import { LeadSource } from "../models/leads/crm.source.model.js"
 import { IStage, Stage } from "../models/leads/crm.stage.model.js"
 import { HandleCRMCitiesAssignment } from "../utils/AssignCitiesToUsers.js"
-import { AssignOrRemoveCrmCityDto, AssignOrRemoveCrmStateDto, CreateAndUpdatesCityFromExcelDto, CreateAndUpdatesLeadFromExcelDto, CreateAndUpdatesStateFromExcelDto, CreateOrEditCrmCity, CreateOrEditLeadDto, CreateOrEditReferDto, CreateOrEditReferFromExcelDto, CreateOrEditRemarkDto, CreateOrRemoveReferForLeadDto, GetActivitiesOrRemindersDto, GetAssignedReferDto, GetCrmCityDto, GetCrmStateDto, GetLeadDto, GetMergeLeadsDto, GetNewReferDto, GetReferDto, GetRemarksDto } from "../dtos/crm/crm.dto.js"
+import { AssignOrRemoveCrmCityDto, AssignOrRemoveCrmStateDto, CreateAndUpdatesCityFromExcelDto, CreateAndUpdatesLeadFromExcelDto, CreateAndUpdatesStateFromExcelDto, CreateOrEditCrmCity, CreateOrEditLeadDto, CreateOrEditReferDto, CreateOrEditReferFromExcelDto, CreateOrEditRemarkDto, CreateOrRemoveReferForLeadDto, GetActivitiesOrRemindersDto, GetActivitiesTopBarDetailsDto, GetCrmCityDto, GetCrmStateDto, GetLeadDto, GetMergeLeadsDto, GetReferDto, GetRemarksDto } from "../dtos/crm/crm.dto.js"
 import moment from "moment"
 import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dto.js"
 
@@ -3658,6 +3658,53 @@ export const GetRemarkHistory = async (req: Request, res: Response, next: NextFu
     })
     return res.json(result)
 }
+
+export const GetActivitiesTopBarDetails = async (req: Request, res: Response, next: NextFunction) => {
+    let result: GetActivitiesTopBarDetailsDto[] = []
+    let start_date = req.query.start_date
+    let id = req.query.id
+    let end_date = req.query.end_date
+    let dt1 = new Date(String(start_date))
+    let dt2 = new Date(String(end_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    dt2.setHours(0)
+    dt2.setMinutes(0)
+    let ids = req.user?.assigned_users.map((id) => { return id._id })
+    let stages = await Stage.find();
+    let remarks: IRemark[] = []
+    if (req.user?.is_admin && !id) {
+        remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('lead')
+
+    }
+
+    else if (ids && ids.length > 0 && !id) {
+        remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: ids } }).populate('lead')
+    }
+    else if (!id) {
+        remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('lead')
+    }
+    else {
+        remarks = await Remark.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('lead')
+    }
+    result.push({
+        stage: "Activities", value: remarks.length
+    });
+    for (let i = 0; i <= stages.length; i++) {
+        let stage = stages[i];
+        if (stage) {
+            let remarkscount = remarks.filter((r) => {
+                if (r.lead && r.lead.stage === stage.stage)
+                    return r;
+            }).length;
+            result.push({
+                stage: stage.stage, value: remarkscount
+            });
+        }
+    }
+    return res.status(200).json(result)
+
+}
 export const GetActivities = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)
@@ -3879,36 +3926,40 @@ export const FindUnknownCrmCities = async (req: Request, res: Response, next: Ne
 }
 
 export const GetNewRefers = async (req: Request, res: Response, next: NextFunction) => {
-    let result: GetNewReferDto[] = [];
+    let result: GetReferDto[] = [];
     let start_date = req.query.start_date
     let end_date = req.query.end_date
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
     let parties: IReferredParty[] = []
+
     parties = await ReferredParty.find({ created_at: { $gte: dt1, $lt: dt2 }, convertedfromlead: true }).populate('created_by').populate('updated_by').sort('-created_at');
 
     for (let i = 0; i < parties.length; i++) {
-        let refer = parties[i]
-        let remark = await Remark.findOne({ refer: refer._id }).sort('-created_at');
+        let r = parties[i];
+        let remark = await Remark.findOne({ refer: r._id }).sort('-created_at');
+        let refers = await Lead.find({ referred_party: r._id }).countDocuments()
         result.push({
-            _id: refer._id,
-            name: refer.name,
-            customer_name: refer.customer_name,
-            mobile: refer.mobile,
-            mobile2: refer.mobile2,
-            mobile3: refer.mobile3,
-            address: refer.address,
+            _id: r._id,
+            name: r.name,
+            refers: refers,
             remark: remark?.remark || "",
-            gst: refer.gst,
-            city: refer.city,
-            state: refer.state,
-            convertedfromlead: refer.convertedfromlead,
-            created_at: moment(refer.created_at).format("DD/MM/YYYY"),
-            updated_at: moment(refer.updated_at).format("DD/MM/YYYY"),
-            created_by: { id: refer.created_by._id, value: refer.created_by.username, label: refer.created_by.username },
-            updated_by: { id: refer.updated_by._id, value: refer.updated_by.username, label: refer.updated_by.username }
+            customer_name: r.customer_name,
+            mobile: r.mobile,
+            mobile2: r.mobile2,
+            mobile3: r.mobile3,
+            address: r.address,
+            gst: r.gst,
+            city: r.city,
+            state: r.state,
+            convertedfromlead: r.convertedfromlead,
+            created_at: moment(r.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
+            updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
         })
     }
+
     return res.status(200).json(result)
 }
 

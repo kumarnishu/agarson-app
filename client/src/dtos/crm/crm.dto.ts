@@ -14,7 +14,7 @@ export type MergeTwoLeadsDto = {
     source_lead_id: string,
     refer_id: string
 }
-
+export type GetActivitiesTopBarDetailsDto = { stage: string, value: number }
 export type GetCrmCityDto = {
     city: DropDownDto;
     state: string;
@@ -245,35 +245,4 @@ export type CreateOrEditRemarkDto = {
     remind_date: string,
     stage: string,
     has_card: boolean
-}
-export type GetAssignedReferDto = {
-    lead: DropDownDto,
-    lead_mobile1: string,
-    lead_mobile2: string,
-    lead_mobile3: string,
-    remark: string,
-    refer?:DropDownDto,
-    refer_mobile1?: string,
-    refer_mobile2?:string,
-    refer_mobile3?: string,
-    refer_date?:string
-
-}
-export type GetNewReferDto = {
-    _id: string,
-    name: string,
-    customer_name: string,
-    mobile: string,
-    remark: string,
-    mobile2: string,
-    mobile3: string,
-    address: string,
-    gst: string,
-    city: string,
-    state: string,
-    convertedfromlead: boolean,
-    created_at: string,
-    updated_at: string,
-    created_by: DropDownDto,
-    updated_by: DropDownDto
 }

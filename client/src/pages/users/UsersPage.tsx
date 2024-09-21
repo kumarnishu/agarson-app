@@ -1,4 +1,4 @@
-import { Avatar, Fade, IconButton, LinearProgress, Menu, MenuItem, Tooltip, Typography } from '@mui/material'
+import { Avatar, Fade, IconButton,  Menu, MenuItem, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useState } from 'react'
@@ -400,7 +400,7 @@ export default function UsersPage() {
         enableTableFooter: true,
         enableRowVirtualization: true,
         onSortingChange: setSorting,
-        state: { sorting }
+        state: { isLoading, sorting }
     });
 
     useEffect(() => {
@@ -495,11 +495,9 @@ export default function UsersPage() {
                     </>
                 </Stack >
             </Stack >
-            {
-                isLoading && <LinearProgress />
-            }
 
-            {!isLoading && data && <MaterialReactTable table={table} />}
+
+            <MaterialReactTable table={table} />
             {
                 user ?
                     <>

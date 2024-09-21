@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/userContext";
 import { ButtonLogo } from "../components/logo/Agarson";
-import { toTitleCase } from "../utils/TitleCase";
 
 function ProductionDashboard() {
   const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
@@ -39,7 +38,7 @@ function ProductionDashboard() {
                   <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                     <ButtonLogo title="" height={50} width={50} />
                     <Typography variant="button" fontSize={15} component="div">
-                      {toTitleCase(feat.feature)}
+                      {feat.feature.toUpperCase()}
                     </Typography>
                   </Stack>
                 </Paper>
