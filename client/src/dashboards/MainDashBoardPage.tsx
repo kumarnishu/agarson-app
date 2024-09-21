@@ -204,7 +204,7 @@ function MainDashBoardPage() {
                 }}
               />
 
-              {search != "" && features.length > 0 && <Box style={{ position: 'absolute', backgroundColor: 'white', top: 48, width: '270px', borderRadius: 2, border: '5px', zIndex: 5 }}>
+              {search != "" && features.length > 0 && <Box style={{ position: 'absolute', backgroundColor: 'white', top: 48, width: '270px', minHeight: '200px', maxHeight: '400px', borderRadius: 2, border: '5px', zIndex: 5, overflow: 'scroll' }}>
                 <List>
                   {features.map((feat, index) => (
                     <>
