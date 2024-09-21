@@ -434,12 +434,13 @@ export default function LeadsPage() {
     muiTableHeadRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
-        color: 'white'
+        color: 'white',
+        border: '1px solid lightgrey;',
       },
     }),
     muiTableBodyCellProps: () => ({
       sx: {
-        border: '1px solid #c2beba;',
+        border: '1px solid lightgrey;',
         fontSize: '13px'
       },
     }),

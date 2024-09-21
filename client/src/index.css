@@ -7,7 +7,7 @@
   font-family: Roboto, sans-serif;
   box-sizing: border-box;
   font-size: 13px;
-  overflow:'hidden';
+  overflow: 'hidden';
 }
 
 input[type=file]::file-selector-button {
@@ -15,6 +15,6 @@ input[type=file]::file-selector-button {
   cursor: pointer;
 }
 
-td{
+td {
   text-transform: capitalize;
 }
