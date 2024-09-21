@@ -9,18 +9,13 @@ function LogoutButton() {
     const { mutate, isSuccess } = useMutation(Logout)
     const goto = useNavigate()
     const { setUser } = useContext(UserContext)
-
-    useEffect(() => {
-        if (isSuccess) {
-            setUser(undefined)
-            goto("/Login")
-        }
-    }, [isSuccess])
     return (
         <Button fullWidth color="error" variant="outlined"
             onClick={
                 () => {
                     mutate()
+                    setUser(undefined)
+                    goto("/Login")
                 }
             }
         >
