@@ -1,5 +1,5 @@
 import express from "express";
-import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, UpdateRemark, DeleteRemark, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages, CreateCRMCity, AssignCRMCitiesToUsers, FindUnknownCrmCities,  GetNewRefers, GetAssignedRefers, GetMyReminders, GetAssignedReferrals, GetRemarkHistory, GetActivities, GetReferRemarkHistory, MergeTwoLeads, GetActivitiesTopBarDetails } from "../controllers/lead.controller";
+import { BulkLeadUpdateFromExcel, CreateLead, DeleteLead, FuzzySearchLeads, GetLeads, NewRemark, UpdateLead, BackUpAllLeads, CreateReferParty, UpdateReferParty, DeleteReferParty, ReferLead, RemoveLeadReferral, FuzzySearchRefers, GetRefers, GetPaginatedRefers, UpdateRemark, DeleteRemark, GetAllCRMStates, CreateCRMState, UpdateCRMState, DeleteCRMState, BulkCreateAndUpdateCRMStatesFromExcel, BulkReferUpdateFromExcel, GetAllCRMCities, UpdateCRMCity, DeleteCRMCity, BulkCreateAndUpdateCRMCityFromExcel, CreateCRMLeadTypes, GetAllCRMLeadTypes, DeleteCRMLeadType, UpdateCRMLeadTypes, GetAllCRMLeadStages, CreateCRMLeadStages, UpdateCRMLeadStages, DeleteCRMLeadStage, GetAllCRMLeadSources, CreateCRMLeadSource, UpdateCRMLeadSource, DeleteCRMLeadSource, AssignCRMStatesToUsers, ConvertLeadToRefer, BulkDeleteUselessLeads, FindUnknownCrmSates, FindUnknownCrmStages, CreateCRMCity, AssignCRMCitiesToUsers, FindUnknownCrmCities, GetNewRefers, GetAssignedRefers, GetMyReminders, GetAssignedReferrals, GetRemarkHistory, GetActivities, GetReferRemarkHistory, MergeTwoLeads, GetActivitiesTopBarDetails, GetReferPartyBillsHistory, GetLeadBillsHistory, CreateBill, UpdateBill, DeleteBill } from "../controllers/lead.controller";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
 
@@ -69,5 +69,8 @@ router.route("/reminders").get(isAuthenticatedUser, GetMyReminders)
 router.route("/merge/leads/:id").put(isAuthenticatedUser, MergeTwoLeads)
 router.route("/assigned/refers/report").get(isAuthenticatedUser, GetAssignedRefers)
 router.route("/new/refers/report").get(isAuthenticatedUser, GetNewRefers)
-
+router.route("/bills").post(isAuthenticatedUser, upload.single('file'), CreateBill)
+router.route("/bills/:id").put(isAuthenticatedUser, upload.single('file'), UpdateBill).delete(isAuthenticatedUser, DeleteBill)
+router.route("/bills/history/leads").get(isAuthenticatedUser, GetLeadBillsHistory)
+router.route("/bills/history/refers").get(isAuthenticatedUser, GetReferPartyBillsHistory)
 export default router

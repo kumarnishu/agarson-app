@@ -88,6 +88,18 @@ export const MergeTwoLeads = async ({ id, body }: { id: string, body: IleadReqBo
   return await apiClient.put(`merge/leads/${id}`, body)
 }
 //remarks
+
+
+export const CreateOrEditBill = async ({ body, id }: {
+  body: FormData,
+  id?: string,
+
+}) => {
+  if (!id) {
+    return await apiClient.post(`bills`, body)
+  }
+  return await apiClient.put(`bills/${id}`, body)
+}
 export const CreateOrEditRemark = async ({ body, lead_id, remark_id }: {
   body: {
     remark: string,

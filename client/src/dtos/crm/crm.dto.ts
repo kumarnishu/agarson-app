@@ -16,21 +16,24 @@ export type MergeTwoLeadsDto = {
 }
 export type GetBillDto = {
     _id: string,
-    remarks: string,
+    bill_no: string,
+    bill_date: string,
     articles: { article: DropDownDto, qty: number, rate: number, mrp: number }[],
     lead?: DropDownDto,
     billphoto: string,
     refer?: DropDownDto,
     created_at: Date,
-    remind_date: Date,
     updated_at: Date,
     created_by: DropDownDto,
     updated_by: DropDownDto
 
 }
 export type CreateOrEditBillDto = {
-    remark: string,
-    articles: { articleid: string, qty: number, rate: number, mrp: number }[],
+    leadid?: string,
+    referid?: string,
+    bill_no: string,
+    bill_date: string,
+    articles: { article: string, qty: number, rate: number, mrp: number }[],
     billphoto: string
 }
 export type GetActivitiesTopBarDetailsDto = { stage: string, value: number }

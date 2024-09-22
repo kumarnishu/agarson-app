@@ -7,11 +7,12 @@ import { IArticle } from "../production/article.model"
 
 export type IBill = {
     _id: string,
-    remarks: string,
     articles: { article: IArticle, qty: number, rate: number, mrp: number }[],
     lead: ILead,
-    billphoto:Asset,
+    billphoto: Asset,
     refer: IReferredParty,
+    bill_no: string,
+    bill_date: Date,
     created_at: Date,
     remind_date: Date,
     updated_at: Date,
@@ -20,7 +21,7 @@ export type IBill = {
 }
 
 const BillSchema = new mongoose.Schema<IBill, mongoose.Model<IBill, {}, {}>, {}>({
-    remarks: {
+    bill_no: {
         type: String,
         required: true,
         trim: true,
@@ -41,7 +42,11 @@ const BillSchema = new mongoose.Schema<IBill, mongoose.Model<IBill, {}, {}>, {}>
         size: { type: String },
         bucket: { type: String },
         created_at: Date
-    }, 
+    },
+    bill_date: {
+        type: Date,
+        required: true
+    },
     remind_date: {
         type: Date,
     },
