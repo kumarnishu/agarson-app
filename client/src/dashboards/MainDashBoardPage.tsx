@@ -65,7 +65,7 @@ function MainDashBoardPage() {
           </React.Fragment >
 
         ))}
-        <ListItem sx={{ px: 1 }} key={'sojs'} disablePadding>
+        <ListItem sx={{ px: 1, pt: 4 }} key={'sojs'} disablePadding>
 
           <LogoutButton />
         </ListItem>
@@ -97,6 +97,8 @@ function MainDashBoardPage() {
     user?.is_admin && tmpfeatures.push({ feature: 'Todos', is_visible: true, url: "/Todo" })
     user?.is_admin && tmpfeatures.push({ feature: 'Visits', is_visible: true, url: "/Visit" })
     user?.assigned_permissions.includes('checklist_menu') && tmpfeatures.push({ feature: 'Checklists', is_visible: true, url: "/Checklist" })
+
+    
 
     //sub featrures
     tmpfeatures.push({
