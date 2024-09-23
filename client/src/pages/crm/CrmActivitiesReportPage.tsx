@@ -59,7 +59,7 @@ function CrmActivitiesReportPage() {
                 Cell: ({ cell }) => <PopUp
                     element={
                         <Stack direction="row" spacing={1}>
-                            {LoggedInUser?.assigned_permissions.includes('assignedrefer_view') && <Tooltip title="view remarks">
+                            {LoggedInUser?.assigned_permissions.includes('activities_view') && <Tooltip title="view remarks">
                                 <IconButton color="primary"
 
                                     onClick={() => {
@@ -73,7 +73,7 @@ function CrmActivitiesReportPage() {
                                     <Visibility />
                                 </IconButton>
                             </Tooltip>}
-                            {LoggedInUser?.assigned_permissions.includes('assignedrefer_edit') &&
+                            {LoggedInUser?.assigned_permissions.includes('activities_create') &&
                                 <Tooltip title="Add Remark">
                                     <IconButton
 

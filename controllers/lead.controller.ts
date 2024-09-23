@@ -4148,85 +4148,85 @@ export const DeleteBill = async (req: Request, res: Response, next: NextFunction
     return res.status(200).json({ message: "bill deleted successfully" })
 }
 
-export const GetReferPartyBillsHistory = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
-    let refer = await ReferredParty.findById(id);
-    if (!refer) {
-        return res.status(404).json({ message: "refer not found" })
-    }
-    let bills: IBill[] = []
-    let result: GetBillDto[] = []
-    bills = await Bill.find({ refer: refer._id }).populate('created_by').populate('updated_by').populate('refer').populate('articles.article').sort('-bill_date')
+// export const GetReferPartyBillsHistory = async (req: Request, res: Response, next: NextFunction) => {
+//     const id = req.params.id;
+//     if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
+//     let refer = await ReferredParty.findById(id);
+//     if (!refer) {
+//         return res.status(404).json({ message: "refer not found" })
+//     }
+//     let bills: IBill[] = []
+//     let result: GetBillDto[] = []
+//     bills = await Bill.find({ refer: refer._id }).populate('created_by').populate('updated_by').populate('refer').populate('articles.article').sort('-bill_date')
 
-    let articles: {
-        article: DropDownDto, qty: number, rate: number, mrp: number
-    }[] = [{
-        article: { id: bills[0].articles[0].article && bills[0].articles[0].article.created_by._id, value: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username, label: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username }, qty: bills[0].articles[0].qty, rate: bills[0].articles[0].rate, mrp: bills[0].articles[0].mrp
-    }]
+//     let articles: {
+//         article: DropDownDto, qty: number, rate: number, mrp: number
+//     }[] = [{
+//         article: { id: bills[0].articles[0].article && bills[0].articles[0].article.created_by._id, value: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username, label: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username }, qty: bills[0].articles[0].qty, rate: bills[0].articles[0].rate, mrp: bills[0].articles[0].mrp
+//     }]
 
-    result = bills.map((r) => {
-        return {
-            _id: r._id,
-            bill_no: r.bill_no,
-            refer: { id: refer && refer.created_by._id, value: refer && refer.created_by.username, label: refer && refer.created_by.username },
-            billphoto: r.billphoto?.public_url || "",
-            articles: articles,
-            bill_date: r.bill_date && moment(r.bill_date).format("DD/MM/YYYY"),
-            created_at: moment(r.created_at).format("DD/MM/YYYY"),
-            updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
-            created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
-            updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username }
-        }
-    })
-    return res.json(result)
-}
-export const GetLeadBillsHistory = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
-    let lead = await Lead.findById(id);
-    if (!lead) {
-        return res.status(404).json({ message: "lead not found" })
-    }
-    let bills: IBill[] = []
-    let result: GetBillDto[] = []
-    bills = await Bill.find({ lead: lead._id }).populate('created_by').populate('updated_by').populate({
-        path: 'lead',
-        populate: [
-            {
-                path: 'created_by',
-                model: 'User'
-            },
-            {
-                path: 'updated_by',
-                model: 'User'
-            },
-            {
-                path: 'referred_party',
-                model: 'ReferredParty'
-            }
-        ]
-    }).populate('articles.article').sort('-bill_date')
+//     result = bills.map((r) => {
+//         return {
+//             _id: r._id,
+//             bill_no: r.bill_no,
+//             refer: { id: refer && refer.created_by._id, value: refer && refer.created_by.username, label: refer && refer.created_by.username },
+//             billphoto: r.billphoto?.public_url || "",
+//             articles: articles,
+//             bill_date: r.bill_date && moment(r.bill_date).format("DD/MM/YYYY"),
+//             created_at: moment(r.created_at).format("DD/MM/YYYY"),
+//             updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
+//             created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
+//             updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username }
+//         }
+//     })
+//     return res.json(result)
+// }
+// export const GetLeadBillsHistory = async (req: Request, res: Response, next: NextFunction) => {
+//     const id = req.params.id;
+//     if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
+//     let lead = await Lead.findById(id);
+//     if (!lead) {
+//         return res.status(404).json({ message: "lead not found" })
+//     }
+//     let bills: IBill[] = []
+//     let result: GetBillDto[] = []
+//     bills = await Bill.find({ lead: lead._id }).populate('created_by').populate('updated_by').populate({
+//         path: 'lead',
+//         populate: [
+//             {
+//                 path: 'created_by',
+//                 model: 'User'
+//             },
+//             {
+//                 path: 'updated_by',
+//                 model: 'User'
+//             },
+//             {
+//                 path: 'referred_party',
+//                 model: 'ReferredParty'
+//             }
+//         ]
+//     }).populate('articles.article').sort('-bill_date')
 
-    let articles: {
-        article: DropDownDto, qty: number, rate: number, mrp: number
-    }[] = [{
-        article: { id: bills[0].articles[0].article && bills[0].articles[0].article.created_by._id, value: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username, label: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username }, qty: bills[0].articles[0].qty, rate: bills[0].articles[0].rate, mrp: bills[0].articles[0].mrp
-    }]
+//     let articles: {
+//         article: DropDownDto, qty: number, rate: number, mrp: number
+//     }[] = [{
+//         article: { id: bills[0].articles[0].article && bills[0].articles[0].article.created_by._id, value: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username, label: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username }, qty: bills[0].articles[0].qty, rate: bills[0].articles[0].rate, mrp: bills[0].articles[0].mrp
+//     }]
 
-    result = bills.map((r) => {
-        return {
-            _id: r._id,
-            bill_no: r.bill_no,
-            lead: { id: lead && lead.created_by._id, value: lead && lead.created_by.username, label: lead && lead.created_by.username },
-            billphoto: r.billphoto?.public_url || "",
-            articles: articles,
-            bill_date: r.bill_date && moment(r.bill_date).format("DD/MM/YYYY"),
-            created_at: moment(r.created_at).format("DD/MM/YYYY"),
-            updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
-            created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
-            updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username }
-        }
-    })
-    return res.json(result)
-}
+//     result = bills.map((r) => {
+//         return {
+//             _id: r._id,
+//             bill_no: r.bill_no,
+//             lead: { id: lead && lead.created_by._id, value: lead && lead.created_by.username, label: lead && lead.created_by.username },
+//             billphoto: r.billphoto?.public_url || "",
+//             articles: articles,
+//             bill_date: r.bill_date && moment(r.bill_date).format("DD/MM/YYYY"),
+//             created_at: moment(r.created_at).format("DD/MM/YYYY"),
+//             updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
+//             created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
+//             updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username }
+//         }
+//     })
+//     return res.json(result)
+// }
