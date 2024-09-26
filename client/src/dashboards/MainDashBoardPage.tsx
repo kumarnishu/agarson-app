@@ -5,8 +5,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { Box, IconButton, InputAdornment, Paper, Stack, TextField, Typography } from '@mui/material';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Menu as MenuIcon, Search } from '@mui/icons-material';
@@ -54,9 +52,9 @@ function MainDashBoardPage() {
             }}>
               <Divider />
               <ListItem key={index} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <ListItemButton >
+                  <ListItemIcon >
+                    <ButtonLogo title="" height={25} width={25} />
                   </ListItemIcon>
                   <ListItemText primary={toTitleCase(feat.feature)} />
                 </ListItemButton>
@@ -94,11 +92,9 @@ function MainDashBoardPage() {
     user?.assigned_permissions.includes('crm_menu') && tmpfeatures.push({ feature: 'crm', is_visible: true, url: "/Crm" })
     user?.assigned_permissions.includes('production_menu') && tmpfeatures.push({ feature: 'productions', is_visible: true, url: "/Production" })
     user?.assigned_permissions.includes('erp_report_menu') && tmpfeatures.push({ feature: 'erp reports', is_visible: true, url: "/ErpReports" })
-    user?.is_admin && tmpfeatures.push({ feature: 'Todos', is_visible: true, url: "/Todo" })
-    user?.is_admin && tmpfeatures.push({ feature: 'Visits', is_visible: true, url: "/Visit" })
     user?.assigned_permissions.includes('checklist_menu') && tmpfeatures.push({ feature: 'Checklists', is_visible: true, url: "/Checklist" })
 
-    
+
 
     //sub featrures
     tmpfeatures.push({
@@ -137,20 +133,6 @@ function MainDashBoardPage() {
     user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: false, url: "/Production/MachineWiseProductionReportPage" })
     user?.assigned_permissions.includes('machine_category_wise_production_report_view') && tmpfeatures.push({ feature: 'Category Wise Production report', is_visible: false, url: "/Production/CategoryWiseProductionReportPage" }),
       user?.assigned_permissions.includes('thekedar_wise_production_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production report', is_visible: false, url: "/Production/ThekedarWiseProductionReportPage" })
-    tmpfeatures.push({
-      feature: 'my todos ', is_visible: false, url: "/Todo/TodosPage"
-    })
-    tmpfeatures.push({
-      feature: 'todos admin', is_visible: false, url: "/Todo/TodosAdminPage"
-    })
-    tmpfeatures.push({ feature: 'my visit ', is_visible: false, url: "/Visit/MyVisitPage" })
-    tmpfeatures.push({
-      feature: 'visit reports', is_visible: false, url: "/Visit/VisitAdminPage"
-    })
-    tmpfeatures.push({
-      feature: 'visit attendence', is_visible: false, url: "Visit/VisitAttendencePage"
-    })
-
     setFeatures(tmpfeatures)
     setFilteredFeatures(tmpfeatures)
 
