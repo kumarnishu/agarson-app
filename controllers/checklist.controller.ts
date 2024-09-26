@@ -7,6 +7,7 @@ import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dt
 import { CreateOrEditChecklistDto, GetChecklistDto } from "../dtos/checklist/checklist.dto";
 import { uploadFileToCloud } from "../utils/uploadFile.util";
 import moment from "moment";
+import { destroyFile } from "../utils/destroyFile.util";
 
 
 export const GetAllChecklistCategory = async (req: Request, res: Response, next: NextFunction) => {
@@ -270,8 +271,11 @@ export const EditChecklist = async (req: Request, res: Response, next: NextFunct
         if (req.file.size > 20 * 1024 * 1024)
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
         const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-        if (doc)
+        if (doc) {
             document = doc
+            if (checklist.photo && checklist.photo?._id)
+                await destroyFile(checklist.photo._id)
+        }
         else {
             return res.status(500).json({ message: "file uploading error" })
         }
@@ -292,6 +296,10 @@ export const DeleteChecklist = async (req: Request, res: Response, next: NextFun
     }
     await ChecklistBox.deleteMany({ checklist: checklist._id })
     await checklist.remove()
+
+    if (checklist.photo && checklist.photo?._id)
+        await destroyFile(checklist.photo._id)
+
     return res.status(200).json({ message: `Checklist deleted` });
 }
 
