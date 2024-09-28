@@ -291,6 +291,7 @@ export const GetPartyTargetReports = async (req: Request, res: Response, next: N
             Cur_Feb: item.Cur_Feb,
             Last_Mar: item.Last_Mar,
             Cur_Mar: item.Cur_Mar,
+            created_at: moment(item.created_at).format("DD/MM/YYYY")
         }
     })
 

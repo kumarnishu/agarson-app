@@ -226,7 +226,8 @@ export type GetPartyTargetReportFromExcelDto = {
     Cur_Feb: number,
     Last_Mar: number,
     Cur_Mar: number,
-    status?: string
+    status?: string,
+    created_at?: string,
 }
 
 

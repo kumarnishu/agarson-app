@@ -20,6 +20,7 @@ import moment from "moment"
 import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dto.js"
 import { Bill, IBill } from "../models/leads/bill.model.js"
 import { IArticle } from "../models/production/article.model.js"
+import { BillItem } from "../models/leads/bill.item.js"
 
 
 
@@ -3174,219 +3175,214 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
     return res.status(200).json(result)
 }
 
-// export const CreateBill = async (req: Request, res: Response, next: NextFunction) => {
-//     const { bill_no, bill_date, articles, leadid, referid } = req.body as CreateOrEditBillDto
-//     if (!bill_no || !bill_date || !articles) {
-//         return res.status(400).json({ message: "please fill all reqired fields" })
-//     }
-//     let result;
-//     if (leadid) {
-//         if (await Bill.findOne({ lead: leadid, bill_no: bill_no.toLowerCase() }))
-//             return res.status(400).json({ message: "already exists this bill no" })
+export const CreateBill = async (req: Request, res: Response, next: NextFunction) => {
+    const {
+        items,
+        lead,
+        refer,
+        bill_no,
+        bill_date } = req.body as CreateOrEditBillDto
+    if (!bill_no || !bill_date || !items) {
+        return res.status(400).json({ message: "please fill all required fields" })
+    }
+    let bill;
+    if (lead) {
+        if (await Bill.findOne({ lead: lead, bill_no: bill_no.toLowerCase() }))
+            return res.status(400).json({ message: "already exists this bill no" })
+        bill = new Bill({
+            bill_no, lead: lead, bill_date: new Date(bill_date),
+            created_at: new Date(),
+            updated_at: new Date(),
+            created_by: req.user,
+            updated_by: req.user
+        })
 
-//         result = await new Bill({
-//             bill_no, lead: leadid, bill_date: new Date(bill_date), articles: articles,
-//             created_at: new Date(),
-//             updated_at: new Date(),
-//             created_by: req.user,
-//             updated_by: req.user
-//         })
+    }
+    else {
+        if (await Bill.findOne({ refer: refer, bill_no: bill_no.toLowerCase() }))
+            return res.status(400).json({ message: "already exists this bill no" })
 
-//     }
-//     else {
-//         if (await Bill.findOne({ refer: referid, bill_no: bill_no.toLowerCase() }))
-//             return res.status(400).json({ message: "already exists this bill no" })
+        bill = new Bill({
+            bill_no, refer: refer, bill_date: new Date(bill_date),
+            created_at: new Date(),
+            updated_at: new Date(),
+            created_by: req.user,
+            updated_by: req.user
+        })
+    }
+    let document: Asset = undefined
+    if (req.file) {
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+        const storageLocation = `bills/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 20 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            document = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    bill.billphoto = document;
+    for (let i = 0; i <= items.length; i++) {
+        let item = items[i]
+        await new BillItem({
+            article: item.article,
+            rate: item.rate,
+            qty: item.qty,
+            bill: bill._id,
+            created_at: new Date(),
+            updated_at: new Date(),
+            created_by: req.user,
+            updated_by: req.user
+        }).save()
+    }
+    await bill.save()
+    return res.status(201).json({ message: "success" })
 
-//         result = await new Bill({
-//             bill_no, refer: referid, bill_date: new Date(bill_date), articles: articles,
-//             created_at: new Date(),
-//             updated_at: new Date(),
-//             created_by: req.user,
-//             updated_by: req.user
-//         }).save()
-//     }
-//     let document: Asset = undefined
-//     if (req.file) {
-//         const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
-//         const storageLocation = `bills/media`;
-//         if (!allowedFiles.includes(req.file.mimetype))
-//             return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-//         if (req.file.size > 20 * 1024 * 1024)
-//             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
-//         const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-//         if (doc)
-//             document = doc
-//         else {
-//             return res.status(500).json({ message: "file uploading error" })
-//         }
-//     }
-//     result.billphoto = document
-//     await result.save()
-//     return res.status(201).json({ message: "success" })
+}
 
-// }
+export const UpdateBill = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let bill = await Bill.findById(id)
+    if (!bill)
+        return res.status(404).json({ message: "bill not found" })
+    const { items, bill_no, bill_date } = req.body as CreateOrEditBillDto
+    if (!bill_no || !bill_date || !items) {
+        return res.status(400).json({ message: "please fill all required fields" })
+    }
 
-// export const UpdateBill = async (req: Request, res: Response, next: NextFunction) => {
-//     const id = req.params.id
-//     let bill = await Bill.findById(id)
-//     if (!bill)
-//         return res.status(404).json({ message: "bill not found" })
-//     const { bill_no, bill_date, articles, leadid, referid } = req.body as CreateOrEditBillDto
-//     if (!bill_no || !bill_date || !articles) {
-//         return res.status(400).json({ message: "please fill all reqired fields" })
-//     }
-//     let result;
-//     if (leadid) {
-//         if (bill.bill_no !== bill_no.toLowerCase())
-//             if (await Bill.findOne({ lead: leadid, bill_no: bill_no.toLowerCase() }))
-//                 return res.status(400).json({ message: "already exists this bill no" })
-//         let document: Asset = bill.billphoto
-//         if (req.file) {
-//             const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
-//             const storageLocation = `bills/media`;
-//             if (!allowedFiles.includes(req.file.mimetype))
-//                 return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-//             if (req.file.size > 20 * 1024 * 1024)
-//                 return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
-//             const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-//             if (doc)
-//                 document = doc
-//             else {
-//                 return res.status(500).json({ message: "file uploading error" })
-//             }
-//         }
-//         result = await Bill.findByIdAndUpdate(id, {
-//             bill_no, lead: leadid, bill_date: new Date(bill_date), billphoto: document, articles: articles,
-//             created_at: new Date(),
-//             updated_at: new Date(),
-//             created_by: req.user,
-//             updated_by: req.user
-//         })
+    if (bill.bill_no !== bill_no.toLowerCase())
+        if (await Bill.findOne({ bill_no: bill_no.toLowerCase() }))
+            return res.status(400).json({ message: "already exists this bill no" })
+    let document: Asset = bill.billphoto
+    if (req.file) {
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+        const storageLocation = `bills/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 20 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc) {
+            document = doc
+            if (bill.billphoto)
+                await destroyFile(bill.billphoto._id)
+        }
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
 
-//     }
-//     else {
-//         if (bill.bill_no !== bill_no.toLowerCase())
-//             if (await Bill.findOne({ refer: referid, bill_no: bill_no.toLowerCase() }))
-//                 return res.status(400).json({ message: "already exists this bill no" })
-//         let document: Asset = bill.billphoto
-//         if (req.file) {
-//             const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
-//             const storageLocation = `bills/media`;
-//             if (!allowedFiles.includes(req.file.mimetype))
-//                 return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-//             if (req.file.size > 20 * 1024 * 1024)
-//                 return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
-//             const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-//             if (doc)
-//                 document = doc
-//             else {
-//                 return res.status(500).json({ message: "file uploading error" })
-//             }
-//         }
-//         result = await Bill.findByIdAndUpdate(id, {
-//             bill_no, refer: referid, bill_date: new Date(bill_date),
-//             billphoto: document,
-//             articles: articles,
-//             created_at: new Date(),
-//             updated_at: new Date(),
-//             created_by: req.user,
-//             updated_by: req.user
-//         })
-//     }
+    for (let i = 0; i <= items.length; i++) {
+        let item = items[i]
+        let existBill = await BillItem.findById(item._id)
+        if (existBill) {
+            await BillItem.findByIdAndUpdate(id, {
+                article: item.article,
+                rate: item.rate,
+                qty: item.qty,
+                bill: bill._id,
+                created_at: new Date(),
+                updated_at: new Date(),
+                created_by: req.user,
+                updated_by: req.user
+            })
+        }
+        else {
+            await new BillItem({
+                article: item.article,
+                rate: item.rate,
+                qty: item.qty,
+                bill: bill._id,
+                created_at: new Date(),
+                updated_at: new Date(),
+                created_by: req.user,
+                updated_by: req.user
+            }).save()
+        }
 
-//     return res.status(200).json({ message: "updated" })
+    }
+    await Bill.findByIdAndUpdate(bill._id, {
+        bill_no, bill_date: new Date(bill_date),
+        updated_at: new Date(),
+        updated_by: req.user
+    })
 
-// }
-// export const DeleteBill = async (req: Request, res: Response, next: NextFunction) => {
-//     const id = req.params.id;
-//     if (!isMongoId(id)) return res.status(403).json({ message: "bill id not valid" })
-//     let bill = await Bill.findById(id);
-//     if (!bill) {
-//         return res.status(404).json({ message: "bill not found" })
-//     }
-//     await bill.remove();
-//     return res.status(200).json({ message: "bill deleted successfully" })
-// }
+    return res.status(200).json({ message: "updated" })
 
-// export const GetReferPartyBillsHistory = async (req: Request, res: Response, next: NextFunction) => {
-//     const id = req.params.id;
-//     if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
-//     let refer = await ReferredParty.findById(id);
-//     if (!refer) {
-//         return res.status(404).json({ message: "refer not found" })
-//     }
-//     let bills: IBill[] = []
-//     let result: GetBillDto[] = []
-//     bills = await Bill.find({ refer: refer._id }).populate('created_by').populate('updated_by').populate('refer').populate('articles.article').sort('-bill_date')
+}
+export const DeleteBill = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "bill id not valid" })
+    let bill = await Bill.findById(id);
+    if (!bill) {
+        return res.status(404).json({ message: "bill not found" })
+    }
+    if (bill.billphoto)
+        await destroyFile(bill.billphoto._id)
+    await bill.remove();
+    return res.status(200).json({ message: "bill deleted successfully" })
+}
 
-//     let articles: {
-//         article: DropDownDto, qty: number, rate: number, mrp: number
-//     }[] = [{
-//         article: { id: bills[0].articles[0].article && bills[0].articles[0].article.created_by._id, value: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username, label: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username }, qty: bills[0].articles[0].qty, rate: bills[0].articles[0].rate, mrp: bills[0].articles[0].mrp
-//     }]
+export const GetReferPartyBillsHistory = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
+    let refer = await ReferredParty.findById(id);
+    if (!refer) {
+        return res.status(404).json({ message: "refer not found" })
+    }
+    let bills: IBill[] = []
+    let result: GetBillDto[] = []
+    bills = await Bill.find({ refer: refer._id }).populate('created_by').populate('updated_by').populate('refer').sort('-bill_date')
 
-//     result = bills.map((r) => {
-//         return {
-//             _id: r._id,
-//             bill_no: r.bill_no,
-//             refer: { id: refer && refer.created_by._id, value: refer && refer.created_by.username, label: refer && refer.created_by.username },
-//             billphoto: r.billphoto?.public_url || "",
-//             articles: articles,
-//             bill_date: r.bill_date && moment(r.bill_date).format("DD/MM/YYYY"),
-//             created_at: moment(r.created_at).format("DD/MM/YYYY"),
-//             updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
-//             created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
-//             updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username }
-//         }
-//     })
-//     return res.json(result)
-// }
-// export const GetLeadBillsHistory = async (req: Request, res: Response, next: NextFunction) => {
-//     const id = req.params.id;
-//     if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
-//     let lead = await Lead.findById(id);
-//     if (!lead) {
-//         return res.status(404).json({ message: "lead not found" })
-//     }
-//     let bills: IBill[] = []
-//     let result: GetBillDto[] = []
-//     bills = await Bill.find({ lead: lead._id }).populate('created_by').populate('updated_by').populate({
-//         path: 'lead',
-//         populate: [
-//             {
-//                 path: 'created_by',
-//                 model: 'User'
-//             },
-//             {
-//                 path: 'updated_by',
-//                 model: 'User'
-//             },
-//             {
-//                 path: 'referred_party',
-//                 model: 'ReferredParty'
-//             }
-//         ]
-//     }).populate('articles.article').sort('-bill_date')
+    for (let i = 0; i < bills.length; i++) {
+        let bill = bills[i]
+        let billItems = await BillItem.find({ bill: bill._id }).populate('article').sort('-bill_date')
+        result.push({
+            _id: bill._id,
+            bill_no: bill.bill_no,
+            refer: { id: refer && refer._id, value: refer && refer.name, label: refer && refer.name },
+            billphoto: bill.billphoto?.public_url || "",
+            items: billItems.map((i) => { return { id: i._id, value: i.article.name, label: i.article.name } }),
+            bill_date: bill.bill_date && moment(bill.bill_date).format("DD/MM/YYYY"),
+            created_at: moment(bill.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(bill.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: bill.created_by._id, value: bill.created_by.username, label: bill.created_by.username },
+            updated_by: { id: bill.updated_by._id, value: bill.updated_by.username, label: bill.updated_by.username }
+        })
+    }
+    return res.json(result)
+}
 
-//     let articles: {
-//         article: DropDownDto, qty: number, rate: number, mrp: number
-//     }[] = [{
-//         article: { id: bills[0].articles[0].article && bills[0].articles[0].article.created_by._id, value: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username, label: bills[0].articles[0].article && bills[0].articles[0].article.created_by.username }, qty: bills[0].articles[0].qty, rate: bills[0].articles[0].rate, mrp: bills[0].articles[0].mrp
-//     }]
+export const GetLeadPartyBillsHistory = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(400).json({ message: "lead id not valid" })
+    let lead = await Lead.findById(id);
+    if (!lead) {
+        return res.status(404).json({ message: "lead not found" })
+    }
+    let bills: IBill[] = []
+    let result: GetBillDto[] = []
+    bills = await Bill.find({ lead: lead._id }).populate('created_by').populate('updated_by').populate('lead').sort('-bill_date')
 
-//     result = bills.map((r) => {
-//         return {
-//             _id: r._id,
-//             bill_no: r.bill_no,
-//             lead: { id: lead && lead.created_by._id, value: lead && lead.created_by.username, label: lead && lead.created_by.username },
-//             billphoto: r.billphoto?.public_url || "",
-//             articles: articles,
-//             bill_date: r.bill_date && moment(r.bill_date).format("DD/MM/YYYY"),
-//             created_at: moment(r.created_at).format("DD/MM/YYYY"),
-//             updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
-//             created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
-//             updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username }
-//         }
-//     })
-//     return res.json(result)
-// }
+    for (let i = 0; i < bills.length; i++) {
+        let bill = bills[i]
+        let billItems = await BillItem.find({ bill: bill._id }).populate('article').sort('-bill_date')
+        result.push({
+            _id: bill._id,
+            bill_no: bill.bill_no,
+            lead: { id: lead && lead._id, value: lead && lead.name, label: lead && lead.name },
+            billphoto: bill.billphoto?.public_url || "",
+            items: billItems.map((i) => { return { id: i._id, value: i.article.name, label: i.article.name } }),
+            bill_date: bill.bill_date && moment(bill.bill_date).format("DD/MM/YYYY"),
+            created_at: moment(bill.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(bill.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: bill.created_by._id, value: bill.created_by.username, label: bill.created_by.username },
+            updated_by: { id: bill.updated_by._id, value: bill.updated_by.username, label: bill.updated_by.username }
+        })
+    }
+    return res.json(result)
+}

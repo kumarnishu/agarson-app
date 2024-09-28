@@ -111,11 +111,11 @@ export type GetPartyTargetReportDto = {
     Cur_Feb: number,
     Last_Mar: number,
     Cur_Mar: number,
-    created_at: string,
     updated_at: string,
     created_by: DropDownDto,
     updated_by: DropDownDto,
-    status?: string
+    status?: string,
+    created_at?: string,
 }
 export type GetClientSaleLastYearReportDto = {
     _id: string,

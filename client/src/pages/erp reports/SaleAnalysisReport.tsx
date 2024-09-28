@@ -1,4 +1,4 @@
-import {  LinearProgress, TextField, Typography } from '@mui/material'
+import {   TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -26,6 +26,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'state',
         header: 'State',
+        size:150,
         width: '50',
         filterVariant: 'multi-select',
         aggregationFn: 'count',
@@ -35,6 +36,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'monthly_target',
         header: 'MONTHLY TARGET', 
+        size:120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.monthly_target) }, 0).toFixed(2)}</b>
@@ -42,6 +44,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'monthly_achivement',
         header: 'MONTHLY ACHIVEMENT',
+        size:120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.monthly_achivement) }, 0).toFixed(2)}</b>
@@ -49,6 +52,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'monthly_percentage',
         header: 'MONTHLY PERCENTAGE',
+        size:120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.monthly_percentage) }, 0).toFixed(2)}</b>
@@ -56,6 +60,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'annual_target',
         header: 'ANNUAL TARGET',
+        size:120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.annual_target) }, 0).toFixed(2)}</b>
@@ -63,6 +68,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'annual_achivement',
         header: 'ANNUAL ACHIVEMENT',
+        size:120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.annual_achivement) }, 0).toFixed(2)}</b>
@@ -70,6 +76,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'annual_percentage',
         header: 'ANNUAL PERCENTAGE',
+        size:120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.annual_percentage) }, 0).toFixed(2)}</b>
@@ -77,12 +84,14 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'last_year_sale',
         header: 'LAST YEAR SALE',
+        size:120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
          Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.last_year_sale) }, 0).toFixed(2)}</b>},
       {
         accessorKey: 'last_year_sale_percentage_comparison',
         header: 'LAST YEAR PERCENTAGE COMPARISON',
+        size:420,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
          Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.last_year_sale_percentage_comparison) }, 0).toFixed(2)}</b>
@@ -110,55 +119,58 @@ export default function SaleAnalysisReport() {
 
   const table = useMaterialReactTable({
     columns,
-    data: reports, //10,000 rows
-    defaultDisplayColumn: { enableResizing: true },
-    enableBottomToolbar: false,
+    data: reports, //10,000 rows       
     enableColumnResizing: true,
-    enableColumnVirtualization: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        fontSize: '14px'
+      }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+    }),
     muiTableHeadRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
         color: 'white'
       },
     }),
-    muiTableFooterRowProps:()=>({
-      sx: {
-        backgroundColor: 'whitesmoke',
-        color: 'white',
-        paddingBottom:2
-      }
-    }),
     muiTableBodyCellProps: () => ({
       sx: {
-        fontSize: '13px',
-        border: '1px solid #ddd;'
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
       },
-    }), initialState: { density: 'compact' },
+    }),
+    muiPaginationProps: {
+      rowsPerPageOptions: [100, 200, 500, 1000, 2000, 5000, 7000, 10000],
+      shape: 'rounded',
+      variant: 'outlined',
+    },
+    initialState: {
+      density: 'compact',  pagination: { pageIndex: 0, pageSize: 7000 }
+    },
     enableGrouping: true,
-    enableRowSelection: true, enableStickyFooter: true,
-    enableGlobalFilterModes: true,
-    enablePagination: false,
+    enableRowSelection: true,
+    manualPagination: false,
+    enablePagination: true,
+    enableRowNumbers: true,
     enableColumnPinning: true,
     enableTableFooter: true,
-    enableRowNumbers: true,
     enableRowVirtualization: true,
-    muiTableContainerProps: { sx: { maxHeight: '450px' } },
-    onSortingChange: setSorting,
-    state: { isLoading, sorting },
     rowVirtualizerInstanceRef, //optional
     rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
     columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+    onSortingChange: setSorting,
+    state: { isLoading, sorting }
   });
+
 
 
   return (
     <>
-
-      {
-        isLoading && <LinearProgress />
-      }
-
-
       <Stack
         spacing={4}
         padding={2}
@@ -179,10 +191,10 @@ export default function SaleAnalysisReport() {
             native: true
           }}
           focused
+          sx={{width:150}}
           size='small'
           id="month"
           label="Month"
-          sx={{width:'50%'}}
           value={month}
           onChange={(e) => setMonth(Number(e.target.value))}
         >
@@ -197,15 +209,10 @@ export default function SaleAnalysisReport() {
             })
           }
         </TextField>
-        <Stack direction={'row'} gap={2} alignItems={'center'}>
-         
-        </Stack>
-
-
+        
       </Stack >
      
-        {/* table */}
-        {!isLoading && data && <MaterialReactTable table={table} />}
+       <MaterialReactTable table={table} />
     </>
 
   )

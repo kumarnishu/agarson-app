@@ -1,4 +1,4 @@
-import { Button, LinearProgress, Typography } from '@mui/material'
+import { Button,  Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -12,28 +12,29 @@ import AlertBar from '../../components/snacks/AlertBar'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import UploadPartyTargetButton from '../../components/buttons/UploadPartyTargetButton'
-import { GetPartyTargetReportFromExcelDto } from '../../dtos/erp reports/erp.reports.dto'
+import { GetPartyTargetReportDto, GetPartyTargetReportFromExcelDto } from '../../dtos/erp reports/erp.reports.dto'
 
 
 
 export default function PartyTargetReportPage() {
-    const [reports, setReports] = useState<GetPartyTargetReportFromExcelDto[]>([])
+    const [reports, setReports] = useState<GetPartyTargetReportDto[]>([])
     const { user } = useContext(UserContext)
     const [sent, setSent] = useState(false)
-    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetPartyTargetReportFromExcelDto[]>, BackendError>("party_target_reports", GetPartyTargetReports)
-    const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+    const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetPartyTargetReportDto[]>, BackendError>("party_target_reports", GetPartyTargetReports)
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
-
-    const columns = useMemo<MRT_ColumnDef<GetPartyTargetReportFromExcelDto>[]>(
+    const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+    const columns = useMemo<MRT_ColumnDef<GetPartyTargetReportDto>[]>(
         //column definitions...
         () => [
             {
-                accessorKey: 'slno',
-                header: 'Sl.No.',
-                size: 50,
+                accessorKey: 'created_at',
+                header: 'Create Date',
+                Footer: <b>Total</b>,
+                filterVariant: 'multi-select',
+                filterSelectOptions: reports.map((i) => { return i.created_at || "" }).filter(onlyUnique),
                 aggregationFn: 'count',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-
             },
             {
                 accessorKey: 'PARTY',
@@ -44,21 +45,13 @@ export default function PartyTargetReportPage() {
                 aggregationFn: 'count',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
-            {
-                accessorKey: 'Create_Date',
-                header: 'Create Date',
-                Footer: <b>Total</b>,
-                filterVariant: 'multi-select',
-                filterSelectOptions: reports.map((i) => { return i.PARTY }).filter(onlyUnique),
-                aggregationFn: 'count',
-                AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                size: 150
-            },
+           
             {
                 accessorKey: 'STATION',
                 header: 'Station',
                 filterVariant: 'multi-select',
                 aggregationFn: 'count',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 filterSelectOptions: reports.map((i) => { return i.STATION }).filter(onlyUnique)
             },
@@ -67,6 +60,7 @@ export default function PartyTargetReportPage() {
                 header: 'Sales Owner',
                 filterVariant: 'multi-select',
                 aggregationFn: 'count',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 filterSelectOptions: reports.map((i) => { return i.SALES_OWNER }).filter(onlyUnique)
             },
@@ -75,6 +69,7 @@ export default function PartyTargetReportPage() {
                 header: 'State',
                 filterVariant: 'multi-select',
                 aggregationFn: 'count',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 filterSelectOptions: reports.map((i) => { return i.report_owner }).filter(onlyUnique)
             },
@@ -82,12 +77,14 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'All_TARGET',
                 header: 'ALL TARGET',
                 aggregationFn: 'count',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'TARGET',
                 header: 'TARGET',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TARGET) }, 0).toFixed()}</b>
             },
@@ -95,6 +92,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'PROJECTION',
                 header: 'Projection',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.PROJECTION) }, 0).toFixed()}</b>
             },
@@ -102,6 +100,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'GROWTH',
                 header: 'Growth',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.GROWTH) }, 0).toFixed()}</b>
             },
@@ -109,6 +108,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'TARGET_ACHIEVE',
                 header: 'Target Achieved',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TARGET_ACHIEVE) }, 0).toFixed()}</b>
             },
@@ -116,6 +116,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'TOTAL_SALE_OLD',
                 header: 'Total Old Sale',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TOTAL_SALE_OLD) }, 0).toFixed()}</b>
             },
@@ -123,6 +124,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'TOTAL_SALE_NEW',
                 header: 'Total Sale New',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.TOTAL_SALE_NEW) }, 0).toFixed()}</b>
             },
@@ -130,6 +132,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Apr',
                 header: 'L-Apr',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Apr) }, 0).toFixed()}</b>
             },
@@ -137,6 +140,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Apr',
                 header: 'C-APr',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Apr) }, 0).toFixed()}</b>
             },
@@ -144,6 +148,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_May',
                 header: 'L-May',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_May) }, 0).toFixed()}</b>
             },
@@ -151,6 +156,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_May',
                 header: 'C-MAY',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_May) }, 0).toFixed()}</b>
             },
@@ -158,6 +164,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Jun',
                 header: 'L-JUN',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Jun) }, 0).toFixed()}</b>
             },
@@ -165,6 +172,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Jun',
                 header: 'C-JUN',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Jun) }, 0).toFixed()}</b>
             },
@@ -172,6 +180,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Jul',
                 header: 'L-JUL',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Jul) }, 0).toFixed()}</b>
             },
@@ -179,6 +188,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Jul',
                 header: 'C-JUL',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Jul) }, 0).toFixed()}</b>
             },
@@ -186,6 +196,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Aug',
                 header: 'L-AUG',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Aug) }, 0).toFixed()}</b>
             },
@@ -193,6 +204,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Aug',
                 header: 'C-AUG',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Aug) }, 0).toFixed()}</b>
             },
@@ -200,6 +212,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Sep',
                 header: 'L-SEP',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Sep) }, 0).toFixed()}</b>
             },
@@ -207,6 +220,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Sep',
                 header: 'C-SEP',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Sep) }, 0).toFixed()}</b>
             },
@@ -214,6 +228,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Oct',
                 header: 'L-OCT',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Oct) }, 0).toFixed()}</b>
             },
@@ -221,6 +236,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Oct',
                 header: 'C-OCT',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Oct) }, 0).toFixed()}</b>
             },
@@ -228,6 +244,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Nov',
                 header: 'L-NOV',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Nov) }, 0).toFixed()}</b>
             },
@@ -235,6 +252,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Nov',
                 header: 'C-NOV',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Nov) }, 0).toFixed()}</b>
             },
@@ -242,6 +260,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Dec',
                 header: 'L-DEC',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Dec) }, 0).toFixed()}</b>
             },
@@ -249,6 +268,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Dec',
                 header: 'C-DEC',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Dec) }, 0).toFixed()}</b>
             },
@@ -256,6 +276,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Jan',
                 header: 'L-JAN',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Jan) }, 0).toFixed()}</b>
             },
@@ -263,6 +284,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Jan',
                 header: 'C-JAN',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Jan) }, 0).toFixed()}</b>
             },
@@ -270,6 +292,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Feb',
                 header: 'L-FEB',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Feb) }, 0).toFixed()}</b>
             },
@@ -277,6 +300,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Feb',
                 header: 'C-FEB',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Feb) }, 0).toFixed()}</b>
             },
@@ -284,6 +308,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Last_Mar',
                 header: 'L-MAR',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Last_Mar) }, 0).toFixed()}</b>
             },
@@ -291,6 +316,7 @@ export default function PartyTargetReportPage() {
                 accessorKey: 'Cur_Mar',
                 header: 'C-,MAR',
                 aggregationFn: 'sum',
+                size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.Cur_Mar) }, 0).toFixed()}</b>
             },
@@ -353,7 +379,7 @@ export default function PartyTargetReportPage() {
     }
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && isSuccess) {
+        if (isSuccess && data) {
             setReports(data.data);
         }
     }, [isSuccess]);
@@ -369,12 +395,19 @@ export default function PartyTargetReportPage() {
 
     const table = useMaterialReactTable({
         columns,
-        data: reports, //10,000 rows
-        defaultDisplayColumn: { enableResizing: true },
-        enableBottomToolbar: false,
+        data: reports, //10,000 rows       
         enableColumnResizing: true,
-        enableColumnVirtualization: true,
-        initialState: { density: 'compact' },
+        enableColumnVirtualization: true, enableStickyFooter: true,
+        muiTableFooterRowProps: () => ({
+            sx: {
+                backgroundColor: 'whitesmoke',
+                color: 'white',
+                fontSize: '14px'
+            }
+        }),
+        muiTableContainerProps: (table) => ({
+            sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+        }),
         muiTableHeadRowProps: () => ({
             sx: {
                 backgroundColor: 'whitesmoke',
@@ -383,39 +416,36 @@ export default function PartyTargetReportPage() {
         }),
         muiTableBodyCellProps: () => ({
             sx: {
-                fontSize: '13px',
-                border: '1px solid #ddd;'
+                border: '1px solid #c2beba;',
+                fontSize: '13px'
             },
         }),
+        muiPaginationProps: {
+            rowsPerPageOptions: [100, 200, 500, 1000, 2000, 5000, 7000, 10000],
+            shape: 'rounded',
+            variant: 'outlined',
+        },
+        initialState: {
+            density: 'compact',  pagination: { pageIndex: 0, pageSize: 7000 }
+        },
         enableGrouping: true,
         enableRowSelection: true,
-        enableGlobalFilterModes: true,
-        enablePagination: false, enableStickyFooter: true,
-        enableColumnPinning: true, muiTableFooterRowProps: () => ({
-            sx: {
-                backgroundColor: 'whitesmoke',
-                color: 'white',
-                paddingBottom: 2
-            }
-        }),
+        manualPagination: false,
+        enablePagination: true,
+        enableRowNumbers: true,
+        enableColumnPinning: true,
         enableTableFooter: true,
-        enableRowNumbers: false,
         enableRowVirtualization: true,
-        muiTableContainerProps: { sx: { maxHeight: '450px' } },
-        onSortingChange: setSorting,
-        state: { isLoading, sorting },
         rowVirtualizerInstanceRef, //optional
         rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
         columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+        onSortingChange: setSorting,
+        state: { isLoading, sorting }
     });
+
 
     return (
         <>
-
-            {
-                isLoading && <LinearProgress />
-            }
-
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
             <Stack
@@ -435,7 +465,7 @@ export default function PartyTargetReportPage() {
                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                     <>
                         {user?.assigned_permissions.includes("party_target_create") && <UploadPartyTargetButton />}
-                        {user?.assigned_permissions.includes("party_target_create") && <Button variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
+                        {user?.assigned_permissions.includes("party_target_create") && <Button size="small" variant="outlined" startIcon={<Download />} onClick={handleExcel}> Template</Button>}
                     </>
                 </Stack>
 
@@ -443,7 +473,7 @@ export default function PartyTargetReportPage() {
             </Stack >
 
             {/* table */}
-            {!isLoading && data && <MaterialReactTable table={table} />}
+            <MaterialReactTable table={table} />
         </>
 
     )

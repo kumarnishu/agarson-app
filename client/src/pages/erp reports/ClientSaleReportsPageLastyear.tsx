@@ -1,4 +1,4 @@
-import { Button, LinearProgress, Typography } from '@mui/material'
+import { Button,  Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -31,6 +31,7 @@ export default function ClientSaleLastYearReportsPage() {
                 accessorKey: 'created_at',
                 header: 'Created On',
                 filterVariant: 'multi-select',
+                size: 120,
                 filterSelectOptions: reports.map((i) => { return i.created_at || "" }).filter(onlyUnique)
             },
             {
@@ -38,6 +39,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'State',
                 width: '50',
                 aggregationFn: 'count',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 filterVariant: 'multi-select',
                 filterSelectOptions: reports.map((i) => { return i.report_owner }).filter(onlyUnique)
@@ -67,6 +69,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'Old Qty',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.oldqty) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -74,20 +77,22 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'New Qty',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.newqty) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             }, {
                 accessorKey: 'total',
                 header: 'Total',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.total) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
-
             {
                 accessorKey: 'apr',
                 header: 'APR',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.apr) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -95,6 +100,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'MAY',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.may) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -102,6 +108,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'JUN',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.jun) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -109,6 +116,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'JUL',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.jul) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -116,6 +124,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'AUG',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.aug) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -123,6 +132,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'SEP',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.sep) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -130,6 +140,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'OCT',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.oct) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -137,6 +148,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'NOV',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.nov) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -144,6 +156,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'DEC',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.dec) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -151,6 +164,7 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'JAN',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.jan) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
@@ -158,14 +172,16 @@ export default function ClientSaleLastYearReportsPage() {
                 header: 'FEB',
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.feb) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'mar',
                 header: 'MAR',
                 aggregationFn: 'sum',
+                size: 120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.mar) }, 0).toFixed()}</b>,
+                Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.mar) }, 0).toFixed()}</b>
             }
         ],
         [reports,],
@@ -206,7 +222,7 @@ export default function ClientSaleLastYearReportsPage() {
     }
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && isSuccess) {
+        if (isSuccess && data) {
             setClientSaleReports(data.data);
         }
     }, [isSuccess]);
@@ -222,52 +238,59 @@ export default function ClientSaleLastYearReportsPage() {
 
     const table = useMaterialReactTable({
         columns,
-        data: reports, //10,000 rows
-        defaultDisplayColumn: { enableResizing: true },
-        enableBottomToolbar: false,
+        data: reports, //10,000 rows       
         enableColumnResizing: true,
-        enableColumnVirtualization: true,
+        enableColumnVirtualization: true, enableStickyFooter: true,
+        muiTableFooterRowProps: () => ({
+            sx: {
+                backgroundColor: 'whitesmoke',
+                color: 'white',
+                fontSize: '14px'
+            }
+        }),
+        muiTableContainerProps: (table) => ({
+            sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+        }),
         muiTableHeadRowProps: () => ({
             sx: {
                 backgroundColor: 'whitesmoke',
                 color: 'white'
             },
-        }), initialState: { density: 'compact' },
+        }),
         muiTableBodyCellProps: () => ({
             sx: {
-                fontSize: '13px',
-                border: '1px solid #ddd;'
+                border: '1px solid #c2beba;',
+                fontSize: '13px'
             },
         }),
+        muiPaginationProps: {
+            rowsPerPageOptions: [100, 200, 500, 1000, 2000, 5000, 7000, 10000],
+            shape: 'rounded',
+            variant: 'outlined',
+        },
+        initialState: {
+            density: 'compact',  pagination: { pageIndex: 0, pageSize: 7000 }
+        },
         enableGrouping: true,
         enableRowSelection: true,
-        enableGlobalFilterModes: true,
-        enablePagination: false,
-        enableColumnPinning: true, enableStickyFooter: true,
+        manualPagination: false,
+        enablePagination: true,
+        enableRowNumbers: true,
+        enableColumnPinning: true,
         enableTableFooter: true,
-        enableRowNumbers: true, muiTableFooterRowProps: () => ({
-            sx: {
-                backgroundColor: 'whitesmoke',
-                color: 'white',
-                paddingBottom: 2
-            }
-        }),
         enableRowVirtualization: true,
-        muiTableContainerProps: { sx: { maxHeight: '450px' } },
-        onSortingChange: setSorting,
-        state: { isLoading, sorting },
         rowVirtualizerInstanceRef, //optional
         rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
         columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+        onSortingChange: setSorting,
+        state: { isLoading, sorting }
     });
 
 
     return (
         <>
 
-            {
-                isLoading && <LinearProgress />
-            }
+        
 
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
@@ -295,8 +318,7 @@ export default function ClientSaleLastYearReportsPage() {
 
             </Stack >
 
-            {/* table */}
-            {!isLoading && data && <MaterialReactTable table={table} />}
+           <MaterialReactTable table={table} />
         </>
 
     )

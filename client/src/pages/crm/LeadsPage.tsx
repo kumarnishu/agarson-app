@@ -321,7 +321,7 @@ export default function LeadsPage() {
         accessorKey: 'referred_party_name',
         header: 'Refer Party',
         size: 120,
-        Cell: (cell) => <>{cell.row.original.referred_party_name ? cell.row.original.remark : ""}</>
+        Cell: (cell) => <>{cell.row.original.referred_party_name ? cell.row.original.referred_party_name : ""}</>
       },
       {
         accessorKey: 'referred_party_mobile',

@@ -1,4 +1,4 @@
-import { Button, LinearProgress, Typography } from '@mui/material'
+import { Button,  Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -28,14 +28,14 @@ export default function PendingOrdersReport() {
         () => [
             {
                 accessorKey: 'created_at',
-                size: 100,
                 header: 'Created On',
+                szie: 120,
                 filterVariant: 'multi-select',
                 filterSelectOptions: reports.map((i) => { return i.created_at || "" }).filter(onlyUnique)
             },
             {
                 accessorKey: 'report_owner',
-                size: 100,
+                size: 150,
                 header: 'State',
                 filterVariant: 'multi-select',
                 aggregationFn: 'count',
@@ -73,8 +73,8 @@ export default function PendingOrdersReport() {
             },
             {
                 accessorKey: 'total',
-                size: 100,
                 header: 'Total',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.total) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
@@ -82,192 +82,192 @@ export default function PendingOrdersReport() {
 
             {
                 accessorKey: 'size5',
-                size: 100,
                 header: '5',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size5) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size6',
-                size: 100,
                 header: '6',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size6) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size7',
-                size: 100,
                 header: '7',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size7) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size8',
-                size: 100,
                 header: '8',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size8) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size9',
-                size: 100,
                 header: '9',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size9) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size10',
-                size: 100,
                 header: '10',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size10) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size11',
-                size: 100,
                 header: '11',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size11) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size12_24pairs',
-                size: 100,
                 header: '12x24',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size12_24pairs) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size13',
-                size: 100,
                 header: '13',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size13) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size11x12',
-                size: 100,
                 header: '11x12',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size11x12) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size3',
-                size: 100,
                 header: '3',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size3) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size4',
-                size: 100,
                 header: '4',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size4) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size6to10',
-                size: 100,
                 header: '6-10',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size6to10) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size7to10',
-                size: 100,
                 header: '7-10',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size7to10) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size8to10',
-                size: 100,
                 header: '8-10',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size8to10) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size4to8',
-                size: 100,
                 header: '4-8',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size4to8) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size6to9',
-                size: 100,
                 header: '6-9',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size6to9) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size5to8',
-                size: 100,
                 header: '5-8',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size5to8) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size6to10A',
-                size: 100,
                 header: '6-10A',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size6to10A) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size7to10B',
-                size: 100,
                 header: '7-10B',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size7to10B) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size6to9A',
-                size: 100,
                 header: '6-9A',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size6to9A) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size11close',
-                size: 100,
                 header: '11 Close',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size11close) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size11to13',
-                size: 100,
                 header: '11-13',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size11to13) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'size3to8',
-                size: 100,
                 header: '3-8',
+                size: 120,
                 Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.size3to8) }, 0).toFixed()}</b>,
                 aggregationFn: 'sum',
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
@@ -322,7 +322,7 @@ export default function PendingOrdersReport() {
     }
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && isSuccess) {
+        if (data && isSuccess) {
             setReports(data.data);
         }
     }, [isSuccess]);
@@ -338,11 +338,19 @@ export default function PendingOrdersReport() {
 
     const table = useMaterialReactTable({
         columns,
-        data: reports, //10,000 rows
-        defaultDisplayColumn: { enableResizing: true },
-        enableBottomToolbar: false,
+        data: reports, //10,000 rows       
         enableColumnResizing: true,
-        enableColumnVirtualization: true,
+        enableColumnVirtualization: true, enableStickyFooter: true,
+        muiTableFooterRowProps: () => ({
+            sx: {
+                backgroundColor: 'whitesmoke',
+                color: 'white',
+                fontSize: '14px'
+            }
+        }),
+        muiTableContainerProps: (table) => ({
+            sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+        }),
         muiTableHeadRowProps: () => ({
             sx: {
                 backgroundColor: 'whitesmoke',
@@ -351,39 +359,38 @@ export default function PendingOrdersReport() {
         }),
         muiTableBodyCellProps: () => ({
             sx: {
-                fontSize: '13px',
-                border: '1px solid #ddd;'
+                border: '1px solid #c2beba;',
+                fontSize: '13px'
             },
-        }), initialState: { density: 'compact' }, muiTableFooterRowProps: () => ({
-            sx: {
-                backgroundColor: 'whitesmoke',
-                color: 'white',
-                paddingBottom: 2
-            }
         }),
+        muiPaginationProps: {
+            rowsPerPageOptions: [100, 200, 500, 1000, 2000, 5000, 7000, 10000],
+            shape: 'rounded',
+            variant: 'outlined',
+        },
+        initialState: {
+            density: 'compact', pagination: { pageIndex: 0, pageSize: 7000 }
+        },
         enableGrouping: true,
         enableRowSelection: true,
-        enableGlobalFilterModes: true,
-        enablePagination: false,
-        enableColumnPinning: true, enableStickyFooter: true,
-        enableTableFooter: true,
+        manualPagination: false,
+        enablePagination: true,
         enableRowNumbers: true,
+        enableColumnPinning: true,
+        enableTableFooter: true,
         enableRowVirtualization: true,
-        muiTableContainerProps: { sx: { maxHeight: '450px' } },
-        onSortingChange: setSorting,
-        state: { isLoading, sorting },
         rowVirtualizerInstanceRef, //optional
         rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
         columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+        onSortingChange: setSorting,
+        state: { isLoading, sorting }
     });
 
 
     return (
         <>
 
-            {
-                isLoading && <LinearProgress />
-            }
+           
 
             {sent && <AlertBar message="File Exported Successfuly" color="success" />}
 
@@ -411,8 +418,7 @@ export default function PendingOrdersReport() {
 
             </Stack >
 
-            {/* table */}
-            {!isLoading && data && <MaterialReactTable table={table} />}
+             <MaterialReactTable table={table} />
         </>
 
     )
