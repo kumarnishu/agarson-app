@@ -242,14 +242,33 @@ export type GetActivitiesOrRemindersDto = {
 
 }
 
+export type GetBillItemDto = {
+    _id: string,
+    article: DropDownDto,
+    qty: number,
+    rate: number,
+    bill: DropDownDto,
+    created_at: string,
+    updated_at: string,
+    created_by: DropDownDto,
+    updated_by: DropDownDto
+
+}
+export type CreateOrEditBillItemDto={
+    article: string,
+    qty: number,
+    rate: number,
+    bill: string,
+}
+
 export type GetBillDto = {
     _id: string,
-    bill_no: string,
-    bill_date: string,
-    articles: { article: DropDownDto, qty: number, rate: number, mrp: number }[],
-    lead?: DropDownDto,
+    items: DropDownDto[],
+    lead: DropDownDto,
     billphoto: string,
-    refer?: DropDownDto,
+    refer: DropDownDto,
+    bill_no: string,
+    bill_date: Date,
     created_at: string,
     updated_at: string,
     created_by: DropDownDto,
@@ -257,12 +276,12 @@ export type GetBillDto = {
 
 }
 export type CreateOrEditBillDto = {
-    leadid?: string,
-    referid?: string,
+    items: string[],
+    lead: string,
+    billphoto: string,
+    refer: string,
     bill_no: string,
-    bill_date: string,
-    articles: { article: string, qty: number, rate: number, mrp: number }[],
-    billphoto: string
+    bill_date: Date,
 }
 
 export type CreateOrEditRemarkDto = {

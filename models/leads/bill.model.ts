@@ -2,19 +2,18 @@ import mongoose from "mongoose"
 import { Asset, IUser } from "../users/user.model"
 import { ILead } from "./lead.model"
 import { IReferredParty } from "./referred.model"
-import { IArticle } from "../production/article.model"
+import { IBillItem } from "./bill.item"
 
 
 export type IBill = {
     _id: string,
-    articles: { article: IArticle, qty: number, rate: number }[],
+    items: IBillItem[],
     lead: ILead,
     billphoto: Asset,
     refer: IReferredParty,
     bill_no: string,
     bill_date: Date,
     created_at: Date,
-    remind_date: Date,
     updated_at: Date,
     created_by: IUser,
     updated_by: IUser
@@ -28,11 +27,10 @@ const BillSchema = new mongoose.Schema<IBill, mongoose.Model<IBill, {}, {}>, {}>
         index: true,
         lowercase: true,
     },
-    articles: [{
-        article: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Article'
-        }, qty: Number, rate: Number
+    items: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'IBillItem',
+        required: true
     }],
     billphoto: {
         _id: { type: String },
@@ -46,9 +44,6 @@ const BillSchema = new mongoose.Schema<IBill, mongoose.Model<IBill, {}, {}>, {}>
     bill_date: {
         type: Date,
         required: true
-    },
-    remind_date: {
-        type: Date,
     },
     created_at: {
         type: Date,

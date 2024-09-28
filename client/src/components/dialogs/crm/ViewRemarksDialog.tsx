@@ -31,8 +31,8 @@ function ViewRemarksDialog({ id }: { id: string }) {
     useEffect(() => {
         if (isSuccess && data)
             setRemarks(data?.data)
-    }, [isSuccess])
-  
+    }, [isSuccess, data])
+
     return (
         <Dialog fullScreen={Boolean(window.screen.width < 500)}
             open={choice === LeadChoiceActions.view_remarks ? true : false}

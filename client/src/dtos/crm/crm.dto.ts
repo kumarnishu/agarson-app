@@ -14,29 +14,7 @@ export type MergeTwoLeadsDto = {
     source_lead_id: string,
     refer_id: string
 }
-export type GetBillDto = {
-    _id: string,
-    bill_no: string,
-    bill_date: string,
-    articles: { article: DropDownDto, qty: number, rate: number, mrp: number }[],
-    lead?: DropDownDto,
-    billphoto: string,
-    refer?: DropDownDto,
-    created_at: Date,
-    updated_at: Date,
-    created_by: DropDownDto,
-    updated_by: DropDownDto
 
-}
-export type CreateOrEditBillDto = {
-    leadid?: string,
-    referid?: string,
-    bill_no: string,
-    bill_date: string,
-    articles: { article: string, qty: number, rate: number, mrp: number }[],
-    billphoto: string
-}
-export type GetActivitiesTopBarDetailsDto = { stage: string, value: number }
 export type GetCrmCityDto = {
     city: DropDownDto;
     state: string;
@@ -71,7 +49,7 @@ export type CreateAndUpdatesCityFromExcelDto = {
     status?: string
 }
 export type CreateOrEditCrmCity = {
-    id:string,
+    id: string,
     state: string,
     city: string
 }
@@ -152,10 +130,10 @@ export type CreateOrEditLeadDto = {
     lead_source: string,
 }
 export type CreateOrRemoveReferForLeadDto = {
-    party_id: string, remark: string
+    party_id: string, remark: string, remind_date: string
 }
 
-export type GetMergeLeadsDto={
+export type GetMergeLeadsDto = {
     name: string,
     mobiles: string[],
     city: string,
@@ -212,23 +190,25 @@ export type CreateOrEditReferFromExcelDto = {
     gst: string,
     city: string,
     state: string,
-    status?:string
+    status?: string
 }
-
-export type GetRemarksDto={
-    _id:string,
-    remark:string,
+export type GetRemarksDto = {
+    _id: string,
+    remark: string,
     lead_id?: string,
     lead_name?: string,
     lead_mobile?: string,
     refer_id?: string,
     refer_name?: string,
     refer_mobile?: string,
-    remind_date:string,
-    created_date:string,
-    created_by:DropDownDto
+    remind_date: string,
+    created_date: string,
+    created_by: DropDownDto
 
 }
+
+
+export type GetActivitiesTopBarDetailsDto = { stage: string, value: number }
 export type GetActivitiesOrRemindersDto = {
     _id: string,
     remark: string,
@@ -259,7 +239,49 @@ export type GetActivitiesOrRemindersDto = {
     referred_party_name?: string,
     referred_party_mobile?: string,
     referred_date?: string
-    
+
+}
+
+export type GetBillItemDto = {
+    _id: string,
+    article: DropDownDto,
+    qty: number,
+    rate: number,
+    bill: DropDownDto,
+    created_at: string,
+    updated_at: string,
+    created_by: DropDownDto,
+    updated_by: DropDownDto
+
+}
+export type CreateOrEditBillItemDto = {
+    article: string,
+    qty: number,
+    rate: number,
+    bill: string,
+}
+
+export type GetBillDto = {
+    _id: string,
+    items: DropDownDto[],
+    lead: DropDownDto,
+    billphoto: string,
+    refer: DropDownDto,
+    bill_no: string,
+    bill_date: Date,
+    created_at: string,
+    updated_at: string,
+    created_by: DropDownDto,
+    updated_by: DropDownDto
+
+}
+export type CreateOrEditBillDto = {
+    items: string[],
+    lead: string,
+    billphoto: string,
+    refer: string,
+    bill_no: string,
+    bill_date: Date,
 }
 
 export type CreateOrEditRemarkDto = {
@@ -268,3 +290,4 @@ export type CreateOrEditRemarkDto = {
     stage: string,
     has_card: boolean
 }
+

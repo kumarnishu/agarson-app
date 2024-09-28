@@ -3174,139 +3174,139 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
     return res.status(200).json(result)
 }
 
-export const CreateBill = async (req: Request, res: Response, next: NextFunction) => {
-    const { bill_no, bill_date, articles, leadid, referid } = req.body as CreateOrEditBillDto
-    if (!bill_no || !bill_date || !articles) {
-        return res.status(400).json({ message: "please fill all reqired fields" })
-    }
-    let result;
-    if (leadid) {
-        if (await Bill.findOne({ lead: leadid, bill_no: bill_no.toLowerCase() }))
-            return res.status(400).json({ message: "already exists this bill no" })
+// export const CreateBill = async (req: Request, res: Response, next: NextFunction) => {
+//     const { bill_no, bill_date, articles, leadid, referid } = req.body as CreateOrEditBillDto
+//     if (!bill_no || !bill_date || !articles) {
+//         return res.status(400).json({ message: "please fill all reqired fields" })
+//     }
+//     let result;
+//     if (leadid) {
+//         if (await Bill.findOne({ lead: leadid, bill_no: bill_no.toLowerCase() }))
+//             return res.status(400).json({ message: "already exists this bill no" })
 
-        result = await new Bill({
-            bill_no, lead: leadid, bill_date: new Date(bill_date), articles: articles,
-            created_at: new Date(),
-            updated_at: new Date(),
-            created_by: req.user,
-            updated_by: req.user
-        })
+//         result = await new Bill({
+//             bill_no, lead: leadid, bill_date: new Date(bill_date), articles: articles,
+//             created_at: new Date(),
+//             updated_at: new Date(),
+//             created_by: req.user,
+//             updated_by: req.user
+//         })
 
-    }
-    else {
-        if (await Bill.findOne({ refer: referid, bill_no: bill_no.toLowerCase() }))
-            return res.status(400).json({ message: "already exists this bill no" })
+//     }
+//     else {
+//         if (await Bill.findOne({ refer: referid, bill_no: bill_no.toLowerCase() }))
+//             return res.status(400).json({ message: "already exists this bill no" })
 
-        result = await new Bill({
-            bill_no, refer: referid, bill_date: new Date(bill_date), articles: articles,
-            created_at: new Date(),
-            updated_at: new Date(),
-            created_by: req.user,
-            updated_by: req.user
-        }).save()
-    }
-    let document: Asset = undefined
-    if (req.file) {
-        const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
-        const storageLocation = `bills/media`;
-        if (!allowedFiles.includes(req.file.mimetype))
-            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-        if (req.file.size > 20 * 1024 * 1024)
-            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
-        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-        if (doc)
-            document = doc
-        else {
-            return res.status(500).json({ message: "file uploading error" })
-        }
-    }
-    result.billphoto = document
-    await result.save()
-    return res.status(201).json({ message: "success" })
+//         result = await new Bill({
+//             bill_no, refer: referid, bill_date: new Date(bill_date), articles: articles,
+//             created_at: new Date(),
+//             updated_at: new Date(),
+//             created_by: req.user,
+//             updated_by: req.user
+//         }).save()
+//     }
+//     let document: Asset = undefined
+//     if (req.file) {
+//         const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+//         const storageLocation = `bills/media`;
+//         if (!allowedFiles.includes(req.file.mimetype))
+//             return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+//         if (req.file.size > 20 * 1024 * 1024)
+//             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+//         const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+//         if (doc)
+//             document = doc
+//         else {
+//             return res.status(500).json({ message: "file uploading error" })
+//         }
+//     }
+//     result.billphoto = document
+//     await result.save()
+//     return res.status(201).json({ message: "success" })
 
-}
+// }
 
-export const UpdateBill = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    let bill = await Bill.findById(id)
-    if (!bill)
-        return res.status(404).json({ message: "bill not found" })
-    const { bill_no, bill_date, articles, leadid, referid } = req.body as CreateOrEditBillDto
-    if (!bill_no || !bill_date || !articles) {
-        return res.status(400).json({ message: "please fill all reqired fields" })
-    }
-    let result;
-    if (leadid) {
-        if (bill.bill_no !== bill_no.toLowerCase())
-            if (await Bill.findOne({ lead: leadid, bill_no: bill_no.toLowerCase() }))
-                return res.status(400).json({ message: "already exists this bill no" })
-        let document: Asset = bill.billphoto
-        if (req.file) {
-            const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
-            const storageLocation = `bills/media`;
-            if (!allowedFiles.includes(req.file.mimetype))
-                return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-            if (req.file.size > 20 * 1024 * 1024)
-                return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
-            const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-            if (doc)
-                document = doc
-            else {
-                return res.status(500).json({ message: "file uploading error" })
-            }
-        }
-        result = await Bill.findByIdAndUpdate(id, {
-            bill_no, lead: leadid, bill_date: new Date(bill_date), billphoto: document, articles: articles,
-            created_at: new Date(),
-            updated_at: new Date(),
-            created_by: req.user,
-            updated_by: req.user
-        })
+// export const UpdateBill = async (req: Request, res: Response, next: NextFunction) => {
+//     const id = req.params.id
+//     let bill = await Bill.findById(id)
+//     if (!bill)
+//         return res.status(404).json({ message: "bill not found" })
+//     const { bill_no, bill_date, articles, leadid, referid } = req.body as CreateOrEditBillDto
+//     if (!bill_no || !bill_date || !articles) {
+//         return res.status(400).json({ message: "please fill all reqired fields" })
+//     }
+//     let result;
+//     if (leadid) {
+//         if (bill.bill_no !== bill_no.toLowerCase())
+//             if (await Bill.findOne({ lead: leadid, bill_no: bill_no.toLowerCase() }))
+//                 return res.status(400).json({ message: "already exists this bill no" })
+//         let document: Asset = bill.billphoto
+//         if (req.file) {
+//             const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+//             const storageLocation = `bills/media`;
+//             if (!allowedFiles.includes(req.file.mimetype))
+//                 return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+//             if (req.file.size > 20 * 1024 * 1024)
+//                 return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+//             const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+//             if (doc)
+//                 document = doc
+//             else {
+//                 return res.status(500).json({ message: "file uploading error" })
+//             }
+//         }
+//         result = await Bill.findByIdAndUpdate(id, {
+//             bill_no, lead: leadid, bill_date: new Date(bill_date), billphoto: document, articles: articles,
+//             created_at: new Date(),
+//             updated_at: new Date(),
+//             created_by: req.user,
+//             updated_by: req.user
+//         })
 
-    }
-    else {
-        if (bill.bill_no !== bill_no.toLowerCase())
-            if (await Bill.findOne({ refer: referid, bill_no: bill_no.toLowerCase() }))
-                return res.status(400).json({ message: "already exists this bill no" })
-        let document: Asset = bill.billphoto
-        if (req.file) {
-            const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
-            const storageLocation = `bills/media`;
-            if (!allowedFiles.includes(req.file.mimetype))
-                return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-            if (req.file.size > 20 * 1024 * 1024)
-                return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
-            const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-            if (doc)
-                document = doc
-            else {
-                return res.status(500).json({ message: "file uploading error" })
-            }
-        }
-        result = await Bill.findByIdAndUpdate(id, {
-            bill_no, refer: referid, bill_date: new Date(bill_date),
-            billphoto: document,
-            articles: articles,
-            created_at: new Date(),
-            updated_at: new Date(),
-            created_by: req.user,
-            updated_by: req.user
-        })
-    }
+//     }
+//     else {
+//         if (bill.bill_no !== bill_no.toLowerCase())
+//             if (await Bill.findOne({ refer: referid, bill_no: bill_no.toLowerCase() }))
+//                 return res.status(400).json({ message: "already exists this bill no" })
+//         let document: Asset = bill.billphoto
+//         if (req.file) {
+//             const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
+//             const storageLocation = `bills/media`;
+//             if (!allowedFiles.includes(req.file.mimetype))
+//                 return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+//             if (req.file.size > 20 * 1024 * 1024)
+//                 return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+//             const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+//             if (doc)
+//                 document = doc
+//             else {
+//                 return res.status(500).json({ message: "file uploading error" })
+//             }
+//         }
+//         result = await Bill.findByIdAndUpdate(id, {
+//             bill_no, refer: referid, bill_date: new Date(bill_date),
+//             billphoto: document,
+//             articles: articles,
+//             created_at: new Date(),
+//             updated_at: new Date(),
+//             created_by: req.user,
+//             updated_by: req.user
+//         })
+//     }
 
-    return res.status(200).json({ message: "updated" })
+//     return res.status(200).json({ message: "updated" })
 
-}
-export const DeleteBill = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (!isMongoId(id)) return res.status(403).json({ message: "bill id not valid" })
-    let bill = await Bill.findById(id);
-    if (!bill) {
-        return res.status(404).json({ message: "bill not found" })
-    }
-    await bill.remove();
-    return res.status(200).json({ message: "bill deleted successfully" })
-}
+// }
+// export const DeleteBill = async (req: Request, res: Response, next: NextFunction) => {
+//     const id = req.params.id;
+//     if (!isMongoId(id)) return res.status(403).json({ message: "bill id not valid" })
+//     let bill = await Bill.findById(id);
+//     if (!bill) {
+//         return res.status(404).json({ message: "bill not found" })
+//     }
+//     await bill.remove();
+//     return res.status(200).json({ message: "bill deleted successfully" })
+// }
 
 // export const GetReferPartyBillsHistory = async (req: Request, res: Response, next: NextFunction) => {
 //     const id = req.params.id;
