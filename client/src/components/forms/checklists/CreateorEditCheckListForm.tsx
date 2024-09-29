@@ -37,6 +37,7 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
             work_title: checklist ? checklist.work_title : "",
             link: checklist ? checklist.link : "",
             end_date: checklist ? moment(checklist.end_date).format("YYYY-MM-DD") : "",
+            next_date: checklist ? moment(checklist.next_date).format("YYYY-MM-DD") : "",
             user_id: checklist ? checklist.user.id : "",
             frequency: checklist ? checklist.frequency : "daily",
             photo: checklist && checklist.photo && checklist.photo || ""
@@ -49,6 +50,7 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
             frequency: Yup.string().required("required"),
             user_id: Yup.string().required("required"),
             end_date: Yup.date().required("required"),
+            next_date: Yup.date().required("required"),
             photo: Yup.mixed<File>()
                 .test("size", "size is allowed only less than 20mb",
                     file => {
@@ -262,6 +264,20 @@ function CreateorEditCheckListForm({ checklist }: { checklist?: GetChecklistDto 
                         })
                     }
                 </TextField>
+                < TextField
+                    type="date"
+                    error={
+                        formik.touched.next_date && formik.errors.next_date ? true : false
+                    }
+                    focused
+                    id="next_date"
+                    label="Next Check In Date"
+                    fullWidth
+                    helperText={
+                        formik.touched.next_date && formik.errors.next_date ? formik.errors.next_date : ""
+                    }
+                    {...formik.getFieldProps('next_date')}
+                />
                 < TextField
                     type="date"
                     error={

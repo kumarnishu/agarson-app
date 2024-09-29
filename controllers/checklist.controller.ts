@@ -111,11 +111,7 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
             if (ch && ch.category) {
                 let boxes = await ChecklistBox.find({ checklist: ch._id, date: { $gte: dt1, $lt: dt2 } }).sort('date');
                 let lastcheckedbox = await ChecklistBox.findOne({ checklist: ch._id, checked: true }).sort('-date')
-                let nextcheckeddate = "";
-                if (lastcheckedbox) {
-                    let nextcheckedbox = await ChecklistBox.findOne({ date: { $gte: lastcheckedbox?.date }, checklist: ch._id, checked: false }).sort('date')
-                    nextcheckeddate = nextcheckedbox ? moment(nextcheckedbox.date).format('DD/MM/YYYY') : ""
-                }
+
                 let dtoboxes = boxes.map((b) => { return { _id: b._id, checked: b.checked, date: b.date.toString(), remarks: b.remarks } });
                 result.push({
                     _id: ch._id,
@@ -129,7 +125,7 @@ export const GetChecklists = async (req: Request, res: Response, next: NextFunct
                     updated_at: ch.updated_at.toString(),
                     boxes: dtoboxes,
                     done_date: lastcheckedbox ? moment(lastcheckedbox.date).format('DD/MM/YYYY') : "",
-                    next_date: nextcheckeddate,
+                    next_date: ch.next_date ? moment(ch.next_date).format('DD/MM/YYYY') : "",
                     photo: ch.photo?.public_url || "",
                     created_by: { id: ch.created_by._id, value: ch.created_by.username, label: ch.created_by.username },
                     updated_by: { id: ch.updated_by._id, value: ch.updated_by.username, label: ch.updated_by.username }
@@ -158,10 +154,11 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
         work_title,
         link,
         user_id,
+        next_date,
         frequency,
         end_date } = body as CreateOrEditChecklistDto
     console.log(req.body)
-    if (!category || !work_title || !user_id || !frequency || !end_date)
+    if (!category || !work_title || !user_id || !frequency || !end_date || !next_date)
         return res.status(400).json({ message: "please provide all required fields" })
 
     if (!isvalidDate(new Date(end_date)) || new Date(end_date) <= new Date())
@@ -178,6 +175,7 @@ export const CreateChecklist = async (req: Request, res: Response, next: NextFun
         work_title: work_title,
         link: link,
         end_date: new Date(end_date),
+        next_date: new Date(next_date),
         user: user._id,
         frequency: frequency,
         created_at: new Date(),
@@ -245,7 +243,7 @@ export const EditChecklist = async (req: Request, res: Response, next: NextFunct
     const {
         work_title,
         link,
-        user_id } = body as CreateOrEditChecklistDto
+        user_id, next_date } = body as CreateOrEditChecklistDto
     if (!work_title || !user_id)
         return res.status(400).json({ message: "please provide all required fields" })
 
@@ -281,6 +279,8 @@ export const EditChecklist = async (req: Request, res: Response, next: NextFunct
         }
     }
     checklist.photo = document;
+    if (next_date)
+        checklist.next_date = new Date(next_date);
     await checklist.save()
     return res.status(200).json({ message: `Checklist updated` });
 }

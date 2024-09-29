@@ -21,6 +21,7 @@ export type IChecklist = {
     user: IUser,
     frequency: string,
     end_date: Date,
+    next_date:Date,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
@@ -90,6 +91,9 @@ const ChecklistSchema = new mongoose.Schema<IChecklist, mongoose.Model<IChecklis
         type: Date,
         default: new Date(),
         required: true
+    },
+    next_date: {
+        type: Date
     },
     photo: {
         _id: { type: String },

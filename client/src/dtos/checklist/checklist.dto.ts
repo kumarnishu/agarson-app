@@ -29,6 +29,7 @@ export type CreateOrEditChecklistDto = {
     work_title: string,
     link: string,
     end_date: string,
+    next_date: string,
     user_id: string,
     frequency: string,
 }
