@@ -1,7 +1,7 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
-import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateDyeLocation, CreateDyeStatus, CreateMachine, CreateProduction, CreateShoeWeight, DeleteDyeLocation, DeleteDyeStatus, DeleteProduction, DeleteShoeWeight, GetAllDyeLocations, GetArticles, GetCategoryWiseProductionReports, GetDyeById, GetDyes, GetDyeStatus, GetMachineCategories, GetMachines, GetMachineWiseProductionReports, GetMyTodayDyeStatus, GetMyTodayProductions, GetMyTodayShoeWeights, GetProductions, GetShoeWeightDifferenceReports, GetShoeWeights, GetThekedarWiseProductionReports, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateDyeLocation, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, ValidateShoeWeight } from "../controllers/production.controller";
+import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateDyeLocation, CreateDyeStatus, CreateMachine, CreateProduction, CreateShoeWeight, CreateSoleThickness, DeleteDyeLocation, DeleteDyeStatus, DeleteProduction, DeleteShoeWeight, DeleteSoleThickness, GetAllDyeLocations, GetArticles, GetCategoryWiseProductionReports, GetDyeById, GetDyes, GetDyeStatus, GetMachineCategories, GetMachines, GetMachineWiseProductionReports, GetMyTodayDyeStatus, GetMyTodayProductions, GetMyTodayShoeWeights, GetProductions, GetShoeWeightDifferenceReports, GetShoeWeights, GetSoleThickness, GetThekedarWiseProductionReports, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateDyeLocation, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, UpdateSoleThickness, ValidateShoeWeight } from "../controllers/production.controller";
 
 const router = express.Router()
 
@@ -45,4 +45,7 @@ router.route("/production/categorywise").get(isAuthenticatedUser, GetCategoryWis
 router.route("/production/machinewise").get(isAuthenticatedUser, GetMachineWiseProductionReports)
 router.route("/production/thekedarwise").get(isAuthenticatedUser, GetThekedarWiseProductionReports)
 router.route("/shoeweight/diffreports").get(isAuthenticatedUser, GetShoeWeightDifferenceReports)
+router.route("/solethickness").get(isAuthenticatedUser, GetSoleThickness).post(isAuthenticatedUser, CreateSoleThickness)
+router.route("/solethickness/:id").get(isAuthenticatedUser, DeleteSoleThickness).put(isAuthenticatedUser, UpdateSoleThickness)
+
 export default router
