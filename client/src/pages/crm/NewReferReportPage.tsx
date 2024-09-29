@@ -14,11 +14,13 @@ import AllReferralPageDialog from '../../components/dialogs/crm/AllReferralPageD
 import ViewReferRemarksDialog from '../../components/dialogs/crm/ViewReferRemarksDialog'
 import { UserContext } from '../../contexts/userContext'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import { Delete, Edit, Visibility } from '@mui/icons-material'
+import { Delete, Edit, Upload, Visibility } from '@mui/icons-material'
 import { Fade, IconButton, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import PopUp from '../../components/popup/PopUp'
 import ExportToExcel from '../../utils/ExportToExcel'
 import { Menu as MenuIcon } from '@mui/icons-material';
+import CreateOrEditBillDialog from '../../components/dialogs/crm/CreateOrEditBillDialog'
+import ViewRefersBillHistoryDialog from '../../components/dialogs/crm/ViewRefersBillHistoryDialog'
 
 
 
@@ -49,7 +51,31 @@ export default function NewReferReportPage() {
         Cell: ({ cell }) => <PopUp
           element={
             <Stack direction="row" spacing={1}>
+              {LoggedInUser?.assigned_permissions.includes('create_refer_bills') && <Tooltip title="upload bill">
+                <IconButton color="error"
 
+                  onClick={() => {
+                    setChoice({ type: LeadChoiceActions.create_or_edit_bill })
+                    setRefer(cell.row.original)
+
+                  }}
+                >
+                  <Upload />
+                </IconButton>
+              </Tooltip>}
+
+              {LoggedInUser?.assigned_permissions.includes('view_refer_bills') && <Tooltip title="view bills">
+                <IconButton color="primary"
+
+                  onClick={() => {
+
+                    setChoice({ type: LeadChoiceActions.view_bills })
+                    setRefer(cell.row.original)
+                  }}
+                >
+                  <Visibility />
+                </IconButton>
+              </Tooltip>}
               {LoggedInUser?.is_admin && LoggedInUser.assigned_permissions.includes('newrefer_delete') &&
                 <Tooltip title="delete">
                   <IconButton color="error"
@@ -351,6 +377,8 @@ export default function NewReferReportPage() {
                   <DeleteCrmItemDialog refer={refer ? { id: refer._id, label: refer.name, value: refer.name } : undefined} />
                   <AllReferralPageDialog refer={refer} />
                   <ViewReferRemarksDialog id={refer._id} />
+                  <CreateOrEditBillDialog refer={refer} bill={undefined} />
+                  <ViewRefersBillHistoryDialog id={refer._id} />
                 </>
                 : null
             }

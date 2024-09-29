@@ -377,6 +377,22 @@ export function FetchAllPermissions() {
                         label: 'Merge Leads'
                     },
                     {
+                        value: 'create_lead_bills',
+                        label: 'Upload Bill'
+                    },
+                    {
+                        value: 'edit_lead_bills',
+                        label: 'Edit Bill'
+                    },
+                    {
+                        value: 'delete_lead_bills',
+                        label: 'Delete Bill'
+                    },
+                    {
+                        value: 'view_lead_bills',
+                        label: 'View Bills'
+                    },
+                    {
                         value: 'leads_export',
                         label: 'export'
                     }
@@ -404,7 +420,23 @@ export function FetchAllPermissions() {
                     {
                         value: 'refer_export',
                         label: 'export'
-                    }
+                    },
+                    {
+                        value: 'create_refer_bills',
+                        label: 'Upload Bill'
+                    },
+                    {
+                        value: 'edit_refer_bills',
+                        label: 'Edit Bill'
+                    },
+                    {
+                        value: 'delete_refer_bills',
+                        label: 'Delete Bill'
+                    },
+                    {
+                        value: 'view_refer_bills',
+                        label: 'View Bills'
+                    },
                 ]
             },
             {

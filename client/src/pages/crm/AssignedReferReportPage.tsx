@@ -10,7 +10,7 @@ import moment from 'moment'
 import { GetLeadDto } from '../../dtos/crm/crm.dto'
 import PopUp from '../../components/popup/PopUp'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import { BuildOutlined, Comment, Delete, Edit, Share, Visibility } from '@mui/icons-material'
+import { BuildOutlined, Comment, Delete, Edit, Share, Upload, Visibility } from '@mui/icons-material'
 import { UserContext } from '../../contexts/userContext'
 import CreateOrEditRemarkDialog from '../../components/dialogs/crm/CreateOrEditRemarkDialog'
 import ViewRemarksDialog from '../../components/dialogs/crm/ViewRemarksDialog'
@@ -23,6 +23,9 @@ import RemoveLeadReferralDialog from '../../components/dialogs/crm/RemoveLeadRef
 import ConvertLeadToReferDialog from '../../components/dialogs/crm/ConvertLeadToReferDialog'
 import ExportToExcel from '../../utils/ExportToExcel'
 import { Menu as MenuIcon } from '@mui/icons-material';
+import CreateOrEditBillDialog from '../../components/dialogs/crm/CreateOrEditBillDialog'
+import ViewLeadsBillHistoryDialog from '../../components/dialogs/crm/ViewLeadsBillHistoryDialog'
+import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
 
 export default function AssignedReferReportPage() {
   const [leads, setLeads] = useState<GetLeadDto[]>([])
@@ -109,9 +112,31 @@ export default function AssignedReferReportPage() {
               </Tooltip>}
 
 
+              {LoggedInUser?.assigned_permissions.includes('create_lead_bills') && <Tooltip title="upload bill">
+                <IconButton color="error"
 
+                  onClick={() => {
+                    setChoice({ type: LeadChoiceActions.create_or_edit_bill })
+                    setLead(cell.row.original)
 
+                  }}
+                >
+                  <Upload />
+                </IconButton>
+              </Tooltip>}
 
+              {LoggedInUser?.assigned_permissions.includes('view_lead_bills') && <Tooltip title="view bills">
+                <IconButton color="primary"
+
+                  onClick={() => {
+
+                    setChoice({ type: LeadChoiceActions.view_bills })
+                    setLead(cell.row.original)
+                  }}
+                >
+                  <Visibility />
+                </IconButton>
+              </Tooltip>}
               {LoggedInUser?.assigned_permissions.includes('assignedrefer_edit') &&
                 <Tooltip title="edit">
                   <IconButton color="secondary"
@@ -487,12 +512,15 @@ export default function AssignedReferReportPage() {
             <ViewRemarksDialog id={lead._id} />
             <ReferLeadDialog lead={lead} />
             <RemoveLeadReferralDialog lead={lead} />
+            <CreateOrEditLeadDialog lead={lead} />
             <ConvertLeadToReferDialog lead={lead} />
+            <CreateOrEditBillDialog lead={lead} bill={undefined} />
+            <ViewLeadsBillHistoryDialog id={lead._id} />
           </>
           : null
       }
       {/* table */}
-    <MaterialReactTable table={table} />
+      <MaterialReactTable table={table} />
     </>
 
   )

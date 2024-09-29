@@ -255,22 +255,21 @@ export type GetBillItemDto = {
 
 }
 export type CreateOrEditBillItemDto = {
+    _id?: string,
     article: string,
     qty: number,
     rate: number,
-    bill: string,
 }
-
 export type GetBillDto = {
     _id: string,
-    items: DropDownDto[],
+    items: CreateOrEditBillItemDto[],
     lead?: DropDownDto,
     billphoto: string,
     refer?: DropDownDto,
     bill_no: string,
     bill_date: string,
-    created_at: string,
-    updated_at: string,
+    created_at: Date,
+    updated_at: Date,
     created_by: DropDownDto,
     updated_by: DropDownDto
 
@@ -281,7 +280,7 @@ export type CreateOrEditBillDto = {
     billphoto: string,
     refer: string,
     bill_no: string,
-    bill_date: Date,
+    bill_date: string,
 }
 
 export type CreateOrEditRemarkDto = {

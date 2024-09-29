@@ -121,6 +121,9 @@ export const CreateOrEditRemark = async ({ body, lead_id, remark_id }: {
 export const DeleteRemark = async (id: string) => {
   return await apiClient.delete(`remarks/${id}`)
 }
+export const DeleteBill = async (id: string) => {
+  return await apiClient.delete(`bills/${id}`)
+}
 
 
 //refers
@@ -132,6 +135,12 @@ export const GetRefers = async () => {
 }
 export const GetRemarksHistory = async ({ id }: { id: string }) => {
   return await apiClient.get(`remarks/${id}`)
+}
+export const GetLeadBillHistory = async ({ id }: { id: string }) => {
+  return await apiClient.get(`bills/history/leads/${id}`)
+}
+export const GetReferBillHistory = async ({ id }: { id: string }) => {
+  return await apiClient.get(`bills/history/refers/${id}`)
 }
 export const GetReferRemarksHistory = async ({ id }: { id: string }) => {
   return await apiClient.get(`remarks/refers/${id}`)

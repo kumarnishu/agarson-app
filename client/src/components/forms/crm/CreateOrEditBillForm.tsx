@@ -1,213 +1,342 @@
-// import { Button, Checkbox, CircularProgress, FormControlLabel, FormGroup, Stack, TextField } from '@mui/material';
-// import { AxiosResponse } from 'axios';
-// import { useFormik } from 'formik';
-// import { useEffect, useContext, useState } from 'react';
-// import { useMutation, useQuery } from 'react-query';
-// import * as Yup from "yup"
-// import { CreateOrEditBill,  GetAllStages } from '../../../services/LeadsServices';
-// import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
-// import { BackendError } from '../../..';
-// import { queryClient } from '../../../main';
-// import AlertBar from '../../snacks/AlertBar';
-// import { toTitleCase } from '../../../utils/TitleCase';
-// import { DropDownDto } from '../../../dtos/common/dropdown.dto';
-// import { GetBillDto } from '../../../dtos/crm/crm.dto';
+import { Button, CircularProgress, Divider, Stack, TextField } from '@mui/material';
+import { AxiosResponse } from 'axios';
+import { useFormik } from 'formik';
+import { useEffect, useContext, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
+import * as Yup from "yup"
+import { CreateOrEditBill } from '../../../services/LeadsServices';
+import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext';
+import { BackendError, Target } from '../../..';
+import { queryClient } from '../../../main';
+import AlertBar from '../../snacks/AlertBar';
+import { toTitleCase } from '../../../utils/TitleCase';
+import { CreateOrEditBillItemDto, GetBillDto, GetLeadDto, GetReferDto } from '../../../dtos/crm/crm.dto';
+import moment from 'moment';
+import { IArticle } from '../../../types/production.types';
+import { GetArticles } from '../../../services/ProductionServices';
+import { Delete } from '@mui/icons-material';
 
 
-// function CreateOrEditBillForm({ lead, bill, setDisplay2 }: { lead?: { _id: string, has_card?: boolean }, bill?: GetBillDto, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
-//     const [display, setDisplay] = useState(false)
-//     const [card, setCard] = useState(Boolean(lead?.has_card))
-//     const [stages, setStages] = useState<DropDownDto[]>([])
-//     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-//         <AxiosResponse<string>, BackendError, {
-//             lead_id?: string,
-//             bill_id?: string,
-//             body: FormData
-//         }>
-//         (CreateOrEditBill, {
-//             onSuccess: () => {
-//                 queryClient.resetQueries('bills')
-//             }
-//         })
-//     const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
-
-//     const { setChoice } = useContext(ChoiceContext)
-
-//     const formik = useFormik<{
-//         bill: string,
-//         remind_date?: string,
-//         stage: string,
-//         has_card: boolean
-//     }>({
-//         initialValues: {
-//             bill_no: bill ? bill.bill_no : "",
-//             bill_date: bill ? bill.bill_date : ""
-//         },
-//         validationSchema: Yup.object({
-//             stage: Yup.string().required("required field"),
-//             bill: Yup.string().required("required field")
-//                 .min(5, 'Must be 5 characters or more')
-//                 .max(200, 'Must be 200 characters or less')
-//                 .required('Required field'),
-//             remind_date: Yup.string().test(() => {
-//                 if (display && !formik.values.remind_date)
-//                     return false
-//                 else
-//                     return true
-//             })
-//         }),
-//         onSubmit: (values: {
-//             bill: string,
-//             stage: string,
-//             lead_owners?: string[],
-//             remind_date?: string
-//         }) => {
-//             mutate({
-//                 lead_id: lead && lead._id,
-//                 bill_id: bill?._id,
-//                 body: {
-//                     bill: values.bill,
-//                     has_card: card,
-//                     remind_date: values.remind_date,
-//                     stage: values.stage
-//                 }
-//             })
-//         }
-//     });
-
-//     useEffect(() => {
-//         if (stageSuccess) {
-//             setStages(stagedata.data)
-//         }
-//     }, [isSuccess, stages, stagedata])
+function CreateOrEditBillForm({ lead, refer, setDisplay2, bill }: { lead?: GetLeadDto, refer?: GetReferDto, bill?: GetBillDto, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
+    const [items, setItems] = useState<CreateOrEditBillItemDto[]>(bill?.items || [])
+    const [item, setItem] = useState<CreateOrEditBillItemDto>()
+    const [articles, setArticles] = useState<IArticle[]>([])
+    const { data: articlesData, isSuccess: isSucessArticles } = useQuery<AxiosResponse<IArticle[]>, BackendError>(["articles"], async () => GetArticles(String(false)))
+    const { mutate, isLoading, isSuccess, isError, error } = useMutation
+        <AxiosResponse<string>, BackendError, {
+            body: FormData,
+            id?: string,
+        }>
+        (CreateOrEditBill, {
+            onSuccess: () => {
+                queryClient.invalidateQueries('bills')
+            }
+        })
 
 
-//     useEffect(() => {
-//         if (isSuccess) {
-//             setChoice({ type: LeadChoiceActions.close_lead })
-//             if (setDisplay2)
-//                 setDisplay2(false);
-//             setCard(false)
-//         }
-//     }, [isSuccess, setChoice])
-//     return (
-//         <form onSubmit={formik.handleSubmit}>
-//             <Stack
-//                 gap={2}
-//                 pt={2}
-//             >
-//                 {/* bills */}
-//                 <TextField
-//                     multiline
-//                     minRows={4}
-//                     required
-//                     error={
-//                         formik.touched.bill && formik.errors.bill ? true : false
-//                     }
-//                     autoFocus
-//                     id="bill"
-//                     label="Remark"
-//                     fullWidth
-//                     helperText={
-//                         formik.touched.bill && formik.errors.bill ? formik.errors.bill : ""
-//                     }
-//                     {...formik.getFieldProps('bill')}
-//                 />
-//                 {lead && <>
-//                     <FormGroup>
-//                         <FormControlLabel control={<Checkbox
-//                             checked={Boolean(display)}
-//                             onChange={() => setDisplay(!display)}
-//                         />} label="Make Reminder" />
-//                     </FormGroup>
-//                     {display && < TextField
-//                         type="date"
-//                         error={
-//                             formik.touched.remind_date && formik.errors.remind_date ? true : false
-//                         }
-//                         focused
-//                         id="remind_date"
-//                         label="Remind Date"
-//                         fullWidth
-//                         helperText={
-//                             formik.touched.remind_date && formik.errors.remind_date ? formik.errors.remind_date : ""
-//                         }
-//                         {...formik.getFieldProps('remind_date')}
-//                     />}
-//                     <FormGroup>
-//                         <FormControlLabel control={<Checkbox
-//                             checked={Boolean(card)}
-//                             onChange={() => setCard(!card)}
-//                         />} label="Have a Visiting Card ?" />
-//                     </FormGroup>
+    const { setChoice } = useContext(ChoiceContext)
 
-//                     {/* stage */}
-//                     < TextField
-//                         select
-//                         SelectProps={{
-//                             native: true
-//                         }}
-//                         focused
+    const formik = useFormik<{
+        lead?: string,
+        billphoto: string,
+        refer?: string,
+        bill_no: string,
+        bill_date: string,
+    }>({
+        initialValues: {
+            lead: lead?._id,
+            billphoto: "",
+            refer: refer?._id,
+            bill_no: bill ? bill.bill_no : "",
+            bill_date: bill ? moment(new Date(bill.bill_date)).format("YYYY-MM-DD") : moment(new Date()).format("YYYY-MM-DD"),
+        },
+        validationSchema: Yup.object({
+            lead: Yup.string(),
+            refer: Yup.string(),
+            bill_no: Yup.string().required('required field'),
+            bill_date: Yup.string().required('required field'),
+            billphoto: Yup.mixed<File>()
+                .test("size", "size is allowed only less than 10mb",
+                    file => {
+                        if (file)
+                            if (!file.size) //file not provided
+                                return true
+                            else
+                                return Boolean(file.size <= 20 * 1024 * 1024)
+                        return true
+                    }
+                )
+                .test("type", " allowed only .jpg, .jpeg, .png, .gif .pdf .csv .xlsx .docs",
+                    file => {
+                        const Allowed = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"]
+                        if (file)
+                            if (!file.size) //file not provided
+                                return true
+                            else
+                                return Boolean(Allowed.includes(file.type))
+                        return true
+                    }
+                )
+        }),
+        onSubmit: (values) => {
+            let body = {
+                items: items,
+                lead: values.lead,
+                refer: values.refer,
+                bill_no: values.bill_no,
+                bill_date: values.bill_date,
+            }
+            let formdata = new FormData()
+            formdata.append("body", JSON.stringify(body))
+            if (values.billphoto)
+                formdata.append("billphoto", values.billphoto)
+            if (bill && bill._id)
+                mutate({ id: bill?._id, body: formdata });
+            else
+                mutate({ body: formdata });
+        }
+    });
 
-//                         error={
-//                             formik.touched.stage && formik.errors.stage ? true : false
-//                         }
-//                         id="stage"
-//                         label="Stage"
-//                         fullWidth
-//                         helperText={
-//                             formik.touched.stage && formik.errors.stage ? formik.errors.stage : ""
-//                         }
-//                         {...formik.getFieldProps('stage')}
-//                     >
-//                         <option value="">
+    const handleRemove = (itm: CreateOrEditBillItemDto) => {
+        if (itm) {
+            let tmp = items.filter((it) => { return it.article !== itm.article })
+            setItems(tmp)
+        }
+    }
+    const handleAdd = () => {
+        let tmp = items;
 
-//                         </option>
-//                         {
-//                             stages.map(stage => {
-//                                 if (stage.value === "refer")
-//                                     return null
-//                                 else
-//                                     return (<option key={stage.id} value={stage.value}>
-//                                         {toTitleCase(stage.label)}
-//                                     </option>)
-//                             })
-//                         }
-//                     </TextField>
-//                 </>}
+        if (item && !items.find((it) => it.article === item.article)) {
+            tmp.push(item)
+            setItems(tmp)
+            setItem(undefined)
+        }
+    }
+    useEffect(() => {
+        if (isSucessArticles && articlesData) {
+            setArticles(articlesData.data)
+        }
+    }, [isSucessArticles])
 
+    useEffect(() => {
+        if (isSuccess) {
+            setChoice({ type: LeadChoiceActions.close_lead })
+            if (setDisplay2)
+                setDisplay2(false);
+        }
+    }, [isSuccess, setChoice])
+    return (
+        <form onSubmit={formik.handleSubmit}>
+            <Stack
+                gap={2}
+                pt={2}
+            >
+                {/* remarks */}
+                <TextField
+                    required
+                    error={
+                        formik.touched.bill_no && formik.errors.bill_no ? true : false
+                    }
+                    autoFocus
+                    id="bill_no"
+                    label="Bill No"
+                    fullWidth
+                    helperText={
+                        formik.touched.bill_no && formik.errors.bill_no ? formik.errors.bill_no : ""
+                    }
+                    {...formik.getFieldProps('bill_no')}
+                />
 
-//                 <Button variant="contained" color="primary" type="submit"
-//                     disabled={Boolean(isLoading)}
-//                     fullWidth>{Boolean(isLoading) ? <CircularProgress /> : !bill ? "Add Remark" : "Update Remark"}
-//                 </Button>
-//             </Stack>
+                < TextField
+                    type="date"
+                    error={
+                        formik.touched.bill_date && formik.errors.bill_date ? true : false
+                    }
+                    focused
+                    required
+                    id="bill_date"
+                    label="Billing Date"
+                    fullWidth
+                    helperText={
+                        formik.touched.bill_date && formik.errors.bill_date ? formik.errors.bill_date : ""
+                    }
+                    {...formik.getFieldProps('bill_date')}
+                />
 
-//             {
-//                 isError ? (
-//                     <>
-//                         {<AlertBar message={error?.response.data.message} color="error" />}
-//                     </>
-//                 ) : null
-//             }
-//             {
-//                 isSuccess ? (
-//                     <>
-//                         {!bill ? <AlertBar message="new bill created" color="success" /> : <AlertBar message="bill updated" color="success" />}
-//                     </>
-//                 ) : null
-//             }
+                <TextField
+                    fullWidth
+                    error={
+                        formik.touched.billphoto && formik.errors.billphoto ? true : false
+                    }
+                    helperText={
+                        formik.touched.billphoto && formik.errors.billphoto ? (formik.errors.billphoto) : ""
+                    }
+                    label="Bill"
+                    focused
 
-//         </form>
-//     )
-// }
+                    type="file"
+                    name="billphoto"
+                    onBlur={formik.handleBlur}
+                    onChange={(e) => {
+                        e.preventDefault()
+                        const target: Target = e.currentTarget
+                        let files = target.files
+                        if (files) {
+                            let file = files[0]
+                            formik.setFieldValue("billphoto", file)
+                        }
+                    }}
+                />
+                <Divider />
+                {/* bill items */}
+                <Stack direction={'row'} gap={1}>
+                    < TextField
+                        select
+                        SelectProps={{
+                            native: true
+                        }}
+                        focused
+                        id="article"
+                        label="Articles"
+                        fullWidth
+                        value={item ? item.article : ""}
+                        onChange={(e) => {
+                            if (e.target.value)
+                                //@ts-ignore
+                                setItem({
+                                    ...item,
+                                    article: e.target.value
+                                })
+                        }}
+                    >
+                        <option value="" key={'00'}>
+                            Select
+                        </option>
 
-// export default CreateOrEditBillForm
+                        {
+                            articles && articles.map((art, index) => {
+                                return <option key={index} value={art._id} >
+                                    {toTitleCase(art.name)}
+                                </option>
 
-function CreateOrEditBillForm() {
-  return (
-    <div>CreateOrEditBillForm</div>
-  )
+                            })
+                        }
+                    </TextField>
+
+                    < TextField
+                        type="number"
+                        focused
+                        id="qty"
+                        value={item ? item.qty : 0}
+                        onChange={(e) => {
+                            if (e.target.value)
+                                //@ts-ignore
+                                setItem({
+                                    ...item,
+                                    qty: Number(e.target.value)
+                                })
+                        }}
+                        label="Qty"
+                        fullWidth
+                    />
+                    < TextField
+                        type="number"
+                        focused
+                        id="rate"
+                        label="Rate"
+                        onChange={(e) => {
+                            if (e.target.value)
+                                //@ts-ignore
+                                setItem({
+                                    ...item,
+                                    rate: Number(e.target.value)
+                                })
+                        }}
+                        fullWidth
+                        value={item ? item.rate : 0}
+                    />
+                    <Button size="small" variant='contained' onClick={handleAdd}>+</Button>
+                </Stack>
+                <>
+                    {items && items.map((it, index) => {
+                        return <Stack key={index}>
+                            <Stack direction={'row'} gap={1}>
+                                < TextField
+                                    select
+                                    SelectProps={{
+                                        native: true
+                                    }}
+                                    disabled
+                                    focused
+                                    required
+                                    id="article"
+                                    label="Articles"
+                                    fullWidth
+                                    value={it ? it.article : ""}
+                                >
+                                    <option value="" key={'00'}>
+                                        Select
+                                    </option>
+
+                                    {
+                                        articles && articles.map((art, index) => {
+                                            return <option key={index} value={art._id} >
+                                                {toTitleCase(art.name)}
+                                            </option>
+
+                                        })
+                                    }
+                                </TextField>
+
+                                < TextField
+                                    required
+                                    type="number"
+                                    focused
+                                    id="qty"
+                                    value={it ? it.qty : 0}
+                                    label="Qty"
+                                    fullWidth
+                                    disabled
+                                />
+                                < TextField
+                                    required
+                                    type="number"
+                                    focused
+                                    id="rate"
+                                    label="Rate"
+                                    fullWidth
+                                    disabled
+                                    value={it ? it.rate : 0}
+                                />
+                                <Button size="small" variant='contained' onClick={() => handleRemove({ ...it, _id: String(index) })}><Delete /></Button>
+                            </Stack>
+                        </Stack>
+                    })}
+                </>
+                <Button variant="contained" color="primary" type="submit"
+                    disabled={Boolean(isLoading)}
+                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : !bill ? "Submit" : "Update "}
+                </Button>
+
+            </Stack>
+
+            {
+                isError ? (
+                    <>
+                        {<AlertBar message={error?.response.data.message} color="error" />}
+                    </>
+                ) : null
+            }
+            {
+                isSuccess ? (
+                    <>
+                        {!bill ? <AlertBar message="new bill created" color="success" /> : <AlertBar message="bill updated" color="success" />}
+                    </>
+                ) : null
+            }
+
+        </form >
+    )
 }
 
 export default CreateOrEditBillForm

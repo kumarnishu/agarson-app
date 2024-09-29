@@ -1,4 +1,4 @@
-import { Delete, Edit, Search, Visibility } from '@mui/icons-material'
+import { Delete, Edit, Search, Upload, Visibility } from '@mui/icons-material'
 import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
@@ -20,6 +20,8 @@ import AllReferralPageDialog from '../../components/dialogs/crm/AllReferralPageD
 import ViewReferRemarksDialog from '../../components/dialogs/crm/ViewReferRemarksDialog'
 import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServices'
 import ExportToExcel from '../../utils/ExportToExcel'
+import CreateOrEditBillDialog from '../../components/dialogs/crm/CreateOrEditBillDialog'
+import ViewRefersBillHistoryDialog from '../../components/dialogs/crm/ViewRefersBillHistoryDialog'
 
 export default function RefersPage() {
   const [paginationData, setPaginationData] = useState({ limit: 20, page: 1, total: 1 });
@@ -121,8 +123,33 @@ export default function RefersPage() {
                   >
                     <Delete />
                   </IconButton>
-                </Tooltip>
-              }
+                </Tooltip>}
+            
+              {LoggedInUser?.assigned_permissions.includes('create_refer_bills') && <Tooltip title="upload bill">
+                <IconButton color="error"
+
+                  onClick={() => {
+                    setChoice({ type: LeadChoiceActions.create_or_edit_bill })
+                    setRefer(cell.row.original)
+
+                  }}
+                >
+                  <Upload />
+                </IconButton>
+              </Tooltip>}
+
+              {LoggedInUser?.assigned_permissions.includes('view_refer_bills') && <Tooltip title="view bills">
+                <IconButton color="primary"
+
+                  onClick={() => {
+
+                    setChoice({ type: LeadChoiceActions.view_bills })
+                    setRefer(cell.row.original)
+                  }}
+                >
+                  <Visibility />
+                </IconButton>
+              </Tooltip>}
               {LoggedInUser?.assigned_permissions.includes('refer_edit') && <Tooltip title="edit">
                 <IconButton color="secondary"
 
@@ -413,6 +440,8 @@ export default function RefersPage() {
               <DeleteCrmItemDialog refer={refer ? { id: refer._id, label: refer.name, value: refer.name } : undefined} />
               <AllReferralPageDialog refer={refer} />
               <ViewReferRemarksDialog id={refer._id} />
+              <CreateOrEditBillDialog refer={refer} bill={undefined} />
+              <ViewRefersBillHistoryDialog id={refer._id} />
             </>
             : null
         }

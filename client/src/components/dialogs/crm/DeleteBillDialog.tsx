@@ -3,21 +3,21 @@ import { AxiosResponse } from 'axios';
 import { useContext, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
-import { DeleteRemark } from '../../../services/LeadsServices';
+import { DeleteBill } from '../../../services/LeadsServices';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
-import {  GetRemarksDto } from '../../../dtos/crm/crm.dto';
+import {  GetBillDto } from '../../../dtos/crm/crm.dto';
 
 
-function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: GetRemarksDto, display: boolean, setDisplay: React.Dispatch<React.SetStateAction<boolean>> }) {
+function DeleteBillDialog({ bill, display, setDisplay }: { bill: GetBillDto, display: boolean, setDisplay: React.Dispatch<React.SetStateAction<boolean>> }) {
   const { choice, setChoice } = useContext(ChoiceContext)
   const { mutate, isLoading, isSuccess, error, isError } = useMutation
     <AxiosResponse<any>, BackendError, string>
-    (DeleteRemark, {
+    (DeleteBill, {
       onSuccess: () => {
-        queryClient.invalidateQueries('remarks')
+        queryClient.invalidateQueries('bills')
       }
     })
 
@@ -30,7 +30,7 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: GetRemark
   }, [isSuccess])
 
   return (
-    <Dialog open={choice === LeadChoiceActions.delete_remark || display ? true : false}
+    <Dialog open={choice === LeadChoiceActions.delete_bill || display ? true : false}
     >
       <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => {
         if (!display)
@@ -41,7 +41,7 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: GetRemark
         <Cancel fontSize='large' />
       </IconButton>
       <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-        Delete Remark
+        Delete Bill
       </DialogTitle>
       {
         isError ? (
@@ -55,7 +55,7 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: GetRemark
       }
       <DialogContent>
         <Typography variant="h4" color="error">
-          Are you sure to permanently delete this remark ?
+          Are you sure to permanently delete this bill ?
 
         </Typography>
       </DialogContent>
@@ -67,7 +67,7 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: GetRemark
       >
         <Button fullWidth variant="outlined" color="error"
           onClick={() => {
-            mutate(remark._id)
+            mutate(bill._id)
           }}
           disabled={isLoading}
         >
@@ -88,4 +88,4 @@ function DeleteRemarkDialog({ remark, display, setDisplay }: { remark: GetRemark
   )
 }
 
-export default DeleteRemarkDialog
+export default DeleteBillDialog

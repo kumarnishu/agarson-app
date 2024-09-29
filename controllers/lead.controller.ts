@@ -3176,12 +3176,14 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
 }
 
 export const CreateBill = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body)
     const {
         items,
         lead,
         refer,
         bill_no,
-        bill_date } = req.body as CreateOrEditBillDto
+        bill_date } = body as CreateOrEditBillDto
+    console.log(body, bill_no)
     if (!bill_no || !bill_date || !items) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -3226,7 +3228,7 @@ export const CreateBill = async (req: Request, res: Response, next: NextFunction
         }
     }
     bill.billphoto = document;
-    for (let i = 0; i <= items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         let item = items[i]
         await new BillItem({
             article: item.article,
@@ -3249,7 +3251,9 @@ export const UpdateBill = async (req: Request, res: Response, next: NextFunction
     let bill = await Bill.findById(id)
     if (!bill)
         return res.status(404).json({ message: "bill not found" })
-    const { items, bill_no, bill_date } = req.body as CreateOrEditBillDto
+    let body = JSON.parse(req.body.body)
+    const { items, bill_no, bill_date } = body as CreateOrEditBillDto
+
     if (!bill_no || !bill_date || !items) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -3257,7 +3261,7 @@ export const UpdateBill = async (req: Request, res: Response, next: NextFunction
     if (bill.bill_no !== bill_no.toLowerCase())
         if (await Bill.findOne({ bill_no: bill_no.toLowerCase() }))
             return res.status(400).json({ message: "already exists this bill no" })
-    let document: Asset = bill.billphoto
+    let document: Asset = bill.billphoto;
     if (req.file) {
         const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
         const storageLocation = `bills/media`;
@@ -3276,7 +3280,7 @@ export const UpdateBill = async (req: Request, res: Response, next: NextFunction
         }
     }
 
-    for (let i = 0; i <= items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         let item = items[i]
         let existBill = await BillItem.findById(item._id)
         if (existBill) {
@@ -3346,10 +3350,17 @@ export const GetReferPartyBillsHistory = async (req: Request, res: Response, nex
             bill_no: bill.bill_no,
             refer: { id: refer && refer._id, value: refer && refer.name, label: refer && refer.name },
             billphoto: bill.billphoto?.public_url || "",
-            items: billItems.map((i) => { return { id: i._id, value: i.article.name, label: i.article.name } }),
+            items: billItems.map((i) => {
+                return {
+                    _id: i._id,
+                    article: i.article._id,
+                    qty: i.qty,
+                    rate: i.rate
+                }
+            }),
             bill_date: bill.bill_date && moment(bill.bill_date).format("DD/MM/YYYY"),
-            created_at: moment(bill.created_at).format("DD/MM/YYYY"),
-            updated_at: moment(bill.updated_at).format("DD/MM/YYYY"),
+            created_at: bill.created_at,
+            updated_at: bill.updated_at,
             created_by: { id: bill.created_by._id, value: bill.created_by.username, label: bill.created_by.username },
             updated_by: { id: bill.updated_by._id, value: bill.updated_by.username, label: bill.updated_by.username }
         })
@@ -3376,10 +3387,17 @@ export const GetLeadPartyBillsHistory = async (req: Request, res: Response, next
             bill_no: bill.bill_no,
             lead: { id: lead && lead._id, value: lead && lead.name, label: lead && lead.name },
             billphoto: bill.billphoto?.public_url || "",
-            items: billItems.map((i) => { return { id: i._id, value: i.article.name, label: i.article.name } }),
+            items: billItems.map((i) => {
+                return {
+                    _id: i._id,
+                    article: i.article._id,
+                    qty: i.qty,
+                    rate: i.rate
+                }
+            }),
             bill_date: bill.bill_date && moment(bill.bill_date).format("DD/MM/YYYY"),
-            created_at: moment(bill.created_at).format("DD/MM/YYYY"),
-            updated_at: moment(bill.updated_at).format("DD/MM/YYYY"),
+            created_at: bill.created_at,
+            updated_at: bill.updated_at,
             created_by: { id: bill.created_by._id, value: bill.created_by.username, label: bill.created_by.username },
             updated_by: { id: bill.updated_by._id, value: bill.updated_by.username, label: bill.updated_by.username }
         })
