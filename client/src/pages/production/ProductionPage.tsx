@@ -299,8 +299,7 @@ export default function ProductionAdminPage() {
             productions={MemoData}
           />
         </Box>}
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />
-    </>
+      <DBPagination paginationData={paginationData} refetch={ReftechProductions} setPaginationData={setPaginationData} />    </>
 
   )
 

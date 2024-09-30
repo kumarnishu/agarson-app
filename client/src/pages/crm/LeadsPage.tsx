@@ -1,4 +1,4 @@
-import { BuildOutlined, Comment, Delete, Edit, Search, Share,  Visibility } from '@mui/icons-material'
+import { BuildOutlined, Comment, Delete, Edit, Search, Share, Visibility } from '@mui/icons-material'
 import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
@@ -44,7 +44,7 @@ export default function LeadsPage() {
   const [stages, setStages] = useState<DropDownDto[]>([])
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { data, isLoading, refetch } = useQuery<AxiosResponse<{ result: GetLeadDto[], page: number, total: number, limit: number }>, BackendError>(["leads", paginationData], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
+  const { data, isLoading, refetch } = useQuery<AxiosResponse<{ result: GetLeadDto[], page: number, total: number, limit: number }>, BackendError>(["leads"], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
 
   const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
 
@@ -195,7 +195,7 @@ export default function LeadsPage() {
               </Tooltip>}
 
 
-            
+
 
 
 
@@ -231,7 +231,7 @@ export default function LeadsPage() {
                   <Visibility />
                 </IconButton>
               </Tooltip>}
-            
+
               {LoggedInUser?.assigned_permissions.includes('leads_edit') &&
                 <Tooltip title="Add Remark">
                   <IconButton
@@ -637,12 +637,12 @@ export default function LeadsPage() {
             <ReferLeadDialog lead={lead} />
             <RemoveLeadReferralDialog lead={lead} />
             <ConvertLeadToReferDialog lead={lead} />
-          
+
           </>
           : null
       }
       <MaterialReactTable table={table} />
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+      <DBPagination paginationData={paginationData} refetch={refetch} setPaginationData={setPaginationData} />
 
     </>
 

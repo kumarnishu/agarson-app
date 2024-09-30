@@ -332,7 +332,7 @@ export default function VisitAttendencePage() {
                         attendences={MemoData}
                     />
                 </Box>}
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData}  />
+            <DBPagination paginationData={paginationData} refetch={ReftechVisits} setPaginationData={setPaginationData} />
         </>
 
     )

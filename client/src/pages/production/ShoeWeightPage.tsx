@@ -332,8 +332,7 @@ export default function ShoeWeightAdminPage() {
             shoe_weights={MemoData}
           />
         </Box>}
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
-    </>
+      <DBPagination paginationData={paginationData} refetch={ReftechShoeWeights} setPaginationData={setPaginationData} />    </>
 
   )
 

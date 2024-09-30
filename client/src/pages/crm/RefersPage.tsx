@@ -34,9 +34,9 @@ export default function RefersPage() {
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 20, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
 
-  const { data, isLoading } = useQuery<AxiosResponse<{
+  const { data, isLoading, refetch } = useQuery<AxiosResponse<{
     result: GetReferDto[], page: number, total: number, limit: number
-  }>, BackendError>(["refers", paginationData], async () => GetPaginatedRefers({ limit: paginationData?.limit, page: paginationData?.page }))
+  }>, BackendError>(["refers"], async () => GetPaginatedRefers({ limit: paginationData?.limit, page: paginationData?.page }))
 
 
   const { data: fuzzyrefers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{
@@ -447,7 +447,7 @@ export default function RefersPage() {
         }
       </>
       <MaterialReactTable table={table} />
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+      <DBPagination paginationData={paginationData} refetch={refetch}setPaginationData={setPaginationData} />
     </>
 
   )

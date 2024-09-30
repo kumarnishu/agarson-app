@@ -436,7 +436,7 @@ function CrmActivitiesReportPage() {
                 has_card: remark.has_card
             } : undefined} />}
             <MaterialReactTable table={table} />
-            <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
+            <DBPagination paginationData={paginationData} refetch={ReftechRemarks} setPaginationData={setPaginationData} />
 
         </>
     )

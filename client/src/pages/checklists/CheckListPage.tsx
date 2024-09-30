@@ -250,8 +250,7 @@ function CheckListPage() {
         }
         {!isLoading && checklists.length == 0 && <p style={{ textAlign: 'center' }}>No Activity Found</p>}
       </>
-      <DBPagination paginationData={paginationData} setPaginationData={setPaginationData} />
-    </>
+      <DBPagination paginationData={paginationData} refetch={ReftechChecklists} setPaginationData={setPaginationData} />    </>
   )
 }
 

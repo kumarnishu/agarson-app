@@ -1,4 +1,4 @@
-import { IconButton, Stack } from "@mui/material"
+import { Button, IconButton, Stack } from "@mui/material"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
@@ -12,12 +12,13 @@ type Props = {
         limit: number;
         page: number;
         total: number;
-    }>>
+    }>>,
+    refetch: () => void
 }
-function DBPagination({ paginationData, setPaginationData }: Props) {
+function DBPagination({ paginationData, setPaginationData,refetch }: Props) {
     return (
         <>
-            <Stack sx={{bottom: 0, width: '100vw', bgcolor: 'white', right: 0 }} direction={'row'} justifyContent={'space-evenly'} p={1}>
+            <Stack sx={{ bottom: 0, width: '100vw', bgcolor: 'white', right: 0 }} direction={'row'} justifyContent={'space-evenly'} p={1}>
                 <Stack direction={'row'}
                     spacing={2}
                     px={2}
@@ -36,7 +37,7 @@ function DBPagination({ paginationData, setPaginationData }: Props) {
                         }}
                     >
                         {
-                            [10,20,50,100,200,500,1000].map(item => {
+                            [10, 20, 50, 100, 200, 500, 1000].map(item => {
                                 return (<option key={item} value={item}>
                                     {item}
                                 </option>)
@@ -44,6 +45,7 @@ function DBPagination({ paginationData, setPaginationData }: Props) {
                         }
                     </select>
                     <label> Pages {`${paginationData.page}  Of  ${paginationData.total} `}</label>
+                    <Button size="small" variant="contained" color="inherit" sx={{ py: 0 }} onClick={() => refetch()}>Go</Button>
                 </Stack>
                 <Stack
                     spacing={2} direction={"row"}
