@@ -79,7 +79,6 @@ function DeleteCrmItemDialog({ refer, lead, state, city, type, source, stage }: 
             >
                 <Button fullWidth variant="outlined" color="error"
                     onClick={() => {
-                        setChoice({ type: LeadChoiceActions.delete_refer })
                         mutate({ refer, lead, state, city, type, source, stage })
                     }}
                     disabled={isLoading}
