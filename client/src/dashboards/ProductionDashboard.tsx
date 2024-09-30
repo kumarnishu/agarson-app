@@ -16,6 +16,7 @@ function ProductionDashboard() {
     user?.assigned_permissions.includes('dye_location_view') && tmpfeatures.push({ feature: 'Location ', is_visible: true, url: "/Production/DyeLocationsPage" })
     user?.assigned_permissions.includes('article_view') && tmpfeatures.push({ feature: 'articles', is_visible: true, url: "/Production/ArticlePage" })
     user?.assigned_permissions.includes('machine_view') && tmpfeatures.push({ feature: 'machines ', is_visible: true, url: "/Production/MachinePage" })
+    user?.assigned_permissions.includes('sole_thickness_view') && tmpfeatures.push({ feature: 'Sole Thickness ', is_visible: true, url: "/Production/SoleThickness" })
     user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: "/Production/UpdateMachineCategoriesPage" })
     user?.assigned_permissions.includes('dye_view') && tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: "/Production/DyePage" })
     user?.assigned_permissions.includes('shoe_weight_view') && tmpfeatures.push({ feature: 'shoe weight ', is_visible: true, url: "/Production/ShoeWeightPage" })
@@ -24,6 +25,7 @@ function ProductionDashboard() {
     user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: true, url: "/Production/MachineWiseProductionReportPage" })
     user?.assigned_permissions.includes('machine_category_wise_production_report_view') && tmpfeatures.push({ feature: 'Category Wise Production report', is_visible: true, url: "/Production/CategoryWiseProductionReportPage" }),
       user?.assigned_permissions.includes('thekedar_wise_production_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production report', is_visible: true, url: "/Production/ThekedarWiseProductionReportPage" })
+    user?.assigned_permissions.includes('sole_thickness_report_view') && tmpfeatures.push({ feature: 'Sole Thickness report', is_visible: true, url: "/Production/SoleThicknessReportPage" })
     setFeatures(tmpfeatures)
   }, [])
 

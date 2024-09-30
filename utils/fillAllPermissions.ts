@@ -85,6 +85,31 @@ export function FetchAllPermissions() {
                 ]
             },
             {
+                label: 'Sole Thickness',
+                permissions: [
+                    {
+                        value: 'sole_thickness_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'sole_thickness_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'sole_thickness_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'sole_thickness_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'sole_thickness_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
                 label: 'Machine Category',
                 permissions: [
                     {
@@ -230,6 +255,31 @@ export function FetchAllPermissions() {
                     },
                     {
                         value: 'shoe_weight_report_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
+                label: 'Sole Thickness Report',
+                permissions: [
+                    {
+                        value: 'sole_thickness_report_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'sole_thickness_report_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'sole_thickness_report_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'sole_thickness_report_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'sole_thickness_report_export',
                         label: 'export'
                     }
                 ]

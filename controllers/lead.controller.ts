@@ -36,7 +36,7 @@ export const GetAllCRMLeadTypes = async (req: Request, res: Response, next: Next
 
 export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const { name, mobiles, city, stage, state, email, alternate_email, address, merge_refer, merge_remarks, source_lead_id, refer_id } = req.body as GetMergeLeadsDto
+    const { name, mobiles, city, stage, state, email, alternate_email, address, merge_refer, merge_remarks, source_lead_id } = req.body as GetMergeLeadsDto
     let lead = await Lead.findById(id);
     let sourcelead = await Lead.findById(source_lead_id);
 
@@ -56,8 +56,8 @@ export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunct
         address: address
     });
 
-    if (merge_refer && refer_id) {
-        let refer = await ReferredParty.findById(refer_id);
+    if (merge_refer) {
+        let refer = await ReferredParty.findById(sourcelead.referred_party);
         if (refer) {
             lead.referred_party = refer;
             lead.referred_date = sourcelead.referred_date;

@@ -23,7 +23,6 @@ export type IleadReqBody = {
     merge_refer: boolean,
     merge_remarks: boolean,
     source_lead_id: string,
-    refer_id?: string
 }
 function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto[], removeSelectedLeads: () => void }) {
     const { choice, setChoice } = useContext(ChoiceContext)
@@ -422,8 +421,6 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
                     onClick={() => {
                         let lead = targetLead;
                         lead.mobiles = mobiles;
-                        if (targetLead.merge_refer && leads[1].referred_party_name)
-                            targetLead.refer_id = leads[1].referred_party_name;
                         if (mobiles.length == 0) {
                             alert("one mobile is required at least")
                         }

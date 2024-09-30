@@ -143,6 +143,11 @@ function AppRoutes() {
                   <DyeStatusReportPage />
                 }
               />
+              <Route
+                path="SoleThicknessReportPage" element={
+                  <DyeStatusReportPage />
+                }
+              />
 
             </Route>}
 
