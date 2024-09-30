@@ -39,7 +39,7 @@ function CheckListPage() {
   let day = previous_date.getDate() - 1
   previous_date.setDate(day)
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'checklist_menu', show_assigned_only: true }))
-  const { data, isLoading, refetch: ReftechChecklists } = useQuery<AxiosResponse<{ result: GetChecklistDto[], page: number, total: number, limit: number }>, BackendError>(["checklists", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetChecklists({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+  const { data, isLoading, refetch: ReftechChecklists } = useQuery<AxiosResponse<{ result: GetChecklistDto[], page: number, total: number, limit: number }>, BackendError>(["checklists", userId, dates?.start_date, dates?.end_date], async () => GetChecklists({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   console.log(checklist)

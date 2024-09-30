@@ -40,7 +40,7 @@ export default function ProductionAdminPage() {
   })
   const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'production_view', show_assigned_only: true }))
 
-  const { data, isLoading, refetch: ReftechProductions } = useQuery<AxiosResponse<{ productions: IProduction[], page: number, total: number, limit: number }>, BackendError>(["productions", paginationData, userId, dates?.start_date, dates?.end_date], async () => GetProductions({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+  const { data, isLoading, refetch: ReftechProductions } = useQuery<AxiosResponse<{ productions: IProduction[], page: number, total: number, limit: number }>, BackendError>(["productions", userId, dates?.start_date, dates?.end_date], async () => GetProductions({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
   const [selectedData, setSelectedData] = useState<{
     machine?: string,
