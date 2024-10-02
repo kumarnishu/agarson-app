@@ -15,7 +15,7 @@ type CheckListChoices = "create_or_edit_checklist" | "create_or_edit_checklist_c
 
 
 type LeadChoices = "create_or_edit_refer" |"create_or_edit_leadtype"| "create_or_edit_source" | "delete_crm_item" | "view_remarks" | "close_lead" | "create_or_edit_city" | "bulk_assign_crm_cities" | "find_unknown_stages" | "create_or_edit_bill" | "convert_lead_to_refer" | "bulk_delete_useless_leads" | "view_referrals" | "delete_crm_state" |"find_unknown_cities"|
-  "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "find_unknown_states" | "merge_leads" | "view_refer_remarks" | "delete_bill" |"view_bills"
+  "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "find_unknown_states" | "merge_leads" | "view_refer_remarks" | "delete_bill" | "view_bills" |"merge_refers"
 
 
 type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "view_shoe_photo2" | "view_shoe_photo3" | "create_shoe_weight" | "delete_production" | "update_shoe_weight1" | "create_production" | "update_production" | "delete_weight" | "create_or_edit_location" | "delete_dye_location" | "update_shoe_weight2" | "update_shoe_weight3"
@@ -121,6 +121,7 @@ export enum TemplateChoiceActions {
 export enum LeadChoiceActions {
   create_or_edit_lead = "create_or_edit_lead",
   view_bills ="view_bills",
+  merge_refers ="merge_refers",
   create_or_edit_state = "create_or_edit_state",
   delete_crm_state ="delete_crm_state",
   create_or_edit_stage = "create_or_edit_stage",
@@ -239,6 +240,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.convert_lead_to_refer: return type
     case LeadChoiceActions.bulk_delete_useless_leads: return type
     case LeadChoiceActions.create_or_edit_leadtype: return type
+    case LeadChoiceActions.merge_refers: return type
     case LeadChoiceActions.view_referrals: return type
     case LeadChoiceActions.view_bills: return type
     case LeadChoiceActions.refer_lead: return type

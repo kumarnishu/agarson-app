@@ -1,61 +1,58 @@
 import { Dialog, DialogContent, DialogActions, IconButton, DialogTitle, Stack, Checkbox, Button } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
-import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
+import { ChoiceContext, LeadChoiceActions } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
 import { STable, STableBody, STableCell, STableHead, STableHeadCell, STableRow } from '../../styled/STyledTable'
-import { MergeTwoLeads } from '../../../services/LeadsServices'
 import { AxiosResponse } from 'axios'
 import { useMutation } from 'react-query'
 import { BackendError } from '../../..'
 import { queryClient } from '../../../main'
 import AlertBar from '../../snacks/AlertBar'
-import { CreateOrEditMergeLeadsDto, GetLeadDto } from '../../../dtos/crm/crm.dto'
+import { CreateOrEditMergeRefersDto, GetReferDto } from '../../../dtos/crm/crm.dto'
+import { MergeTwoRefers } from '../../../services/LeadsServices'
 
 
-function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto[], removeSelectedLeads: () => void }) {
+function MergeTwoRefersDialog({ refers, removeSelectedRefers }: { refers: GetReferDto[], removeSelectedRefers: () => void }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const [mobiles, setMobiles] = useState<string[]>([]);
-    const [targetLead, setTartgetLead] = useState<CreateOrEditMergeLeadsDto>({
-        name: leads[0].name,
+    const [targetRefer, setTartgetRefer] = useState<CreateOrEditMergeRefersDto>({
+        name: refers[0].name,
         mobiles: mobiles,
-        city: leads[0].city,
-        state: leads[0].state,
-        stage: leads[0].stage,
-        email: leads[0].email,
-        alternate_email: leads[0].alternate_email,
-        address: leads[0].address,
-        merge_refer: true,
-        merge_bills: true,
+        city: refers[0].city,
+        state: refers[0].state,
+        address: refers[0].address,
+        merge_assigned_refers: true,
         merge_remarks: true,
-        source_lead_id: leads[1]._id
+        merge_bills: true,
+        source_refer_id: refers[1]._id
     })
 
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<GetLeadDto>, BackendError, { body: CreateOrEditMergeLeadsDto, id: string }>
-        (MergeTwoLeads, {
+        <AxiosResponse<GetReferDto>, BackendError, { body: CreateOrEditMergeRefersDto, id: string }>
+        (MergeTwoRefers, {
             onSuccess: () => {
-                queryClient.resetQueries('leads')
-                removeSelectedLeads()
+                queryClient.resetQueries('refers')
+                removeSelectedRefers()
             }
         },)
 
 
     useEffect(() => {
-        if (leads) {
-            let tmp = [leads[0].mobile]
-            if (leads[0].alternate_mobile1) {
-                tmp.push(leads[0].alternate_mobile1);
+        if (refers) {
+            let tmp = [refers[0].mobile]
+            if (refers[0].mobile2) {
+                tmp.push(refers[0].mobile2);
             }
-            if (leads[0].alternate_mobile2) {
-                tmp.push(leads[0].alternate_mobile2);
+            if (refers[0].mobile3) {
+                tmp.push(refers[0].mobile3);
             }
             setMobiles(tmp);
         }
-    }, [leads])
+    }, [refers])
 
     return (
         <Dialog fullScreen
-            open={choice === LeadChoiceActions.merge_leads ? true : false}
+            open={choice === LeadChoiceActions.merge_refers ? true : false}
             onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
         >
             {
@@ -75,7 +72,7 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
                 <Cancel fontSize='large' />
             </IconButton>
-            <DialogTitle sx={{ textAlign: 'center', minWidth: '350px' }}>{`Merging Source into Target Lead `}</DialogTitle>
+            <DialogTitle sx={{ textAlign: 'center', minWidth: '350px' }}>{`Merging Source into Target Refer `}</DialogTitle>
             <DialogContent>
                 <Stack flexDirection={'row'} gap={3}>
                     <STable
@@ -113,23 +110,23 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
                             >
 
 
-                                <STableCell title='lead name' style={{ width: '200px' }}>
-                                    {leads[0].name}
+                                <STableCell title='refer name' style={{ width: '200px' }}>
+                                    {refers[0].name}
                                 </STableCell>
-                                <STableCell title='lead name' style={{ width: '200px' }}>
+                                <STableCell title='refer name' style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         if (e.target.checked) {
-                                            setTartgetLead({ ...targetLead, name: leads[1].name })
+                                            setTartgetRefer({ ...targetRefer, name: refers[1].name })
                                         }
                                         else {
-                                            setTartgetLead({ ...targetLead, name: leads[0].name })
+                                            setTartgetRefer({ ...targetRefer, name: refers[0].name })
                                         }
-                                    }} disabled={!leads[1].name} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!refers[1].name} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
-                                        size="small" />{leads[1].name}
+                                        size="small" />{refers[1].name}
                                 </STableCell>
-                                <STableCell title='lead name' style={{ width: '200px' }}>
-                                    {targetLead.name}
+                                <STableCell title='refer name' style={{ width: '200px' }}>
+                                    {targetRefer.name}
                                 </STableCell>
                             </STableRow>
                             <STableRow
@@ -137,71 +134,71 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
                             >
 
 
-                                <STableCell title='lead mobiles' style={{ width: '200px' }}>
-                                    {leads[0].mobile}
-                                    {leads[0].alternate_mobile1 ? ` | ${leads[0].alternate_mobile1}` : ""}
-                                    {leads[0].alternate_mobile2 ? ` | ${leads[0].alternate_mobile2}` : ""}
+                                <STableCell title='refer mobiles' style={{ width: '200px' }}>
+                                    {refers[0].mobile}
+                                    {refers[0].mobile2 ? ` | ${refers[0].mobile2}` : ""}
+                                    {refers[0].mobile3 ? ` | ${refers[0].mobile3}` : ""}
                                 </STableCell>
-                                <STableCell title='lead mobiles' style={{ width: '200px' }}>
+                                <STableCell title='refer mobiles' style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         var tmp = mobiles;
 
                                         if (e.target.checked) {
                                             if (tmp.length <= 3) {
-                                                tmp.push(leads[1].mobile)
+                                                tmp.push(refers[1].mobile)
                                                 setMobiles(tmp);
                                             }
                                         }
                                         else {
                                             tmp = tmp.filter(e => {
-                                                return e !== leads[1].mobile
+                                                return e !== refers[1].mobile
                                             })
                                             setMobiles(tmp);
                                         }
-                                    }} disabled={!leads[1].mobile} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!refers[1].mobile} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
-                                        size="small" />{leads[1].mobile},
+                                        size="small" />{refers[1].mobile},
                                     <Checkbox onChange={(e) => {
                                         var tmp = mobiles;
 
                                         if (e.target.checked) {
                                             if (tmp.length <= 3) {
-                                                tmp.push(leads[1].alternate_mobile1)
+                                                tmp.push(refers[1].mobile2)
                                                 setMobiles(tmp);
                                             }
                                         }
                                         else {
                                             tmp = tmp.filter(e => {
-                                                return e !== leads[1].alternate_mobile1
+                                                return e !== refers[1].mobile2
                                             })
                                             setMobiles(tmp);
                                         }
-                                    }} disabled={!leads[1].alternate_mobile1} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!refers[1].mobile2} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
-                                        size="small" />{leads[1].alternate_mobile1},
+                                        size="small" />{refers[1].mobile2},
 
                                     <Checkbox onChange={(e) => {
                                         var tmp = mobiles;
 
                                         if (e.target.checked) {
                                             if (tmp.length <= 3) {
-                                                tmp.push(leads[1].alternate_mobile2)
+                                                tmp.push(refers[1].mobile3)
                                                 setMobiles(tmp);
                                             }
                                         }
                                         else {
                                             tmp = tmp.filter(e => {
-                                                return e !== leads[1].alternate_mobile2
+                                                return e !== refers[1].mobile3
                                             })
                                             setMobiles(tmp);
                                         }
-                                    }} disabled={!leads[1].alternate_mobile2} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!refers[1].mobile3} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
-                                        size="small" />{leads[1].alternate_mobile2}
+                                        size="small" />{refers[1].mobile3}
 
 
                                 </STableCell>
-                                <STableCell title='lead mobiles' style={{ width: '200px' }}>
+                                <STableCell title='refer mobiles' style={{ width: '200px' }}>
                                     {mobiles.toString()}
                                 </STableCell>
                             </STableRow>
@@ -213,22 +210,22 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
 
 
                                 <STableCell title='city' style={{ width: '200px' }}>
-                                    {leads[0].city}
+                                    {refers[0].city}
                                 </STableCell>
                                 <STableCell title='city' style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         if (e.target.checked) {
-                                            setTartgetLead({ ...targetLead, city: leads[1].city })
+                                            setTartgetRefer({ ...targetRefer, city: refers[1].city })
                                         }
                                         else {
-                                            setTartgetLead({ ...targetLead, city: leads[0].city })
+                                            setTartgetRefer({ ...targetRefer, city: refers[0].city })
                                         }
-                                    }} disabled={!leads[1].city} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!refers[1].city} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
-                                        size="small" />{leads[1].city}
+                                        size="small" />{refers[1].city}
                                 </STableCell>
                                 <STableCell title='city' style={{ width: '200px' }}>
-                                    {targetLead.city}
+                                    {targetRefer.city}
                                 </STableCell>
                             </STableRow>
                             <STableRow
@@ -237,95 +234,25 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
 
 
                                 <STableCell title='state' style={{ width: '200px' }}>
-                                    {leads[0].state}
+                                    {refers[0].state}
                                 </STableCell>
                                 <STableCell title='state' style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         if (e.target.checked) {
-                                            setTartgetLead({ ...targetLead, state: leads[1].state })
+                                            setTartgetRefer({ ...targetRefer, state: refers[1].state })
                                         }
                                         else {
-                                            setTartgetLead({ ...targetLead, state: leads[0].state })
+                                            setTartgetRefer({ ...targetRefer, state: refers[0].state })
                                         }
-                                    }} disabled={!leads[1].state} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!refers[1].state} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
-                                        size="small" />{leads[1].state}
+                                        size="small" />{refers[1].state}
                                 </STableCell>
                                 <STableCell title='state' style={{ width: '200px' }}>
-                                    {targetLead.state}
+                                    {targetRefer.state}
                                 </STableCell>
                             </STableRow>
-                            <STableRow
-                                key={5}
-                            >
 
-
-                                <STableCell title='lead stage' style={{ width: '200px' }}>
-                                    {leads[0].stage}
-                                </STableCell>
-                                <STableCell title='lead stage' style={{ width: '200px' }}>
-                                    <Checkbox onChange={(e) => {
-                                        if (e.target.checked) {
-                                            setTartgetLead({ ...targetLead, stage: leads[1].stage })
-                                        }
-                                        else {
-                                            setTartgetLead({ ...targetLead, stage: leads[0].stage })
-                                        }
-                                    }} disabled={!leads[1].stage} sx={{ width: 16, height: 16 }}
-                                        indeterminate={false}
-                                        size="small" />{leads[1].stage}
-                                </STableCell>
-                                <STableCell title='lead stage' style={{ width: '200px' }}>
-                                    {targetLead.stage}
-                                </STableCell>
-                            </STableRow> <STableRow
-                                key={6}
-                            >
-
-
-                                <STableCell title='email' style={{ width: '200px' }}>
-                                    {leads[0].email}
-                                </STableCell>
-                                <STableCell title='email' style={{ width: '200px' }}>
-                                    <Checkbox onChange={(e) => {
-                                        if (e.target.checked) {
-                                            setTartgetLead({ ...targetLead, email: leads[1].email })
-                                        }
-                                        else {
-                                            setTartgetLead({ ...targetLead, email: leads[0].email })
-                                        }
-                                    }} disabled={!leads[1].email} sx={{ width: 16, height: 16 }}
-                                        indeterminate={false}
-                                        size="small" />{leads[1].email}
-                                </STableCell>
-                                <STableCell title='email' style={{ width: '200px' }}>
-                                    {targetLead.email}
-                                </STableCell>
-                            </STableRow>
-                            <STableRow
-                                key={7}
-                            >
-
-
-                                <STableCell title='alternate email' style={{ width: '200px' }}>
-                                    {leads[0].alternate_email}
-                                </STableCell>
-                                <STableCell title='alternate email' style={{ width: '200px' }}>
-                                    <Checkbox onChange={(e) => {
-                                        if (e.target.checked) {
-                                            setTartgetLead({ ...targetLead, alternate_email: leads[1].alternate_email })
-                                        }
-                                        else {
-                                            setTartgetLead({ ...targetLead, alternate_email: leads[0].alternate_email })
-                                        }
-                                    }} disabled={!leads[1].alternate_email} sx={{ width: 16, height: 16 }}
-                                        indeterminate={false}
-                                        size="small" />{leads[1].alternate_email}
-                                </STableCell>
-                                <STableCell title='email' style={{ width: '200px' }}>
-                                    {targetLead.alternate_email}
-                                </STableCell>
-                            </STableRow>
 
                             {/* address */}
                             <STableRow
@@ -333,22 +260,22 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
                             >
 
                                 <STableCell title='address' style={{ width: '200px' }}>
-                                    {leads[0].address && leads[0].address.slice(20).toString()}
+                                    {refers[0].address && refers[0].address.slice(20).toString()}
                                 </STableCell>
                                 <STableCell title='address' style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         if (e.target.checked) {
-                                            setTartgetLead({ ...targetLead, address: leads[1].address })
+                                            setTartgetRefer({ ...targetRefer, address: refers[1].address })
                                         }
                                         else {
-                                            setTartgetLead({ ...targetLead, address: leads[0].address })
+                                            setTartgetRefer({ ...targetRefer, address: refers[0].address })
                                         }
-                                    }} disabled={!leads[1].address} sx={{ width: 16, height: 16 }}
+                                    }} disabled={!refers[1].address} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
-                                        size="small" />{leads[1].address && leads[1].address.slice(20).toString()}
+                                        size="small" />{refers[1].address && refers[1].address.slice(20).toString()}
                                 </STableCell>
                                 <STableCell title='address' style={{ width: '200px' }}>
-                                    {targetLead.address && targetLead.address.slice(20).toString()}
+                                    {targetRefer.address && targetRefer.address.slice(20).toString()}
                                 </STableCell>
                             </STableRow>
 
@@ -364,14 +291,14 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
                                 <STableCell style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         if (e.target.checked) {
-                                            setTartgetLead({ ...targetLead, merge_refer: true })
+                                            setTartgetRefer({ ...targetRefer, merge_assigned_refers: true })
                                         }
                                         else {
-                                            setTartgetLead({ ...targetLead, merge_refer: false })
+                                            setTartgetRefer({ ...targetRefer, merge_assigned_refers: false })
                                         }
-                                    }} disabled={!leads[1].referred_party_name} sx={{ width: 16, height: 16 }}
+                                    }} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
-                                        size="small" /> Merge Refer Data
+                                        size="small" /> Merge Assigned Refers
                                 </STableCell>
 
                             </STableRow>
@@ -387,10 +314,10 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
                                 <STableCell style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         if (e.target.checked) {
-                                            setTartgetLead({ ...targetLead, merge_remarks: true })
+                                            setTartgetRefer({ ...targetRefer, merge_remarks: true })
                                         }
                                         else {
-                                            setTartgetLead({ ...targetLead, merge_remarks: false })
+                                            setTartgetRefer({ ...targetRefer, merge_remarks: false })
                                         }
                                     }} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
@@ -409,10 +336,10 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
                                 <STableCell style={{ width: '200px' }}>
                                     <Checkbox onChange={(e) => {
                                         if (e.target.checked) {
-                                            setTartgetLead({ ...targetLead, merge_bills: true })
+                                            setTartgetRefer({ ...targetRefer, merge_bills: true })
                                         }
                                         else {
-                                            setTartgetLead({ ...targetLead, merge_bills: false })
+                                            setTartgetRefer({ ...targetRefer, merge_bills: false })
                                         }
                                     }} sx={{ width: 16, height: 16 }}
                                         indeterminate={false}
@@ -429,12 +356,12 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
                 <Button
                     disabled={isLoading}
                     onClick={() => {
-                        let lead = targetLead;
-                        lead.mobiles = mobiles;
+                        let refer = targetRefer;
+                        refer.mobiles = mobiles;
                         if (mobiles.length == 0) {
                             alert("one mobile is required at least")
                         }
-                        mutate({ id: leads[0]._id, body: targetLead })
+                        mutate({ id: refers[0]._id, body: targetRefer })
                         setChoice({ type: LeadChoiceActions.close_lead })
                     }} fullWidth variant='contained'>
                     Save
@@ -444,4 +371,4 @@ function MergeTwoLeadsDialog({ leads, removeSelectedLeads }: { leads: GetLeadDto
     )
 }
 
-export default MergeTwoLeadsDialog
+export default MergeTwoRefersDialog

@@ -1,3 +1,4 @@
+import { IBill } from "../../models/leads/bill.model";
 import { DropDownDto } from "../common/dropdown.dto";
 
 export type MergeTwoLeadsDto = {
@@ -133,7 +134,7 @@ export type CreateOrRemoveReferForLeadDto = {
     party_id: string, remark: string, remind_date: string
 }
 
-export type GetMergeLeadsDto = {
+export type CreateOrEditMergeLeadsDto = {
     name: string,
     mobiles: string[],
     city: string,
@@ -145,7 +146,18 @@ export type GetMergeLeadsDto = {
     merge_refer: boolean,
     merge_remarks: boolean,
     source_lead_id: string,
-    refer_id: string
+    merge_bills:boolean
+}
+export type CreateOrEditMergeRefersDto = {
+    name: string,
+    mobiles: string[],
+    city: string,
+    state: string,
+    address: string,
+    merge_assigned_refers: boolean,
+    merge_remarks: boolean,
+    source_refer_id: string,
+    merge_bills: boolean
 }
 export type GetReferDto = {
     _id: string,

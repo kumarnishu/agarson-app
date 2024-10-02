@@ -22,6 +22,7 @@ import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServi
 import ExportToExcel from '../../utils/ExportToExcel'
 import CreateOrEditBillDialog from '../../components/dialogs/crm/CreateOrEditBillDialog'
 import ViewRefersBillHistoryDialog from '../../components/dialogs/crm/ViewRefersBillHistoryDialog'
+import MergeTwoRefersDialog from '../../components/dialogs/crm/MergeTwoRefersDialog'
 
 export default function RefersPage() {
   const [paginationData, setPaginationData] = useState({ limit: 20, page: 1, total: 1 });
@@ -420,6 +421,23 @@ export default function RefersPage() {
                 }}
 
               > Add New</MenuItem>}
+              {LoggedInUser?.assigned_permissions.includes('refers_merge') && <MenuItem
+                onClick={() => {
+                  if (table.getSelectedRowModel().rows.length == 2) {
+                    setChoice({ type: LeadChoiceActions.merge_refers })
+                    setRefer(undefined);
+                    setAnchorEl(null)
+                  } else {
+                    alert("please select two refers only");
+                    setRefer(undefined);
+                    setAnchorEl(null)
+                    return;
+                  }
+                }
+                }
+              > Merge Refers</MenuItem>}
+           
+
               {LoggedInUser?.assigned_permissions.includes('refer_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
               >Export All</MenuItem>}
@@ -432,7 +450,9 @@ export default function RefersPage() {
         </Stack >
       </Stack >
       <CreateOrEditReferDialog refer={refer} />
+      {table.getSelectedRowModel().rows.length == 2 && <MergeTwoRefersDialog refers={table.getSelectedRowModel().rows.map((l) => { return l.original })} removeSelectedRefers={() => { table.resetRowSelection() }} />}
       <>
+
         {
           refer ?
             <>

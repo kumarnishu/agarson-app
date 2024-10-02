@@ -464,6 +464,10 @@ export function FetchAllPermissions() {
                         label: 'edit'
                     },
                     {
+                        value: 'refers_merge',
+                        label: 'Merge Refers'
+                    },
+                    {
                         value: 'refer_delete',
                         label: 'delete'
                     },

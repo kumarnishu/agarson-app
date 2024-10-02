@@ -15,7 +15,7 @@ import { LeadType } from "../models/leads/crm.leadtype.model.js"
 import { LeadSource } from "../models/leads/crm.source.model.js"
 import { IStage, Stage } from "../models/leads/crm.stage.model.js"
 import { HandleCRMCitiesAssignment } from "../utils/AssignCitiesToUsers.js"
-import { AssignOrRemoveCrmCityDto, AssignOrRemoveCrmStateDto, CreateAndUpdatesCityFromExcelDto, CreateAndUpdatesLeadFromExcelDto, CreateAndUpdatesStateFromExcelDto, CreateOrEditBillDto, CreateOrEditCrmCity, CreateOrEditLeadDto, CreateOrEditReferDto, CreateOrEditReferFromExcelDto, CreateOrEditRemarkDto, CreateOrRemoveReferForLeadDto, GetActivitiesOrRemindersDto, GetActivitiesTopBarDetailsDto, GetBillDto, GetCrmCityDto, GetCrmStateDto, GetLeadDto, GetMergeLeadsDto, GetReferDto, GetRemarksDto } from "../dtos/crm/crm.dto.js"
+import { AssignOrRemoveCrmCityDto, AssignOrRemoveCrmStateDto, CreateAndUpdatesCityFromExcelDto, CreateAndUpdatesLeadFromExcelDto, CreateAndUpdatesStateFromExcelDto, CreateOrEditBillDto, CreateOrEditCrmCity, CreateOrEditLeadDto, CreateOrEditMergeLeadsDto, CreateOrEditMergeRefersDto, CreateOrEditReferDto, CreateOrEditReferFromExcelDto, CreateOrEditRemarkDto, CreateOrRemoveReferForLeadDto, GetActivitiesOrRemindersDto, GetActivitiesTopBarDetailsDto, GetBillDto, GetCrmCityDto, GetCrmStateDto, GetLeadDto,  GetReferDto, GetRemarksDto } from "../dtos/crm/crm.dto.js"
 import moment from "moment"
 import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dto.js"
 import { Bill, IBill } from "../models/leads/bill.model.js"
@@ -36,7 +36,7 @@ export const GetAllCRMLeadTypes = async (req: Request, res: Response, next: Next
 
 export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const { name, mobiles, city, stage, state, email, alternate_email, address, merge_refer, merge_remarks, source_lead_id } = req.body as GetMergeLeadsDto
+    const { name, mobiles, city, stage, state, email, alternate_email, address, merge_refer, merge_bills,merge_remarks, source_lead_id } = req.body as CreateOrEditMergeLeadsDto
     let lead = await Lead.findById(id);
     let sourcelead = await Lead.findById(source_lead_id);
 
@@ -67,8 +67,42 @@ export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunct
     if (merge_remarks) {
         await Remark.updateMany({ lead: source_lead_id }, { lead: id });
     }
+    if (merge_bills) {
+        await Bill.updateMany({ lead: source_lead_id }, { lead: id });
+    }
     await Lead.findByIdAndDelete(source_lead_id);
     return res.status(200).json({ message: "merge leads successfully" })
+}
+export const MergeTwoRefers = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const { name, mobiles, city, state, address, merge_assigned_refers, merge_bills,merge_remarks, source_refer_id } = req.body as CreateOrEditMergeRefersDto
+    let refer = await ReferredParty.findById(id);
+    let sourcerefer = await ReferredParty.findById(source_refer_id);
+
+    if (!refer || !sourcerefer)
+        return res.status(404).json({ message: "refers not found" })
+
+    await ReferredParty.findByIdAndUpdate(id, {
+        name: name,
+        city: city,
+        state: state,
+        mobile: mobiles[0] || null,
+        alternate_mobile1: mobiles[1] || null,
+        alternate_mobile2: mobiles[2] || null,
+        address: address
+    });
+
+    if (merge_assigned_refers) {
+        await Lead.updateMany({ referred_party: source_refer_id }, { referred_party: id });
+    }
+    if (merge_remarks) {
+        await Remark.updateMany({ refer: source_refer_id }, { refer: id });
+    }
+    if (merge_bills) {
+        await Bill.updateMany({ refer: source_refer_id }, { refer: id });
+    }
+    await ReferredParty.findByIdAndDelete(source_refer_id);
+    return res.status(200).json({ message: "merge refers successfully" })
 }
 
 

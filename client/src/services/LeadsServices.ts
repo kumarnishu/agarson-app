@@ -1,6 +1,5 @@
-import { IleadReqBody } from "../components/dialogs/crm/MergeTwoLeadsDialog"
 import { DropDownDto } from "../dtos/common/dropdown.dto"
-import { GetReferDto } from "../dtos/crm/crm.dto"
+import { CreateOrEditMergeLeadsDto, CreateOrEditMergeRefersDto, GetReferDto } from "../dtos/crm/crm.dto"
 import { apiClient } from "./utils/AxiosInterceptor"
 
 //leads
@@ -84,8 +83,11 @@ export const DeleteCrmItem = async ({ refer, lead, state, city, type, source, st
 export const BulkLeadUpdateFromExcel = async (body: FormData) => {
   return await apiClient.put(`update/leads/bulk`, body)
 }
-export const MergeTwoLeads = async ({ id, body }: { id: string, body: IleadReqBody }) => {
+export const MergeTwoLeads = async ({ id, body }: { id: string, body: CreateOrEditMergeLeadsDto }) => {
   return await apiClient.put(`merge/leads/${id}`, body)
+}
+export const MergeTwoRefers = async ({ id, body }: { id: string, body: CreateOrEditMergeRefersDto }) => {
+  return await apiClient.put(`merge/refers/${id}`, body)
 }
 //remarks
 
