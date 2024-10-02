@@ -42,18 +42,21 @@ function CreateOrEditBillForm({ lead, refer, setDisplay2, bill }: { lead?: GetLe
         refer?: string,
         bill_no: string,
         bill_date: string,
+        remarks: string,
     }>({
         initialValues: {
             lead: lead?._id,
             billphoto: "",
             refer: refer?._id,
             bill_no: bill ? bill.bill_no : "",
+            remarks: bill ? bill.remarks : "",
             bill_date: bill ? moment(new Date(bill.bill_date)).format("YYYY-MM-DD") : moment(new Date()).format("YYYY-MM-DD"),
         },
         validationSchema: Yup.object({
             lead: Yup.string(),
             refer: Yup.string(),
             bill_no: Yup.string().required('required field'),
+            remarks: Yup.string().required('required field'),
             bill_date: Yup.string().required('required field'),
             billphoto: Yup.mixed<File>()
                 .test("size", "size is allowed only less than 10mb",
@@ -85,6 +88,7 @@ function CreateOrEditBillForm({ lead, refer, setDisplay2, bill }: { lead?: GetLe
                 refer: values.refer,
                 bill_no: values.bill_no,
                 bill_date: values.bill_date,
+                remarks: values.remarks,
             }
             let formdata = new FormData()
             formdata.append("body", JSON.stringify(body))
@@ -162,7 +166,22 @@ function CreateOrEditBillForm({ lead, refer, setDisplay2, bill }: { lead?: GetLe
                     }
                     {...formik.getFieldProps('bill_date')}
                 />
-
+                <TextField
+                    required
+                    multiline
+                    rows={2}
+                    error={
+                        formik.touched.remarks && formik.errors.remarks ? true : false
+                    }
+                    autoFocus
+                    id="remarks"
+                    label="Bill Remarks"
+                    fullWidth
+                    helperText={
+                        formik.touched.remarks && formik.errors.remarks ? formik.errors.remarks : ""
+                    }
+                    {...formik.getFieldProps('remarks')}
+                />
                 <TextField
                     fullWidth
                     error={

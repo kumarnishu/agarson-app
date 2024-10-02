@@ -1,6 +1,6 @@
 import { DropDownDto } from "../common/dropdown.dto";
 
-export type CreateOrEditMergeLeadsDto = {
+export type MergeTwoLeadsDto = {
     name: string,
     mobiles: string[],
     city: string,
@@ -12,18 +12,7 @@ export type CreateOrEditMergeLeadsDto = {
     merge_refer: boolean,
     merge_remarks: boolean,
     source_lead_id: string,
-    merge_bills: boolean
-}
-export type CreateOrEditMergeRefersDto = {
-    name: string,
-    mobiles: string[],
-    city: string,
-    state: string,
-    address: string,
-    merge_assigned_refers: boolean,
-    merge_remarks: boolean,
-    source_refer_id: string,
-    merge_bills: boolean
+    refer_id: string
 }
 
 export type GetCrmCityDto = {
@@ -144,7 +133,7 @@ export type CreateOrRemoveReferForLeadDto = {
     party_id: string, remark: string, remind_date: string
 }
 
-export type GetMergeLeadsDto = {
+export type CreateOrEditMergeLeadsDto = {
     name: string,
     mobiles: string[],
     city: string,
@@ -156,7 +145,18 @@ export type GetMergeLeadsDto = {
     merge_refer: boolean,
     merge_remarks: boolean,
     source_lead_id: string,
-    refer_id: string
+    merge_bills: boolean
+}
+export type CreateOrEditMergeRefersDto = {
+    name: string,
+    mobiles: string[],
+    city: string,
+    state: string,
+    address: string,
+    merge_assigned_refers: boolean,
+    merge_remarks: boolean,
+    source_refer_id: string,
+    merge_bills: boolean
 }
 export type GetReferDto = {
     _id: string,
@@ -271,6 +271,7 @@ export type CreateOrEditBillItemDto = {
     qty: number,
     rate: number,
 }
+
 export type GetBillDto = {
     _id: string,
     items: CreateOrEditBillItemDto[],
@@ -279,6 +280,7 @@ export type GetBillDto = {
     refer?: DropDownDto,
     bill_no: string,
     bill_date: string,
+    remarks: string,
     created_at: Date,
     updated_at: Date,
     created_by: DropDownDto,
@@ -286,9 +288,10 @@ export type GetBillDto = {
 
 }
 export type CreateOrEditBillDto = {
-    items: { _id: number, article: string, rate: number, qty: number }[],
+    items: CreateOrEditBillItemDto[],
     lead: string,
     billphoto: string,
+    remarks: string,
     refer: string,
     bill_no: string,
     bill_date: string,

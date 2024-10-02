@@ -15,7 +15,7 @@ import { LeadType } from "../models/leads/crm.leadtype.model.js"
 import { LeadSource } from "../models/leads/crm.source.model.js"
 import { IStage, Stage } from "../models/leads/crm.stage.model.js"
 import { HandleCRMCitiesAssignment } from "../utils/AssignCitiesToUsers.js"
-import { AssignOrRemoveCrmCityDto, AssignOrRemoveCrmStateDto, CreateAndUpdatesCityFromExcelDto, CreateAndUpdatesLeadFromExcelDto, CreateAndUpdatesStateFromExcelDto, CreateOrEditBillDto, CreateOrEditCrmCity, CreateOrEditLeadDto, CreateOrEditMergeLeadsDto, CreateOrEditMergeRefersDto, CreateOrEditReferDto, CreateOrEditReferFromExcelDto, CreateOrEditRemarkDto, CreateOrRemoveReferForLeadDto, GetActivitiesOrRemindersDto, GetActivitiesTopBarDetailsDto, GetBillDto, GetCrmCityDto, GetCrmStateDto, GetLeadDto,  GetReferDto, GetRemarksDto } from "../dtos/crm/crm.dto.js"
+import { AssignOrRemoveCrmCityDto, AssignOrRemoveCrmStateDto, CreateAndUpdatesCityFromExcelDto, CreateAndUpdatesLeadFromExcelDto, CreateAndUpdatesStateFromExcelDto, CreateOrEditBillDto, CreateOrEditCrmCity, CreateOrEditLeadDto, CreateOrEditMergeLeadsDto, CreateOrEditMergeRefersDto, CreateOrEditReferDto, CreateOrEditReferFromExcelDto, CreateOrEditRemarkDto, CreateOrRemoveReferForLeadDto, GetActivitiesOrRemindersDto, GetActivitiesTopBarDetailsDto, GetBillDto, GetCrmCityDto, GetCrmStateDto, GetLeadDto, GetReferDto, GetRemarksDto } from "../dtos/crm/crm.dto.js"
 import moment from "moment"
 import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dto.js"
 import { Bill, IBill } from "../models/leads/bill.model.js"
@@ -36,7 +36,7 @@ export const GetAllCRMLeadTypes = async (req: Request, res: Response, next: Next
 
 export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const { name, mobiles, city, stage, state, email, alternate_email, address, merge_refer, merge_bills,merge_remarks, source_lead_id } = req.body as CreateOrEditMergeLeadsDto
+    const { name, mobiles, city, stage, state, email, alternate_email, address, merge_refer, merge_bills, merge_remarks, source_lead_id } = req.body as CreateOrEditMergeLeadsDto
     let lead = await Lead.findById(id);
     let sourcelead = await Lead.findById(source_lead_id);
 
@@ -75,7 +75,7 @@ export const MergeTwoLeads = async (req: Request, res: Response, next: NextFunct
 }
 export const MergeTwoRefers = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const { name, mobiles, city, state, address, merge_assigned_refers, merge_bills,merge_remarks, source_refer_id } = req.body as CreateOrEditMergeRefersDto
+    const { name, mobiles, city, state, address, merge_assigned_refers, merge_bills, merge_remarks, source_refer_id } = req.body as CreateOrEditMergeRefersDto
     let refer = await ReferredParty.findById(id);
     let sourcerefer = await ReferredParty.findById(source_refer_id);
 
@@ -3215,10 +3215,11 @@ export const CreateBill = async (req: Request, res: Response, next: NextFunction
         items,
         lead,
         refer,
+        remarks,
         bill_no,
         bill_date } = body as CreateOrEditBillDto
     console.log(body, bill_no)
-    if (!bill_no || !bill_date || !items) {
+    if (!bill_no || !bill_date || !items || !remarks) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
     let bill;
@@ -3226,7 +3227,7 @@ export const CreateBill = async (req: Request, res: Response, next: NextFunction
         if (await Bill.findOne({ lead: lead, bill_no: bill_no.toLowerCase() }))
             return res.status(400).json({ message: "already exists this bill no" })
         bill = new Bill({
-            bill_no, lead: lead, bill_date: new Date(bill_date),
+            bill_no, lead: lead, bill_date: new Date(bill_date), remarks,
             created_at: new Date(),
             updated_at: new Date(),
             created_by: req.user,
@@ -3239,7 +3240,7 @@ export const CreateBill = async (req: Request, res: Response, next: NextFunction
             return res.status(400).json({ message: "already exists this bill no" })
 
         bill = new Bill({
-            bill_no, refer: refer, bill_date: new Date(bill_date),
+            bill_no, refer: refer, bill_date: new Date(bill_date), remarks,
             created_at: new Date(),
             updated_at: new Date(),
             created_by: req.user,
@@ -3255,13 +3256,15 @@ export const CreateBill = async (req: Request, res: Response, next: NextFunction
         if (req.file.size > 20 * 1024 * 1024)
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
         const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-        if (doc)
+        if (doc) {
             document = doc
+            bill.billphoto = document;
+        }
         else {
             return res.status(500).json({ message: "file uploading error" })
         }
     }
-    bill.billphoto = document;
+
     for (let i = 0; i < items.length; i++) {
         let item = items[i]
         await new BillItem({
@@ -3286,16 +3289,16 @@ export const UpdateBill = async (req: Request, res: Response, next: NextFunction
     if (!bill)
         return res.status(404).json({ message: "bill not found" })
     let body = JSON.parse(req.body.body)
-    const { items, bill_no, bill_date } = body as CreateOrEditBillDto
+    const { items, bill_no, bill_date, remarks } = body as CreateOrEditBillDto
 
-    if (!bill_no || !bill_date || !items) {
+    if (!bill_no || !bill_date || !items || !remarks) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
 
     if (bill.bill_no !== bill_no.toLowerCase())
         if (await Bill.findOne({ bill_no: bill_no.toLowerCase() }))
             return res.status(400).json({ message: "already exists this bill no" })
-    let document: Asset = bill.billphoto;
+    let document: Asset = undefined
     if (req.file) {
         const allowedFiles = ["image/png", "image/jpeg", "image/gif", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv", "application/pdf"];
         const storageLocation = `bills/media`;
@@ -3308,11 +3311,13 @@ export const UpdateBill = async (req: Request, res: Response, next: NextFunction
             document = doc
             if (bill.billphoto)
                 await destroyFile(bill.billphoto._id)
+            bill.billphoto = document;
         }
         else {
             return res.status(500).json({ message: "file uploading error" })
         }
     }
+
 
     for (let i = 0; i < items.length; i++) {
         let item = items[i]
@@ -3343,12 +3348,13 @@ export const UpdateBill = async (req: Request, res: Response, next: NextFunction
         }
 
     }
-    await Bill.findByIdAndUpdate(bill._id, {
-        bill_no, bill_date: new Date(bill_date),
-        updated_at: new Date(),
-        updated_by: req.user
-    })
-
+    bill.bill_no = bill_no;
+    bill.bill_date = new Date(bill_date);
+    bill.remarks = remarks;
+    bill.updated_at = new Date();
+    if (req.user)
+        bill.updated_by = req.user
+    await bill.save()
     return res.status(200).json({ message: "updated" })
 
 }
@@ -3383,6 +3389,7 @@ export const GetReferPartyBillsHistory = async (req: Request, res: Response, nex
             _id: bill._id,
             bill_no: bill.bill_no,
             refer: { id: refer && refer._id, value: refer && refer.name, label: refer && refer.name },
+            remarks: bill.remarks,
             billphoto: bill.billphoto?.public_url || "",
             items: billItems.map((i) => {
                 return {
@@ -3421,6 +3428,7 @@ export const GetLeadPartyBillsHistory = async (req: Request, res: Response, next
             bill_no: bill.bill_no,
             lead: { id: lead && lead._id, value: lead && lead.name, label: lead && lead.name },
             billphoto: bill.billphoto?.public_url || "",
+            remarks: bill.remarks,
             items: billItems.map((i) => {
                 return {
                     _id: i._id,

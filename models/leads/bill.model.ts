@@ -10,6 +10,7 @@ export type IBill = {
     billphoto: Asset,
     refer: IReferredParty,
     bill_no: string,
+    remarks:string,
     bill_date: Date,
     created_at: Date,
     updated_at: Date,
@@ -33,6 +34,13 @@ const BillSchema = new mongoose.Schema<IBill, mongoose.Model<IBill, {}, {}>, {}>
         size: { type: String },
         bucket: { type: String },
         created_at: Date
+    },
+    remarks: {
+        type: String,
+        required: true,
+        trim: true,
+        index: true,
+        lowercase: true,
     },
     bill_date: {
         type: Date,

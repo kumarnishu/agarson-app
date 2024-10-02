@@ -1,21 +1,23 @@
 import { Dialog, DialogContent, IconButton, DialogTitle, Stack } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
-import { Cancel } from '@mui/icons-material'
+import { Cancel, Photo } from '@mui/icons-material'
 import { UserContext } from '../../../contexts/userContext'
 import { toTitleCase } from '../../../utils/TitleCase'
 import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { BackendError } from '../../..'
-import {  GetReferBillHistory } from '../../../services/LeadsServices'
+import { GetReferBillHistory } from '../../../services/LeadsServices'
 import DeleteBillDialog from './DeleteBillDialog'
 import { GetBillDto } from '../../../dtos/crm/crm.dto'
 import CreateOrEditBillDialog from './CreateOrEditBillDialog'
+import ViewBillPhotoDialog from './ViewBillPhotoDialog'
 
 
 function ViewRefersBillHistoryDialog({ id }: { id: string }) {
     const [display, setDisplay] = useState<boolean>(false)
     const [display2, setDisplay2] = useState<boolean>(false)
+    const [display3, setDisplay3] = useState<boolean>(false)
     const { choice, setChoice } = useContext(ChoiceContext)
     const [bill, setBill] = useState<GetBillDto>()
     const [bills, setBills] = useState<GetBillDto[]>()
@@ -47,37 +49,43 @@ function ViewRefersBillHistoryDialog({ id }: { id: string }) {
                 <Stack direction="column" gap={2} >
                     {bills && bills.map((item, index) => {
                         return (
+                            <div key={index} style={{ borderRadius: '1px 3px', padding: '5px', background: 'lightblue', paddingLeft: '20px', border: '1px solid grey' }}>
 
-                            <div key={index} style={{ borderRadius: '1px 10px', padding: '10px', background: 'whitesmoke', paddingLeft: '20px', border: '1px solid grey' }}>
-                                <p>{toTitleCase(item.bill_no)} - {item.bill_date} </p>
-                                <br></br>
-                                <p>{new Date(item.created_at).toLocaleString()}</p>
                                 {
-                                    user && item && user?.username === item.created_by.value && new Date(item.created_at) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
-                                        {user?.assigned_permissions.includes('delete_refer_bills') && <IconButton size="small" color="error" onClick={() => {
-                                            setBill(item)
-                                            setDisplay(true)
-                                        }}>
-                                            Delete</IconButton>}
-                                        {user?.assigned_permissions.includes('edit_refer_bills') && <IconButton size="small" color="success"
-                                            onClick={() => {
+                                     <Stack
+                                        justifyContent={'space-between'} direction="row" gap={0} alignItems={'center'}>
+                                        <p>{toTitleCase(item.bill_no)} - {item.bill_date} </p>
+                                        {user && item && user?.username === item.created_by.value && new Date(item.created_at) > new Date(previous_date) &&<div>
+                                            {item?.billphoto !== "" && user?.assigned_permissions.includes('view_refer_bills') && <IconButton size="small" color="error" onClick={() => {
                                                 setBill(item)
-                                                setDisplay2(true)
+                                                setDisplay3(true)
+                                            }}>
+                                                <Photo /></IconButton>}
+                                            {user?.assigned_permissions.includes('delete_refer_bills') && <IconButton size="small" color="error" onClick={() => {
+                                                setBill(item)
+                                                setDisplay(true)
+                                            }}>
+                                                Delete</IconButton>}
+                                            {user?.assigned_permissions.includes('edit_refer_bills') && <IconButton size="small" color="success"
+                                                onClick={() => {
+                                                    setBill(item)
+                                                    setDisplay2(true)
 
-                                            }}
-                                        >Edit</IconButton>}
+                                                }}
+                                            >Edit</IconButton>}
+                                        </div>}
                                     </Stack>
                                 }
                             </div>
-
                         )
                     })}
                 </Stack>
                 {bill && <DeleteBillDialog display={display} setDisplay={setDisplay} bill={bill} />}
                 {bill && <CreateOrEditBillDialog bill={bill} display={display2} setDisplay={setDisplay2} />}
+                {bill && <ViewBillPhotoDialog bill={bill} display={display3} setDisplay={setDisplay3} />}
             </DialogContent>
 
-        </Dialog>
+        </Dialog >
     )
 }
 
