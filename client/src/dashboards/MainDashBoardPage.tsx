@@ -56,7 +56,7 @@ function MainDashBoardPage() {
                   <ListItemIcon >
                     <ButtonLogo title="" height={25} width={25} />
                   </ListItemIcon>
-                  <ListItemText primary={toTitleCase(feat.feature)} />
+                  <ListItemText primary={feat.feature.toUpperCase()} />
                 </ListItemButton>
               </ListItem>
             </Link >}

@@ -87,8 +87,8 @@ export const MergeTwoRefers = async (req: Request, res: Response, next: NextFunc
         city: city,
         state: state,
         mobile: mobiles[0] || null,
-        alternate_mobile1: mobiles[1] || null,
-        alternate_mobile2: mobiles[2] || null,
+        mobile2: mobiles[1] || null,
+        mobile3: mobiles[2] || null,
         address: address
     });
 
@@ -2465,19 +2465,44 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
 
 export const CreateReferParty = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state, gst, mobile } = body as CreateOrEditReferDto
+    const { name, customer_name, city, state, gst, mobile, mobile2, mobile3 } = body as CreateOrEditReferDto
     if (!name || !city || !state || !mobile || !gst) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
 
+    let uniqueNumbers = []
+    if (mobile)
+        uniqueNumbers.push(mobile)
+    if (mobile2)
+        uniqueNumbers.push(mobile2)
+    if (mobile3)
+        uniqueNumbers.push(mobile3)
+
+    uniqueNumbers = uniqueNumbers.filter((item, i, ar) => ar.indexOf(item) === i);
+
+    if (uniqueNumbers[0] && await ReferredParty.findOne({ $or: [{ mobile: uniqueNumbers[0] }, { mobile2: uniqueNumbers[0] }, { mobile3: uniqueNumbers[0] }] }))
+        return res.status(400).json({ message: `${mobile} already exists ` })
+
+
+    if (uniqueNumbers[1] && await ReferredParty.findOne({ $or: [{ mobile: uniqueNumbers[1] }, { mobile2: uniqueNumbers[1] }, { mobile3: uniqueNumbers[1] }] }))
+        return res.status(400).json({ message: `${uniqueNumbers[1]} already exists ` })
+
+    if (uniqueNumbers[2] && await ReferredParty.findOne({ $or: [{ mobile: uniqueNumbers[2] }, { mobile2: uniqueNumbers[2] }, { mobile3: uniqueNumbers[2] }] }))
+        return res.status(400).json({ message: `${uniqueNumbers[2]} already exists ` })
+
+
     let resultParty = await ReferredParty.findOne({ $or: [{ gst: String(gst).toLowerCase().trim() }, { mobile: String(mobile).toLowerCase().trim() }] })
     if (resultParty) {
-        return res.status(400).json({ message: "already exists  gst or mobile number" })
+        return res.status(400).json({ message: "already exists  gst" })
     }
 
 
     let party = await new ReferredParty({
-        name, customer_name, city, state, mobile, gst,
+        name, customer_name, city, state, 
+        mobile: uniqueNumbers[0] || null,
+        mobile2: uniqueNumbers[1] || null,
+        mobile3: uniqueNumbers[2] || null,
+         gst,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -2491,7 +2516,7 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
     if (!isMongoId(id))
         return res.status(400).json({ message: "bad mongo id" })
     let body = JSON.parse(req.body.body)
-    const { name, customer_name, city, state, mobile, gst } = body as CreateOrEditReferDto
+    const { name, customer_name, city, state, mobile, mobile2, mobile3, gst } = body as CreateOrEditReferDto
     if (!name || !city || !state || !mobile) {
         return res.status(400).json({ message: "please fill all required fields" })
     }
@@ -2504,15 +2529,52 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
         if (resultParty) {
             return res.status(400).json({ message: "already exists this  gst" })
         }
+    }
+    let uniqueNumbers = []
+    if (mobile) {
+        if (mobile === party.mobile) {
+            uniqueNumbers[0] = party.mobile
+        }
         if (mobile !== party.mobile) {
-            let resultParty = await ReferredParty.findOne({ mobile: mobile });
-            if (resultParty) {
-                return res.status(400).json({ message: "already exists this  mobile" })
-            }
+            uniqueNumbers[0] = mobile
         }
     }
+    if (mobile2) {
+        if (mobile2 === party.mobile2) {
+            uniqueNumbers[1] = party.mobile2
+        }
+        if (mobile2 !== party.mobile2) {
+            uniqueNumbers[1] = mobile2
+        }
+    }
+    if (mobile3) {
+        if (mobile3 === party.mobile3) {
+            uniqueNumbers[2] = party.mobile3
+        }
+        if (mobile3 !== party.mobile3) {
+            uniqueNumbers[2] = mobile3
+        }
+    }
+
+    uniqueNumbers = uniqueNumbers.filter((item, i, ar) => ar.indexOf(item) === i);
+
+
+    if (uniqueNumbers[0] && uniqueNumbers[0] !== party.mobile && await ReferredParty.findOne({ $or: [{ mobile: uniqueNumbers[0] }, { mobile2: uniqueNumbers[0] }, { mobile3: uniqueNumbers[0] }] }))
+        return res.status(400).json({ message: `${mobile} already exists ` })
+
+
+    if (uniqueNumbers[1] && uniqueNumbers[1] !== party.mobile2 && await ReferredParty.findOne({ $or: [{ mobile: uniqueNumbers[1] }, { mobile2: uniqueNumbers[1] }, { mobile3: uniqueNumbers[1] }] }))
+        return res.status(400).json({ message: `${uniqueNumbers[1]} already exists ` })
+
+    if (uniqueNumbers[2] && uniqueNumbers[2] !== party.mobile3 && await ReferredParty.findOne({ $or: [{ mobile: uniqueNumbers[2] }, { mobile2: uniqueNumbers[2] }, { mobile3: uniqueNumbers[2] }] }))
+        return res.status(400).json({ message: `${uniqueNumbers[2]} already exists ` })
+
     await ReferredParty.findByIdAndUpdate(id, {
-        name, customer_name, city, state, mobile, gst,
+        name, customer_name, city, state, 
+        mobile: uniqueNumbers[0] || null,
+        mobile2: uniqueNumbers[1] || null,
+        mobile3: uniqueNumbers[2] || null, 
+        gst,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,

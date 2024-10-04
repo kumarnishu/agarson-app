@@ -13,15 +13,6 @@ import { UserContext } from '../../../contexts/userContext';
 import { toTitleCase } from '../../../utils/TitleCase';
 import { GetCrmCityDto, GetCrmStateDto, GetReferDto } from '../../../dtos/crm/crm.dto';
 
-export type TformData = {
-    name: string,
-    customer_name: string,
-    mobile: string,
-    gst: string,
-    city: string,
-    state: string,
-}
-
 function CreateOrEditReferForm({ refer }: { refer?: GetReferDto }) {
     const { user } = useContext(UserContext);
     const [states, setStates] = useState<GetCrmStateDto[]>([])
@@ -40,11 +31,13 @@ function CreateOrEditReferForm({ refer }: { refer?: GetReferDto }) {
         })
 
     const { setChoice } = useContext(ChoiceContext)
-    const formik = useFormik<TformData>({
+    const formik = useFormik({
         initialValues: {
             name: refer ? refer.name : "",
             customer_name: refer ? refer.customer_name : "",
-            mobile: refer ? refer.mobile : "",
+            mobile: refer?.mobile||"",
+            mobile2: refer?.mobile2 || "",
+            mobile3: refer?.mobile3 || "",
             city: refer ? refer.city : "",
             gst: refer ? refer.gst : "",
             state: refer ? refer.state : "",
@@ -60,14 +53,22 @@ function CreateOrEditReferForm({ refer }: { refer?: GetReferDto }) {
             mobile: Yup.string().required("required mobile ")
                 .min(10, 'Must be 10 digits')
                 .max(10, 'Must be 10 digits'),
+            mobile2: Yup.string()
+                .min(10, 'Must be 10 digits')
+                .max(10, 'Must be 10 digits'),
+            mobile3: Yup.string()
+                .min(10, 'Must be 10 digits')
+                .max(10, 'Must be 10 digits'),
             gst: Yup.string().required("required gst ")
                 .min(15, 'Must be 15 characters')
                 .max(15, 'Must be 15 characters'),
         }),
-        onSubmit: (values: TformData) => {
+        onSubmit: (values) => {
             let leadData = {
                 customer_name: values.customer_name,
                 mobile: values.mobile,
+                mobile2: values.mobile2,
+                mobile3: values.mobile3,
                 city: values.city,
                 state: values.state,
                 gst: values.gst,
@@ -179,7 +180,33 @@ function CreateOrEditReferForm({ refer }: { refer?: GetReferDto }) {
                     }
                     {...formik.getFieldProps('mobile')}
                 />
+                < TextField
 
+                    type="string"
+                    error={
+                        formik.touched.mobile2 && formik.errors.mobile2 ? true : false
+                    }
+                    id="mobile2"
+                    label="Mobile2"
+                    fullWidth
+                    helperText={
+                        formik.touched.mobile2 && formik.errors.mobile2 ? formik.errors.mobile2 : ""
+                    }
+                    {...formik.getFieldProps('mobile2')}
+                />
+                < TextField
+                    type="string"
+                    error={
+                        formik.touched.mobile3 && formik.errors.mobile3 ? true : false
+                    }
+                    id="mobile3"
+                    label="Mobile3"
+                    fullWidth
+                    helperText={
+                        formik.touched.mobile3 && formik.errors.mobile3 ? formik.errors.mobile3 : ""
+                    }
+                    {...formik.getFieldProps('mobile3')}
+                />
 
           
                 {/* state */}
