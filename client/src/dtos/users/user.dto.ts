@@ -18,6 +18,7 @@ export type IMenu = {
 export type GetUserDto = {
     _id: string,
     username: string,
+    company: string,
     email: string,
     mobile: string,
     dp: string,

@@ -9,6 +9,7 @@ function CreateOrEditRemarkDialog({ lead, remark, display, setDisplay }: {
     lead?: {
         _id: string;
         has_card?: boolean;
+        refer:boolean
     }, remark?: GetRemarksDto, display?: boolean, setDisplay?: React.Dispatch<React.SetStateAction<boolean>> }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     

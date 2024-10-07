@@ -14,7 +14,7 @@ import { GetRemarksDto } from '../../../dtos/crm/crm.dto';
 import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
 
-function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: string, has_card?: boolean }, remark?: GetRemarksDto, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
+function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: string, refer: boolean, has_card?: boolean }, remark?: GetRemarksDto, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [display, setDisplay] = useState(false)
     const [card, setCard] = useState(Boolean(lead?.has_card))
     const [stages, setStages] = useState<DropDownDto[]>([])
@@ -31,7 +31,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
         }>
         (CreateOrEditRemark, {
             onSuccess: () => {
-              
+
                 queryClient.invalidateQueries('remarks')
             }
         })
@@ -48,7 +48,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
         initialValues: {
             remark: remark ? remark.remark : "",
             remind_date: undefined,
-            stage: 'open',
+            stage: lead?.refer ? "refer" : 'open',
             has_card: card
         },
         validationSchema: Yup.object({
@@ -160,6 +160,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
                         error={
                             formik.touched.stage && formik.errors.stage ? true : false
                         }
+                        disabled={Boolean(lead?.refer)}
                         id="stage"
                         label="Stage"
                         fullWidth
@@ -168,8 +169,9 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
                         }
                         {...formik.getFieldProps('stage')}
                     >
-                        <option value="">
 
+                        <option value={lead?.refer ? "refer" : ""}>
+                            {lead?.refer ? "Refer" : "Select"}
                         </option>
                         {
                             stages.map(stage => {
