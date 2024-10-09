@@ -38,9 +38,8 @@ export default function LeadsPage() {
   const [lead, setLead] = useState<GetLeadDto>()
   const [leads, setLeads] = useState<GetLeadDto[]>([])
   const [preFilteredData, setPreFilteredData] = useState<GetLeadDto[]>([])
-  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 20, page: 1, total: 1 });
-  const [filterCount, setFilterCount] = useState(0)
-  const [stage, setStage] = useState<string>();
+  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
+  const [stage, setStage] = useState<string>("open");
   const [stages, setStages] = useState<DropDownDto[]>([])
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -48,13 +47,11 @@ export default function LeadsPage() {
 
   const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
 
-  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{ result: GetLeadDto[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads", filter, LoggedInUser], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
+  const { data: fuzzyleads, isLoading: isFuzzyLoading, refetch: refetchFuzzy, isRefetching: isFuzzyRefetching } = useQuery<AxiosResponse<{ result: GetLeadDto[], page: number, total: number, limit: number }>, BackendError>(["fuzzyleads"], async () => FuzzySearchLeads({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page, stage: stage }), {
     enabled: false
   })
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
-  const [showFilter, setShowFilter] = useState(false)
-  const [isFullScreen, setIsFullScreen] = useState(false)
   useEffect(() => {
     if (stageSuccess && stagedata.data) {
       let tmp: DropDownDto[] = stagedata.data;
@@ -70,25 +67,12 @@ export default function LeadsPage() {
   }, [stageSuccess])
 
   useEffect(() => {
-
     if (!filter) {
       setLeads(preFilteredData)
       setPaginationData(preFilteredPaginationData)
     }
-    if (stage && !filter) {
-      refetch();
-    }
+  }, [filter])
 
-
-  }, [filter, stage])
-
-
-
-  useEffect(() => {
-    if (filter) {
-      refetchFuzzy()
-    }
-  }, [paginationData])
 
   useEffect(() => {
     if (data && !filter) {
@@ -112,20 +96,15 @@ export default function LeadsPage() {
   useEffect(() => {
     if (fuzzyleads && filter) {
       setLeads(fuzzyleads.data.result)
-      let count = filterCount
-      if (count === 0)
-        setPaginationData({
-          ...paginationData,
-          page: fuzzyleads.data.page,
-          limit: fuzzyleads.data.limit,
-          total: fuzzyleads.data.total
-        })
-      count = filterCount + 1
-      setFilterCount(count)
+      setPaginationData({
+        ...paginationData,
+        page: fuzzyleads.data.page,
+        limit: fuzzyleads.data.limit,
+        total: fuzzyleads.data.total
+      })
     }
   }, [fuzzyleads])
   const columns = useMemo<MRT_ColumnDef<GetLeadDto>[]>(
-    //column definitions...
     () => leads && [
       {
         accessorKey: 'actions',
@@ -417,15 +396,20 @@ export default function LeadsPage() {
       },
     ],
     [leads],
-    //end
   );
 
 
   const table = useMaterialReactTable({
     columns,
-    data: leads, //10,000 rows       
+    data: leads,
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableHeadCellProps:()=> ({
+      //simple styling with the `sx` prop, works just like a style prop in this example
+      sx: {
+        overflowY: 'none',
+      },
+    }),
     muiTableFooterRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
@@ -444,7 +428,7 @@ export default function LeadsPage() {
       sx: { height: table.table.getState().isFullScreen ? 'auto' : '72vh' }
     }),
     positionToolbarAlertBanner: 'none',
-    renderTopToolbarCustomActions: () => (
+    renderTopToolbarCustomActions: ({ table }) => (
 
       <Stack
         sx={{ width: '100%' }}
@@ -458,8 +442,6 @@ export default function LeadsPage() {
           size="small"
           onChange={(e) => {
             setFilter(e.currentTarget.value)
-            setFilterCount(0)
-
           }}
           InputProps={{
             endAdornment: (
@@ -492,12 +474,12 @@ export default function LeadsPage() {
           }}
           size='small'
         >
-          <MenuItem
+          {filter && <MenuItem
             key={'00'}
-            value={undefined}
+            value={'all'}
           >
             All
-          </MenuItem>
+          </MenuItem>}
           {stages.map((stage, index) => (
             <MenuItem
               key={index}
@@ -526,18 +508,22 @@ export default function LeadsPage() {
         {LoggedInUser?.assigned_permissions.includes('leads_create') && <UploadLeadsExcelButton />}
         <Tooltip title="Toogle Filter">
           <Button size="small" color="primary" variant='contained'
-            onClick={() => setShowFilter(!showFilter)
+            onClick={() => {
+              if (table.getState().showColumnFilters)
+                table.resetColumnFilters(true)
+              table.setShowColumnFilters(!table.getState().showColumnFilters)
+            }
             }
           >
-            {showFilter ? <FilterAltOff /> : <FilterAlt />}
+            {table.getState().showColumnFilters ? <FilterAltOff /> : <FilterAlt />}
           </Button>
         </Tooltip>
         <Tooltip title="Toogle FullScreen">
           <Button size="small" color="primary" variant='contained'
-            onClick={() => setIsFullScreen(!isFullScreen)
+            onClick={() => table.setIsFullScreen(!table.getState().isFullScreen)
             }
           >
-            {isFullScreen ? <FullscreenExit /> : <Fullscreen />}
+            {table.getState().isFullScreen ? <FullscreenExit /> : <Fullscreen />}
           </Button>
         </Tooltip>
         <Tooltip title="Menu">
@@ -573,7 +559,7 @@ export default function LeadsPage() {
     enableTopToolbar: true,
     enableTableFooter: true,
     enableRowVirtualization: true,
-    state: { sorting, showColumnFilters: showFilter, isFullScreen: isFullScreen, isLoading: isLoading },
+    state: { sorting, isLoading: isLoading },
     enableBottomToolbar: true,
     enableGlobalFilter: false,
     manualPagination: true,
@@ -581,7 +567,6 @@ export default function LeadsPage() {
     enableToolbarInternalActions: false
   });
   useEffect(() => {
-    //scroll to the top of the table when the sorting changes
     try {
       rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
     } catch (error) {
@@ -591,7 +576,7 @@ export default function LeadsPage() {
   return (
     <>
       {
-        isLoading || isFuzzyLoading || isRefetching && <LinearProgress color='secondary' />
+        isLoading || isFuzzyLoading || isRefetching || isFuzzyRefetching && <LinearProgress color='secondary' />
       }
       <>
         <Menu

@@ -713,7 +713,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
         let count = 0
-        if (stage != "undefined") {
+        if (stage != "all") {
             leads = await Lead.find({
                 stage: stage, state: { $in: states }, city: { $in: cities }
             }).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at').skip((page - 1) * limit).limit(limit)
@@ -903,7 +903,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
     let leads: ILead[] = []
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
 
-        if (stage != "undefined") {
+        if (stage != "all") {
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
@@ -1186,7 +1186,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                         { alternate_email: { $regex: key[0], $options: 'i' } },
                         { lead_type: { $regex: key[0], $options: 'i' } },
-                        { stage: { $regex: key[0], $options: 'i' } },
                         { lead_source: { $regex: key[0], $options: 'i' } },
                         { last_remark: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -1217,7 +1216,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1239,7 +1237,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1273,7 +1270,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1295,7 +1291,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1317,7 +1312,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[2], $options: 'i' } },
                                 { alternate_email: { $regex: key[2], $options: 'i' } },
                                 { lead_type: { $regex: key[2], $options: 'i' } },
-                                { stage: { $regex: key[2], $options: 'i' } },
                                 { lead_source: { $regex: key[2], $options: 'i' } },
                                 { last_remark: { $regex: key[2], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1351,7 +1345,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1373,7 +1366,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1395,7 +1387,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[2], $options: 'i' } },
                                 { alternate_email: { $regex: key[2], $options: 'i' } },
                                 { lead_type: { $regex: key[2], $options: 'i' } },
-                                { stage: { $regex: key[2], $options: 'i' } },
                                 { lead_source: { $regex: key[2], $options: 'i' } },
                                 { last_remark: { $regex: key[2], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1417,7 +1408,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[3], $options: 'i' } },
                                 { alternate_email: { $regex: key[3], $options: 'i' } },
                                 { lead_type: { $regex: key[3], $options: 'i' } },
-                                { stage: { $regex: key[3], $options: 'i' } },
                                 { lead_source: { $regex: key[3], $options: 'i' } },
                                 { last_remark: { $regex: key[3], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1451,7 +1441,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                         { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                         { alternate_email: { $regex: key[0], $options: 'i' } },
                         { lead_type: { $regex: key[0], $options: 'i' } },
-                        { stage: { $regex: key[0], $options: 'i' } },
                         { lead_source: { $regex: key[0], $options: 'i' } },
                         { last_remark: { $regex: key[0], $options: 'i' } },
                         { city: { $regex: key[0], $options: 'i' } },
@@ -1483,7 +1472,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1505,7 +1493,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1540,7 +1527,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1562,7 +1548,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1584,7 +1569,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[2], $options: 'i' } },
                                 { alternate_email: { $regex: key[2], $options: 'i' } },
                                 { lead_type: { $regex: key[2], $options: 'i' } },
-                                { stage: { $regex: key[2], $options: 'i' } },
                                 { lead_source: { $regex: key[2], $options: 'i' } },
                                 { last_remark: { $regex: key[2], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1619,7 +1603,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[0], $options: 'i' } },
                                 { alternate_email: { $regex: key[0], $options: 'i' } },
                                 { lead_type: { $regex: key[0], $options: 'i' } },
-                                { stage: { $regex: key[0], $options: 'i' } },
                                 { lead_source: { $regex: key[0], $options: 'i' } },
                                 { last_remark: { $regex: key[0], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1641,7 +1624,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[1], $options: 'i' } },
                                 { alternate_email: { $regex: key[1], $options: 'i' } },
                                 { lead_type: { $regex: key[1], $options: 'i' } },
-                                { stage: { $regex: key[1], $options: 'i' } },
                                 { lead_source: { $regex: key[1], $options: 'i' } },
                                 { last_remark: { $regex: key[1], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1663,7 +1645,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[2], $options: 'i' } },
                                 { alternate_email: { $regex: key[2], $options: 'i' } },
                                 { lead_type: { $regex: key[2], $options: 'i' } },
-                                { stage: { $regex: key[2], $options: 'i' } },
                                 { lead_source: { $regex: key[2], $options: 'i' } },
                                 { last_remark: { $regex: key[2], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
@@ -1685,7 +1666,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                                 { alternate_mobile2: { $regex: key[3], $options: 'i' } },
                                 { alternate_email: { $regex: key[3], $options: 'i' } },
                                 { lead_type: { $regex: key[3], $options: 'i' } },
-                                { stage: { $regex: key[3], $options: 'i' } },
                                 { lead_source: { $regex: key[3], $options: 'i' } },
                                 { last_remark: { $regex: key[3], $options: 'i' } },
                                 { city: { $regex: key[0], $options: 'i' } },
