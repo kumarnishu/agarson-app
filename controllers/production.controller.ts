@@ -1313,7 +1313,6 @@ export const GetMyTodaySoleThickness = async (req: Request, res: Response, next:
     return res.status(200).json(result)
 }
 
-
 export const GetSoleThickness = async (req: Request, res: Response, next: NextFunction) => {
     let limit = Number(req.query.limit)
     let page = Number(req.query.page)

@@ -218,7 +218,7 @@ export default function ShowWeightDifferenceReportPage() {
         border: '1px solid #ddd;'
       },
     }),
-    initialState: { density: 'comfortable' },
+    initialState: { density: 'compact' },
     renderTopToolbarCustomActions: ({ table }) => (
       <Box
         sx={{

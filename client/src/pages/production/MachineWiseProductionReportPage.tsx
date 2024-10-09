@@ -86,7 +86,7 @@ export default function MachineWiseProductionReportPage() {
         border: '1px solid #ddd;'
       },
     }),
-    initialState: { density: 'comfortable' },
+    initialState: { density: 'compact' },
     enableGrouping: true,
     enableRowSelection: true,
     enableGlobalFilterModes: true,

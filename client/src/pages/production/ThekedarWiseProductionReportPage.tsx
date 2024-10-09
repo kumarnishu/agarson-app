@@ -83,7 +83,7 @@ export default function ThekedarWiseProductionReportPage() {
         border: '1px solid #ddd;'
       },
     }),
-    initialState: { density: 'comfortable' },
+    initialState: { density: 'compact' },
     enableGrouping: true,
     enableRowSelection: true,
     enableGlobalFilterModes: true,

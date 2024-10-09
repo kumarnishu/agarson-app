@@ -1,7 +1,7 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
-import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateDyeLocation, CreateDyeStatus, CreateMachine, CreateProduction, CreateShoeWeight, CreateSoleThickness, DeleteDyeLocation, DeleteDyeStatus, DeleteProduction, DeleteShoeWeight, DeleteSoleThickness, GetAllDyeLocations, GetArticles, GetCategoryWiseProductionReports, GetDyeById, GetDyes, GetDyeStatus, GetMachineCategories, GetMachines, GetMachineWiseProductionReports, GetMyTodayDyeStatus, GetMyTodayProductions, GetMyTodayShoeWeights, GetProductions, GetShoeWeightDifferenceReports, GetShoeWeights, GetSoleThickness, GetThekedarWiseProductionReports, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateDyeLocation, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, UpdateSoleThickness, ValidateShoeWeight } from "../controllers/production.controller";
+import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateDyeLocation, CreateDyeStatus, CreateMachine, CreateProduction, CreateShoeWeight, CreateSoleThickness, DeleteDyeLocation, DeleteDyeStatus, DeleteProduction, DeleteShoeWeight, DeleteSoleThickness, GetAllDyeLocations, GetArticles, GetCategoryWiseProductionReports, GetDyeById, GetDyes, GetDyeStatus, GetMachineCategories, GetMachines, GetMachineWiseProductionReports, GetMyTodayDyeStatus, GetMyTodayProductions, GetMyTodayShoeWeights, GetMyTodaySoleThickness, GetProductions, GetShoeWeightDifferenceReports, GetShoeWeights, GetSoleThickness, GetThekedarWiseProductionReports, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateDyeLocation, UpdateMachine, UpdateMachineCategories, UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, UpdateSoleThickness, ValidateShoeWeight } from "../controllers/production.controller";
 
 const router = express.Router()
 
@@ -46,6 +46,6 @@ router.route("/production/machinewise").get(isAuthenticatedUser, GetMachineWiseP
 router.route("/production/thekedarwise").get(isAuthenticatedUser, GetThekedarWiseProductionReports)
 router.route("/shoeweight/diffreports").get(isAuthenticatedUser, GetShoeWeightDifferenceReports)
 router.route("/solethickness").get(isAuthenticatedUser, GetSoleThickness).post(isAuthenticatedUser, CreateSoleThickness)
-router.route("/solethickness/:id").get(isAuthenticatedUser, DeleteSoleThickness).put(isAuthenticatedUser, UpdateSoleThickness)
-
+router.route("/solethickness/:id").get(isAuthenticatedUser, DeleteSoleThickness).put(isAuthenticatedUser, UpdateSoleThickness).delete(isAuthenticatedUser,DeleteSoleThickness)
+router.route("/solethickness/me").get(isAuthenticatedUser, GetMyTodaySoleThickness)
 export default router

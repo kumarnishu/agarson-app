@@ -1,3 +1,4 @@
+import { CreateOrEditSoleThicknessDto } from "../dtos/production/production.dto";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
@@ -206,4 +207,26 @@ export const GetproductioncategoryWise = async ({ start_date, end_date }: { star
 }
 export const GetShoeWeightDiffReports = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
     return await apiClient.get(`shoeweight/diffreports/?start_date=${start_date}&end_date=${end_date}`)
+}
+export const CreateSoleThickness = async (body: CreateOrEditSoleThicknessDto) => {
+    return await apiClient.post(`solethickness`, body);
+}
+
+export const UpdateSoleThickness = async ({ id, body }: {
+    body: CreateOrEditSoleThicknessDto, id: string
+
+}) => {
+    return await apiClient.put(`solethickness/${id}`, body);
+}
+
+export const DeleteSoleThickness = async (id: string) => {
+    return await apiClient.delete(`solethickness/${id}`);
+}
+
+export const GetSoleThickness= async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+    if (id)
+        return await apiClient.get(`solethickness/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+    else
+        return await apiClient.get(`solethickness/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+
 }
