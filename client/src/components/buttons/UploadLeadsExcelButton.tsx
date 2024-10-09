@@ -72,7 +72,7 @@ function UploadLeadsExcelButton() {
           <>
             <Button
               size="small"
-              
+              variant="contained"
               component="label"
             >
               <Tooltip title="upload excel template">

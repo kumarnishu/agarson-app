@@ -1,5 +1,5 @@
-import { BuildOutlined, Comment, Delete, Edit, Search, Share, Visibility } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
+import { BuildOutlined, Comment, Delete, Edit, FilterAlt, FilterAltOff, Fullscreen, FullscreenExit, Search, Share, Visibility } from '@mui/icons-material'
+import { Button, Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -53,7 +53,8 @@ export default function LeadsPage() {
   })
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
-
+  const [showFilter, setShowFilter] = useState(false)
+  const [isFullScreen, setIsFullScreen] = useState(false)
   useEffect(() => {
     if (stageSuccess && stagedata.data) {
       let tmp: DropDownDto[] = stagedata.data;
@@ -440,162 +441,114 @@ export default function LeadsPage() {
       },
     }),
     muiTableContainerProps: (table) => ({
-      sx: { height: table.table.getState().isFullScreen ? 'auto' : '74vh' }
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '72vh' }
     }),
     positionToolbarAlertBanner: 'none',
     renderTopToolbarCustomActions: () => (
 
       <Stack
         sx={{ width: '100%' }}
-        p={0}
         direction="row"
         alignItems={'center'}
         justifyContent="space-between">
 
         <Typography variant="h5">Leads</Typography>
+        <TextField
+          sx={{ width: '40vw' }}
+          size="small"
+          onChange={(e) => {
+            setFilter(e.currentTarget.value)
+            setFilterCount(0)
 
-        <Stack
-          direction="row"
-          justifyContent="end"
-        >
-          {/* search bar */}
-          < Stack direction="row" spacing={2} >
-            <TextField
-              sx={{ width: '40vw' }}
-              size="small"
-              onChange={(e) => {
-                setFilter(e.currentTarget.value)
-                setFilterCount(0)
-
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Search sx={{ cursor: 'pointer' }} onClick={() => {
-                      refetchFuzzy()
-                    }} />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder={`Search Leads `}
-              style={{
-                fontSize: '1.1rem',
-                border: '0',
-              }}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Search sx={{ cursor: 'pointer' }} onClick={() => {
                   refetchFuzzy()
-                }
-              }}
-            />
-            {LoggedInUser?._id === LoggedInUser?.created_by.id && LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="Delete Selected Leads">
-              <IconButton color="secondary"
+                }} />
+              </InputAdornment>
+            ),
+          }}
+          placeholder={`Search Leads `}
+          style={{
+            fontSize: '1.1rem',
+            border: '0',
+          }}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              refetchFuzzy()
+            }
+          }}
+        />
 
-                onClick={() => {
-                  let data: any[] = [];
-                  data = table.getSelectedRowModel().rows.filter((lead) => { return lead.original.stage === 'useless' })
-                  if (data.length == 0)
-                    alert("select some useless leads")
-                  else
-                    setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })
-                }}
-              >
-                <Delete />
-              </IconButton>
-            </Tooltip>}
-
-            <Select
-              sx={{ m: 1, width: 300 }}
-              labelId="demo-multiple-name-label"
-              id="demo-multiple-name"
-              value={stage}
-              onChange={(e) => {
-                setStage(e.target.value);
-              }}
-              size='small'
-            >
-              <MenuItem
-                key={'00'}
-                value={undefined}
-              >
-                All
-              </MenuItem>
-              {stages.map((stage, index) => (
-                <MenuItem
-                  key={index}
-                  value={stage.value}
-                >
-                  {toTitleCase(stage.label)}
-                </MenuItem>
-              ))}
-            </Select>
-
-
-            {LoggedInUser?.assigned_permissions.includes('leads_create') && <UploadLeadsExcelButton />}
-          </Stack >
-          <>
-
-
-            {/* stage */}
-
-
-
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)
-              }
-              TransitionComponent={Fade}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-              sx={{ borderRadius: 2 }}
-            >
-              {LoggedInUser?.assigned_permissions.includes('leads_create') && <MenuItem
-                onClick={() => {
-                  setChoice({ type: LeadChoiceActions.create_or_edit_lead })
-                  setLead(undefined);
-                  setAnchorEl(null)
-                }}
-
-
-              > Add New</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('leads_merge') && <MenuItem
-                onClick={() => {
-                  if (table.getSelectedRowModel().rows.length == 2) {
-                    setChoice({ type: LeadChoiceActions.merge_leads })
-                    setLead(undefined);
-                    setAnchorEl(null)
-                  } else {
-                    alert("please select two leads only");
-                    setLead(undefined);
-                    setAnchorEl(null)
-                    return;
-                  }
-                }
-                }
-              > Merge Leads</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('leads_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
-
-              >Export All</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('leads_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
-
-              >Export Selected</MenuItem>}
-
-            </Menu >
-            <CreateOrEditLeadDialog lead={lead} />
-            {table.getSelectedRowModel().rows.length == 2 && <MergeTwoLeadsDialog leads={table.getSelectedRowModel().rows.map((l) => { return l.original })} removeSelectedLeads={() => { table.resetRowSelection() }} />}
-            {table.getSelectedRowModel().rows && table.getSelectedRowModel().rows.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={table.getSelectedRowModel().rows.map((l) => { return l.original })} removeSelectedLeads={() => { table.resetRowSelection() }} />}
-          </>
-        </Stack >
-        <IconButton size="small" color="primary"
-          onClick={(e) => setAnchorEl(e.currentTarget)
-          }
-          sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
+        <Select
+          sx={{ m: 1, width: 300 }}
+          labelId="demo-multiple-name-label"
+          id="demo-multiple-name"
+          value={stage}
+          onChange={(e) => {
+            setStage(e.target.value);
+          }}
+          size='small'
         >
-          <MenuIcon />
-        </IconButton>
+          <MenuItem
+            key={'00'}
+            value={undefined}
+          >
+            All
+          </MenuItem>
+          {stages.map((stage, index) => (
+            <MenuItem
+              key={index}
+              value={stage.value}
+            >
+              {toTitleCase(stage.label)}
+            </MenuItem>
+          ))}
+        </Select>
+
+        {LoggedInUser?._id !== LoggedInUser?.created_by.id && LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="Delete Selected Leads">
+          <Button size="small" variant='contained' color='error'
+
+            onClick={() => {
+              let data: any[] = [];
+              data = table.getSelectedRowModel().rows.filter((lead) => { return lead.original.stage === 'useless' })
+              if (data.length == 0)
+                alert("select some useless leads")
+              else
+                setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })
+            }}
+          >
+            <Delete />
+          </Button>
+        </Tooltip>}
+        {LoggedInUser?.assigned_permissions.includes('leads_create') && <UploadLeadsExcelButton />}
+        <Tooltip title="Toogle Filter">
+          <Button size="small" color="primary" variant='contained'
+            onClick={() => setShowFilter(!showFilter)
+            }
+          >
+            {showFilter ? <FilterAltOff /> : <FilterAlt />}
+          </Button>
+        </Tooltip>
+        <Tooltip title="Toogle FullScreen">
+          <Button size="small" color="primary" variant='contained'
+            onClick={() => setIsFullScreen(!isFullScreen)
+            }
+          >
+            {isFullScreen ? <FullscreenExit /> : <Fullscreen />}
+          </Button>
+        </Tooltip>
+        <Tooltip title="Menu">
+          <Button size="small" color="primary" variant='contained'
+            onClick={(e) => setAnchorEl(e.currentTarget)
+            }
+          >
+            <MenuIcon />
+            <Typography pl={1}> Menu</Typography>
+          </Button>
+        </Tooltip>
       </Stack>
     ),
     rowVirtualizerInstanceRef,
@@ -620,7 +573,7 @@ export default function LeadsPage() {
     enableTopToolbar: true,
     enableTableFooter: true,
     enableRowVirtualization: true,
-    state: { showLoadingOverlay: isLoading || isRefetching, sorting },
+    state: { sorting, showColumnFilters: showFilter, isFullScreen: isFullScreen },
     enableBottomToolbar: true,
     enableGlobalFilter: false,
     manualPagination: true,
@@ -638,9 +591,56 @@ export default function LeadsPage() {
   return (
     <>
       {
-        isLoading || isFuzzyLoading && <LinearProgress />
+        isLoading || isFuzzyLoading || isRefetching && <LinearProgress color='secondary' />
       }
+      <>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)
+          }
+          TransitionComponent={Fade}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+          sx={{ borderRadius: 2 }}
+        >
+          {LoggedInUser?.assigned_permissions.includes('leads_create') && <MenuItem
+            onClick={() => {
+              setChoice({ type: LeadChoiceActions.create_or_edit_lead })
+              setLead(undefined);
+              setAnchorEl(null)
+            }}
 
+
+          > Add New</MenuItem>}
+          {LoggedInUser?.assigned_permissions.includes('leads_merge') && <MenuItem
+            onClick={() => {
+              if (table.getSelectedRowModel().rows.length == 2) {
+                setChoice({ type: LeadChoiceActions.merge_leads })
+                setLead(undefined);
+                setAnchorEl(null)
+              } else {
+                alert("please select two leads only");
+                setLead(undefined);
+                setAnchorEl(null)
+                return;
+              }
+            }
+            }
+          > Merge Leads</MenuItem>}
+          {LoggedInUser?.assigned_permissions.includes('leads_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+          >Export All</MenuItem>}
+          {LoggedInUser?.assigned_permissions.includes('leads_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+          >Export Selected</MenuItem>}
+
+        </Menu >
+        <CreateOrEditLeadDialog lead={lead} />
+        {table.getSelectedRowModel().rows.length == 2 && <MergeTwoLeadsDialog leads={table.getSelectedRowModel().rows.map((l) => { return l.original })} removeSelectedLeads={() => { table.resetRowSelection() }} />}
+        {table.getSelectedRowModel().rows && table.getSelectedRowModel().rows.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={table.getSelectedRowModel().rows.map((l) => { return l.original })} removeSelectedLeads={() => { table.resetRowSelection() }} />}
+      </>
       {
         lead ?
           <>
