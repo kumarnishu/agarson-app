@@ -40,7 +40,7 @@ router.route("/remarks/refers/:id").get(isAuthenticatedUser, GetReferRemarkHisto
 router.route("/activities").get(isAuthenticatedUser, GetActivities)
 router.route("/leads/:id").put(isAuthenticatedUser, upload.single('visiting_card'), UpdateLead).delete(isAuthenticatedUser, DeleteLead)
 router.route("/update/leads/bulk").put(isAuthenticatedUser, upload.single('file'), BulkLeadUpdateFromExcel)
-router.route("/remarks/leads/:id").patch(isAuthenticatedUser, NewRemark)
+router.route("/remarks/:id").post(isAuthenticatedUser, NewRemark)
 router.route("/remarks/:id").put(isAuthenticatedUser, UpdateRemark)
 router.route("/remarks/:id").delete(isAuthenticatedUser, DeleteRemark)
 router.route("/search/leads").get(isAuthenticatedUser, FuzzySearchLeads)

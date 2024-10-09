@@ -74,6 +74,7 @@ function UploadLeadsExcelButton() {
               size="small"
               variant="contained"
               component="label"
+              color="inherit"
             >
               <Tooltip title="upload excel template">
                 <Upload />

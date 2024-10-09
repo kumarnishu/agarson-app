@@ -53,7 +53,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
             has_card: card
         },
         validationSchema: Yup.object({
-            stage: Yup.string().required("required field"),
+            stage: Yup.string(),
             remark: Yup.string().required("required field")
                 .min(5, 'Must be 5 characters or more')
                 .max(200, 'Must be 200 characters or less')
@@ -83,7 +83,6 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
             })
         }
     });
-
     useEffect(() => {
         if (stageSuccess) {
             setStages(stagedata.data)
@@ -170,7 +169,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
                         }
                         {...formik.getFieldProps('stage')}
                     >
-                        
+
                         {lead.stage == "refer" && <option key={'01'} value="refer">
                             Refer
                         </option>}

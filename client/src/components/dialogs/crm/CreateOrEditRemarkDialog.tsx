@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogActions, Typography, IconButton, DialogTitle } from '@mui/material'
+import { Dialog, DialogContent,  IconButton, DialogTitle } from '@mui/material'
 import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import { Cancel } from '@mui/icons-material'
@@ -28,21 +28,8 @@ function CreateOrEditRemarkDialog({ lead, remark, display, setDisplay }: {
             <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>{!remark ? "New Remark" : "Edit Remark"}</DialogTitle>
             <DialogContent>
                 {remark && display && <CreateOrEditRemarkForm lead={lead} remark={remark} setDisplay2={setDisplay} />}
-                {!remark && !display && <CreateOrEditRemarkForm lead={lead} remark={remark} />}
+                {!remark && !display && <CreateOrEditRemarkForm lead={lead} />}
             </DialogContent>
-            <DialogActions>
-                <Typography
-                    variant="button"
-                    component="p"
-                    sx={{
-                        display: "flex",
-                        width: "100%",
-                        alignItems: "center",
-                        justifyContent: "center"
-                    }}
-                >
-                </Typography >
-            </DialogActions>
         </Dialog>
     )
 }

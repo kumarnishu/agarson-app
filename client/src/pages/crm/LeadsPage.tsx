@@ -52,6 +52,8 @@ export default function LeadsPage() {
   })
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+
+
   useEffect(() => {
     if (stageSuccess && stagedata.data) {
       let tmp: DropDownDto[] = stagedata.data;
@@ -62,7 +64,7 @@ export default function LeadsPage() {
       if (!LoggedInUser?.assigned_permissions.includes('show_refer_leads')) {
         tmp = tmp.filter((stage) => { return stage.value !== 'refer' })
       }
-      setStages(tmp)
+      setStages(stagedata.data)
     }
   }, [stageSuccess])
 
@@ -94,6 +96,13 @@ export default function LeadsPage() {
   }, [data])
 
   useEffect(() => {
+    if (filter)
+      refetchFuzzy()
+    if (!filter)
+      refetch()
+  }, [stage])
+
+  useEffect(() => {
     if (fuzzyleads && filter) {
       setLeads(fuzzyleads.data.result)
       setPaginationData({
@@ -104,12 +113,14 @@ export default function LeadsPage() {
       })
     }
   }, [fuzzyleads])
+
   const columns = useMemo<MRT_ColumnDef<GetLeadDto>[]>(
     () => leads && [
       {
         accessorKey: 'actions',
         header: '',
         maxSize: 50,
+        enableColumnFilter:false,
         size: 120,
         Cell: ({ cell }) => <PopUp
           element={
@@ -436,7 +447,7 @@ export default function LeadsPage() {
         alignItems={'center'}
         justifyContent="space-between">
 
-        <Typography variant="h5">Leads</Typography>
+        <Typography variant="h6">Leads</Typography>
         <TextField
           sx={{ width: '40vw' }}
           size="small"
@@ -447,7 +458,8 @@ export default function LeadsPage() {
             endAdornment: (
               <InputAdornment position="end">
                 <Search sx={{ cursor: 'pointer' }} onClick={() => {
-                  refetchFuzzy()
+                  if (filter)
+                    refetchFuzzy()
                 }} />
               </InputAdornment>
             ),
@@ -474,12 +486,12 @@ export default function LeadsPage() {
           }}
           size='small'
         >
-          {filter && <MenuItem
+          <MenuItem
             key={'00'}
             value={'all'}
           >
             All
-          </MenuItem>}
+          </MenuItem>
           {stages.map((stage, index) => (
             <MenuItem
               key={index}
@@ -507,7 +519,7 @@ export default function LeadsPage() {
         </Tooltip>}
         {LoggedInUser?.assigned_permissions.includes('leads_create') && <UploadLeadsExcelButton />}
         <Tooltip title="Toogle Filter">
-          <Button size="small" color="primary" variant='contained'
+          <Button size="small" color="inherit" variant='contained'
             onClick={() => {
               if (table.getState().showColumnFilters)
                 table.resetColumnFilters(true)
@@ -519,7 +531,7 @@ export default function LeadsPage() {
           </Button>
         </Tooltip>
         <Tooltip title="Toogle FullScreen">
-          <Button size="small" color="primary" variant='contained'
+          <Button size="small" color="inherit" variant='contained'
             onClick={() => table.setIsFullScreen(!table.getState().isFullScreen)
             }
           >
@@ -527,7 +539,7 @@ export default function LeadsPage() {
           </Button>
         </Tooltip>
         <Tooltip title="Menu">
-          <Button size="small" color="primary" variant='contained'
+          <Button size="small" color="inherit" variant='contained'
             onClick={(e) => setAnchorEl(e.currentTarget)
             }
           >
@@ -566,6 +578,7 @@ export default function LeadsPage() {
     enablePagination: false,
     enableToolbarInternalActions: false
   });
+
   useEffect(() => {
     try {
       rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
@@ -573,6 +586,7 @@ export default function LeadsPage() {
       console.error(error);
     }
   }, [sorting]);
+
   return (
     <>
       {

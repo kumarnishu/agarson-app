@@ -114,7 +114,7 @@ export const CreateOrEditRemark = async ({ body, lead_id, remark_id }: {
 
 }) => {
   if (lead_id) {
-    return await apiClient.patch(`remarks/leads/${lead_id}`, body)
+    return await apiClient.post(`remarks/${lead_id}`, body)
   }
   return await apiClient.put(`remarks/${remark_id}`, body)
 }
