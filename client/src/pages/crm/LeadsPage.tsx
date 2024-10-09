@@ -647,7 +647,7 @@ export default function LeadsPage() {
             <CreateOrEditRemarkDialog lead={lead ? {
               _id: lead._id,
               has_card: lead.has_card,
-              refer: lead.referred_party_mobile ? true : false
+              stage: lead.stage
             } : undefined} />
             <DeleteCrmItemDialog lead={lead ? { id: lead._id, value: lead.name, label: lead.name } : undefined} />
             <ViewRemarksDialog id={lead._id} />

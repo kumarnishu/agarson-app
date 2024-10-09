@@ -14,7 +14,7 @@ import { GetRemarksDto } from '../../../dtos/crm/crm.dto';
 import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
 
-function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: string, refer: boolean, has_card?: boolean }, remark?: GetRemarksDto, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
+function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: string, has_card?: boolean, stage: string }, remark?: GetRemarksDto, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [display, setDisplay] = useState(false)
     const [card, setCard] = useState(Boolean(lead?.has_card))
     const [stages, setStages] = useState<DropDownDto[]>([])
@@ -33,6 +33,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
             onSuccess: () => {
 
                 queryClient.invalidateQueries('remarks')
+                queryClient.invalidateQueries('leads')
             }
         })
     const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
@@ -48,7 +49,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
         initialValues: {
             remark: remark ? remark.remark : "",
             remind_date: undefined,
-            stage: lead?.refer ? "refer" : 'open',
+            stage: lead?.stage || "",
             has_card: card
         },
         validationSchema: Yup.object({
@@ -160,7 +161,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
                         error={
                             formik.touched.stage && formik.errors.stage ? true : false
                         }
-                        disabled={Boolean(lead?.refer)}
+                        disabled={Boolean(lead.stage == "refer")}
                         id="stage"
                         label="Stage"
                         fullWidth
@@ -169,10 +170,10 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
                         }
                         {...formik.getFieldProps('stage')}
                     >
-
-                        <option value={lead?.refer ? "refer" : ""}>
-                            {lead?.refer ? "Refer" : "Select"}
-                        </option>
+                        
+                        {lead.stage == "refer" && <option key={'01'} value="refer">
+                            Refer
+                        </option>}
                         {
                             stages.map(stage => {
                                 if (stage.value === "refer")
