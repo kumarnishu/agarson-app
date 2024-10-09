@@ -2,7 +2,7 @@ import { BuildOutlined, Comment, Delete, Edit, Search, Share, Visibility } from 
 import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchLeads, GetAllStages, GetLeads } from '../../services/LeadsServices'
 import { UserContext } from '../../contexts/userContext'
@@ -10,7 +10,7 @@ import { BackendError } from '../..'
 import { toTitleCase } from '../../utils/TitleCase'
 import { GetLeadDto } from '../../dtos/crm/crm.dto'
 import { DropDownDto } from '../../dtos/common/dropdown.dto'
-import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLeadDialog'
 import MergeTwoLeadsDialog from '../../components/dialogs/crm/MergeTwoLeadsDialog'
@@ -32,7 +32,7 @@ import { DownloadFile } from '../../utils/DownloadFile'
 
 
 export default function LeadsPage() {
-  const [paginationData, setPaginationData] = useState({ limit: 20, page: 1, total: 1 });
+  const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
   const [filter, setFilter] = useState<string | undefined>()
   const { user: LoggedInUser } = useContext(UserContext)
   const [lead, setLead] = useState<GetLeadDto>()
@@ -44,7 +44,7 @@ export default function LeadsPage() {
   const [stages, setStages] = useState<DropDownDto[]>([])
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { data, isLoading, refetch } = useQuery<AxiosResponse<{ result: GetLeadDto[], page: number, total: number, limit: number }>, BackendError>(["leads"], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
+  const { data, isLoading, isRefetching, refetch } = useQuery<AxiosResponse<{ result: GetLeadDto[], page: number, total: number, limit: number }>, BackendError>(["leads"], async () => GetLeads({ limit: paginationData?.limit, page: paginationData?.page, stage: stage }))
 
   const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
 
@@ -52,7 +52,7 @@ export default function LeadsPage() {
     enabled: false
   })
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
-
+  const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
 
   useEffect(() => {
     if (stageSuccess && stagedata.data) {
@@ -130,7 +130,6 @@ export default function LeadsPage() {
         accessorKey: 'actions',
         header: '',
         maxSize: 50,
-        Footer: <b></b>,
         size: 120,
         Cell: ({ cell }) => <PopUp
           element={
@@ -433,9 +432,6 @@ export default function LeadsPage() {
         fontSize: '14px'
       }
     }),
-    muiTableContainerProps: (table) => ({
-      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
-    }),
     muiTableHeadRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
@@ -443,78 +439,57 @@ export default function LeadsPage() {
         border: '1px solid lightgrey;',
       },
     }),
-    muiTableBodyCellProps: () => ({
-      sx: {
-        border: '1px solid lightgrey;',
-        fontSize: '13px'
-      },
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '74vh' }
     }),
-    initialState: { density: 'compact' },
-    enableRowSelection: true,
-    enableRowNumbers: true,
-    enableColumnPinning: true,
-    onSortingChange: setSorting,
-    enableTableFooter: true,
-    enableRowVirtualization: true,
-    state: { isLoading, sorting },
-    enableBottomToolbar: false,
-    enableGlobalFilter: false,
-    manualPagination: true
-  });
+    positionToolbarAlertBanner: 'none',
+    renderTopToolbarCustomActions: () => (
 
-  return (
-    <>
       <Stack
-        spacing={1}
-        padding={1}
+        sx={{ width: '100%' }}
+        p={0}
         direction="row"
-        justifyContent="space-between"
+        alignItems={'center'}
+        justifyContent="space-between">
 
-      >
+        <Typography variant="h5">Leads</Typography>
 
-        <Typography
-          variant={'h6'}
-          component={'h1'}
-          sx={{ pl: 1 }}
-        >
-          Leads
-        </Typography>
-
-        <TextField
-          sx={{ width: '40vw' }}
-          size="small"
-          onChange={(e) => {
-            setFilter(e.currentTarget.value)
-            setFilterCount(0)
-
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Search sx={{ cursor: 'pointer' }} onClick={() => {
-                  refetchFuzzy()
-                }} />
-              </InputAdornment>
-            ),
-          }}
-          placeholder={`Search Leads `}
-          style={{
-            fontSize: '1.1rem',
-            border: '0',
-          }}
-          onKeyUp={(e) => {
-            if (e.key === "Enter") {
-              refetchFuzzy()
-            }
-          }}
-        />
         <Stack
           direction="row"
+          justifyContent="end"
         >
           {/* search bar */}
           < Stack direction="row" spacing={2} >
+            <TextField
+              sx={{ width: '40vw' }}
+              size="small"
+              onChange={(e) => {
+                setFilter(e.currentTarget.value)
+                setFilterCount(0)
+
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Search sx={{ cursor: 'pointer' }} onClick={() => {
+                      refetchFuzzy()
+                    }} />
+                  </InputAdornment>
+                ),
+              }}
+              placeholder={`Search Leads `}
+              style={{
+                fontSize: '1.1rem',
+                border: '0',
+              }}
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  refetchFuzzy()
+                }
+              }}
+            />
             {LoggedInUser?._id === LoggedInUser?.created_by.id && LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="Delete Selected Leads">
-              <IconButton color="error"
+              <IconButton color="secondary"
 
                 onClick={() => {
                   let data: any[] = [];
@@ -564,13 +539,7 @@ export default function LeadsPage() {
             {/* stage */}
 
 
-            <IconButton size="small" color="primary"
-              onClick={(e) => setAnchorEl(e.currentTarget)
-              }
-              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
-            >
-              <MenuIcon />
-            </IconButton>
+
 
             <Menu
               anchorEl={anchorEl}
@@ -620,7 +589,54 @@ export default function LeadsPage() {
             {table.getSelectedRowModel().rows && table.getSelectedRowModel().rows.length > 0 && <BulkDeleteUselessLeadsDialog selectedLeads={table.getSelectedRowModel().rows.map((l) => { return l.original })} removeSelectedLeads={() => { table.resetRowSelection() }} />}
           </>
         </Stack >
-      </Stack >
+        <IconButton size="small" color="primary"
+          onClick={(e) => setAnchorEl(e.currentTarget)
+          }
+          sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
+        >
+          <MenuIcon />
+        </IconButton>
+      </Stack>
+    ),
+    rowVirtualizerInstanceRef,
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper, //change default background color
+    }),
+    renderBottomToolbarCustomActions: () => (
+      <DBPagination paginationData={paginationData} refetch={refetch} setPaginationData={setPaginationData} />
+
+    ),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        border: '1px solid lightgrey;',
+        fontSize: '13px'
+      },
+    }),
+    initialState: { density: 'compact' },
+    enableRowSelection: true,
+    enableRowNumbers: true,
+    enableColumnPinning: true,
+    onSortingChange: setSorting,
+    enableTopToolbar: true,
+    enableTableFooter: true,
+    enableRowVirtualization: true,
+    state: { showLoadingOverlay: isLoading || isRefetching, sorting },
+    enableBottomToolbar: true,
+    enableGlobalFilter: false,
+    manualPagination: true,
+    enablePagination: false,
+    enableToolbarInternalActions: false
+  });
+  useEffect(() => {
+    //scroll to the top of the table when the sorting changes
+    try {
+      rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [sorting]);
+  return (
+    <>
       {
         isLoading || isFuzzyLoading && <LinearProgress />
       }
@@ -643,7 +659,6 @@ export default function LeadsPage() {
           : null
       }
       <MaterialReactTable table={table} />
-      <DBPagination paginationData={paginationData} refetch={refetch} setPaginationData={setPaginationData} />
 
     </>
 
