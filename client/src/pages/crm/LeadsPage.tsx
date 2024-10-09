@@ -404,7 +404,7 @@ export default function LeadsPage() {
     data: leads,
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
-    muiTableHeadCellProps:()=> ({
+    muiTableHeadCellProps: () => ({
       //simple styling with the `sx` prop, works just like a style prop in this example
       sx: {
         overflowY: 'none',
@@ -542,7 +542,7 @@ export default function LeadsPage() {
       baseBackgroundColor: theme.palette.background.paper, //change default background color
     }),
     renderBottomToolbarCustomActions: () => (
-      <DBPagination paginationData={paginationData} refetch={refetch} setPaginationData={setPaginationData} />
+      <DBPagination paginationData={paginationData} refetch={() => { filter ? refetchFuzzy() : refetch() }} setPaginationData={setPaginationData} />
 
     ),
     muiTableBodyCellProps: () => ({
@@ -576,7 +576,10 @@ export default function LeadsPage() {
   return (
     <>
       {
-        isLoading || isFuzzyLoading || isRefetching || isFuzzyRefetching && <LinearProgress color='secondary' />
+        isFuzzyLoading || isFuzzyRefetching && <LinearProgress color='secondary' />
+      }
+      {
+        isLoading || isRefetching && <LinearProgress color='secondary' />
       }
       <>
         <Menu
