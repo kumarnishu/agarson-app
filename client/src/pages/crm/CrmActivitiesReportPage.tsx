@@ -434,7 +434,7 @@ function CrmActivitiesReportPage() {
             {remark && <CreateOrEditRemarkDialog lead={remark ? {
                 _id: remark.lead_id,
                 has_card: remark.has_card,
-                refer: remark.referred_party_mobile ? true : false
+                stage:remark.stage
             } : undefined} />}
             <MaterialReactTable table={table} />
             <DBPagination paginationData={paginationData} refetch={ReftechRemarks} setPaginationData={setPaginationData} />
