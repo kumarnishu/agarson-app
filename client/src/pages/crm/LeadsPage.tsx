@@ -508,7 +508,7 @@ export default function LeadsPage() {
           ))}
         </Select>
 
-        {LoggedInUser?._id !== LoggedInUser?.created_by.id && LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="Delete Selected Leads">
+        {LoggedInUser?._id === LoggedInUser?.created_by.id && LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="Delete Selected Leads">
           <Button size="small" variant='contained' color='error'
 
             onClick={() => {
