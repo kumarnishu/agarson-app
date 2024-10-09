@@ -573,7 +573,7 @@ export default function LeadsPage() {
     enableTopToolbar: true,
     enableTableFooter: true,
     enableRowVirtualization: true,
-    state: { sorting, showColumnFilters: showFilter, isFullScreen: isFullScreen },
+    state: { sorting, showColumnFilters: showFilter, isFullScreen: isFullScreen, isLoading: isLoading },
     enableBottomToolbar: true,
     enableGlobalFilter: false,
     manualPagination: true,
