@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 type Context = {
@@ -15,17 +16,15 @@ export const FeatureContext = createContext<Context>({
 });
 
 export function FeatureProvider(props: { children: JSX.Element }) {
-    const [location, setLocation] = useState(window.location.pathname)
+    const naviagte = useNavigate()
     const [feature, setFeature] = useState<{ feature: string, url: string, icon?: Element }>();
-    useEffect(() => {
-        setLocation(window.location.pathname)
-    }, [location])
 
     useEffect(() => {
-        if (location == "/") {
-            setFeature({ feature: "Dashboard", url: "/" })
+        if (window.location.pathname == "/") {
+            setFeature({ feature: "Dashboard", url: window.location.pathname })
+            naviagte("/")
         }
-    }, [location])
+    }, [window.location.pathname])
     return (
         <FeatureContext.Provider value={{ feature, setFeature }}>
             {props.children}

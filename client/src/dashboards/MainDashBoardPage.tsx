@@ -167,13 +167,12 @@ function MainDashBoardPage() {
                 setFeature({ feature: "Dashboard", url: "/" })
                 setSearch("")
                 navigate("/")
+                if (feature?.feature == "Dashboard")
+                  setDisplay(!display)
               }
             }} replace={true} style={{ textDecoration: 'none' }}>
               <Paper sx={{ ml: 2, p: 1, bgcolor: 'white', boxShadow: 1, borderRadius: 1, borderColor: 'white' }}>
-                <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }} onDoubleClick={() => {
-                  if (feature?.feature == "Dashboard")
-                    setDisplay(!display)
-                }}>
+                <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
                   <ButtonLogo title="" height={20} width={20} />
                   <Typography variant="button" sx={{ fontSize: 12 }} component="div">
                     {feature?.feature || "Dashboard"}
