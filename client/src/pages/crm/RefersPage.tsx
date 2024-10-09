@@ -1,8 +1,8 @@
-import { Delete, Edit, Search, Upload, Visibility } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
+import { Delete, Edit, FilterAlt, FilterAltOff, Fullscreen, FullscreenExit, Search, Upload, Visibility } from '@mui/icons-material'
+import { Button, Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { UserContext } from '../../contexts/userContext'
 import DBPagination from '../../components/pagination/DBpagination';
@@ -12,17 +12,17 @@ import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import CreateOrEditReferDialog from '../../components/dialogs/crm/CreateOrEditReferDialog'
 import UploadRefersExcelButton from '../../components/buttons/UploadRefersExcelButton'
 import { GetReferDto } from '../../dtos/crm/crm.dto'
-import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import PopUp from '../../components/popup/PopUp'
 import { onlyUnique } from '../../utils/UniqueArray'
 import DeleteCrmItemDialog from '../../components/dialogs/crm/DeleteCrmItemDialog'
 import AllReferralPageDialog from '../../components/dialogs/crm/AllReferralPageDialog'
 import ViewReferRemarksDialog from '../../components/dialogs/crm/ViewReferRemarksDialog'
 import { FuzzySearchRefers, GetPaginatedRefers } from '../../services/LeadsServices'
-import ExportToExcel from '../../utils/ExportToExcel'
 import CreateOrEditBillDialog from '../../components/dialogs/crm/CreateOrEditBillDialog'
 import ViewRefersBillHistoryDialog from '../../components/dialogs/crm/ViewRefersBillHistoryDialog'
 import MergeTwoRefersDialog from '../../components/dialogs/crm/MergeTwoRefersDialog'
+import ExportToExcel from '../../utils/ExportToExcel'
 
 export default function RefersPage() {
   const [paginationData, setPaginationData] = useState({ limit: 20, page: 1, total: 1 });
@@ -34,13 +34,13 @@ export default function RefersPage() {
   const [preFilteredData, setPreFilteredData] = useState<GetReferDto[]>([])
   const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 20, page: 1, total: 1 });
   const [filterCount, setFilterCount] = useState(0)
-
-  const { data, isLoading, refetch } = useQuery<AxiosResponse<{
+  const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+  const { data, isLoading, refetch, isRefetching } = useQuery<AxiosResponse<{
     result: GetReferDto[], page: number, total: number, limit: number
   }>, BackendError>(["refers"], async () => GetPaginatedRefers({ limit: paginationData?.limit, page: paginationData?.page }))
 
 
-  const { data: fuzzyrefers, isLoading: isFuzzyLoading, refetch: refetchFuzzy } = useQuery<AxiosResponse<{
+  const { data: fuzzyrefers, isLoading: isFuzzyLoading, refetch: refetchFuzzy, isFetching: isFuzzyRefetching } = useQuery<AxiosResponse<{
     result: GetReferDto[], page: number, total: number, limit: number
   }>, BackendError>(["fuzzyrefers", filter], async () => FuzzySearchRefers({ searchString: filter, limit: paginationData?.limit, page: paginationData?.page }), {
     enabled: false
@@ -105,6 +105,7 @@ export default function RefersPage() {
       {
         accessorKey: 'actions',
         header: '',
+        enableColumnFilter: false,
         maxSize: 50,
         Footer: <b></b>,
         size: 120,
@@ -125,7 +126,7 @@ export default function RefersPage() {
                     <Delete />
                   </IconButton>
                 </Tooltip>}
-            
+
               {LoggedInUser?.assigned_permissions.includes('create_refer_bills') && <Tooltip title="upload bill">
                 <IconButton color="error"
 
@@ -294,7 +295,7 @@ export default function RefersPage() {
 
   const table = useMaterialReactTable({
     columns,
-    data: refers, //10,000 rows       
+    data: refers,
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
     muiTableFooterRowProps: () => ({
@@ -304,15 +305,94 @@ export default function RefersPage() {
         fontSize: '14px'
       }
     }),
-    muiTableContainerProps: (table) => ({
-      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
-    }),
     muiTableHeadRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
         color: 'white',
         border: '1px solid lightgrey;',
       },
+    }),
+    renderTopToolbarCustomActions: ({ table }) => (
+
+      <Stack
+        sx={{ width: '100%' }}
+        direction="row"
+        alignItems={'center'}
+        justifyContent="space-between">
+
+        <Typography variant="h6">Refers</Typography>
+        <TextField
+          sx={{ width: '40vw',p:0 }}
+          size="small"
+          onChange={(e) => {
+            setFilter(e.currentTarget.value)
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Search sx={{ cursor: 'pointer' }} onClick={() => {
+                  if (filter)
+                    refetchFuzzy()
+                }} />
+              </InputAdornment>
+            ),
+          }}
+          placeholder={`Search  `}
+          style={{
+            fontSize: '1.1rem',
+            border: '0',
+          }}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              refetchFuzzy()
+            }
+          }}
+        />
+        <Stack justifyContent={'right'} direction={'row'} gap={1}>
+          {LoggedInUser?.assigned_permissions.includes('leads_create') && <UploadRefersExcelButton />}
+          <Tooltip title="Toogle Filter">
+            <Button size="small" color="inherit" variant='contained'
+              onClick={() => {
+                if (table.getState().showColumnFilters)
+                  table.resetColumnFilters(true)
+                table.setShowColumnFilters(!table.getState().showColumnFilters)
+              }
+              }
+            >
+              {table.getState().showColumnFilters ? <FilterAltOff /> : <FilterAlt />}
+            </Button>
+          </Tooltip>
+          <Tooltip title="Toogle FullScreen">
+            <Button size="small" color="inherit" variant='contained'
+              onClick={() => table.setIsFullScreen(!table.getState().isFullScreen)
+              }
+            >
+              {table.getState().isFullScreen ? <FullscreenExit /> : <Fullscreen />}
+            </Button>
+          </Tooltip>
+          <Tooltip title="Menu">
+            <Button size="small" color="inherit" variant='contained'
+              onClick={(e) => setAnchorEl(e.currentTarget)
+              }
+            >
+              <MenuIcon />
+              <Typography pl={1}> Menu</Typography>
+            </Button>
+          </Tooltip>
+        </Stack>
+      </Stack>
+    ),
+    positionToolbarAlertBanner: 'none',
+    rowVirtualizerInstanceRef,
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper, //change default background color
+    }),
+    renderBottomToolbarCustomActions: () => (
+      <DBPagination paginationData={paginationData} refetch={() => { filter ? refetchFuzzy() : refetch() }} setPaginationData={setPaginationData} />
+
+    ),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '74vh' }
     }),
     muiTableBodyCellProps: () => ({
       sx: {
@@ -325,130 +405,73 @@ export default function RefersPage() {
     enableRowNumbers: true,
     enableColumnPinning: true,
     onSortingChange: setSorting,
+    enableTopToolbar: true,
     enableTableFooter: true,
     enableRowVirtualization: true,
-    state: { isLoading, sorting },
-    enableBottomToolbar: false,
+    state: { sorting, isLoading: isLoading },
+    enableBottomToolbar: true,
     enableGlobalFilter: false,
-    manualPagination: true
+    manualPagination: true,
+    enablePagination: false,
+    enableToolbarInternalActions: false
   });
+  useEffect(() => {
+    try {
+      rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [sorting]);
   return (
     <>
-
       {
-        isLoading && <LinearProgress />
+        isFuzzyLoading || isFuzzyRefetching && <LinearProgress color='secondary' />
       }
       {
-        isFuzzyLoading && <LinearProgress />
+        isLoading || isRefetching && <LinearProgress color='secondary' />
       }
-      {/*heading, search bar and table menu */}
-
-      <Stack
-        spacing={2}
-        padding={1}
-        direction="row"
-        justifyContent="space-between"
-
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)
+        }
+        TransitionComponent={Fade}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+        sx={{ borderRadius: 2 }}
       >
+        {LoggedInUser?.assigned_permissions.includes('refer_create') && <MenuItem
+          onClick={() => {
+            setChoice({ type: LeadChoiceActions.create_or_edit_refer })
+            setRefer(undefined);
+            setAnchorEl(null)
+          }}
 
-        <Typography
-          variant={'h6'}
-          component={'h1'}
-          sx={{ pl: 1 }}
-        >
-          Refers
-        </Typography>
-
-        <TextField
-          sx={{ width: '50vw' }}
-          size="small"
-          onChange={(e) => {
-            setFilter(e.currentTarget.value)
-            setFilterCount(0)
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Search sx={{ cursor: 'pointer' }} onClick={() => {
-                  refetchFuzzy()
-                }} />
-              </InputAdornment>
-            ),
-          }}
-          placeholder={`Search Refers`}
-          style={{
-            fontSize: '1.1rem',
-            border: '0',
-          }}
-          onKeyUp={(e) => {
-            if (e.key === "Enter") {
-              refetchFuzzy()
+        > Add New</MenuItem>}
+        {LoggedInUser?.assigned_permissions.includes('refers_merge') && <MenuItem
+          onClick={() => {
+            if (table.getSelectedRowModel().rows.length == 2) {
+              setChoice({ type: LeadChoiceActions.merge_refers })
+              setRefer(undefined);
+              setAnchorEl(null)
+            } else {
+              alert("please select two refers only");
+              setRefer(undefined);
+              setAnchorEl(null)
+              return;
             }
-          }}
-        />
-        <Stack
-          direction="row"
-        >
-          {/* search bar */}
-          < Stack direction="row" spacing={2}>
-            {LoggedInUser?.assigned_permissions.includes('refer_create') && <UploadRefersExcelButton />}
-          </Stack >
-          <>
-            <IconButton size="small" color="primary"
-              onClick={(e) => setAnchorEl(e.currentTarget)
-              }
-              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
-            >
-              <MenuIcon />
-            </IconButton>
+          }
+          }
+        > Merge Refers</MenuItem>}
+        {LoggedInUser?.assigned_permissions.includes('refer_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)
-              }
-              TransitionComponent={Fade}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-              sx={{ borderRadius: 2 }}
-            >
-              {LoggedInUser?.assigned_permissions.includes('refer_create') && <MenuItem
-                onClick={() => {
-                  setChoice({ type: LeadChoiceActions.create_or_edit_refer })
-                  setRefer(undefined);
-                  setAnchorEl(null)
-                }}
+        >Export All</MenuItem>}
+        {LoggedInUser?.assigned_permissions.includes('refer_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
-              > Add New</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('refers_merge') && <MenuItem
-                onClick={() => {
-                  if (table.getSelectedRowModel().rows.length == 2) {
-                    setChoice({ type: LeadChoiceActions.merge_refers })
-                    setRefer(undefined);
-                    setAnchorEl(null)
-                  } else {
-                    alert("please select two refers only");
-                    setRefer(undefined);
-                    setAnchorEl(null)
-                    return;
-                  }
-                }
-                }
-              > Merge Refers</MenuItem>}
-           
+        >Export Selected</MenuItem>}
+      </Menu>
 
-              {LoggedInUser?.assigned_permissions.includes('refer_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
-
-              >Export All</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('refer_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
-
-              >Export Selected</MenuItem>}
-
-            </Menu >
-          </>
-        </Stack >
-      </Stack >
       <CreateOrEditReferDialog refer={refer} />
       {table.getSelectedRowModel().rows.length == 2 && <MergeTwoRefersDialog refers={table.getSelectedRowModel().rows.map((l) => { return l.original })} removeSelectedRefers={() => { table.resetRowSelection() }} />}
       <>
@@ -467,7 +490,6 @@ export default function RefersPage() {
         }
       </>
       <MaterialReactTable table={table} />
-      <DBPagination paginationData={paginationData} refetch={refetch}setPaginationData={setPaginationData} />
     </>
 
   )

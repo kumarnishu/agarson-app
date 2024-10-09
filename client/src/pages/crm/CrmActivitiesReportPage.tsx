@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { GetActivitiesTopBarDeatils, GetAllStages, GetRemarks } from '../../services/LeadsServices'
 import { BackendError } from '../..'
-import { DialogTitle, IconButton, MenuItem, Select, Stack, TextField, Tooltip } from '@mui/material'
+import { Button, Fade, IconButton, LinearProgress, Menu, MenuItem, Select, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import { UserContext } from '../../contexts/userContext'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
@@ -16,10 +16,12 @@ import ViewRemarksDialog from '../../components/dialogs/crm/ViewRemarksDialog'
 import CreateOrEditRemarkDialog from '../../components/dialogs/crm/CreateOrEditRemarkDialog'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import PopUp from '../../components/popup/PopUp'
-import { Comment, Visibility } from '@mui/icons-material'
+import { Comment, FilterAlt, FilterAltOff, Fullscreen, FullscreenExit, Visibility } from '@mui/icons-material'
 import { onlyUnique } from '../../utils/UniqueArray'
 import { DownloadFile } from '../../utils/DownloadFile'
 import DBPagination from '../../components/pagination/DBpagination'
+import { Menu as MenuIcon } from '@mui/icons-material';
+import ExportToExcel from '../../utils/ExportToExcel'
 
 function CrmActivitiesReportPage() {
     const { user } = useContext(UserContext)
@@ -43,10 +45,10 @@ function CrmActivitiesReportPage() {
     let day = previous_date.getDate() - 1
     previous_date.setDate(day)
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'crm_menu', show_assigned_only: true }))
-    const { data, isLoading, refetch: ReftechRemarks } = useQuery<AxiosResponse<{ result: GetActivitiesOrRemindersDto[], page: number, total: number, limit: number }>, BackendError>(["activities", stage,  userId, dates?.start_date, dates?.end_date], async () => GetRemarks({ stage: stage, limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+    const { data, isLoading, refetch: ReftechRemarks, isRefetching } = useQuery<AxiosResponse<{ result: GetActivitiesOrRemindersDto[], page: number, total: number, limit: number }>, BackendError>(["activities", stage, userId, dates?.start_date, dates?.end_date], async () => GetRemarks({ stage: stage, limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
     const { setChoice } = useContext(ChoiceContext)
-
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const columns = useMemo<MRT_ColumnDef<GetActivitiesOrRemindersDto>[]>(
         //column definitions...
         () => remarks && [
@@ -54,6 +56,7 @@ function CrmActivitiesReportPage() {
                 accessorKey: 'actions',
                 header: '',
                 maxSize: 50,
+                enableColumnFilter: false,
                 Footer: <b></b>,
                 size: 120,
                 Cell: ({ cell }) => <PopUp
@@ -274,7 +277,7 @@ function CrmActivitiesReportPage() {
             }
         }),
         muiTableContainerProps: (table) => ({
-            sx: { height: table.table.getState().isFullScreen ? 'auto' : '320px' }
+            sx: { height: table.table.getState().isFullScreen ? 'auto' : '65vh' }
         }),
         muiTableHeadRowProps: () => ({
             sx: {
@@ -283,12 +286,63 @@ function CrmActivitiesReportPage() {
                 border: '1px solid lightgrey;',
             },
         }),
+        renderTopToolbarCustomActions: ({ table }) => (
+
+            <Stack
+                sx={{ width: '100%' }}
+                direction="row"
+                alignItems={'center'}
+                justifyContent="space-between">
+                <Stack direction={'row'} gap={1}>
+                    {activitiesTopBarData && activitiesTopBarData.data && activitiesTopBarData.data.map((stage, index) => (
+                        <span key={index} style={{ paddingLeft: '25px', fontWeight: 'bold' }}>{toTitleCase(stage.stage)} : {stage.value}</span>
+                    ))}
+                </Stack>
+
+                <Stack justifyContent={'right'} direction={'row'} gap={1}>
+                    <Tooltip title="Toogle Filter">
+                        <Button size="small" color="inherit" variant='contained'
+                            onClick={() => {
+                                if (table.getState().showColumnFilters)
+                                    table.resetColumnFilters(true)
+                                table.setShowColumnFilters(!table.getState().showColumnFilters)
+                            }
+                            }
+                        >
+                            {table.getState().showColumnFilters ? <FilterAltOff /> : <FilterAlt />}
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Toogle FullScreen">
+                        <Button size="small" color="inherit" variant='contained'
+                            onClick={() => table.setIsFullScreen(!table.getState().isFullScreen)
+                            }
+                        >
+                            {table.getState().isFullScreen ? <FullscreenExit /> : <Fullscreen />}
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Menu">
+                        <Button size="small" color="inherit" variant='contained'
+                            onClick={(e) => setAnchorEl(e.currentTarget)
+                            }
+                        >
+                            <MenuIcon />
+                            <Typography pl={1}> Menu</Typography>
+                        </Button>
+                    </Tooltip>
+                </Stack>
+            </Stack>
+        ),
+        renderBottomToolbarCustomActions: () => (
+            <DBPagination paginationData={paginationData} refetch={ReftechRemarks} setPaginationData={setPaginationData} />
+
+        ),
         muiTableBodyCellProps: () => ({
             sx: {
                 border: '1px solid lightgrey;',
                 fontSize: '13px'
             },
         }),
+        enableToolbarInternalActions: false,
         initialState: { density: 'compact' },
         enableRowSelection: true,
         enableRowNumbers: true,
@@ -296,9 +350,10 @@ function CrmActivitiesReportPage() {
         onSortingChange: setSorting,
         enableTableFooter: true,
         enableRowVirtualization: true,
-        state: { isLoading, sorting },
-        enableBottomToolbar: false,
+        state: { sorting },
+        enableBottomToolbar: true,
         enableGlobalFilter: false,
+        enablePagination: false,
         manualPagination: true
     });
     useEffect(() => {
@@ -325,18 +380,29 @@ function CrmActivitiesReportPage() {
 
     return (
         <>
-            <DialogTitle sx={{ textAlign: 'center' }}>
-                <>
-                    {activitiesTopBarData && activitiesTopBarData.data && activitiesTopBarData.data.map((stage, index) => (
-                        <span
-                            key={index}
-                        >
-                            <span key={index} style={{ paddingLeft: '25px' }}>{toTitleCase(stage.stage)} : {stage.value}</span>
-                        </span>
-                    ))}
 
-                </>
-            </DialogTitle>
+            {
+                isLoading || isRefetching && <LinearProgress color='secondary' />
+            }
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)
+                }
+                TransitionComponent={Fade}
+                MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                }}
+                sx={{ borderRadius: 2 }}
+            >
+
+                {LoggedInUser?.assigned_permissions.includes('activities_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+                >Export All</MenuItem>}
+                {LoggedInUser?.assigned_permissions.includes('activities_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+                >Export Selected</MenuItem>}
+            </Menu>
             <Stack sx={{ px: 2 }} direction='row' gap={1} pb={1} alignItems={'center'} justifyContent={'center'}>
                 < TextField
                     size="small"
@@ -434,10 +500,10 @@ function CrmActivitiesReportPage() {
             {remark && <CreateOrEditRemarkDialog lead={remark ? {
                 _id: remark.lead_id,
                 has_card: remark.has_card,
-                stage:remark.stage
+                stage: remark.stage
             } : undefined} />}
             <MaterialReactTable table={table} />
-            <DBPagination paginationData={paginationData} refetch={ReftechRemarks} setPaginationData={setPaginationData} />
+
 
         </>
     )

@@ -120,7 +120,7 @@ export default function LeadsPage() {
         accessorKey: 'actions',
         header: '',
         maxSize: 50,
-        enableColumnFilter:false,
+        enableColumnFilter: false,
         size: 120,
         Cell: ({ cell }) => <PopUp
           element={
@@ -415,12 +415,6 @@ export default function LeadsPage() {
     data: leads,
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
-    muiTableHeadCellProps: () => ({
-      //simple styling with the `sx` prop, works just like a style prop in this example
-      sx: {
-        overflowY: 'none',
-      },
-    }),
     muiTableFooterRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
@@ -464,7 +458,7 @@ export default function LeadsPage() {
               </InputAdornment>
             ),
           }}
-          placeholder={`Search Leads `}
+          placeholder={`Search  `}
           style={{
             fontSize: '1.1rem',
             border: '0',
@@ -501,52 +495,53 @@ export default function LeadsPage() {
             </MenuItem>
           ))}
         </Select>
+        <Stack justifyContent={'right'} direction={'row'} gap={1}>
+          {LoggedInUser?._id === LoggedInUser?.created_by.id && LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="Delete Selected Leads">
+            <Button size="small" variant='contained' color='error'
 
-        {LoggedInUser?._id === LoggedInUser?.created_by.id && LoggedInUser?.assigned_permissions.includes('leads_delete') && <Tooltip title="Delete Selected Leads">
-          <Button size="small" variant='contained' color='error'
-
-            onClick={() => {
-              let data: any[] = [];
-              data = table.getSelectedRowModel().rows.filter((lead) => { return lead.original.stage === 'useless' })
-              if (data.length == 0)
-                alert("select some useless leads")
-              else
-                setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })
-            }}
-          >
-            <Delete />
-          </Button>
-        </Tooltip>}
-        {LoggedInUser?.assigned_permissions.includes('leads_create') && <UploadLeadsExcelButton />}
-        <Tooltip title="Toogle Filter">
-          <Button size="small" color="inherit" variant='contained'
-            onClick={() => {
-              if (table.getState().showColumnFilters)
-                table.resetColumnFilters(true)
-              table.setShowColumnFilters(!table.getState().showColumnFilters)
-            }
-            }
-          >
-            {table.getState().showColumnFilters ? <FilterAltOff /> : <FilterAlt />}
-          </Button>
-        </Tooltip>
-        <Tooltip title="Toogle FullScreen">
-          <Button size="small" color="inherit" variant='contained'
-            onClick={() => table.setIsFullScreen(!table.getState().isFullScreen)
-            }
-          >
-            {table.getState().isFullScreen ? <FullscreenExit /> : <Fullscreen />}
-          </Button>
-        </Tooltip>
-        <Tooltip title="Menu">
-          <Button size="small" color="inherit" variant='contained'
-            onClick={(e) => setAnchorEl(e.currentTarget)
-            }
-          >
-            <MenuIcon />
-            <Typography pl={1}> Menu</Typography>
-          </Button>
-        </Tooltip>
+              onClick={() => {
+                let data: any[] = [];
+                data = table.getSelectedRowModel().rows.filter((lead) => { return lead.original.stage === 'useless' })
+                if (data.length == 0)
+                  alert("select some useless leads")
+                else
+                  setChoice({ type: LeadChoiceActions.bulk_delete_useless_leads })
+              }}
+            >
+              <Delete />
+            </Button>
+          </Tooltip>}
+          {LoggedInUser?.assigned_permissions.includes('leads_create') && <UploadLeadsExcelButton />}
+          <Tooltip title="Toogle Filter">
+            <Button size="small" color="inherit" variant='contained'
+              onClick={() => {
+                if (table.getState().showColumnFilters)
+                  table.resetColumnFilters(true)
+                table.setShowColumnFilters(!table.getState().showColumnFilters)
+              }
+              }
+            >
+              {table.getState().showColumnFilters ? <FilterAltOff /> : <FilterAlt />}
+            </Button>
+          </Tooltip>
+          <Tooltip title="Toogle FullScreen">
+            <Button size="small" color="inherit" variant='contained'
+              onClick={() => table.setIsFullScreen(!table.getState().isFullScreen)
+              }
+            >
+              {table.getState().isFullScreen ? <FullscreenExit /> : <Fullscreen />}
+            </Button>
+          </Tooltip>
+          <Tooltip title="Menu">
+            <Button size="small" color="inherit" variant='contained'
+              onClick={(e) => setAnchorEl(e.currentTarget)
+              }
+            >
+              <MenuIcon />
+              <Typography pl={1}> Menu</Typography>
+            </Button>
+          </Tooltip>
+        </Stack>
       </Stack>
     ),
     rowVirtualizerInstanceRef,

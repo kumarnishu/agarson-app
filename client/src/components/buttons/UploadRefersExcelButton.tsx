@@ -72,7 +72,8 @@ function UploadRefersExcelButton() {
           <>
             <Button
               size="small"
-              
+              color="inherit"
+              variant="contained"
               component="label"
             >
               <Tooltip title="upload excel template">
