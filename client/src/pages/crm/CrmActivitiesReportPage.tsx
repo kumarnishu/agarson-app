@@ -295,7 +295,7 @@ function CrmActivitiesReportPage() {
                 justifyContent="space-between">
                 <Stack direction={'row'} gap={1}>
                     {activitiesTopBarData && activitiesTopBarData.data && activitiesTopBarData.data.map((stage, index) => (
-                        <span key={index} style={{ paddingLeft: '25px', fontWeight: 'bold' }}>{toTitleCase(stage.stage)} : {stage.value}</span>
+                        <span key={index} style={{ paddingLeft: '25px', fontWeight: 'bold' }}>{toTitleCase(stage.stage)} - {stage.value}</span>
                     ))}
                 </Stack>
 
@@ -350,7 +350,7 @@ function CrmActivitiesReportPage() {
         onSortingChange: setSorting,
         enableTableFooter: true,
         enableRowVirtualization: true,
-        state: { sorting },
+        state: { sorting, isLoading: isLoading },
         enableBottomToolbar: true,
         enableGlobalFilter: false,
         enablePagination: false,

@@ -5,7 +5,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { Box, IconButton, InputAdornment, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Box, Grid, IconButton, InputAdornment, Paper, Stack, TextField, Typography } from '@mui/material';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Menu as MenuIcon, Search } from '@mui/icons-material';
 import { toTitleCase } from '../utils/TitleCase';
@@ -22,6 +22,7 @@ function MainDashBoardPage() {
   const navigate = useNavigate()
   const { feature, setFeature } = useContext(FeatureContext)
   const [open, setOpen] = useState(false);
+  const [display, setDisplay] = useState(false)
   const [search, setSearch] = useState("");
   const { user } = useContext(UserContext)
   const [features, setFeatures] = useState<{ feature: string, url: string, is_visible?: boolean, icon?: Element }[]>([])
@@ -169,7 +170,10 @@ function MainDashBoardPage() {
               }
             }} replace={true} style={{ textDecoration: 'none' }}>
               <Paper sx={{ ml: 2, p: 1, bgcolor: 'white', boxShadow: 1, borderRadius: 1, borderColor: 'white' }}>
-                <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
+                <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }} onDoubleClick={() => {
+                  if (feature?.feature == "Dashboard")
+                    setDisplay(!display)
+                }}>
                   <ButtonLogo title="" height={20} width={20} />
                   <Typography variant="button" sx={{ fontSize: 12 }} component="div">
                     {feature?.feature || "Dashboard"}
@@ -228,45 +232,75 @@ function MainDashBoardPage() {
 
         <>
 
-          <Stack direction={'row'} gap={2} alignItems={'center'}>
-            <LineChart
-              xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-              series={[
-                {
-                  data: [2, 5.5, 2, 8.5, 1.5, 5],
-                },
-              ]}
-              width={500}
-              height={300}
-            />
-            <PieChart
-              series={[
-                {
-                  data: [
-                    { id: 0, value: 10, label: 'series A' },
-                    { id: 1, value: 15, label: 'series B' },
-                    { id: 2, value: 20, label: 'series C' },
-                  ],
-                },
-              ]}
-              width={400}
-              height={200}
-            />
-            <LineChart
-              xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-              series={[
-                {
-                  data: [2, 5.5, 2, 8.5, 1.5, 5],
-                  area: true,
-                },
-              ]}
-              width={500}
-              height={300}
-            />
-          </Stack>
+          {!display ?
+
+            <Stack direction={'row'} gap={2} alignItems={'center'}>
+              <LineChart
+                xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+                series={[
+                  {
+                    data: [2, 5.5, 2, 8.5, 1.5, 5],
+                  },
+                ]}
+                width={500}
+                height={300}
+              />
+              <PieChart
+                series={[
+                  {
+                    data: [
+                      { id: 0, value: 10, label: 'series A' },
+                      { id: 1, value: 15, label: 'series B' },
+                      { id: 2, value: 20, label: 'series C' },
+                    ],
+                  },
+                ]}
+                width={400}
+                height={200}
+              />
+              <LineChart
+                xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+                series={[
+                  {
+                    data: [2, 5.5, 2, 8.5, 1.5, 5],
+                    area: true,
+                  },
+                ]}
+                width={500}
+                height={300}
+              />
+            </Stack> :
+            <>
+              <Grid container sx={{ pt: 2 }} >
+                {features.map((feat, index) => {
+                  if (feat.is_visible)
+                    return (
+                      <Grid key={index} item xs={12} md={4} lg={3} sx={{ p: 1 }}>
+                        <Link to={feat.url} style={{ textDecoration: 'none' }}
+                          onClick={() => {
+                            setFeature({ feature: feat.feature.toUpperCase(), url: feat.url })
+                            setSearch("")
+                          }}
+                        >
+                          <Paper sx={{ p: 2, m: 0, height: 80, bgcolor: feat.feature.includes('report') ? 'lightblue' : 'white', boxShadow: 2, borderRadius: 5, borderColor: 'white' }} >
+                            <Stack flexDirection={"row"} gap={2} sx={{ alignItems: 'center' }}>
+                              <ButtonLogo title="" height={50} width={50} />
+                              <Typography variant="button" fontSize={15} component="div">
+                                {feat.feature.toUpperCase()}
+                              </Typography>
+                            </Stack>
+                          </Paper>
+                        </Link>
+                      </Grid>
+                    )
+                })}
+              </Grid>
+            </>
+          }
 
         </>
         :
+
         <Outlet />}
 
       <Drawer open={open} onClose={toggleDrawer(false)} anchor='right'>
