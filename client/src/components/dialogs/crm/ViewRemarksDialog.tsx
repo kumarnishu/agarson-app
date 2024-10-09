@@ -49,7 +49,7 @@ function ViewRemarksDialog({ id }: { id: string }) {
                     {remarks && remarks.map((item, index) => {
                         return (
 
-                            <div key={index} style={{ borderRadius: '1px 10px', padding: '10px', background: 'whitesmoke', paddingLeft: '20px', border: '1px solid grey' }}>
+                            <div key={index} style={{ borderRadius: '1px 10px', padding: '10px', background: 'lightblue', paddingLeft: '20px', border: '1px solid grey' }}>
                                 <p>{toTitleCase(item.created_by.value)} : {item.remark} </p>
                                 <p>{item.remind_date && `Remind Date : ${item.remind_date}`} </p>
                                 <br></br>
