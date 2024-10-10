@@ -19,7 +19,6 @@ import { AssignOrRemoveCrmCityDto, AssignOrRemoveCrmStateDto, CreateAndUpdatesCi
 import moment from "moment"
 import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dto.js"
 import { Bill, IBill } from "../models/leads/bill.model.js"
-import { IArticle } from "../models/production/article.model.js"
 import { BillItem } from "../models/leads/bill.item.js"
 
 
@@ -710,7 +709,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     let result: GetLeadDto[] = []
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
-    let stages = await (await Stage.find()).map((i)=>{return i.stage})
+    let stages = await (await Stage.find()).map((i) => { return i.stage })
     if (!req.user?.assigned_permissions.includes('show_leads_useless'))
         stages.push('useless')
     if (!req.user?.assigned_permissions.includes('show_refer_leads'))
@@ -736,7 +735,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         }
         else {
             leads = await Lead.find({
-                stage: {$in:stages}, state: { $in: states }, city: { $in: cities }
+                stage: { $in: stages }, state: { $in: states }, city: { $in: cities }
             }).populate('updated_by').populate('referred_party').populate('created_by').sort('-updated_at').skip((page - 1) * limit).limit(limit)
             count = await Lead.find({
                 stage: { $in: stages }, state: { $in: states }, city: { $in: cities }
@@ -898,11 +897,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     let key = String(req.query.key).split(",")
     let stage = req.query.stage
-    let stages = []
-    if (!req.user?.assigned_permissions.includes('show_leads_useless'))
-        stages.push('useless')
-    if (!req.user?.assigned_permissions.includes('show_refer_leads'))
-        stages.push('refer')
     if (!key)
         return res.status(500).json({ message: "bad request" })
     let leads: ILead[] = []
@@ -1176,7 +1170,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, stage: { $nin: stages }, state: { $in: states }, city: { $in: cities },
+                    has_card: showonlycardleads,  state: { $in: states }, city: { $in: cities },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { customer_name: { $regex: key[0], $options: 'i' } },
@@ -1204,7 +1198,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 2) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, stage: { $nin: stages }, state: { $in: states }, city: { $in: cities },
+                    has_card: showonlycardleads,  state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -1258,7 +1252,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 3) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, stage: { $nin: stages }, state: { $in: states }, city: { $in: cities },
+                    has_card: showonlycardleads, state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -1333,7 +1327,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 4) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads, stage: { $nin: stages }, state: { $in: states }, city: { $in: cities },
+                    has_card: showonlycardleads, state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
@@ -1431,7 +1425,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
-                    stage: { $nin: stages }, state: { $in: states }, city: { $in: cities },
+                    state: { $in: states }, city: { $in: cities },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { customer_name: { $regex: key[0], $options: 'i' } },
@@ -1459,7 +1453,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 2) {
 
                 leads = await Lead.find({
-                    stage: { $nin: stages },
                     state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
@@ -1514,7 +1507,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 3) {
 
                 leads = await Lead.find({
-                    stage: { $nin: stages },
                     state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
@@ -1590,7 +1582,6 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 4) {
 
                 leads = await Lead.find({
-                    stage: { $nin: stages },
                     state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
@@ -2483,11 +2474,11 @@ export const CreateReferParty = async (req: Request, res: Response, next: NextFu
 
 
     let party = await new ReferredParty({
-        name, customer_name, city, state, 
+        name, customer_name, city, state,
         mobile: uniqueNumbers[0] || null,
         mobile2: uniqueNumbers[1] || null,
         mobile3: uniqueNumbers[2] || null,
-         gst,
+        gst,
         created_at: new Date(),
         updated_at: new Date(),
         created_by: req.user,
@@ -2555,10 +2546,10 @@ export const UpdateReferParty = async (req: Request, res: Response, next: NextFu
         return res.status(400).json({ message: `${uniqueNumbers[2]} already exists ` })
 
     await ReferredParty.findByIdAndUpdate(id, {
-        name, customer_name, city, state, 
+        name, customer_name, city, state,
         mobile: uniqueNumbers[0] || null,
         mobile2: uniqueNumbers[1] || null,
-        mobile3: uniqueNumbers[2] || null, 
+        mobile3: uniqueNumbers[2] || null,
         gst,
         created_at: new Date(),
         updated_at: new Date(),

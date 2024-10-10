@@ -162,7 +162,7 @@ function MainDashBoardPage() {
             alignItems="center"
             gap={2}
           >
-            <Link to={feature ? feature.url : "/"} onDoubleClick={() => {
+            <Link to={feature ? feature.url : "/"} onClick={() => {
               {
                 setFeature({ feature: "Dashboard", url: "/" })
                 setSearch("")
@@ -231,7 +231,7 @@ function MainDashBoardPage() {
 
         <>
 
-          {!display ?
+          {display ?
 
             <Stack direction={'row'} gap={2} alignItems={'center'}>
               <LineChart

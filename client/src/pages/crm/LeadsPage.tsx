@@ -64,7 +64,7 @@ export default function LeadsPage() {
       if (!LoggedInUser?.assigned_permissions.includes('show_refer_leads')) {
         tmp = tmp.filter((stage) => { return stage.value !== 'refer' })
       }
-      setStages(stagedata.data)
+      setStages(tmp)
     }
   }, [stageSuccess])
 
