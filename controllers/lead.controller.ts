@@ -486,7 +486,7 @@ export const GetAllCRMCities = async (req: Request, res: Response, next: NextFun
     let result: GetCrmCityDto[] = []
     let state = req.query.state;
     let cities: ICRMCity[] = []
-    if (state && state !== 'Select State')
+    if (state && state !== 'all')
         cities = await CRMCity.find({ state: state })
     else
         cities = await CRMCity.find()

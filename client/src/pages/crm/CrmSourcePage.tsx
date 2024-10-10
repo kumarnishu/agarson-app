@@ -1,202 +1,226 @@
-import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import FuzzySearch from "fuzzy-search";
+import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { onlyUnique } from '../../utils/UniqueArray'
+import DeleteCrmItemDialog from '../../components/dialogs/crm/DeleteCrmItemDialog'
+import { UserContext } from '../../contexts/userContext'
+import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
+import { Delete, Edit } from '@mui/icons-material'
+import { Fade, IconButton, Menu, MenuItem,  Tooltip, Typography } from '@mui/material'
+import PopUp from '../../components/popup/PopUp'
 import ExportToExcel from '../../utils/ExportToExcel'
-import { ChoiceContext, LeadChoiceActions, } from '../../contexts/dialogContext'
 import { Menu as MenuIcon } from '@mui/icons-material';
-import AlertBar from '../../components/snacks/AlertBar'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import { DropDownDto } from '../../dtos/common/dropdown.dto'
 import CreateOrEditLeadSourceDialog from '../../components/dialogs/crm/CreateOrEditLeadSourceDialog'
 import { GetAllSources } from '../../services/LeadsServices'
-import LeadsLeadSourceTable from '../../components/tables/crm/LeadsSourceTable'
-import { UserContext } from '../../contexts/userContext'
-import { DropDownDto } from '../../dtos/common/dropdown.dto'
 
-type ITemplate = {
-  _id: string,
-  source: string
-}
-let template: ITemplate[] = [
-  {
-    _id: "qeqq6g54",
-    source: "internet"
-  }
-]
+
 
 export default function CrmLeadSourcesPage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_sources", GetAllSources)
-  const [source, setLeadSource] = useState<DropDownDto>()
-  const [sources, setLeadSources] = useState<DropDownDto[]>([])
-  const [selectAll, setSelectAll] = useState(false)
-  const MemoData = React.useMemo(() => sources, [sources])
-  const [preFilteredData, setPreFilteredData] = useState<DropDownDto[]>([])
-  const [selectedLeadSources, setSelectedLeadSources] = useState<DropDownDto[]>([])
-  const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<ITemplate[]>(template)
-  const [sent, setSent] = useState(false)
+  const [source, setSource] = useState<DropDownDto>()
+  const [sources, setSources] = useState<DropDownDto[]>([])
+
+  const { user: LoggedInUser } = useContext(UserContext)
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>(["sources"], async () => GetAllSources())
+
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { user: LoggedInUser } = useContext(UserContext)
 
-  function handleExcel() {
-    setAnchorEl(null)
-    try {
-      ExportToExcel(selectedData, "crm_sources_data")
-      setSent(true)
-      setSelectAll(false)
-      setSelectedData([])
-      setSelectedLeadSources([])
-    }
-    catch (err) {
-      console.log(err)
-      setSent(false)
-    }
-  }
+  const columns = useMemo<MRT_ColumnDef<DropDownDto>[]>(
+    //column definitions...
+    () => sources && [
+      {
+        accessorKey: 'actions',
+        header: '',
+        maxSize: 50,
+        Footer: <b></b>,
+        size: 120,
+        Cell: ({ cell }) => <PopUp
+          element={
+            <Stack direction="row">
+              <>
 
-  // refine data
-  useEffect(() => {
-    let data: ITemplate[] = []
-    selectedLeadSources.map((source) => {
-      return data.push({
-        _id: source.id,
-        source: source.value,
-      })
-    })
-    if (data.length > 0)
-      setSelectedData(data)
-  }, [selectedLeadSources])
+                {LoggedInUser?.is_admin && LoggedInUser.assigned_permissions.includes('lead_source_delete') &&
+                  <Tooltip title="delete">
+                    <IconButton color="error"
+
+                      onClick={() => {
+                        setChoice({ type: LeadChoiceActions.delete_crm_item })
+                        setSource(cell.row.original)
+
+                      }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Tooltip>
+                }
+                {LoggedInUser?.assigned_permissions.includes('lead_source_edit') && <Tooltip title="edit">
+                  <IconButton
+
+                    onClick={() => {
+                      setSource(cell.row.original)
+                      setChoice({ type: LeadChoiceActions.create_or_edit_source })
+                    }}
+
+                  >
+                    <Edit />
+                  </IconButton>
+                </Tooltip>}
+
+              </>
+
+            </Stack>}
+        />
+      },
+
+      {
+        accessorKey: 'label',
+        header: 'Source',
+        size: 350,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.value ? cell.row.original.value : ""}</>,
+        filterSelectOptions: sources && sources.map((i) => {
+          return i.value;
+        }).filter(onlyUnique)
+      }
+    ],
+    [sources],
+    //end
+  );
+
+
+  const table = useMaterialReactTable({
+    columns,
+    data: sources, //10,000 rows       
+    enableColumnResizing: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        fontSize: '14px'
+      }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+    }),
+    muiTableHeadRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white'
+      },
+    }),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
+      },
+    }),
+    muiPaginationProps: {
+      rowsPerPageOptions: [100, 200, 500, 1000, 2000],
+      shape: 'rounded',
+      variant: 'outlined',
+    },
+    initialState: {
+      density: 'compact', showGlobalFilter: true, pagination: { pageIndex: 0, pageSize: 500 }
+    },
+    enableGrouping: true,
+    enableRowSelection: true,
+    manualPagination: false,
+    enablePagination: true,
+    enableRowNumbers: true,
+    enableColumnPinning: true,
+    enableTableFooter: true,
+    enableRowVirtualization: true,
+    onSortingChange: setSorting,
+    state: { isLoading, sorting }
+  });
+
 
   useEffect(() => {
     if (isSuccess) {
-      setLeadSources(data.data)
-      setPreFilteredData(data.data)
+      setSources(data.data);
     }
-  }, [isSuccess, sources, data])
+  }, [isSuccess]);
 
 
-  useEffect(() => {
-    if (filter) {
-      if (sources) {
-        const searcher = new FuzzySearch(sources, ["source", "users.username"], {
-          caseSensitive: false,
-        });
-        const result = searcher.search(filter);
-        setLeadSources(result)
-      }
-    }
-    if (!filter)
-      setLeadSources(preFilteredData)
-
-  }, [filter, sources])
   return (
     <>
-      {
-        isLoading && <LinearProgress />
-      }
-      {/*heading, search bar and table menu */}
+
+
       <Stack
         spacing={2}
         padding={1}
         direction="row"
         justifyContent="space-between"
-
+        alignItems={'center'}
       >
-
         <Typography
           variant={'h6'}
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          LeadSources {selectedLeadSources.length > 0 ? <span>(checked : {selectedLeadSources.length})</span> : `- ${sources.length}`}
+          Sources : {sources && sources.length}
         </Typography>
 
-        <TextField
-          sx={{ width: '50vw' }}
-          size="small"
-          onChange={(e) => {
-            setFilter(e.currentTarget.value)
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Search sx={{ cursor: 'pointer' }} />
-              </InputAdornment>
-            ),
-          }}
-          placeholder={`Search LeadSources `}
-          style={{
-            fontSize: '1.1rem',
-            border: '0',
-          }}
-        />
-        <Stack
-          direction="row"
-        >
-          {/* search bar */}
-          < Stack direction="row" spacing={2}>
-            {/* {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMLeadSourcesFromExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />} */}
-          </Stack >
-          <>
+        <>
+          <IconButton size="small" color="primary"
+            onClick={(e) => setAnchorEl(e.currentTarget)
+            }
+            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
+          >
+            <MenuIcon />
+          </IconButton>
 
-            {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-
-
-            <IconButton size="small" color="primary"
-              onClick={(e) => setAnchorEl(e.currentTarget)
-              }
-              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)
-              }
-              TransitionComponent={Fade}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)
+            }
+            TransitionComponent={Fade}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+            sx={{ borderRadius: 2 }}
+          >
+            {LoggedInUser?.assigned_permissions.includes("lead_source_create") && <MenuItem
+              onClick={() => {
+                setChoice({ type: LeadChoiceActions.create_or_edit_source })
+                setSource(undefined)
+                setAnchorEl(null)
               }}
-              sx={{ borderRadius: 2 }}
-            >
-              {LoggedInUser?.assigned_permissions.includes('lead_source_create')&&<MenuItem
-                onClick={() => {
-                  setChoice({ type: LeadChoiceActions.create_or_edit_source })
-                  setLeadSource(undefined)
-                  setAnchorEl(null)
-                }}
-              
-              > Add New</MenuItem>}
 
-              {LoggedInUser?.assigned_permissions.includes('lead_source_export') &&< MenuItem onClick={handleExcel}
-              
-              >Export To Excel</MenuItem>}
+            > Add New</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('lead_source_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
-            </Menu >
-            <CreateOrEditLeadSourceDialog />
+            >Export All</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('lead_source_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+            >Export Selected</MenuItem>}
+
+          </Menu >
+          <CreateOrEditLeadSourceDialog source={source} />
+          <>
+            {
+              source ?
+                <>
+                  <DeleteCrmItemDialog source={source} />
+                </>
+                : null
+            }
           </>
-        </Stack >
-      </Stack >
-      {/*  table */}
-      {isLoading && <TableSkeleton />}
-      {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && MemoData.length > 0 &&
-        <LeadsLeadSourceTable
-          source={source}
-          selectAll={selectAll}
-          selectedLeadSources={selectedLeadSources}
-          setSelectedLeadSources={setSelectedLeadSources}
-          setSelectAll={setSelectAll}
-          sources={MemoData}
-          setLeadSource={setLeadSource}
-        />}
+        </>
 
+
+      </Stack >
+
+      {/* table */}
+      <MaterialReactTable table={table} />
     </>
 
   )

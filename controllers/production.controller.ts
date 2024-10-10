@@ -1299,8 +1299,8 @@ export const GetMyTodaySoleThickness = async (req: Request, res: Response, next:
     }
     result = items.map((item) => {
         return {
-            dye: item.dye.dye_number,
-            article: item.article.name,
+            dye: { id: item.dye._id, value: item.dye.dye_number.toString(), label: item.dye.dye_number.toString() },
+            article: { id: item.article._id, value: item.article.name, label: item.article.name },
             size: item.size,
             left_thickness: item.left_thickness,
             right_thickness: item.right_thickness,
@@ -1351,8 +1351,8 @@ export const GetSoleThickness = async (req: Request, res: Response, next: NextFu
 
         result = items.map((item) => {
             return {
-                dye: item.dye.dye_number,
-                article: item.article.name,
+                dye: { id: item.dye._id, value: item.dye.dye_number.toString(), label: item.dye.dye_number.toString() },
+                article: { id: item.article._id, value: item.article.name, label: item.article.name },
                 size: item.size,
                 left_thickness: item.left_thickness,
                 right_thickness: item.right_thickness,

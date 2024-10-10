@@ -1,243 +1,277 @@
-import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import FuzzySearch from "fuzzy-search";
-import ExportToExcel from '../../utils/ExportToExcel'
-import { ChoiceContext, LeadChoiceActions, } from '../../contexts/dialogContext'
-import { Menu as MenuIcon } from '@mui/icons-material';
-import AlertBar from '../../components/snacks/AlertBar'
-import { UserContext } from '../../contexts/userContext'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import LeadsStateTable from '../../components/tables/crm/LeadsStateTable'
-import { GetAllStates } from '../../services/LeadsServices'
+import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { onlyUnique } from '../../utils/UniqueArray'
 import CreateOrEditStateDialog from '../../components/dialogs/crm/CreateOrEditStateDialog'
-import AssignCrmStatesDialog from '../../components/dialogs/crm/AssignCrmStatesDialog'
+import DeleteCrmItemDialog from '../../components/dialogs/crm/DeleteCrmItemDialog'
+import { UserContext } from '../../contexts/userContext'
+import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
+import { Delete, Edit } from '@mui/icons-material'
+import { Fade, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material'
+import PopUp from '../../components/popup/PopUp'
+import ExportToExcel from '../../utils/ExportToExcel'
+import { Menu as MenuIcon } from '@mui/icons-material';
+import { GetAllStates } from '../../services/LeadsServices'
 import FindUknownCrmStatesDialog from '../../components/dialogs/crm/FindUknownCrmStatesDialog'
-import UploadCRMStatesFromExcelButton from '../../components/buttons/UploadCRMStatesFromExcelButton'
-import { CreateAndUpdatesStateFromExcelDto, GetCrmStateDto } from '../../dtos/crm/crm.dto'
+import { GetCrmStateDto } from '../../dtos/crm/crm.dto'
+import AssignCrmStatesDialog from '../../components/dialogs/crm/AssignCrmStatesDialog'
 
 
-let template: CreateAndUpdatesStateFromExcelDto[] = [
-  {
-    _id: "",
-    state: "delhi"
-  }
-]
 
 export default function CrmStatesPage() {
-  const [flag, setFlag] = useState(1);
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>("crm_states", GetAllStates)
   const [state, setState] = useState<GetCrmStateDto>()
   const [states, setStates] = useState<GetCrmStateDto[]>([])
-  const [selectAll, setSelectAll] = useState(false)
-  const MemoData = React.useMemo(() => states, [states])
-  const [preFilteredData, setPreFilteredData] = useState<GetCrmStateDto[]>([])
-  const [selectedStates, setSelectedStates] = useState<GetCrmStateDto[]>([])
-  const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<CreateAndUpdatesStateFromExcelDto[]>(template)
-  const [sent, setSent] = useState(false)
+  const [flag, setFlag] = useState(1);
+  const { user: LoggedInUser } = useContext(UserContext)
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>(["states"], async () => GetAllStates())
+
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { user: LoggedInUser } = useContext(UserContext)
+
+  const columns = useMemo<MRT_ColumnDef<GetCrmStateDto>[]>(
+    //column definitions...
+    () => states && [
+      {
+        accessorKey: 'actions',
+        header: '',
+        maxSize: 50,
+        Footer: <b></b>,
+        size: 120,
+        Cell: ({ cell }) => <PopUp
+          element={
+            <Stack direction="row">
+              <>
+
+                {LoggedInUser?.is_admin && LoggedInUser.assigned_permissions.includes('states_delete') &&
+                  <Tooltip title="delete">
+                    <IconButton color="error"
+
+                      onClick={() => {
+                        setChoice({ type: LeadChoiceActions.delete_crm_item })
+                        setState(cell.row.original)
+
+                      }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Tooltip>
+                }
+                {LoggedInUser?.assigned_permissions.includes('states_edit') && <Tooltip title="edit">
+                  <IconButton
+
+                    onClick={() => {
+                      setState(cell.row.original)
+                      setChoice({ type: LeadChoiceActions.create_or_edit_state })
+                    }}
+
+                  >
+                    <Edit />
+                  </IconButton>
+                </Tooltip>}
+
+              </>
+
+            </Stack>}
+        />
+      },
+
+      {
+        accessorKey: 'state',
+        header: 'State',
+        size: 350,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state.label : ""}</>,
+        filterSelectOptions: states && states.map((i) => {
+          return i.state.value;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'assigned_users',
+        header: 'Assigned Users',
+        size: 650,
+        filterVariant: 'text',
+        Cell: (cell) => <>{cell.row.original.assigned_users && cell.row.original.assigned_users.length > 0 ? cell.row.original.assigned_users.map((i) => { return i.value }).toString() : ""}</>,
+      }
+    ],
+    [states],
+    //end
+  );
 
 
-  function handleExcel() {
-    setAnchorEl(null)
-    try {
-      ExportToExcel(selectedData, "crm_states_data")
-      setSent(true)
-      setSelectAll(false)
-      setSelectedData([])
-      setSelectedStates([])
-    }
-    catch (err) {
-      console.log(err)
-      setSent(false)
-    }
-  }
+  const table = useMaterialReactTable({
+    columns,
+    data: states, //10,000 rows       
+    enableColumnResizing: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        fontSize: '14px'
+      }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+    }),
+    muiTableHeadRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white'
+      },
+    }),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
+      },
+    }),
+    muiPaginationProps: {
+      rowsPerPageOptions: [100, 200, 500, 1000, 2000],
+      shape: 'rounded',
+      variant: 'outlined',
+    },
+    initialState: {
+      density: 'compact', showGlobalFilter: true, pagination: { pageIndex: 0, pageSize: 500 }
+    },
+    enableGrouping: true,
+    enableRowSelection: true,
+    manualPagination: false,
+    enablePagination: true,
+    enableRowNumbers: true,
+    enableColumnPinning: true,
+    enableTableFooter: true,
+    enableRowVirtualization: true,
+    onSortingChange: setSorting,
+    state: { isLoading, sorting }
+  });
 
-  // refine data
-  useEffect(() => {
-    let data: CreateAndUpdatesStateFromExcelDto[] = []
-    selectedStates.map((state) => {
-      return data.push({
-        _id: state.state.id,
-        state: state.state.value,
-        users: state.assigned_users.map((u) => { return u.value }).toString()
-      })
-    })
-    if (data.length > 0)
-      setSelectedData(data)
-  }, [selectedStates])
 
   useEffect(() => {
     if (isSuccess) {
-      setStates(data.data)
-      setPreFilteredData(data.data)
+      setStates(data.data);
     }
-  }, [isSuccess, data])
+  }, [isSuccess]);
 
 
-  useEffect(() => {
-    if (filter) {
-      if (states) {
-        const searcher = new FuzzySearch(states, ["state.value", "assigned_users.value"], {
-          caseSensitive: false,
-        });
-        const result = searcher.search(filter);
-        setStates(result)
-      }
-    }
-    if (!filter)
-      setStates(preFilteredData)
-
-  }, [filter])
   return (
     <>
-      {
-        isLoading && <LinearProgress />
-      }
-      {/*heading, search bar and table menu */}
+
+
       <Stack
         spacing={2}
         padding={1}
         direction="row"
         justifyContent="space-between"
-
+        alignItems={'center'}
       >
-
         <Typography
           variant={'h6'}
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          States {selectedStates.length > 0 ? <span>(checked : {selectedStates.length})</span> : `- ${states.length}`}
+          States : {states && states.length}
         </Typography>
 
-        <TextField
-          sx={{ width: '50vw' }}
-          size="small"
-          onChange={(e) => {
-            setFilter(e.currentTarget.value)
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Search sx={{ cursor: 'pointer' }} />
-              </InputAdornment>
-            ),
-          }}
-          placeholder={`Search States `}
-          style={{
-            fontSize: '1.1rem',
-            border: '0',
-          }}
-        />
-        <Stack
-          direction="row"
-        >
-          {/* search bar */}
-          < Stack direction="row" spacing={2}>
-            {LoggedInUser?.assigned_permissions.includes('states_create') && <UploadCRMStatesFromExcelButton />}
-          </Stack >
-          <>
+        <>
+          <IconButton size="small" color="primary"
+            onClick={(e) => setAnchorEl(e.currentTarget)
+            }
+            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
+          >
+            <MenuIcon />
+          </IconButton>
 
-            {sent && <AlertBar message="File Exported Successfuly" color="success" />}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)
+            }
+            TransitionComponent={Fade}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+            sx={{ borderRadius: 2 }}
+          >
+            {LoggedInUser?.assigned_permissions.includes('states_create') && <MenuItem
 
-
-            <IconButton size="small" color="primary"
-              onClick={(e) => setAnchorEl(e.currentTarget)
-              }
-              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)
-              }
-              TransitionComponent={Fade}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
+              onClick={() => {
+                setChoice({ type: LeadChoiceActions.create_or_edit_state })
+                setState(undefined)
+                setAnchorEl(null)
               }}
-              sx={{ borderRadius: 2 }}
-            >
-              {LoggedInUser?.assigned_permissions.includes('states_create') && <MenuItem
+            > Add New</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('states_edit') && <MenuItem
 
-                onClick={() => {
-                  setChoice({ type: LeadChoiceActions.create_or_edit_state })
+              onClick={() => {
+                if (!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()) {
+                  alert("select some states")
+                }
+                else {
+                  setChoice({ type: LeadChoiceActions.bulk_assign_crm_states })
                   setState(undefined)
-                  setAnchorEl(null)
-                }}
-              > Add New</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('states_edit') && <MenuItem
+                  setFlag(1)
+                }
+                setAnchorEl(null)
+              }}
+            > Assign States</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('states_edit') && <MenuItem
 
-                onClick={() => {
-                  if (selectedStates && selectedStates.length == 0) {
-                    alert("select some states")
-                  }
-                  else {
-                    setChoice({ type: LeadChoiceActions.bulk_assign_crm_states })
-                    setState(undefined)
-                    setFlag(1)
-                  }
-                  setAnchorEl(null)
-                }}
-              > Assign States</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('states_edit') && <MenuItem
-
-                onClick={() => {
-                  if (selectedStates && selectedStates.length == 0) {
-                    alert("select some states")
-                  }
-                  else {
-                    setChoice({ type: LeadChoiceActions.bulk_assign_crm_states })
-                    setState(undefined)
-                    setFlag(0)
-                  }
-                  setAnchorEl(null)
-                }}
-              > Remove States</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('states_create') && <MenuItem
-                sx={{ color: 'red' }}
-
-                onClick={() => {
-                  setChoice({ type: LeadChoiceActions.find_unknown_states })
+              onClick={() => {
+                if (!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()) {
+                  alert("select some states")
+                }
+                else {
+                  setChoice({ type: LeadChoiceActions.bulk_assign_crm_states })
                   setState(undefined)
-                  setAnchorEl(null)
-                }}
-              > Find Unknown States</MenuItem>}
+                  setFlag(0)
+                }
+                setAnchorEl(null)
+              }}
+            > Remove States</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('states_create') && <MenuItem
+              sx={{ color: 'red' }}
 
-              {LoggedInUser?.assigned_permissions.includes('states_export') && < MenuItem onClick={handleExcel}
+              onClick={() => {
+                setChoice({ type: LeadChoiceActions.find_unknown_states })
+                setState(undefined)
+                setAnchorEl(null)
+              }}
+            > Find Unknown States</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('states_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
-              >Export To Excel</MenuItem>}
+            >Export All</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('states_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
-            </Menu >
-            <CreateOrEditStateDialog />
-            {LoggedInUser?.is_admin && <FindUknownCrmStatesDialog />}
-            {<AssignCrmStatesDialog flag={flag} states={selectedStates.map((item) => { return { id: item.state.id, label: item.state.label, value: item.state.value } })} />}
+            >Export Selected</MenuItem>}
+
+          </Menu >
+          <CreateOrEditStateDialog />
+          {LoggedInUser?.is_admin && <FindUknownCrmStatesDialog />}
+          {<AssignCrmStatesDialog flag={flag} states={table.getSelectedRowModel().rows.map((item) => { return { id: item.original.state.id, label: item.original.state.label, value: item.original.state.value } })} />}
+          <>
+            {
+              state ?
+                <>
+
+                  <DeleteCrmItemDialog state={state ? { id: state.state.id, label: state.state.label, value: state.state.value } : undefined} />
+                  <CreateOrEditStateDialog state={state.state} />
+                  <DeleteCrmItemDialog state={state.state} />
+                </>
+                : null
+            }
           </>
-        </Stack >
-      </Stack >
-      {/*  table */}
-      {isLoading && <TableSkeleton />}
-      {MemoData.length &&
-        <LeadsStateTable
-          state={state}
-          selectAll={selectAll}
-          selectedStates={selectedStates}
-          setSelectedStates={setSelectedStates}
-          setSelectAll={setSelectAll}
-          states={MemoData}
-          setState={setState}
-        />}
+        </>
 
+
+      </Stack >
+
+      {/* table */}
+      <MaterialReactTable table={table} />
     </>
 
   )

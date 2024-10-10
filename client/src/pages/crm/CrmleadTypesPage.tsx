@@ -1,202 +1,226 @@
-import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import FuzzySearch from "fuzzy-search";
-import ExportToExcel from '../../utils/ExportToExcel'
-import { ChoiceContext, LeadChoiceActions, } from '../../contexts/dialogContext'
-import { Menu as MenuIcon } from '@mui/icons-material';
-import AlertBar from '../../components/snacks/AlertBar'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import CreateOrEditLeadTypeDialog from '../../components/dialogs/crm/CreateOrEditLeadTypeDialog'
-import LeadsTypeTable from '../../components/tables/crm/LeadsTypesTable'
-import { GetAllLeadTypes } from '../../services/LeadsServices'
+import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { onlyUnique } from '../../utils/UniqueArray'
+import DeleteCrmItemDialog from '../../components/dialogs/crm/DeleteCrmItemDialog'
 import { UserContext } from '../../contexts/userContext'
+import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
+import { Delete, Edit } from '@mui/icons-material'
+import { Fade, IconButton, Menu, MenuItem,  Tooltip, Typography } from '@mui/material'
+import PopUp from '../../components/popup/PopUp'
+import ExportToExcel from '../../utils/ExportToExcel'
+import { Menu as MenuIcon } from '@mui/icons-material';
 import { DropDownDto } from '../../dtos/common/dropdown.dto'
+import { GetAllLeadTypes } from '../../services/LeadsServices'
+import CreateOrEditLeadTypeDialog from '../../components/dialogs/crm/CreateOrEditLeadTypeDialog'
 
-type ITemplate = {
-  _id: string,
-  type: string
-}
-let template: ITemplate[] = [
-  {
-    _id: "qeqq6g54",
-    type: "internet"
-  }
-]
+
 
 export default function CrmTypesPage() {
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_types", GetAllLeadTypes)
-  const [type, setLeadType] = useState<DropDownDto>()
+  const [type, setType] = useState<DropDownDto>()
   const [types, setTypes] = useState<DropDownDto[]>([])
-  const [selectAll, setSelectAll] = useState(false)
-  const MemoData = React.useMemo(() => types, [types])
-  const [preFilteredData, setPreFilteredData] = useState<DropDownDto[]>([])
-  const [selectedTypes, setSelectedTypes] = useState<DropDownDto[]>([])
-  const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<ITemplate[]>(template)
-  const [sent, setSent] = useState(false)
+
+  const { user: LoggedInUser } = useContext(UserContext)
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>(["types"], async () => GetAllLeadTypes())
+
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { user: LoggedInUser } = useContext(UserContext)
 
-  function handleExcel() {
-    setAnchorEl(null)
-    try {
-      ExportToExcel(selectedData, "crm_types_data")
-      setSent(true)
-      setSelectAll(false)
-      setSelectedData([])
-      setSelectedTypes([])
-    }
-    catch (err) {
-      console.log(err)
-      setSent(false)
-    }
-  }
+  const columns = useMemo<MRT_ColumnDef<DropDownDto>[]>(
+    //column definitions...
+    () => types && [
+      {
+        accessorKey: 'actions',
+        header: '',
+        maxSize: 50,
+        Footer: <b></b>,
+        size: 120,
+        Cell: ({ cell }) => <PopUp
+          element={
+            <Stack direction="row">
+              <>
 
-  // refine data
-  useEffect(() => {
-    let data: ITemplate[] = []
-    selectedTypes.map((type) => {
-      return data.push({
-        _id: type.id,
-        type: type.value,
-      })
-    })
-    if (data.length > 0)
-      setSelectedData(data)
-  }, [selectedTypes])
+                {LoggedInUser?.is_admin && LoggedInUser.assigned_permissions.includes('leadtype_delete') &&
+                  <Tooltip title="delete">
+                    <IconButton color="error"
+
+                      onClick={() => {
+                        setChoice({ type: LeadChoiceActions.delete_crm_item })
+                        setType(cell.row.original)
+
+                      }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Tooltip>
+                }
+                {LoggedInUser?.assigned_permissions.includes('leadtype_edit') && <Tooltip title="edit">
+                  <IconButton
+
+                    onClick={() => {
+                      setType(cell.row.original)
+                      setChoice({ type: LeadChoiceActions.create_or_edit_leadtype })
+                    }}
+
+                  >
+                    <Edit />
+                  </IconButton>
+                </Tooltip>}
+
+              </>
+
+            </Stack>}
+        />
+      },
+
+      {
+        accessorKey: 'label',
+        header: 'Type',
+        size: 350,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.value ? cell.row.original.value : ""}</>,
+        filterSelectOptions: types && types.map((i) => {
+          return i.value;
+        }).filter(onlyUnique)
+      }
+    ],
+    [types],
+    //end
+  );
+
+
+  const table = useMaterialReactTable({
+    columns,
+    data: types, //10,000 rows       
+    enableColumnResizing: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        fontSize: '14px'
+      }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+    }),
+    muiTableHeadRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white'
+      },
+    }),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
+      },
+    }),
+    muiPaginationProps: {
+      rowsPerPageOptions: [100, 200, 500, 1000, 2000],
+      shape: 'rounded',
+      variant: 'outlined',
+    },
+    initialState: {
+      density: 'compact', showGlobalFilter: true, pagination: { pageIndex: 0, pageSize: 500 }
+    },
+    enableGrouping: true,
+    enableRowSelection: true,
+    manualPagination: false,
+    enablePagination: true,
+    enableRowNumbers: true,
+    enableColumnPinning: true,
+    enableTableFooter: true,
+    enableRowVirtualization: true,
+    onSortingChange: setSorting,
+    state: { isLoading, sorting }
+  });
+
 
   useEffect(() => {
     if (isSuccess) {
-      setTypes(data.data)
-      setPreFilteredData(data.data)
+      setTypes(data.data);
     }
-  }, [isSuccess, types, data])
+  }, [isSuccess]);
 
 
-  useEffect(() => {
-    if (filter) {
-      if (types) {
-        const searcher = new FuzzySearch(types, ["type", "users.username"], {
-          caseSensitive: false,
-        });
-        const result = searcher.search(filter);
-        setTypes(result)
-      }
-    }
-    if (!filter)
-      setTypes(preFilteredData)
-
-  }, [filter, types])
   return (
     <>
-      {
-        isLoading && <LinearProgress />
-      }
-      {/*heading, search bar and table menu */}
+
+
       <Stack
         spacing={2}
         padding={1}
         direction="row"
         justifyContent="space-between"
-
+        alignItems={'center'}
       >
-
         <Typography
           variant={'h6'}
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          Types {selectedTypes.length > 0 ? <span>(checked : {selectedTypes.length})</span> : ''}
+          Types : {types && types.length}
         </Typography>
 
-        <TextField
-          sx={{ width: '50vw' }}
-          size="small"
-          onChange={(e) => {
-            setFilter(e.currentTarget.value)
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Search sx={{ cursor: 'pointer' }} />
-              </InputAdornment>
-            ),
-          }}
-          placeholder={`Search Types `}
-          style={{
-            fontSize: '1.1rem',
-            border: '0',
-          }}
-        />
-        <Stack
-          direction="row"
-        >
-          {/* search bar */}
-          < Stack direction="row" spacing={2}>
-            {/* {LoggedInUser?.crm_access_fields.is_editable && <UploadCRMTypesFromExcelButton disabled={!LoggedInUser?.crm_access_fields.is_editable} />} */}
-          </Stack >
-          <>
+        <>
+          <IconButton size="small" color="primary"
+            onClick={(e) => setAnchorEl(e.currentTarget)
+            }
+            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
+          >
+            <MenuIcon />
+          </IconButton>
 
-            {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-
-
-            <IconButton size="small" color="primary"
-              onClick={(e) => setAnchorEl(e.currentTarget)
-              }
-              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)
-              }
-              TransitionComponent={Fade}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)
+            }
+            TransitionComponent={Fade}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+            sx={{ borderRadius: 2 }}
+          >
+            {LoggedInUser?.assigned_permissions.includes("leadtype_create") && <MenuItem
+              onClick={() => {
+                setChoice({ type: LeadChoiceActions.create_or_edit_leadtype })
+                setType(undefined)
+                setAnchorEl(null)
               }}
-              sx={{ borderRadius: 2 }}
-            >
-              {LoggedInUser?.assigned_permissions.includes("leadtype_create")&& <MenuItem
-                onClick={() => {
-                  setChoice({ type: LeadChoiceActions.create_or_edit_leadtype })
-                  setLeadType(undefined)
-                  setAnchorEl(null)
-                }}
-              
-              > Add New</MenuItem>}
 
-              {LoggedInUser?.assigned_permissions.includes("leadtype_export") &&  < MenuItem onClick={handleExcel}
-              
-              >Export To Excel</MenuItem>}
+            > Add New</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('leadtype_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
-            </Menu >
-            <CreateOrEditLeadTypeDialog />
+            >Export All</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('leadtype_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+            >Export Selected</MenuItem>}
+
+          </Menu >
+          <CreateOrEditLeadTypeDialog type={type} />
+          <>
+            {
+              type ?
+                <>
+                  <DeleteCrmItemDialog type={type} />
+                </>
+                : null
+            }
           </>
-        </Stack >
-      </Stack >
-      {/*  table */}
-      {isLoading && <TableSkeleton />}
-      {MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && MemoData.length > 0 &&
-        <LeadsTypeTable
-          type={type}
-          selectAll={selectAll}
-          selectedTypes={selectedTypes}
-          setSelectedTypes={setSelectedTypes}
-          setSelectAll={setSelectAll}
-          types={MemoData}
-          setType={setLeadType}
-        />}
+        </>
 
+
+      </Stack >
+
+      {/* table */}
+      <MaterialReactTable table={table} />
     </>
 
   )

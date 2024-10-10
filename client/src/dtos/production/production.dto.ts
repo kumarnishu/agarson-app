@@ -1,8 +1,8 @@
 import { DropDownDto } from "../common/dropdown.dto"
 
-export type GetSoleThicknessDto={
-    dye: string,
-    article: string,
+export type GetSoleThicknessDto = {
+    dye: DropDownDto,
+    article: DropDownDto,
     size: string,
     left_thickness: number,
     right_thickness: number,
