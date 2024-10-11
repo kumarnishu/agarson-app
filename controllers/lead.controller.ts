@@ -710,10 +710,10 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     let stages = await (await Stage.find()).map((i) => { return i.stage })
-    if (req.user?.assigned_permissions.includes('show_leads_useless'))
-        stages.push('useless')
-    if (req.user?.assigned_permissions.includes('show_refer_leads'))
-        stages.push('refer')
+    if (!req.user?.assigned_permissions.includes('show_leads_useless'))
+        stages = stages.filter((stage) => { return stage !== "useless" })
+    if (!req.user?.assigned_permissions.includes('show_refer_leads'))
+        stages = stages.filter((stage) => { return stage !== "refer" })
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
         let count = 0
@@ -1170,7 +1170,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 1 || key.length > 4) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads,  state: { $in: states }, city: { $in: cities },
+                    has_card: showonlycardleads, state: { $in: states }, city: { $in: cities },
                     $or: [
                         { name: { $regex: key[0], $options: 'i' } },
                         { customer_name: { $regex: key[0], $options: 'i' } },
@@ -1198,7 +1198,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
             if (key.length == 2) {
 
                 leads = await Lead.find({
-                    has_card: showonlycardleads,  state: { $in: states }, city: { $in: cities },
+                    has_card: showonlycardleads, state: { $in: states }, city: { $in: cities },
                     $and: [
                         {
                             $or: [
