@@ -162,7 +162,7 @@ function MainDashBoardPage() {
             alignItems="center"
             gap={2}
           >
-            <Link to={feature ? feature.url : "/"} onClick={() => {
+            <Link to={feature ? feature.url : "/"} onDoubleClick={() => {
               {
                 setFeature({ feature: "Dashboard", url: "/" })
                 setSearch("")
