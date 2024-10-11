@@ -113,6 +113,8 @@ function MainDashBoardPage() {
     user?.assigned_permissions.includes('activities_view') && tmpfeatures.push({ feature: 'activities reports ', is_visible: false, url: "/Crm/CrmActivitiesPage" })
     user?.assigned_permissions.includes('assignedrefer_view') && tmpfeatures.push({ feature: 'assigned refer reports', is_visible: false, url: "/Crm/AssignedReferReportPage" })
     user?.assigned_permissions.includes('newrefer_view') && tmpfeatures.push({ feature: 'new refer reports ', is_visible: false, url: "/Crm/NewReferReportPage" })
+
+
     user?.assigned_permissions.includes('pending_orders_view') && tmpfeatures.push({ feature: 'pending orders report', is_visible: false, url: "/ErpReports/PendingOrdersReport" })
     user?.assigned_permissions.includes('bills_ageing_view') && tmpfeatures.push({ feature: 'bills aging  report', is_visible: false, url: "/ErpReports/BillsAgingReportPage" })
     user?.assigned_permissions.includes('client_sale_report_view') && tmpfeatures.push({ feature: 'Client Sale  report', is_visible: false, url: "/ErpReports/ClientSaleReportsPage" }),
@@ -121,9 +123,10 @@ function MainDashBoardPage() {
       user?.assigned_permissions.includes('sale_analysis_view') && tmpfeatures.push({ feature: 'Sale Analysis report', is_visible: false, url: "/ErpReports/SaleAnalysisReport" }),
       user?.assigned_permissions.includes('erp_state_view') && tmpfeatures.push({ feature: 'states', is_visible: false, url: "/ErpReports/ErpStatesPage" })
 
+      
     user?.assigned_permissions.includes('production_view') && tmpfeatures.push({ feature: 'production ', is_visible: false, url: "/Production/ProductionAdminPage" })
-    user?.assigned_permissions.includes('dye_status_view') && tmpfeatures.push({ feature: 'Dye-Status ', is_visible: false, url: "/Production/DyeStatusReportPage" })
-    user?.assigned_permissions.includes('dye_location_view') && tmpfeatures.push({ feature: 'Location ', is_visible: false, url: "/Production/DyeLocationsPage" })
+    user?.assigned_permissions.includes('dye_status_view') && tmpfeatures.push({ feature: 'Spare Dye ', is_visible: false, url: "/Production/DyeStatusReportPage" })
+    user?.assigned_permissions.includes('dye_location_view') && tmpfeatures.push({ feature: 'Dye Location ', is_visible: false, url: "/Production/DyeLocationsPage" })
     user?.assigned_permissions.includes('article_view') && tmpfeatures.push({ feature: 'articles', is_visible: false, url: "/Production/ArticlePage" })
     user?.assigned_permissions.includes('machine_view') && tmpfeatures.push({ feature: 'machines ', is_visible: false, url: "/Production/MachinePage" })
     user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: false, url: "/Production/UpdateMachineCategoriesPage" })

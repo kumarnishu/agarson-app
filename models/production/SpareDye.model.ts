@@ -1,15 +1,11 @@
 import mongoose from "mongoose"
 import { Asset, IUser } from "../users/user.model"
-import { IArticle } from "./article.model"
 import { IDye } from "./dye.model"
-import { IMachine } from "./machine.model"
 import { IDyeLocation } from "./dye.location.model"
 
-export type IDyeStatus = {
+export type ISpareDye = {
     _id: string,
     dye: IDye,
-    article: IArticle,
-    machine: IMachine,
     repair_required: boolean,
     dye_photo: Asset,
     photo_time: Date,
@@ -20,19 +16,12 @@ export type IDyeStatus = {
     updated_by: IUser
 }
 
-const DyeStatusSchema = new mongoose.Schema<IDyeStatus, mongoose.Model<IDyeStatus, {}, {}>, {}>({
-    machine: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Machine'
-    },
+const SpareDyeSchema = new mongoose.Schema<ISpareDye, mongoose.Model<ISpareDye, {}, {}>, {}>({
+   
     dye: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Dye',
         required: true
-    },
-    article: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article'
     },
     repair_required: { type: Boolean, default: false },
     location: {
@@ -73,4 +62,4 @@ const DyeStatusSchema = new mongoose.Schema<IDyeStatus, mongoose.Model<IDyeStatu
     }
 })
 
-export const DyeStatus = mongoose.model<IDyeStatus, mongoose.Model<IDyeStatus, {}, {}>>("DyeStatus", DyeStatusSchema)
+export const SpareDye = mongoose.model<ISpareDye, mongoose.Model<ISpareDye, {}, {}>>("SpareDye", SpareDyeSchema)

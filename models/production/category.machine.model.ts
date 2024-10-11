@@ -1,8 +1,10 @@
 import mongoose from "mongoose"
 import { IUser } from "../users/user.model"
+
+
 export type IMachineCategory = {
     _id: string,
-    categories: string[],
+    category: string,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
@@ -11,11 +13,12 @@ export type IMachineCategory = {
 
 
 const MachineCategorySchema = new mongoose.Schema<IMachineCategory, mongoose.Model<IMachineCategory, {}, {}>, {}>({
-    categories: [{
+    category: {
         type: String,
         required: true,
+        lowercase:true,
         trim: true
-    }],
+    },
     created_at: {
         type: Date,
         default: new Date(),

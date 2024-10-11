@@ -11,49 +11,110 @@ import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { destroyFile } from "../utils/destroyFile.util"
 import { DyeLocation } from "../models/production/dye.location.model"
 import isMongoId from "validator/lib/isMongoId"
-import { DyeStatus, IDyeStatus } from "../models/production/dye.status.model"
 import moment from "moment"
 import { ISoleThickness, SoleThickness } from "../models/production/sole.thickness.model"
-import { CreateOrEditSoleThicknessDto, GetSoleThicknessDto } from "../dtos/production/production.dto"
+import { CreateOrEditArticleDto, CreateOrEditDyeDTo, CreateOrEditDyeLocationDto, CreateOrEditMachineDto, CreateOrEditProductionDto, CreateOrEditShoeWeightDto, CreateOrEditSoleThicknessDto, CreateOrEditSpareDyeDto, GetArticleDto, GetCategoryWiseProductionReportDto, GetDyeDto, GetMachineDto, GetProductionDto, GetShoeWeightDiffReportDto, GetShoeWeightDto, GetSoleThicknessDto, GetSpareDyeDto, IColumnRowData, IRowData } from "../dtos/production/production.dto"
+import { ISpareDye, SpareDye } from "../models/production/SpareDye.model"
 
 //get
 export const GetMachineCategories = async (req: Request, res: Response, next: NextFunction) => {
-    let categoryObj = await MachineCategory.findOne()
-    return res.status(200).json(categoryObj)
+    let result = (await MachineCategory.find()).map((c) => {
+        return { id: c._id, label: c.category, value: c.category }
+    })
+    return res.status(200).json(result)
 }
 
 export const GetMachines = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = String(req.query.hidden)
     let machines: IMachine[] = []
+    let result: GetMachineDto[] = []
     if (hidden === "true") {
         machines = await Machine.find().populate('created_by').populate('updated_by').sort('serial_no')
     } else
         machines = await Machine.find({ active: true }).populate('created_by').populate('updated_by').sort('serial_no')
-    return res.status(200).json(machines)
+    result = machines.map((m) => {
+        return {
+            _id: m._id,
+            name: m.name,
+            active: m.active,
+            category: m.category,
+            serial_no: m.serial_no,
+            display_name: m.display_name,
+            created_at: m.created_at && moment(m.created_at).format("DD/MM/YYYY"),
+            updated_at: m.updated_at && moment(m.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: m.created_by._id, value: m.created_by.username, label: m.created_by.username },
+            updated_by: { id: m.updated_by._id, value: m.updated_by.username, label: m.updated_by.username }
+        }
+    })
+    return res.status(200).json(result)
 }
 export const GetArticles = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = String(req.query.hidden)
+    let result: GetArticleDto[] = []
     let articles: IArticle[] = []
     if (hidden === "true") {
         articles = await Article.find().populate('created_by').populate('updated_by').sort('name')
     } else
         articles = await Article.find({ active: true }).populate('created_by').populate('updated_by').sort('name')
-    return res.status(200).json(articles)
+    result = articles.map((m) => {
+        return {
+            _id: m._id,
+            name: m.name,
+            display_name: m.display_name,
+            active: m.active,
+            created_at: m.created_at && moment(m.created_at).format("DD/MM/YYYY"),
+            updated_at: m.updated_at && moment(m.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: m.created_by._id, value: m.created_by.username, label: m.created_by.username },
+            updated_by: { id: m.updated_by._id, value: m.updated_by.username, label: m.updated_by.username }
+        }
+    })
+    return res.status(200).json(result)
 }
 
 export const GetDyeById = async (req: Request, res: Response, next: NextFunction) => {
     let id = req.params.id;
+
     let dye = await Dye.findById(id).populate('articles');
-    return res.status(200).json(dye)
+    if (!dye)
+        return res.status(404).json({ message: "dye not exists" })
+    let result: GetDyeDto = {
+        _id: dye._id,
+        active: dye.active,
+        dye_number: dye.dye_number,
+        size: dye.size,
+        articles: dye.articles.map((a) => { return { id: a._id, value: a.name, label: a.name } }),
+        stdshoe_weight: dye.stdshoe_weight,
+        created_at: dye.created_at && moment(dye.created_at).format("DD/MM/YYYY"),
+        updated_at: dye.updated_at && moment(dye.updated_at).format("DD/MM/YYYY"),
+        created_by: { id: dye.created_by._id, value: dye.created_by.username, label: dye.created_by.username },
+        updated_by: { id: dye.updated_by._id, value: dye.updated_by.username, label: dye.updated_by.username }
+    }
+    return res.status(200).json(result)
 }
+
 export const GetDyes = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = String(req.query.hidden)
     let dyes: IDye[] = []
+    let result: GetDyeDto[] = []
     if (hidden === "true") {
         dyes = await Dye.find().populate('articles').populate('created_by').populate('updated_by').sort('dye_number')
     } else
         dyes = await Dye.find({ active: true }).populate('articles').populate('created_by').populate('updated_by').sort('dye_number')
-    return res.status(200).json(dyes)
+    result = dyes.map((dye) => {
+        return {
+            _id: dye._id,
+            active: dye.active,
+            dye_number: dye.dye_number,
+            size: dye.size,
+            articles: dye.articles.map((a) => { return { id: a._id, value: a.name, label: a.name } }),
+            stdshoe_weight: dye.stdshoe_weight,
+            created_at: dye.created_at && moment(dye.created_at).format("DD/MM/YYYY"),
+            updated_at: dye.updated_at && moment(dye.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: dye.created_by._id, value: dye.created_by.username, label: dye.created_by.username },
+            updated_by: { id: dye.updated_by._id, value: dye.updated_by.username, label: dye.updated_by.username }
+        }
+    })
+    return res.status(200).json(result)
 }
 
 
@@ -64,6 +125,7 @@ export const GetProductions = async (req: Request, res: Response, next: NextFunc
     let start_date = req.query.start_date
     let end_date = req.query.end_date
     let productions: IProduction[] = []
+    let result: GetProductionDto[] = []
     let count = 0
     let dt1 = new Date(String(start_date))
     let dt2 = new Date(String(end_date))
@@ -87,9 +149,27 @@ export const GetProductions = async (req: Request, res: Response, next: NextFunc
             productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: id }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('date').skip((page - 1) * limit).limit(limit)
             count = await Production.find({ date: { $gte: dt1, $lt: dt2 }, thekedar: id }).countDocuments()
         }
-
+        result = productions.map((p) => {
+            return {
+                _id: p._id,
+                machine: { id: p.machine._id, value: p.machine.name, label: p.machine.name },
+                thekedar: { id: p.thekedar._id, value: p.thekedar.username, label: p.thekedar.username },
+                articles: p.articles.map((a) => { return { id: a._id, value: a.name, label: a.name } }),
+                manpower: p.manpower,
+                production: p.production,
+                big_repair: p.big_repair,
+                upper_damage: p.upper_damage,
+                small_repair: p.small_repair,
+                date: p.date && moment(p.date).format("DD/MM/YYYY"),
+                production_hours: p.production_hours,
+                created_at: p.created_at && moment(p.created_at).format("DD/MM/YYYY"),
+                updated_at: p.updated_at && moment(p.updated_at).format("DD/MM/YYYY"),
+                created_by: { id: p.created_by._id, value: p.created_by.username, label: p.created_by.username },
+                updated_by: { id: p.updated_by._id, value: p.updated_by.username, label: p.updated_by.username }
+            }
+        })
         return res.status(200).json({
-            productions,
+            result,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
@@ -107,23 +187,37 @@ export const GetMyTodayProductions = async (req: Request, res: Response, next: N
     let dt2 = new Date(date)
     dt2.setDate(dt1.getDate() + 1)
     let productions: IProduction[] = []
+    let result: GetProductionDto[] = []
     if (machine) {
         productions = await Production.find({ date: { $gte: dt1, $lt: dt2 }, machine: machine }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
     }
     if (!machine)
         productions = await Production.find({ date: { $gte: dt1, $lt: dt2 } }).populate('machine').populate('thekedar').populate('articles').populate('created_by').populate('updated_by').sort('-updated_at')
 
+    result = productions.map((p) => {
+        return {
+            _id: p._id,
+            machine: { id: p.machine._id, value: p.machine.name, label: p.machine.name },
+            thekedar: { id: p.thekedar._id, value: p.thekedar.username, label: p.thekedar.username },
+            articles: p.articles.map((a) => { return { id: a._id, value: a.name, label: a.name } }),
+            manpower: p.manpower,
+            production: p.production,
+            big_repair: p.big_repair,
+            upper_damage: p.upper_damage,
+            small_repair: p.small_repair,
+            date: p.date && moment(p.date).format("DD/MM/YYYY"),
+            production_hours: p.production_hours,
+            created_at: p.created_at && moment(p.created_at).format("DD/MM/YYYY"),
+            updated_at: p.updated_at && moment(p.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: p.created_by._id, value: p.created_by.username, label: p.created_by.username },
+            updated_by: { id: p.updated_by._id, value: p.updated_by.username, label: p.updated_by.username }
+        }
+    })
     return res.status(200).json(productions)
 }
-
 //post/put/patch/delete
 export const CreateMachine = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, display_name, category, serial_no } = req.body as {
-        name: string,
-        display_name: string,
-        serial_no: number,
-        category: string
-    }
+    const { name, display_name, category, serial_no } = req.body as CreateOrEditMachineDto
     if (!name || !display_name || !category || !serial_no) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
@@ -154,7 +248,7 @@ export const BulkUploadMachine = async (req: Request, res: Response, next: NextF
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: { name: string, display_name: string, category: string, serial_no: number }[] = xlsx.utils.sheet_to_json(
+        let workbook_response: CreateOrEditMachineDto[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         console.log(workbook_response)
@@ -189,7 +283,7 @@ export const BulkUploadDye = async (req: Request, res: Response, next: NextFunct
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: { dye_number: number, size: string, articles: string, st_weight: number }[] = xlsx.utils.sheet_to_json(
+        let workbook_response: CreateOrEditDyeDTo[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         let newDyes: { dye_number: number, size: string, articles: IArticle[], st_weight: number }[] = []
@@ -242,11 +336,11 @@ export const BulkUploadArticle = async (req: Request, res: Response, next: NextF
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: { name: string, display_name: string }[] = xlsx.utils.sheet_to_json(
+        let workbook_response: CreateOrEditArticleDto[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         console.log(workbook_response)
-        let newArticles: { name: string, display_name: string }[] = []
+        let newArticles: CreateOrEditArticleDto[] = []
         workbook_response.forEach(async (article) => {
             let name: string | null = article.name
             let display_name: string | null = article.display_name
@@ -263,12 +357,7 @@ export const BulkUploadArticle = async (req: Request, res: Response, next: NextF
     return res.status(200).json({ message: "articles updated" });
 }
 export const UpdateMachine = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, display_name, category, serial_no } = req.body as {
-        name: string,
-        display_name: string,
-        category: string,
-        serial_no: number
-    }
+    const { name, display_name, category, serial_no } = req.body as CreateOrEditMachineDto
     if (!name || !display_name || !category || !serial_no) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
@@ -305,10 +394,7 @@ export const ToogleMachine = async (req: Request, res: Response, next: NextFunct
 }
 
 export const CreateArticle = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, display_name } = req.body as {
-        name: string,
-        display_name: string
-    }
+    const { name, display_name } = req.body as CreateOrEditArticleDto
     if (!name) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
@@ -327,11 +413,7 @@ export const CreateArticle = async (req: Request, res: Response, next: NextFunct
 }
 
 export const UpdateArticle = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, display_name } = req.body as {
-        name: string,
-        display_name: string,
-
-    }
+    const { name, display_name } = req.body as CreateOrEditArticleDto
     if (!name) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
@@ -366,12 +448,7 @@ export const ToogleArticle = async (req: Request, res: Response, next: NextFunct
 }
 
 export const CreateDye = async (req: Request, res: Response, next: NextFunction) => {
-    const { dye_number, size, article_ids, st_weight } = req.body as {
-        dye_number: number,
-        size: string,
-        article_ids: string,
-        st_weight: number
-    }
+    const { dye_number, size, articles, st_weight } = req.body as CreateOrEditDyeDTo
     if (!dye_number || !size) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
@@ -380,7 +457,7 @@ export const CreateDye = async (req: Request, res: Response, next: NextFunction)
 
     let dye = await new Dye({
         dye_number: dye_number, size: size,
-        article: article_ids,
+        articles: articles,
         stdshoe_weight: st_weight,
         created_at: new Date(),
         updated_at: new Date(),
@@ -390,12 +467,7 @@ export const CreateDye = async (req: Request, res: Response, next: NextFunction)
     return res.status(201).json(dye)
 }
 export const UpdateDye = async (req: Request, res: Response, next: NextFunction) => {
-    const { dye_number, size, article_ids, st_weight } = req.body as {
-        dye_number: number,
-        size: string,
-        article_ids: string,
-        st_weight: number
-    }
+    const { dye_number, size, articles, st_weight } = req.body as CreateOrEditDyeDTo
     if (!dye_number || !size) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
@@ -412,7 +484,7 @@ export const UpdateDye = async (req: Request, res: Response, next: NextFunction)
     dye.dye_number = dye_number
     dye.size = size
     //@ts-ignore
-    dye.articles = article_ids
+    dye.articles = articles
     dye.stdshoe_weight = st_weight,
         dye.updated_at = new Date()
     if (req.user)
@@ -447,18 +519,7 @@ export const CreateProduction = async (req: Request, res: Response, next: NextFu
         small_repair,
         date,
         upper_damage
-    } = req.body as {
-        machine: string,
-        date: string,
-        production_hours: number,
-        thekedar: string,
-        articles: string[],
-        manpower: number,
-        production: number,
-        big_repair: number,
-        small_repair: number,
-        upper_damage: number
-    }
+    } = req.body as CreateOrEditProductionDto
     let previous_date = new Date()
     let day = previous_date.getDate() - 3
     previous_date.setDate(day)
@@ -528,18 +589,7 @@ export const UpdateProduction = async (req: Request, res: Response, next: NextFu
         small_repair,
         upper_damage,
         date
-    } = req.body as {
-        machine: string,
-        date: string,
-        production_hours: number,
-        thekedar: string,
-        articles: string[],
-        manpower: number,
-        production: number,
-        big_repair: number,
-        upper_damage: number,
-        small_repair: number
-    }
+    } = req.body as CreateOrEditProductionDto
     let previous_date = new Date()
     let day = previous_date.getDate() - 3
     previous_date.setDate(day)
@@ -595,24 +645,12 @@ export const DeleteProduction = async (req: Request, res: Response, next: NextFu
 }
 
 
-export const UpdateMachineCategories = async (req: Request, res: Response, next: NextFunction) => {
-    const { categories } = req.body as { categories: string[] }
-    await MachineCategory.findOneAndRemove()
-    let cat = new MachineCategory({ categories: categories })
-    cat.created_at = new Date()
-    cat.updated_at = new Date()
-    if (req.user) {
-        cat.created_by = req.user
-        cat.updated_by = req.user
-    }
-    await cat.save()
-    return res.status(200).json({ message: "updated categories" })
-}
 export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: NextFunction) => {
     let dt1 = new Date()
     dt1.setDate(new Date().getDate())
     dt1.setHours(0)
     dt1.setMinutes(0)
+    let result: GetShoeWeightDto[] = []
     let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
     let weights: IShoeWeight[] = []
 
@@ -622,7 +660,33 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
     else {
         weights = await ShoeWeight.find({ created_at: { $gte: dt1 }, created_by: req.user?._id }).populate('machine').populate('dye').populate('article').populate('created_by').populate('updated_by').sort('-updated_at')
     }
-    return res.status(200).json(weights)
+    result = weights.map((w) => {
+        return {
+            _id: w._id,
+            machine: { id: w.machine._id, label: w.machine.name, value: w.machine.name },
+            dye: { id: w.dye._id, label: String(w.dye.dye_number), value: String(w.dye.dye_number) },
+            article: { id: w.article._id, label: w.article.name, value: w.article.name },
+            is_validated: w.is_validated,
+            month: w.month,
+            shoe_weight1: w.shoe_weight1,
+            shoe_photo1: w.shoe_photo1?.public_url || "",
+            weighttime1: moment(new Date(w.weighttime1)).format('LT'),
+            weighttime2: moment(new Date(w.weighttime2)).format('LT'),
+            weighttime3: moment(new Date(w.weighttime3)).format('LT'),
+            upper_weight1: w.upper_weight1,
+            upper_weight2: w.upper_weight2,
+            upper_weight3: w.upper_weight3,
+            shoe_weight2: w.shoe_weight2,
+            shoe_photo2: w.shoe_photo2?.public_url || "",
+            shoe_weight3: w.shoe_weight3,
+            shoe_photo3: w.shoe_photo3?.public_url || "",
+            created_at: moment(w.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(w.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: w.created_by._id, value: w.created_by.username, label: w.created_by.username },
+            updated_by: { id: w.updated_by._id, value: w.updated_by.username, label: w.updated_by.username },
+        }
+    })
+    return res.status(200).json(result)
 }
 
 
@@ -633,6 +697,7 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
     let start_date = req.query.start_date
     let end_date = req.query.end_date
     let weights: IShoeWeight[] = []
+    let result: GetShoeWeightDto[] = []
     let count = 0
     let dt1 = new Date(String(start_date))
     dt1.setHours(0)
@@ -660,9 +725,34 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
             weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
             count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
-
+        result = weights.map((w) => {
+            return {
+                _id: w._id,
+                machine: { id: w.machine._id, label: w.machine.name, value: w.machine.name },
+                dye: { id: w.dye._id, label: String(w.dye.dye_number), value: String(w.dye.dye_number) },
+                article: { id: w.article._id, label: w.article.name, value: w.article.name },
+                is_validated: w.is_validated,
+                month: w.month,
+                shoe_weight1: w.shoe_weight1,
+                shoe_photo1: w.shoe_photo1?.public_url || "",
+                weighttime1: moment(new Date(w.weighttime1)).format('LT'),
+                weighttime2: moment(new Date(w.weighttime2)).format('LT'),
+                weighttime3: moment(new Date(w.weighttime3)).format('LT'),
+                upper_weight1: w.upper_weight1,
+                upper_weight2: w.upper_weight2,
+                upper_weight3: w.upper_weight3,
+                shoe_weight2: w.shoe_weight2,
+                shoe_photo2: w.shoe_photo2?.public_url || "",
+                shoe_weight3: w.shoe_weight3,
+                shoe_photo3: w.shoe_photo3?.public_url || "",
+                created_at: moment(w.created_at).format("DD/MM/YYYY"),
+                updated_at: moment(w.updated_at).format("DD/MM/YYYY"),
+                created_by: { id: w.created_by._id, value: w.created_by.username, label: w.created_by.username },
+                updated_by: { id: w.updated_by._id, value: w.updated_by.username, label: w.updated_by.username },
+            }
+        })
         return res.status(200).json({
-            weights,
+            result,
             total: Math.ceil(count / limit),
             page: page,
             limit: limit
@@ -673,14 +763,7 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
 }
 
 export const CreateShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
-    let body = JSON.parse(req.body.body) as {
-        machine: string,
-        dye: string,
-        article: string,
-        weight: number,
-        upper_weight: number,
-        month: number,
-    }
+    let body = JSON.parse(req.body.body) as CreateOrEditShoeWeightDto
 
     let dt1 = new Date()
     let dt2 = new Date()
@@ -732,14 +815,7 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     return res.status(201).json(shoe_weight)
 }
 export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextFunction) => {
-    let body = JSON.parse(req.body.body) as {
-        machine: string,
-        dye: string,
-        article: string,
-        weight: number,
-        month: number,
-        upper_weight: number,
-    }
+    let body = JSON.parse(req.body.body) as CreateOrEditShoeWeightDto
     let { machine, dye, article, weight, month, upper_weight } = body
 
     if (!machine || !dye || !article || !weight || !upper_weight)
@@ -790,14 +866,7 @@ export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextF
     return res.status(200).json(shoe_weight)
 }
 export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextFunction) => {
-    let body = JSON.parse(req.body.body) as {
-        machine: string,
-        dye: string,
-        article: string,
-        weight: number,
-        month: number,
-        upper_weight: number,
-    }
+    let body = JSON.parse(req.body.body) as CreateOrEditShoeWeightDto
     console.log(body)
     let { machine, dye, article, weight, month, upper_weight } = body
 
@@ -848,14 +917,7 @@ export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextF
     return res.status(200).json(shoe_weight)
 }
 export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextFunction) => {
-    let body = JSON.parse(req.body.body) as {
-        machine: string,
-        dye: string,
-        article: string,
-        weight: number,
-        month: number,
-        upper_weight: number,
-    }
+    let body = JSON.parse(req.body.body) as CreateOrEditShoeWeightDto
     let { machine, dye, article, weight, month, upper_weight } = body
 
     if (!machine || !dye || !article || !weight || !upper_weight)
@@ -944,10 +1006,7 @@ export const GetAllDyeLocations = async (req: Request, res: Response, next: Next
 
 
 export const CreateDyeLocation = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, display_name } = req.body as {
-        name: string,
-        display_name: string
-    }
+    const { name, display_name } = req.body as CreateOrEditDyeLocationDto
     if (!name) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
@@ -965,10 +1024,7 @@ export const CreateDyeLocation = async (req: Request, res: Response, next: NextF
 }
 
 export const UpdateDyeLocation = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, display_name } = req.body as {
-        name: string,
-        display_name: string
-    }
+    const { name, display_name } = req.body as CreateOrEditDyeLocationDto
     if (!name) {
         return res.status(400).json({ message: "please fill all reqired fields" })
     }
@@ -998,136 +1054,12 @@ export const DeleteDyeLocation = async (req: Request, res: Response, next: NextF
     await location.remove();
     return res.status(200).json({ message: "lead location deleted successfully" })
 }
-export const GetMyTodayDyeStatus = async (req: Request, res: Response, next: NextFunction) => {
-    let dt1 = new Date()
-    dt1.setDate(new Date().getDate() - 1)
-    dt1.setHours(0)
-    dt1.setMinutes(0)
-    let statusall: IDyeStatus[] = []
-    if (req.user?.is_admin) {
-        statusall = await DyeStatus.find({ created_at: { $gte: dt1 } }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
-    }
-    else {
-        statusall = await DyeStatus.find({ created_at: { $gte: dt1 }, created_by: req.user?._id }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
-    }
-    return res.status(200).json(statusall)
-}
 
-export const GetDyeStatus = async (req: Request, res: Response, next: NextFunction) => {
-    let statusall = await DyeStatus.find().populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at')
-    return res.status(200).json(statusall)
-}
-
-export const CreateDyeStatus = async (req: Request, res: Response, next: NextFunction) => {
-    let body = JSON.parse(req.body.body) as {
-        machine: string,
-        dye: string,
-        article: string,
-        repair_required: boolean,
-        location: string
-    }
-    let { machine, dye, article, location, repair_required } = body
-
-    if (!location || !dye)
-        if (!machine || !article)
-            return res.status(400).json({ message: "please fill all reqired fields" })
-
-    let m1 = await Machine.findById(machine)
-    let l1 = await DyeLocation.findById(location)
-    let a1 = await Article.findById(article)
-    let d1 = await Dye.findById(dye)
-    if (!d1) {
-        return res.status(404).json({ message: "dye not found" })
-    }
-
-    let status = new DyeStatus({
-        machine: m1, dye: d1, article: a1, location: l1
-    })
-    if (req.file) {
-        console.log(req.file.mimetype)
-        const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
-        const storageLocation = `dyestatus/media`;
-        if (!allowedFiles.includes(req.file.mimetype))
-            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
-        if (req.file.size > 20 * 1024 * 1024)
-            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
-        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
-        if (doc)
-            status.dye_photo = doc
-        else {
-            return res.status(500).json({ message: "file uploading error" })
-        }
-    }
-    status.created_at = new Date()
-    status.updated_at = new Date()
-    if (req.user)
-        status.created_by = req.user
-    status.repair_required = repair_required;
-    if (req.user)
-        status.updated_by = req.user
-    status.photo_time = new Date()
-    await status.save()
-    return res.status(201).json(status)
-}
-
-export const DeleteDyeStatus = async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    let status = await DyeStatus.findById(id)
-    if (!status)
-        return res.status(404).json({ message: "dye status not found" })
-    status.updated_at = new Date()
-    if (req.user)
-        status.updated_by = req.user
-    if (status.dye_photo && status.dye_photo._id)
-        await destroyFile(status.dye_photo._id)
-    await status.remove()
-    return res.status(200).json(status)
-}
-
-export interface IColumn {
-    key: string;
-    header: string,
-    type: string
-}
-export interface IRowData {
-    [key: string]: any; // Type depends on your data
-}
-
-export interface IColumnRowData {
-    columns: IColumn[];
-    rows: IRowData[];
-}
-
-export interface ICategoryWiseProductionReport {
-    date: string,
-    total: number,
-    verticalpluslympha: number,
-    pu: number,
-    gumboot: number
-}
-export interface IShoeWeightDiffReport {
-    date: string,
-    dye_no: number,
-    article: string,
-    size: string,
-    st_weight: number,
-    machine: string,
-    w1: number,
-    w2: number,
-    w3: number,
-    u1: number,
-    u2: number,
-    u3: number,
-    d1: number,
-    d2: number,
-    d3: number,
-    person: string
-}
 export const GetShoeWeightDifferenceReports = async (req: Request, res: Response, next: NextFunction) => {
     let start_date = req.query.start_date
     let end_date = req.query.end_date
     let weights: IShoeWeight[] = []
-    let reports: IShoeWeightDiffReport[] = []
+    let reports: GetShoeWeightDiffReportDto[] = []
     let dt1 = new Date(String(start_date))
     dt1.setHours(0)
     dt1.setMinutes(0)
@@ -1253,7 +1185,7 @@ export const GetMachineWiseProductionReports = async (req: Request, res: Respons
 export const GetCategoryWiseProductionReports = async (req: Request, res: Response, next: NextFunction) => {
     let start_date = req.query.start_date
     let end_date = req.query.end_date
-    let productions: ICategoryWiseProductionReport[] = [];
+    let productions: GetCategoryWiseProductionReportDto[] = [];
     let dt1 = new Date(String(start_date))
     dt1.setHours(0)
     dt1.setMinutes(0)
@@ -1439,4 +1371,201 @@ export const DeleteSoleThickness = async (req: Request, res: Response, next: Nex
         return res.status(404).json({ message: " not found" })
     await thickness.remove()
     return res.status(200).json(thickness)
+}
+export const GetMyTodaySpareDye = async (req: Request, res: Response, next: NextFunction) => {
+    let dt1 = new Date()
+    dt1.setDate(new Date().getDate() - 1)
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    let sparedyes: ISpareDye[] = []
+    let result: GetSpareDyeDto[] = []
+    if (req.user?.is_admin) {
+        sparedyes = await SpareDye.find({ created_at: { $gte: dt1 } }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
+    }
+    else {
+        sparedyes = await SpareDye.find({ created_at: { $gte: dt1 }, created_by: req.user?._id }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
+    }
+    result = sparedyes.map((dye) => {
+        return {
+            _id: dye._id,
+            dye: { id: dye._id, value: String(dye.dye.dye_number), label: String(dye.dye.dye_number) },
+            repair_required: dye.repair_required,
+            dye_photo: dye.dye_photo?.public_url || "",
+            photo_time: dye.created_at && moment(dye.photo_time).format("LT"),
+            location: { id: dye.location._id, value: dye.location.name, label: dye.location.name },
+            created_at: dye.created_at && moment(dye.created_at).format("DD/MM/YYYY"),
+            updated_at: dye.updated_at && moment(dye.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: dye.created_by._id, value: dye.created_by.username, label: dye.created_by.username },
+            updated_by: { id: dye.updated_by._id, value: dye.updated_by.username, label: dye.updated_by.username }
+        }
+    })
+    return res.status(200).json(result)
+}
+
+export const GetSpareDyes = async (req: Request, res: Response, next: NextFunction) => {
+    let limit = Number(req.query.limit)
+    let page = Number(req.query.page)
+    let id = req.query.id
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let dyes: ISpareDye[] = []
+    let result: GetSpareDyeDto[] = []
+    let count = 0
+    let dt1 = new Date(String(start_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    let dt2 = new Date(String(end_date))
+    dt2.setHours(0)
+    dt2.setMinutes(0)
+    let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
+
+    if (!Number.isNaN(limit) && !Number.isNaN(page)) {
+        if (!id) {
+            if (user_ids.length > 0) {
+                dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
+            }
+
+            else {
+                dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                count = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
+            }
+        }
+
+
+        if (id) {
+            dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            count = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
+        }
+        result = dyes.map((dye) => {
+            return {
+                _id: dye._id,
+                dye: { id: dye._id, value: String(dye.dye.dye_number), label: String(dye.dye.dye_number) },
+                repair_required: dye.repair_required,
+                dye_photo: dye.dye_photo?.public_url || "",
+                photo_time: dye.created_at && moment(dye.photo_time).format("LT"),
+                location: { id: dye.location._id, value: dye.location.name, label: dye.location.name },
+                created_at: dye.created_at && moment(dye.created_at).format("DD/MM/YYYY"),
+                updated_at: dye.updated_at && moment(dye.updated_at).format("DD/MM/YYYY"),
+                created_by: { id: dye.created_by._id, value: dye.created_by.username, label: dye.created_by.username },
+                updated_by: { id: dye.updated_by._id, value: dye.updated_by.username, label: dye.updated_by.username }
+            }
+        })
+        return res.status(200).json({
+            result,
+            total: Math.ceil(count / limit),
+            page: page,
+            limit: limit
+        })
+    }
+    else
+        return res.status(200).json({ message: "bad request" })
+}
+
+
+export const CreateSpareDye = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body) as CreateOrEditSpareDyeDto
+    let { dye, location, repair_required } = body
+
+    if (!location || !dye)
+        if (!dye || !location)
+            return res.status(400).json({ message: "please fill all reqired fields" })
+
+    let l1 = await DyeLocation.findById(location)
+    let d1 = await Dye.findById(dye)
+    if (!d1) {
+        return res.status(404).json({ message: "dye not found" })
+    }
+    if (!l1) {
+        return res.status(404).json({ message: "location not found" })
+    }
+    let dyeObj = new SpareDye({
+         dye: d1, location: l1
+    })
+    if (req.file) {
+        console.log(req.file.mimetype)
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
+        const storageLocation = `dyestatus/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 20 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            dyeObj.dye_photo = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    dyeObj.created_at = new Date()
+    dyeObj.updated_at = new Date()
+    if (req.user)
+        dyeObj.created_by = req.user
+    dyeObj.repair_required = repair_required;
+    if (req.user)
+        dyeObj.updated_by = req.user
+    dyeObj.photo_time = new Date()
+    await dyeObj.save()
+    return res.status(201).json(dyeObj)
+}
+
+export const UpdateSpareDye = async (req: Request, res: Response, next: NextFunction) => {
+    let body = JSON.parse(req.body.body) as CreateOrEditSpareDyeDto
+    let { dye, location, repair_required } = body
+    const id = req.params.id
+    let dyeObj = await SpareDye.findById(id)
+    if (!dyeObj)
+        return res.status(404).json({ message: "dye not found" })
+    if (!location || !dye)
+        if (!dye || !location)
+            return res.status(400).json({ message: "please fill all reqired fields" })
+
+    let l1 = await DyeLocation.findById(location)
+    let d1 = await Dye.findById(dye)
+    if (!d1) {
+        return res.status(404).json({ message: "dye not found" })
+    }
+    if (!l1) {
+        return res.status(404).json({ message: "location not found" })
+    }
+    dyeObj.dye = d1;
+    dyeObj.location = l1;
+    if (req.file) {
+        console.log(req.file.mimetype)
+        const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
+        const storageLocation = `dyestatus/media`;
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only ${allowedFiles} types are allowed to upload` })
+        if (req.file.size > 20 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :10mb` })
+        const doc = await uploadFileToCloud(req.file.buffer, storageLocation, req.file.originalname)
+        if (doc)
+            dyeObj.dye_photo = doc
+        else {
+            return res.status(500).json({ message: "file uploading error" })
+        }
+    }
+    dyeObj.created_at = new Date()
+    dyeObj.updated_at = new Date()
+    if (req.user)
+        dyeObj.created_by = req.user
+    dyeObj.repair_required = repair_required;
+    if (req.user)
+        dyeObj.updated_by = req.user
+    dyeObj.photo_time = new Date()
+    await dyeObj.save()
+    return res.status(201).json(dyeObj)
+}
+export const DeleteSpareDye = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let dye = await SpareDye.findById(id)
+    if (!dye)
+        return res.status(404).json({ message: "spare dye not found" })
+    dye.updated_at = new Date()
+    if (req.user)
+        dye.updated_by = req.user
+    if (dye.dye_photo && dye.dye_photo._id)
+        await destroyFile(dye.dye_photo._id)
+    await dye.remove()
+    return res.status(200).json(dye)
 }
