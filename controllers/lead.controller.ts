@@ -710,9 +710,9 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     let stages = await (await Stage.find()).map((i) => { return i.stage })
-    if (!req.user?.assigned_permissions.includes('show_leads_useless'))
+    if (req.user?.assigned_permissions.includes('show_leads_useless'))
         stages.push('useless')
-    if (!req.user?.assigned_permissions.includes('show_refer_leads'))
+    if (req.user?.assigned_permissions.includes('show_refer_leads'))
         stages.push('refer')
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         let leads: ILead[] = []
