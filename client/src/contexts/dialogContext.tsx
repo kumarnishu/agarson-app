@@ -18,7 +18,7 @@ type LeadChoices = "create_or_edit_refer" |"create_or_edit_leadtype"| "create_or
   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "find_unknown_states" | "merge_leads" | "view_refer_remarks" | "delete_bill" | "view_bills" | "merge_refers" |"view_bills_photo"
 
 
-type ProductionChoices = "create_or_edit_machine" | "close_production" | "create_or_edit_spareDye" | "create_or_edit_article" | "update_article" | "create_or_edit_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "view_shoe_photo2" | "view_shoe_photo3" | "create_or_edit_shoe_weight" | "validate_spareDye" | "update_shoe_weight1" | "create_or_edit_production" | "update_production" | "delete_production_item" | "create_or_edit_location" | "toogle_dye_location" | "update_shoe_weight2" | "update_shoe_weight3" |"create_or_edit_machine_category"
+type ProductionChoices = "create_or_edit_machine" | "close_production" | "create_or_edit_spareDye" | "create_or_edit_article" | "create_or_edit_thickness" | "create_or_edit_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "view_shoe_photo2" | "view_shoe_photo3" | "create_or_edit_shoe_weight" | "validate_spareDye" | "view_spare_dye_photo" | "create_or_edit_production" | "update_production" | "delete_production_item" | "create_or_edit_location" | "toogle_dye_location" | "update_shoe_weight2" | "update_shoe_weight3" |"create_or_edit_machine_category"
 
 
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
@@ -42,7 +42,7 @@ export enum ProductionChoiceActions {
   view_shoe_photo3 = "view_shoe_photo3",
   create_or_edit_spareDye = "create_or_edit_spareDye",
   create_or_edit_article = "create_or_edit_article",
-  update_article = "update_article",
+  create_or_edit_thickness = "create_or_edit_thickness",
   create_or_edit_dye = "create_or_edit_dye",
   update_dye = "update_dye",
   toogle_machine = "toogle_machine",
@@ -50,7 +50,7 @@ export enum ProductionChoiceActions {
   toogle_dye = "toogle_dye",
   close_production = "close_production",
   create_or_edit_shoe_weight = "create_or_edit_shoe_weight",
-  update_shoe_weight1 = "update_shoe_weight1",
+  view_spare_dye_photo = "view_spare_dye_photo",
   update_shoe_weight2 = "update_shoe_weight2",
   update_shoe_weight3 = "update_shoe_weight3",
   create_or_edit_production = "create_or_edit_production",
@@ -267,7 +267,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case ProductionChoiceActions.create_or_edit_machine: return type
     case ProductionChoiceActions.create_or_edit_spareDye: return type
     case ProductionChoiceActions.create_or_edit_article: return type
-    case ProductionChoiceActions.update_article: return type
+    case ProductionChoiceActions.create_or_edit_thickness: return type
     case ProductionChoiceActions.create_or_edit_dye: return type
     case ProductionChoiceActions.update_dye: return type
     case ProductionChoiceActions.toogle_article: return type
@@ -284,7 +284,7 @@ function reducer(state: ChoiceState | null, action: Action) {
     case ProductionChoiceActions.create_or_edit_production: return type
     case ProductionChoiceActions.update_production: return type
     case ProductionChoiceActions.create_or_edit_shoe_weight: return type
-    case ProductionChoiceActions.update_shoe_weight1: return type
+    case ProductionChoiceActions.view_spare_dye_photo: return type
     case ProductionChoiceActions.update_shoe_weight2: return type
     case ProductionChoiceActions.update_shoe_weight3: return type
     case ProductionChoiceActions.validate_spareDye: return type

@@ -125,7 +125,8 @@ function MainDashBoardPage() {
 
       
     user?.assigned_permissions.includes('production_view') && tmpfeatures.push({ feature: 'production ', is_visible: false, url: "/Production/ProductionAdminPage" })
-    user?.assigned_permissions.includes('dye_status_view') && tmpfeatures.push({ feature: 'Spare Dyes ', is_visible: false, url: "/Production/SpareDyesPage" })
+    user?.assigned_permissions.includes('spare_dye_view') && tmpfeatures.push({ feature: 'Spare Dyes ', is_visible: false, url: "/Production/SpareDyesPage" })
+    user?.assigned_permissions.includes('sole_thickness_view') && tmpfeatures.push({ feature: 'Sole Thickness ', is_visible: false, url: "/Production/SoleThicknessPage" })
     user?.assigned_permissions.includes('dye_location_view') && tmpfeatures.push({ feature: 'Dye Location ', is_visible: false, url: "/Production/DyeLocationsPage" })
     user?.assigned_permissions.includes('article_view') && tmpfeatures.push({ feature: 'articles', is_visible: false, url: "/Production/ArticlePage" })
     user?.assigned_permissions.includes('machine_view') && tmpfeatures.push({ feature: 'machines ', is_visible: false, url: "/Production/MachinePage" })

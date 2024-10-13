@@ -1,6 +1,7 @@
 import { DropDownDto } from "../common/dropdown.dto"
 
 export type GetSoleThicknessDto = {
+    _id:string,
     dye: DropDownDto,
     article: DropDownDto,
     size: string,
@@ -107,8 +108,10 @@ export type GetShoeWeightDto = {
     article: DropDownDto
     is_validated: boolean,
     month: number,
+    size:string,
     shoe_weight1: number,
     shoe_photo1: string,
+    std_weigtht: number,
     weighttime1: string,
     weighttime2: string,
     weighttime3: string,

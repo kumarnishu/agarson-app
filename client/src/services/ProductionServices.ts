@@ -1,5 +1,5 @@
 import { DropDownDto } from "../dtos/common/dropdown.dto";
-import { CreateOrEditArticleDto, CreateOrEditDyeDTo, CreateOrEditMachineDto, CreateOrEditProductionDto, CreateOrEditSoleThicknessDto, GetProductionDto, GetShoeWeightDto, GetSpareDyeDto } from "../dtos/production/production.dto";
+import { CreateOrEditArticleDto, CreateOrEditDyeDTo, CreateOrEditMachineDto, CreateOrEditProductionDto, CreateOrEditSoleThicknessDto, GetProductionDto, GetShoeWeightDto, GetSoleThicknessDto, GetSpareDyeDto } from "../dtos/production/production.dto";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
@@ -233,15 +233,13 @@ export const GetDyeStatusReport = async ({ start_date, end_date }: { start_date?
 
 
 
-export const CreateSoleThickness = async (body: CreateOrEditSoleThicknessDto) => {
-    return await apiClient.post(`solethickness`, body);
-}
-
-export const UpdateSoleThickness = async ({ id, body }: {
-    body: CreateOrEditSoleThicknessDto, id: string
+export const CreateOrEditSoleThickness = async ({ id, body }: {
+    body: CreateOrEditSoleThicknessDto, id?: string
 
 }) => {
-    return await apiClient.put(`solethickness/${id}`, body);
+    if (id)
+        return await apiClient.put(`solethickness/${id}`, body);
+    return await apiClient.post(`solethickness`, body);
 }
 
 export const DeleteSoleThickness = async (id: string) => {
@@ -263,13 +261,13 @@ export const GetSoleThickness = async ({ limit, page, start_date, end_date, id }
 
 
 
-export const DeleteProductionItem = async ({ category, spare_dye, weight, thickness, production }: { category?: DropDownDto, weight?: GetShoeWeightDto, thickness?: DropDownDto, spare_dye?: GetSpareDyeDto, production?: GetProductionDto }) => {
+export const DeleteProductionItem = async ({ category, spare_dye, weight, thickness, production }: { category?: DropDownDto, weight?: GetShoeWeightDto, thickness?: GetSoleThicknessDto, spare_dye?: GetSpareDyeDto, production?: GetProductionDto }) => {
     if (category)
         return await apiClient.delete(`machine/categories/${category.id}`)
     if (weight)
         return await apiClient.delete(`weights/${weight._id}`)
     if (thickness)
-        return await apiClient.delete(`thickness/${thickness.id}`)
+        return await apiClient.delete(`solethickness/${thickness._id}`)
     if (spare_dye)
         return await apiClient.delete(`sparedyes/${spare_dye._id}`)
     else

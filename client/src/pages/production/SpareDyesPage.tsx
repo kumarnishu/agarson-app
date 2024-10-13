@@ -8,7 +8,7 @@ import { BackendError } from '../..'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
-import { Check, Delete, Edit, FilterAlt, FilterAltOff, Fullscreen, FullscreenExit, Menu as MenuIcon } from '@mui/icons-material';
+import { Check, Delete, Edit, FilterAlt, FilterAltOff, Fullscreen, FullscreenExit, Menu as MenuIcon, Photo } from '@mui/icons-material';
 import DBPagination from '../../components/pagination/DBpagination'
 import ExportToExcel from '../../utils/ExportToExcel'
 import PopUp from '../../components/popup/PopUp'
@@ -20,6 +20,7 @@ import DeleteProductionItemDialog from '../../components/dialogs/production/Dele
 import { GetSpareDyes } from '../../services/ProductionServices'
 import ValidateSpareDyeDialog from '../../components/dialogs/production/ValidateSpareDyeDialog'
 import CreateOrEditSpareDyeDialog from '../../components/dialogs/production/CreateOrEditSpareDyeDialog'
+import ViewSpareDyePhotoDialog from '../../components/dialogs/production/ViewSpareDyePhotoDialog'
 
 
 export default function SpareDyesPage() {
@@ -114,17 +115,76 @@ export default function SpareDyesPage() {
                         </Stack>}
                 />
             },
-
             {
-                accessorKey: 'dye_number',
+                accessorKey: 'dye_photo',
+                header: 'Photo',
+                size: 160,
+                Cell: (cell) => <>
+                    {cell.row.original.dye_photo && <IconButton
+                        disabled={!LoggedInUser?.assigned_permissions.includes('spare_dye_view')}
+                        onClick={() => {
+                            setSpareDye(cell.row.original)
+                            setChoice({ type: ProductionChoiceActions.view_spare_dye_photo })
+                        }}
+
+                    ><Photo />
+                    </IconButton>}
+                </>
+            },
+            {
+                accessorKey: 'photo_time',
+                header: 'Photo Time',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.photo_time || ""}</>
+            },
+            {
+                accessorKey: 'dye',
                 header: 'Dye',
-                size: 350,
+                size: 150,
                 filterVariant: 'multi-select',
                 Cell: (cell) => <>{cell.row.original.dye.value.toString() || "" ? cell.row.original.dye.value.toString() || "" : ""}</>,
                 filterSelectOptions: spareDyes && spareDyes.map((i) => {
                     return i.dye.value.toString() || "";
                 }).filter(onlyUnique)
-            }
+            },
+            {
+                accessorKey: 'location',
+                header: 'Dye Location',
+                size: 150,
+                filterVariant: 'multi-select',
+                Cell: (cell) => <>{cell.row.original.location.value.toString() || "" ? cell.row.original.location.value.toString() || "" : ""}</>,
+                filterSelectOptions: spareDyes && spareDyes.map((i) => {
+                    return i.location.value.toString() || "";
+                }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'repair_required',
+                header: 'Repair Required',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.repair_required ? "Yes" : "No"}</>
+            },
+            {
+                accessorKey: 'remarks',
+                header: 'remarks',
+                size: 250,
+                Cell: (cell) => <>{cell.row.original.remarks || ""}</>
+            },
+            {
+                accessorKey: 'created_at',
+                header: 'Created At',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.created_at || ""}</>
+            },
+            {
+                accessorKey: 'created_by',
+                header: 'Creator',
+                size: 150,
+                filterVariant: 'multi-select',
+                Cell: (cell) => <>{cell.row.original.created_by.value.toString() || "" ? cell.row.original.created_by.value.toString() || "" : ""}</>,
+                filterSelectOptions: spareDyes && spareDyes.map((i) => {
+                    return i.created_by.value.toString() || "";
+                }).filter(onlyUnique)
+            },
         ],
         [spareDyes],
     );
@@ -349,6 +409,7 @@ export default function SpareDyesPage() {
 
                         <DeleteProductionItemDialog spare_dye={spareDye} />
                         <ValidateSpareDyeDialog sparedye={spareDye} />
+                        <ViewSpareDyePhotoDialog spare_dye={spareDye} />
                     </>
                     : null
             }

@@ -9,19 +9,19 @@ import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
 import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 import { DeleteProductionItem } from '../../../services/ProductionServices';
-import { GetProductionDto, GetShoeWeightDto, GetSpareDyeDto } from '../../../dtos/production/production.dto';
+import { GetProductionDto, GetShoeWeightDto, GetSoleThicknessDto, GetSpareDyeDto } from '../../../dtos/production/production.dto';
 
 
-function DeleteProductionItemDialog({ category, weight, thickness, spare_dye, production }: { category?: DropDownDto, weight?: GetShoeWeightDto, thickness?: DropDownDto, spare_dye?: GetSpareDyeDto, production?: GetProductionDto }) {
+function DeleteProductionItemDialog({ category, weight, thickness, spare_dye, production }: { category?: DropDownDto, weight?: GetShoeWeightDto, thickness?: GetSoleThicknessDto, spare_dye?: GetSpareDyeDto, production?: GetProductionDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
-        <AxiosResponse<any>, BackendError, { category?: DropDownDto, weight?: GetShoeWeightDto, thickness?: DropDownDto, spare_dye?: GetSpareDyeDto, production?: GetProductionDto }>
+        <AxiosResponse<any>, BackendError, { category?: DropDownDto, weight?: GetShoeWeightDto, thickness?: GetSoleThicknessDto, spare_dye?: GetSpareDyeDto, production?: GetProductionDto }>
         (DeleteProductionItem, {
             onSuccess: () => {
                 if (category)
                     queryClient.invalidateQueries('machine_categories')
                 if (thickness)
-                    queryClient.invalidateQueries('crm_thicknesss')
+                    queryClient.invalidateQueries('thickness')
                 if (weight)
                     queryClient.invalidateQueries('shoe_weights')
                 if (spare_dye)

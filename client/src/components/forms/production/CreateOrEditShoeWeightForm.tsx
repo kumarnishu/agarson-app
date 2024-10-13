@@ -19,7 +19,6 @@ import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 function CreateOrEditShoeWeightForm({ shoe_weight }: { shoe_weight?: GetShoeWeightDto }) {
     const { data: dyes } = useQuery<AxiosResponse<GetDyeDto[]>, BackendError>("dyes", async () => GetDyes('false'))
     const [dyeid, setDyeid] = useState<string>('');
-    const [stWeight, setStWeight] = useState(0)
     const [articles, setArticles] = useState<DropDownDto[]>([])
     const { data: dyedata, isSuccess: isDyeSuccess, refetch: refetchDye } = useQuery<AxiosResponse<GetDyeDto>, BackendError>(["dye", dyeid], async () => GetDyeById(dyeid), { enabled: false })
     const { data: machines } = useQuery<AxiosResponse<GetMachineDto[]>, BackendError>("machines", async () => GetMachines())
@@ -45,12 +44,14 @@ function CreateOrEditShoeWeightForm({ shoe_weight }: { shoe_weight?: GetShoeWeig
             month: shoe_weight ? shoe_weight.month : "",
             article: shoe_weight ? shoe_weight.article.id : "",
             weight: shoe_weight ? shoe_weight.shoe_weight1 : 0,
-            upper_weight: shoe_weight ? shoe_weight.upper_weight1 : 0
+            upper_weight: shoe_weight ? shoe_weight.upper_weight1 : 0,
+            std_weigtht: shoe_weight ? shoe_weight.std_weigtht : 0
         },
         validationSchema: Yup.object({
             weight: Yup.number().required("required weight"),
             machine: Yup.string().required("required machine"),
             upper_weight: Yup.number().required("required Upper Weight"),
+            std_weigtht: Yup.number().required("required std Weight"),
             article: Yup.string().required("required article"),
             dye: Yup.string().required("required dye"),
             month: Yup.number().required("required clock in")
@@ -101,11 +102,13 @@ function CreateOrEditShoeWeightForm({ shoe_weight }: { shoe_weight?: GetShoeWeig
         if (isDyeSuccess && dyedata && dyedata.data) {
             let tmp = dyedata.data.articles && dyedata.data.articles.map((a) => { return { id: a.id, label: a.label, value: a.value } })
             setArticles(tmp)
-            dyedata.data.stdshoe_weight && setStWeight(dyedata.data.stdshoe_weight)
+            dyedata.data.stdshoe_weight && formik.setValues({ ...formik.values, std_weigtht: dyedata.data.stdshoe_weight })
+
+
         }
         else {
             setArticles([])
-            setStWeight(0)
+            formik.setValues({ ...formik.values, std_weigtht: 0 })
         }
     }, [dyedata, isDyeSuccess])
 
@@ -224,17 +227,17 @@ function CreateOrEditShoeWeightForm({ shoe_weight }: { shoe_weight?: GetShoeWeig
                         variant="outlined"
                         fullWidth
                         required
-                        type='number'
                         disabled
                         focused
-                        label="St Weight"
-                        id="St Weight"
-                        value={stWeight}
-                        onChange={(e) => {
-                            if (e.target.value) {
-                                setStWeight(Number(e.target.value))
-                            }
-                        }}
+                        label="Std Weight"
+                        error={
+                            formik.touched.std_weigtht && formik.errors.std_weigtht ? true : false
+                        }
+                        id="Std Weight"
+                        helperText={
+                            formik.touched.std_weigtht && formik.errors.std_weigtht ? formik.errors.std_weigtht : ""
+                        }
+                        {...formik.getFieldProps('std_weigtht')}
                     />
                     <TextField
                         variant="outlined"

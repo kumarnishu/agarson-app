@@ -12,11 +12,11 @@ function ProductionDashboard() {
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     user?.assigned_permissions.includes('production_view') && tmpfeatures.push({ feature: 'production ', is_visible: true, url: "/Production/ProductionAdminPage" })
-    user?.assigned_permissions.includes('dye_status_view') && tmpfeatures.push({ feature: 'Spare Dyes ', is_visible: true, url: "/Production/SpareDyesPage" })
+    user?.assigned_permissions.includes('spare_dye_view') && tmpfeatures.push({ feature: 'Spare Dyes ', is_visible: true, url: "/Production/SpareDyesPage" })
+    user?.assigned_permissions.includes('sole_thickness_view') && tmpfeatures.push({ feature: 'Sole Thickness ', is_visible: true, url: "/Production/SoleThicknessPage" })
     user?.assigned_permissions.includes('dye_location_view') && tmpfeatures.push({ feature: 'Dye-Location  ', is_visible: true, url: "/Production/DyeLocationsPage" })
     user?.assigned_permissions.includes('article_view') && tmpfeatures.push({ feature: 'articles', is_visible: true, url: "/Production/ArticlePage" })
     user?.assigned_permissions.includes('machine_view') && tmpfeatures.push({ feature: 'machines ', is_visible: true, url: "/Production/MachinePage" })
-    user?.assigned_permissions.includes('sole_thickness_view') && tmpfeatures.push({ feature: 'Sole Thickness ', is_visible: true, url: "/Production/SoleThickness" })
     user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: "/Production/UpdateMachineCategoriesPage" })
     user?.assigned_permissions.includes('dye_view') && tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: "/Production/DyePage" })
     user?.assigned_permissions.includes('shoe_weight_view') && tmpfeatures.push({ feature: 'shoe weight ', is_visible: true, url: "/Production/ShoeWeightPage" })

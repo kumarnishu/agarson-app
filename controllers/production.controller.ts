@@ -717,6 +717,8 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
             article: { id: w.article._id, label: w.article.name, value: w.article.name },
             is_validated: w.is_validated,
             month: w.month,
+            std_weigtht: w.dye.stdshoe_weight || 0,
+            size:w.dye.size||"",
             shoe_weight1: w.shoe_weight1,
             shoe_photo1: w.shoe_photo1?.public_url || "",
             weighttime1: moment(new Date(w.weighttime1)).format('LT'),
@@ -780,8 +782,10 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
                 machine: { id: w.machine._id, label: w.machine.name, value: w.machine.name },
                 dye: { id: w.dye._id, label: String(w.dye.dye_number), value: String(w.dye.dye_number) },
                 article: { id: w.article._id, label: w.article.name, value: w.article.name },
+                size: w.dye.size || "",
                 is_validated: w.is_validated,
                 month: w.month,
+                std_weigtht:w.dye.stdshoe_weight||0,
                 shoe_weight1: w.shoe_weight1,
                 shoe_photo1: w.shoe_photo1?.public_url || "",
                 weighttime1: moment(new Date(w.weighttime1)).format('LT'),
@@ -893,7 +897,7 @@ export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextF
     }
 
     //@ts-ignore
-    
+
     if (shoe_weight.dye !== dye)
         if (await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
             return res.status(400).json({ message: "sorry ! dye is not available" })
@@ -1370,6 +1374,7 @@ export const GetMyTodaySoleThickness = async (req: Request, res: Response, next:
     }
     result = items.map((item) => {
         return {
+            _id: item._id,
             dye: { id: item.dye._id, value: item.dye.dye_number.toString(), label: item.dye.dye_number.toString() },
             article: { id: item.article._id, value: item.article.name, label: item.article.name },
             size: item.size,
@@ -1422,6 +1427,7 @@ export const GetSoleThickness = async (req: Request, res: Response, next: NextFu
 
         result = items.map((item) => {
             return {
+                _id: item._id,
                 dye: { id: item.dye._id, value: item.dye.dye_number.toString(), label: item.dye.dye_number.toString() },
                 article: { id: item.article._id, value: item.article.name, label: item.article.name },
                 size: item.size,
@@ -1461,10 +1467,9 @@ export const CreateSoleThickness = async (req: Request, res: Response, next: Nex
     if (!d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
 
-    let soleThickness = await SoleThickness.findOne({ dye: dye, article: article, size: size, created_at: { $gte: dt1, $lt: dt2 } });
 
-    if (soleThickness) {
-        return res.status(400).json({ message: "sorry !selected dye,article and size not available" })
+    if (await SoleThickness.findOne({ dye: dye, article: article, size: size, created_at: { $gte: dt1, $lt: dt2 } })) {
+        return res.status(400).json({ message: "sorry !selected dye,article or size not available" })
     }
     let thickness = new SoleThickness({
         dye: d1, article: art1, size: size, left_thickness: left_thickness, right_thickness: right_thickness,
@@ -1482,25 +1487,31 @@ export const UpdateSoleThickness = async (req: Request, res: Response, next: Nex
     dt2.setDate(new Date(dt2).getDate() + 1)
     dt1.setHours(0)
     dt1.setMinutes(0)
-    let { left_thickness, right_thickness } = req.body as CreateOrEditSoleThicknessDto
+    let { dye, article, size, left_thickness, right_thickness } = req.body as CreateOrEditSoleThicknessDto
 
-    if (!left_thickness || !right_thickness)
+    if (!size || !dye || !article || !left_thickness || !right_thickness)
         return res.status(400).json({ message: "please fill all reqired fields" })
     const id = req.params.id
     let thickness = await SoleThickness.findById(id)
     if (!thickness)
         return res.status(404).json({ message: "not found" })
 
+    let d1 = await Dye.findById(dye)
+    let art1 = await Article.findById(article)
+    if (!d1 || !art1)
+        return res.status(400).json({ message: "please fill all reqired fields" })
 
-    thickness.left_thickness = left_thickness
-    thickness.right_thickness = right_thickness
-    thickness.created_at = new Date()
-    thickness.updated_at = new Date()
-    if (req.user) {
-        thickness.created_by = req.user
-        thickness.updated_by = req.user
-    }
-    await thickness.save()
+    //@ts-ignore
+    if (thickness.size !== size || thickness.article !== article || thickness.dye !== dye)
+        if (await SoleThickness.findOne({ dye: dye, article: article, size: size, created_at: { $gte: dt1, $lt: dt2 } })) {
+            return res.status(400).json({ message: "sorry !selected dye,article or size not available" })
+        }
+
+    await SoleThickness.findByIdAndUpdate(id, {
+        dye: d1, article: art1, size: size, left_thickness: left_thickness, right_thickness: right_thickness,
+        updated_at: new Date(),
+        updated_by: req.user
+    })
     return res.status(200).json(thickness)
 }
 export const DeleteSoleThickness = async (req: Request, res: Response, next: NextFunction) => {

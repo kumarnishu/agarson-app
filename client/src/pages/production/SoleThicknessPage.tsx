@@ -1,272 +1,173 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { Button, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
+import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
-import { GetActivitiesTopBarDeatils, GetAllStages, GetRemarks } from '../../services/LeadsServices'
-import { BackendError } from '../..'
-import { Button, Fade, IconButton, LinearProgress, Menu, MenuItem, Select, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import { UserContext } from '../../contexts/userContext'
+import { BackendError } from '../..'
+import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { onlyUnique } from '../../utils/UniqueArray'
+import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
+import { Delete, Edit, FilterAlt, FilterAltOff, Fullscreen, FullscreenExit, Menu as MenuIcon } from '@mui/icons-material';
+import DBPagination from '../../components/pagination/DBpagination'
+import ExportToExcel from '../../utils/ExportToExcel'
+import PopUp from '../../components/popup/PopUp'
+import { GetSoleThickness } from '../../services/ProductionServices'
+import { GetUserDto } from '../../dtos/users/user.dto'
 import { GetUsers } from '../../services/UserServices'
 import moment from 'moment'
-import { toTitleCase } from '../../utils/TitleCase'
-import { GetUserDto } from '../../dtos/users/user.dto'
-import { DropDownDto } from '../../dtos/common/dropdown.dto'
-import { GetActivitiesOrRemindersDto, GetActivitiesTopBarDetailsDto } from '../../dtos/crm/crm.dto'
-import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
-import ViewRemarksDialog from '../../components/dialogs/crm/ViewRemarksDialog'
-import CreateOrEditRemarkDialog from '../../components/dialogs/crm/CreateOrEditRemarkDialog'
-import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import PopUp from '../../components/popup/PopUp'
-import { Comment, FilterAlt, FilterAltOff, Fullscreen, FullscreenExit, Visibility } from '@mui/icons-material'
-import { onlyUnique } from '../../utils/UniqueArray'
-import { DownloadFile } from '../../utils/DownloadFile'
-import DBPagination from '../../components/pagination/DBpagination'
-import { Menu as MenuIcon } from '@mui/icons-material';
-import ExportToExcel from '../../utils/ExportToExcel'
+import { GetSoleThicknessDto } from '../../dtos/production/production.dto'
+import CreateOrEditSoleThicknessDialog from '../../components/dialogs/production/CreateOrEditSoleThicknessDialog'
+import DeleteProductionItemDialog from '../../components/dialogs/production/DeleteProductionItemDialog'
 
-function SoleThicknessPage() {
-    const { user } = useContext(UserContext)
-    const [users, setUsers] = useState<GetUserDto[]>([])
-    const [paginationData, setPaginationData] = useState({ limit: 500, page: 1, total: 1 });
-    const [stage, setStage] = useState<string>('undefined');
-    const [stages, setStages] = useState<DropDownDto[]>([])
-    const [remark, setRemark] = useState<GetActivitiesOrRemindersDto>()
-    const [remarks, setRemarks] = useState<GetActivitiesOrRemindersDto[]>([])
-    const [userId, setUserId] = useState<string>()
-    const [dates, setDates] = useState<{ start_date: string, end_date: string }>({
-        start_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
-        , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
-    })
+
+export default function SoleThicknessPage() {
+    const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
     const { user: LoggedInUser } = useContext(UserContext)
-    const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
-
-    const { data: activitiesTopBarData } = useQuery<AxiosResponse<GetActivitiesTopBarDetailsDto[]>, BackendError>(["activities_topbar", dates, userId], async () => GetActivitiesTopBarDeatils({ start_date: dates?.start_date, end_date: dates?.end_date, id: userId }))
-
-    let previous_date = new Date()
-    let day = previous_date.getDate() - 1
-    previous_date.setDate(day)
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'crm_menu', show_assigned_only: true }))
-    const { data, isLoading, refetch: ReftechRemarks, isRefetching } = useQuery<AxiosResponse<{ result: GetActivitiesOrRemindersDto[], page: number, total: number, limit: number }>, BackendError>(["activities", stage, userId, dates?.start_date, dates?.end_date], async () => GetRemarks({ stage: stage, limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
-    const [sorting, setSorting] = useState<MRT_SortingState>([]);
+    const [thickness, setThickness] = useState<GetSoleThicknessDto>()
+    const [thicknesses, setProductions] = useState<GetSoleThicknessDto[]>([])
+    const [users, setUsers] = useState<GetUserDto[]>([])
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const columns = useMemo<MRT_ColumnDef<GetActivitiesOrRemindersDto>[]>(
-        //column definitions...
-        () => remarks && [
+
+    const [userId, setUserId] = useState<string>()
+    const [sorting, setSorting] = useState<MRT_SortingState>([]);
+    const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+    const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
+        start_date: moment(new Date()).format("YYYY-MM-DD")
+        , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
+    })
+    const { data, isLoading, isSuccess, isRefetching, refetch } = useQuery<AxiosResponse<{ result: GetSoleThicknessDto[], page: number, total: number, limit: number }>, BackendError>(["thickness", userId, dates?.start_date, dates?.end_date], async () => GetSoleThickness({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
+
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'production_view', show_assigned_only: true }))
+
+    useEffect(() => {
+        if (isUsersSuccess)
+            setUsers(usersData?.data)
+    }, [users, isUsersSuccess, usersData])
+
+
+
+    useEffect(() => {
+        if (data && isSuccess) {
+            setProductions(data.data.result)
+            setPaginationData({
+                ...paginationData,
+                page: data.data.page,
+                limit: data.data.limit,
+                total: data.data.total
+            })
+        }
+    }, [data, isSuccess])
+
+
+    const columns = useMemo<MRT_ColumnDef<GetSoleThicknessDto>[]>(
+        () => thicknesses && [
             {
                 accessorKey: 'actions',
                 header: '',
                 maxSize: 50,
                 enableColumnFilter: false,
-                Footer: <b></b>,
                 size: 120,
                 Cell: ({ cell }) => <PopUp
                     element={
                         <Stack direction="row" spacing={1}>
-                            {LoggedInUser?.assigned_permissions.includes('activities_view') && <Tooltip title="view remarks">
-                                <IconButton color="primary"
 
-                                    onClick={() => {
+                            <>
+                                {LoggedInUser?.assigned_permissions.includes('production_edit') && <Tooltip title="edit">
+                                    <IconButton color="info"
 
-                                        setChoice({ type: LeadChoiceActions.view_remarks })
-                                        setRemark(cell.row.original)
-
-
-                                    }}
-                                >
-                                    <Visibility />
-                                </IconButton>
-                            </Tooltip>}
-                            {LoggedInUser?.assigned_permissions.includes('activities_create') &&
-                                <Tooltip title="Add Remark">
-                                    <IconButton
-
-                                        color="success"
                                         onClick={() => {
-
-                                            setChoice({ type: LeadChoiceActions.create_or_edt_remark })
-                                            setRemark(cell.row.original)
-
+                                            setChoice({ type: ProductionChoiceActions.create_or_edit_thickness })
+                                            setThickness(cell.row.original)
                                         }}
                                     >
-                                        <Comment />
+                                        <Edit />
                                     </IconButton>
                                 </Tooltip>}
+                                {LoggedInUser?.is_admin && LoggedInUser?.assigned_permissions.includes('production_delete') && <Tooltip title="delete">
+                                    <IconButton color="error"
+
+                                        onClick={() => {
+                                            setChoice({ type: ProductionChoiceActions.delete_production_item })
+                                            setThickness(cell.row.original)
+                                        }}
+                                    >
+                                        <Delete />
+                                    </IconButton>
+                                </Tooltip>}
+                            </>
+
 
                         </Stack>}
                 />
             },
+
             {
-                accessorKey: 'remark',
-                header: ' Last Remark',
-                size: 320,
-                Cell: (cell) => <>{cell.row.original.remark ? cell.row.original.remark : ""}</>
+                accessorKey: 'dye',
+                header: 'Dye',
+                size: 120,
+                filterVariant: 'multi-select',
+                Cell: (cell) => <>{cell.row.original.dye && cell.row.original.dye.value.toString() || "" ? cell.row.original.dye.value.toString() || "" : ""}</>,
+                filterSelectOptions: thicknesses && thicknesses.map((i) => {
+                    return i.dye && i.dye.value.toString() || "";
+                }).filter(onlyUnique)
             },
             {
-                accessorKey: 'created_by.label',
-                header: 'Creator',
-                size: 100,
-                Cell: (cell) => <>{cell.row.original.created_by.label ? cell.row.original.created_by.label : ""}</>
+                accessorKey: 'article',
+                header: 'Article',
+                size: 220,
+                filterVariant: 'multi-select',
+                Cell: (cell) => <>{cell.row.original.article && cell.row.original.article.value || "" ? cell.row.original.article.value || "" : ""}</>,
+                filterSelectOptions: thicknesses && thicknesses.map((i) => {
+                    return i.article && i.article.value || "";
+                }).filter(onlyUnique)
+            },
+            {
+                accessorKey: 'size',
+                header: 'Size',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.size && cell.row.original.size.toString() || "" ? cell.row.original.size.toString() || "" : ""}</>,
+
+            },
+
+            {
+                accessorKey: 'left_thickness',
+                header: 'Left Thickness',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.right_thickness && cell.row.original.right_thickness.toString() || "" ? cell.row.original.right_thickness.toString() || "" : ""}</>,
+
+            },
+            {
+                accessorKey: 'right_thickness',
+                header: 'Right Thickness',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.right_thickness && cell.row.original.right_thickness.toString() || "" ? cell.row.original.right_thickness.toString() || "" : ""}</>
             },
             {
                 accessorKey: 'created_at',
-                header: 'TimeStamp',
-                size: 200,
-                Cell: (cell) => <>{cell.row.original.created_at ? cell.row.original.created_at : ""}</>
+                header: 'Created At',
+                size: 150,
+                Cell: (cell) => <>{cell.row.original.created_at || ""}</>
             },
             {
-                accessorKey: 'stage',
-                header: 'Stage',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.stage ? cell.row.original.stage : ""}</>
-            },
-
-            {
-                accessorKey: 'remind_date',
-                header: 'Next Call',
-                size: 140,
-                Cell: (cell) => <>{cell.row.original.remind_date ? cell.row.original.remind_date : ""}</>
-            },
-
-            {
-                accessorKey: 'name',
-                header: 'Name',
-                size: 250,
+                accessorKey: 'created_by',
+                header: 'Creator',
+                size: 150,
                 filterVariant: 'multi-select',
-                Cell: (cell) => <>{cell.row.original.name ? cell.row.original.name : ""}</>,
-                filterSelectOptions: remarks && remarks.map((i) => {
-                    return i.name;
+                Cell: (cell) => <>{cell.row.original.created_by.value.toString() || "" ? cell.row.original.created_by.value.toString() || "" : ""}</>,
+                filterSelectOptions: thicknesses && thicknesses.map((i) => {
+                    return i.created_by.value.toString() || "";
                 }).filter(onlyUnique)
-            },
-
-
-            {
-                accessorKey: 'mobile',
-                header: 'Mobile1',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.mobile ? cell.row.original.mobile : ""}</>
-            }, {
-                accessorKey: 'alternate_mobile1',
-                header: 'Mobile2',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.alternate_mobile1 ? cell.row.original.alternate_mobile1 : ""}</>
-            }, {
-                accessorKey: 'alternate_mobile2',
-                header: 'Mobile3',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.alternate_mobile2 ? cell.row.original.alternate_mobile2 : ""}</>
-            },
-
-            {
-                accessorKey: 'referred_party_name',
-                header: 'Refer Party',
-                size: 320,
-                Cell: (cell) => <>{cell.row.original.referred_party_name ? cell.row.original.referred_party_name : ""}</>
-            },
-            {
-                accessorKey: 'referred_party_mobile',
-                header: 'Refer Mobile',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.referred_party_mobile ? cell.row.original.referred_party_mobile : ""}</>
-            },
-            {
-                accessorKey: 'referred_date',
-                header: 'Refer Date',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.referred_date ? cell.row.original.referred_date : ""}</>
-            },
-            {
-                accessorKey: 'city',
-                header: 'City',
-                filterVariant: 'multi-select',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.city ? cell.row.original.city : ""}</>,
-                filterSelectOptions: remarks && remarks.map((i) => {
-                    return i.city;
-                }).filter(onlyUnique)
-            },
-            {
-                accessorKey: 'state',
-                header: 'State',
-                filterVariant: 'multi-select',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state : ""}</>,
-                filterSelectOptions: remarks && remarks.map((i) => {
-                    return i.state;
-                }).filter(onlyUnique)
-            },
-
-
-            {
-                accessorKey: 'customer_name',
-                header: 'Customer',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.customer_name ? cell.row.original.customer_name : ""}</>
-            }
-            , {
-                accessorKey: 'customer_designation',
-                header: 'Designitaion',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.customer_designation ? cell.row.original.customer_designation : ""}</>
-            }
-
-            ,
-            {
-                accessorKey: 'email',
-                header: 'Email',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.email ? cell.row.original.email : ""}</>
-            }
-            ,
-            {
-                accessorKey: 'alternate_email',
-                header: 'Email2',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.alternate_email ? cell.row.original.alternate_email : ""}</>
-            }
-            ,
-
-            {
-                accessorKey: 'address',
-                header: 'Address',
-                size: 320,
-                Cell: (cell) => <>{cell.row.original.address ? cell.row.original.address : ""}</>
-            },
-            {
-                accessorKey: 'source',
-                header: 'Lead Source',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.lead_source ? cell.row.original.lead_source : ""}</>
-            },
-            {
-                accessorKey: 'type',
-                header: 'Lead Type',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.lead_type ? cell.row.original.lead_type : ""}</>
-            },
-            {
-                accessorKey: 'country',
-                header: 'Country',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.country ? cell.row.original.country : ""}</>
-            },
-            {
-                accessorKey: 'visiting_card',
-                header: 'Visiting Card',
-                size: 120,
-                Cell: (cell) => <span onDoubleClick={() => {
-                    if (cell.row.original.visiting_card && cell.row.original.visiting_card) {
-                        DownloadFile(cell.row.original.visiting_card, 'visiting card')
-                    }
-                }}>
-                    {cell.row.original.visiting_card && cell.row.original.visiting_card ? < img height="20" width="55" src={cell.row.original.visiting_card && cell.row.original.visiting_card} alt="visiting card" /> : "na"}</span>
             },
         ],
-        [remarks],
-        //end
+        [thicknesses],
     );
+
+
     const table = useMaterialReactTable({
         columns,
-        data: remarks, //10,000 rows       
+        data: thicknesses,
         enableColumnResizing: true,
         enableColumnVirtualization: true, enableStickyFooter: true,
         muiTableFooterRowProps: () => ({
@@ -276,9 +177,6 @@ function SoleThicknessPage() {
                 fontSize: '14px'
             }
         }),
-        muiTableContainerProps: (table) => ({
-            sx: { height: table.table.getState().isFullScreen ? 'auto' : '65vh' }
-        }),
         muiTableHeadRowProps: () => ({
             sx: {
                 backgroundColor: 'whitesmoke',
@@ -286,20 +184,93 @@ function SoleThicknessPage() {
                 border: '1px solid lightgrey;',
             },
         }),
+        muiTableContainerProps: (table) => ({
+            sx: { height: table.table.getState().isFullScreen ? 'auto' : '72vh' }
+        }),
+        positionToolbarAlertBanner: 'none',
         renderTopToolbarCustomActions: ({ table }) => (
 
             <Stack
-                sx={{ width: '100%' }}
+                spacing={2}
                 direction="row"
-                alignItems={'center'}
-                justifyContent="space-between">
-                <Stack direction={'row'} gap={1}>
-                    {activitiesTopBarData && activitiesTopBarData.data && activitiesTopBarData.data.map((stage, index) => (
-                        <span key={index} style={{ paddingLeft: '25px', fontWeight: 'bold' }}>{toTitleCase(stage.stage)} - {stage.value}</span>
-                    ))}
-                </Stack>
+                sx={{ width: '100%' }}
+                justifyContent="space-between"
 
-                <Stack justifyContent={'right'} direction={'row'} gap={1}>
+            >
+                <Typography
+                    variant={'h6'}
+                    component={'h1'}
+                    sx={{ pl: 1 }}
+
+                >
+                    Sole Thickness
+                </Typography>
+                {/* filter dates and person */}
+                <Stack direction="row" gap={2} justifyContent={'end'}>
+                    < TextField
+
+                        size="small"
+                        type="date"
+                        id="start_date"
+                        label="Start Date"
+                        fullWidth
+                        value={dates.start_date}
+                        focused
+                        onChange={(e) => {
+                            if (e.currentTarget.value) {
+                                setDates({
+                                    ...dates,
+                                    start_date: moment(e.target.value).format("YYYY-MM-DD")
+                                })
+                            }
+                        }}
+                    />
+                    < TextField
+
+                        size="small"
+                        type="date"
+                        id="end_date"
+                        label="End Date"
+                        focused
+                        value={dates.end_date}
+                        fullWidth
+                        onChange={(e) => {
+                            if (e.currentTarget.value) {
+                                setDates({
+                                    ...dates,
+                                    end_date: moment(e.target.value).format("YYYY-MM-DD")
+                                })
+                            }
+                        }}
+                    />
+                    {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 && < TextField
+                        focused
+                        size="small"
+                        select
+                        SelectProps={{
+                            native: true,
+                        }}
+                        onChange={(e) => {
+                            setUserId(e.target.value)
+                        }}
+                        required
+                        id="production_owner"
+                        label="Person"
+                        fullWidth
+                    >
+                        <option key={'00'} value={undefined}>
+
+                        </option>
+                        {
+                            users.map((user, index) => {
+
+                                return (<option key={index} value={user._id}>
+                                    {user.username}
+                                </option>)
+
+                            })
+                        }
+                    </TextField>}
                     <Tooltip title="Toogle Filter">
                         <Button size="small" color="inherit" variant='contained'
                             onClick={() => {
@@ -330,10 +301,14 @@ function SoleThicknessPage() {
                         </Button>
                     </Tooltip>
                 </Stack>
-            </Stack>
+            </Stack >
         ),
+        rowVirtualizerInstanceRef,
+        mrtTheme: (theme) => ({
+            baseBackgroundColor: theme.palette.background.paper, //change default background color
+        }),
         renderBottomToolbarCustomActions: () => (
-            <DBPagination paginationData={paginationData} refetch={ReftechRemarks} setPaginationData={setPaginationData} />
+            <DBPagination paginationData={paginationData} refetch={() => { refetch() }} setPaginationData={setPaginationData} />
 
         ),
         muiTableBodyCellProps: () => ({
@@ -342,171 +317,79 @@ function SoleThicknessPage() {
                 fontSize: '13px'
             },
         }),
-        enableToolbarInternalActions: false,
         initialState: { density: 'compact' },
         enableRowSelection: true,
         enableRowNumbers: true,
         enableColumnPinning: true,
         onSortingChange: setSorting,
+        enableTopToolbar: true,
         enableTableFooter: true,
         enableRowVirtualization: true,
         state: { sorting, isLoading: isLoading },
         enableBottomToolbar: true,
         enableGlobalFilter: false,
+        manualPagination: true,
         enablePagination: false,
-        manualPagination: true
+        enableToolbarInternalActions: false
     });
-    useEffect(() => {
-        if (stageSuccess)
-            setStages(stagedata?.data)
-    }, [stageSuccess])
 
     useEffect(() => {
-        if (isUsersSuccess)
-            setUsers(usersData?.data)
-    }, [users, isUsersSuccess, usersData])
-
-    useEffect(() => {
-        if (data) {
-            setRemarks(data.data.result)
-            setPaginationData({
-                ...paginationData,
-                page: data.data.page,
-                limit: data.data.limit,
-                total: data.data.total
-            })
+        try {
+            rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
+        } catch (error) {
+            console.error(error);
         }
-    }, [data])
+    }, [sorting]);
 
     return (
         <>
-
             {
                 isLoading || isRefetching && <LinearProgress color='secondary' />
             }
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={() => setAnchorEl(null)
-                }
-                TransitionComponent={Fade}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                }}
-                sx={{ borderRadius: 2 }}
-            >
-
-                {LoggedInUser?.assigned_permissions.includes('activities_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
-
-                >Export All</MenuItem>}
-                {LoggedInUser?.assigned_permissions.includes('activities_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
-
-                >Export Selected</MenuItem>}
-            </Menu>
-            <Stack sx={{ px: 2 }} direction='row' gap={1} pb={1} alignItems={'center'} justifyContent={'center'}>
-                < TextField
-                    size="small"
-                    type="date"
-                    id="start_date"
-                    label="Start Date"
-                    fullWidth
-                    focused
-                    value={dates.start_date}
-                    onChange={(e) => {
-                        if (e.currentTarget.value) {
-                            setDates({
-                                ...dates,
-                                start_date: moment(e.target.value).format("YYYY-MM-DD")
-                            })
-                        }
+            <>
+                <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={() => setAnchorEl(null)
+                    }
+                    TransitionComponent={Fade}
+                    MenuListProps={{
+                        'aria-labelledby': 'basic-button',
                     }}
-                />
-                < TextField
-                    type="date"
-                    id="end_date"
-                    size="small"
-                    label="End Date"
-                    value={dates.end_date}
-                    focused
-                    fullWidth
-                    onChange={(e) => {
-                        if (e.currentTarget.value) {
-                            setDates({
-                                ...dates,
-                                end_date: moment(e.target.value).format("YYYY-MM-DD")
-                            })
-                        }
-                    }}
-                />
-                {user?.assigned_users && user?.assigned_users.length > 0 && <Select
-                    sx={{ m: 1, width: 300 }}
-                    labelId="demo-multiple-name-label"
-                    id="demo-multiple-name"
-                    value={stage}
-                    onChange={(e) => {
-                        setStage(e.target.value);
-                    }}
-                    size='small'
+                    sx={{ borderRadius: 2 }}
                 >
-                    <MenuItem
-                        key={'00'}
-                        value={'undefined'}
-                        onChange={() => setStage('undefined')}
-                    >
-                        All
-                    </MenuItem>
-                    {stages.map((stage, index) => (
-                        <MenuItem
-                            key={index}
-                            value={stage.value}
-                        >
-                            {toTitleCase(stage.label)}
-                        </MenuItem>
-                    ))}
-                </Select>}
-
-                {user?.assigned_users && user?.assigned_users.length > 0 &&
-                    < TextField
-                        select
-
-                        size="small"
-                        SelectProps={{
-                            native: true,
+                    {LoggedInUser?.assigned_permissions.includes('production_create') && <MenuItem
+                        onClick={() => {
+                            setChoice({ type: ProductionChoiceActions.create_or_edit_thickness })
+                            setThickness(undefined);
+                            setAnchorEl(null)
                         }}
-                        onChange={(e) => {
-                            setUserId(e.target.value)
-                            ReftechRemarks()
-                        }}
-                        required
-                        id="lead_owners"
-                        label="Filter Remarks Of Indivdual"
-                        fullWidth
-                    >
-                        <option key={'00'} value={undefined}>
 
-                        </option>
-                        {
-                            users.map((user, index) => {
 
-                                return (<option key={index} value={user._id}>
-                                    {user.username}
-                                </option>)
+                    > Add New</MenuItem>}
 
-                            })
-                        }
-                    </TextField>}
-            </Stack>
-            {remark && <ViewRemarksDialog id={remark.lead_id} />}
-            {remark && <CreateOrEditRemarkDialog lead={remark ? {
-                _id: remark.lead_id,
-                has_card: remark.has_card,
-                stage: remark.stage
-            } : undefined} />}
+                    {LoggedInUser?.assigned_permissions.includes('production_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+                    >Export All</MenuItem>}
+                    {LoggedInUser?.assigned_permissions.includes('production_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+                    >Export Selected</MenuItem>}
+
+                </Menu >
+                <CreateOrEditSoleThicknessDialog thickness={thickness} />
+            </>
+            {
+                thickness ?
+                    <>
+
+                        <DeleteProductionItemDialog thickness={thickness} />
+                    </>
+                    : null
+            }
             <MaterialReactTable table={table} />
 
-
         </>
-    )
-}
 
-export default SoleThicknessPage
+    )
+
+}

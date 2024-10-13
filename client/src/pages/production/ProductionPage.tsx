@@ -102,17 +102,98 @@ export default function ProductionPage() {
             </Stack>}
         />
       },
-
+      {
+        accessorKey: 'date',
+        header: 'Production Date',
+        size: 140,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.date.toString() || "" ? cell.row.original.date.toString() || "" : ""}</>,
+        filterSelectOptions: productions && productions.map((i) => {
+          return i.date.toString() || "";
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'articles',
+        header: 'Articles',
+        size: 250,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.articles.toString() ? cell.row.original.articles.map((a) => { return a.value }).toString() : ""}</>,
+        filterSelectOptions: production && production.articles.map((i) => {
+          return i.value.toString();
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'machine',
+        header: 'Machine',
+        size: 120,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.machine.value.toString() || "" ? cell.row.original.machine.value.toString() || "" : ""}</>,
+        filterSelectOptions: productions && productions.map((i) => {
+          return i.machine.value.toString() || "";
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'thekedar',
+        header: 'Thekedar',
+        size: 120,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.thekedar.value.toString() || "" ? cell.row.original.thekedar.value.toString() || "" : ""}</>,
+        filterSelectOptions: productions && productions.map((i) => {
+          return i.thekedar.value.toString() || "";
+        }).filter(onlyUnique)
+      },
       {
         accessorKey: 'production',
         header: 'Production',
-        size: 350,
-        filterVariant: 'multi-select',
+        size: 120,
         Cell: (cell) => <>{cell.row.original.production.toString() || "" ? cell.row.original.production.toString() || "" : ""}</>,
+      },
+      {
+        accessorKey: 'production_hours',
+        header: 'Production Hours',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.production_hours.toString() || "" ? cell.row.original.production_hours.toString() || "" : ""}</>,
+      },
+      {
+        accessorKey: 'manpower',
+        header: 'Man Power',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.manpower.toString() || "" ? cell.row.original.manpower.toString() || "" : ""}</>,
+      },
+      {
+        accessorKey: 'small_repair',
+        header: 'Small Repair',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.small_repair.toString() || "" ? cell.row.original.small_repair.toString() || "" : ""}</>,
+      },
+      {
+        accessorKey: 'big_repair',
+        header: 'Big Repair',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.big_repair.toString() || "" ? cell.row.original.big_repair.toString() || "" : ""}</>,
+      },
+      {
+        accessorKey: 'upper_damage',
+        header: 'Upper Damage',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.upper_damage.toString() || "" ? cell.row.original.upper_damage.toString() || "" : ""}</>,
+      },
+      {
+        accessorKey: 'created_at',
+        header: 'Created At',
+        size: 150,
+        Cell: (cell) => <>{cell.row.original.created_at || ""}</>
+      },
+      {
+        accessorKey: 'created_by',
+        header: 'Creator',
+        size: 150,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.created_by.value.toString() || "" ? cell.row.original.created_by.value.toString() || "" : ""}</>,
         filterSelectOptions: productions && productions.map((i) => {
-          return i.production.toString() || "";
+          return i.created_by.value.toString() || "";
         }).filter(onlyUnique)
-      }
+      },
     ],
     [productions],
   );

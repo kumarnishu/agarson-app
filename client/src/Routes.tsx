@@ -50,6 +50,7 @@ import ChecklistCategoriesPage from './pages/checklists/CategoriesPage.tsx'
 import CheckListPage from './pages/checklists/CheckListPage.tsx'
 import VisitDashboard from './dashboards/VisitDashboard.tsx'
 import SpareDyesPage from './pages/production/SpareDyesPage.tsx'
+import SoleThicknessPage from './pages/production/SoleThicknessPage.tsx'
 
 
 
@@ -119,6 +120,12 @@ function AppRoutes() {
                   <DyePage />
                 }
               />
+              <Route
+                path="SoleThicknessPage" element={
+                  <SoleThicknessPage />
+                }
+              />
+              
               <Route
                 path="ArticlePage" element={
                   <ArticlePage />

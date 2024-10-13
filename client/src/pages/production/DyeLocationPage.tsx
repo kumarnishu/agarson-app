@@ -76,17 +76,6 @@ export default function DyeLocationPage() {
             </Stack>}
         />
       },
-
-      {
-        accessorKey: 'name',
-        header: 'Name',
-        size: 350,
-        filterVariant: 'multi-select',
-        Cell: (cell) => <>{cell.row.original.name ? cell.row.original.name : ""}</>,
-        filterSelectOptions: dyelocations && dyelocations.map((i) => {
-          return i.name;
-        }).filter(onlyUnique)
-      },
       {
         accessorKey: 'active',
         header: 'Status',
@@ -97,6 +86,17 @@ export default function DyeLocationPage() {
           return i.active ? "active" : "inactive";
         }).filter(onlyUnique)
       },
+      {
+        accessorKey: 'name',
+        header: 'Name',
+        size: 350,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.name ? cell.row.original.name : ""}</>,
+        filterSelectOptions: dyelocations && dyelocations.map((i) => {
+          return i.name;
+        }).filter(onlyUnique)
+      },
+     
       {
         accessorKey: 'display_name',
         header: 'Display Name',
