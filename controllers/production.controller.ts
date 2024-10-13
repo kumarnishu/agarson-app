@@ -13,7 +13,7 @@ import { DyeLocation, IDyeLocation } from "../models/production/dye.location.mod
 import isMongoId from "validator/lib/isMongoId"
 import moment from "moment"
 import { ISoleThickness, SoleThickness } from "../models/production/sole.thickness.model"
-import { CreateOrEditArticleDto, CreateOrEditDyeDTo, CreateOrEditDyeDtoFromExcel, CreateOrEditDyeLocationDto, CreateOrEditMachineDto, CreateOrEditProductionDto, CreateOrEditShoeWeightDto, CreateOrEditSoleThicknessDto, CreateOrEditSpareDyeDto, GetArticleDto, GetCategoryWiseProductionReportDto, GetDyeDto, GetDyeLocationDto, GetMachineDto, GetProductionDto, GetShoeWeightDiffReportDto, GetShoeWeightDto, GetSoleThicknessDto, GetSpareDyeDto, IColumnRowData, IRowData } from "../dtos/production/production.dto"
+import { CreateOrEditArticleDto, CreateOrEditDyeDTo, CreateOrEditDyeDtoFromExcel, CreateOrEditDyeLocationDto, CreateOrEditMachineDto, CreateOrEditProductionDto, CreateOrEditShoeWeightDto, CreateOrEditSoleThicknessDto, CreateOrEditSpareDyeDto, GetArticleDto, GetCategoryWiseProductionReportDto, GetDyeDto, GetDyeLocationDto, GetDyeStatusReportDto, GetMachineDto, GetProductionDto, GetShoeWeightDiffReportDto, GetShoeWeightDto, GetSoleThicknessDto, GetSpareDyeDto, IColumnRowData, IRowData } from "../dtos/production/production.dto"
 import { ISpareDye, SpareDye } from "../models/production/SpareDye.model"
 import { CreateOrEditDropDownDto } from "../dtos/common/dropdown.dto"
 
@@ -718,7 +718,7 @@ export const GetMyTodayShoeWeights = async (req: Request, res: Response, next: N
             is_validated: w.is_validated,
             month: w.month,
             std_weigtht: w.dye.stdshoe_weight || 0,
-            size:w.dye.size||"",
+            size: w.dye.size || "",
             shoe_weight1: w.shoe_weight1,
             shoe_photo1: w.shoe_photo1?.public_url || "",
             weighttime1: moment(new Date(w.weighttime1)).format('LT'),
@@ -761,19 +761,19 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (user_ids.length > 0) {
-                weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
+                weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
                 count = await ShoeWeight.find({ created_at: { $gt: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
             }
 
             else {
-                weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
+                weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
                 count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
             }
         }
 
 
         if (id) {
-            weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
+            weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
             count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
         result = weights.map((w) => {
@@ -785,7 +785,7 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
                 size: w.dye.size || "",
                 is_validated: w.is_validated,
                 month: w.month,
-                std_weigtht:w.dye.stdshoe_weight||0,
+                std_weigtht: w.dye.stdshoe_weight || 0,
                 shoe_weight1: w.shoe_weight1,
                 shoe_photo1: w.shoe_photo1?.public_url || "",
                 weighttime1: moment(new Date(w.weighttime1)).format('LT'),
@@ -1209,7 +1209,7 @@ export const GetShoeWeightDifferenceReports = async (req: Request, res: Response
     let dt2 = new Date(String(end_date))
     dt2.setHours(0)
     dt2.setMinutes(0)
-    weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("dye.dye_number")
+    weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('updated_by').sort("dye.dye_number")
     reports = weights.map((weight) => {
         return {
             date: moment(weight.created_at).format("DD/MM/YYYY"),
@@ -1409,19 +1409,19 @@ export const GetSoleThickness = async (req: Request, res: Response, next: NextFu
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (user_ids.length > 0) {
-                items = await SoleThickness.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
+                items = await SoleThickness.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('article').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
                 count = await SoleThickness.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
             }
 
             else {
-                items = await SoleThickness.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
+                items = await SoleThickness.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('article').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
                 count = await SoleThickness.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
             }
         }
 
 
         if (id) {
-            items = await SoleThickness.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
+            items = await SoleThickness.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('article').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
             count = await SoleThickness.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
 
@@ -1574,19 +1574,19 @@ export const GetSpareDyes = async (req: Request, res: Response, next: NextFuncti
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (user_ids.length > 0) {
-                dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
                 count = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
             }
 
             else {
-                dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
                 count = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
             }
         }
 
 
         if (id) {
-            dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
         result = dyes.map((dye) => {
@@ -1753,4 +1753,59 @@ export const DeleteSpareDye = async (req: Request, res: Response, next: NextFunc
         await destroyFile(dye.dye_photo._id)
     await dye.remove()
     return res.status(200).json(dye)
+}
+
+
+export const GetDyeStatusReport = async (req: Request, res: Response, next: NextFunction) => {
+    let start_date = req.query.start_date
+    let end_date = req.query.end_date
+    let reports: GetDyeStatusReportDto[] = [];
+
+    let dt1 = new Date(String(start_date))
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    let dt2 = new Date(String(end_date))
+    dt2.setHours(0)
+    dt2.setMinutes(0)
+
+    let sparedyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('dye').populate('created_by').populate('location').sort('-created_at')
+
+    let weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('updated_by').sort("-created_at")
+
+    for (let i = 0; i < sparedyes.length; i++) {
+        let dye = sparedyes[i];
+        if (dye) {
+            reports.push({
+                _id: dye._id,
+                dye: dye.dye.dye_number,
+                article: "",
+                size: dye.dye.size,
+                std_weight: dye.dye.stdshoe_weight,
+                location: dye.location.name,
+                repair_required: dye.repair_required ? "Need repair" : "no Need",
+                remarks: dye.remarks,
+                created_at: dye.created_at && moment(dye.created_at).format("DD/MM/YYYY"),
+                created_by: { id: dye.created_by._id, value: dye.created_by.username, label: dye.created_by.username }
+            })
+        }
+    }
+    for (let i = 0; i < weights.length; i++) {
+        let dye = weights[i];
+        if (dye) {
+            reports.push({
+                _id: dye._id,
+                dye: dye.dye.dye_number,
+                article: dye.article.name || "",
+                size: dye.dye.size,
+                std_weight: dye.dye.stdshoe_weight,
+                location: dye.machine.name || "",
+                repair_required: "",
+                remarks: "",
+                created_at: dye.created_at && moment(dye.created_at).format("DD/MM/YYYY"),
+                created_by: { id: dye.created_by._id, value: dye.created_by.username, label: dye.created_by.username }
+            })
+        }
+    }
+
+    return res.status(200).json(reports)
 }

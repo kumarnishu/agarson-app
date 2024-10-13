@@ -49,7 +49,6 @@ export const CreateOrEditMachineCategory = async ({ body, id }: {
 
 
 
-
 export const CreateOrEditDyeLocation = async ({ body, id }: {
     body: {
         name: string,
@@ -224,7 +223,7 @@ export const GetSpareDyes = async ({ limit, page, start_date, end_date, id }: { 
 }
 
 export const GetDyeStatusReport = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
-    return await apiClient.get(`dyestatus/diffreports/?start_date=${start_date}&end_date=${end_date}`)
+    return await apiClient.get(`dyestatus/report/?start_date=${start_date}&end_date=${end_date}`)
 }
 
 

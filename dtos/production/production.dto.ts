@@ -69,6 +69,19 @@ export type GetSpareDyeDto = {
     created_by: DropDownDto,
     updated_by: DropDownDto
 }
+export type GetDyeStatusReportDto = {
+    _id: string,
+    dye: number,
+    article: string,
+    size:string,
+    std_weight:number,
+    location:string,
+    repair_required:string,
+    remarks:string,
+    created_at: string,
+    created_by: DropDownDto,
+
+}
 
 
 export type GetMachineDto = {
