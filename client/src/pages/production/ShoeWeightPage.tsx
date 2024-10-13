@@ -141,6 +141,16 @@ export default function ShoeWeightPage() {
         filterSelectOptions: weights && weights.map((i) => {
           return i.shoe_weight1.toString() || "";
         }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'dye',
+        header: 'Dye',
+        size: 350,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.dye.value.toString() || "" ? cell.row.original.dye.value.toString() || "" : ""}</>,
+        filterSelectOptions: weights && weights.map((i) => {
+          return i.dye.value.toString() || "";
+        }).filter(onlyUnique)
       }
     ],
     [weights],

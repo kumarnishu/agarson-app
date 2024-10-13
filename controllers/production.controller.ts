@@ -829,12 +829,15 @@ export const CreateShoeWeight = async (req: Request, res: Response, next: NextFu
     let art1 = await Article.findById(article)
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
+    if (await SpareDye.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
+        return res.status(400).json({ message: "sorry ! this is a spare dye" })
+    }
 
-    let weightcheck = await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } });
-
-    if (weightcheck) {
+    if (await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
         return res.status(400).json({ message: "sorry ! dye is not available" })
     }
+
+
     let shoe_weight = new ShoeWeight({
         machine: m1, dye: d1, article: art1, shoe_weight1: weight, month: month, upper_weight1: upper_weight
     })
@@ -879,6 +882,24 @@ export const UpdateShoeWeight1 = async (req: Request, res: Response, next: NextF
     let art1 = await Article.findById(article)
     if (!m1 || !d1 || !art1)
         return res.status(400).json({ message: "please fill all reqired fields" })
+
+    let dt1 = new Date()
+    let dt2 = new Date()
+    dt2.setDate(new Date(dt2).getDate() + 1)
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    if (await SpareDye.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
+        return res.status(400).json({ message: "sorry ! this is a spare dye" })
+    }
+
+    //@ts-ignore
+    
+    if (shoe_weight.dye !== dye)
+        if (await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
+            return res.status(400).json({ message: "sorry ! dye is not available" })
+        }
+
+
     if (shoe_weight.shoe_photo1 && shoe_weight.shoe_photo1._id)
         await destroyFile(shoe_weight.shoe_photo1._id)
     if (req.file) {
@@ -925,6 +946,22 @@ export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextF
     let shoe_weight = await ShoeWeight.findById(id)
     if (!shoe_weight)
         return res.status(404).json({ message: "shoe weight not found" })
+
+    let dt1 = new Date()
+    let dt2 = new Date()
+    dt2.setDate(new Date(dt2).getDate() + 1)
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    if (await SpareDye.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
+        return res.status(400).json({ message: "sorry ! this is a spare dye" })
+    }
+
+    //@ts-ignore
+    if (shoe_weight.dye !== dye)
+        if (await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
+            return res.status(400).json({ message: "sorry ! dye is not available" })
+        }
+
 
     let m1 = await Machine.findById(machine)
     let d1 = await Dye.findById(dye)
@@ -975,6 +1012,22 @@ export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextF
     let shoe_weight = await ShoeWeight.findById(id)
     if (!shoe_weight)
         return res.status(404).json({ message: "shoe weight not found" })
+
+    let dt1 = new Date()
+    let dt2 = new Date()
+    dt2.setDate(new Date(dt2).getDate() + 1)
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    if (await SpareDye.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
+        return res.status(400).json({ message: "sorry ! this is a spare dye" })
+    }
+
+    //@ts-ignore
+    if (shoe_weight.dye !== dye)
+        if (await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
+            return res.status(400).json({ message: "sorry ! dye is not available" })
+        }
+
 
     let m1 = await Machine.findById(machine)
     let d1 = await Dye.findById(dye)
@@ -1466,10 +1519,10 @@ export const GetMyTodaySpareDye = async (req: Request, res: Response, next: Next
     let sparedyes: ISpareDye[] = []
     let result: GetSpareDyeDto[] = []
     if (req.user?.is_admin) {
-        sparedyes = await SpareDye.find({ created_at: { $gte: dt1 } }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
+        sparedyes = await SpareDye.find({ created_at: { $gte: dt1 } }).populate('dye').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
     }
     else {
-        sparedyes = await SpareDye.find({ created_at: { $gte: dt1 }, created_by: req.user?._id }).populate('machine').populate('dye').populate('article').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
+        sparedyes = await SpareDye.find({ created_at: { $gte: dt1 }, created_by: req.user?._id }).populate('dye').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
     }
     result = sparedyes.map((dye) => {
         return {
@@ -1510,25 +1563,25 @@ export const GetSpareDyes = async (req: Request, res: Response, next: NextFuncti
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (user_ids.length > 0) {
-                dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
                 count = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
             }
 
             else {
-                dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+                dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
                 count = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
             }
         }
 
 
         if (id) {
-            dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
+            dyes = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).populate('dye').populate('created_by').populate('created_by').populate('location').populate('updated_by').sort('-created_at').skip((page - 1) * limit).limit(limit)
             count = await SpareDye.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: id }).countDocuments()
         }
         result = dyes.map((dye) => {
             return {
                 _id: dye._id,
-                dye: { id: dye._id, value: String(dye.dye.dye_number), label: String(dye.dye.dye_number) },
+                dye: { id: dye.dye._id, value: String(dye.dye.dye_number), label: String(dye.dye.dye_number) },
                 repair_required: dye.repair_required,
                 dye_photo: dye.dye_photo?.public_url || "",
                 remarks: dye.remarks || "",
@@ -1572,6 +1625,19 @@ export const CreateSpareDye = async (req: Request, res: Response, next: NextFunc
     let dyeObj = new SpareDye({
         dye: d1, location: l1
     })
+
+    let dt1 = new Date()
+    let dt2 = new Date()
+    dt2.setDate(new Date(dt2).getDate() + 1)
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+    if (await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } }))
+        return res.status(400).json({ message: "sorry ! this dye is in machine" })
+    if (await SpareDye.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
+        return res.status(400).json({ message: "sorry ! dye is not available" })
+    }
+
+
     if (req.file) {
         console.log(req.file.mimetype)
         const allowedFiles = ["image/png", "image/jpeg", "image/gif"];
@@ -1611,6 +1677,21 @@ export const UpdateSpareDye = async (req: Request, res: Response, next: NextFunc
     if (!location || !dye || !remarks)
         if (!dye || !location)
             return res.status(400).json({ message: "please fill all reqired fields" })
+
+    let dt1 = new Date()
+    let dt2 = new Date()
+    dt2.setDate(new Date(dt2).getDate() + 1)
+    dt1.setHours(0)
+    dt1.setMinutes(0)
+
+    if (await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } }))
+        return res.status(400).json({ message: "sorry ! this dye is in machine" })
+
+    //@ts-ignore
+    if (dyeObj.dye !== dye)
+        if (await SpareDye.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
+            return res.status(400).json({ message: "sorry ! dye is not available" })
+        }
 
     let l1 = await DyeLocation.findById(location)
     let d1 = await Dye.findById(dye)

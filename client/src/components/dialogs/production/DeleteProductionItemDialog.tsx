@@ -23,9 +23,9 @@ function DeleteProductionItemDialog({ category, weight, thickness, spare_dye, pr
                 if (thickness)
                     queryClient.invalidateQueries('crm_thicknesss')
                 if (weight)
-                    queryClient.invalidateQueries('weights')
+                    queryClient.invalidateQueries('shoe_weights')
                 if (spare_dye)
-                    queryClient.invalidateQueries('crm_cities')
+                    queryClient.invalidateQueries('spare_dyes')
                 else
                     queryClient.invalidateQueries('productions')
             }

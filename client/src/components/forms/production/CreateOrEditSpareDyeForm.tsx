@@ -11,14 +11,14 @@ import AlertBar from '../../snacks/AlertBar';
 import { CreateOrEditSpareDye, GetAllDyeLocations, GetDyes } from '../../../services/ProductionServices';
 import UploadFileButton from '../../buttons/UploadFileButton';
 import { GetUserDto } from '../../../dtos/users/user.dto';
-import { GetDyeDto, GetMachineDto, GetSpareDyeDto, } from '../../../dtos/production/production.dto';
+import { GetDyeDto, GetDyeLocationDto,  GetSpareDyeDto, } from '../../../dtos/production/production.dto';
 
 
 function CreateOrEditSpareDyeForm({ sparedye }: { sparedye?: GetSpareDyeDto }) {
-    const { data: dyes } = useQuery<AxiosResponse<GetDyeDto[]>, BackendError>("dyes", async () => GetDyes())
-    const { data: locations } = useQuery<AxiosResponse<GetMachineDto[]>, BackendError>("locations", async () => GetAllDyeLocations())
+    const { data: dyes } = useQuery<AxiosResponse<GetDyeDto[]>, BackendError>("dyes", async () => GetDyes('false'))
+    const { data: locations } = useQuery<AxiosResponse<GetDyeLocationDto[]>, BackendError>("locations", async () => GetAllDyeLocations())
     const [file, setFile] = useState<File>()
-    const [repairRequired, setRepairRequired] = useState(true)
+    const [repairRequired, setRepairRequired] = useState(sparedye?.repair_required)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<GetUserDto>, BackendError, {
             id?: string,
@@ -85,7 +85,6 @@ function CreateOrEditSpareDyeForm({ sparedye }: { sparedye?: GetSpareDyeDto }) {
             }, 1000)
         }
     }, [isSuccess, setChoice])
-
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>
@@ -144,7 +143,7 @@ function CreateOrEditSpareDyeForm({ sparedye }: { sparedye?: GetSpareDyeDto }) {
                         label="Select location"
                         fullWidth
                     >
-                        <option key={'00'} value={undefined}>
+                        <option key={'00'} value={""}>
                         </option>
                         {
                             locations && locations.data && locations.data.map((location, index) => {
@@ -160,7 +159,7 @@ function CreateOrEditSpareDyeForm({ sparedye }: { sparedye?: GetSpareDyeDto }) {
                         <FormControlLabel control={<Checkbox
                             checked={Boolean(repairRequired)}
                             onChange={() => setRepairRequired(!repairRequired)}
-                        />} label="Check If Needs Repair ?" />
+                        />} label="Needs Repair ?" />
                     </FormGroup>
 
                     <TextField

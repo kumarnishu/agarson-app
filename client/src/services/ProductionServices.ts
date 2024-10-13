@@ -92,12 +92,6 @@ export const GetDyes = async (hidden?: string) => {
         return await apiClient.get(`dyes`);
 };
 
-
-
-
-
-
-
 export const CreateOrEditArticle = async ({ body, id }: { body: CreateOrEditArticleDto, id?: string }) => {
     if (id)
         return await apiClient.put(`articles/${id}`, body);
@@ -269,13 +263,15 @@ export const GetSoleThickness = async ({ limit, page, start_date, end_date, id }
 
 
 
-export const DeleteProductionItem = async ({ category, weight, thickness, production }: { category?: DropDownDto, weight?: GetShoeWeightDto, thickness?: DropDownDto, spare_dye?: GetSpareDyeDto, production?: GetProductionDto }) => {
+export const DeleteProductionItem = async ({ category, spare_dye, weight, thickness, production }: { category?: DropDownDto, weight?: GetShoeWeightDto, thickness?: DropDownDto, spare_dye?: GetSpareDyeDto, production?: GetProductionDto }) => {
     if (category)
         return await apiClient.delete(`machine/categories/${category.id}`)
     if (weight)
         return await apiClient.delete(`weights/${weight._id}`)
     if (thickness)
         return await apiClient.delete(`thickness/${thickness.id}`)
+    if (spare_dye)
+        return await apiClient.delete(`sparedyes/${spare_dye._id}`)
     else
         return await apiClient.delete(`productions/${production ? production._id : ""}`)
 

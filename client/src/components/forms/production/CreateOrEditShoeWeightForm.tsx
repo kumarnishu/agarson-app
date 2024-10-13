@@ -17,7 +17,7 @@ import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
 
 function CreateOrEditShoeWeightForm({ shoe_weight }: { shoe_weight?: GetShoeWeightDto }) {
-    const { data: dyes } = useQuery<AxiosResponse<GetDyeDto[]>, BackendError>("dyes", async () => GetDyes())
+    const { data: dyes } = useQuery<AxiosResponse<GetDyeDto[]>, BackendError>("dyes", async () => GetDyes('false'))
     const [dyeid, setDyeid] = useState<string>('');
     const [stWeight, setStWeight] = useState(0)
     const [articles, setArticles] = useState<DropDownDto[]>([])
