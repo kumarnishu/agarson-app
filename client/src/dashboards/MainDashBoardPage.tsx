@@ -132,7 +132,7 @@ function MainDashBoardPage() {
     user?.assigned_permissions.includes('machine_view') && tmpfeatures.push({ feature: 'machines ', is_visible: false, url: "/Production/MachinePage" })
     user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: false, url: "/Production/UpdateMachineCategoriesPage" })
     user?.assigned_permissions.includes('dye_view') && tmpfeatures.push({ feature: 'dyes ', is_visible: false, url: "/Production/DyePage" })
-    user?.assigned_permissions.includes('shoe_weight_view') && tmpfeatures.push({ feature: 'shoe weight ', is_visible: false, url: "/Production/ShoeWeightPage" })
+    user?.assigned_permissions.includes('shoe_weight_view') && tmpfeatures.push({ feature: 'shoe weights ', is_visible: false, url: "/Production/ShoeWeightPage" })
     user?.assigned_permissions.includes('shoe_weight_report_view') && tmpfeatures.push({ feature: 'Shoe Weight Difference report', is_visible: false, url: "/Production/ShowWeightDifferenceReportPage" })
     user?.assigned_permissions.includes('dye_status_report_view') && tmpfeatures.push({ feature: 'Dye Status report', is_visible: false, url: "/Production/DyeStatusReportPage" })
     user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: false, url: "/Production/MachineWiseProductionReportPage" })
