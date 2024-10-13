@@ -49,6 +49,7 @@ import DyeStatusReportPage from './pages/production/DyeStatusReportPage.tsx'
 import ChecklistCategoriesPage from './pages/checklists/CategoriesPage.tsx'
 import CheckListPage from './pages/checklists/CheckListPage.tsx'
 import VisitDashboard from './dashboards/VisitDashboard.tsx'
+import SpareDyesPage from './pages/production/SpareDyesPage.tsx'
 
 
 
@@ -96,6 +97,11 @@ function AppRoutes() {
               <Route
                 path="ShoeWeightPage" element={
                   <ShoeWeightPage />
+                }
+              />
+              <Route
+                path="SpareDyesPage" element={
+                  <SpareDyesPage />
                 }
               />
               <Route

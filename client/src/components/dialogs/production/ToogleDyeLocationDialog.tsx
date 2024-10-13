@@ -7,16 +7,16 @@ import { BackendError } from '../../..';
 import { useMutation } from 'react-query';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
-import { DeleteProduction } from '../../../services/ProductionServices';
-import { IProduction } from '../../../types/production.types';
+import { GetDyeLocationDto } from '../../../dtos/production/production.dto';
+import { ToogleDyeLocation } from '../../../services/ProductionServices';
 
-function DeleteProductionDialog({ production }: { production: IProduction }) {
+function ToogleDyeLocationDialog({ location }: { location: GetDyeLocationDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
         <AxiosResponse<any>, BackendError, string>
-        (DeleteProduction, {
+        (ToogleDyeLocation, {
             onSuccess: () => {
-                queryClient.invalidateQueries('productions')
+                queryClient.invalidateQueries('dyelocations')
             }
         })
 
@@ -26,7 +26,7 @@ function DeleteProductionDialog({ production }: { production: IProduction }) {
     }, [setChoice, isSuccess])
     return (
         <>
-            <Dialog open={choice === ProductionChoiceActions.delete_production ? true : false}
+            <Dialog open={choice === ProductionChoiceActions.toogle_dye_location ? true : false}
                 onClose={() => setChoice({ type: ProductionChoiceActions.close_production })}
             >
                 {
@@ -36,26 +36,26 @@ function DeleteProductionDialog({ production }: { production: IProduction }) {
                 }
                 {
                     isSuccess ? (
-                        <AlertBar message="deleted production" color="success" />
+                        <AlertBar message="success" color="success" />
                     ) : null
                 }
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: ProductionChoiceActions.close_production })}>
                     <Cancel fontSize='large' />
                 </IconButton>
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Delete Production</DialogTitle>
+                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Toogle Location</DialogTitle>
                 <DialogContent>
-                    This Will delete production of the {production.machine.display_name}
+                    This Will toogle location {location.name}
                 </DialogContent>
                 <DialogActions sx={{ p: 2 }}>
                     <Button fullWidth variant="outlined" color="error"
                         onClick={() => {
-                            setChoice({ type: ProductionChoiceActions.delete_production })
-                            mutate(production._id)
+                            setChoice({ type: ProductionChoiceActions.toogle_dye_location })
+                            mutate(location._id)
                         }}
                         disabled={isLoading}
                     >
                         {isLoading ? <CircularProgress /> :
-                            "Delete"}
+                            "Toogle"}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -63,4 +63,4 @@ function DeleteProductionDialog({ production }: { production: IProduction }) {
     )
 }
 
-export default DeleteProductionDialog
+export default ToogleDyeLocationDialog

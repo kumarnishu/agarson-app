@@ -4,6 +4,7 @@ import { IUser } from "../users/user.model"
 export type IDyeLocation = {
     _id: string,
     name: string,
+    active: boolean,
     display_name: string,
     created_at: Date,
     updated_at: Date,
@@ -16,9 +17,10 @@ const DyeLocationSchema = new mongoose.Schema<IDyeLocation, mongoose.Model<IDyeL
     name: {
         type: String,
         required: true,
-        lowercase:true,
+        lowercase: true,
         trim: true
     },
+    active: { type: Boolean, default: true },
     display_name: {
         type: String,
         required: true,

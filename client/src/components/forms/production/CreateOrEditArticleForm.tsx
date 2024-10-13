@@ -4,21 +4,21 @@ import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from "yup"
-import {  ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { UpdateArticle } from '../../../services/ProductionServices';
-import { IArticle } from '../../../types/production.types';
+import { CreateOrEditArticle } from '../../../services/ProductionServices';
+import { CreateOrEditArticleDto, GetArticleDto } from '../../../dtos/production/production.dto';
 
 
 
-function UpdateArticleForm({ article }: { article: IArticle }) {
+function CreateOrEditArticleForm({ article }: { article?: GetArticleDto }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IArticle>, BackendError, {
-            body: { name: string, display_name: string}, id: string
+        <AxiosResponse<GetArticleDto>, BackendError, {
+            body: CreateOrEditArticleDto, id?: string
         }>
-        (UpdateArticle, {
+        (CreateOrEditArticle, {
             onSuccess: () => {
                 queryClient.invalidateQueries('articles')
             }
@@ -28,8 +28,8 @@ function UpdateArticleForm({ article }: { article: IArticle }) {
 
     const formik = useFormik({
         initialValues: {
-            name: article.name,
-            display_name: article.display_name,
+            name: article ? article.name : "",
+            display_name: article ? article.display_name : "",
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -40,11 +40,15 @@ function UpdateArticleForm({ article }: { article: IArticle }) {
 
         }),
         onSubmit: (values) => {
-            mutate({ id: article._id, body: { name: values.name, display_name: values.display_name }})
+            if (article)
+                mutate({ id: article._id, body: { name: values.name, display_name: values.display_name } })
+            else {
+                mutate({ body: { name: values.name, display_name: values.display_name } })
+            }
         }
     });
 
-    
+
 
     useEffect(() => {
         if (isSuccess) {
@@ -97,16 +101,16 @@ function UpdateArticleForm({ article }: { article: IArticle }) {
                 }
                 {
                     isSuccess ? (
-                        <AlertBar message="article updated" color="success" />
+                        <AlertBar message={article ? "article updated" : "created"} color="success" />
                     ) : null
                 }
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
-                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Update Article"}
+                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
                 </Button>
             </Stack>
         </form>
     )
 }
 
-export default UpdateArticleForm
+export default CreateOrEditArticleForm

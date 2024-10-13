@@ -1,118 +1,45 @@
-import { Box, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
+import { Button, Fade, IconButton, LinearProgress, Menu, MenuItem, TextField, Tooltip, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
-import DBPagination from '../../components/pagination/DBpagination';
-import { BackendError } from '../..'
-import { Menu as MenuIcon } from '@mui/icons-material';
-import ExportToExcel from '../../utils/ExportToExcel'
-import AlertBar from '../../components/snacks/AlertBar'
-import { GetUsers } from '../../services/UserServices'
-import moment from 'moment'
-import ProductionTable from '../../components/tables/production/ProductionTable'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
 import { UserContext } from '../../contexts/userContext'
-import { IProduction } from '../../types/production.types'
-import {  GetProductions } from '../../services/ProductionServices'
+import { BackendError } from '../..'
+import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { onlyUnique } from '../../utils/UniqueArray'
 import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
-import NewProductionDialog from '../../components/dialogs/production/CreateProductionDialog'
+import { Delete, Edit, FilterAlt, FilterAltOff, Fullscreen, FullscreenExit, Menu as MenuIcon } from '@mui/icons-material';
+import DBPagination from '../../components/pagination/DBpagination'
+import ExportToExcel from '../../utils/ExportToExcel'
+import PopUp from '../../components/popup/PopUp'
+import { GetProductionDto } from '../../dtos/production/production.dto'
+import { GetProductions } from '../../services/ProductionServices'
 import { GetUserDto } from '../../dtos/users/user.dto'
+import { GetUsers } from '../../services/UserServices'
+import DeleteProductionItemDialog from '../../components/dialogs/production/DeleteProductionItemDialog'
+import moment from 'moment'
+import CreateOrEditProductionDialog from '../../components/dialogs/production/CreateOrEditProductionDialog'
 
 
-export default function ProductionAdminPage() {
-  const { user } = useContext(UserContext)
-  const { setChoice } = useContext(ChoiceContext)
-  const [users, setUsers] = useState<GetUserDto[]>([])
+export default function ProductionPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });
-  const [filter] = useState<string | undefined>()
-  const [production, setProduction] = useState<IProduction>()
-  const [productions, setProductions] = useState<IProduction[]>([])
-  const [selectAll, setSelectAll] = useState(false)
-  const MemoData = React.useMemo(() => productions, [productions])
-  const [preFilteredData, setPreFilteredData] = useState<IProduction[]>([])
-  const [preFilteredPaginationData, setPreFilteredPaginationData] = useState({ limit: 100, page: 1, total: 1 });
-  const [selectedProductions, setSelectedProductions] = useState<IProduction[]>([])
-  const [userId, setUserId] = useState<string>()
-  const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-    start_date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
-    , end_date: moment(new Date().setDate(new Date().getDate())).format("YYYY-MM-DD")
-  })
-  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'production_view', show_assigned_only: true }))
-
-  const { data, isLoading, refetch: ReftechProductions } = useQuery<AxiosResponse<{ productions: IProduction[], page: number, total: number, limit: number }>, BackendError>(["productions", userId, dates?.start_date, dates?.end_date], async () => GetProductions({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
-
-  const [selectedData, setSelectedData] = useState<{
-    machine?: string,
-    thekedar?: string,
-    articles?: string,
-    manpower?: number,
-    production?: number,
-    production_hours?: number,
-    small_repair?: number,
-    big_repair?: number,
-    created_at?: string,
-    updated_at?: string
-  }[]>()
-
-  const [sent, setSent] = useState(false)
+  const { user: LoggedInUser } = useContext(UserContext)
+  const [production, setProduction] = useState<GetProductionDto>()
+  const [productions, setProductions] = useState<GetProductionDto[]>([])
+  const [users, setUsers] = useState<GetUserDto[]>([])
+  const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-  function handleExcel() {
-    setAnchorEl(null)
-    try {
-      if (selectedData && selectedData.length === 0) {
-        alert("select some rows")
-      }
-      else {
-        selectedData && ExportToExcel(selectedData, "productions_data")
-        setSent(true)
-        setSelectAll(false)
-        setSelectedData([])
-        setSelectedProductions([])
-      }
+  const [userId, setUserId] = useState<string>()
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+  const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+  const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
+    start_date: moment(new Date()).format("YYYY-MM-DD")
+    , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
+  })
+  const { data, isLoading, isSuccess, isRefetching, refetch } = useQuery<AxiosResponse<{ result: GetProductionDto[], page: number, total: number, limit: number }>, BackendError>(["productions", userId, dates?.start_date, dates?.end_date], async () => GetProductions({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
-    }
-    catch (err) {
-      console.log(err)
-      setSent(false)
-    }
-  }
-
-
-  // refine data
-  useEffect(() => {
-    let data: {
-      machine?: string,
-      thekedar?: string,
-      articles?: string,
-      manpower?: number,
-      production?: number,
-      production_hours?: number,
-      small_repair?: number,
-      big_repair?: number,
-      created_at?: string,
-      updated_at?: string
-    }[] = []
-    selectedProductions.map((production) => {
-      return data.push(
-        {
-          machine: production.machine.name,
-          thekedar: production.thekedar.username,
-          articles: production.articles.map((a) => { return a.display_name }).toString(),
-          manpower: production.manpower,
-          production_hours: production.production_hours,
-          production: production.production,
-          small_repair: production.small_repair,
-          big_repair: production.big_repair,
-          created_at: new Date(production.created_at).toLocaleDateString(),
-          updated_at: new Date(production.updated_at).toLocaleDateString()
-        })
-    })
-    if (data.length > 0)
-      setSelectedData(data)
-  }, [selectedProductions])
-
+  const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'production_view', show_assigned_only: true }))
 
   useEffect(() => {
     if (isUsersSuccess)
@@ -120,25 +47,10 @@ export default function ProductionAdminPage() {
   }, [users, isUsersSuccess, usersData])
 
 
-  useEffect(() => {
-    if (!filter) {
-      setProductions(preFilteredData)
-      setPaginationData(preFilteredPaginationData)
-    }
-  }, [filter])
-
-
 
   useEffect(() => {
-    if (data && !filter) {
-      setProductions(data.data.productions)
-      setPreFilteredData(data.data.productions)
-      setPreFilteredPaginationData({
-        ...paginationData,
-        page: data.data.page,
-        limit: data.data.limit,
-        total: data.data.total
-      })
+    if (data && isSuccess) {
+      setProductions(data.data.result)
       setPaginationData({
         ...paginationData,
         page: data.data.page,
@@ -146,32 +58,108 @@ export default function ProductionAdminPage() {
         total: data.data.total
       })
     }
-  }, [data])
+  }, [data, isSuccess])
 
-  return (
-    <>
+
+  const columns = useMemo<MRT_ColumnDef<GetProductionDto>[]>(
+    () => productions && [
       {
-        isLoading && <LinearProgress />
+        accessorKey: 'actions',
+        header: '',
+        maxSize: 50,
+        enableColumnFilter: false,
+        size: 120,
+        Cell: ({ cell }) => <PopUp
+          element={
+            <Stack direction="row" spacing={1}>
+
+              <>
+                {LoggedInUser?.assigned_permissions.includes('production_edit') && <Tooltip title="edit">
+                  <IconButton color="info"
+
+                    onClick={() => {
+                      setChoice({ type: ProductionChoiceActions.create_or_edit_production })
+                      setProduction(cell.row.original)
+                    }}
+                  >
+                    <Edit />
+                  </IconButton>
+                </Tooltip>}
+                {LoggedInUser?.is_admin && LoggedInUser?.assigned_permissions.includes('production_delete') && <Tooltip title="delete">
+                  <IconButton color="error"
+
+                    onClick={() => {
+                      setChoice({ type: ProductionChoiceActions.delete_production_item })
+                      setProduction(cell.row.original)
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Tooltip>}
+              </>
+
+
+            </Stack>}
+        />
+      },
+
+      {
+        accessorKey: 'production',
+        header: 'Production',
+        size: 350,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.production.toString() || "" ? cell.row.original.production.toString() || "" : ""}</>,
+        filterSelectOptions: productions && productions.map((i) => {
+          return i.production.toString() || "";
+        }).filter(onlyUnique)
       }
-     
-      {/*heading, search bar and table menu */}
+    ],
+    [productions],
+  );
+
+
+  const table = useMaterialReactTable({
+    columns,
+    data: productions,
+    enableColumnResizing: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        fontSize: '14px'
+      }
+    }),
+    muiTableHeadRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        border: '1px solid lightgrey;',
+      },
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '72vh' }
+    }),
+    positionToolbarAlertBanner: 'none',
+    renderTopToolbarCustomActions: ({ table }) => (
 
       <Stack
         spacing={2}
-        padding={1}
         direction="row"
+        sx={{ width: '100%' }}
         justifyContent="space-between"
-        
+
       >
         <Typography
           variant={'h6'}
           component={'h1'}
           sx={{ pl: 1 }}
+
         >
           Production
         </Typography>
         {/* filter dates and person */}
-        <Stack direction="row"  gap={2}>
+        <Stack direction="row" gap={2} justifyContent={'end'}>
           < TextField
 
             size="small"
@@ -208,7 +196,7 @@ export default function ProductionAdminPage() {
               }
             }}
           />
-          {user?.assigned_users && user?.assigned_users.length > 0 && < TextField
+          {LoggedInUser?.assigned_users && LoggedInUser?.assigned_users.length > 0 && < TextField
             focused
             size="small"
             select
@@ -217,7 +205,6 @@ export default function ProductionAdminPage() {
             }}
             onChange={(e) => {
               setUserId(e.target.value)
-              ReftechProductions()
             }}
             required
             id="production_owner"
@@ -229,77 +216,132 @@ export default function ProductionAdminPage() {
             </option>
             {
               users.map((user, index) => {
-            
-                  return (<option key={index} value={user._id}>
-                    {user.username}
-                  </option>)
-             
+
+                return (<option key={index} value={user._id}>
+                  {user.username}
+                </option>)
+
               })
             }
           </TextField>}
-        </Stack>
-        <Stack
-          direction="row"
-        >
-          <>
-
-            {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-
-
-            <IconButton size="small" color="primary"
+          <Tooltip title="Toogle Filter">
+            <Button size="small" color="inherit" variant='contained'
+              onClick={() => {
+                if (table.getState().showColumnFilters)
+                  table.resetColumnFilters(true)
+                table.setShowColumnFilters(!table.getState().showColumnFilters)
+              }
+              }
+            >
+              {table.getState().showColumnFilters ? <FilterAltOff /> : <FilterAlt />}
+            </Button>
+          </Tooltip>
+          <Tooltip title="Toogle FullScreen">
+            <Button size="small" color="inherit" variant='contained'
+              onClick={() => table.setIsFullScreen(!table.getState().isFullScreen)
+              }
+            >
+              {table.getState().isFullScreen ? <FullscreenExit /> : <Fullscreen />}
+            </Button>
+          </Tooltip>
+          <Tooltip title="Menu">
+            <Button size="small" color="inherit" variant='contained'
               onClick={(e) => setAnchorEl(e.currentTarget)
               }
-              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
             >
               <MenuIcon />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)
-              }
-              TransitionComponent={Fade}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-              sx={{ borderRadius: 2 }}
-            >
-              {user?.assigned_permissions.includes('production_create')&&< MenuItem 
-               
-              onClick={() => {
-                setChoice({ type: ProductionChoiceActions.create_production })
-              }}
-              >New Production</MenuItem>}
-              {user?.assigned_permissions.includes('production_export') &&< MenuItem 
-               
-              onClick={() => {
-                handleExcel()
-              }}
-              >Export To Excel</MenuItem>}
-            </Menu >
-            <NewProductionDialog/>
-          </>
-        </Stack >
+              <Typography pl={1}> Menu</Typography>
+            </Button>
+          </Tooltip>
+        </Stack>
       </Stack >
+    ),
+    rowVirtualizerInstanceRef,
+    mrtTheme: (theme) => ({
+      baseBackgroundColor: theme.palette.background.paper, //change default background color
+    }),
+    renderBottomToolbarCustomActions: () => (
+      <DBPagination paginationData={paginationData} refetch={() => { refetch() }} setPaginationData={setPaginationData} />
 
-     
+    ),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        border: '1px solid lightgrey;',
+        fontSize: '13px'
+      },
+    }),
+    initialState: { density: 'compact' },
+    enableRowSelection: true,
+    enableRowNumbers: true,
+    enableColumnPinning: true,
+    onSortingChange: setSorting,
+    enableTopToolbar: true,
+    enableTableFooter: true,
+    enableRowVirtualization: true,
+    state: { sorting, isLoading: isLoading },
+    enableBottomToolbar: true,
+    enableGlobalFilter: false,
+    manualPagination: true,
+    enablePagination: false,
+    enableToolbarInternalActions: false
+  });
 
-      {/* table */}
-      {isLoading && <TableSkeleton />}
-      {!isLoading &&
-      <Box>
-          <ProductionTable
-            production={production}
-            setProduction={setProduction}
-            selectAll={selectAll}
-            selectedProductions={selectedProductions}
-            setSelectedProductions={setSelectedProductions}
-            setSelectAll={setSelectAll}
-            productions={MemoData}
-          />
-        </Box>}
-      <DBPagination paginationData={paginationData} refetch={ReftechProductions} setPaginationData={setPaginationData} />    </>
+  useEffect(() => {
+    try {
+      rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [sorting]);
+
+  return (
+    <>
+      {
+        isLoading || isRefetching && <LinearProgress color='secondary' />
+      }
+      <>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)
+          }
+          TransitionComponent={Fade}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+          sx={{ borderRadius: 2 }}
+        >
+          {LoggedInUser?.assigned_permissions.includes('production_create') && <MenuItem
+            onClick={() => {
+              setChoice({ type: ProductionChoiceActions.create_or_edit_production })
+              setProduction(undefined);
+              setAnchorEl(null)
+            }}
+
+
+          > Add New</MenuItem>}
+
+          {LoggedInUser?.assigned_permissions.includes('production_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+          >Export All</MenuItem>}
+          {LoggedInUser?.assigned_permissions.includes('production_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+          >Export Selected</MenuItem>}
+
+        </Menu >
+        <CreateOrEditProductionDialog production={production} />
+      </>
+      {
+        production ?
+          <>
+
+            <DeleteProductionItemDialog production={production} />
+          </>
+          : null
+      }
+      <MaterialReactTable table={table} />
+
+    </>
 
   )
 

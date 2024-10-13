@@ -18,7 +18,7 @@ type LeadChoices = "create_or_edit_refer" |"create_or_edit_leadtype"| "create_or
   "refer_lead" | "remove_referral" | "assign_refer" | "bulk_assign_leads" | "bulk_assign_refers" | "delete_remark" | "create_or_edt_remark" | "create_or_edit_lead" | "create_or_edit_state" | "create_or_edit_stage" | "bulk_assign_crm_states" | "find_unknown_states" | "merge_leads" | "view_refer_remarks" | "delete_bill" | "view_bills" | "merge_refers" |"view_bills_photo"
 
 
-type ProductionChoices = "create_machine" | "close_production" | "update_machine" | "create_article" | "update_article" | "create_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "view_shoe_photo2" | "view_shoe_photo3" | "create_shoe_weight" | "delete_production" | "update_shoe_weight1" | "create_production" | "update_production" | "delete_weight" | "create_or_edit_location" | "delete_dye_location" | "update_shoe_weight2" | "update_shoe_weight3"
+type ProductionChoices = "create_or_edit_machine" | "close_production" | "create_or_edit_spareDye" | "create_or_edit_article" | "update_article" | "create_or_edit_dye" | "update_dye" | "validate_weight" | "toogle_machine" | "toogle_article" | "toogle_dye" | "view_shoe_photo" | "view_shoe_photo2" | "view_shoe_photo3" | "create_or_edit_shoe_weight" | "validate_spareDye" | "update_shoe_weight1" | "create_or_edit_production" | "update_production" | "delete_production_item" | "create_or_edit_location" | "toogle_dye_location" | "update_shoe_weight2" | "update_shoe_weight3" |"create_or_edit_machine_category"
 
 
 type TemplateChoices = "create_template" | "update_template" | "delete_template" | "view_template" | "close_template" | "view_template"
@@ -32,28 +32,29 @@ const initialState: ChoiceState | null = null
 
 export enum ProductionChoiceActions {
   validate_weight = "validate_weight",
-  delete_weight ="delete_weight",
+  delete_production_item ="delete_production_item",
+  create_or_edit_machine_category ="create_or_edit_machine_category",
   create_or_edit_location="create_or_edit_location",
-  delete_dye_location ="delete_dye_location",
-  create_machine = "create_machine",
+  toogle_dye_location ="toogle_dye_location",
+  create_or_edit_machine = "create_or_edit_machine",
   view_shoe_photo = "view_shoe_photo",
   view_shoe_photo2 = "view_shoe_photo2",
   view_shoe_photo3 = "view_shoe_photo3",
-  update_machine = "update_machine",
-  create_article = "create_article",
+  create_or_edit_spareDye = "create_or_edit_spareDye",
+  create_or_edit_article = "create_or_edit_article",
   update_article = "update_article",
-  create_dye = "create_dye",
+  create_or_edit_dye = "create_or_edit_dye",
   update_dye = "update_dye",
   toogle_machine = "toogle_machine",
   toogle_article = "toogle_article",
   toogle_dye = "toogle_dye",
   close_production = "close_production",
-  create_shoe_weight = "create_shoe_weight",
+  create_or_edit_shoe_weight = "create_or_edit_shoe_weight",
   update_shoe_weight1 = "update_shoe_weight1",
   update_shoe_weight2 = "update_shoe_weight2",
   update_shoe_weight3 = "update_shoe_weight3",
-  create_production = "create_production",
-  delete_production = "delete_production",
+  create_or_edit_production = "create_or_edit_production",
+  validate_spareDye = "validate_spareDye",
   update_production = "update_production"
 }
 
@@ -263,11 +264,11 @@ function reducer(state: ChoiceState | null, action: Action) {
     case LeadChoiceActions.view_refer_remarks: return type
 
     //production choice actios
-    case ProductionChoiceActions.create_machine: return type
-    case ProductionChoiceActions.update_machine: return type
-    case ProductionChoiceActions.create_article: return type
+    case ProductionChoiceActions.create_or_edit_machine: return type
+    case ProductionChoiceActions.create_or_edit_spareDye: return type
+    case ProductionChoiceActions.create_or_edit_article: return type
     case ProductionChoiceActions.update_article: return type
-    case ProductionChoiceActions.create_dye: return type
+    case ProductionChoiceActions.create_or_edit_dye: return type
     case ProductionChoiceActions.update_dye: return type
     case ProductionChoiceActions.toogle_article: return type
     case ProductionChoiceActions.toogle_dye: return type
@@ -275,18 +276,21 @@ function reducer(state: ChoiceState | null, action: Action) {
     case ProductionChoiceActions.close_production: return type
     case ProductionChoiceActions.validate_weight: return type
     case ProductionChoiceActions.view_shoe_photo: return type
+    case ProductionChoiceActions.create_or_edit_machine_category: return type
     case ProductionChoiceActions.view_shoe_photo2: return type
+
+
     case ProductionChoiceActions.view_shoe_photo3: return type
-    case ProductionChoiceActions.create_production: return type
+    case ProductionChoiceActions.create_or_edit_production: return type
     case ProductionChoiceActions.update_production: return type
-    case ProductionChoiceActions.create_shoe_weight: return type
+    case ProductionChoiceActions.create_or_edit_shoe_weight: return type
     case ProductionChoiceActions.update_shoe_weight1: return type
     case ProductionChoiceActions.update_shoe_weight2: return type
     case ProductionChoiceActions.update_shoe_weight3: return type
-    case ProductionChoiceActions.delete_production: return type
-    case ProductionChoiceActions.delete_weight: return type
+    case ProductionChoiceActions.validate_spareDye: return type
+    case ProductionChoiceActions.delete_production_item: return type
     case ProductionChoiceActions.create_or_edit_location: return type
-    case ProductionChoiceActions.delete_dye_location: return type
+    case ProductionChoiceActions.toogle_dye_location: return type
 
     // template choice action
     case TemplateChoiceActions.create_template: return type

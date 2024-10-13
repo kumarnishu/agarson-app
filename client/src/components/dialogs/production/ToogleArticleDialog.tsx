@@ -8,9 +8,9 @@ import { useMutation } from 'react-query';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
 import { ToogleArticle } from '../../../services/ProductionServices';
-import { IArticle } from '../../../types/production.types';
+import { GetArticleDto } from '../../../dtos/production/production.dto';
 
-function ToogleArticleDialog({ article }: { article: IArticle }) {
+function ToogleArticleDialog({ article }: { article: GetArticleDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
         <AxiosResponse<any>, BackendError, string>
@@ -36,7 +36,7 @@ function ToogleArticleDialog({ article }: { article: IArticle }) {
                 }
                 {
                     isSuccess ? (
-                        <AlertBar message="deleted article" color="success" />
+                        <AlertBar message="success" color="success" />
                     ) : null
                 }
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: ProductionChoiceActions.close_production })}>
@@ -49,7 +49,6 @@ function ToogleArticleDialog({ article }: { article: IArticle }) {
                 <DialogActions sx={{ p: 2 }}>
                     <Button fullWidth variant="outlined" color="error"
                         onClick={() => {
-                            setChoice({ type: ProductionChoiceActions.toogle_article })
                             mutate(article._id)
                         }}
                         disabled={isLoading}

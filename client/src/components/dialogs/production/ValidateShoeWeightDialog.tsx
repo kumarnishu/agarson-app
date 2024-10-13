@@ -6,12 +6,12 @@ import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
 import { useMutation } from 'react-query';
 import AlertBar from '../../snacks/AlertBar';
-import { IShoeWeight } from '../../../types/production.types';
 import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
 import { ValidateShoeWeight } from '../../../services/ProductionServices';
 import { GetUserDto } from '../../../dtos/users/user.dto';
+import { GetShoeWeightDto } from '../../../dtos/production/production.dto';
 
-function ValidateShoeWeightDialog({ weight }: { weight: IShoeWeight }) {
+function ValidateShoeWeightDialog({ weight }: { weight: GetShoeWeightDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<GetUserDto>, BackendError, string>

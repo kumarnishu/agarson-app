@@ -8,30 +8,23 @@ import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialog
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import {  GetDyeById, GetDyes, GetMachines,  UpdateShoeWeight3 } from '../../../services/ProductionServices';
-import { IArticle, IDye, IMachine, IShoeWeight } from '../../../types/production.types';
+import { GetDyeById, GetDyes, GetMachines, UpdateShoeWeight3 } from '../../../services/ProductionServices';
 import { months } from '../../../utils/months';
 import UploadFileButton from '../../buttons/UploadFileButton';
 import { GetUserDto } from '../../../dtos/users/user.dto';
+import { GetDyeDto, GetMachineDto, GetShoeWeightDto } from '../../../dtos/production/production.dto';
+import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
 
-type TformData = {
-    machine: string,
-    dye: string,
-    month: number,
-    article: string,
-    weight: number,
-    st_weight: number,
-    upper_weight: number
-}
-
-function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
-    const { data: dyes } = useQuery<AxiosResponse<IDye[]>, BackendError>("dyes", async () => GetDyes())
-    const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
-    const [file, setFile] = useState<File>()
+function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: GetShoeWeightDto }) {
+    const { data: dyes } = useQuery<AxiosResponse<GetDyeDto[]>, BackendError>("dyes", async () => GetDyes())
     const [dyeid, setDyeid] = useState<string>('');
-    const [articles, setArticles] = useState<IArticle[]>([])
-    const { data: dyedata, refetch: refetchDye } = useQuery<AxiosResponse<IDye>, BackendError>(["dye", dyeid], async () => GetDyeById(dyeid), { enabled: false })
+    const [stWeight, setStWeight] = useState(0)
+    const [articles, setArticles] = useState<DropDownDto[]>([])
+    const { data: dyedata, isSuccess: isDyeSuccess, refetch: refetchDye } = useQuery<AxiosResponse<GetDyeDto>, BackendError>(["dye", dyeid], async () => GetDyeById(dyeid), { enabled: false })
+    const { data: machines } = useQuery<AxiosResponse<GetMachineDto[]>, BackendError>("machines", async () => GetMachines())
+    const [file, setFile] = useState<File>()
+
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<GetUserDto>, BackendError, {
             id: string,
@@ -45,27 +38,25 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
 
     const { setChoice } = useContext(ChoiceContext)
 
-    const formik = useFormik<TformData>({
+    const formik = useFormik({
         initialValues: {
-            machine: shoe_weight.machine._id,
-            dye: shoe_weight.dye._id,
-            month: shoe_weight.month,
-            article: shoe_weight.article._id,
-            weight: shoe_weight.shoe_weight3,
-            upper_weight: shoe_weight.upper_weight3,
-            st_weight: shoe_weight.dye&& shoe_weight.dye.stdshoe_weight
+            machine: shoe_weight ? shoe_weight.machine.id : "",
+            dye: shoe_weight ? shoe_weight.dye.id : "",
+            month: shoe_weight ? shoe_weight.month : "",
+            article: shoe_weight ? shoe_weight.article.id : "",
+            weight: shoe_weight ? shoe_weight.shoe_weight3 : 0,
+            upper_weight: shoe_weight ? shoe_weight.upper_weight3 : 0
         },
         validationSchema: Yup.object({
             weight: Yup.number().required("required weight"),
-            st_weight: Yup.number().required("required St weight"),
             machine: Yup.string().required("required machine"),
+            upper_weight: Yup.number().required("required Upper Weight"),
             article: Yup.string().required("required article"),
             dye: Yup.string().required("required dye"),
-            upper_weight: Yup.number().required("required Upper Weight"),
             month: Yup.number().required("required clock in")
 
         }),
-        onSubmit: (values: TformData) => {
+        onSubmit: (values) => {
             if (file) {
                 let formdata = new FormData()
                 let Data = {
@@ -73,9 +64,8 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                     article: values.article,
                     month: values.month,
                     dye: values.dye,
-                    upper_weight:values.upper_weight,
-                    machine: values.machine,
-                    st_weight: values.st_weight
+                    upper_weight: values.upper_weight,
+                    machine: values.machine
                 }
                 formdata.append("body", JSON.stringify(Data))
                 formdata.append("media", file)
@@ -83,29 +73,42 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                 setFile(undefined)
             }
             else {
+
+                console.log(formik.errors)
                 alert("Upload a file")
             }
+
         }
     });
 
+    useEffect(() => {
+        if (file)
+            setFile(file)
+    }, [file])
 
     useEffect(() => {
-        if (formik.values.dye)
+        if (formik.values.dye) {
             setDyeid(formik.values.dye)
+        }
     }, [formik.values.dye])
+
+    useEffect(() => {
+        if (isDyeSuccess && dyedata && dyedata.data) {
+            let tmp = dyedata.data.articles && dyedata.data.articles.map((a) => { return { id: a.id, label: a.label, value: a.value } })
+            setArticles(tmp)
+            dyedata.data.stdshoe_weight && setStWeight(dyedata.data.stdshoe_weight)
+        }
+        else {
+            setArticles([])
+            setStWeight(0)
+        }
+    }, [dyedata, isDyeSuccess])
+
 
     useEffect(() => {
         refetchDye()
     }, [dyeid])
 
-    useEffect(() => {
-        if (dyedata) {
-            setArticles(dyedata.data.articles)
-        }
-        else {
-            setArticles([])
-        }
-    }, [dyedata])
     useEffect(() => {
         if (isSuccess) {
             setTimeout(() => {
@@ -114,18 +117,13 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
         }
     }, [isSuccess, setChoice])
 
-
-    useEffect(() => {
-        if (file)
-            setFile(file)
-    }, [file])
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack sx={{ direction: { xs: 'column', md: 'row' } }}>
                 <Stack
                     direction="column"
-                    gap={2}
-                    sx={{ pt: 2 }}
+                    gap={3}
+                    sx={{ pt: 3 }}
                 >
                     {/* machine */}
                     < TextField
@@ -136,7 +134,7 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         }}
                         error={
                             formik.touched.machine && formik.errors.machine ? true : false
-                        } disabled
+                        }
                         id="machine"
                         helperText={
                             formik.touched.machine && formik.errors.machine ? formik.errors.machine : ""
@@ -167,7 +165,7 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         error={
                             formik.touched.dye && formik.errors.dye ? true : false
                         }
-                        id="dye" disabled
+                        id="dye"
                         helperText={
                             formik.touched.dye && formik.errors.dye ? formik.errors.dye : ""
                         }
@@ -201,7 +199,6 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         helperText={
                             formik.touched.article && formik.errors.article ? formik.errors.article : ""
                         }
-                        disabled
                         {...formik.getFieldProps('article')}
                         required
                         label="Select Article"
@@ -210,29 +207,29 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                         <option key={'00'} value={undefined}>
                         </option>
                         {
-                            articles &&  articles.map((article, index) => {
-                                return (<option key={index} value={article._id}>
-                                    {article.display_name}
+                            articles && articles.map((article, index) => {
+                                return (<option key={index} value={article.id}>
+                                    {article.label}
                                 </option>)
                             })
                         }
                     </TextField>
-                   
+
                     <TextField
                         variant="outlined"
                         fullWidth
                         required
+                        type='number'
                         disabled
                         focused
                         label="St Weight"
-                        error={
-                            formik.touched.st_weight && formik.errors.st_weight ? true : false
-                        }
                         id="St Weight"
-                        helperText={
-                            formik.touched.st_weight && formik.errors.st_weight ? formik.errors.st_weight : ""
-                        }
-                        {...formik.getFieldProps('st_weight')}
+                        value={stWeight}
+                        onChange={(e) => {
+                            if (e.target.value) {
+                                setStWeight(Number(e.target.value))
+                            }
+                        }}
                     />
                     <TextField
                         variant="outlined"
@@ -273,7 +270,6 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                             formik.touched.month && formik.errors.month ? true : false
                         }
                         id="month"
-                        disabled
                         helperText={
                             formik.touched.month && formik.errors.month ? formik.errors.month : ""
                         }
@@ -300,7 +296,7 @@ function UpdateShoeWeightForm3({ shoe_weight }: { shoe_weight: IShoeWeight }) {
                     }
                     {
                         isSuccess ? (
-                            <AlertBar message="Updated Shoe weight" color="success" />
+                            <AlertBar message="Updated  Shoe weight 3" color="success" />
                         ) : null
                     }
                     <Button size="large" variant="contained" color="primary" type="submit"

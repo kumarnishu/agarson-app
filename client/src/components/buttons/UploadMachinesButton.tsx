@@ -56,7 +56,7 @@ function UploadMachinesFromExcelButton() {
                     <>
                         <Button
                             component="label"
-                            
+                            variant="contained"
                         >
                             <Upload />
                             <FileInput

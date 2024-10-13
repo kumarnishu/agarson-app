@@ -4,36 +4,29 @@ import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
-import {  ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import { IArticle, IMachine, IProduction } from '../../../types/production.types';
-import { CreateProduction, GetArticles, GetMachines } from '../../../services/ProductionServices';
+import { CreateOrEditProduction, GetArticles, GetMachines } from '../../../services/ProductionServices';
 import { GetUsers } from '../../../services/UserServices';
 import { UserContext } from '../../../contexts/userContext';
 import moment from 'moment';
 import { GetUserDto } from '../../../dtos/users/user.dto';
+import { CreateOrEditProductionDto, GetProductionDto } from '../../../dtos/production/production.dto';
 
-function NewProductionForm() {
+function CreateOrEditProductionForm({ production }: { production?: GetProductionDto }) {
     const { user } = useContext(UserContext)
     const { data: users } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'production_menu', show_assigned_only: true }))
     const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
     const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<IProduction>, BackendError, {
-            machine: string,
-            thekedar: string,
-            articles: string[],
-            manpower: number,
-            production: number,
-            production_hours: number,
-            big_repair: number,
-            upper_damage:number,
-            small_repair: number,
-            date: string
+            id?: string,
+            body: CreateOrEditProductionDto
         }>
-        (CreateProduction, {
+        (CreateOrEditProduction, {
             onSuccess: () => {
                 queryClient.invalidateQueries('productions')
             }
@@ -43,16 +36,16 @@ function NewProductionForm() {
 
     const formik = useFormik({
         initialValues: {
-            machine: '',
-            thekedar: '',
-            articles: [],
-            production_hours: 0,
-            manpower: 0,
-            production: 0,
-            big_repair: 0,
-            upper_damage: 0,
-            small_repair: 0,
-            date: moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY-MM-DD")
+            machine: production ? production.machine.id : "",
+            thekedar: production ? production.thekedar.id : "",
+            production_hours: production ? production.production_hours : 0,
+            articles: production ? production.articles.map((a) => { return a.id }) : [],
+            manpower: production ? production.manpower : 0,
+            production: production ? production.production : 0,
+            big_repair: production ? production.big_repair : 0,
+            upper_damage: production ? production.upper_damage : 0,
+            small_repair: production ? production.small_repair : 0,
+            date: production ? moment(production.date).format("YYYY-MM-DD") : moment(new Date()).format("YYYY-MM-DD")
         },
         validationSchema: Yup.object({
             machine: Yup.string()
@@ -63,9 +56,9 @@ function NewProductionForm() {
                 .required('Required field'),
             manpower: Yup.number()
                 .required('Required field'),
-            production: Yup.number()
-                .required('Required field'),
             production_hours: Yup.number()
+                .required('Required field'),
+            production: Yup.number()
                 .required('Required field'),
             big_repair: Yup.number()
                 .required('Required field'),
@@ -76,18 +69,17 @@ function NewProductionForm() {
             date: Yup.string().required('Required field'),
         }),
         onSubmit: (values) => {
-            mutate({
-                machine: values.machine,
-                thekedar: values.thekedar,
-                articles: values.articles,
-                upper_damage: values.upper_damage,
-                production_hours: values.production_hours,
-                manpower: values.manpower,
-                production: values.production,
-                big_repair: values.big_repair,
-                small_repair: values.small_repair,
-                date: values.date
-            })
+            if (production)
+                mutate({
+                    id: production._id,
+                    body: values
+                })
+            else {
+                mutate({
+                    body: values
+
+                })
+            }
         }
     });
 
@@ -96,7 +88,6 @@ function NewProductionForm() {
             setChoice({ type: ProductionChoiceActions.close_production })
         }
     }, [isSuccess, setChoice])
-
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -108,8 +99,8 @@ function NewProductionForm() {
             >
                 < TextField
                     type="date"
+                    disabled={production ? true : false}
                     focused
-
                     error={
                         formik.touched.date && formik.errors.date ? true : false
                     }
@@ -126,12 +117,12 @@ function NewProductionForm() {
                     select
 
                     SelectProps={{
-                        native: true
-
+                        native: true,
                     }}
                     error={
                         formik.touched.machine && formik.errors.machine ? true : false
                     }
+                    disabled={production ? true : false}
                     id="machine"
                     helperText={
                         formik.touched.machine && formik.errors.machine ? formik.errors.machine : ""
@@ -175,11 +166,10 @@ function NewProductionForm() {
                     </option>
                     {
                         users && users.data.map((user, index) => {
-                          
-                                return (<option key={index} value={user._id}>
-                                    {user.username}
-                                </option>)
-                           
+                            return (<option key={index} value={user._id}>
+                                {user.username}
+                            </option>)
+
                         })
                     }
                 </TextField>}
@@ -195,6 +185,7 @@ function NewProductionForm() {
                         formik.touched.articles && formik.errors.articles ? true : false
                     }
                     id="articles"
+
                     helperText={
                         formik.touched.articles && formik.errors.articles ? formik.errors.articles : ""
                     }
@@ -203,6 +194,7 @@ function NewProductionForm() {
                     label="Select Articles"
                     fullWidth
                 >
+
                     {
                         articles && articles.data && articles.data.map((article, index) => {
                             return (<option key={index} value={article._id}>
@@ -211,8 +203,34 @@ function NewProductionForm() {
                         })
                     }
                 </TextField>
-               
-                
+                <TextField
+                    required
+                    fullWidth
+                    type="number"
+                    error={
+                        formik.touched.manpower && formik.errors.manpower ? true : false
+                    }
+                    id="manpower"
+                    label="Man Power"
+                    helperText={
+                        formik.touched.manpower && formik.errors.manpower ? formik.errors.manpower : ""
+                    }
+                    {...formik.getFieldProps('manpower')}
+                />
+                <TextField
+                    required
+                    fullWidth
+                    type="number"
+                    error={
+                        formik.touched.production_hours && formik.errors.production_hours ? true : false
+                    }
+                    id="production_hours"
+                    label="Production Hours"
+                    helperText={
+                        formik.touched.production_hours && formik.errors.production_hours ? formik.errors.production_hours : ""
+                    }
+                    {...formik.getFieldProps('production_hours')}
+                />
                 <TextField
                     required
                     fullWidth
@@ -269,34 +287,7 @@ function NewProductionForm() {
                     }
                     {...formik.getFieldProps('small_repair')}
                 />
-                <TextField
-                    required
-                    fullWidth
-                    type="number"
-                    error={
-                        formik.touched.manpower && formik.errors.manpower ? true : false
-                    }
-                    id="manpower"
-                    label="Man Power"
-                    helperText={
-                        formik.touched.manpower && formik.errors.manpower ? formik.errors.manpower : ""
-                    }
-                    {...formik.getFieldProps('manpower')}
-                />
-                <TextField
-                    required
-                    fullWidth
-                    type="number"
-                    error={
-                        formik.touched.production_hours && formik.errors.production_hours ? true : false
-                    }
-                    id="production_hours"
-                    label="Production Hours"
-                    helperText={
-                        formik.touched.production_hours && formik.errors.production_hours ? formik.errors.production_hours : ""
-                    }
-                    {...formik.getFieldProps('production_hours')}
-                />
+
                 {
                     isError ? (
                         <AlertBar message={error?.response.data.message} color="error" />
@@ -304,16 +295,16 @@ function NewProductionForm() {
                 }
                 {
                     isSuccess ? (
-                        <AlertBar message="new production created" color="success" />
+                        <AlertBar message={production ? "updated" : "created"} color="success" />
                     ) : null
                 }
-                <Button variant="contained" color="primary" type="submit"
+                <Button variant="contained" size="large" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
-                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Create Production"}
+                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
                 </Button>
             </Stack>
         </form>
     )
 }
 
-export default NewProductionForm
+export default CreateOrEditProductionForm

@@ -1,7 +1,7 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
 import { upload } from "./user.routes";
-import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateDyeLocation,  CreateMachine, CreateProduction, CreateShoeWeight, CreateSoleThickness, CreateSpareDye, DeleteDyeLocation,  DeleteProduction, DeleteShoeWeight, DeleteSoleThickness, DeleteSpareDye, GetAllDyeLocations, GetArticles, GetCategoryWiseProductionReports, GetDyeById, GetDyes,  GetMachineCategories, GetMachines, GetMachineWiseProductionReports,  GetMyTodayProductions, GetMyTodayShoeWeights, GetMyTodaySoleThickness, GetMyTodaySpareDye, GetProductions, GetShoeWeightDifferenceReports, GetShoeWeights, GetSoleThickness, GetSpareDyes, GetThekedarWiseProductionReports, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateDyeLocation, UpdateMachine,  UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, UpdateSoleThickness, ValidateShoeWeight } from "../controllers/production.controller";
+import { BulkUploadArticle, BulkUploadDye, BulkUploadMachine, CreateArticle, CreateDye, CreateDyeLocation, CreateMachine, CreateMachineCategory, CreateProduction, CreateShoeWeight, CreateSoleThickness, CreateSpareDye, ToogleDyeLocation, DeleteMachineCategory, DeleteProduction, DeleteShoeWeight, DeleteSoleThickness, DeleteSpareDye, GetAllDyeLocations, GetArticles, GetCategoryWiseProductionReports, GetDyeById, GetDyes, GetMachineCategories, GetMachines, GetMachineWiseProductionReports, GetMyTodayProductions, GetMyTodayShoeWeights, GetMyTodaySoleThickness, GetMyTodaySpareDye, GetProductions, GetShoeWeightDifferenceReports, GetShoeWeights, GetSoleThickness, GetSpareDyes, GetThekedarWiseProductionReports, ToogleArticle, ToogleDye, ToogleMachine, UpdateArticle, UpdateDye, UpdateDyeLocation, UpdateMachine, UpdateMachineCategory, UpdateProduction, UpdateShoeWeight1, UpdateShoeWeight2, UpdateShoeWeight3, UpdateSoleThickness, ValidateShoeWeight, UpdateSpareDye, ValidateSpareDye } from "../controllers/production.controller";
 
 const router = express.Router()
 
@@ -26,7 +26,7 @@ router.route("/productions").get(isAuthenticatedUser, GetProductions)
     .post(isAuthenticatedUser, CreateProduction)
 router.route("/productions/:id").put(isAuthenticatedUser, UpdateProduction)
     .delete(isAuthenticatedUser, DeleteProduction)
-router.route("/machine/categories").get(isAuthenticatedUser, GetMachineCategories)
+
 router.route("/weights/me").get(isAuthenticatedUser, GetMyTodayShoeWeights),
     router.route("/weights").get(isAuthenticatedUser, GetShoeWeights)
         .post(isAuthenticatedUser, upload.single('media'), CreateShoeWeight)
@@ -34,17 +34,21 @@ router.route("/weights/:id").put(isAuthenticatedUser, upload.single('media'), Up
     router.put("/weights2/:id", isAuthenticatedUser, upload.single('media'), UpdateShoeWeight2),
     router.put("/weights3/:id", isAuthenticatedUser, upload.single('media'), UpdateShoeWeight3),
     router.patch("/weights/validate/:id", isAuthenticatedUser, ValidateShoeWeight)
-router.route("/dye/spares/me").get(isAuthenticatedUser, GetMyTodaySpareDye),
-    router.route("/dye/spares").get(isAuthenticatedUser, GetSpareDyes).post(isAuthenticatedUser, CreateSpareDye)
-router.route("/dye/spares/:id").delete(isAuthenticatedUser, DeleteSpareDye),
+router.patch("/sparedyes/validate/:id", isAuthenticatedUser, ValidateSpareDye)
+router.route("/sparedyes/me").get(isAuthenticatedUser, GetMyTodaySpareDye),
+    router.route("/sparedyes").get(isAuthenticatedUser, GetSpareDyes).post(isAuthenticatedUser, upload.single('media'), CreateSpareDye)
+router.route("/sparedyes/:id").put(isAuthenticatedUser, upload.single('media'), UpdateSpareDye).delete(isAuthenticatedUser, DeleteSpareDye),
     router.route("/dye/locations").get(isAuthenticatedUser, GetAllDyeLocations).post(isAuthenticatedUser, CreateDyeLocation),
-    router.route("/dye/locations/:id").put(isAuthenticatedUser, UpdateDyeLocation).delete(isAuthenticatedUser, DeleteDyeLocation)
+    router.route("/dye/locations/:id").put(isAuthenticatedUser, UpdateDyeLocation).patch(isAuthenticatedUser, ToogleDyeLocation)
 
 router.route("/production/categorywise").get(isAuthenticatedUser, GetCategoryWiseProductionReports)
 router.route("/production/machinewise").get(isAuthenticatedUser, GetMachineWiseProductionReports)
 router.route("/production/thekedarwise").get(isAuthenticatedUser, GetThekedarWiseProductionReports)
 router.route("/shoeweight/diffreports").get(isAuthenticatedUser, GetShoeWeightDifferenceReports)
 router.route("/solethickness").get(isAuthenticatedUser, GetSoleThickness).post(isAuthenticatedUser, CreateSoleThickness)
-router.route("/solethickness/:id").get(isAuthenticatedUser, DeleteSoleThickness).put(isAuthenticatedUser, UpdateSoleThickness).delete(isAuthenticatedUser,DeleteSoleThickness)
+router.route("/solethickness/:id").get(isAuthenticatedUser, DeleteSoleThickness).put(isAuthenticatedUser, UpdateSoleThickness).delete(isAuthenticatedUser, DeleteSoleThickness)
 router.route("/solethickness/me").get(isAuthenticatedUser, GetMyTodaySoleThickness)
+router.route("/machine/categories").get(isAuthenticatedUser, GetMachineCategories).post(isAuthenticatedUser, CreateMachineCategory)
+router.route("/machine/categories/:id").put(isAuthenticatedUser, UpdateMachineCategory).delete(isAuthenticatedUser, DeleteMachineCategory)
+
 export default router

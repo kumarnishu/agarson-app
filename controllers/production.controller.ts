@@ -9,12 +9,13 @@ import { MachineCategory } from "../models/production/category.machine.model"
 import { IShoeWeight, ShoeWeight } from "../models/production/shoe.weight.model"
 import { uploadFileToCloud } from "../utils/uploadFile.util"
 import { destroyFile } from "../utils/destroyFile.util"
-import { DyeLocation } from "../models/production/dye.location.model"
+import { DyeLocation, IDyeLocation } from "../models/production/dye.location.model"
 import isMongoId from "validator/lib/isMongoId"
 import moment from "moment"
 import { ISoleThickness, SoleThickness } from "../models/production/sole.thickness.model"
-import { CreateOrEditArticleDto, CreateOrEditDyeDTo, CreateOrEditDyeLocationDto, CreateOrEditMachineDto, CreateOrEditProductionDto, CreateOrEditShoeWeightDto, CreateOrEditSoleThicknessDto, CreateOrEditSpareDyeDto, GetArticleDto, GetCategoryWiseProductionReportDto, GetDyeDto, GetMachineDto, GetProductionDto, GetShoeWeightDiffReportDto, GetShoeWeightDto, GetSoleThicknessDto, GetSpareDyeDto, IColumnRowData, IRowData } from "../dtos/production/production.dto"
+import { CreateOrEditArticleDto, CreateOrEditDyeDTo, CreateOrEditDyeDtoFromExcel, CreateOrEditDyeLocationDto, CreateOrEditMachineDto, CreateOrEditProductionDto, CreateOrEditShoeWeightDto, CreateOrEditSoleThicknessDto, CreateOrEditSpareDyeDto, GetArticleDto, GetCategoryWiseProductionReportDto, GetDyeDto, GetDyeLocationDto, GetMachineDto, GetProductionDto, GetShoeWeightDiffReportDto, GetShoeWeightDto, GetSoleThicknessDto, GetSpareDyeDto, IColumnRowData, IRowData } from "../dtos/production/production.dto"
 import { ISpareDye, SpareDye } from "../models/production/SpareDye.model"
+import { CreateOrEditDropDownDto } from "../dtos/common/dropdown.dto"
 
 //get
 export const GetMachineCategories = async (req: Request, res: Response, next: NextFunction) => {
@@ -23,13 +24,61 @@ export const GetMachineCategories = async (req: Request, res: Response, next: Ne
     })
     return res.status(200).json(result)
 }
+export const CreateMachineCategory = async (req: Request, res: Response, next: NextFunction) => {
+    const { key } = req.body as CreateOrEditDropDownDto
+    if (!key) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    if (await MachineCategory.findOne({ category: key.toLowerCase() }))
+        return res.status(400).json({ message: "already exists this category" })
+    let result = await new MachineCategory({
+        category: key,
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save()
+    return res.status(201).json({ message: "success" })
 
+}
+
+export const UpdateMachineCategory = async (req: Request, res: Response, next: NextFunction) => {
+    const { key } = req.body as CreateOrEditDropDownDto
+    if (!key) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    const id = req.params.id
+    let oldtype = await MachineCategory.findById(id)
+    if (!oldtype)
+        return res.status(404).json({ message: "category not found" })
+    if (key !== oldtype.category)
+        if (await MachineCategory.findOne({ category: key.toLowerCase() }))
+            return res.status(400).json({ message: "already exists this category" })
+    let prevtype = oldtype.category
+    oldtype.category = key
+    oldtype.updated_at = new Date()
+    if (req.user)
+        oldtype.updated_by = req.user
+    await Machine.updateMany({ category: prevtype }, { category: key })
+    await oldtype.save()
+    return res.status(200).json({ message: "updated" })
+
+}
+export const DeleteMachineCategory = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "category id not valid" })
+    let category = await MachineCategory.findById(id);
+    if (!category) {
+        return res.status(404).json({ message: "category not found" })
+    }
+    await category.remove();
+    return res.status(200).json({ message: "category deleted successfully" })
+}
 export const GetMachines = async (req: Request, res: Response, next: NextFunction) => {
     let hidden = String(req.query.hidden)
     let machines: IMachine[] = []
     let result: GetMachineDto[] = []
     if (hidden === "true") {
-        machines = await Machine.find().populate('created_by').populate('updated_by').sort('serial_no')
+        machines = await Machine.find({ active: false }).populate('created_by').populate('updated_by').sort('serial_no')
     } else
         machines = await Machine.find({ active: true }).populate('created_by').populate('updated_by').sort('serial_no')
     result = machines.map((m) => {
@@ -53,7 +102,7 @@ export const GetArticles = async (req: Request, res: Response, next: NextFunctio
     let result: GetArticleDto[] = []
     let articles: IArticle[] = []
     if (hidden === "true") {
-        articles = await Article.find().populate('created_by').populate('updated_by').sort('name')
+        articles = await Article.find({ active: false }).populate('created_by').populate('updated_by').sort('name')
     } else
         articles = await Article.find({ active: true }).populate('created_by').populate('updated_by').sort('name')
     result = articles.map((m) => {
@@ -97,7 +146,7 @@ export const GetDyes = async (req: Request, res: Response, next: NextFunction) =
     let dyes: IDye[] = []
     let result: GetDyeDto[] = []
     if (hidden === "true") {
-        dyes = await Dye.find().populate('articles').populate('created_by').populate('updated_by').sort('dye_number')
+        dyes = await Dye.find({ active: false }).populate('articles').populate('created_by').populate('updated_by').sort('dye_number')
     } else
         dyes = await Dye.find({ active: true }).populate('articles').populate('created_by').populate('updated_by').sort('dye_number')
     result = dyes.map((dye) => {
@@ -283,7 +332,7 @@ export const BulkUploadDye = async (req: Request, res: Response, next: NextFunct
             return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
         const workbook = xlsx.read(req.file.buffer);
         let workbook_sheet = workbook.SheetNames;
-        let workbook_response: CreateOrEditDyeDTo[] = xlsx.utils.sheet_to_json(
+        let workbook_response: CreateOrEditDyeDtoFromExcel[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
         let newDyes: { dye_number: number, size: string, articles: IArticle[], st_weight: number }[] = []
@@ -711,7 +760,7 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
         if (!id) {
             if (user_ids.length > 0) {
                 weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).populate('dye').populate('machine').populate('article').populate('created_by').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
-                count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
+                count = await ShoeWeight.find({ created_at: { $gt: dt1, $lt: dt2 }, created_by: { $in: user_ids } }).countDocuments()
             }
 
             else {
@@ -979,6 +1028,18 @@ export const ValidateShoeWeight = async (req: Request, res: Response, next: Next
     await shoe_weight.save()
     return res.status(200).json(shoe_weight)
 }
+export const ValidateSpareDye = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    let sparedye = await SpareDye.findById(id)
+    if (!sparedye)
+        return res.status(404).json({ message: "spare dye not found" })
+    sparedye.is_validated = true
+    sparedye.updated_at = new Date()
+    if (req.user)
+        sparedye.updated_by = req.user
+    await sparedye.save()
+    return res.status(200).json(sparedye)
+}
 export const DeleteShoeWeight = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     let shoe_weight = await ShoeWeight.findById(id)
@@ -1000,8 +1061,28 @@ export const DeleteShoeWeight = async (req: Request, res: Response, next: NextFu
 
 
 export const GetAllDyeLocations = async (req: Request, res: Response, next: NextFunction) => {
-    let locations = await DyeLocation.find()
-    return res.status(200).json(locations)
+    let hidden = String(req.query.hidden)
+    let result: GetDyeLocationDto[] = []
+    let locations: IDyeLocation[] = []
+    if (hidden === "true") {
+        locations = await DyeLocation.find({ active: false }).populate('created_by').populate('updated_by')
+    } else
+        locations = await DyeLocation.find({ active: true }).populate('created_by').populate('updated_by')
+
+
+    result = locations.map((l) => {
+        return {
+            _id: l._id,
+            name: l.name,
+            active: l.active,
+            display_name: l.display_name,
+            created_at: l.created_at && moment(l.created_at).format("DD/MM/YYYY"),
+            updated_at: l.updated_at && moment(l.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: l.created_by._id, value: l.created_by.username, label: l.created_by.username },
+            updated_by: { id: l.updated_by._id, value: l.updated_by.username, label: l.updated_by.username }
+        }
+    })
+    return res.status(200).json(result)
 }
 
 
@@ -1035,8 +1116,8 @@ export const UpdateDyeLocation = async (req: Request, res: Response, next: NextF
     if (name !== oldlocation.name)
         if (await DyeLocation.findOne({ name: name.toLowerCase() }))
             return res.status(400).json({ message: "already exists this location" })
-    let prevname = oldlocation.name
     oldlocation.name = name
+    oldlocation.display_name = display_name
     oldlocation.updated_at = new Date()
     if (req.user)
         oldlocation.updated_by = req.user
@@ -1044,15 +1125,20 @@ export const UpdateDyeLocation = async (req: Request, res: Response, next: NextF
     return res.status(200).json(oldlocation)
 
 }
-export const DeleteDyeLocation = async (req: Request, res: Response, next: NextFunction) => {
+
+export const ToogleDyeLocation = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     if (!isMongoId(id)) return res.status(403).json({ message: "location id not valid" })
     let location = await DyeLocation.findById(id);
     if (!location) {
         return res.status(404).json({ message: "location not found" })
     }
-    await location.remove();
-    return res.status(200).json({ message: "lead location deleted successfully" })
+    location.active = !location.active
+    location.updated_at = new Date()
+    if (req.user)
+        location.updated_by = req.user
+    await location.save()
+    return res.status(200).json({ message: "success" })
 }
 
 export const GetShoeWeightDifferenceReports = async (req: Request, res: Response, next: NextFunction) => {
@@ -1390,8 +1476,10 @@ export const GetMyTodaySpareDye = async (req: Request, res: Response, next: Next
             _id: dye._id,
             dye: { id: dye._id, value: String(dye.dye.dye_number), label: String(dye.dye.dye_number) },
             repair_required: dye.repair_required,
+            is_validated: dye.is_validated,
             dye_photo: dye.dye_photo?.public_url || "",
             photo_time: dye.created_at && moment(dye.photo_time).format("LT"),
+            remarks: dye.remarks || "",
             location: { id: dye.location._id, value: dye.location.name, label: dye.location.name },
             created_at: dye.created_at && moment(dye.created_at).format("DD/MM/YYYY"),
             updated_at: dye.updated_at && moment(dye.updated_at).format("DD/MM/YYYY"),
@@ -1443,6 +1531,8 @@ export const GetSpareDyes = async (req: Request, res: Response, next: NextFuncti
                 dye: { id: dye._id, value: String(dye.dye.dye_number), label: String(dye.dye.dye_number) },
                 repair_required: dye.repair_required,
                 dye_photo: dye.dye_photo?.public_url || "",
+                remarks: dye.remarks || "",
+                is_validated: dye.is_validated,
                 photo_time: dye.created_at && moment(dye.photo_time).format("LT"),
                 location: { id: dye.location._id, value: dye.location.name, label: dye.location.name },
                 created_at: dye.created_at && moment(dye.created_at).format("DD/MM/YYYY"),
@@ -1465,9 +1555,9 @@ export const GetSpareDyes = async (req: Request, res: Response, next: NextFuncti
 
 export const CreateSpareDye = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body) as CreateOrEditSpareDyeDto
-    let { dye, location, repair_required } = body
+    let { dye, location, repair_required, remarks } = body
 
-    if (!location || !dye)
+    if (!location || !dye || !remarks)
         if (!dye || !location)
             return res.status(400).json({ message: "please fill all reqired fields" })
 
@@ -1480,7 +1570,7 @@ export const CreateSpareDye = async (req: Request, res: Response, next: NextFunc
         return res.status(404).json({ message: "location not found" })
     }
     let dyeObj = new SpareDye({
-         dye: d1, location: l1
+        dye: d1, location: l1
     })
     if (req.file) {
         console.log(req.file.mimetype)
@@ -1499,6 +1589,8 @@ export const CreateSpareDye = async (req: Request, res: Response, next: NextFunc
     }
     dyeObj.created_at = new Date()
     dyeObj.updated_at = new Date()
+    if (remarks)
+        dyeObj.remarks = remarks;
     if (req.user)
         dyeObj.created_by = req.user
     dyeObj.repair_required = repair_required;
@@ -1511,12 +1603,12 @@ export const CreateSpareDye = async (req: Request, res: Response, next: NextFunc
 
 export const UpdateSpareDye = async (req: Request, res: Response, next: NextFunction) => {
     let body = JSON.parse(req.body.body) as CreateOrEditSpareDyeDto
-    let { dye, location, repair_required } = body
+    let { dye, location, repair_required, remarks } = body
     const id = req.params.id
     let dyeObj = await SpareDye.findById(id)
     if (!dyeObj)
         return res.status(404).json({ message: "dye not found" })
-    if (!location || !dye)
+    if (!location || !dye || !remarks)
         if (!dye || !location)
             return res.status(400).json({ message: "please fill all reqired fields" })
 
@@ -1528,6 +1620,7 @@ export const UpdateSpareDye = async (req: Request, res: Response, next: NextFunc
     if (!l1) {
         return res.status(404).json({ message: "location not found" })
     }
+    dyeObj.remarks = remarks;
     dyeObj.dye = d1;
     dyeObj.location = l1;
     if (req.file) {

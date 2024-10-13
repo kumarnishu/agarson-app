@@ -63,7 +63,7 @@ export type IShoeWeight = {
 }
 export type IMachineCategory={
     _id: string,
-    categories: string[],
+    category: string,
     created_at: Date,
     updated_at: Date,
     created_by: GetUserDto,

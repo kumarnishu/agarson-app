@@ -1,127 +1,193 @@
-import { Search } from '@mui/icons-material'
-import { Fade, FormControlLabel, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import FuzzySearch from "fuzzy-search";
-import ExportToExcel from '../../utils/ExportToExcel'
-import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
-import { Menu as MenuIcon } from '@mui/icons-material';
-import AlertBar from '../../components/snacks/AlertBar'
+import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { onlyUnique } from '../../utils/UniqueArray'
 import { UserContext } from '../../contexts/userContext'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import { IDye } from '../../types/production.types'
+import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
+import { Edit, RestartAlt } from '@mui/icons-material'
+import { Fade, FormControlLabel, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material'
+import PopUp from '../../components/popup/PopUp'
+import ExportToExcel from '../../utils/ExportToExcel'
+import { Menu as MenuIcon } from '@mui/icons-material';
+import { GetDyeDto } from '../../dtos/production/production.dto'
 import { GetDyes } from '../../services/ProductionServices'
-import NewDyeDialog from '../../components/dialogs/production/CreateDyeDialog'
-import DyesTable from '../../components/tables/production/DyesTable'
 import UploadDyesFromExcelButton from '../../components/buttons/UploadDyesButton'
+import ToogleDyeDialog from '../../components/dialogs/production/ToogleDyeDialog'
+import CreateOrEditDyeDialog from '../../components/dialogs/production/CreateOrEditDyeDialog'
 
 
-type SelectedData = {
-  dye_number?: number,
-  size?: string,
-  articles?: string,
-  st_weight?: number,
-  is_active?: boolean,
-  created_at?: string,
-  updated_at?: string
-}
-let template: SelectedData[] = [
-  {
-    dye_number: 1,
-    is_active: true,
-    articles:"Power",
-    st_weight:1000,
-    size: "6"
-  }
-]
 
 export default function DyePage() {
+  const [dye, setDye] = useState<GetDyeDto>()
+  const [dyes, setDyes] = useState<GetDyeDto[]>([])
   const [hidden, setHidden] = useState(false)
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IDye[]>, BackendError>(["dyes", hidden], async () => GetDyes(String(hidden)))
-  const [dye, setDye] = useState<IDye>()
-  const [dyes, setDyes] = useState<IDye[]>([])
-  const [selectAll, setSelectAll] = useState(false)
-  const MemoData = React.useMemo(() => dyes, [dyes])
-  const [preFilteredData, setPreFilteredData] = useState<IDye[]>([])
-  const [selectedDyes, setSelectedDyes] = useState<IDye[]>([])
-  const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<SelectedData[]>(template)
-  const [sent, setSent] = useState(false)
+  const { user: LoggedInUser } = useContext(UserContext)
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetDyeDto[]>, BackendError>(["dyes", hidden], async () => GetDyes(String(hidden)))
+
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { user: LoggedInUser } = useContext(UserContext)
+
+  const columns = useMemo<MRT_ColumnDef<GetDyeDto>[]>(
+    //column definitions...
+    () => dyes && [
+      {
+        accessorKey: 'actions',
+        header: '',
+        maxSize: 50,
+        enableColumnFilter: false,
+        size: 120,
+        Cell: ({ cell }) => <PopUp
+          element={
+            <Stack direction="row">
+              <>
+
+                {LoggedInUser?.assigned_permissions.includes('dye_edit') && <Tooltip title="Toogle">
+                  <IconButton color="primary"
+
+                    onClick={() => {
+                      setDye(cell.row.original)
+                      setChoice({ type: ProductionChoiceActions.toogle_dye })
+
+                    }}
+                  >
+                    <RestartAlt />
+                  </IconButton>
+                </Tooltip>}
+
+                {LoggedInUser?.assigned_permissions.includes('dye_edit') && <Tooltip title="edit">
+                  <IconButton
+
+                    onClick={() => {
+                      setDye(cell.row.original)
+                      setChoice({ type: ProductionChoiceActions.create_or_edit_dye })
+                    }}
+
+                  >
+                    <Edit />
+                  </IconButton>
+                </Tooltip>}
+
+              </>
+
+            </Stack>}
+        />
+      },
+      {
+        accessorKey: 'active',
+        header: 'Status',
+        size: 120,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.active ? "active" : "inactive"}</>,
+        filterSelectOptions: dyes && dyes.map((i) => {
+          return i.active ? "active" : "inactive";
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'dye_number',
+        header: 'Dye',
+        size: 120,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.dye_number.toString() || "" ? cell.row.original.dye_number.toString() || "" : ""}</>,
+        filterSelectOptions: dyes && dyes.map((i) => {
+          return i.dye_number.toString() || "";
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'size',
+        header: 'Size',
+        size: 200,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.size ? cell.row.original.size : ""}</>,
+        filterSelectOptions: dyes && dyes.map((i) => {
+          return i.size;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'articles',
+        header: 'Articles',
+        size: 720,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.articles.toString() ? cell.row.original.articles.map((a) => { return a.value }).toString() : ""}</>,
+        filterSelectOptions: dyes && dyes.map((i) => {
+          return i.articles.toString();
+        }).filter(onlyUnique)
+      }
+    ],
+    [dyes],
+    //end
+  );
 
 
-  function handleExcel() {
-    setAnchorEl(null)
-    try {
-      ExportToExcel(selectedData, "dyes_data")
-      setSent(true)
-      setSelectAll(false)
-      setSelectedData([])
-      setSelectedDyes([])
-    }
-    catch (err) {
-      console.log(err)
-      setSent(false)
-    }
-  }
+  const table = useMaterialReactTable({
+    columns,
+    data: dyes, //10,000 rows       
+    enableColumnResizing: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        fontSize: '14px'
+      }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '62vh' }
+    }),
+    muiTableHeadRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white'
+      },
+    }),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
+      },
+    }),
+    muiPaginationProps: {
+      rowsPerPageOptions: [100, 200, 500, 1000, 2000],
+      shape: 'rounded',
+      variant: 'outlined',
+    },
+    initialState: {
+      density: 'compact', showGlobalFilter: true, pagination: { pageIndex: 0, pageSize: 500 }
+    },
+    enableGrouping: true,
+    enableRowSelection: true,
+    manualPagination: false,
+    enablePagination: true,
+    enableRowNumbers: true,
+    enableColumnPinning: true,
+    enableTableFooter: true,
+    enableRowVirtualization: true,
+    onSortingChange: setSorting,
+    state: { isLoading, sorting }
+  });
 
-  // refine data
-  useEffect(() => {
-    let data: SelectedData[] = []
-    selectedDyes.map((dye) => {
-      return data.push({
-        dye_number: dye.dye_number,
-        size: dye.size,
-        articles: dye.articles&& dye.articles.map((d)=>{return d.display_name}).toString(),
-        st_weight: dye.stdshoe_weight,
-        is_active: dye.active ? true : false,
-        created_at: new Date(dye.created_at).toLocaleDateString(),
-        updated_at: new Date(dye.updated_at).toLocaleDateString()
-      })
-    })
-    if (data.length > 0)
-      setSelectedData(data)
-  }, [selectedDyes])
 
   useEffect(() => {
     if (isSuccess) {
-      setDyes(data.data)
-      setPreFilteredData(data.data)
+      setDyes(data.data);
     }
-  }, [isSuccess, dyes, data])
+  }, [data, isSuccess]);
 
 
-  useEffect(() => {
-    if (filter) {
-      if (dyes) {
-        const searcher = new FuzzySearch(dyes, ["dye_number","stdshoe_weight", "size",  "created_by", "updated_by"], {
-          caseSensitive: false,
-        });
-        const result = searcher.search(filter);
-        setDyes(result)
-      }
-    }
-    if (!filter)
-      setDyes(preFilteredData)
-
-  }, [filter, dyes])
   return (
     <>
-      {
-        isLoading && <LinearProgress />
-      }
-      {/*heading, search bar and table menu */}
+
+
       <Stack
         spacing={2}
         padding={1}
         direction="row"
         justifyContent="space-between"
-        width="100vw"
+        alignItems={'center'}
       >
         <Typography
           variant={'h6'}
@@ -130,88 +196,68 @@ export default function DyePage() {
         >
           Dyes
         </Typography>
-
         <Stack
+          spacing={2}
+          padding={1}
           direction="row"
+          justifyContent="space-between"
+          alignItems={'end'}
         >
-          {/* search bar */}
-          < Stack direction="row" spacing={2} >
-            
-            {LoggedInUser?.assigned_permissions.includes('dye_create') && < UploadDyesFromExcelButton  />}
-            <FormControlLabel control={<Switch
-              defaultChecked={Boolean(hidden)}
-              onChange={() => setHidden(!hidden)}
-            />} label="Show Inactive" />
-            <TextField
-              fullWidth
-              size="small"
-              onChange={(e) => setFilter(e.currentTarget.value)}
-              autoFocus
-              InputProps={{
-                startAdornment: <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>,
-              }}
-              placeholder={`${MemoData?.length} records...`}
-              style={{
-                fontSize: '1.1rem',
-                border: '0',
-              }}
-            />
-          </Stack >
-          {/* menu */}
-          <>
+          {LoggedInUser?.assigned_permissions.includes('dye_create') &&
+            < UploadDyesFromExcelButton />}
+          <FormControlLabel control={<Switch
+            defaultChecked={Boolean(hidden)}
+            onChange={() => setHidden(!hidden)}
+          />} label="Show Inactive" />
+          <IconButton size="small" color="primary"
+            onClick={(e) => setAnchorEl(e.currentTarget)
+            }
+            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
+          >
+            <MenuIcon />
+          </IconButton>
 
-            {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-
-
-            <IconButton size="small" color="primary"
-              onClick={(e) => setAnchorEl(e.currentTarget)
-              }
-              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)
-              }
-              TransitionComponent={Fade}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-              sx={{ borderRadius: 2 }}
-            >
-              {LoggedInUser?.assigned_permissions.includes('dye_create') &&  <MenuItem onClick={() => {
-                setChoice({ type: ProductionChoiceActions.create_dye })
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)
+            }
+            TransitionComponent={Fade}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+            sx={{ borderRadius: 2 }}
+          >
+            {LoggedInUser?.assigned_permissions.includes("dye_create") && <MenuItem
+              onClick={() => {
+                setDye(undefined)
                 setAnchorEl(null)
+                setChoice({ type: ProductionChoiceActions.create_or_edit_dye })
               }}
-              >New Dye</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes('dye_export') && <MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>}
 
+            > Add New</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('dye_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
-            </Menu>
-            <NewDyeDialog />
-          </>
+            >Export All</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('dye_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
+            >Export Selected</MenuItem>}
+
+          </Menu >
         </Stack>
-      </Stack>
-      {/*  table */}
-      {isLoading && <TableSkeleton />}
-      {!isLoading &&
-        <DyesTable
-          dye={dye}
-          selectAll={selectAll}
-          selectedDyes={selectedDyes}
-          setSelectedDyes={setSelectedDyes}
-          setSelectAll={setSelectAll}
-          dyes={MemoData}
-          setDye={setDye}
-        />}
 
+        <CreateOrEditDyeDialog dye={dye} />
+        {
+          dye ?
+            <>
+              <ToogleDyeDialog dye={dye} />
+            </>
+            : null
+        }
+      </Stack >
+
+      {/* table */}
+      <MaterialReactTable table={table} />
     </>
 
   )

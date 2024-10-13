@@ -1,120 +1,184 @@
-import { Search } from '@mui/icons-material'
-import { Fade, FormControlLabel, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Switch, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import FuzzySearch from "fuzzy-search";
-import ExportToExcel from '../../utils/ExportToExcel'
-import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
-import { Menu as MenuIcon } from '@mui/icons-material';
-import AlertBar from '../../components/snacks/AlertBar'
-import ArticlesTable from '../../components/tables/production/ArticleTable'
+import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { onlyUnique } from '../../utils/UniqueArray'
 import { UserContext } from '../../contexts/userContext'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
-import NewArticleDialog from '../../components/dialogs/production/CreateArticleDialog'
-import { IArticle } from '../../types/production.types'
+import { ChoiceContext, ProductionChoiceActions } from '../../contexts/dialogContext'
+import { Edit, RestartAlt } from '@mui/icons-material'
+import { Fade, FormControlLabel, IconButton, Menu, MenuItem, Switch, Tooltip, Typography } from '@mui/material'
+import PopUp from '../../components/popup/PopUp'
+import ExportToExcel from '../../utils/ExportToExcel'
+import { Menu as MenuIcon } from '@mui/icons-material';
+import { GetArticleDto } from '../../dtos/production/production.dto'
 import { GetArticles } from '../../services/ProductionServices'
 import UploadArticlesFromExcelButton from '../../components/buttons/UploadArticlesButton'
+import CreateOrEditArticleDialog from '../../components/dialogs/production/CreateOrEditArticleDialog'
+import ToogleArticleDialog from '../../components/dialogs/production/ToogleArticleDialog'
 
 
-type SelectedData = {
-  name?: string,
-  display_name?: string,
-  is_active?: boolean
-  created_at?: string,
-  updated_at?: string
-}
-let template: SelectedData[] = [
-  {
-    name: "power",
-    display_name: "power"
-  }
-]
 
 export default function ArticlePage() {
+  const [article, setArticle] = useState<GetArticleDto>()
+  const [articles, setArticles] = useState<GetArticleDto[]>([])
   const [hidden, setHidden] = useState(false)
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<IArticle[]>, BackendError>(["articles", hidden], async () => GetArticles(String(hidden)))
-  const [article, setArticle] = useState<IArticle>()
-  const [articles, setArticles] = useState<IArticle[]>([])
-  const [selectAll, setSelectAll] = useState(false)
-  const MemoData = React.useMemo(() => articles, [articles])
-  const [preFilteredData, setPreFilteredData] = useState<IArticle[]>([])
-  const [selectedArticles, setSelectedArticles] = useState<IArticle[]>([])
-  const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<SelectedData[]>(template)
-  const [sent, setSent] = useState(false)
+  const { user: LoggedInUser } = useContext(UserContext)
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetArticleDto[]>, BackendError>(["articles", hidden], async () => GetArticles(String(hidden)))
+
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { user: LoggedInUser } = useContext(UserContext)
 
+  const columns = useMemo<MRT_ColumnDef<GetArticleDto>[]>(
+    //column definitions...
+    () => articles && [
+      {
+        accessorKey: 'actions',
+        header: '',
+        maxSize: 50,
+        enableColumnFilter: false,
+        size: 120,
+        Cell: ({ cell }) => <PopUp
+          element={
+            <Stack direction="row">
+              <>
 
-  function handleExcel() {
-    setAnchorEl(null)
-    try {
-      ExportToExcel(selectedData, "articles_data")
-      setSent(true)
-      setSelectAll(false)
-      setSelectedData([])
-      setSelectedArticles([])
-    }
-    catch (err) {
-      console.log(err)
-      setSent(false)
-    }
-  }
+                {LoggedInUser?.assigned_permissions.includes('article_edit') && <Tooltip title="Toogle">
+                  <IconButton color="primary"
 
-  // refine data
-  useEffect(() => {
-    let data: SelectedData[] = []
-    selectedArticles.map((article) => {
-      return data.push({
-        name: article.name,
-        display_name: article.display_name,
-        is_active: article.active ? true : false,
-        created_at: new Date(article.created_at).toLocaleDateString(),
-        updated_at: new Date(article.updated_at).toLocaleDateString()
-      })
-    })
-    if (data.length > 0)
-      setSelectedData(data)
-  }, [selectedArticles])
+                    onClick={() => {
+                      setArticle(cell.row.original)
+                      setChoice({ type: ProductionChoiceActions.toogle_article })
+
+                    }}
+                  >
+                    <RestartAlt />
+                  </IconButton>
+                </Tooltip>}
+
+                {LoggedInUser?.assigned_permissions.includes('article_edit') && <Tooltip title="edit">
+                  <IconButton
+
+                    onClick={() => {
+                      setArticle(cell.row.original)
+                      setChoice({ type: ProductionChoiceActions.create_or_edit_article })
+                    }}
+
+                  >
+                    <Edit />
+                  </IconButton>
+                </Tooltip>}
+
+              </>
+
+            </Stack>}
+        />
+      },
+
+      {
+        accessorKey: 'active',
+        header: 'Status',
+        size: 120,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.active ? "active" : "inactive"}</>,
+        filterSelectOptions: articles && articles.map((i) => {
+          return i.active ? "active" : "inactive";
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'name',
+        header: 'Name',
+        size: 220,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.name ? cell.row.original.name : ""}</>,
+        filterSelectOptions: articles && articles.map((i) => {
+          return i.name;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'display_name',
+        header: 'Display Name',
+        size: 220,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.display_name ? cell.row.original.display_name : ""}</>,
+        filterSelectOptions: articles && articles.map((i) => {
+          return i.display_name;
+        }).filter(onlyUnique)
+      }
+    ],
+    [articles],
+    //end
+  );
+
+console.log(article)
+  const table = useMaterialReactTable({
+    columns,
+    data: articles, //10,000 rows       
+    enableColumnResizing: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        fontSize: '14px'
+      }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '62vh' }
+    }),
+    muiTableHeadRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white'
+      },
+    }),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
+      },
+    }),
+    muiPaginationProps: {
+      rowsPerPageOptions: [100, 200, 500, 1000, 2000],
+      shape: 'rounded',
+      variant: 'outlined',
+    },
+    initialState: {
+      density: 'compact', showGlobalFilter: true, pagination: { pageIndex: 0, pageSize: 500 }
+    },
+    enableGrouping: true,
+    enableRowSelection: true,
+    manualPagination: false,
+    enablePagination: true,
+    enableRowNumbers: true,
+    enableColumnPinning: true,
+    enableTableFooter: true,
+    enableRowVirtualization: true,
+    onSortingChange: setSorting,
+    state: { isLoading, sorting }
+  });
+
 
   useEffect(() => {
     if (isSuccess) {
-      setArticles(data.data)
-      setPreFilteredData(data.data)
+      setArticles(data.data);
     }
-  }, [isSuccess, articles, data])
+  }, [data, isSuccess]);
 
 
-  useEffect(() => {
-    if (filter) {
-      if (articles) {
-        const searcher = new FuzzySearch(articles, ["name", "display_name", "created_by", "updated_by"], {
-          caseSensitive: false,
-        });
-        const result = searcher.search(filter);
-        setArticles(result)
-      }
-    }
-    if (!filter)
-      setArticles(preFilteredData)
-
-  }, [filter, articles])
   return (
     <>
-      {
-        isLoading && <LinearProgress />
-      }
-      {/*heading, search bar and table menu */}
+
+
       <Stack
         spacing={2}
         padding={1}
         direction="row"
         justifyContent="space-between"
-        width="100vw"
+        alignItems={'center'}
       >
         <Typography
           variant={'h6'}
@@ -123,88 +187,64 @@ export default function ArticlePage() {
         >
           Articles
         </Typography>
-
         <Stack
+          spacing={2}
+          padding={1}
           direction="row"
+          justifyContent="space-between"
+          alignItems={'end'}
         >
-          {/* search bar */}
-          < Stack direction="row" spacing={2} >
-            
-            {LoggedInUser?.assigned_permissions.includes("article_create")&&< UploadArticlesFromExcelButton  />}
-            <FormControlLabel control={<Switch
-              defaultChecked={Boolean(hidden)}
-              onChange={() => setHidden(!hidden)}
-            />} label="Show Inactive" />
+          {LoggedInUser?.assigned_permissions.includes('article_create') &&
+            < UploadArticlesFromExcelButton />}
+          <FormControlLabel control={<Switch
+            defaultChecked={Boolean(hidden)}
+            onChange={() => setHidden(!hidden)}
+          />} label="Show Inactive" />
+          <IconButton size="small" color="primary"
+            onClick={(e) => setAnchorEl(e.currentTarget)
+            }
+            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
+          >
+            <MenuIcon />
+          </IconButton>
 
-            <TextField
-              fullWidth
-              size="small"
-              onChange={(e) => setFilter(e.currentTarget.value)}
-              autoFocus
-              InputProps={{
-                startAdornment: <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>,
-              }}
-              placeholder={`${MemoData?.length} records...`}
-              style={{
-                fontSize: '1.1rem',
-                border: '0',
-              }}
-            />
-          </Stack >
-          {/* menu */}
-          <>
-
-            {sent && <AlertBar message="File Exported Successfuly" color="success" />}
-
-
-            <IconButton size="small" color="primary"
-              onClick={(e) => setAnchorEl(e.currentTarget)
-              }
-              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)
-              }
-              TransitionComponent={Fade}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-              sx={{ borderRadius: 2 }}
-            >  {LoggedInUser?.assigned_permissions.includes("article_create") && <MenuItem onClick={() => {
-                setChoice({ type: ProductionChoiceActions.create_article })
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)
+            }
+            TransitionComponent={Fade}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+            sx={{ borderRadius: 2 }}
+          >
+            {LoggedInUser?.assigned_permissions.includes("article_create") && <MenuItem
+              onClick={() => {
+                setArticle(undefined)
                 setAnchorEl(null)
+                setChoice({ type: ProductionChoiceActions.create_or_edit_article })
               }}
-              >New Article</MenuItem>}
-              {LoggedInUser?.assigned_permissions.includes("article_export") &&<MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>}
 
+            > Add New</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('article_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
-            </Menu>
-            <NewArticleDialog />
-          </>
+            >Export All</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('article_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
+            >Export Selected</MenuItem>}
+
+          </Menu >
         </Stack>
-      </Stack>
-      {/*  table */}
-      {isLoading && <TableSkeleton />}
-      {!isLoading &&
-        <ArticlesTable
-          article={article}
-          selectAll={selectAll}
-          selectedArticles={selectedArticles}
-          setSelectedArticles={setSelectedArticles}
-          setSelectAll={setSelectAll}
-          articles={MemoData}
-          setArticle={setArticle}
-        />}
 
+        <CreateOrEditArticleDialog article={article} />
+
+        {article && <ToogleArticleDialog article={article} />}
+
+      </Stack >
+
+      {/* table */}
+      <MaterialReactTable table={table} />
     </>
 
   )

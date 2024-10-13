@@ -4,35 +4,36 @@ import { useFormik } from 'formik';
 import { useEffect, useContext } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import * as Yup from "yup"
-import {  ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
+import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { GetMachineCategories, UpdateMachine } from '../../../services/ProductionServices';
-import { IMachine, IMachineCategory } from '../../../types/production.types';
+import { GetMachineCategories, CreateOrEditMachine } from '../../../services/ProductionServices';
+import { CreateOrEditMachineDto, GetMachineDto } from '../../../dtos/production/production.dto';
+import { DropDownDto } from '../../../dtos/common/dropdown.dto';
 
 
-function UpdateMachineForm({ machine }: { machine: IMachine }) {
+function CreateOrEditMachineForm({ machine }: { machine?: GetMachineDto }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IMachine>, BackendError, {
-            body: { name: string, display_name: string, category: string, serial_no: number, }, id: string
+        <AxiosResponse<GetMachineDto>, BackendError, {
+            body: CreateOrEditMachineDto, id?: string
         }>
-        (UpdateMachine, {
+        (CreateOrEditMachine, {
             onSuccess: () => {
                 queryClient.invalidateQueries('machines')
             }
         })
-    const { data: catgeories } = useQuery<AxiosResponse<IMachineCategory>, BackendError>("machine_catgeories", GetMachineCategories, {
+    const { data: catgeories } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("machine_catgeories", GetMachineCategories, {
         staleTime: 10000
     })
     const { setChoice } = useContext(ChoiceContext)
 
     const formik = useFormik({
         initialValues: {
-            name: machine.name,
-            display_name: machine.display_name,
-            category: machine.category,
-            serial_no: machine.serial_no
+            name: machine ? machine.name : "",
+            display_name: machine ? machine.display_name : "",
+            category: machine ? machine.category : "",
+            serial_no: machine ? machine.serial_no : 0
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -46,7 +47,13 @@ function UpdateMachineForm({ machine }: { machine: IMachine }) {
 
         }),
         onSubmit: (values) => {
-            mutate({ id: machine._id, body: { name: values.name, display_name: values.display_name, category: values.category, serial_no: values.serial_no } })
+            if (machine) {
+                mutate({ id: machine._id, body: { name: values.name, display_name: values.display_name, category: values.category, serial_no: values.serial_no } })
+            }
+            else {
+                mutate({ body: values })
+            }
+
         }
     });
 
@@ -57,7 +64,7 @@ function UpdateMachineForm({ machine }: { machine: IMachine }) {
             setChoice({ type: ProductionChoiceActions.close_production })
         }
     }, [isSuccess, setChoice])
-
+    console.log(formik.errors)
     return (
         <form onSubmit={formik.handleSubmit}>
 
@@ -82,6 +89,7 @@ function UpdateMachineForm({ machine }: { machine: IMachine }) {
                 <TextField
                     required
                     fullWidth
+                    type="number"
                     error={
                         formik.touched.serial_no && formik.errors.serial_no ? true : false
                     }
@@ -126,15 +134,18 @@ function UpdateMachineForm({ machine }: { machine: IMachine }) {
                     }
                     {...formik.getFieldProps('category')}
                 >
-                    {
-                        <option key={"00"} value={machine.category}>
+                    <option key={"01"} value={undefined}>
+                        Select
+                    </option>
+                    {machine &&
+                        <option key={"02"} value={machine.category}>
                             {machine.category}
                         </option>
                     }
                     {
-                        catgeories && catgeories.data && catgeories.data.categories.map((category, index) => {
-                            return (<option key={index} value={category}>
-                                {category}
+                        catgeories && catgeories.data.map((category, index) => {
+                            return (<option key={index} value={category.id}>
+                                {category.label}
                             </option>)
                         })
                     }
@@ -146,16 +157,16 @@ function UpdateMachineForm({ machine }: { machine: IMachine }) {
                 }
                 {
                     isSuccess ? (
-                        <AlertBar message="machine updated" color="success" />
+                        <AlertBar message={machine ? "machine updated" : "created"} color="success" />
                     ) : null
                 }
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
-                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Update Machine"}
+                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
                 </Button>
             </Stack>
         </form>
     )
 }
 
-export default UpdateMachineForm
+export default CreateOrEditMachineForm

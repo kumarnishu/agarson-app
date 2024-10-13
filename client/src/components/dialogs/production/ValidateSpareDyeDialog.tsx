@@ -6,18 +6,18 @@ import { queryClient } from '../../../main';
 import { BackendError } from '../../..';
 import { useMutation } from 'react-query';
 import AlertBar from '../../snacks/AlertBar';
-import { IShoeWeight } from '../../../types/production.types';
 import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
-import { DeleteShoeWeight } from '../../../services/ProductionServices';
+import { ValidateSpareDye } from '../../../services/ProductionServices';
 import { GetUserDto } from '../../../dtos/users/user.dto';
+import { GetSpareDyeDto } from '../../../dtos/production/production.dto';
 
-function DeleteShoeWeightDialog({ weight }: { weight: IShoeWeight }) {
+function ValidateSpareDyeDialog({ sparedye }: { sparedye: GetSpareDyeDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<GetUserDto>, BackendError, string>
-        (DeleteShoeWeight, {
+        (ValidateSpareDye, {
             onSuccess: () => {
-                queryClient.invalidateQueries('shoe_weights')
+                queryClient.invalidateQueries('spare_dyes')
             }
         })
     useEffect(() => {
@@ -36,19 +36,19 @@ function DeleteShoeWeightDialog({ weight }: { weight: IShoeWeight }) {
             }
             {
                 isSuccess ? (
-                    <AlertBar message="deleted successfull" color="success" />
+                    <AlertBar message="validated successfull" color="success" />
                 ) : null
             }
 
-            <Dialog open={choice === ProductionChoiceActions.delete_weight ? true : false}
+            <Dialog open={choice === ProductionChoiceActions.validate_spareDye ? true : false}
             > <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: ProductionChoiceActions.close_production })}>
                     <Cancel fontSize='large' />
                 </IconButton>
-                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Delete Shoe Weight</DialogTitle>
+                <DialogTitle sx={{ minWidth: '350px' }} textAlign={"center"}>Validate Spare Dye</DialogTitle>
                 <DialogContent>
-                    <Button variant="contained" color="error" onClick={() => mutate(weight._id)}
+                    <Button variant="contained" color="error" onClick={() => mutate(sparedye._id)}
                         disabled={Boolean(isLoading)}
-                        fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Delete"}
+                        fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
                     </Button>
                 </DialogContent>
             </Dialog>
@@ -56,7 +56,7 @@ function DeleteShoeWeightDialog({ weight }: { weight: IShoeWeight }) {
     )
 }
 
-export default DeleteShoeWeightDialog
+export default ValidateSpareDyeDialog
 
 
 

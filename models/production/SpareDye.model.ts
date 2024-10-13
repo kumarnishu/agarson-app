@@ -8,6 +8,8 @@ export type ISpareDye = {
     dye: IDye,
     repair_required: boolean,
     dye_photo: Asset,
+    remarks: string,
+    is_validated: boolean,
     photo_time: Date,
     location: IDyeLocation,
     created_at: Date,
@@ -17,17 +19,19 @@ export type ISpareDye = {
 }
 
 const SpareDyeSchema = new mongoose.Schema<ISpareDye, mongoose.Model<ISpareDye, {}, {}>, {}>({
-   
+
     dye: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Dye',
         required: true
     },
     repair_required: { type: Boolean, default: false },
+    remarks: { type: String, default: "" },
     location: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'DyeLocation'
     },
+    is_validated: { type: Boolean, default: false },
     dye_photo: {
         _id: { type: String },
         filename: { type: String },

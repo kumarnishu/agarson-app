@@ -8,47 +8,62 @@ import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialog
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IArticle, IDye } from '../../../types/production.types';
-import { CreateDye, GetArticles } from '../../../services/ProductionServices';
+import { CreateOrEditDye, GetArticles } from '../../../services/ProductionServices';
+import { CreateOrEditDyeDTo, GetArticleDto, GetDyeDto } from '../../../dtos/production/production.dto';
 
-function NewDyeForm() {
+
+
+function CreateOrEditDyeForm({ dye }: { dye?: GetDyeDto }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IDye>, BackendError, {
-            dye_number: number, size: string, article_ids: string[], st_weight: number
+        <AxiosResponse<GetDyeDto>, BackendError, {
+            body: CreateOrEditDyeDTo, id?: string
         }>
-        (CreateDye, {
+        (CreateOrEditDye, {
             onSuccess: () => {
                 queryClient.invalidateQueries('dyes')
             }
         })
-    const { data: articles, isLoading: userLoading } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
+    const { data: articles, isLoading: articleLoading } = useQuery<AxiosResponse<GetArticleDto[]>, BackendError>("articles", async () => GetArticles())
     const { setChoice } = useContext(ChoiceContext)
 
     const formik = useFormik({
         initialValues: {
-            dye_number: 0,
-            size: "",
-            st_weight: 0,
-            article_ids: []
+            dye_number: dye ? dye.dye_number : 0,
+            size: dye ? dye.size : "",
+            st_weight: dye ? dye.stdshoe_weight : 0,
+            articles: dye ? dye.articles && dye.articles.map((a) => { return a.id }) : []
         },
         validationSchema: Yup.object({
             dye_number: Yup.number()
                 .required('Required field'),
             size: Yup.string()
                 .required('Required field'),
-            article_ids: Yup.array()
+            articles: Yup.array()
                 .required('Required field'),
             st_weight: Yup.string()
                 .required('Required field'),
+
+
         }),
         onSubmit: (values) => {
-            mutate({
-                dye_number: values.dye_number,
-                size: values.size,
-                article_ids: values.article_ids,
-                st_weight: values.st_weight
-
-            })
+            if (dye)
+                mutate({
+                    id: dye._id, body: {
+                        dye_number: values.dye_number,
+                        size: values.size,
+                        articles: values.articles,
+                        st_weight: values.st_weight
+                    }
+                })
+            else
+                mutate({
+                    body: {
+                        dye_number: values.dye_number,
+                        size: values.size,
+                        articles: values.articles,
+                        st_weight: values.st_weight
+                    }
+                })
         }
     });
 
@@ -63,19 +78,18 @@ function NewDyeForm() {
     return (
         <form onSubmit={formik.handleSubmit}>
 
-            {!userLoading && <Stack
+            {!articleLoading && <Stack
                 direction="column"
                 gap={2}
                 pt={2}
             >
                 <TextField
+                    type="number"
                     required
                     fullWidth
-                    SelectProps={{ native: true }}
                     error={
                         formik.touched.dye_number && formik.errors.dye_number ? true : false
                     }
-                    type='number'
                     id="dye_number"
                     label="Dye Number"
                     helperText={
@@ -110,22 +124,19 @@ function NewDyeForm() {
                     }
                     {...formik.getFieldProps('st_weight')}
                 />
-                
+
                 < TextField
                     select
-                    SelectProps={{
-                        native: true,
-                        multiple:true
-                    }}
                     focused
+                    SelectProps={{ native: true, multiple: true }}
                     error={
-                        formik.touched.article_ids && formik.errors.article_ids ? true : false
+                        formik.touched.articles && formik.errors.articles ? true : false
                     }
-                    id="article_ids"
+                    id="articles"
                     helperText={
-                        formik.touched.article_ids && formik.errors.article_ids ? formik.errors.article_ids : ""
+                        formik.touched.articles && formik.errors.articles ? formik.errors.articles : ""
                     }
-                    {...formik.getFieldProps('article_ids')}
+                    {...formik.getFieldProps('articles')}
                     required
                     label="Select Articles"
                     fullWidth
@@ -145,16 +156,16 @@ function NewDyeForm() {
                 }
                 {
                     isSuccess ? (
-                        <AlertBar message="new dye created" color="success" />
+                        <AlertBar message={dye ? "dye updated" : "created"} color="success" />
                     ) : null
                 }
                 <Button variant="contained" color="primary" type="submit"
                     disabled={Boolean(isLoading)}
-                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Create Dye"}
+                    fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Submit"}
                 </Button>
             </Stack>}
         </form>
     )
 }
 
-export default NewDyeForm
+export default CreateOrEditDyeForm

@@ -1,4 +1,5 @@
-import { CreateOrEditSoleThicknessDto } from "../dtos/production/production.dto";
+import { DropDownDto } from "../dtos/common/dropdown.dto";
+import { CreateOrEditArticleDto, CreateOrEditDyeDTo, CreateOrEditMachineDto, CreateOrEditProductionDto, CreateOrEditSoleThicknessDto, GetProductionDto, GetShoeWeightDto, GetSpareDyeDto } from "../dtos/production/production.dto";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
@@ -7,11 +8,14 @@ export const CreateMachine = async (body: { name: string, display_name: string, 
 };
 
 
-export const UpdateMachine = async ({ body, id }: { body: { name: string, serial_no: number, display_name: string, category: string }, id: string }) => {
-    return await apiClient.put(`machines/${id}`, body);
+export const CreateOrEditMachine = async ({ id, body }: { id?: string, body: CreateOrEditMachineDto }) => {
+    if (id)
+        return await apiClient.put(`machines/${id}`, body);
+    return await apiClient.post(`machines`, body);
 };
 
 export const ToogleMachine = async (id: string) => {
+
     return await apiClient.patch(`machines/toogle/${id}`);
 };
 
@@ -22,12 +26,56 @@ export const GetMachines = async (hidden?: string) => {
     return await apiClient.get(`machines`);
 };
 
-export const CreateDye = async (body: { dye_number: number, size: string, article_ids: string[], st_weight: number }) => {
-    return await apiClient.post(`dyes`, body);
-};
+export const BulkUploadMachines = async (body: FormData) => {
+    return await apiClient.put(`machines/upload/bulk`, body);
+}
+export const GetMachineCategories = async () => {
+    return await apiClient.get(`machine/categories`)
+}
+export const CreateOrEditMachineCategory = async ({ body, id }: {
+    body: { key: string }
+    id?: string
+}) => {
+    if (id) {
+        return await apiClient.put(`machine/categories/${id}`, body)
+    }
+    return await apiClient.post(`machine/categories`, body)
+}
 
-export const UpdateDye = async ({ body, id }: { body: { dye_number: number, size: string, article_ids: string[], st_weight: number }, id: string, }) => {
-    return await apiClient.put(`dyes/${id}`, body);
+
+
+
+
+
+
+
+
+export const CreateOrEditDyeLocation = async ({ body, id }: {
+    body: {
+        name: string,
+        display_name: string
+    }
+    id?: string
+}) => {
+    if (id) {
+        return await apiClient.put(`dye/locations/${id}`, body)
+    }
+    return await apiClient.post(`dye/locations`, body)
+}
+export const ToogleDyeLocation = async (id: string) => {
+    return await apiClient.patch(`dye/locations/${id}`);
+}
+
+export const GetAllDyeLocations = async (hidden?: string) => {
+    return await apiClient.get(`dye/locations/?hidden=${hidden}`)
+}
+export const BulkUploadDyes = async (body: FormData) => {
+    return await apiClient.put(`dyes/upload/bulk`, body);
+}
+export const CreateOrEditDye = async ({ body, id }: { body: CreateOrEditDyeDTo, id?: string, }) => {
+    if (id)
+        return await apiClient.put(`dyes/${id}`, body);
+    return await apiClient.post(`dyes`, body);
 };
 
 export const GetDyeById = async (id: string) => {
@@ -44,12 +92,16 @@ export const GetDyes = async (hidden?: string) => {
         return await apiClient.get(`dyes`);
 };
 
-export const CreateArticle = async (body: { name: string, display_name: string }) => {
-    return await apiClient.post(`articles`, body);
-};
 
-export const UpdateArticle = async ({ body, id }: { body: { name: string, display_name: string }, id: string }) => {
-    return await apiClient.put(`articles/${id}`, body);
+
+
+
+
+
+export const CreateOrEditArticle = async ({ body, id }: { body: CreateOrEditArticleDto, id?: string }) => {
+    if (id)
+        return await apiClient.put(`articles/${id}`, body);
+    return await apiClient.post(`articles`, body);
 };
 
 export const ToogleArticle = async (id: string) => {
@@ -64,48 +116,32 @@ export const GetArticles = async (hidden?: string) => {
 };
 
 
+export const BulkUploadArticles = async (body: FormData) => {
+    return await apiClient.put(`articles/upload/bulk`, body);
+}
+
+
+
+
+
+
+
+
+export const CreateOrEditProduction = async ({ id, body }: {
+    body: CreateOrEditProductionDto, id?: string
+
+}) => {
+    if (id)
+        return await apiClient.put(`productions/${id}`, body);
+    return await apiClient.post(`productions`, body);
+}
+
+
 export const GetMyProductions = async ({ date, machine }: { date: string, machine?: string }) => {
     if (machine)
         return await apiClient.get(`productions/me/?date=${date}&machine=${machine}`);
     else
         return await apiClient.get(`productions/me/?date=${date}`);
-}
-
-export const CreateProduction = async (body: {
-    machine: string,
-    thekedar: string,
-    articles: string[],
-    manpower: number,
-    production: number,
-    big_repair: number,
-    small_repair: number,
-    production_hours: number,
-    upper_damage: number,
-    date: String
-}) => {
-    return await apiClient.post(`productions`, body);
-}
-
-export const UpdateProduction = async ({ id, body }: {
-    body: {
-        machine: string,
-        thekedar: string,
-        production_hours: number,
-        articles: string[],
-        manpower: number,
-        production: number,
-        upper_damage: number,
-        big_repair: number,
-        small_repair: number,
-        date: String
-    }, id: string
-
-}) => {
-    return await apiClient.put(`productions/${id}`, body);
-}
-
-export const DeleteProduction = async (id: string) => {
-    return await apiClient.delete(`productions/${id}`);
 }
 
 export const GetProductions = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
@@ -116,13 +152,28 @@ export const GetProductions = async ({ limit, page, start_date, end_date, id }: 
 
 }
 
-export const CreateShoeWeight = async ({ body }: { body: FormData }) => {
+export const GetproductionMachineWise = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
+    return await apiClient.get(`production/machinewise/?start_date=${start_date}&end_date=${end_date}`)
+}
+export const GetproductionThekedarWise = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
+    return await apiClient.get(`production/thekedarwise/?start_date=${start_date}&end_date=${end_date}`)
+}
+export const GetproductioncategoryWise = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
+    return await apiClient.get(`production/categorywise/?start_date=${start_date}&end_date=${end_date}`)
+}
+
+
+
+
+
+
+
+export const CreateOrEditShoeWeight = async ({ id, body }: { id?: string, body: FormData }) => {
+    if (id)
+        return await apiClient.put(`weights/${id}`, body);
     return await apiClient.post(`weights`, body);
 }
 
-export const UpdateShoeWeight1 = async ({ id, body }: { id: string, body: FormData }) => {
-    return await apiClient.put(`weights/${id}`, body);
-}
 export const UpdateShoeWeight2 = async ({ id, body }: { id: string, body: FormData }) => {
     return await apiClient.put(`weights2/${id}`, body);
 }
@@ -144,70 +195,50 @@ export const GetShoeWeights = async ({ limit, page, start_date, end_date, id }: 
 
 }
 
-
-export const BulkUploadMachines = async (body: FormData) => {
-    return await apiClient.put(`machines/upload/bulk`, body);
-}
-export const BulkUploadDyes = async (body: FormData) => {
-    return await apiClient.put(`dyes/upload/bulk`, body);
-}
-export const BulkUploadArticles = async (body: FormData) => {
-    return await apiClient.put(`articles/upload/bulk`, body);
-}
-
-export const UpdateMachineCategories = async ({ body }: { body: { categories?: string[] } }) => {
-    return await apiClient.put(`machine/categories`, body)
-}
-export const GetMachineCategories = async () => {
-    return await apiClient.get(`machine/categories`)
-}
-
-export const GetAllDyeLocations = async () => {
-    return await apiClient.get(`dye/locations`)
-}
-
-
-export const CreateOrEditDyeLocation = async ({ body, id }: {
-    body: {
-        name: string,
-        display_name: string
-    }
-    id?: string
-}) => {
-    if (id) {
-        return await apiClient.put(`dye/locations/${id}`, body)
-    }
-    return await apiClient.post(`dye/locations`, body)
-}
-export const DeleteDyeLocation = async (id: string) => {
-    return await apiClient.delete(`dye/locations/${id}`);
-}
-
-export const GetMyTodayDyeStatus = async () => {
-    return await apiClient.get(`dye/status/me`);
-}
-export const GetAllDyeStatus = async () => {
-    return await apiClient.get(`dye/status`);
-}
-export const CreateDyeStatus = async ({ body }: { body: FormData }) => {
-    return await apiClient.post(`dye/status`, body);
-}
-export const DeleteDyeStatus = async (id: string) => {
-    return await apiClient.delete(`dye/status/${id}`);
-}
-
-export const GetproductionMachineWise = async ({ start_date, end_date }: {  start_date?: string, end_date?: string }) => {
-    return await apiClient.get(`production/machinewise/?start_date=${start_date}&end_date=${end_date}`)
-}
-export const GetproductionThekedarWise = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
-    return await apiClient.get(`production/thekedarwise/?start_date=${start_date}&end_date=${end_date}`)
-}
-export const GetproductioncategoryWise = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
-    return await apiClient.get(`production/categorywise/?start_date=${start_date}&end_date=${end_date}`)
-}
 export const GetShoeWeightDiffReports = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
     return await apiClient.get(`shoeweight/diffreports/?start_date=${start_date}&end_date=${end_date}`)
 }
+
+
+
+
+
+
+
+
+
+export const CreateOrEditSpareDye = async ({ id, body }: { id?: string, body: FormData }) => {
+    if (id)
+        return await apiClient.put(`sparedyes/${id}`, body);
+    return await apiClient.post(`sparedyes`, body);
+}
+
+export const ValidateSpareDye = async (id: string) => {
+    return await apiClient.patch(`sparedyes/validate/${id}`);
+}
+
+export const DeleteSpareDye = async (id: string) => {
+    return await apiClient.delete(`sparedyes/${id}`);
+}
+
+export const GetSpareDyes = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+    if (id)
+        return await apiClient.get(`sparedyes/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+    else
+        return await apiClient.get(`sparedyes/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+
+}
+
+export const GetDyeStatusReport = async ({ start_date, end_date }: { start_date?: string, end_date?: string }) => {
+    return await apiClient.get(`dyestatus/diffreports/?start_date=${start_date}&end_date=${end_date}`)
+}
+
+
+
+
+
+
+
 export const CreateSoleThickness = async (body: CreateOrEditSoleThicknessDto) => {
     return await apiClient.post(`solethickness`, body);
 }
@@ -223,10 +254,29 @@ export const DeleteSoleThickness = async (id: string) => {
     return await apiClient.delete(`solethickness/${id}`);
 }
 
-export const GetSoleThickness= async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
+export const GetSoleThickness = async ({ limit, page, start_date, end_date, id }: { limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {
     if (id)
         return await apiClient.get(`solethickness/?id=${id}&start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
     else
         return await apiClient.get(`solethickness/?start_date=${start_date}&end_date=${end_date}&limit=${limit}&page=${page}`)
+
+}
+
+
+
+
+
+
+
+
+export const DeleteProductionItem = async ({ category, weight, thickness, production }: { category?: DropDownDto, weight?: GetShoeWeightDto, thickness?: DropDownDto, spare_dye?: GetSpareDyeDto, production?: GetProductionDto }) => {
+    if (category)
+        return await apiClient.delete(`machine/categories/${category.id}`)
+    if (weight)
+        return await apiClient.delete(`weights/${weight._id}`)
+    if (thickness)
+        return await apiClient.delete(`thickness/${thickness.id}`)
+    else
+        return await apiClient.delete(`productions/${production ? production._id : ""}`)
 
 }

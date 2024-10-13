@@ -8,10 +8,10 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import * as yup from 'yup';
-import { IDyeLocation } from '../../../types/production.types';
 import { CreateOrEditDyeLocation } from '../../../services/ProductionServices';
+import { GetDyeLocationDto } from '../../../dtos/production/production.dto';
 
-function CreateOrEditDyeLocationForm({ location }: { location?: IDyeLocation }) {
+function CreateOrEditDyeLocationForm({ location }: { location?: GetDyeLocationDto }) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: {
@@ -22,7 +22,7 @@ function CreateOrEditDyeLocationForm({ location }: { location?: IDyeLocation }) 
         }>
         (CreateOrEditDyeLocation, {
             onSuccess: () => {
-                queryClient.invalidateQueries('dye_locations')
+                queryClient.invalidateQueries('dyelocations')
             }
         })
 

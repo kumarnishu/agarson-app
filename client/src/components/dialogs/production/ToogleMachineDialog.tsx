@@ -8,9 +8,9 @@ import { useMutation } from 'react-query';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
 import { ToogleMachine } from '../../../services/ProductionServices';
-import { IMachine } from '../../../types/production.types';
+import { GetMachineDto } from '../../../dtos/production/production.dto';
 
-function ToogleMachineDialog({ machine }: { machine: IMachine }) {
+function ToogleMachineDialog({ machine }: { machine: GetMachineDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
         <AxiosResponse<any>, BackendError, string>

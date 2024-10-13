@@ -8,9 +8,9 @@ import { useMutation } from 'react-query';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
 import { ToogleDye } from '../../../services/ProductionServices';
-import { IDye } from '../../../types/production.types';
+import { GetDyeDto } from '../../../dtos/production/production.dto';
 
-function ToogleDyeDialog({ dye }: { dye: IDye }) {
+function ToogleDyeDialog({ dye }: { dye: GetDyeDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
         <AxiosResponse<any>, BackendError, string>
@@ -36,7 +36,7 @@ function ToogleDyeDialog({ dye }: { dye: IDye }) {
                 }
                 {
                     isSuccess ? (
-                        <AlertBar message="deleted dye" color="success" />
+                        <AlertBar message="success" color="success" />
                     ) : null
                 }
                 <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: ProductionChoiceActions.close_production })}>

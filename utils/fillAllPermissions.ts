@@ -185,7 +185,32 @@ export function FetchAllPermissions() {
                 ]
             },
             {
-                label: 'Dye Status',
+                label: 'Spare Dye',
+                permissions: [
+                    {
+                        value: 'spare_dye_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'spare_dye_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'spare_dye_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'spare_dye_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'spare_dye_export',
+                        label: 'export'
+                    }
+                ]
+            },
+            {
+                label: 'Dye Status Report',
                 permissions: [
                     {
                         value: 'dye_status_view',

@@ -1,6 +1,6 @@
 import { DropDownDto } from "../common/dropdown.dto"
 
-export type GetSoleThicknessDto={
+export type GetSoleThicknessDto = {
     dye: DropDownDto,
     article: DropDownDto,
     size: string,
@@ -34,6 +34,7 @@ export type GetArticleDto = {
 export type GetDyeLocationDto = {
     _id: string,
     name: string,
+    active: boolean,
     display_name: string,
     created_at: string,
     updated_at: string,
@@ -58,7 +59,9 @@ export type GetSpareDyeDto = {
     dye: DropDownDto,
     repair_required: boolean,
     dye_photo: string,
+    is_validated: boolean,
     photo_time: string,
+    remarks: string,
     location: DropDownDto,
     created_at: string,
     updated_at: string,
@@ -99,9 +102,9 @@ export type GetProductionDto = {
 }
 export type GetShoeWeightDto = {
     _id: string,
-    machine:DropDownDto
-    dye:DropDownDto
-    article:DropDownDto
+    machine: DropDownDto
+    dye: DropDownDto
+    article: DropDownDto
     is_validated: boolean,
     month: number,
     shoe_weight1: number,
@@ -118,26 +121,29 @@ export type GetShoeWeightDto = {
     shoe_photo3: string,
     created_at: string,
     updated_at: string,
-    created_by:DropDownDto
-    updated_by:DropDownDto
+    created_by: DropDownDto
+    updated_by: DropDownDto
 }
 
-export type CreateOrEditMachineDto={
+export type CreateOrEditMachineDto = {
     name: string,
     display_name: string,
     serial_no: number,
     category: string
 }
 export type CreateOrEditDyeDTo = {
-     dye_number: number, size: string, articles: string, st_weight: number
-     }
-export type CreateOrEditArticleDto={
-    name: string, display_name: string 
+    dye_number: number, size: string, articles: string[], st_weight: number
+}
+export type CreateOrEditDyeDtoFromExcel = {
+    dye_number: number, size: string, articles: string, st_weight: number
+}
+export type CreateOrEditArticleDto = {
+    name: string, display_name: string
 }
 export type CreateOrEditDyeLocationDto = {
     name: string, display_name: string
 }
-export type CreateOrEditProductionDto={
+export type CreateOrEditProductionDto = {
     machine: string,
     date: string,
     production_hours: number,
@@ -149,7 +155,7 @@ export type CreateOrEditProductionDto={
     small_repair: number,
     upper_damage: number
 }
-export type CreateOrEditShoeWeightDto={
+export type CreateOrEditShoeWeightDto = {
     machine: string,
     dye: string,
     article: string,
@@ -157,10 +163,11 @@ export type CreateOrEditShoeWeightDto={
     upper_weight: number,
     month: number,
 }
-export type CreateOrEditSpareDyeDto={
+export type CreateOrEditSpareDyeDto = {
     dye: string,
     repair_required: boolean,
     location: string,
+    remarks: string,
     dye_photo: string
 }
 export interface IColumn {
@@ -176,14 +183,14 @@ export interface IColumnRowData {
     columns: IColumn[];
     rows: IRowData[];
 }
-export type GetCategoryWiseProductionReportDto ={
+export type GetCategoryWiseProductionReportDto = {
     date: string,
     total: number,
     verticalpluslympha: number,
     pu: number,
     gumboot: number
 }
-export type GetShoeWeightDiffReportDto ={
+export type GetShoeWeightDiffReportDto = {
     date: string,
     dye_no: number,
     article: string,

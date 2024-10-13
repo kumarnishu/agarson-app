@@ -1,25 +1,26 @@
 import { Dialog, DialogContent, DialogTitle, Stack, IconButton } from '@mui/material'
 import { useContext } from 'react';
-import { Cancel } from '@mui/icons-material';
 import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialogContext';
-import NewArticleForm from '../../forms/production/CreateArticleForm';
+import { Cancel } from '@mui/icons-material';
+import { GetDyeDto } from '../../../dtos/production/production.dto';
+import CreateOrEditDyeForm from '../../forms/production/CreateOrEditDyeForm';
 
 
-function NewArticleDialog() {
+function CreateOrEditDyeDialog({ dye }: { dye?: GetDyeDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     return (
-        <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === ProductionChoiceActions.create_article ? true : false}
+        <Dialog fullScreen={Boolean(window.screen.width < 500)} open={choice === ProductionChoiceActions.create_or_edit_dye ? true : false}
             onClose={() => setChoice({ type: ProductionChoiceActions.close_production })}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: ProductionChoiceActions.close_production })}>
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-                New Article
+                {dye ? "Update Dye" : "Create Dye"}
             </DialogTitle>
 
             <DialogContent>
-                <NewArticleForm />
+                <CreateOrEditDyeForm dye={dye} />
             </DialogContent>
             <Stack
                 direction="column"
@@ -32,4 +33,4 @@ function NewArticleDialog() {
     )
 }
 
-export default NewArticleDialog
+export default CreateOrEditDyeDialog
