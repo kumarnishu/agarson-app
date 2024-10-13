@@ -25,7 +25,6 @@ function ProductionDashboard() {
     user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: true, url: "/Production/MachineWiseProductionReportPage" })
     user?.assigned_permissions.includes('machine_category_wise_production_report_view') && tmpfeatures.push({ feature: 'Category Wise Production report', is_visible: true, url: "/Production/CategoryWiseProductionReportPage" }),
       user?.assigned_permissions.includes('thekedar_wise_production_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production report', is_visible: true, url: "/Production/ThekedarWiseProductionReportPage" })
-    user?.assigned_permissions.includes('sole_thickness_report_view') && tmpfeatures.push({ feature: 'Sole Thickness report', is_visible: true, url: "/Production/SoleThicknessReportPage" })
     setFeatures(tmpfeatures)
   }, [])
 

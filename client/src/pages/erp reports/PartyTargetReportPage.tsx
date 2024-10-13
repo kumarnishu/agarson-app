@@ -29,7 +29,7 @@ export default function PartyTargetReportPage() {
             {
                 accessorKey: 'created_at',
                 header: 'Create Date',
-                Footer: <b>Total</b>,
+                
                 filterVariant: 'multi-select',
                 filterSelectOptions: reports.map((i) => { return i.created_at || "" }).filter(onlyUnique),
                 aggregationFn: 'count',
@@ -69,6 +69,7 @@ export default function PartyTargetReportPage() {
                 header: 'State',
                 filterVariant: 'multi-select',
                 aggregationFn: 'count',
+                Footer: <b>Total</b>,
                 size:120,
                 AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
                 filterSelectOptions: reports.map((i) => { return i.report_owner }).filter(onlyUnique)
@@ -406,7 +407,7 @@ export default function PartyTargetReportPage() {
             }
         }),
         muiTableContainerProps: (table) => ({
-            sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+            sx: { height: table.table.getState().isFullScreen ? 'auto' : '64vh' }
         }),
         muiTableHeadRowProps: () => ({
             sx: {

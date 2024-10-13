@@ -1,4 +1,4 @@
-import {   TextField, Typography } from '@mui/material'
+import { TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -26,8 +26,9 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'state',
         header: 'State',
-        size:150,
+        size: 150,
         width: '50',
+        Footer: <h1>Total</h1>,
         filterVariant: 'multi-select',
         aggregationFn: 'count',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
@@ -35,8 +36,8 @@ export default function SaleAnalysisReport() {
       },
       {
         accessorKey: 'monthly_target',
-        header: 'MONTHLY TARGET', 
-        size:120,
+        header: 'MONTHLY TARGET',
+        size: 120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.monthly_target) }, 0).toFixed(2)}</b>
@@ -44,7 +45,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'monthly_achivement',
         header: 'MONTHLY ACHIVEMENT',
-        size:120,
+        size: 120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.monthly_achivement) }, 0).toFixed(2)}</b>
@@ -52,7 +53,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'monthly_percentage',
         header: 'MONTHLY PERCENTAGE',
-        size:120,
+        size: 120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.monthly_percentage) }, 0).toFixed(2)}</b>
@@ -60,7 +61,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'annual_target',
         header: 'ANNUAL TARGET',
-        size:120,
+        size: 120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.annual_target) }, 0).toFixed(2)}</b>
@@ -68,7 +69,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'annual_achivement',
         header: 'ANNUAL ACHIVEMENT',
-        size:120,
+        size: 120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.annual_achivement) }, 0).toFixed(2)}</b>
@@ -76,7 +77,7 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'annual_percentage',
         header: 'ANNUAL PERCENTAGE',
-        size:120,
+        size: 120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.annual_percentage) }, 0).toFixed(2)}</b>
@@ -84,17 +85,18 @@ export default function SaleAnalysisReport() {
       {
         accessorKey: 'last_year_sale',
         header: 'LAST YEAR SALE',
-        size:120,
+        size: 120,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.last_year_sale) }, 0).toFixed(2)}</b>},
+        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.last_year_sale) }, 0).toFixed(2)}</b>
+      },
       {
         accessorKey: 'last_year_sale_percentage_comparison',
         header: 'LAST YEAR PERCENTAGE COMPARISON',
-        size:420,
+        size: 420,
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
-         Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.last_year_sale_percentage_comparison) }, 0).toFixed(2)}</b>
+        Footer: ({ table }) => <b>{table.getFilteredRowModel().rows.reduce((a, b) => { return Number(a) + Number(b.original.last_year_sale_percentage_comparison) }, 0).toFixed(2)}</b>
       }
     ],
     [reports,],
@@ -130,7 +132,7 @@ export default function SaleAnalysisReport() {
       }
     }),
     muiTableContainerProps: (table) => ({
-      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '64vh' }
     }),
     muiTableHeadRowProps: () => ({
       sx: {
@@ -150,7 +152,7 @@ export default function SaleAnalysisReport() {
       variant: 'outlined',
     },
     initialState: {
-      density: 'compact',  pagination: { pageIndex: 0, pageSize: 7000 }
+      density: 'compact', pagination: { pageIndex: 0, pageSize: 7000 }
     },
     enableGrouping: true,
     enableRowSelection: true,
@@ -191,7 +193,7 @@ export default function SaleAnalysisReport() {
             native: true
           }}
           focused
-          sx={{width:150}}
+          sx={{ width: 150 }}
           size='small'
           id="month"
           label="Month"
@@ -209,10 +211,10 @@ export default function SaleAnalysisReport() {
             })
           }
         </TextField>
-        
+
       </Stack >
-     
-       <MaterialReactTable table={table} />
+
+      <MaterialReactTable table={table} />
     </>
 
   )

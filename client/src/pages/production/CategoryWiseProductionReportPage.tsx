@@ -1,28 +1,32 @@
-import {  LinearProgress, TextField, Typography } from '@mui/material'
+import {  Box, Button, LinearProgress, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import moment from 'moment'
-import { ICategoryWiseProductionReport } from '../../types/production.types'
 import { GetproductioncategoryWise } from '../../services/ProductionServices'
+import ExportToExcel from '../../utils/ExportToExcel'
+import { UserContext } from '../../contexts/userContext'
+import { GetCategoryWiseProductionReportDto } from '../../dtos/production/production.dto'
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 
 
 export default function CategoryWiseProductionReportPage() {
-  const [reports, setReports] = useState<ICategoryWiseProductionReport[]>([])
+  const [reports, setReports] = useState<GetCategoryWiseProductionReportDto[]>([])
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
     start_date: moment(new Date().setDate(1)).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
   })
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<ICategoryWiseProductionReport[]>, BackendError>(["categorywisereports", dates.start_date, dates.end_date], async () => GetproductioncategoryWise({ start_date: dates.start_date, end_date: dates.end_date }))
+  const { user } = useContext(UserContext)
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetCategoryWiseProductionReportDto[]>, BackendError>(["categorywisereports", dates.start_date, dates.end_date], async () => GetproductioncategoryWise({ start_date: dates.start_date, end_date: dates.end_date }))
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-  const columns = useMemo<MRT_ColumnDef<ICategoryWiseProductionReport>[]>(
+  const columns = useMemo<MRT_ColumnDef<GetCategoryWiseProductionReportDto>[]>(
     //column definitions...
     () => reports &&[
       {
@@ -74,18 +78,20 @@ export default function CategoryWiseProductionReportPage() {
 
 
   const table = useMaterialReactTable({
+    //@ts-ignore
     columns,
-    data: reports, //10,000 rows
-    defaultDisplayColumn: { enableResizing: true },
-    enableBottomToolbar: false,
+    data: reports, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
     muiTableFooterRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
         color: 'white',
-        paddingBottom: 2
+        fontSize: '14px'
       }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '62vh' }
     }),
     muiTableHeadRowProps: () => ({
       sx: {
@@ -93,29 +99,66 @@ export default function CategoryWiseProductionReportPage() {
         color: 'white'
       },
     }),
+    renderTopToolbarCustomActions: ({ table }) => (
+      <Box
+        sx={{
+          display: 'flex',
+          gap: '16px',
+          padding: '8px',
+          flexWrap: 'wrap',
+        }}
+      >
+        {user?.assigned_permissions.includes("shoe_weight_report_export") && <Button
+          //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+          onClick={() => {
+            ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "shoe_weight_difference")
+          }}
+          startIcon={<FileDownloadIcon />}
+        >
+          Export All Data
+        </Button>}
+
+
+        {user?.assigned_permissions.includes("shoe_weight_report_export") && <Button
+          disabled={
+            !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+          }
+          //only export selected rows
+          onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "shoe_weight_difference")}
+          startIcon={<FileDownloadIcon />}
+        >
+          Export Selected Rows
+        </Button>}
+      </Box>
+    ),
     muiTableBodyCellProps: () => ({
       sx: {
-        fontSize: '13px',
-        border: '1px solid #ddd;'
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
       },
     }),
-    initialState: { density: 'compact' },
+    muiPaginationProps: {
+      rowsPerPageOptions: [100, 200, 500, 1000, 2000, 5000, 7000, 10000],
+      shape: 'rounded',
+      variant: 'outlined',
+    },
+    initialState: {
+      density: 'compact', pagination: { pageIndex: 0, pageSize: 7000 }
+    },
     enableGrouping: true,
     enableRowSelection: true,
-    enableGlobalFilterModes: true,
-    enablePagination: false,
+    manualPagination: false,
+    enablePagination: true,
+    enableRowNumbers: true,
     enableColumnPinning: true,
     enableTableFooter: true,
-    enableRowNumbers: true,
     enableRowVirtualization: true,
-    muiTableContainerProps: { sx: { maxHeight: '450px' } },
-    onSortingChange: setSorting,
-    state: { isLoading, sorting },
     rowVirtualizerInstanceRef, //optional
     rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
     columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+    onSortingChange: setSorting,
+    state: { isLoading, sorting }
   });
-
 
   return (
     <>

@@ -4,56 +4,40 @@ import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
+import { UserContext } from '../../contexts/userContext'
+import ExportToExcel from '../../utils/ExportToExcel'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import moment from 'moment'
-import { GetShoeWeightDiffReports } from '../../services/ProductionServices'
+import { GetShoeWeightDiffReportDto } from '../../dtos/production/production.dto'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import ExportToExcel from '../../utils/ExportToExcel'
-import { UserContext } from '../../contexts/userContext'
+import { GetShoeWeightDiffReports } from '../../services/ProductionServices'
 
-export interface IShoeWeightDiffReport {
-  date: string,
-  dye_no: number,
-  article: string,
-  size: string,
-  st_weight: number,
-  machine: string,
-  w1: number,
-  w2: number,
-  w3: number,
-  u1: number,
-  u2: number,
-  u3: number,
-  d1: number,
-  d2: number,
-  d3: number,
-  person: string
-}
 
 export default function ShowWeightDifferenceReportPage() {
-  const [reports, setReports] = useState<IShoeWeightDiffReport[]>([])
+  const [reports, setReports] = useState<GetShoeWeightDiffReportDto[]>([])
+  const { user } = useContext(UserContext)
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
     start_date: moment(new Date()).format("YYYY-MM-DD")
     , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
   })
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IShoeWeightDiffReport[]>, BackendError>(["shoeweight_diffreports", dates.start_date, dates.end_date], async () => GetShoeWeightDiffReports({ start_date: dates.start_date, end_date: dates.end_date }))
-  const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetShoeWeightDiffReportDto[]>, BackendError>(["shoeweight_diffreports", dates.start_date, dates.end_date], async () => GetShoeWeightDiffReports({ start_date: dates.start_date, end_date: dates.end_date }))
+
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
-  const { user } = useContext(UserContext)
-  const columns = useMemo<MRT_ColumnDef<IShoeWeightDiffReport>[]>(
+  const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+  const columns = useMemo<MRT_ColumnDef<GetShoeWeightDiffReportDto>[]>(
     //column definitions...
     () => reports && [
       {
         accessorKey: 'date',
+        size: 140,
         header: 'Date',
-        size: 150,
-        Footer: <b>Total</b>,
         filterVariant: 'multi-select',
         filterSelectOptions: reports && reports.map((i) => { return i.date.toString() }).filter(onlyUnique)
       },
       {
         accessorKey: 'dye_no',
+        size: 140,
         header: 'Dye',
         aggregationFn: 'count',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
@@ -66,6 +50,7 @@ export default function ShowWeightDifferenceReportPage() {
       },
       {
         accessorKey: 'article',
+        size: 140,
         header: 'Article',
         aggregationFn: 'count',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
@@ -78,6 +63,7 @@ export default function ShowWeightDifferenceReportPage() {
       },
       {
         accessorKey: 'size',
+        size: 140,
         header: 'Size',
         aggregationFn: 'count',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
@@ -90,6 +76,7 @@ export default function ShowWeightDifferenceReportPage() {
       },
       {
         accessorKey: 'st_weight',
+        size: 140,
         header: 'St Weight',
         aggregationFn: 'count',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
@@ -102,6 +89,7 @@ export default function ShowWeightDifferenceReportPage() {
       },
       {
         accessorKey: 'machine',
+        size: 140,
         header: 'Machine',
         aggregationFn: 'count',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
@@ -114,60 +102,70 @@ export default function ShowWeightDifferenceReportPage() {
       },
       {
         accessorKey: 'w1',
+        size: 140,
         header: 'Weight1',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
         accessorKey: 'u1',
+        size: 140,
         header: 'Upper1',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
         accessorKey: 'd1',
+        size: 140,
         header: 'Diff-1',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
         accessorKey: 'w2',
+        size: 140,
         header: 'Weight2',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
         accessorKey: 'u2',
+        size: 140,
         header: 'Upper2',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
         accessorKey: 'd2',
+        size: 140,
         header: 'Diff-2',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
         accessorKey: 'w3',
+        size: 140,
         header: 'Weight3',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
         accessorKey: 'u3',
+        size: 140,
         header: 'Upper3',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
         accessorKey: 'd3',
+        size: 140,
         header: 'Diff-3',
         aggregationFn: 'sum',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
       },
       {
         accessorKey: 'person',
+        size: 140,
         header: 'Person',
         aggregationFn: 'count',
         AggregatedCell: ({ cell }) => <div> {Number(cell.getValue())}</div>,
@@ -183,28 +181,26 @@ export default function ShowWeightDifferenceReportPage() {
     //end
   );
 
-
   useEffect(() => {
     if (isSuccess && data) {
       setReports(data.data);
     }
   }, [isSuccess]);
 
-
-
   const table = useMaterialReactTable({
     columns,
-    data: reports, //10,000 rows
-    defaultDisplayColumn: { enableResizing: true },
-    enableBottomToolbar: false,
+    data: reports, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
     muiTableFooterRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
         color: 'white',
-        paddingBottom: 2
+        fontSize: '14px'
       }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '62vh' }
     }),
     muiTableHeadRowProps: () => ({
       sx: {
@@ -212,13 +208,6 @@ export default function ShowWeightDifferenceReportPage() {
         color: 'white'
       },
     }),
-    muiTableBodyCellProps: () => ({
-      sx: {
-        fontSize: '13px',
-        border: '1px solid #ddd;'
-      },
-    }),
-    initialState: { density: 'compact' },
     renderTopToolbarCustomActions: ({ table }) => (
       <Box
         sx={{
@@ -251,26 +240,44 @@ export default function ShowWeightDifferenceReportPage() {
         </Button>}
       </Box>
     ),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
+      },
+    }),
+    muiPaginationProps: {
+      rowsPerPageOptions: [100, 200, 500, 1000, 2000, 5000, 7000, 10000],
+      shape: 'rounded',
+      variant: 'outlined',
+    },
+    initialState: {
+      density: 'compact', pagination: { pageIndex: 0, pageSize: 7000 }
+    },
     enableGrouping: true,
     enableRowSelection: true,
-    enableGlobalFilterModes: true,
-    enablePagination: false,
+    manualPagination: false,
+    enablePagination: true,
+    enableRowNumbers: true,
     enableColumnPinning: true,
     enableTableFooter: true,
-    enableRowNumbers: true,
     enableRowVirtualization: true,
-    muiTableContainerProps: { sx: { maxHeight: '450px' } },
-    onSortingChange: setSorting,
-    state: { isLoading, sorting },
     rowVirtualizerInstanceRef, //optional
     rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
     columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+    onSortingChange: setSorting,
+    state: { isLoading, sorting }
   });
-
-
+  useEffect(() => {
+    //scroll to the top of the table when the sorting changes
+    try {
+      rowVirtualizerInstanceRef.current?.scrollToIndex?.(0);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [sorting]);
   return (
     <>
-
       {
         isLoading && <LinearProgress />
       }
@@ -327,9 +334,8 @@ export default function ShowWeightDifferenceReportPage() {
           />
         </Stack>
       </Stack >
-   
-        {/* table */}
-        {!isLoading && data && <MaterialReactTable table={table} />}
+
+      <MaterialReactTable table={table} />
     </>
 
   )

@@ -349,7 +349,7 @@ export default function PendingOrdersReport() {
             }
         }),
         muiTableContainerProps: (table) => ({
-            sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+            sx: { height: table.table.getState().isFullScreen ? 'auto' : '64vh' }
         }),
         muiTableHeadRowProps: () => ({
             sx: {

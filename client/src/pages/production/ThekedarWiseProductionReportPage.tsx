@@ -1,15 +1,17 @@
-import {  LinearProgress, TextField, Typography } from '@mui/material'
+import {  Box, Button, LinearProgress, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
-import { IColumnRowData } from '../../types/production.types'
 import moment from 'moment'
 import { GetproductionThekedarWise } from '../../services/ProductionServices'
 import { onlyUnique } from '../../utils/UniqueArray'
-
+import { UserContext } from '../../contexts/userContext'
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { IColumnRowData } from '../../dtos/production/production.dto'
+import ExportToExcel from '../../utils/ExportToExcel'
 
 export default function ThekedarWiseProductionReportPage() {
   const [reports, setReports] = useState<IColumnRowData['rows']>([])
@@ -19,7 +21,7 @@ export default function ThekedarWiseProductionReportPage() {
     , end_date: moment(new Date().setDate(31)).format("YYYY-MM-DD")
   })
   const { data, isLoading, isSuccess } = useQuery<AxiosResponse<IColumnRowData>, BackendError>(["thekedarwisereports", dates.start_date, dates.end_date], async () => GetproductionThekedarWise({ start_date: dates.start_date, end_date: dates.end_date }))
-
+  const { user } = useContext(UserContext)
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
@@ -54,22 +56,21 @@ export default function ThekedarWiseProductionReportPage() {
   }, [isSuccess]);
 
  
-
   const table = useMaterialReactTable({
     //@ts-ignore
     columns,
-    //@ts-ignore
-    data: reports, //10,000 rows
-    defaultDisplayColumn: { enableResizing: true },
-    enableBottomToolbar: false,
+    data: reports, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
     muiTableFooterRowProps: () => ({
       sx: {
         backgroundColor: 'whitesmoke',
         color: 'white',
-        paddingBottom: 2
+        fontSize: '14px'
       }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '62vh' }
     }),
     muiTableHeadRowProps: () => ({
       sx: {
@@ -77,27 +78,65 @@ export default function ThekedarWiseProductionReportPage() {
         color: 'white'
       },
     }),
+    renderTopToolbarCustomActions: ({ table }) => (
+      <Box
+        sx={{
+          display: 'flex',
+          gap: '16px',
+          padding: '8px',
+          flexWrap: 'wrap',
+        }}
+      >
+        {user?.assigned_permissions.includes("shoe_weight_report_export") && <Button
+          //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+          onClick={() => {
+            ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "shoe_weight_difference")
+          }}
+          startIcon={<FileDownloadIcon />}
+        >
+          Export All Data
+        </Button>}
+
+
+        {user?.assigned_permissions.includes("shoe_weight_report_export") && <Button
+          disabled={
+            !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+          }
+          //only export selected rows
+          onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "shoe_weight_difference")}
+          startIcon={<FileDownloadIcon />}
+        >
+          Export Selected Rows
+        </Button>}
+      </Box>
+    ),
     muiTableBodyCellProps: () => ({
       sx: {
-        fontSize: '13px',
-        border: '1px solid #ddd;'
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
       },
     }),
-    initialState: { density: 'compact' },
+    muiPaginationProps: {
+      rowsPerPageOptions: [100, 200, 500, 1000, 2000, 5000, 7000, 10000],
+      shape: 'rounded',
+      variant: 'outlined',
+    },
+    initialState: {
+      density: 'compact', pagination: { pageIndex: 0, pageSize: 7000 }
+    },
     enableGrouping: true,
     enableRowSelection: true,
-    enableGlobalFilterModes: true,
-    enablePagination: false,
+    manualPagination: false,
+    enablePagination: true,
+    enableRowNumbers: true,
     enableColumnPinning: true,
     enableTableFooter: true,
-    enableRowNumbers: true,
     enableRowVirtualization: true,
-    muiTableContainerProps: { sx: { maxHeight: '450px' } },
-    onSortingChange: setSorting,
-    state: { isLoading, sorting },
     rowVirtualizerInstanceRef, //optional
     rowVirtualizerOptions: { overscan: 5 }, //optionally customize the row virtualizer
     columnVirtualizerOptions: { overscan: 2 }, //optionally customize the column virtualizer
+    onSortingChange: setSorting,
+    state: { isLoading, sorting }
   });
 
   console.log(columns)
@@ -159,8 +198,7 @@ export default function ThekedarWiseProductionReportPage() {
         </Stack>
       </Stack >
     
-        {/* table */}
-        {!isLoading && data && <MaterialReactTable table={table} />}
+      <MaterialReactTable table={table} />
     </>
 
   )
