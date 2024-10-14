@@ -239,37 +239,37 @@ export default function ShoeWeightPage() {
         accessorKey: 'upper_weight2',
         header: 'Upper Weight2',
         size: 160,
-        Cell: (cell) => <>{cell.row.original.upper_weight2.toString() || ""}</>
+        Cell: (cell) => <>{cell.row.original.upper_weight2 && cell.row.original.upper_weight2.toString() || ""}</>
       },
       {
         accessorKey: 'shoe_weight2',
         header: 'Shoe Weight2',
         size: 160,
-        Cell: (cell) => <>{cell.row.original.shoe_weight2.toString() || ""}</>
+        Cell: (cell) => <>{cell.row.original.shoe_weight2 && cell.row.original.shoe_weight2.toString() || ""}</>
       },
       {
         accessorKey: 'weighttime2',
         header: 'Weight Time2',
         size: 160,
-        Cell: (cell) => <>{cell.row.original.weighttime2.toString() || ""}</>
+        Cell: (cell) => <>{cell.row.original.weighttime2 && cell.row.original.weighttime2.toString() || ""}</>
       },
       {
         accessorKey: 'upper_weight3',
         header: 'Upper Weight3',
         size: 160,
-        Cell: (cell) => <>{cell.row.original.upper_weight3.toString() || ""}</>
+        Cell: (cell) => <>{cell.row.original.upper_weight3 && cell.row.original.upper_weight3.toString() || ""}</>
       },
       {
         accessorKey: 'shoe_weight3',
         header: 'Shoe Weight3',
         size: 160,
-        Cell: (cell) => <>{cell.row.original.shoe_weight3.toString() || ""}</>
+        Cell: (cell) => <>{cell.row.original.shoe_weight3 && cell.row.original.shoe_weight3.toString() || ""}</>
       },
       {
         accessorKey: 'weighttime3',
         header: 'Weight Time3',
         size: 160,
-        Cell: (cell) => <>{cell.row.original.weighttime3.toString() || ""}</>
+        Cell: (cell) => <>{cell.row.original.weighttime3 && cell.row.original.weighttime3.toString() || ""}</>
       }, {
         accessorKey: 'created_at',
         header: 'Created At',

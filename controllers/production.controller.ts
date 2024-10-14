@@ -1358,6 +1358,7 @@ export const GetCategoryWiseProductionReports = async (req: Request, res: Respon
     return res.status(200).json(productions)
 }
 export const GetMyTodaySoleThickness = async (req: Request, res: Response, next: NextFunction) => {
+    console.log("enterd")
     let dt1 = new Date()
     dt1.setDate(new Date().getDate())
     dt1.setHours(0)
@@ -1380,8 +1381,8 @@ export const GetMyTodaySoleThickness = async (req: Request, res: Response, next:
             size: item.size,
             left_thickness: item.left_thickness,
             right_thickness: item.right_thickness,
-            created_at: item.created_at ? moment(item.created_at).format('DD/MM/YYYY') : "",
-            updated_at: item.updated_at ? moment(item.updated_at).format('DD/MM/YYYY') : "",
+            created_at: item.created_at ? moment(item.created_at).format('LT'): "",
+            updated_at: item.updated_at ? moment(item.updated_at).format('LT'): "",
             created_by: { id: item.created_by._id, value: item.created_by.username, label: item.created_by.username },
             updated_by: { id: item.updated_by._id, value: item.updated_by.username, label: item.updated_by.username }
         }
@@ -1524,13 +1525,14 @@ export const DeleteSoleThickness = async (req: Request, res: Response, next: Nex
 }
 export const GetMyTodaySpareDye = async (req: Request, res: Response, next: NextFunction) => {
     let dt1 = new Date()
-    dt1.setDate(new Date().getDate() - 1)
+    dt1.setDate(new Date().getDate())
     dt1.setHours(0)
     dt1.setMinutes(0)
     let sparedyes: ISpareDye[] = []
     let result: GetSpareDyeDto[] = []
-    if (req.user?.is_admin) {
-        sparedyes = await SpareDye.find({ created_at: { $gte: dt1 } }).populate('dye').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
+    let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
+    if (user_ids.length > 0) {
+        sparedyes = await SpareDye.find({ created_at: { $gte: dt1 }, created_by: { $in: user_ids } }).populate('dye').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
     }
     else {
         sparedyes = await SpareDye.find({ created_at: { $gte: dt1 }, created_by: req.user?._id }).populate('dye').populate('location').populate('created_by').populate('updated_by').sort('-created_at')
@@ -1545,8 +1547,8 @@ export const GetMyTodaySpareDye = async (req: Request, res: Response, next: Next
             photo_time: dye.created_at && moment(dye.photo_time).format("LT"),
             remarks: dye.remarks || "",
             location: { id: dye.location._id, value: dye.location.name, label: dye.location.name },
-            created_at: dye.created_at && moment(dye.created_at).format("DD/MM/YYYY"),
-            updated_at: dye.updated_at && moment(dye.updated_at).format("DD/MM/YYYY"),
+            created_at: dye.created_at && moment(dye.created_at).format('LT'),
+            updated_at: dye.updated_at && moment(dye.updated_at).format('LT'),
             created_by: { id: dye.created_by._id, value: dye.created_by.username, label: dye.created_by.username },
             updated_by: { id: dye.updated_by._id, value: dye.updated_by.username, label: dye.updated_by.username }
         }

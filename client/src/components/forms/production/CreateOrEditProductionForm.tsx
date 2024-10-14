@@ -8,21 +8,20 @@ import { ChoiceContext, ProductionChoiceActions } from '../../../contexts/dialog
 import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
-import { IArticle, IMachine, IProduction } from '../../../types/production.types';
 import { CreateOrEditProduction, GetArticles, GetMachines } from '../../../services/ProductionServices';
 import { GetUsers } from '../../../services/UserServices';
 import { UserContext } from '../../../contexts/userContext';
 import moment from 'moment';
 import { GetUserDto } from '../../../dtos/users/user.dto';
-import { CreateOrEditProductionDto, GetProductionDto } from '../../../dtos/production/production.dto';
+import { CreateOrEditProductionDto, GetArticleDto, GetMachineDto, GetProductionDto } from '../../../dtos/production/production.dto';
 
 function CreateOrEditProductionForm({ production }: { production?: GetProductionDto }) {
     const { user } = useContext(UserContext)
     const { data: users } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'production_menu', show_assigned_only: true }))
-    const { data: machines } = useQuery<AxiosResponse<IMachine[]>, BackendError>("machines", async () => GetMachines())
-    const { data: articles } = useQuery<AxiosResponse<IArticle[]>, BackendError>("articles", async () => GetArticles())
+    const { data: machines } = useQuery<AxiosResponse<GetMachineDto[]>, BackendError>("machines", async () => GetMachines())
+    const { data: articles } = useQuery<AxiosResponse<GetArticleDto[]>, BackendError>("articles", async () => GetArticles())
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<IProduction>, BackendError, {
+        <AxiosResponse<GetProductionDto>, BackendError, {
             id?: string,
             body: CreateOrEditProductionDto
         }>

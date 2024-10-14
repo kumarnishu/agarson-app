@@ -12,16 +12,16 @@ import AlertBar from '../../snacks/AlertBar';
 import { toTitleCase } from '../../../utils/TitleCase';
 import { CreateOrEditBillItemDto, GetBillDto, GetLeadDto, GetReferDto } from '../../../dtos/crm/crm.dto';
 import moment from 'moment';
-import { IArticle } from '../../../types/production.types';
 import { GetArticles } from '../../../services/ProductionServices';
 import { Delete } from '@mui/icons-material';
+import { GetArticleDto } from '../../../dtos/production/production.dto';
 
 
 function CreateOrEditBillForm({ lead, refer, setDisplay2, bill }: { lead?: GetLeadDto, refer?: GetReferDto, bill?: GetBillDto, setDisplay2?: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [items, setItems] = useState<CreateOrEditBillItemDto[]>(bill?.items || [])
     const [item, setItem] = useState<CreateOrEditBillItemDto>()
-    const [articles, setArticles] = useState<IArticle[]>([])
-    const { data: articlesData, isSuccess: isSucessArticles } = useQuery<AxiosResponse<IArticle[]>, BackendError>(["articles"], async () => GetArticles(String(false)))
+    const [articles, setArticles] = useState<GetArticleDto[]>([])
+    const { data: articlesData, isSuccess: isSucessArticles } = useQuery<AxiosResponse<GetArticleDto[]>, BackendError>(["articles"], async () => GetArticles(String(false)))
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: FormData,
