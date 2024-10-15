@@ -1,5 +1,4 @@
 import { Stack } from '@mui/system'
-import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
@@ -8,17 +7,97 @@ import { Fade, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/mate
 import { GetErpStateDto } from '../../dtos/erp reports/erp.reports.dto'
 import { GetStates } from '../../services/ErpServices'
 import { UserContext } from '../../contexts/userContext'
-import { BackendError } from '../..'
 import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
 import { onlyUnique } from '../../utils/UniqueArray'
 import { Menu as MenuIcon } from '@mui/icons-material';
-import ExportToExcel from '../../utils/ExportToExcel'
 import PopUp from '../../components/popup/PopUp'
 import CreateOrEditErpStateDialog from '../../components/dialogs/erp/CreateOrEditErpStateDialog'
 import AssignErpStatesDialog from '../../components/dialogs/erp/AssignErpStatesDialog'
 import DeleteErpStateDialog from '../../components/dialogs/erp/DeleteErpStateDialog'
 
+import { AxiosResponse } from "axios"
+import React from "react"
+import { useMutation } from "react-query"
+import { styled } from "styled-components"
+import { BackendError } from "../.."
+import { Button, CircularProgress, Snackbar } from "@mui/material"
+import { Upload } from "@mui/icons-material"
+import { BulkCreateStateFromExcel } from "../../services/ErpServices"
+import ExportToExcel from "../../utils/ExportToExcel"
 
+const FileInput = styled.input`
+background:none;
+color:blue;
+`
+function UploadStatesFromExcelButton() {
+  const { data, mutate, isLoading, isSuccess, isError, error } = useMutation
+    <AxiosResponse<any[]>, BackendError, FormData>
+    (BulkCreateStateFromExcel)
+  const [file, setFile] = React.useState<File | null>(null)
+
+
+  function handleFile() {
+    if (file) {
+      let formdata = new FormData()
+      formdata.append('file', file)
+      mutate(formdata)
+    }
+  }
+  React.useEffect(() => {
+    if (file) {
+      handleFile()
+    }
+  }, [file])
+  React.useEffect(() => {
+    if (isSuccess) {
+      if (data.data.length > 0)
+        ExportToExcel(data.data, "upload_output")
+    }
+  }, [isSuccess])
+  return (
+    <>
+
+      <Snackbar
+        open={isSuccess}
+        autoHideDuration={6000}
+        onClose={() => setFile(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        message="Uploaded Successfuly wait for some minutes"
+      />
+
+      <Snackbar
+        open={isError}
+        autoHideDuration={6000}
+        onClose={() => setFile(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        message={error?.response.data.message}
+      />
+      {
+        isLoading ?
+          <CircularProgress />
+          :
+          <>
+            <Button
+              component="label"
+
+            >
+              <Upload />
+              <FileInput
+                id="upload_input"
+                hidden
+                type="file" required name="file" onChange={
+                  (e: any) => {
+                    if (e.currentTarget.files) {
+                      setFile(e.currentTarget.files[0])
+                    }
+                  }}>
+              </FileInput >
+            </Button>
+          </>
+      }
+    </>
+  )
+}
 export default function ErpStatesPage() {
   const [state, setState] = useState<GetErpStateDto>()
   const [states, setStates] = useState<GetErpStateDto[]>([])
@@ -176,6 +255,7 @@ export default function ErpStatesPage() {
         </Typography>
 
         <>
+          {LoggedInUser?.assigned_permissions.includes('states_create') && <UploadStatesFromExcelButton />}
           <IconButton size="small" color="primary"
             onClick={(e) => setAnchorEl(e.currentTarget)
             }

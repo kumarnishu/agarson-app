@@ -10,7 +10,6 @@ import { BackendError } from '../..'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import CreateOrEditReferDialog from '../../components/dialogs/crm/CreateOrEditReferDialog'
-import UploadRefersExcelButton from '../../components/buttons/UploadRefersExcelButton'
 import { GetReferDto } from '../../dtos/crm/crm.dto'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import PopUp from '../../components/popup/PopUp'
@@ -23,6 +22,103 @@ import CreateOrEditBillDialog from '../../components/dialogs/crm/CreateOrEditBil
 import ViewRefersBillHistoryDialog from '../../components/dialogs/crm/ViewRefersBillHistoryDialog'
 import MergeTwoRefersDialog from '../../components/dialogs/crm/MergeTwoRefersDialog'
 import ExportToExcel from '../../utils/ExportToExcel'
+
+import React from "react"
+import { useMutation } from "react-query"
+import { styled } from "styled-components"
+import { BulkReferUpdateFromExcel } from "../../services/LeadsServices"
+import {  Snackbar } from "@mui/material"
+import { CreateOrEditReferFromExcelDto } from "../../dtos/crm/crm.dto"
+
+const FileInput = styled.input`
+background:none;
+color:blue;
+`
+function UploadRefersExcelButton() {
+  const [leads, setLeads] = React.useState<CreateOrEditReferFromExcelDto[]>()
+  const { data, mutate, isLoading, isSuccess, isError, error } = useMutation
+    <AxiosResponse<CreateOrEditReferFromExcelDto[]>, BackendError, FormData>
+    (BulkReferUpdateFromExcel)
+  const [file, setFile] = React.useState<File | null>(null)
+
+
+  function handleFile() {
+    if (file) {
+      let formdata = new FormData()
+      formdata.append('file', file)
+      mutate(formdata)
+    }
+  }
+  React.useEffect(() => {
+    if (file) {
+      handleFile()
+    }
+  }, [file])
+
+
+  React.useEffect(() => {
+    if (data) {
+      setLeads(data.data)
+    }
+  }, [data, leads])
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      if (data.data.length > 0)
+        ExportToExcel(data.data, "upload_output")
+    }
+  }, [isSuccess])
+  return (
+    <>
+
+      <Snackbar
+        open={isSuccess}
+        autoHideDuration={6000}
+        onClose={() => setFile(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        message="Uploaded Successfuly wait for some minutes"
+      />
+
+      <Snackbar
+        open={isError}
+        autoHideDuration={6000}
+        onClose={() => setFile(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        message={error?.response.data.message}
+      />
+      {
+        isLoading ?
+          <p style={{ color: 'blue', paddingTop: '10px' }}>processing...</p>
+          :
+          <>
+            <Button
+              size="small"
+              color="inherit"
+              variant="contained"
+              component="label"
+            >
+              <Tooltip title="upload excel template">
+                <Upload />
+              </Tooltip>
+              <FileInput
+                id="upload_input"
+                hidden
+                type="file"
+                name="file"
+                onChange={
+                  (e: any) => {
+                    if (e.currentTarget.files) {
+                      setFile(e.currentTarget.files[0])
+                    }
+                  }}>
+              </FileInput >
+            </Button>
+          </>
+      }
+    </>
+  )
+}
+
 
 export default function RefersPage() {
   const [paginationData, setPaginationData] = useState({ limit: 20, page: 1, total: 1 });

@@ -1,12 +1,10 @@
 import { BuildOutlined, Comment, Delete, Edit, FilterAlt, FilterAltOff, Fullscreen, FullscreenExit, Search, Share, Visibility } from '@mui/icons-material'
-import { Button, Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
+import {  Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Select, TextField,  Typography } from '@mui/material'
 import { Stack } from '@mui/system'
-import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { FuzzySearchLeads, GetAllStages, GetLeads } from '../../services/LeadsServices'
 import { UserContext } from '../../contexts/userContext'
-import { BackendError } from '../..'
 import { toTitleCase } from '../../utils/TitleCase'
 import { GetLeadDto } from '../../dtos/crm/crm.dto'
 import { DropDownDto } from '../../dtos/common/dropdown.dto'
@@ -16,10 +14,8 @@ import CreateOrEditLeadDialog from '../../components/dialogs/crm/CreateOrEditLea
 import MergeTwoLeadsDialog from '../../components/dialogs/crm/MergeTwoLeadsDialog'
 import BulkDeleteUselessLeadsDialog from '../../components/dialogs/crm/BulkDeleteUselessLeadsDialog'
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import UploadLeadsExcelButton from '../../components/buttons/UploadLeadsExcelButton'
 import { Menu as MenuIcon } from '@mui/icons-material';
 import DBPagination from '../../components/pagination/DBpagination'
-import ExportToExcel from '../../utils/ExportToExcel'
 import PopUp from '../../components/popup/PopUp'
 import BackHandIcon from '@mui/icons-material/BackHand';
 import CreateOrEditRemarkDialog from '../../components/dialogs/crm/CreateOrEditRemarkDialog'
@@ -29,7 +25,105 @@ import RemoveLeadReferralDialog from '../../components/dialogs/crm/RemoveLeadRef
 import ConvertLeadToReferDialog from '../../components/dialogs/crm/ConvertLeadToReferDialog'
 import ReferLeadDialog from '../../components/dialogs/crm/ReferLeadDialog'
 import { DownloadFile } from '../../utils/DownloadFile'
+import { AxiosResponse } from "axios"
+import React from "react"
+import { useMutation } from "react-query"
+import { styled } from "styled-components"
+import { BackendError } from "../.."
+import { BulkLeadUpdateFromExcel } from "../../services/LeadsServices"
+import { Button, Snackbar, Tooltip } from "@mui/material"
+import ExportToExcel from "../../utils/ExportToExcel"
+import { Upload } from "@mui/icons-material"
+import { CreateAndUpdatesLeadFromExcelDto } from "../../dtos/crm/crm.dto"
 
+const FileInput = styled.input`
+background:none;
+color:blue;
+`
+function UploadLeadsExcelButton() {
+  const [leads, setLeads] = React.useState<CreateAndUpdatesLeadFromExcelDto[]>()
+  const { data, mutate, isLoading, isSuccess, isError, error } = useMutation
+    <AxiosResponse<CreateAndUpdatesLeadFromExcelDto[]>, BackendError, FormData>
+    (BulkLeadUpdateFromExcel)
+  const [file, setFile] = React.useState<File | null>(null)
+
+
+  function handleFile() {
+    if (file) {
+      let formdata = new FormData()
+      formdata.append('file', file)
+      mutate(formdata)
+    }
+  }
+  React.useEffect(() => {
+    if (file) {
+      handleFile()
+    }
+  }, [file])
+
+
+  React.useEffect(() => {
+    if (data) {
+      setLeads(data.data)
+    }
+  }, [data, leads])
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      if (data.data.length > 0)
+        ExportToExcel(data.data, "upload_output")
+    }
+  }, [isSuccess])
+  return (
+    <>
+
+      <Snackbar
+        open={isSuccess}
+        autoHideDuration={6000}
+        onClose={() => setFile(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        message="Uploaded Successfuly wait for some minutes"
+      />
+
+      <Snackbar
+        open={isError}
+        autoHideDuration={6000}
+        onClose={() => setFile(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        message={error?.response.data.message}
+      />
+      {
+        isLoading ?
+          <p style={{ color: 'blue', paddingTop: '10px' }}>processing...</p>
+          :
+          <>
+            <Button
+              size="small"
+              variant="contained"
+              component="label"
+              color="inherit"
+            >
+              <Tooltip title="upload excel template">
+                <Upload />
+              </Tooltip>
+              <FileInput
+                id="upload_input"
+                hidden
+                type="file"
+                name="file"
+                onChange={
+                  (e: any) => {
+                    if (e.currentTarget.files) {
+                      setFile(e.currentTarget.files[0])
+                    }
+                  }}>
+              </FileInput >
+            </Button>
+          </>
+      }
+    </>
+  )
+}
 
 export default function LeadsPage() {
   const [paginationData, setPaginationData] = useState({ limit: 100, page: 1, total: 1 });

@@ -4,11 +4,11 @@ import isMongoId from "validator/lib/isMongoId";
 import { isvalidDate } from "../utils/isValidDate";
 import { Checklist, ChecklistBox, ChecklistCategory, IChecklist } from "../models/checklist/checklist.model";
 import { CreateOrEditDropDownDto, DropDownDto } from "../dtos/common/dropdown.dto";
-import { CreateOrEditChecklistDto, GetChecklistDto } from "../dtos/checklist/checklist.dto";
+import { CreateOrEditChecklistDto, GetChecklistDto, GetChecklistFromExcelDto } from "../dtos/checklist/checklist.dto";
 import { uploadFileToCloud } from "../utils/uploadFile.util";
 import moment from "moment";
 import { destroyFile } from "../utils/destroyFile.util";
-
+import xlsx from "xlsx";
 
 export const GetAllChecklistCategory = async (req: Request, res: Response, next: NextFunction) => {
     let result = await ChecklistCategory.find();
@@ -315,4 +315,196 @@ export const ToogleChecklist = async (req: Request, res: Response, next: NextFun
     }
     await ChecklistBox.findByIdAndUpdate(id, { checked: !checklist.checked, remarks: remarks })
     return res.status(200).json("successfully marked")
+}
+
+export const BulkCheckListCreateFromExcel = async (req: Request, res: Response, next: NextFunction) => {
+    let result: GetChecklistFromExcelDto[] = []
+    let statusText: string = ""
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer);
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: GetChecklistFromExcelDto[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        if (workbook_response.length > 3000) {
+            return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
+        }
+        console.log(workbook_response)
+        let checkednumbers: string[] = []
+        // for (let i = 0; i < workbook_response.length; i++) {
+        //     let lead = workbook_response[i]
+        //     let new_: IUser[] = []
+        //     let mobile: string | null = lead.mobile
+        //     let stage: string | null = lead.stage
+        //     let leadtype: string | null = lead.lead_type
+        //     let source: string | null = lead.lead_source
+        //     let city: string | null = lead.city
+        //     let state: string | null = lead.state
+        //     let alternate_mobile1: string | null = lead.alternate_mobile1
+        //     let alternate_mobile2: string | null = lead.alternate_mobile2
+        //     let uniqueNumbers: string[] = []
+        //     let validated = true
+
+        //     //important
+        //     if (!mobile) {
+        //         validated = false
+        //         statusText = "required mobile"
+        //     }
+
+        //     if (mobile && Number.isNaN(Number(mobile))) {
+        //         validated = false
+        //         statusText = "invalid mobile"
+        //     }
+        //     if (alternate_mobile1 && Number.isNaN(Number(alternate_mobile1))) {
+        //         validated = false
+        //         statusText = "invalid alternate mobile 1"
+        //     }
+        //     if (alternate_mobile2 && Number.isNaN(Number(alternate_mobile2))) {
+        //         validated = false
+        //         statusText = "invalid alternate mobile 2"
+        //     }
+        //     if (alternate_mobile1 && String(alternate_mobile1).length !== 10)
+        //         alternate_mobile1 = null
+        //     if (alternate_mobile2 && String(alternate_mobile2).length !== 10)
+        //         alternate_mobile2 = null
+
+        //     if (mobile && String(mobile).length !== 10) {
+        //         validated = false
+        //         statusText = "invalid mobile"
+        //     }
+
+
+
+        //     //duplicate mobile checker
+        //     if (lead._id && isMongoId(String(lead._id))) {
+        //         let targetLead = await Lead.findById(lead._id)
+        //         if (targetLead) {
+        //             if (mobile && mobile === targetLead?.mobile) {
+        //                 uniqueNumbers.push(targetLead?.mobile)
+        //             }
+        //             if (alternate_mobile1 && alternate_mobile1 === targetLead?.alternate_mobile1) {
+        //                 uniqueNumbers.push(targetLead?.alternate_mobile1)
+        //             }
+        //             if (alternate_mobile2 && alternate_mobile2 === targetLead?.alternate_mobile2) {
+        //                 uniqueNumbers.push(targetLead?.alternate_mobile2)
+        //             }
+
+        //             if (mobile && mobile !== targetLead?.mobile) {
+        //                 let ld = await Lead.findOne({ $or: [{ mobile: mobile }, { alternate_mobile1: mobile }, { alternate_mobile2: mobile }] })
+        //                 if (!ld && !checkednumbers.includes(mobile)) {
+        //                     uniqueNumbers.push(mobile)
+        //                     checkednumbers.push(mobile)
+        //                 }
+        //             }
+
+        //             if (alternate_mobile1 && alternate_mobile1 !== targetLead?.alternate_mobile1) {
+        //                 let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile1 }, { alternate_mobile1: alternate_mobile1 }, { alternate_mobile2: alternate_mobile1 }] })
+        //                 if (!ld && !checkednumbers.includes(alternate_mobile1)) {
+        //                     uniqueNumbers.push(alternate_mobile1)
+        //                     checkednumbers.push(alternate_mobile1)
+        //                 }
+        //             }
+
+        //             if (alternate_mobile2 && alternate_mobile2 !== targetLead?.alternate_mobile2) {
+        //                 let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile2 }, { alternate_mobile1: alternate_mobile2 }, { alternate_mobile2: alternate_mobile2 }] })
+        //                 if (!ld && !checkednumbers.includes(alternate_mobile2)) {
+        //                     uniqueNumbers.push(alternate_mobile2)
+        //                     checkednumbers.push(alternate_mobile2)
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     if (!lead._id || !isMongoId(String(lead._id))) {
+        //         if (mobile) {
+        //             let ld = await Lead.findOne({ $or: [{ mobile: mobile }, { alternate_mobile1: mobile }, { alternate_mobile2: mobile }] })
+        //             if (ld) {
+        //                 validated = false
+        //                 statusText = "duplicate"
+        //             }
+        //             if (!ld) {
+        //                 uniqueNumbers.push(mobile)
+        //             }
+        //         }
+
+        //         if (alternate_mobile1) {
+        //             let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile1 }, { alternate_mobile1: alternate_mobile1 }, { alternate_mobile2: alternate_mobile1 }] })
+        //             if (ld) {
+        //                 validated = false
+        //                 statusText = "duplicate"
+        //             }
+        //             if (!ld) {
+        //                 uniqueNumbers.push(alternate_mobile1)
+        //             }
+        //         }
+        //         if (alternate_mobile2) {
+        //             let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile2 }, { alternate_mobile1: alternate_mobile2 }, { alternate_mobile2: alternate_mobile2 }] })
+        //             if (ld) {
+        //                 validated = false
+        //                 statusText = "duplicate"
+        //             }
+        //             if (!ld) {
+        //                 uniqueNumbers.push(alternate_mobile2)
+        //             }
+        //         }
+
+        //     }
+
+        //     if (validated && uniqueNumbers.length > 0) {
+        //         //update and create new nead
+        //         if (lead._id && isMongoId(String(lead._id))) {
+        //             await Lead.findByIdAndUpdate(lead._id, {
+        //                 ...lead,
+        //                 stage: stage ? stage : "unknown",
+        //                 lead_type: leadtype ? leadtype : "unknown",
+        //                 lead_source: source ? source : "unknown",
+        //                 city: city ? city : "unknown",
+        //                 state: state ? state : "unknown",
+        //                 mobile: uniqueNumbers[0],
+        //                 alternate_mobile1: uniqueNumbers[1] || null,
+        //                 alternate_mobile2: uniqueNumbers[2] || null,
+        //                 updated_by: req.user,
+        //                 updated_at: new Date(Date.now())
+        //             })
+        //             statusText = "updated"
+        //         }
+        //         if (!lead._id || !isMongoId(String(lead._id))) {
+        //             let newlead = new Lead({
+        //                 ...lead,
+        //                 _id: new Types.ObjectId(),
+        //                 stage: stage ? stage : "unknown",
+        //                 state: state ? state : "unknown",
+        //                 lead_type: leadtype ? leadtype : "unknown",
+        //                 lead_source: source ? source : "unknown",
+        //                 city: city ? city : "unknown",
+        //                 mobile: uniqueNumbers[0] || null,
+        //                 alternate_mobile1: uniqueNumbers[1] || null,
+        //                 alternate_mobile2: uniqueNumbers[2] || null,
+        //                 created_by: req.user,
+        //                 updated_by: req.user,
+        //                 updated_at: new Date(Date.now()),
+        //                 created_at: new Date(Date.now())
+        //             })
+
+        //             await newlead.save()
+        //             statusText = "created"
+        //         }
+        //     }
+
+        //     result.push({
+        //         ...lead,
+        //         status: statusText
+        //     })
+        // }
+    }
+    return res.status(200).json(result);
 }

@@ -3,7 +3,6 @@ import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
-import { BackendError } from '../..'
 import { GetPartyTargetReports } from '../../services/ErpServices'
 import { UserContext } from '../../contexts/userContext'
 import { Download } from '@mui/icons-material'
@@ -11,9 +10,84 @@ import ExportToExcel from '../../utils/ExportToExcel'
 import AlertBar from '../../components/snacks/AlertBar'
 import { MaterialReactTable, MRT_ColumnDef, MRT_RowVirtualizer, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
-import UploadPartyTargetButton from '../../components/buttons/UploadPartyTargetButton'
 import { GetPartyTargetReportDto, GetPartyTargetReportFromExcelDto } from '../../dtos/erp reports/erp.reports.dto'
+import React from "react"
+import { useMutation } from "react-query"
+import { styled } from "styled-components"
+import { BackendError } from "../.."
+import {  CircularProgress, Snackbar } from "@mui/material"
+import { Upload } from "@mui/icons-material"
+import { BulkPartyTargetFromExcel } from "../../services/ErpServices"
 
+const FileInput = styled.input`
+background:none;
+color:blue;
+`
+function UploadPartyTargetButton() {
+    const { mutate, isLoading, isSuccess, isError, error } = useMutation
+        <AxiosResponse<any[]>, BackendError, FormData>
+        (BulkPartyTargetFromExcel)
+    const [file, setFile] = React.useState<File | null>(null)
+
+
+    function handleFile() {
+        if (file) {
+            let formdata = new FormData()
+            formdata.append('file', file)
+            mutate(formdata)
+        }
+    }
+    React.useEffect(() => {
+        if (file) {
+            handleFile()
+        }
+    }, [file])
+
+
+    return (
+        <>
+
+            <Snackbar
+                open={isSuccess}
+                autoHideDuration={6000}
+                onClose={() => setFile(null)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                message="Uploaded Successfuly wait for some minutes"
+            />
+
+            <Snackbar
+                open={isError}
+                autoHideDuration={6000}
+                onClose={() => setFile(null)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                message={error?.response.data.message}
+            />
+            {
+                isLoading ?
+                    <CircularProgress />
+                    :
+                    <>
+                        <Button
+                            component="label"
+
+                        >
+                            <Upload />
+                            <FileInput
+                                id="upload_input"
+                                hidden
+                                type="file" required name="file" onChange={
+                                    (e: any) => {
+                                        if (e.currentTarget.files) {
+                                            setFile(e.currentTarget.files[0])
+                                        }
+                                    }}>
+                            </FileInput >
+                        </Button>
+                    </>
+            }
+        </>
+    )
+}
 
 
 export default function PartyTargetReportPage() {

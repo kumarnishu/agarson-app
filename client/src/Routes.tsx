@@ -6,7 +6,6 @@ import CrmDashboard from './dashboards/CrmDashboard.tsx'
 import ProductionDashboard from './dashboards/ProductionDashboard.tsx'
 import ChecklistDashboard from './dashboards/ChecklistDashboard.tsx'
 import ErpReportsDashboard from './dashboards/ErpReportsDashboard.tsx'
-import TodoDashboard from './dashboards/TodoDashboard.tsx'
 import RemindersPage from './pages/crm/CrmRemindersPage.tsx'
 import CitiesPage from './pages/crm/CitiesPage.tsx'
 import CrmStatesPage from './pages/crm/CrmStatesPage.tsx'
@@ -29,16 +28,10 @@ import PendingOrdersReport from './pages/erp reports/PendingOrdersReport.tsx'
 import ClientSaleReportsPage from './pages/erp reports/ClientSaleReportsPage.tsx'
 import ClientSaleLastYearReportsPage from './pages/erp reports/ClientSaleReportsPageLastyear.tsx'
 import BillsAgingReportPage from './pages/erp reports/BillsAgingReportPage.tsx'
-import MyVisitPage from './pages/visit/MyVisitPage.tsx'
-import VisitAttendencePage from './pages/visit/VisitAttendencePage.tsx'
-import VisitAdminPage from './pages/visit/VisitAdminPage.tsx'
-import TodosPage from './pages/todos/MyTodoPage.tsx'
-import TodosAdminPage from './pages/todos/TodosAdminPage.tsx'
 import EmailVerifyPage from './pages/users/EmailVerifyPage.tsx'
 import LeadsPage from './pages/crm/LeadsPage.tsx'
 import ResetPasswordDialog from './components/dialogs/users/ResetPasswordDialog.tsx'
 import MachinePage from './pages/production/MachinesPage.tsx'
-import DyeLocationsPage from './pages/production/DyeLocationPage.tsx'
 import AssignedReferReportPage from './pages/crm/AssignedReferReportPage.tsx'
 import NewReferReportPage from './pages/crm/NewReferReportPage.tsx'
 import ShowWeightDifferenceReportPage from './pages/production/ShowWeightDifferenceReportPage.tsx'
@@ -48,9 +41,9 @@ import ThekedarWiseProductionReportPage from './pages/production/ThekedarWisePro
 import DyeStatusReportPage from './pages/production/DyeStatusReportPage.tsx'
 import ChecklistCategoriesPage from './pages/checklists/CategoriesPage.tsx'
 import CheckListPage from './pages/checklists/CheckListPage.tsx'
-import VisitDashboard from './dashboards/VisitDashboard.tsx'
 import SpareDyesPage from './pages/production/SpareDyesPage.tsx'
 import SoleThicknessPage from './pages/production/SoleThicknessPage.tsx'
+import DyeLocationPage from './pages/production/DyeLocationPage.tsx'
 
 
 
@@ -107,7 +100,7 @@ function AppRoutes() {
               />
               <Route
                 path="DyeLocationsPage" element={
-                  <DyeLocationsPage />
+                  <DyeLocationPage />
                 }
               />
               <Route
@@ -270,32 +263,6 @@ function AppRoutes() {
               }
               />
             </Route>}
-
-          {user?.assigned_permissions.includes('visits_menu') &&
-            < Route path="Visit" >
-              <Route index
-                element={
-                  <VisitDashboard />
-                }
-              />
-
-              <Route
-                path="MyVisitPage" element={
-                  <MyVisitPage />
-                }
-              />
-              <Route
-                path="VisitAttendencePage" element={
-                  <VisitAttendencePage />
-                }
-              />
-              <Route
-                path="VisitAdminPage" element={
-                  <VisitAdminPage />
-                }
-              />
-
-            </Route>}
           {
             < Route path="Checklist">
               <Route
@@ -317,26 +284,6 @@ function AppRoutes() {
 
 
             </Route>}
-          {< Route path="Todo">
-            <Route
-              index element={
-                <TodoDashboard />
-              }
-            />
-
-            <Route path="TodosPage" element={
-              < TodosPage />
-            }
-            />
-
-            <Route
-              path="TodosAdminPage" element={
-                <TodosAdminPage />
-              }
-            />
-
-
-          </Route>}
         </Route>
       }
 

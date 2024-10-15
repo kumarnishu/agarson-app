@@ -40,3 +40,7 @@ export type GetChecklistBoxDto = {
     checked: boolean,
     remarks: string,
 }
+
+export type GetChecklistFromExcelDto={
+    
+}
