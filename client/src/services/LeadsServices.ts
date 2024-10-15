@@ -7,8 +7,8 @@ export const GetLeads = async ({ limit, page, stage }: { limit: number | undefin
   return await apiClient.get(`leads/?limit=${limit}&page=${page}&stage=${stage}`)
 }
 
-export const GetReminderRemarks = async (start_date: string, end_date: string) => {
-  return await apiClient.get(`reminders/?start_date=${start_date}&end_date=${end_date}`)
+export const GetReminderRemarks = async () => {
+  return await apiClient.get(`reminders`)
 }
 
 export const BulkDeleteUselessLeads = async (body: { leads_ids: string[] }) => {

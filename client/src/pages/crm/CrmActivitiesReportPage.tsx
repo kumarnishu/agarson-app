@@ -290,6 +290,7 @@ function CrmActivitiesReportPage() {
 
             <Stack
                 sx={{ width: '100%' }}
+                pt={1}
                 direction="row"
                 alignItems={'center'}
                 justifyContent="space-between">

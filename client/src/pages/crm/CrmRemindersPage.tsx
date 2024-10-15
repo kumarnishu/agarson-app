@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 import { useQuery } from 'react-query'
 import { GetReminderRemarks } from '../../services/LeadsServices'
 import { BackendError } from '../..'
-import { Box, DialogTitle, LinearProgress, Stack, TextField } from '@mui/material'
+import { Box, DialogTitle, LinearProgress, Stack } from '@mui/material'
 
 import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
 import { Comment, Visibility } from '@mui/icons-material'
@@ -16,20 +16,13 @@ import { onlyUnique } from '../../utils/UniqueArray'
 import { DownloadFile } from '../../utils/DownloadFile'
 import ViewRemarksDialog from '../../components/dialogs/crm/ViewRemarksDialog'
 import CreateOrEditRemarkDialog from '../../components/dialogs/crm/CreateOrEditRemarkDialog'
-import moment from 'moment'
 
 function CrmReminderPage() {
   const [remarks, setRemarks] = useState<GetActivitiesOrRemindersDto[]>([])
   const [remark, setRemark] = useState<GetActivitiesOrRemindersDto>()
-  const [dates, setDates] = useState<{ start_date: string, end_date: string }>({
-    start_date: moment(new Date().setDate(new Date().getDate() - 7)).format("YYYY-MM-DD")
-    , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
-  })
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetActivitiesOrRemindersDto[]>, BackendError>(["reminders",], async () => GetReminderRemarks(dates?.start_date, dates?.end_date))
+  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetActivitiesOrRemindersDto[]>, BackendError>(["reminders"], async () => GetReminderRemarks())
   const { user: LoggedInUser } = useContext(UserContext)
-  let previous_date = new Date()
-  let day = previous_date.getDate() - 1
-  previous_date.setDate(day)
+  
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const { setChoice } = useContext(ChoiceContext)
 
@@ -306,42 +299,6 @@ function CrmReminderPage() {
         isLoading && <LinearProgress />
       }
       <DialogTitle sx={{ textAlign: 'center' }}>Last 7 Days Reminders - [{remarks && remarks.length}]</DialogTitle>
-      <Stack sx={{ px: 2 }} direction='row' gap={2} pb={1} alignItems={'center'} justifyContent={'center'}>
-        < TextField
-          size="small"
-          type="date"
-          id="start_date"
-          label="Start Date"
-          fullWidth
-          focused
-          value={dates.start_date}
-          onChange={(e) => {
-            if (e.currentTarget.value) {
-              setDates({
-                ...dates,
-                start_date: moment(e.target.value).format("YYYY-MM-DD")
-              })
-            }
-          }}
-        />
-        < TextField
-          type="date"
-          id="end_date"
-          size="small"
-          label="End Date"
-          value={dates.end_date}
-          focused
-          fullWidth
-          onChange={(e) => {
-            if (e.currentTarget.value) {
-              setDates({
-                ...dates,
-                end_date: moment(e.target.value).format("YYYY-MM-DD")
-              })
-            }
-          }}
-        />
-      </Stack>
       {remark && <ViewRemarksDialog id={remark.lead_id} />}
       {remark && <CreateOrEditRemarkDialog lead={remark ? {
         _id: remark.lead_id,

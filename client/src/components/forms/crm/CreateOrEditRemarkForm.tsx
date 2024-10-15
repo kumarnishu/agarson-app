@@ -32,8 +32,8 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
         }>
         (CreateOrEditRemark, {
             onSuccess: () => {
-
                 queryClient.invalidateQueries('remarks')
+                queryClient.invalidateQueries('reminders')
                 queryClient.invalidateQueries('leads')
             }
         })

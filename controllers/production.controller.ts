@@ -1699,8 +1699,7 @@ export const UpdateSpareDye = async (req: Request, res: Response, next: NextFunc
     if (await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } }))
         return res.status(400).json({ message: "sorry ! this dye is in machine" })
 
-    //@ts-ignore
-    if (dyeObj.dye !== dye)
+    if (dyeObj.dye._id.valueOf() !== dye)
         if (await SpareDye.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
             return res.status(400).json({ message: "sorry ! dye is not available" })
         }
