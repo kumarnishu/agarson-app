@@ -295,7 +295,7 @@ export default function RefersPage() {
 
   const table = useMaterialReactTable({
     columns,
-    data: refers,
+    data: refers, columnFilterDisplayMode: 'popover', 
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
     muiTableFooterRowProps: () => ({

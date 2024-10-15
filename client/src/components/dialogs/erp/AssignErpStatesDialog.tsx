@@ -15,7 +15,7 @@ import { GetUserDto } from '../../../dtos/users/user.dto';
 import { GetErpStateDto } from '../../../dtos/erp reports/erp.reports.dto';
 
 
-function AssignErpCrmStatesDialog({ states, flag }: { states: GetErpStateDto[], flag: number }) {
+function AssignErpStatesDialog({ states, flag }: { states: GetErpStateDto[], flag: number }) {
 
     const [users, setUsers] = useState<GetUserDto[]>([])
     const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'erp_report_menu', show_assigned_only: true }))
@@ -151,4 +151,4 @@ function AssignErpCrmStatesDialog({ states, flag }: { states: GetErpStateDto[], 
     )
 }
 
-export default AssignErpCrmStatesDialog
+export default AssignErpStatesDialog

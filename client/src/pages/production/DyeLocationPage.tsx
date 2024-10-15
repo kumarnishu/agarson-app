@@ -124,7 +124,7 @@ export default function DyeLocationPage() {
 
 
   const table = useMaterialReactTable({
-    columns,
+    columns, columnFilterDisplayMode: 'popover', 
     data: dyelocations, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,

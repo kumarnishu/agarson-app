@@ -58,7 +58,7 @@ export default function ThekedarWiseProductionReportPage() {
  
   const table = useMaterialReactTable({
     //@ts-ignore
-    columns,
+    columns, columnFilterDisplayMode: 'popover', 
     data: reports, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,

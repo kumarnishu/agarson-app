@@ -152,7 +152,7 @@ export default function DyeStatusReportPage() {
   }, [isSuccess]);
 
   const table = useMaterialReactTable({
-    columns,
+    columns, columnFilterDisplayMode: 'popover', 
     data: reports, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,

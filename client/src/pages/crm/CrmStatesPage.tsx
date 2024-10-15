@@ -26,7 +26,7 @@ export default function CrmStatesPage() {
   const [states, setStates] = useState<GetCrmStateDto[]>([])
   const [flag, setFlag] = useState(1);
   const { user: LoggedInUser } = useContext(UserContext)
-  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>(["states"], async () => GetAllStates())
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>(["crm_states"], async () => GetAllStates())
 
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
@@ -81,7 +81,7 @@ export default function CrmStatesPage() {
       },
 
       {
-        accessorKey: 'state',
+        accessorKey: 'state.value',
         header: 'State',
         size: 350,
         filterVariant: 'multi-select',
@@ -91,21 +91,21 @@ export default function CrmStatesPage() {
         }).filter(onlyUnique)
       },
       {
-        accessorKey: 'assigned_users',
+        accessorKey: 'assigned_users.value',
         header: 'Assigned Users',
         size: 650,
         filterVariant: 'text',
         Cell: (cell) => <>{cell.row.original.assigned_users && cell.row.original.assigned_users.length > 0 ? cell.row.original.assigned_users.map((i) => { return i.value }).toString() : ""}</>,
       }
     ],
-    [states],
+    [states,data],
     //end
   );
 
 
   const table = useMaterialReactTable({
-    columns,
-    data: states, //10,000 rows       
+    columns, columnFilterDisplayMode: 'popover', 
+    data: states, //10,000 rows     
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
     muiTableFooterRowProps: () => ({

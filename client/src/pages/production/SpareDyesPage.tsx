@@ -191,7 +191,7 @@ export default function SpareDyesPage() {
 
 
     const table = useMaterialReactTable({
-        columns,
+        columns, columnFilterDisplayMode: 'popover', 
         data: spareDyes,
         enableColumnResizing: true,
         enableColumnVirtualization: true, enableStickyFooter: true,

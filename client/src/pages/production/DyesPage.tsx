@@ -124,7 +124,7 @@ export default function DyePage() {
 
 
   const table = useMaterialReactTable({
-    columns,
+    columns, columnFilterDisplayMode: 'popover', 
     data: dyes, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,

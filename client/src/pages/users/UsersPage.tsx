@@ -355,7 +355,7 @@ export default function UsersPage() {
 
 
     const table = useMaterialReactTable({
-        columns,
+        columns, columnFilterDisplayMode: 'popover', 
         data: users, //10,000 rows       
         enableColumnResizing: true,
         enableColumnVirtualization: true, enableStickyFooter: true,

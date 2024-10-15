@@ -1,248 +1,265 @@
-import { Search } from '@mui/icons-material'
-import { Fade, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import { BackendError } from '../..'
-import FuzzySearch from "fuzzy-search";
-import ExportToExcel from '../../utils/ExportToExcel'
-import { ChoiceContext, UserChoiceActions, } from '../../contexts/dialogContext'
-import { Menu as MenuIcon } from '@mui/icons-material';
-import AlertBar from '../../components/snacks/AlertBar'
-import { UserContext } from '../../contexts/userContext'
-import TableSkeleton from '../../components/skeleton/TableSkeleton'
+import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { Delete, Edit } from '@mui/icons-material'
+import { Fade, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material'
+import { GetErpStateDto } from '../../dtos/erp reports/erp.reports.dto'
 import { GetStates } from '../../services/ErpServices'
+import { UserContext } from '../../contexts/userContext'
+import { BackendError } from '../..'
+import { ChoiceContext, UserChoiceActions } from '../../contexts/dialogContext'
+import { onlyUnique } from '../../utils/UniqueArray'
+import { Menu as MenuIcon } from '@mui/icons-material';
+import ExportToExcel from '../../utils/ExportToExcel'
+import PopUp from '../../components/popup/PopUp'
 import CreateOrEditErpStateDialog from '../../components/dialogs/erp/CreateOrEditErpStateDialog'
-import AssignErpCrmStatesDialog from '../../components/dialogs/erp/AssignErpStatesDialog'
-import ErpStateTable from '../../components/tables/erp reports/ErpStateTable'
-import UploadStatesFromExcelButton from '../../components/buttons/UploadStatesButton'
-import { GetErpStateDto, GetErpStateFromExcelDto } from '../../dtos/erp reports/erp.reports.dto'
+import AssignErpStatesDialog from '../../components/dialogs/erp/AssignErpStatesDialog'
+import DeleteErpStateDialog from '../../components/dialogs/erp/DeleteErpStateDialog'
 
-
-let template: GetErpStateFromExcelDto[] = [
-  {
-    _id: "",
-    state: "delhi",
-    apr: 0,
-    may: 0,
-    jun: 0,
-    jul: 0,
-    aug: 0,
-    sep: 0,
-    oct: 0,
-    nov: 0,
-    dec: 0,
-    jan: 0,
-    feb: 0,
-    mar: 0,
-  }
-]
 
 export default function ErpStatesPage() {
-  const [flag, setFlag] = useState(1);
-  const { data, isSuccess, isLoading } = useQuery<AxiosResponse<GetErpStateDto[]>, BackendError>("erp_states", GetStates)
   const [state, setState] = useState<GetErpStateDto>()
   const [states, setStates] = useState<GetErpStateDto[]>([])
-  const [selectAll, setSelectAll] = useState(false)
-  const MemoData = React.useMemo(() => states, [states])
-  const [preFilteredData, setPreFilteredData] = useState<GetErpStateDto[]>([])
-  const [selectedStates, setSelectedStates] = useState<GetErpStateDto[]>([])
-  const [filter, setFilter] = useState<string | undefined>()
-  const [selectedData, setSelectedData] = useState<GetErpStateFromExcelDto[]>(template)
-  const [sent, setSent] = useState(false)
+  const [flag, setFlag] = useState(1);
+  const { user: LoggedInUser } = useContext(UserContext)
+  const { data, isLoading, isSuccess } = useQuery<AxiosResponse<GetErpStateDto[]>, BackendError>(["erp_states"], async () => GetStates())
+
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const { user } = useContext(UserContext)
 
-  function handleExcel() {
-    setAnchorEl(null)
-    try {
-      ExportToExcel(selectedData, "erp_states_data")
-      setSent(true)
-      setSelectAll(false)
-      setSelectedData([])
-      setSelectedStates([])
-    }
-    catch (err) {
-      console.log(err)
-      setSent(false)
-    }
-  }
+  const columns = useMemo<MRT_ColumnDef<GetErpStateDto>[]>(
+    //column definitions...
+    () => states && [
+      {
+        accessorKey: 'actions',
+        header: '',
+        maxSize: 50,
+        Footer: <b></b>,
+        size: 120,
+        Cell: ({ cell }) => <PopUp
+          element={
+            <Stack direction="row">
+              <>
 
-  // refine data
-  useEffect(() => {
-    let data: GetErpStateFromExcelDto[] = []
-    selectedStates.map((state) => {
-      return data.push({
-        _id: state._id,
-        state: state.state,
-        apr: state ? state.apr : 0,
-        may: state ? state.may : 0,
-        jun: state ? state.jun : 0,
-        jul: state ? state.jul : 0,
-        aug: state ? state.aug : 0,
-        sep: state ? state.sep : 0,
-        oct: state ? state.oct : 0,
-        nov: state ? state.nov : 0,
-        dec: state ? state.dec : 0,
-        jan: state ? state.jan : 0,
-        feb: state ? state.feb : 0,
-        mar: state ? state.mar : 0,
-      })
-    })
-    if (data.length > 0)
-      setSelectedData(data)
-  }, [selectedStates])
+                {LoggedInUser?.is_admin && LoggedInUser.assigned_permissions.includes('states_delete') &&
+                  <Tooltip title="delete">
+                    <IconButton color="error"
+
+                      onClick={() => {
+                        setChoice({ type: UserChoiceActions.delete_erp_state })
+                        setState(cell.row.original)
+
+                      }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Tooltip>
+                }
+                {LoggedInUser?.assigned_permissions.includes('states_edit') && <Tooltip title="edit">
+                  <IconButton
+
+                    onClick={() => {
+                      setState(cell.row.original)
+                      setChoice({ type: UserChoiceActions.create_or_edit_erpstate })
+                    }}
+
+                  >
+                    <Edit />
+                  </IconButton>
+                </Tooltip>}
+
+              </>
+
+            </Stack>}
+        />
+      },
+
+      {
+        accessorKey: 'state',
+        header: 'State',
+        size: 350,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state : ""}</>,
+        filterSelectOptions: states && states.map((i) => {
+          return i.state;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'assigned_users',
+        header: 'Assigned Users',
+        size: 650,
+        filterVariant: 'text',
+        Cell: (cell) => <>{cell.row.original.assigned_users && cell.row.original.assigned_users.length > 0 ? cell.row.original.assigned_users.map((i) => { return i.value }).toString() : ""}</>,
+      }
+    ],
+    [states, data],
+    //end
+  );
+
+
+  const table = useMaterialReactTable({
+    columns, columnFilterDisplayMode: 'popover',
+    data: states, //10,000 rows     
+    enableColumnResizing: true,
+    enableColumnVirtualization: true, enableStickyFooter: true,
+    muiTableFooterRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white',
+        fontSize: '14px'
+      }
+    }),
+    muiTableContainerProps: (table) => ({
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+    }),
+    muiTableHeadRowProps: () => ({
+      sx: {
+        backgroundColor: 'whitesmoke',
+        color: 'white'
+      },
+    }),
+    muiTableBodyCellProps: () => ({
+      sx: {
+        border: '1px solid #c2beba;',
+        fontSize: '13px'
+      },
+    }),
+    muiPaginationProps: {
+      rowsPerPageOptions: [100, 200, 500, 1000, 2000],
+      shape: 'rounded',
+      variant: 'outlined',
+    },
+    initialState: {
+      density: 'compact', showGlobalFilter: true, pagination: { pageIndex: 0, pageSize: 500 }
+    },
+    enableGrouping: true,
+    enableRowSelection: true,
+    manualPagination: false,
+    enablePagination: true,
+    enableRowNumbers: true,
+    enableColumnPinning: true,
+    enableTableFooter: true,
+    enableRowVirtualization: true,
+    onSortingChange: setSorting,
+    state: { isLoading, sorting }
+  });
+
 
   useEffect(() => {
     if (isSuccess) {
-      setStates(data.data)
-      setPreFilteredData(data.data)
+      setStates(data.data);
     }
-  }, [isSuccess, data])
+  }, [isSuccess]);
 
 
-  useEffect(() => {
-    if (filter) {
-      if (states) {
-        const searcher = new FuzzySearch(states, ["state.state", "users.username"], {
-          caseSensitive: false,
-        });
-        const result = searcher.search(filter);
-        setStates(result)
-      }
-    }
-    if (!filter)
-      setStates(preFilteredData)
-
-  }, [filter])
   return (
     <>
-      {
-        isLoading && <LinearProgress />
-      }
-      {/*heading, search bar and table menu */}
+
+
       <Stack
         spacing={2}
         padding={1}
         direction="row"
-
+        justifyContent="space-between"
+        alignItems={'center'}
       >
-
         <Typography
           variant={'h6'}
           component={'h1'}
+          sx={{ pl: 1 }}
         >
-          Erp States {selectedStates.length > 0 ? <span>(checked : {selectedStates.length})</span> : `- ${states.length}`}
+          States : {states && states.length}
         </Typography>
 
-        <TextField
-          sx={{ width: '50vw' }}
-          size="small"
-          onChange={(e) => {
-            setFilter(e.currentTarget.value)
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Search sx={{ cursor: 'pointer' }} />
-              </InputAdornment>
-            ),
-          }}
-          placeholder={`Search States `}
-          style={{
-            fontSize: '1.1rem',
-            border: 0,
-          }}
-        />
-        <Stack
-          direction="row"
-        >
-          {/* search bar */}
-          < Stack direction="row" spacing={2}>
-            {user?.assigned_permissions.includes("pending_orders_create") && <UploadStatesFromExcelButton />}
-          </Stack >
-          <>
+        <>
+          <IconButton size="small" color="primary"
+            onClick={(e) => setAnchorEl(e.currentTarget)
+            }
+            sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
+          >
+            <MenuIcon />
+          </IconButton>
 
-            {sent && <AlertBar message="File Exported Successfuly" color="success" />}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)
+            }
+            TransitionComponent={Fade}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+            sx={{ borderRadius: 2 }}
+          >
+            {LoggedInUser?.assigned_permissions.includes('states_create') && <MenuItem
 
-
-            <IconButton size="small" color="primary"
-              onClick={(e) => setAnchorEl(e.currentTarget)
-              }
-              sx={{ border: 2, borderRadius: 3, marginLeft: 1 }}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)
-              }
-              TransitionComponent={Fade}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
+              onClick={() => {
+                setChoice({ type: UserChoiceActions.create_or_edit_erpstate })
+                setState(undefined)
+                setAnchorEl(null)
               }}
-              sx={{ borderRadius: 2 }}
-            >
-              {user?.assigned_permissions.includes("erp_state_create") && <MenuItem
-                onClick={() => {
-                  setChoice({ type: UserChoiceActions.create_or_edit_erpstate })
+            > Add New</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('states_edit') && <MenuItem
+
+              onClick={() => {
+                if (!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()) {
+                  alert("select some states")
+                }
+                else {
+                  setChoice({ type: UserChoiceActions.bulk_assign_erp_states })
                   setState(undefined)
-                  setAnchorEl(null)
-                }}
-              > Add New</MenuItem>}
-              {user?.assigned_permissions.includes("erp_state_edit") && <MenuItem
-                onClick={() => {
-                  if (selectedStates && selectedStates.length == 0) {
-                    alert("select some states")
-                  }
-                  else {
-                    setChoice({ type: UserChoiceActions.bulk_assign_erp_states })
-                    setState(undefined)
-                    setFlag(1)
-                  }
-                  setAnchorEl(null)
-                }}
-              > Assign States</MenuItem>}
-              {user?.assigned_permissions.includes("erp_state_edit") && <MenuItem
-                onClick={() => {
-                  if (selectedStates && selectedStates.length == 0) {
-                    alert("select some states")
-                  }
-                  else {
-                    setChoice({ type: UserChoiceActions.bulk_assign_erp_states })
-                    setState(undefined)
-                    setFlag(0)
-                  }
-                  setAnchorEl(null)
-                }}
-              > Remove States</MenuItem>}
-              {user?.assigned_permissions.includes("erp_state_export") && < MenuItem onClick={handleExcel}
-              >Export To Excel</MenuItem>}
+                  setFlag(1)
+                }
+                setAnchorEl(null)
+              }}
+            > Assign States</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('states_edit') && <MenuItem
 
-            </Menu >
-            <CreateOrEditErpStateDialog />
-            {<AssignErpCrmStatesDialog flag={flag} states={selectedStates.map((item) => { return item })} />}
+              onClick={() => {
+                if (!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()) {
+                  alert("select some states")
+                }
+                else {
+                  setChoice({ type: UserChoiceActions.bulk_assign_erp_states })
+                  setState(undefined)
+                  setFlag(0)
+                }
+                setAnchorEl(null)
+              }}
+            > Remove States</MenuItem>}
+
+            {LoggedInUser?.assigned_permissions.includes('states_export') && < MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+            >Export All</MenuItem>}
+            {LoggedInUser?.assigned_permissions.includes('states_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
+
+            >Export Selected</MenuItem>}
+
+          </Menu >
+          <CreateOrEditErpStateDialog />
+          {<AssignErpStatesDialog flag={flag} states={table.getSelectedRowModel().rows.map((item) => { return item.original })} />}
+          <>
+            {
+              state ?
+                <>
+
+                  <DeleteErpStateDialog state={state} />
+                  <CreateOrEditErpStateDialog state={state} />
+                </>
+                : null
+            }
           </>
-        </Stack >
-      </Stack >
-      {/*  table */}
-      {isLoading && <TableSkeleton />}
-      {!isLoading && MemoData.length == 0 && <div style={{ textAlign: "center", padding: '10px' }}>No Data Found</div>}
-      {!isLoading && MemoData.length > 0 &&
-        <ErpStateTable
-          state={state}
-          selectAll={selectAll}
-          selectedStates={selectedStates}
-          setSelectedStates={setSelectedStates}
-          setSelectAll={setSelectAll}
-          states={MemoData}
-          setState={setState}
-        />}
+        </>
 
+
+      </Stack >
+
+      {/* table */}
+      <MaterialReactTable table={table} />
     </>
 
   )

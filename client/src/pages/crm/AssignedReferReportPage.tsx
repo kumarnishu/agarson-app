@@ -368,7 +368,7 @@ export default function AssignedReferReportPage() {
 
 
   const table = useMaterialReactTable({
-    columns,
+    columns, columnFilterDisplayMode: 'popover', 
     data: leads, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,

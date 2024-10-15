@@ -19,6 +19,8 @@
     "file-saver": "^2.0.5",
     "formik": "^2.2.9",
     "fuzzy-search": "^3.2.1",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.3",
     "material-react-table": "^2.13.0",
     "moment": "^2.29.4",
     "react": "^18.2.0",

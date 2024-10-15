@@ -95,7 +95,7 @@ export default function CrmLeadSourcesPage() {
 
 
   const table = useMaterialReactTable({
-    columns,
+    columns, columnFilterDisplayMode: 'popover', 
     data: sources, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,

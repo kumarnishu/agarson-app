@@ -166,7 +166,7 @@ export default function SoleThicknessPage() {
 
 
     const table = useMaterialReactTable({
-        columns,
+        columns, columnFilterDisplayMode: 'popover', 
         data: thicknesses,
         enableColumnResizing: true,
         enableColumnVirtualization: true, enableStickyFooter: true,

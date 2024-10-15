@@ -383,7 +383,8 @@ export default function LeadsPage() {
         Cell: (cell) => <>{cell.row.original.updated_at ? cell.row.original.updated_at : ""}</>
       },
       {
-        accessorKey: 'created_by.label',
+        accessorKey: 'created_by.value',
+        accessorFn: (row) => { return row.created_by.value },
         header: 'Creator',
         size: 120,
         Cell: (cell) => <>{cell.row.original.created_by.label ? cell.row.original.created_by.label : ""}</>
@@ -411,7 +412,7 @@ export default function LeadsPage() {
 
 
   const table = useMaterialReactTable({
-    columns,
+    columns, columnFilterDisplayMode: 'popover',
     data: leads,
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
@@ -582,6 +583,7 @@ export default function LeadsPage() {
     }
   }, [sorting]);
 
+  
   return (
     <>
       {

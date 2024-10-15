@@ -265,7 +265,7 @@ function CrmActivitiesReportPage() {
         //end
     );
     const table = useMaterialReactTable({
-        columns,
+        columns, columnFilterDisplayMode: 'popover', 
         data: remarks, //10,000 rows       
         enableColumnResizing: true,
         enableColumnVirtualization: true, enableStickyFooter: true,

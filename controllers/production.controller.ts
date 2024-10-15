@@ -961,7 +961,7 @@ export const UpdateShoeWeight2 = async (req: Request, res: Response, next: NextF
     }
 
     //@ts-ignore
-    if (shoe_weight.dye !== dye)
+    if (shoe_weight.dye._id.valueOf() !== dye)
         if (await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
             return res.status(400).json({ message: "sorry ! dye is not available" })
         }
@@ -1026,8 +1026,7 @@ export const UpdateShoeWeight3 = async (req: Request, res: Response, next: NextF
         return res.status(400).json({ message: "sorry ! this is a spare dye" })
     }
 
-    //@ts-ignore
-    if (shoe_weight.dye !== dye)
+    if (shoe_weight.dye._id.valueOf() !== dye)
         if (await ShoeWeight.findOne({ dye: dye, created_at: { $gte: dt1, $lt: dt2 } })) {
             return res.status(400).json({ message: "sorry ! dye is not available" })
         }

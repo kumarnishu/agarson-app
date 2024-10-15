@@ -293,7 +293,7 @@ export default function ShoeWeightPage() {
 
   const table = useMaterialReactTable({
     columns,
-    data: weights,
+    data: weights, columnFilterDisplayMode: 'popover', 
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
     muiTableFooterRowProps: () => ({

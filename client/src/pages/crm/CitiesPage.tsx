@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
-import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
+import { MaterialReactTable, MRT_ColumnDef,  MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
 import CreateOrEditCityDialog from '../../components/dialogs/crm/CreateOrEditCityDialog'
 import DeleteCrmItemDialog from '../../components/dialogs/crm/DeleteCrmItemDialog'
@@ -20,7 +20,8 @@ import { GetCrmCityDto, GetCrmStateDto } from '../../dtos/crm/crm.dto'
 import AssignCrmCitiesDialog from '../../components/dialogs/crm/AssignCrmCitiesDialog'
 import UploadCRMCitiesFromExcelButton from '../../components/buttons/UploadCRMCitiesFromExcelButton'
 import { toTitleCase } from '../../utils/TitleCase'
-
+// import { jsPDF } from 'jspdf'; //or use your library of choice here
+// import autoTable from 'jspdf-autotable';
 
 
 export default function CrmCitiesPage() {
@@ -32,10 +33,24 @@ export default function CrmCitiesPage() {
   const { user: LoggedInUser } = useContext(UserContext)
   const { data: citiesdata, isSuccess, isLoading } = useQuery<AxiosResponse<GetCrmCityDto[]>, BackendError>(["crm_cities", state], async () => GetAllCities({ state: state }))
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
-  const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>("crm_states", GetAllStates)
+  const { data, isSuccess: isStateSuccess } = useQuery<AxiosResponse<GetCrmStateDto[]>, BackendError>("crm_cities", GetAllStates)
 
   const { setChoice } = useContext(ChoiceContext)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+
+  // const handleExportRows = (rows: MRT_Row<GetCrmStateDto>[]) => {
+  //   const doc = new jsPDF();
+  //   const tableData = rows.map((row) => Object.values(row.original.state));
+  //   const tableHeaders = columns.map((c) => c.header);
+
+  //   autoTable(doc, {
+  //     head: [tableHeaders],
+  //     body: tableData,
+  //   });
+
+  //   doc.save('mrt-pdf-example.pdf');
+  // };
 
   useEffect(() => {
     if (isSuccess) {
@@ -96,7 +111,7 @@ export default function CrmCitiesPage() {
       },
 
       {
-        accessorKey: 'city',
+        accessorKey: 'city.value',
         header: 'City',
         size: 350,
         filterVariant: 'multi-select',
@@ -106,7 +121,8 @@ export default function CrmCitiesPage() {
         }).filter(onlyUnique)
       },
       {
-        accessorKey: 'assigned_users',
+        // accessorKey: 'assigned_users.value',
+        accessorFn:(Cell)=>{return Cell.assigned_users},
         header: 'Assigned Users',
         size: 650,
         filterVariant: 'text',
@@ -119,7 +135,7 @@ export default function CrmCitiesPage() {
 
 
   const table = useMaterialReactTable({
-    columns,
+    columns, columnFilterDisplayMode: 'popover', 
     data: cities, //10,000 rows       
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,
@@ -284,6 +300,7 @@ export default function CrmCitiesPage() {
             {LoggedInUser?.assigned_permissions.includes('city_export') && < MenuItem disabled={!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()} onClick={() => ExportToExcel(table.getSelectedRowModel().rows.map((row) => { return row.original }), "Exported Data")}
 
             >Export Selected</MenuItem>}
+
 
           </Menu >
           <CreateOrEditCityDialog />

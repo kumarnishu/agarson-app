@@ -200,7 +200,7 @@ export default function ProductionPage() {
 
 
   const table = useMaterialReactTable({
-    columns,
+    columns, columnFilterDisplayMode: 'popover', 
     data: productions,
     enableColumnResizing: true,
     enableColumnVirtualization: true, enableStickyFooter: true,

@@ -94,7 +94,7 @@ export default function MachineCategoryPage() {
 
 
     const table = useMaterialReactTable({
-        columns,
+        columns, columnFilterDisplayMode: 'popover', 
         data: categories, //10,000 rows       
         enableColumnResizing: true,
         enableColumnVirtualization: true, enableStickyFooter: true,
