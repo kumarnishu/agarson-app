@@ -196,13 +196,13 @@ export default function CrmCitiesPage() {
       },
 
       {
-        accessorKey: 'city.value',
+        accessorKey: 'city',
         header: 'City',
         size: 350,
         filterVariant: 'multi-select',
-        Cell: (cell) => <>{cell.row.original.city ? cell.row.original.city.label : ""}</>,
+        Cell: (cell) => <>{cell.row.original.city ? cell.row.original.city : ""}</>,
         filterSelectOptions: cities && cities.map((i) => {
-          return i.city.value;
+          return i.city;
         }).filter(onlyUnique)
       },
       {
@@ -211,7 +211,7 @@ export default function CrmCitiesPage() {
         header: 'Assigned Users',
         size: 650,
         filterVariant: 'text',
-        Cell: (cell) => <>{cell.row.original.assigned_users && cell.row.original.assigned_users.length > 0 ? cell.row.original.assigned_users.map((i) => { return i.value }).toString() : ""}</>,
+        Cell: (cell) => <>{cell.row.original.assigned_users && cell.row.original.assigned_users.length > 0 ? cell.row.original.assigned_users : ""}</>,
       }
     ],
     [cities],
@@ -307,8 +307,8 @@ export default function CrmCitiesPage() {
             </option>
             {
               states.map(state => {
-                return (<option key={state.state.id} value={state.state.value}>
-                  {toTitleCase(state.state.label)}
+                return (<option key={state._id} value={state.state}>
+                  {toTitleCase(state.state)}
                 </option>)
               })
             }
@@ -390,15 +390,15 @@ export default function CrmCitiesPage() {
           </Menu >
           <CreateOrEditCityDialog />
           {LoggedInUser?.is_admin && <FindUknownCrmCitiesDialog />}
-          {<AssignCrmCitiesDialog flag={flag} cities={table.getSelectedRowModel().rows.map((item) => { return { id: item.original.city.id, label: item.original.city.label, value: item.original.city.value } })} />}
+          {<AssignCrmCitiesDialog flag={flag} cities={table.getSelectedRowModel().rows.map((item) => { return { id: item.original._id, label: item.original.city, value: item.original.city } })} />}
           <>
             {
               city ?
                 <>
 
-                  <DeleteCrmItemDialog city={city ? { id: city.city.id, label: city.city.label, value: city.city.value } : undefined} />
-                  <CreateOrEditCityDialog city={{ id: city.city.id, state: city.state, city: city.city.value }} />
-                  <DeleteCrmItemDialog city={city.city} />
+                  <DeleteCrmItemDialog city={city} />
+                  <CreateOrEditCityDialog city={{ id: city._id, state: city.state, city: city.city }} />
+                  <DeleteCrmItemDialog city={city} />
                 </>
                 : null
             }

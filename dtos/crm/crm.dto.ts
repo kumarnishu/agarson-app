@@ -17,13 +17,15 @@ export type MergeTwoLeadsDto = {
 }
 
 export type GetCrmCityDto = {
-    city: DropDownDto;
+    _id:string,
+    city: string;
     state: string;
-    assigned_users: DropDownDto[];
+    assigned_users: string;
 }
 export type GetCrmStateDto = {
-    state: DropDownDto;
-    assigned_users: DropDownDto[];
+    _id:string,
+    state: string,
+    assigned_users: string;
 }
 
 export type AssignOrRemoveCrmCityDto = {

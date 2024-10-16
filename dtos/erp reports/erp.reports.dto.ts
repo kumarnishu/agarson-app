@@ -19,7 +19,7 @@ export type GetErpStateDto = {
     updated_at: string,
     created_by: DropDownDto,
     updated_by: DropDownDto,
-    assigned_users: DropDownDto[]
+    assigned_users: string
 }
 export type CreateOrEditErpStateDto = {
     state: string,

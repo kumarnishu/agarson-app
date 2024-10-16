@@ -172,7 +172,7 @@ export default function ErpStatesPage() {
         header: 'Assigned Users',
         size: 650,
         filterVariant: 'text',
-        Cell: (cell) => <>{cell.row.original.assigned_users && cell.row.original.assigned_users.length > 0 ? cell.row.original.assigned_users.map((i) => { return i.value }).toString() : ""}</>,
+        Cell: (cell) => <>{cell.row.original.assigned_users ? cell.row.original.assigned_users : ""}</>,
       }
     ],
     [states, data],
@@ -251,7 +251,7 @@ export default function ErpStatesPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          States : {states && states.length}
+          Erp States : {states && states.length}
         </Typography>
 
         <>

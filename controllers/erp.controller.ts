@@ -37,7 +37,7 @@ export const GetAllStates = async (req: Request, res: Response, next: NextFuncti
             updated_at: moment(states[i].updated_at).format("DD/MM/YYYY"),
             created_by: { id: states[i].created_by._id, label: states[i].created_by.username, value: states[i].created_by.username },
             updated_by: { id: states[i].updated_by._id, label: states[i].updated_by.username, value: states[i].updated_by.username },
-            assigned_users: users.map((u) => { return { id: u._id, label: u.username, value: u.username } })
+            assigned_users: users.map((u) => { return u.username }).toString()
         })
     }
     return res.status(200).json(result)
@@ -182,7 +182,7 @@ export const GetClientSaleReportsForLastYear = async (req: Request, res: Respons
             article: i.article,
             oldqty: i.oldqty,
             newqty: i.newqty,
-            total: (i.apr+
+            total: (i.apr +
                 i.may +
                 i.jun +
                 i.jul +
@@ -415,7 +415,7 @@ export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: R
             let mar: number | null = Number(item.mar)
 
             if (state) {
-                if (item._id && isMongoId(item._id)){
+                if (item._id && isMongoId(item._id)) {
                     await State.findByIdAndUpdate(item._id, {
                         state: state,
                         apr: apr || 0,
@@ -438,7 +438,7 @@ export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: R
                     statusText = "updated"
                 }
 
-                if (!item._id || !isMongoId(item._id)){
+                if (!item._id || !isMongoId(item._id)) {
                     let oldstate = await State.findOne({ state: state })
                     if (!oldstate) {
                         await new State({

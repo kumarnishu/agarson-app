@@ -23,7 +23,7 @@ import UpdateMachineCategoriesPage from './pages/production/MachineCategoriesPag
 import ProductionAdminPage from './pages/production/ProductionPage.tsx'
 import DyePage from './pages/production/DyesPage.tsx'
 import ArticlePage from './pages/production/ArticlesPage.tsx'
-import ErpStatesPage from './pages/erp reports/StatesPage.tsx'
+import ErpStatesPage from './pages/erp reports/ErpStatesPage.tsx'
 import PendingOrdersReport from './pages/erp reports/PendingOrdersReport.tsx'
 import ClientSaleReportsPage from './pages/erp reports/ClientSaleReportsPage.tsx'
 import ClientSaleLastYearReportsPage from './pages/erp reports/ClientSaleReportsPageLastyear.tsx'

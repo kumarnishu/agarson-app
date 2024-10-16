@@ -9,12 +9,13 @@ import { queryClient } from '../../../main';
 import { Cancel } from '@mui/icons-material';
 import AlertBar from '../../snacks/AlertBar';
 import { DropDownDto } from '../../../dtos/common/dropdown.dto';
+import { GetCrmCityDto, GetCrmStateDto } from '../../../dtos/crm/crm.dto';
 
 
-function DeleteCrmItemDialog({ refer, lead, state, city, type, source, stage }: { refer?: DropDownDto, lead?: DropDownDto, state?: DropDownDto, city?: DropDownDto, type?: DropDownDto, source?: DropDownDto, stage?: DropDownDto }) {
+function DeleteCrmItemDialog({ refer, lead, state, city, type, source, stage }: { refer?: DropDownDto, lead?: DropDownDto, state?: GetCrmStateDto, city?: GetCrmCityDto, type?: DropDownDto, source?: DropDownDto, stage?: DropDownDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
     const { mutate, isLoading, isSuccess, error, isError } = useMutation
-        <AxiosResponse<any>, BackendError, { refer?: DropDownDto, lead?: DropDownDto, state?: DropDownDto, city?: DropDownDto, type?: DropDownDto, source?: DropDownDto, stage?: DropDownDto }>
+        <AxiosResponse<any>, BackendError, { refer?: DropDownDto, lead?: DropDownDto, state?: GetCrmStateDto, city?: GetCrmCityDto, type?: DropDownDto, source?: DropDownDto, stage?: DropDownDto }>
         (DeleteCrmItem, {
             onSuccess: () => {
                 if(refer)

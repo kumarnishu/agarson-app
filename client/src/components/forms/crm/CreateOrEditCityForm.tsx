@@ -119,8 +119,8 @@ function CreateOrEditCityForm({ city }: { city?: CreateOrEditCrmCity }) {
                     </option>
                     {
                         states.map(state => {
-                            return (<option key={state.state.id} value={state.state.value}>
-                                {toTitleCase(state.state.label)}
+                            return (<option key={state._id} value={state.state}>
+                                {toTitleCase(state.state)}
                             </option>)
                         })
                     }

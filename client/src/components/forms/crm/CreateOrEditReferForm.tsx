@@ -238,8 +238,8 @@ function CreateOrEditReferForm({ refer }: { refer?: GetReferDto }) {
                     </option>
                     {
                         states.map(state => {
-                            return (<option key={state.state.id} value={state.state.value}>
-                                {toTitleCase(state.state.label)}
+                            return (<option key={state.state} value={state.state}>
+                                {toTitleCase(state.state)}
                             </option>)
                         })
                     }
@@ -268,8 +268,8 @@ function CreateOrEditReferForm({ refer }: { refer?: GetReferDto }) {
                     </option>
                     {
                         cities.map((city, index) => {
-                            return (<option key={index} value={city.city.value.toLowerCase()}>
-                                {toTitleCase(city.city.label)}
+                            return (<option key={index} value={city.city.toLowerCase()}>
+                                {toTitleCase(city.city)}
                             </option>)
                         })
                     }

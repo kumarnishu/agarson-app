@@ -9,9 +9,9 @@ import { BackendError } from '../../..';
 import { queryClient } from '../../../main';
 import AlertBar from '../../snacks/AlertBar';
 import * as yup from 'yup';
-import { DropDownDto } from '../../../dtos/common/dropdown.dto';
+import { GetCrmStateDto } from '../../../dtos/crm/crm.dto';
 
-function CreateOrEditStateForm({ state }: { state?: DropDownDto}) {
+function CreateOrEditStateForm({ state }: { state?: GetCrmStateDto}) {
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
         <AxiosResponse<string>, BackendError, {
             body: {
@@ -31,7 +31,7 @@ function CreateOrEditStateForm({ state }: { state?: DropDownDto}) {
         state: string
     }>({
         initialValues: {
-            state: state ? state.value : ""
+            state: state ? state.state : ""
         },
         validationSchema:yup.object({
             state:yup.string().required()
@@ -40,7 +40,7 @@ function CreateOrEditStateForm({ state }: { state?: DropDownDto}) {
             state: string,
         }) => {
             mutate({
-                id:state?.id,
+                id:state?._id,
                 body: {
                     key: values.state
                 }

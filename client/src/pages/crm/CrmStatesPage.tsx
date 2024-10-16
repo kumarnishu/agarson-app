@@ -162,21 +162,21 @@ export default function CrmStatesPage() {
       },
 
       {
-        accessorKey: 'state.value',
+        accessorKey: 'state',
         header: 'State',
         size: 350,
         filterVariant: 'multi-select',
-        Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state.label : ""}</>,
+        Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state : ""}</>,
         filterSelectOptions: states && states.map((i) => {
-          return i.state.value;
+          return i.state;
         }).filter(onlyUnique)
       },
       {
-        accessorKey: 'assigned_users.value',
+        accessorKey: 'assigned_users',
         header: 'Assigned Users',
         size: 650,
         filterVariant: 'text',
-        Cell: (cell) => <>{cell.row.original.assigned_users && cell.row.original.assigned_users.length > 0 ? cell.row.original.assigned_users.map((i) => { return i.value }).toString() : ""}</>,
+        Cell: (cell) => <>{cell.row.original.assigned_users && cell.row.original.assigned_users.length > 0 ? cell.row.original.assigned_users : ""}</>,
       }
     ],
     [states, data],
@@ -236,7 +236,7 @@ export default function CrmStatesPage() {
     if (isSuccess) {
       setStates(data.data);
     }
-  }, [isSuccess]);
+  }, [isSuccess, data]);
 
 
   return (
@@ -336,15 +336,15 @@ export default function CrmStatesPage() {
           </Menu >
           <CreateOrEditStateDialog />
           {LoggedInUser?.is_admin && <FindUknownCrmStatesDialog />}
-          {<AssignCrmStatesDialog flag={flag} states={table.getSelectedRowModel().rows.map((item) => { return { id: item.original.state.id, label: item.original.state.label, value: item.original.state.value } })} />}
+          {<AssignCrmStatesDialog flag={flag} states={table.getSelectedRowModel().rows.map((item) => { return  item.original})} />}
           <>
             {
               state ?
                 <>
 
-                  <DeleteCrmItemDialog state={state ? { id: state.state.id, label: state.state.label, value: state.state.value } : undefined} />
-                  <CreateOrEditStateDialog state={state.state} />
-                  <DeleteCrmItemDialog state={state.state} />
+                  <DeleteCrmItemDialog state={state} />
+                  <CreateOrEditStateDialog state={state} />
+                  <DeleteCrmItemDialog state={state} />
                 </>
                 : null
             }

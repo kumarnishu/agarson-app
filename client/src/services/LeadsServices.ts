@@ -1,5 +1,5 @@
 import { DropDownDto } from "../dtos/common/dropdown.dto"
-import { CreateOrEditMergeLeadsDto, CreateOrEditMergeRefersDto, GetReferDto } from "../dtos/crm/crm.dto"
+import { CreateOrEditMergeLeadsDto, CreateOrEditMergeRefersDto, GetCrmCityDto, GetCrmStateDto, GetReferDto } from "../dtos/crm/crm.dto"
 import { apiClient } from "./utils/AxiosInterceptor"
 
 //leads
@@ -62,11 +62,11 @@ export const CreateOrUpdateLead = async ({ id, body }: { body: FormData, id?: st
 }
 
 
-export const DeleteCrmItem = async ({ refer, lead, state, city, type, source, stage }: { refer?: DropDownDto, lead?: DropDownDto, state?: DropDownDto, city?: DropDownDto, type?: DropDownDto, source?: DropDownDto, stage?: DropDownDto }) => {
+export const DeleteCrmItem = async ({ refer, lead, state, city, type, source, stage }: { refer?: DropDownDto, lead?: DropDownDto, state?: GetCrmStateDto, city?: GetCrmCityDto, type?: DropDownDto, source?: DropDownDto, stage?: DropDownDto }) => {
   if (refer)
     return await apiClient.delete(`refers/${refer.id}`)
   if (state)
-    return await apiClient.delete(`crm/states/${state.id}`)
+    return await apiClient.delete(`crm/states/${state._id}`)
   if (lead)
     return await apiClient.delete(`leads/${lead.id}`)
   if (source)
@@ -74,7 +74,7 @@ export const DeleteCrmItem = async ({ refer, lead, state, city, type, source, st
   if (type)
     return await apiClient.delete(`crm/leadtypes/${type.id}`)
   if (city)
-    return await apiClient.delete(`crm/cities/${city.id}`)
+    return await apiClient.delete(`crm/cities/${city._id}`)
   return await apiClient.delete(`crm/stages/${stage ? stage.id : ""}`)
 
 }
