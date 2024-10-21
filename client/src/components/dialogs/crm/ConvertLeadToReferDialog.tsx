@@ -39,7 +39,7 @@ function ConvertLeadToReferDialog({ lead }: { lead: GetLeadDto }) {
 
             <DialogContent>
                 <Typography variant="body1" color="error">
-                    {`This will make a new Refer with the selected lead data.`}
+                    {`This will make a new Customer with the selected lead data.`}
                 </Typography>
                 {lead &&
                     <>

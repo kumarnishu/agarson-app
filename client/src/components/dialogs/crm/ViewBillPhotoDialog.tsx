@@ -6,7 +6,7 @@ import { GetBillDto } from '../../../dtos/crm/crm.dto';
 function ViewBillPhotoDialog({ bill, display, setDisplay }: { bill: GetBillDto, display: boolean, setDisplay: React.Dispatch<React.SetStateAction<boolean>> }) {
     return (
         <>
-            <Dialog fullScreen={Boolean(window.screen.width < 500)} open={display}
+            <Dialog fullScreen open={display}
                 onClose={() => {
                     setDisplay(false)
                 }}
@@ -24,6 +24,7 @@ function ViewBillPhotoDialog({ bill, display, setDisplay }: { bill: GetBillDto, 
                                 DownloadFile(bill.billphoto, bill.bill_no)
                             }
                         }}>
+                            <iframe src={bill.billphoto} height={600}/>
                         <img  src={bill.billphoto} alt="photo photo" />
                     </Stack>
                 </DialogContent>
