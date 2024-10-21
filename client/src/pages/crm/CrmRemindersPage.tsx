@@ -298,7 +298,7 @@ function CrmReminderPage() {
       {
         isLoading && <LinearProgress />
       }
-      <DialogTitle sx={{ textAlign: 'center' }}>Last 7 Days Reminders - [{remarks && remarks.length}]</DialogTitle>
+      <DialogTitle sx={{ textAlign: 'center' }}>My Reminders - {remarks && remarks.length}</DialogTitle>
       {remark && <ViewRemarksDialog id={remark.lead_id} />}
       {remark && <CreateOrEditRemarkDialog lead={remark ? {
         _id: remark.lead_id,
