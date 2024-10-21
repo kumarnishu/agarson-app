@@ -42,5 +42,10 @@ export type GetChecklistBoxDto = {
 }
 
 export type GetChecklistFromExcelDto={
-    
+    work_title:string,
+    person:string,
+    category:string,
+    frequency:string,
+    next_checkin_date:string,
+    status?:string
 }

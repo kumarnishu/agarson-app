@@ -48,4 +48,7 @@ export const DeleteCheckList = async (id: string) => {
 }
 
 
+export const CreateChecklistFromExcel = async (  body: FormData ) => {
+    return await apiClient.put(`create-from-excel/checklists`, body)
+}
 

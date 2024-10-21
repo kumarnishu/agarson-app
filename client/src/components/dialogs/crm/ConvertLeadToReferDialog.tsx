@@ -34,7 +34,7 @@ function ConvertLeadToReferDialog({ lead }: { lead: GetLeadDto }) {
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-                Convert  To Refer
+                Convert  To Customer
             </DialogTitle>
 
             <DialogContent>

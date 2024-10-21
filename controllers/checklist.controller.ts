@@ -9,6 +9,7 @@ import { uploadFileToCloud } from "../utils/uploadFile.util";
 import moment from "moment";
 import { destroyFile } from "../utils/destroyFile.util";
 import xlsx from "xlsx";
+import SaveFileOnDisk from "../utils/ExportToExcel";
 
 export const GetAllChecklistCategory = async (req: Request, res: Response, next: NextFunction) => {
     let result = await ChecklistCategory.find();
@@ -317,7 +318,7 @@ export const ToogleChecklist = async (req: Request, res: Response, next: NextFun
     return res.status(200).json("successfully marked")
 }
 
-export const BulkCheckListCreateFromExcel = async (req: Request, res: Response, next: NextFunction) => {
+export const CreateChecklistFromExcel = async (req: Request, res: Response, next: NextFunction) => {
     let result: GetChecklistFromExcelDto[] = []
     let statusText: string = ""
     if (!req.file)
@@ -338,173 +339,64 @@ export const BulkCheckListCreateFromExcel = async (req: Request, res: Response, 
         if (workbook_response.length > 3000) {
             return res.status(400).json({ message: "Maximum 3000 records allowed at one time" })
         }
-        console.log(workbook_response)
-        let checkednumbers: string[] = []
-        // for (let i = 0; i < workbook_response.length; i++) {
-        //     let lead = workbook_response[i]
-        //     let new_: IUser[] = []
-        //     let mobile: string | null = lead.mobile
-        //     let stage: string | null = lead.stage
-        //     let leadtype: string | null = lead.lead_type
-        //     let source: string | null = lead.lead_source
-        //     let city: string | null = lead.city
-        //     let state: string | null = lead.state
-        //     let alternate_mobile1: string | null = lead.alternate_mobile1
-        //     let alternate_mobile2: string | null = lead.alternate_mobile2
-        //     let uniqueNumbers: string[] = []
-        //     let validated = true
+        for (let i = 0; i < workbook_response.length; i++) {
+            let checklist = workbook_response[i]
+            let work_title: string | null = checklist.work_title
+            let person: string | null = checklist.person
+            let category: string | null = checklist.category
+            let frequency: string | null = checklist.frequency
+            let validated = true
 
-        //     //important
-        //     if (!mobile) {
-        //         validated = false
-        //         statusText = "required mobile"
-        //     }
+            //important
+            if (!work_title) {
+                validated = false
+                statusText = "required work title"
+            }
+            if (!person) {
+                validated = false
+                statusText = "required person"
+            }
+            if (!frequency) {
+                validated = false
+                statusText = "required frequency"
+            }
 
-        //     if (mobile && Number.isNaN(Number(mobile))) {
-        //         validated = false
-        //         statusText = "invalid mobile"
-        //     }
-        //     if (alternate_mobile1 && Number.isNaN(Number(alternate_mobile1))) {
-        //         validated = false
-        //         statusText = "invalid alternate mobile 1"
-        //     }
-        //     if (alternate_mobile2 && Number.isNaN(Number(alternate_mobile2))) {
-        //         validated = false
-        //         statusText = "invalid alternate mobile 2"
-        //     }
-        //     if (alternate_mobile1 && String(alternate_mobile1).length !== 10)
-        //         alternate_mobile1 = null
-        //     if (alternate_mobile2 && String(alternate_mobile2).length !== 10)
-        //         alternate_mobile2 = null
+            if (await Checklist.findOne({ work_title: work_title.trim().toLowerCase() })) {
+                validated = false
+                statusText = "checklist already exists"
+            }
+           
 
-        //     if (mobile && String(mobile).length !== 10) {
-        //         validated = false
-        //         statusText = "invalid mobile"
-        //     }
-
-
-
-        //     //duplicate mobile checker
-        //     if (lead._id && isMongoId(String(lead._id))) {
-        //         let targetLead = await Lead.findById(lead._id)
-        //         if (targetLead) {
-        //             if (mobile && mobile === targetLead?.mobile) {
-        //                 uniqueNumbers.push(targetLead?.mobile)
-        //             }
-        //             if (alternate_mobile1 && alternate_mobile1 === targetLead?.alternate_mobile1) {
-        //                 uniqueNumbers.push(targetLead?.alternate_mobile1)
-        //             }
-        //             if (alternate_mobile2 && alternate_mobile2 === targetLead?.alternate_mobile2) {
-        //                 uniqueNumbers.push(targetLead?.alternate_mobile2)
-        //             }
-
-        //             if (mobile && mobile !== targetLead?.mobile) {
-        //                 let ld = await Lead.findOne({ $or: [{ mobile: mobile }, { alternate_mobile1: mobile }, { alternate_mobile2: mobile }] })
-        //                 if (!ld && !checkednumbers.includes(mobile)) {
-        //                     uniqueNumbers.push(mobile)
-        //                     checkednumbers.push(mobile)
-        //                 }
-        //             }
-
-        //             if (alternate_mobile1 && alternate_mobile1 !== targetLead?.alternate_mobile1) {
-        //                 let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile1 }, { alternate_mobile1: alternate_mobile1 }, { alternate_mobile2: alternate_mobile1 }] })
-        //                 if (!ld && !checkednumbers.includes(alternate_mobile1)) {
-        //                     uniqueNumbers.push(alternate_mobile1)
-        //                     checkednumbers.push(alternate_mobile1)
-        //                 }
-        //             }
-
-        //             if (alternate_mobile2 && alternate_mobile2 !== targetLead?.alternate_mobile2) {
-        //                 let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile2 }, { alternate_mobile1: alternate_mobile2 }, { alternate_mobile2: alternate_mobile2 }] })
-        //                 if (!ld && !checkednumbers.includes(alternate_mobile2)) {
-        //                     uniqueNumbers.push(alternate_mobile2)
-        //                     checkednumbers.push(alternate_mobile2)
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     if (!lead._id || !isMongoId(String(lead._id))) {
-        //         if (mobile) {
-        //             let ld = await Lead.findOne({ $or: [{ mobile: mobile }, { alternate_mobile1: mobile }, { alternate_mobile2: mobile }] })
-        //             if (ld) {
-        //                 validated = false
-        //                 statusText = "duplicate"
-        //             }
-        //             if (!ld) {
-        //                 uniqueNumbers.push(mobile)
-        //             }
-        //         }
-
-        //         if (alternate_mobile1) {
-        //             let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile1 }, { alternate_mobile1: alternate_mobile1 }, { alternate_mobile2: alternate_mobile1 }] })
-        //             if (ld) {
-        //                 validated = false
-        //                 statusText = "duplicate"
-        //             }
-        //             if (!ld) {
-        //                 uniqueNumbers.push(alternate_mobile1)
-        //             }
-        //         }
-        //         if (alternate_mobile2) {
-        //             let ld = await Lead.findOne({ $or: [{ mobile: alternate_mobile2 }, { alternate_mobile1: alternate_mobile2 }, { alternate_mobile2: alternate_mobile2 }] })
-        //             if (ld) {
-        //                 validated = false
-        //                 statusText = "duplicate"
-        //             }
-        //             if (!ld) {
-        //                 uniqueNumbers.push(alternate_mobile2)
-        //             }
-        //         }
-
-        //     }
-
-        //     if (validated && uniqueNumbers.length > 0) {
-        //         //update and create new nead
-        //         if (lead._id && isMongoId(String(lead._id))) {
-        //             await Lead.findByIdAndUpdate(lead._id, {
-        //                 ...lead,
-        //                 stage: stage ? stage : "unknown",
-        //                 lead_type: leadtype ? leadtype : "unknown",
-        //                 lead_source: source ? source : "unknown",
-        //                 city: city ? city : "unknown",
-        //                 state: state ? state : "unknown",
-        //                 mobile: uniqueNumbers[0],
-        //                 alternate_mobile1: uniqueNumbers[1] || null,
-        //                 alternate_mobile2: uniqueNumbers[2] || null,
-        //                 updated_by: req.user,
-        //                 updated_at: new Date(Date.now())
-        //             })
-        //             statusText = "updated"
-        //         }
-        //         if (!lead._id || !isMongoId(String(lead._id))) {
-        //             let newlead = new Lead({
-        //                 ...lead,
-        //                 _id: new Types.ObjectId(),
-        //                 stage: stage ? stage : "unknown",
-        //                 state: state ? state : "unknown",
-        //                 lead_type: leadtype ? leadtype : "unknown",
-        //                 lead_source: source ? source : "unknown",
-        //                 city: city ? city : "unknown",
-        //                 mobile: uniqueNumbers[0] || null,
-        //                 alternate_mobile1: uniqueNumbers[1] || null,
-        //                 alternate_mobile2: uniqueNumbers[2] || null,
-        //                 created_by: req.user,
-        //                 updated_by: req.user,
-        //                 updated_at: new Date(Date.now()),
-        //                 created_at: new Date(Date.now())
-        //             })
-
-        //             await newlead.save()
-        //             statusText = "created"
-        //         }
-        //     }
-
-        //     result.push({
-        //         ...lead,
-        //         status: statusText
-        //     })
-        // }
+            if (validated) {
+                await new Checklist({
+                    work_title,
+                    person,
+                    frequency,
+                    category,
+                    created_by: req.user,
+                    updated_by: req.user,
+                    updated_at: new Date(Date.now()),
+                    created_at: new Date(Date.now())
+                })
+                // .save()
+                statusText = "success"
+            }
+            result.push({
+                ...checklist,
+                status: statusText
+            })
+        }
     }
     return res.status(200).json(result);
+}
+
+export const DownloadExcelTemplateForCreatechecklists = async (req: Request, res: Response, next: NextFunction) => {
+    let checklist: any = {
+        work_title: "check the work given ",
+        category: "payment",
+        frequency:'daily'
+    }
+    SaveFileOnDisk([checklist])
+    let fileName = "CreateChecklistTemplate.xlsx"
+    return res.download("./file", fileName)
 }
