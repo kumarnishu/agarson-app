@@ -250,7 +250,7 @@ export default function LeadsPage() {
                 </Tooltip>}
 
               {!cell.row.original.referred_party_name && LoggedInUser?.assigned_permissions.includes('leads_edit') &&
-                <Tooltip title="convert to refer">
+                <Tooltip title="convert to customer">
                   <IconButton color="primary"
 
                     onClick={() => {

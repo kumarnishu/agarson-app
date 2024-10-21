@@ -2762,7 +2762,7 @@ export const DeleteRemark = async (req: Request, res: Response, next: NextFuncti
 
 export const GetMyReminders = async (req: Request, res: Response, next: NextFunction) => {
     let previous_date = new Date()
-    let day = previous_date.getDate() - 7
+    let day = previous_date.getDate() - 100
     previous_date.setDate(day)
     let remarks = await Remark.find({ created_at: { $lte: new Date(), $gte: previous_date }, created_by: req.user?._id }).populate('created_by').populate('updated_by').populate({
         path: 'lead',

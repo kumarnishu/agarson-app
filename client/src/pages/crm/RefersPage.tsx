@@ -416,7 +416,7 @@ export default function RefersPage() {
         alignItems={'center'}
         justifyContent="space-between">
 
-        <Typography variant="h6">Refers</Typography>
+        <Typography variant="h6">Customers</Typography>
         <TextField
           sx={{ width: '40vw',p:0 }}
           size="small"

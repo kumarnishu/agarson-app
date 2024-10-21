@@ -96,7 +96,7 @@ function ChecklistPage() {
         Cell: (cell) => <>{cell.row.original.work_title ? cell.row.original.work_title : ""}</>
       },
       {
-        accessorKey: 'created_by.label',
+        accessorKey: 'created_by',
         header: 'Responsible',
         size: 100,
         Cell: (cell) => <>{cell.row.original.user.label ? cell.row.original.user.label : ""}</>
@@ -104,23 +104,23 @@ function ChecklistPage() {
       {
         accessorKey: 'category',
         header: ' Category',
-        size: 320,
-        Cell: (cell) => <>{cell.row.original.category ? cell.row.original.category : ""}</>
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.category ? cell.row.original.category.value : ""}</>
       },
       {
         accessorKey: 'frequency',
         header: ' Frequency',
-        size: 320,
+        size: 120,
         Cell: (cell) => <>{cell.row.original.frequency ? cell.row.original.frequency : ""}</>
       },
       {
         accessorKey: 'boxes',
         header: 'Dates',
-        size: 200,
+        size: 350,
         Cell: (cell) => <>{
           cell.row.original && cell.row.original.boxes.map((b) => {
             return <Tooltip title={b.remarks}>
-              <Button sx={{ borderRadius: 5, minWidth: '10px', m: 0.3, pl: 0.3 }} onClick={() => {
+              <Button sx={{ borderRadius: 5, minWidth: '25px', m: 0.3, pl: 0.3 }} onClick={() => {
                 if (b) {
                   setChecklistBox(b)
                   setChoice({ type: CheckListChoiceActions.toogle_checklist })

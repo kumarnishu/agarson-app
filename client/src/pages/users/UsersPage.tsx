@@ -367,7 +367,7 @@ export default function UsersPage() {
             }
         }),
         muiTableContainerProps: (table) => ({
-            sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+            sx: { height: table.table.getState().isFullScreen ? 'auto' : '70vh' }
         }),
         muiTableHeadRowProps: () => ({
             sx: {

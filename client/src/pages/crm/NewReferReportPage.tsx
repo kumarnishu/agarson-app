@@ -302,7 +302,7 @@ export default function NewReferReportPage() {
           component={'h1'}
           sx={{ pl: 1 }}
         >
-          New Refers : {refers && refers.length}
+          New Customers : {refers && refers.length}
         </Typography>
         <Stack direction="row" gap={2}>
           < TextField

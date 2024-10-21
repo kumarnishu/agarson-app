@@ -12,7 +12,7 @@ function CrmDashboard() {
   useEffect(() => {
     let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
     user?.assigned_permissions.includes('leads_view') && tmpfeatures.push({ feature: 'leads ', is_visible: true, url: "/Crm/LeadsPage" })
-    user?.assigned_permissions.includes('refer_view') && tmpfeatures.push({ feature: 'refers', is_visible: true, url: "/Crm/RefersPage" })
+    user?.assigned_permissions.includes('refer_view') && tmpfeatures.push({ feature: 'customers', is_visible: true, url: "/Crm/RefersPage" })
     user?.assigned_permissions.includes('reminders_view') && tmpfeatures.push({ feature: 'reminders', is_visible: true, url: "/Crm/RemindersPage" })
     user?.assigned_permissions.includes('states_view') && tmpfeatures.push({ feature: 'states', is_visible: true, url: "/Crm/CrmStatesPage" })
     user?.assigned_permissions.includes('city_view') && tmpfeatures.push({ feature: 'cities', is_visible: true, url: "/Crm/CitiesPage" })
@@ -21,7 +21,7 @@ function CrmDashboard() {
     user?.assigned_permissions.includes('leadstage_view') && tmpfeatures.push({ feature: 'Lead Stage', is_visible: true, url: "/Crm/StagesPage" })
     user?.assigned_permissions.includes('activities_view') && tmpfeatures.push({ feature: 'activities reports ', is_visible: true, url: "/Crm/CrmActivitiesPage" })
     user?.assigned_permissions.includes('assignedrefer_view') && tmpfeatures.push({ feature: 'assigned refer reports', is_visible: true, url: "/Crm/AssignedReferReportPage" })
-    user?.assigned_permissions.includes('newrefer_view') && tmpfeatures.push({ feature: 'new refer reports ', is_visible: true, url: "/Crm/NewReferReportPage" })
+    user?.assigned_permissions.includes('newrefer_view') && tmpfeatures.push({ feature: 'new customer reports ', is_visible: true, url: "/Crm/NewReferReportPage" })
     setFeatures(tmpfeatures)
 
   }, [user])
