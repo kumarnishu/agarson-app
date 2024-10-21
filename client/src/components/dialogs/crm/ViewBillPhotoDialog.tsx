@@ -24,8 +24,7 @@ function ViewBillPhotoDialog({ bill, display, setDisplay }: { bill: GetBillDto, 
                                 DownloadFile(bill.billphoto, bill.bill_no)
                             }
                         }}>
-                            <iframe src={bill.billphoto} height={600}/>
-                        <img  src={bill.billphoto} alt="photo photo" />
+                            <iframe src={bill.billphoto} height={600} />
                     </Stack>
                 </DialogContent>
             </Dialog>

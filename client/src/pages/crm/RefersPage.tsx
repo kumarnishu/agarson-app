@@ -321,6 +321,12 @@ export default function RefersPage() {
         }).filter(onlyUnique)
       },
       {
+        accessorKey: 'remark',
+        header: 'Remark',
+        size: 350,
+        Cell: (cell) => <>{cell.row.original.remark ? cell.row.original.remark : ""}</>,
+      },
+      {
         accessorKey: 'mobile',
         header: 'Mobile1',
         size: 120,

@@ -143,7 +143,13 @@ export default function NewReferReportPage() {
         }).filter(onlyUnique)
       },
       {
-        accessorKey: 'reports',
+        accessorKey: 'remark',
+        header: 'Remark',
+        size: 350,
+        Cell: (cell) => <>{cell.row.original.remark ? cell.row.original.remark : ""}</>,
+      },
+      {
+        accessorKey: 'refers',
         header: 'Refers',
         size: 100,
         filterVariant: 'multi-select',

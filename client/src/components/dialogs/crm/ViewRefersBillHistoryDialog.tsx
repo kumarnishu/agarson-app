@@ -55,12 +55,13 @@ function ViewRefersBillHistoryDialog({ id }: { id: string }) {
                                      <Stack
                                         justifyContent={'space-between'} direction="row" gap={0} alignItems={'center'}>
                                         <p>{toTitleCase(item.bill_no)} - {item.bill_date} </p>
+                                        {item?.billphoto !== "" && user?.assigned_permissions.includes('view_refer_bills') && <IconButton size="small" color="error" onClick={() => {
+                                            setBill(item)
+                                            setDisplay3(true)
+                                        }}>
+                                            <Photo /></IconButton>}
                                         {user && item && user?.username === item.created_by.value && new Date(item.created_at) > new Date(previous_date) &&<div>
-                                            {item?.billphoto !== "" && user?.assigned_permissions.includes('view_refer_bills') && <IconButton size="small" color="error" onClick={() => {
-                                                setBill(item)
-                                                setDisplay3(true)
-                                            }}>
-                                                <Photo /></IconButton>}
+                                           
                                             {user?.assigned_permissions.includes('delete_refer_bills') && <IconButton size="small" color="error" onClick={() => {
                                                 setBill(item)
                                                 setDisplay(true)
