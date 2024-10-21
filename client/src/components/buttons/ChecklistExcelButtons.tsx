@@ -7,7 +7,7 @@ import { Download, Upload } from "@mui/icons-material"
 import styled from "styled-components"
 import { saveAs } from 'file-saver';
 import ExportToExcel from "../../utils/ExportToExcel"
-import { BulkChecklistUpdateFromExcel } from "../../services/CheckListServices"
+import { CreateChecklistFromExcel } from "../../services/CheckListServices"
 
 
 const FileInput = styled.input`
@@ -17,9 +17,9 @@ color:blue;
 
 
 export function ChecklistExcelButtons() {
-    const { data, mutate, isLoading, isSuccess, error } = useMutation
+    const { data, mutate, isLoading, isSuccess } = useMutation
         <AxiosResponse<any[]>, BackendError, FormData>
-        (BulkChecklistUpdateFromExcel)
+        (CreateChecklistFromExcel)
     const [file, setFile] = useState<File | null>(null)
 
 
