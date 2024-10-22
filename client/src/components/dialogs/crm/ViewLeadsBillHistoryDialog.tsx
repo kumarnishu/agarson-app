@@ -38,6 +38,7 @@ function ViewLeadsBillHistoryDialog({ id }: { id: string }) {
     return (
         <Dialog fullScreen={Boolean(window.screen.width < 500)}
             open={choice === LeadChoiceActions.view_bills ? true : false}
+            onClose={() => setChoice({ type: LeadChoiceActions.close_lead })}
         >
             <IconButton style={{ display: 'inline-block', position: 'absolute', right: '0px' }} color="error" onClick={() => setChoice({ type: LeadChoiceActions.close_lead })}>
                 <Cancel fontSize='large' />
