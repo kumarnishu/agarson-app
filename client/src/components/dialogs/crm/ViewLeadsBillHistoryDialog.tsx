@@ -65,7 +65,7 @@ function ViewLeadsBillHistoryDialog({ id }: { id: string }) {
                                         }}>
                                             <Photo /></IconButton>}
                                             
-                                        {user && item && user?.username === item.created_by.value && new Date(item.created_at) > new Date(previous_date) &&<div>
+                                       <div>
                                             
                                             {user?.assigned_permissions.includes('delete_lead_bills') && <IconButton size="small" color="error" onClick={() => {
                                                 setBill(item)
@@ -73,14 +73,14 @@ function ViewLeadsBillHistoryDialog({ id }: { id: string }) {
                                                 setChoice({ type: LeadChoiceActions.view_bills_photo })
                                             }}>
                                                 Delete</IconButton>}
-                                            {user?.assigned_permissions.includes('edit_lead_bills') && <IconButton size="small" color="success"
+                                            { user && item && user?.username === item.created_by.value && new Date(item.created_at) > new Date(previous_date) &&user?.assigned_permissions.includes('edit_lead_bills') && <IconButton size="small" color="success"
                                                 onClick={() => {
                                                     setBill(item)
                                                     setDisplay2(true)
 
                                                 }}
                                             >Edit</IconButton>}
-                                        </div>}
+                                        </div>
                                     </Stack>
                                 }
                             </div>
