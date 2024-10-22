@@ -1,93 +1,100 @@
-import { Stack } from '@mui/system'
+import { Box } from '@mui/system'
 import { AxiosResponse } from 'axios'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import {   useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { BackendError } from '../..'
 import { MaterialReactTable, MRT_ColumnDef, MRT_SortingState, useMaterialReactTable } from 'material-react-table'
 import { onlyUnique } from '../../utils/UniqueArray'
-import DeleteCrmItemDialog from '../../components/dialogs/crm/DeleteCrmItemDialog'
-import { UserContext } from '../../contexts/userContext'
-import { ChoiceContext, LeadChoiceActions } from '../../contexts/dialogContext'
-import { Delete, Edit } from '@mui/icons-material'
-import { Fade, IconButton, Menu, MenuItem,  Tooltip, Typography } from '@mui/material'
-import PopUp from '../../components/popup/PopUp'
-import ExportToExcel from '../../utils/ExportToExcel'
-import { Menu as MenuIcon } from '@mui/icons-material';
+// import DeleteCrmItemDialog from '../../components/dialogs/crm/DeleteCrmItemDialog'
+import {  Refresh } from '@mui/icons-material'
+import { Button,  IconButton,   Tooltip, Typography } from '@mui/material'
+// import ExportToExcel from '../../utils/ExportToExcel'
+// import { Menu as MenuIcon } from '@mui/icons-material';
 import { DropDownDto } from '../../dtos/common/dropdown.dto'
-import CreateOrEditLeadSourceDialog from '../../components/dialogs/crm/CreateOrEditLeadSourceDialog'
+// import CreateOrEditLeadSourceDialog from '../../components/dialogs/crm/CreateOrEditLeadSourceDialog'
 import { GetAllSources } from '../../services/LeadsServices'
-
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export default function CrmLeadSourcesPage() {
-  const [source, setSource] = useState<DropDownDto>()
+  // const [source, setSource] = useState<DropDownDto>()
   const [sources, setSources] = useState<DropDownDto[]>([])
-
-  const { user: LoggedInUser } = useContext(UserContext)
+  // const [validationErrors, setValidationErrors] = useState<
+  //   Record<string, string | undefined>
+  // >({});
+  // const { user: LoggedInUser } = useContext(UserContext)
   const { data, isLoading, isSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>(["sources"], async () => GetAllSources())
 
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
-  const { setChoice } = useContext(ChoiceContext)
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  // const { setChoice } = useContext(ChoiceContext)
+  // const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const columns = useMemo<MRT_ColumnDef<DropDownDto>[]>(
     //column definitions...
     () => sources && [
-      {
-        accessorKey: 'actions',
-        header: '',
-        maxSize: 50,
-        Footer: <b></b>,
-        size: 120,
-        Cell: ({ cell }) => <PopUp
-          element={
-            <Stack direction="row">
-              <>
+      // {
+      //   accessorKey: 'actions',
+      //   header: 'Actions',
+      //   maxSize: 50,
+      //   Footer: <b></b>,
+      //   Cell: ({ cell }) => <PopUp
+      //     element={
+      //       <Stack direction="row">
+      //         <>
 
-                {LoggedInUser?.is_admin && LoggedInUser.assigned_permissions.includes('lead_source_delete') &&
-                  <Tooltip title="delete">
-                    <IconButton color="error"
+      //           {LoggedInUser?.is_admin && LoggedInUser.assigned_permissions.includes('lead_source_delete') &&
+      //             <Tooltip title="delete">
+      //               <IconButton color="error"
 
-                      onClick={() => {
-                        setChoice({ type: LeadChoiceActions.delete_crm_item })
-                        setSource(cell.row.original)
+      //                 onClick={() => {
+      //                   setChoice({ type: LeadChoiceActions.delete_crm_item })
+      //                   setSource(cell.row.original)
 
-                      }}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </Tooltip>
-                }
-                {LoggedInUser?.assigned_permissions.includes('lead_source_edit') && <Tooltip title="edit">
-                  <IconButton
+      //                 }}
+      //               >
+      //                 <Delete />
+      //               </IconButton>
+      //             </Tooltip>
+      //           }
+      //           {LoggedInUser?.assigned_permissions.includes('lead_source_edit') && <Tooltip title="edit">
+      //             <IconButton
 
-                    onClick={() => {
-                      setSource(cell.row.original)
-                      setChoice({ type: LeadChoiceActions.create_or_edit_source })
-                    }}
+      //               onClick={() => {
+      //                 setSource(cell.row.original)
+      //                 setChoice({ type: LeadChoiceActions.create_or_edit_source })
+      //               }}
 
-                  >
-                    <Edit />
-                  </IconButton>
-                </Tooltip>}
+      //             >
+      //               <Edit />
+      //             </IconButton>
+      //           </Tooltip>}
 
-              </>
+      //         </>
 
-            </Stack>}
-        />
-      },
+      //       </Stack>}
+      //   />
+      // },
 
       {
         accessorKey: 'label',
         header: 'Source',
-        size: 350,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.label ? cell.row.original.label : ""}</>,
+        filterSelectOptions: sources && sources.map((i) => {
+          return i.value;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'value',
+        header: 'Value',
         filterVariant: 'multi-select',
         Cell: (cell) => <>{cell.row.original.value ? cell.row.original.value : ""}</>,
         filterSelectOptions: sources && sources.map((i) => {
           return i.value;
         }).filter(onlyUnique)
-      }
+      },
     ],
     [sources],
     //end
@@ -98,6 +105,88 @@ export default function CrmLeadSourcesPage() {
     columns, columnFilterDisplayMode: 'popover', 
     data: sources, //10,000 rows       
     enableColumnResizing: true,
+    createDisplayMode:"row",
+    editDisplayMode:"row",
+    enableEditing:true,
+    layoutMode:'grid',
+    // onCreatingRowCancel: () => setValidationErrors({}),
+    onCreatingRowSave: ()=>{alert("row created")},
+    // onEditingRowCancel: () => setValidationErrors({}),
+    onEditingRowSave: (row) => { alert("row updated");console.log(row) },
+    renderRowActions: ({ row, table }) => (
+      <Box sx={{ display: 'flex', gap: '1rem' }}>
+        <Tooltip title="Edit">
+          <IconButton onClick={() => table.setEditingRow(row)}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton color="error" onClick={() => () => { alert("delete") }}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Refer">
+          <IconButton color="error" onClick={() => table.setEditingRow(row)}>
+            <Refresh />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ),
+    renderTopToolbarCustomActions: ({ table }) => (
+
+      <>
+        <Typography
+          variant={'h6'}
+          component={'h1'}
+          sx={{ pl: 1 }}
+        >
+          Sources : {sources && sources.length}
+        </Typography>
+
+        <Button
+          variant="text"
+          onClick={() => {
+            table.setCreatingRow(true); //simplest way to open the create row modal with no default values
+            //or you can pass in a row object to set default values with the `createRow` helper function
+            // table.setCreatingRow(
+            //   createRow(table, {
+            //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
+            //   }),
+            // );
+          }}
+        >
+         ADD NEW
+        </Button>
+        <Button
+          variant="text"
+          onClick={() => {
+            table.setCreatingRow(true); //simplest way to open the create row modal with no default values
+            //or you can pass in a row object to set default values with the `createRow` helper function
+            // table.setCreatingRow(
+            //   createRow(table, {
+            //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
+            //   }),
+            // );
+          }}
+        >
+         EXPORT SELECTED
+        </Button>
+        <Button
+          variant="text"
+          onClick={() => {
+            table.setCreatingRow(true); //simplest way to open the create row modal with no default values
+            //or you can pass in a row object to set default values with the `createRow` helper function
+            // table.setCreatingRow(
+            //   createRow(table, {
+            //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
+            //   }),
+            // );
+          }}
+        >
+          EXPORTED ALL
+        </Button>
+        </>
+    ),
     enableColumnVirtualization: true, enableStickyFooter: true,
     muiTableFooterRowProps: () => ({
       sx: {
@@ -153,7 +242,7 @@ export default function CrmLeadSourcesPage() {
     <>
 
 
-      <Stack
+      {/* <Stack
         spacing={2}
         padding={1}
         direction="row"
@@ -217,7 +306,7 @@ export default function CrmLeadSourcesPage() {
         </>
 
 
-      </Stack >
+      </Stack > */}
 
       {/* table */}
       <MaterialReactTable table={table} />
