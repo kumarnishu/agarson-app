@@ -159,6 +159,12 @@ export default function NewReferReportPage() {
         }).filter(onlyUnique)
       },
       {
+        accessorKey: 'uploaded_bills',
+        header: 'Uploaded Bills',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.uploaded_bills ? cell.row.original.uploaded_bills : ""}</>
+      },
+      {
         accessorKey: 'customer_name',
         header: 'Customer Name',
         size: 120,

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogActions, Typography, CircularProgress, IconButton, DialogTitle } from '@mui/material'
+import { Dialog, DialogContent,  CircularProgress, IconButton, DialogTitle } from '@mui/material'
 import { useContext } from 'react'
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext'
 import ReferLeadForm from '../../forms/crm/ReferLeadForm'
@@ -22,19 +22,6 @@ function ReferLeadDialog({ lead }: { lead: GetLeadDto }) {
                     : <CircularProgress size="large" />
                 }
             </DialogContent>
-            <DialogActions>
-                <Typography
-                    variant="button"
-                    component="p"
-                    sx={{
-                        display: "flex",
-                        width: "100%",
-                        alignItems: "center",
-                        justifyContent: "center"
-                    }}
-                >
-                </Typography >
-            </DialogActions>
         </Dialog>
     )
 }

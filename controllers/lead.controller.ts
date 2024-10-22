@@ -662,13 +662,17 @@ export const GetAssignedReferrals = async (req: Request, res: Response, next: Ne
     let leads: ILead[]
     let result: GetLeadDto[] = []
     leads = await Lead.find({ referred_party: party._id }).populate('updated_by').populate('created_by').populate('referred_party').sort('-updated_at')
+
+   
     for (let i = 0; i < leads.length; i++) {
         let lead = leads[i];
         let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
+        let bills = await Bill.find({ lead:lead._id}).countDocuments()
         result.push({
             _id: lead._id,
             name: lead.name,
             customer_name: lead.customer_name,
+            uploaded_bills: bills,
             customer_designation: lead.customer_designation,
             mobile: lead.mobile,
             gst: lead.gst,
@@ -746,6 +750,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
         for (let i = 0; i < leads.length; i++) {
             let lead = leads[i];
             let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
+            let bills = await Bill.find({ lead: lead._id }).countDocuments()
             result.push({
                 _id: lead._id,
                 name: lead.name,
@@ -757,6 +762,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 email: lead.email,
                 city: lead.city,
                 state: lead.state,
+                uploaded_bills:bills,
                 country: lead.country,
                 address: lead.address,
                 work_description: lead.work_description,
@@ -863,7 +869,7 @@ export const ConvertLeadToRefer = async (req: Request, res: Response, next: Next
     if (!lead) {
         return res.status(404).json({ message: "lead not found" })
     }
-
+    const {remark}=req.body
     let resultParty = await ReferredParty.findOne({ mobile: lead.mobile });
     if (resultParty) {
         return res.status(400).json({ message: "already exists this mobile number in refers" })
@@ -885,6 +891,15 @@ export const ConvertLeadToRefer = async (req: Request, res: Response, next: Next
     await Remark.updateMany({ lead: lead._id }, { lead: undefined, refer: refer._id });
     await refer.save()
     await Lead.findByIdAndDelete(lead._id);
+    if(remark)
+        await new Remark({
+            remark: remark,
+            refer:refer,
+            created_at: new Date(),
+            updated_at: new Date(),
+            created_by: req.user,
+            updated_by: req.user
+        }).save()
     return res.status(200).json({ message: "new refer created" })
 }
 
@@ -1685,6 +1700,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
         for (let i = 0; i < leads.length; i++) {
             let lead = leads[i];
             let remark = await Remark.findOne({ lead: lead._id }).sort('-created_at');
+            let bills = await Bill.find({ lead: lead._id }).countDocuments()
             result.push({
                 _id: lead._id,
                 name: lead.name,
@@ -1696,6 +1712,7 @@ export const FuzzySearchLeads = async (req: Request, res: Response, next: NextFu
                 email: lead.email,
                 city: lead.city,
                 state: lead.state,
+                uploaded_bills: bills,
                 country: lead.country,
                 address: lead.address,
                 work_description: lead.work_description,
@@ -2151,12 +2168,16 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
     let states = user?.assigned_crm_states.map((item) => { return item.state })
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     refers = await ReferredParty.find({ 'state': { $in: states }, 'city': { $in: cities } }).sort('name')
-    result = refers.map((r) => {
-        return {
+
+    for (let i = 0; i < refers.length; i++) {
+        let r = refers[i];
+        let bills = await Bill.find({ refer: r._id }).countDocuments()
+        result.push({
             _id: r._id,
             name: r.name,
             remark: "",
             refers: 0,
+            uploaded_bills: bills,
             customer_name: r.customer_name,
             mobile: r.mobile,
             mobile2: r.mobile2,
@@ -2170,8 +2191,10 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
             updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
             created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
             updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
-        }
-    })
+        })
+
+    }
+   
     return res.status(200).json(refers);
 }
 
@@ -2192,6 +2215,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
             let r = parties[i];
             let remark = await Remark.findOne({ refer: r._id }).sort('-created_at');
             let refers = await Lead.find({ referred_party: r._id }).countDocuments()
+            let bills = await Bill.find({ refer: r._id }).countDocuments()
             result.push({
                 _id: r._id,
                 name: r.name,
@@ -2201,6 +2225,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
                 mobile: r.mobile,
                 mobile2: r.mobile2,
                 mobile3: r.mobile3,
+                uploaded_bills: bills,
                 address: r.address,
                 gst: r.gst,
                 city: r.city,
@@ -2407,12 +2432,14 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
             let r = parties[i];
             let remark = await Remark.findOne({ refer: r._id }).sort('-created_at');
             let refers = await Lead.find({ referred_party: r._id }).countDocuments()
+            let bills = await Bill.find({ refer: r._id }).countDocuments()
             result.push({
                 _id: r._id,
                 name: r.name,
                 refers: refers,
                 remark: remark?.remark || "",
                 customer_name: r.customer_name,
+                uploaded_bills:bills,
                 mobile: r.mobile,
                 mobile2: r.mobile2,
                 mobile3: r.mobile3,
@@ -3174,6 +3201,7 @@ export const GetNewRefers = async (req: Request, res: Response, next: NextFuncti
         let r = parties[i];
         let remark = await Remark.findOne({ refer: r._id }).sort('-created_at');
         let refers = await Lead.find({ referred_party: r._id }).countDocuments()
+        let bills = await Bill.find({ refer: r._id }).countDocuments()
         result.push({
             _id: r._id,
             name: r.name,
@@ -3183,6 +3211,7 @@ export const GetNewRefers = async (req: Request, res: Response, next: NextFuncti
             mobile: r.mobile,
             mobile2: r.mobile2,
             mobile3: r.mobile3,
+            uploaded_bills:bills,
             address: r.address,
             gst: r.gst,
             city: r.city,
@@ -3210,6 +3239,7 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
     for (let i = 0; i < leads.length; i++) {
         let lead = leads[i];
         let remark = await Remark.findOne({ lead: lead._id }).sort("-created_at");
+        let bills = await Bill.find({ lead: lead._id }).countDocuments()
         if (remark && lead.referred_party) {
             result.push({
                 _id: lead._id,
@@ -3218,6 +3248,7 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
                 customer_designation: lead.customer_designation,
                 mobile: lead.mobile,
                 gst: lead.gst,
+                uploaded_bills:bills,
                 has_card: lead.has_card,
                 email: lead.email,
                 city: lead.city,

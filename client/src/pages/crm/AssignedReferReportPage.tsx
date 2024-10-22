@@ -214,6 +214,13 @@ export default function AssignedReferReportPage() {
         Cell: (cell) => <>{cell.row.original.alternate_mobile2 ? cell.row.original.alternate_mobile2 : ""}</>
       },
       {
+        accessorKey: 'uploaded_bills',
+        header: 'Uploaded Bills',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.uploaded_bills ? cell.row.original.uploaded_bills : ""}</>
+      },
+      
+      {
         accessorKey: 'remark',
         header: 'Remark',
         size: 320,

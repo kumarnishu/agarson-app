@@ -35,8 +35,8 @@ export const FuzzySearchLeads = async ({ searchString, limit, page, stage }: { s
 
 
 
-export const ConvertLeadToRefer = async ({ id }: { id: string }) => {
-  return await apiClient.patch(`leads/torefer/${id}`)
+export const ConvertLeadToRefer = async ({ id ,body}: { id: string, body: { remark: string } }) => {
+  return await apiClient.patch(`leads/torefer/${id}`,body)
 }
 
 export const GetRemarks = async ({ stage, limit, page, start_date, end_date, id }: { stage: string, limit: number | undefined, page: number | undefined, start_date?: string, end_date?: string, id?: string }) => {

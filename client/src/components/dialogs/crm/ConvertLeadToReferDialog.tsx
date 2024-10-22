@@ -1,5 +1,5 @@
-import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Button, CircularProgress } from '@mui/material'
-import { useContext, useEffect } from 'react';
+import { Dialog, DialogContent, DialogTitle, Typography, IconButton, Button, CircularProgress, TextField } from '@mui/material'
+import { useContext, useEffect, useState } from 'react';
 import { LeadChoiceActions, ChoiceContext } from '../../../contexts/dialogContext';
 import { Cancel } from '@mui/icons-material';
 import { AxiosResponse } from 'axios';
@@ -13,8 +13,9 @@ import { GetLeadDto, GetReferDto } from '../../../dtos/crm/crm.dto';
 
 function ConvertLeadToReferDialog({ lead }: { lead: GetLeadDto }) {
     const { choice, setChoice } = useContext(ChoiceContext)
+    const [remark,setRemark]=useState("")
     const { mutate, isLoading, isSuccess, isError, error } = useMutation
-        <AxiosResponse<GetReferDto>, BackendError, { id: string }>
+        <AxiosResponse<GetReferDto>, BackendError, {id:string,body:{remark:string} }>
         (ConvertLeadToRefer, {
             onSuccess: () => {
                 queryClient.invalidateQueries('leads')
@@ -36,27 +37,42 @@ function ConvertLeadToReferDialog({ lead }: { lead: GetLeadDto }) {
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
                 Convert  To Customer
             </DialogTitle>
-
-            <DialogContent>
+            {
+                isError ? (
+                    <AlertBar message={error?.response.data.message} color="error" />
+                ) : null
+            }
+            {
+                isSuccess ? (
+                    <AlertBar message="lead converted successfully" color="success" />
+                ) : null
+            }
+            <DialogContent sx={{gap:2}}>
+               
+                <TextField
+                    autoFocus
+                    required
+                    fullWidth
+                    sx={{mt:2}}
+                    multiline
+                    minRows={4}
+                    id="remark"
+                    label="Remarks"
+                    value={remark}
+                    onChange={(e)=>setRemark(e.target.value)}
+                />
                 <Typography variant="body1" color="error">
                     {`This will make a new Customer with the selected lead data.`}
                 </Typography>
                 {lead &&
                     <>
-                        {
-                            isError ? (
-                                <AlertBar message={error?.response.data.message} color="error" />
-                            ) : null
-                        }
-                        {
-                            isSuccess ? (
-                                <AlertBar message="lead converted successfully" color="success" />
-                            ) : null
-                        }
+                       
                         <Button variant="contained" color="primary" onClick={() => {
-                            mutate({
-                                id: lead._id
-                            })
+                            if(remark)
+                                mutate({
+                                    id: lead._id,
+                                    body: { remark: remark }
+                                })
                         }}
                             disabled={Boolean(isLoading)}
                             fullWidth>{Boolean(isLoading) ? <CircularProgress /> : "Convert"}
