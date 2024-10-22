@@ -301,48 +301,6 @@ export default function RefersPage() {
         }).filter(onlyUnique)
       },
       {
-        accessorKey: 'refers',
-        header: 'Refers',
-        size: 100,
-        filterVariant: 'multi-select',
-        Cell: (cell) => <>{cell.row.original.refers ? cell.row.original.refers.toString() : ""}</>,
-        filterSelectOptions: refers && refers.map((i) => {
-          return i.refers.toString();
-        }).filter(onlyUnique)
-      },
-      {
-        accessorKey: 'customer_name',
-        header: 'Customer Name',
-        size: 120,
-        filterVariant: 'multi-select',
-        Cell: (cell) => <>{cell.row.original.customer_name ? cell.row.original.customer_name : ""}</>,
-        filterSelectOptions: refers && refers.map((i) => {
-          return i.customer_name;
-        }).filter(onlyUnique)
-      },
-      {
-        accessorKey: 'remark',
-        header: 'Remark',
-        size: 350,
-        Cell: (cell) => <>{cell.row.original.remark ? cell.row.original.remark : ""}</>,
-      },
-      {
-        accessorKey: 'mobile',
-        header: 'Mobile1',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.mobile ? cell.row.original.mobile : ""}</>
-      }, {
-        accessorKey: 'mobile2',
-        header: 'Mobile2',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.mobile2 ? cell.row.original.mobile2 : ""}</>
-      }, {
-        accessorKey: 'mobile3',
-        header: 'Mobile3',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.mobile3 ? cell.row.original.mobile3 : ""}</>
-      },
-      {
         accessorKey: 'city',
         header: 'City',
         filterVariant: 'multi-select',
@@ -360,6 +318,50 @@ export default function RefersPage() {
         Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state : ""}</>,
         filterSelectOptions: refers && refers.map((i) => {
           return i.state;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'mobile',
+        header: 'Mobile1',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.mobile ? cell.row.original.mobile : ""}</>
+      }, {
+        accessorKey: 'mobile2',
+        header: 'Mobile2',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.mobile2 ? cell.row.original.mobile2 : ""}</>
+      }, {
+        accessorKey: 'mobile3',
+        header: 'Mobile3',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.mobile3 ? cell.row.original.mobile3 : ""}</>
+      },
+      
+      {
+        accessorKey: 'remark',
+        header: 'Remark',
+        size: 350,
+        Cell: (cell) => <>{cell.row.original.remark ? cell.row.original.remark : ""}</>,
+      },
+      
+      {
+        accessorKey: 'refers',
+        header: 'Refers',
+        size: 100,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.refers ? cell.row.original.refers.toString() : ""}</>,
+        filterSelectOptions: refers && refers.map((i) => {
+          return i.refers.toString();
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'customer_name',
+        header: 'Customer Name',
+        size: 180,
+        filterVariant: 'multi-select',
+        Cell: (cell) => <>{cell.row.original.customer_name ? cell.row.original.customer_name : ""}</>,
+        filterSelectOptions: refers && refers.map((i) => {
+          return i.customer_name;
         }).filter(onlyUnique)
       },
       {
