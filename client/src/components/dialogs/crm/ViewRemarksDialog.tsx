@@ -56,13 +56,13 @@ function ViewRemarksDialog({ id }: { id: string }) {
                                 <br></br>
                                 <p>{item.created_date}</p>
                                 {
-                                    user && item.remark && user?.username === item.created_by.value && new Date(item.created_date) > new Date(previous_date) && <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
-                                        {user?.assigned_permissions.includes('reminders_delete') && <IconButton size="small" color="error" onClick={() => {
+                                    <Stack justifyContent={'end'} direction="row" gap={0} pt={2}>
+                                        {user?.assigned_permissions.includes('activities_delete') && <IconButton size="small" color="error" onClick={() => {
                                             setRemark(item)
                                             setDisplay(true)
                                         }}>
                                             Delete</IconButton>}
-                                        {user?.assigned_permissions.includes('reminders_edit') && <IconButton size="small" color="success"
+                                        {user && item.remark && user?.username === item.created_by.value && new Date(item.created_date) > new Date(previous_date) &&user?.assigned_permissions.includes('activities_edit') && <IconButton size="small" color="success"
                                             onClick={() => {
                                                 setRemark(item)
                                                 setDisplay2(true)
