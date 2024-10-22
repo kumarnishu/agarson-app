@@ -30,13 +30,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
                 remind_date?: string
             }
         }>
-        (CreateOrEditRemark, {
-            onSuccess: () => {
-                queryClient.invalidateQueries('remarks')
-                queryClient.invalidateQueries('reminders')
-                queryClient.invalidateQueries('leads')
-            }
-        })
+        (CreateOrEditRemark,{onSuccess:()=>queryClient.refetchQueries('remarks')})
     const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
 
     const { setChoice } = useContext(ChoiceContext)
