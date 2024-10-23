@@ -697,7 +697,7 @@ export const GetAssignedReferrals = async (req: Request, res: Response, next: Ne
             created_by: { id: lead.created_by._id, value: lead.created_by.username, label: lead.created_by.username },
             updated_by: { id: lead.updated_by._id, value: lead.updated_by.username, label: lead.updated_by.username },
         }
-})
+    })
 
     return res.status(200).json(result);
 }
@@ -779,7 +779,7 @@ export const GetLeads = async (req: Request, res: Response, next: NextFunction) 
                 updated_by: { id: lead.updated_by._id, value: lead.updated_by.username, label: lead.updated_by.username },
             }
         })
-       
+
         return res.status(200).json({
             result,
             total: Math.ceil(count / limit),
@@ -820,7 +820,7 @@ export const ReferLead = async (req: Request, res: Response, next: NextFunction)
 
     lead.referred_party = party
     lead.stage = "refer"
-    lead.last_remark=remark;
+    lead.last_remark = remark;
     lead.referred_date = new Date()
     lead.updated_at = new Date()
     if (req.user)
@@ -851,7 +851,7 @@ export const RemoveLeadReferral = async (req: Request, res: Response, next: Next
     lead.referred_party = undefined
     lead.referred_date = undefined
     lead.stage = "open"
-    lead.last_remark=remark;
+    lead.last_remark = remark;
     lead.updated_at = new Date()
     if (req.user)
         lead.updated_by = req.user
@@ -887,7 +887,7 @@ export const ConvertLeadToRefer = async (req: Request, res: Response, next: Next
         updated_by: req.user
     })
     await Remark.updateMany({ lead: lead._id }, { lead: undefined, refer: refer._id });
-    refer.last_remark=remark
+    refer.last_remark = remark
     await refer.save()
     await Lead.findByIdAndDelete(lead._id);
     if (remark)
@@ -1855,7 +1855,7 @@ export const CreateLead = async (req: Request, res: Response, next: NextFunction
         ...body,
         stage: 'open',
         state: state,
-        last_remark :remark||"",
+        last_remark: remark || "",
         city: city,
         visiting_card: visiting_card,
         mobile: uniqueNumbers[0] || null,
@@ -1971,7 +1971,7 @@ export const UpdateLead = async (req: Request, res: Response, next: NextFunction
     if (body.city && body.city != "") city = body.city
     await Lead.findByIdAndUpdate(lead._id, {
         ...body,
-        last_remark:remark?remark:lead.last_remark,
+        last_remark: remark ? remark : lead.last_remark,
         city: city,
         state: state,
         mobile: uniqueNumbers[0] || null,
@@ -2205,28 +2205,28 @@ export const GetRefers = async (req: Request, res: Response, next: NextFunction)
     let cities = user?.assigned_crm_cities.map((item) => { return item.city })
     refers = await ReferredParty.find({ 'state': { $in: states }, 'city': { $in: cities } }).sort('name')
 
-   result=refers.map((r)=>{
-       return {
-           _id: r._id,
-           name: r.name,
-           last_remark:r.last_remark,
-           refers: 0,
-           uploaded_bills: r.uploaded_bills,
-           customer_name: r.customer_name,
-           mobile: r.mobile,
-           mobile2: r.mobile2,
-           mobile3: r.mobile3,
-           address: r.address,
-           gst: r.gst,
-           city: r.city,
-           state: r.state,
-           convertedfromlead: r.convertedfromlead,
-           created_at: moment(r.created_at).format("DD/MM/YYYY"),
-           updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
-           created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
-           updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
-       }
-   })
+    result = refers.map((r) => {
+        return {
+            _id: r._id,
+            name: r.name,
+            last_remark: r.last_remark,
+            refers: 0,
+            uploaded_bills: r.uploaded_bills,
+            customer_name: r.customer_name,
+            mobile: r.mobile,
+            mobile2: r.mobile2,
+            mobile3: r.mobile3,
+            address: r.address,
+            gst: r.gst,
+            city: r.city,
+            state: r.state,
+            convertedfromlead: r.convertedfromlead,
+            created_at: moment(r.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(r.updated_at).format("DD/MM/YYYY"),
+            created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
+            updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
+        }
+    })
 
     return res.status(200).json(refers);
 }
@@ -2265,7 +2265,7 @@ export const GetPaginatedRefers = async (req: Request, res: Response, next: Next
                 created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
                 updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
             }
-})
+        })
         return res.status(200).json({
             result: result,
             total: Math.ceil(count / limit),
@@ -2478,7 +2478,7 @@ export const FuzzySearchRefers = async (req: Request, res: Response, next: NextF
                 created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
                 updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
             }
-})
+        })
         return res.status(200).json({
             result: result,
             total: Math.ceil(count / limit),
@@ -2817,7 +2817,7 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     let previous_date = new Date()
     let day = previous_date.getDate() - 100
     previous_date.setDate(day)
-    let remarks = await Remark.find({ created_at: { $lte: new Date(), $gte: previous_date }}).populate('created_by').populate('updated_by').populate({
+    let remarks = await Remark.find({ created_at: { $lte: new Date(), $gte: previous_date } }).populate('created_by').populate('updated_by').populate({
         path: 'lead',
         populate: [
             {
@@ -2840,7 +2840,7 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     remarks.forEach((rem) => {
         if (rem && rem.lead && !ids.includes(rem.lead._id)) {
             ids.push(rem.lead._id);
-            if (rem.created_by._id.valueOf()==req.user?._id&&rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate() && new Date(rem.remind_date).getMonth() <= new Date().getMonth() && new Date(rem.remind_date).getFullYear() <= new Date().getFullYear())
+            if (rem.created_by._id.valueOf() == req.user?._id && rem.remind_date && new Date(rem.remind_date).getDate() <= new Date().getDate() && new Date(rem.remind_date).getMonth() <= new Date().getMonth() && new Date(rem.remind_date).getFullYear() <= new Date().getFullYear())
                 filteredRemarks.push(rem);
         }
     })
@@ -3184,7 +3184,7 @@ export const NewRemark = async (req: Request, res: Response, next: NextFunction)
     if (req.user) {
         lead.updated_by = req.user
         lead.updated_at = new Date(Date.now())
-        lead.last_remark=remark
+        lead.last_remark = remark
     }
     await lead.save()
     return res.status(200).json({ message: "new remark added successfully" })
@@ -3245,7 +3245,7 @@ export const GetNewRefers = async (req: Request, res: Response, next: NextFuncti
             created_by: { id: r.created_by._id, value: r.created_by.username, label: r.created_by.username },
             updated_by: { id: r.updated_by._id, value: r.updated_by.username, label: r.updated_by.username },
         }
-})
+    })
     return res.status(200).json(result)
 }
 
@@ -3291,7 +3291,7 @@ export const GetAssignedRefers = async (req: Request, res: Response, next: NextF
             created_by: { id: lead.created_by._id, value: lead.created_by.username, label: lead.created_by.username },
             updated_by: { id: lead.updated_by._id, value: lead.updated_by.username, label: lead.updated_by.username },
         }
-})
+    })
     return res.status(200).json(result)
 }
 
@@ -3531,4 +3531,28 @@ export const GetLeadPartyBillsHistory = async (req: Request, res: Response, next
         })
     }
     return res.json(result)
+}
+
+export const test = async (req: Request, res: Response, next: NextFunction) => {
+    await Lead.updateMany({ referred_party: undefined, stage: 'refer' }, { stage: 'open' })
+    let leads = await Lead.find()
+    for (let i = 0; i < leads.length; i++) {
+        let lead = leads[i]._id;
+        let r = await Remark.findOne({ lead: lead }).sort("-created_at");
+        if (r) {
+            await Lead.findByIdAndUpdate(r.lead, { last_remark: r.remark })
+        }
+        console.log(leads.length, "-", i)
+    }
+    let refers = await ReferredParty.find()
+    for (let i = 0; i < refers.length; i++) {
+        let refer = refers[i]._id;
+        let r = await Remark.findOne({ refer: refer }).sort("-created_at");
+        if (r) {
+            await ReferredParty.findByIdAndUpdate(r.refer, { last_remark: r.remark })
+        }
+        console.log(refers.length, "-", i)
+    }
+
+    return res.status(200).json({ result: 'success' })
 }

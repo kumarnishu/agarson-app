@@ -404,7 +404,7 @@ function CrmActivitiesReportPage() {
 
                 >Export Selected</MenuItem>}
             </Menu>
-            <Stack sx={{ px: 2 }} direction='row' gap={1} pb={1} alignItems={'center'} justifyContent={'center'}>
+            <Stack sx={{ p: 2 }} direction='row' gap={1} pb={1} alignItems={'center'} justifyContent={'center'}>
                 < TextField
                     size="small"
                     type="date"

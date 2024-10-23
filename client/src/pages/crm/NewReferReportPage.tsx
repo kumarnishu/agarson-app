@@ -1,4 +1,4 @@
-import { Stack } from '@mui/system'
+  import { Stack } from '@mui/system'
 import { AxiosResponse } from 'axios'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -46,7 +46,6 @@ export default function NewReferReportPage() {
         accessorKey: 'actions',
         header: '',
         maxSize: 50,
-        Footer: <b></b>,
         size: 120,
         Cell: ({ cell }) => <PopUp
           element={
@@ -143,6 +142,26 @@ export default function NewReferReportPage() {
         }).filter(onlyUnique)
       },
       {
+        accessorKey: 'city',
+        header: 'City',
+        filterVariant: 'multi-select',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.city ? cell.row.original.city : ""}</>,
+        filterSelectOptions: refers && refers.map((i) => {
+          return i.city;
+        }).filter(onlyUnique)
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+        filterVariant: 'multi-select',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state : ""}</>,
+        filterSelectOptions: refers && refers.map((i) => {
+          return i.state;
+        }).filter(onlyUnique)
+      },
+      {
         accessorKey: 'last_remark',
         header: 'Remark',
         size: 350,
@@ -190,26 +209,7 @@ export default function NewReferReportPage() {
         size: 120,
         Cell: (cell) => <>{cell.row.original.mobile3 ? cell.row.original.mobile3 : ""}</>
       },
-      {
-        accessorKey: 'city',
-        header: 'City',
-        filterVariant: 'multi-select',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.city ? cell.row.original.city : ""}</>,
-        filterSelectOptions: refers && refers.map((i) => {
-          return i.city;
-        }).filter(onlyUnique)
-      },
-      {
-        accessorKey: 'state',
-        header: 'State',
-        filterVariant: 'multi-select',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.state ? cell.row.original.state : ""}</>,
-        filterSelectOptions: refers && refers.map((i) => {
-          return i.state;
-        }).filter(onlyUnique)
-      },
+     
       {
         accessorKey: 'gst',
         header: 'GST',
@@ -256,7 +256,7 @@ export default function NewReferReportPage() {
       }
     }),
     muiTableContainerProps: (table) => ({
-      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '68vh' }
     }),
     muiTableHeadRowProps: () => ({
       sx: {

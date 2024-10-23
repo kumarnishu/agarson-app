@@ -47,7 +47,6 @@ export default function AssignedReferReportPage() {
         accessorKey: 'actions',
         header: '',
         maxSize: 50,
-        Footer: <b></b>,
         size: 120,
         Cell: ({ cell }) => <PopUp
           element={
@@ -387,7 +386,7 @@ export default function AssignedReferReportPage() {
       }
     }),
     muiTableContainerProps: (table) => ({
-      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '68vh' }
     }),
     muiTableHeadRowProps: () => ({
       sx: {
