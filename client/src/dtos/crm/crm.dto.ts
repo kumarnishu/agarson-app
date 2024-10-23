@@ -1,4 +1,3 @@
-import { IBill } from "../../models/leads/bill.model";
 import { DropDownDto } from "../common/dropdown.dto";
 
 export type MergeTwoLeadsDto = {

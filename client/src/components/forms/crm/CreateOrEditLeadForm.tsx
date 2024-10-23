@@ -50,7 +50,7 @@ function CreateOrEditLeadForm({ lead }: { lead?: GetLeadDto }) {
             state: lead ? lead.state : "",
             country: lead ? lead.country : "India",
             address: lead ? lead.address : "",
-            remark: lead && lead.remark || "",
+            remark: lead && lead.last_remark || "",
             work_description: lead ? lead.work_description : "",
             turnover: lead ? lead.turnover : "",
             lead_type: lead ? lead.lead_type : "",
