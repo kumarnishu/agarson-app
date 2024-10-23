@@ -8,7 +8,6 @@ function FeatureDashboard() {
     const [features, setFeatures] = useState<{ feature: string, is_visible: boolean, url: string }[]>([])
     const { user } = useContext(UserContext)
 
-    //process feature and access
     useEffect(() => {
         let tmpfeatures: { feature: string, is_visible: boolean, url: string }[] = []
         user?.assigned_permissions.includes('leads_view') && tmpfeatures.push({ feature: 'leads ', is_visible: false, url: "LeadsPage" })
@@ -18,6 +17,19 @@ function FeatureDashboard() {
         user?.assigned_permissions.includes('spare_dye_view') && tmpfeatures.push({ feature: 'Spare Dyes ', is_visible: false, url: "SpareDyesPage" })
         user?.assigned_permissions.includes('sole_thickness_view') && tmpfeatures.push({ feature: 'Sole Thickness ', is_visible: false, url: "SoleThicknessPage" })
         user?.assigned_permissions.includes('shoe_weight_view') && tmpfeatures.push({ feature: 'shoe weights ', is_visible: false, url: "ShoeWeightPage" })
+
+        user?.is_admin && tmpfeatures.push({ feature: 'driver app system, ', is_visible: false, url: "ShoeWeightPage" })
+
+        user?.is_admin && tmpfeatures.push({ feature: 'maintenance ', is_visible: false, url: "ShoeWeightPage" })
+
+        user?.is_admin && tmpfeatures.push({ feature: 'bill payments ', is_visible: false, url: "ShoeWeightPage" })
+        user?.is_admin && tmpfeatures.push({ feature: 'MISC EXPENSES LIST ', is_visible: false, url: "ShoeWeightPage" })
+        user?.is_admin && tmpfeatures.push({ feature: 'SALESMEN LEAVES ', is_visible: false, url: "ShoeWeightPage" })
+        
+        user?.is_admin && tmpfeatures.push({ feature: 'cartoon file number ', is_visible: false, url: "ShoeWeightPage" })
+        user?.is_admin && tmpfeatures.push({ feature: 'documents upload ', is_visible: false, url: "ShoeWeightPage" })
+        user?.is_admin && tmpfeatures.push({ feature: 'MACHINE CONDITION ', is_visible: false, url: "ShoeWeightPage" })
+        
 
         setFeatures(tmpfeatures)
 

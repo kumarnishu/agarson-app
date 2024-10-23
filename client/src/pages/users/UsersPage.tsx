@@ -47,7 +47,6 @@ export default function UsersPage() {
                 accessorKey: 'actions',
                 header: '',
                 maxSize: 50,
-                Footer: <b></b>,
                 Cell: ({ cell }) => <PopUp
                     element={
                         <Stack direction="row">
@@ -368,7 +367,7 @@ export default function UsersPage() {
             }
         }),
         muiTableContainerProps: (table) => ({
-            sx: { height: table.table.getState().isFullScreen ? 'auto' : '70vh' }
+            sx: { height: table.table.getState().isFullScreen ? 'auto' : '68vh' }
         }),
         muiTableHeadRowProps: () => ({
             sx: {

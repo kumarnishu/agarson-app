@@ -25,7 +25,8 @@ function ReportDashboard() {
         user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: true, url: "MachineWiseProductionReportPage" })
         user?.assigned_permissions.includes('machine_category_wise_production_report_view') && tmpfeatures.push({ feature: 'Category Wise Production report', is_visible: true, url: "CategoryWiseProductionReportPage" }),
         user?.assigned_permissions.includes('thekedar_wise_production_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production report', is_visible: true, url: "ThekedarWiseProductionReportPage" })
-
+        
+        user?.is_admin && tmpfeatures.push({ feature: 'salesmen visit report ', is_visible: false, url: "ThekedarWiseProductionReportPage" })
     }, [user])
 
     return (
