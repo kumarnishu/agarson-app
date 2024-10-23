@@ -30,7 +30,12 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
                 remind_date?: string
             }
         }>
-        (CreateOrEditRemark,{onSuccess:()=>queryClient.refetchQueries('remarks')})
+        (CreateOrEditRemark,{onSuccess:()=>{
+            queryClient.refetchQueries('remarks')
+            queryClient.refetchQueries('activities')
+            queryClient.refetchQueries('activities_topbar')
+            queryClient.refetchQueries('reminders')
+        }})
     const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
 
     const { setChoice } = useContext(ChoiceContext)
