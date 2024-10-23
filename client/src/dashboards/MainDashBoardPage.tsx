@@ -45,7 +45,7 @@ function MainDashBoardPage() {
               setFeature({ feature: feat.feature.toUpperCase(), url: feat.url })
             }}>
               <Divider />
-              <ListItem key={index} disablePadding>
+              <ListItem key={index} >
                 <ListItemButton >
                   <ButtonLogo title="" height={25} width={25} />
                   <ListItemText sx={{ pl: 1 }} primary={feat.feature.toUpperCase()} />
