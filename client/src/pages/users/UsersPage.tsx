@@ -284,6 +284,18 @@ export default function UsersPage() {
                 }).filter(onlyUnique)
             },
             {
+                accessorKey: 'email',
+                header: 'Email',
+                size: 220,
+                Cell: (cell) => <>{cell.row.original.email || ""}</>
+            },
+            {
+                accessorKey: 'mobile',
+                header: 'Mobile',
+                size: 120,
+                Cell: (cell) => <>{cell.row.original.mobile || ""}</>
+            },
+            {
                 accessorKey: 'is_active',
                 header: 'Status',
                 size: 120,
@@ -334,18 +346,7 @@ export default function UsersPage() {
                 size: 120,
                 Cell: (cell) => <>{cell.row.original.last_login || ""}</>
             },
-            {
-                accessorKey: 'email',
-                header: 'Email',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.email || ""}</>
-            },
-            {
-                accessorKey: 'mobile',
-                header: 'Mobile',
-                size: 120,
-                Cell: (cell) => <>{cell.row.original.mobile || ""}</>
-            }
+           
 
         ],
         [users],

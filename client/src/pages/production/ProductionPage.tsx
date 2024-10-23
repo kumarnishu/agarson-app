@@ -34,8 +34,8 @@ export default function ProductionPage() {
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
   const [dates, setDates] = useState<{ start_date?: string, end_date?: string }>({
-    start_date: moment(new Date()).format("YYYY-MM-DD")
-    , end_date: moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY-MM-DD")
+    start_date: moment(new Date().setDate(new Date().getDate() - 3)).format("YYYY-MM-DD")
+    , end_date: moment(new Date()).format("YYYY-MM-DD")
   })
   const { data, isLoading, isSuccess, isRefetching, refetch } = useQuery<AxiosResponse<{ result: GetProductionDto[], page: number, total: number, limit: number }>, BackendError>(["productions", userId, dates?.start_date, dates?.end_date], async () => GetProductions({ limit: paginationData?.limit, page: paginationData?.page, id: userId, start_date: dates?.start_date, end_date: dates?.end_date }))
 
