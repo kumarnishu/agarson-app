@@ -143,10 +143,10 @@ export default function NewReferReportPage() {
         }).filter(onlyUnique)
       },
       {
-        accessorKey: 'remark',
+        accessorKey: 'last_remark',
         header: 'Remark',
         size: 350,
-        Cell: (cell) => <>{cell.row.original.remark ? cell.row.original.remark : ""}</>,
+        Cell: (cell) => <>{cell.row.original.last_remark ? cell.row.original.last_remark : ""}</>,
       },
       {
         accessorKey: 'refers',

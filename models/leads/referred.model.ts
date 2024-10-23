@@ -10,6 +10,9 @@ export type IReferredParty = {
     mobile2: string,
     mobile3: string,
     address: string,
+    last_remark: string,
+    uploaded_bills: number,
+    refers:number,
     gst: string,
     city: string,
     state: string,
@@ -35,6 +38,18 @@ const ReferredPartySchema = new mongoose.Schema<IReferredParty, mongoose.Model<I
         trim: true,
         index: true,
         lowercase: true,
+    },
+    uploaded_bills: {
+        type: Number,
+        default: 0
+    },
+    refers: {
+        type: Number,
+        default: 0
+    },
+    last_remark: {
+        type: String,
+        trim: true,
     },
     gst: {
         type: String,

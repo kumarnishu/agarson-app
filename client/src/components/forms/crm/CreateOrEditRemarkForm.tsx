@@ -35,6 +35,7 @@ function CreateOrEditRemarkForm({ lead, remark, setDisplay2 }: { lead?: { _id: s
             queryClient.refetchQueries('activities')
             queryClient.refetchQueries('activities_topbar')
             queryClient.refetchQueries('reminders')
+            queryClient.refetchQueries('leads')
         }})
     const { data: stagedata, isSuccess: stageSuccess } = useQuery<AxiosResponse<DropDownDto[]>, BackendError>("crm_stages", GetAllStages)
 

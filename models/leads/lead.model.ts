@@ -22,7 +22,9 @@ export type ILead = {
     alternate_email: string,
     lead_type: string
     stage: string
-    lead_source: string
+    lead_source: string,
+    last_remark:string,
+    uploaded_bills:number,
     visiting_card: Asset,
     referred_party?: IReferredParty,
     referred_date?: Date,
@@ -54,6 +56,14 @@ const leadSchema = new mongoose.Schema<ILead, mongoose.Model<ILead>>({
         trim: true,
         index: true,
         required: true,
+    },
+    uploaded_bills:{
+        type:Number,
+        default:0
+    },
+    last_remark:{
+        type: String,
+        trim: true,
     },
     email: {
         type: String,

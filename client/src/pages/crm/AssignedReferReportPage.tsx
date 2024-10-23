@@ -221,10 +221,10 @@ export default function AssignedReferReportPage() {
       },
       
       {
-        accessorKey: 'remark',
+        accessorKey: 'last_remark',
         header: 'Remark',
         size: 320,
-        Cell: (cell) => <>{cell.row.original.remark ? cell.row.original.remark : ""}</>
+        Cell: (cell) => <>{cell.row.original.last_remark ? cell.row.original.last_remark : ""}</>
       },
       {
         accessorKey: 'referred_party_name',

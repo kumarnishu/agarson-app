@@ -1,3 +1,4 @@
+import { IBill } from "../../models/leads/bill.model";
 import { DropDownDto } from "../common/dropdown.dto";
 
 export type MergeTwoLeadsDto = {
@@ -87,7 +88,6 @@ export type GetLeadDto = {
     customer_designation: string,
     mobile: string,
     gst: string,
-    uploaded_bills:number,
     has_card: boolean,
     email: string,
     city: string,
@@ -106,7 +106,8 @@ export type GetLeadDto = {
     referred_party_name?: string,
     referred_party_mobile?: string,
     referred_date?: string,
-    remark: string,
+    last_remark: string,
+    uploaded_bills: number,
     created_at: string,
     updated_at: string,
     created_by: DropDownDto,
@@ -164,15 +165,15 @@ export type CreateOrEditMergeRefersDto = {
 export type GetReferDto = {
     _id: string,
     name: string,
-    remark: string,
-    refers: number,
-    uploaded_bills: number,
     customer_name: string,
     mobile: string,
     mobile2: string,
     mobile3: string,
     address: string,
     gst: string,
+    last_remark: string,
+    uploaded_bills: number,
+    refers: number,
     city: string,
     state: string,
     convertedfromlead: boolean,

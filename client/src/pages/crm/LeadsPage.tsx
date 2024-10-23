@@ -389,10 +389,10 @@ export default function LeadsPage() {
         Cell: (cell) => <>{cell.row.original.alternate_mobile2 ? cell.row.original.alternate_mobile2 : ""}</>
       },
       {
-        accessorKey: 'remark',
+        accessorKey: 'last_remark',
         header: 'Last Remark',
         size: 120,
-        Cell: (cell) => <>{cell.row.original.remark ? cell.row.original.remark : ""}</>
+        Cell: (cell) => <>{cell.row.original.last_remark ? cell.row.original.last_remark : ""}</>
       },
       {
         accessorKey: 'customer_name',
