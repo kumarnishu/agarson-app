@@ -39,7 +39,7 @@ export default function UsersPage() {
     const { user: LoggedInUser } = useContext(UserContext)
     const { setChoice } = useContext(ChoiceContext)
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+    const [flag, setFlag] = useState(1);
     const columns = useMemo<MRT_ColumnDef<GetUserDto>[]>(
         //column definitions...
         () => users && [
@@ -481,10 +481,26 @@ export default function UsersPage() {
                                     }
                                     else {
                                         setChoice({ type: UserChoiceActions.bulk_assign_permissions })
+                                        setFlag(1)
                                     }
                                     setAnchorEl(null)
                                 }}
                             >Assign Permissions</MenuItem>
+
+                            <MenuItem
+
+                                onClick={() => {
+                                    setChoice({ type: UserChoiceActions.close_user })
+                                    if (!table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()) {
+                                        alert("select some users")
+                                    }
+                                    else {
+                                        setChoice({ type: UserChoiceActions.bulk_assign_permissions })
+                                        setFlag(0)
+                                    }
+                                    setAnchorEl(null)
+                                }}
+                            >Remove Permissions</MenuItem>
 
                             <MenuItem onClick={() => ExportToExcel(table.getRowModel().rows.map((row) => { return row.original }), "Exported Data")}
                             >Export All</MenuItem>
@@ -492,7 +508,7 @@ export default function UsersPage() {
                             >Export Selected</MenuItem>
                         </Menu>
                         <NewUserDialog />
-                        <AssignPermissionsToUsersDialog user_ids={table.getSelectedRowModel().rows.map((I) => { return I.original._id })} />
+                        <AssignPermissionsToUsersDialog flag={flag} user_ids={table.getSelectedRowModel().rows.map((I) => { return I.original._id })} />
                     </>
                 </Stack >
             </Stack >

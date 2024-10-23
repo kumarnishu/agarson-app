@@ -762,19 +762,37 @@ export const AssignPermissionsToOneUser = async (req: Request, res: Response, ne
 }
 
 export const AssignPermissionsToUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const { permissions, user_ids } = req.body as AssignPermissionForMultipleUserDto
+    const { permissions, user_ids,flag } = req.body as AssignPermissionForMultipleUserDto
 
     if (permissions && permissions.length === 0)
         return res.status(400).json({ message: "please select one permission " })
     if (user_ids && user_ids.length === 0)
         return res.status(400).json({ message: "please select one user" })
-    user_ids.forEach(async (i) => {
-        let user = await User.findById(i)
-        if (user) {
-            user.assigned_permissions = permissions
-            await user.save();
-        }
-    })
+    if(flag==0){
+        user_ids.forEach(async (i) => {
+            let user = await User.findById(i)
+            if (user) {
+                let old_permissions = user.assigned_permissions.filter((per)=>{return !permissions.includes(per)})
+                user.assigned_permissions = old_permissions
+                await user.save();
+            }
+        })
+    }
+    else{
+        user_ids.forEach(async (i) => {
+            let user = await User.findById(i)
+            if (user) {
+                let old_permissions=user.assigned_permissions;
+                permissions.forEach((p)=>{
+                    if(!old_permissions.includes(p))
+                        old_permissions.push(p)
+                })
+                user.assigned_permissions = old_permissions
+                await user.save();
+            }
+        })
+    }
+   
 
     return res.status(200).json({ message: "successfull" })
 }

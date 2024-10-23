@@ -74,5 +74,6 @@ export type AssignPermissionForOneUserDto = {
 }
 export type AssignPermissionForMultipleUserDto = {
     permissions: string[],
-    user_ids: string[]
+    user_ids: string[],
+    flag:number
 }

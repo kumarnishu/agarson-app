@@ -11,7 +11,7 @@ import { AssignPermissionsToUsers, GetPermissions } from '../../../services/User
 import { IMenu, IPermission } from '../../../dtos/users/user.dto';
 
 
-function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
+function AssignPermissionsToUsersDialog({ user_ids, flag }: { user_ids: string[], flag: number }) {
     const [permissiontree, setPermissiontree] = useState<IMenu>()
     const [permissions, setPermissions] = useState<string[]>([])
     const { choice, setChoice } = useContext(ChoiceContext)
@@ -19,7 +19,8 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
         <AxiosResponse<string>, BackendError, {
             body: {
                 user_ids: string[],
-                permissions: string[]
+                permissions: string[],
+                flag: number
             }
         }>
         (AssignPermissionsToUsers, {
@@ -72,7 +73,7 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
         }
         return null;
     };
-    
+
 
     useEffect(() => {
         if (isSuccess) {
@@ -94,15 +95,15 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
                 <Cancel fontSize='large' />
             </IconButton>
             <DialogTitle sx={{ minWidth: '350px' }} textAlign="center">
-                Assign Permissions
+                {flag !== 0 ? "Assign Permissions" : "Remove Permissions"}
             </DialogTitle>
-            <DialogContent sx={{alignItems:'center'}}>
+            <DialogContent sx={{ alignItems: 'center' }}>
                 <Stack
                     gap={2}
                 >
                     <Typography variant="body1" color="error">
 
-                        {`Warning ! This will update  permissions for ${user_ids.length} Users.`}
+                        {`Warning ! This will ${flag == 0 ? "remove " : "add "}  permissions for ${user_ids.length} Users.`}
 
                     </Typography>
 
@@ -112,10 +113,12 @@ function AssignPermissionsToUsersDialog({ user_ids }: { user_ids: string[] }) {
                     <Button style={{ padding: 10, marginTop: 10 }} variant="contained" color="primary" type="submit"
                         disabled={Boolean(isLoading)}
                         onClick={() => {
+
                             mutate({
                                 body: {
                                     user_ids: user_ids,
-                                    permissions: permissions
+                                    permissions: permissions,
+                                    flag: flag
                                 }
                             })
                         }}

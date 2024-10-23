@@ -143,7 +143,8 @@ export const AssignPermissionsToOneUser = async ({ body }: {
 export const AssignPermissionsToUsers = async ({ body }: {
   body: {
     user_ids: string[],
-    permissions: string[]
+    permissions: string[],
+    flag: number
   }
 }) => {
   return await apiClient.post(`permissions`, body)
