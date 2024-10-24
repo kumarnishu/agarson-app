@@ -214,7 +214,7 @@ const MaintenancePage = () => {
 function useCreateUser() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (user: User) => {
+        mutationFn: async () => {
             //send api update request here
             await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
             return Promise.resolve();
@@ -254,7 +254,7 @@ function useGetUsers() {
 function useUpdateUser() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (user: User) => {
+        mutationFn: async () => {
             //send api update request here
             await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
             return Promise.resolve();
@@ -275,7 +275,7 @@ function useUpdateUser() {
 function useDeleteUser() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (userId: string) => {
+        mutationFn: async () => {
             //send api update request here
             await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
             return Promise.resolve();
