@@ -20,9 +20,9 @@ function DropDownDashboard() {
         user?.assigned_permissions.includes('dye_location_view') && tmpfeatures.push({ feature: 'Dye-Location  ', is_visible: true, url: "DyeLocationsPage" })
         user?.assigned_permissions.includes('article_view') && tmpfeatures.push({ feature: 'articles', is_visible: true, url: "ArticlePage" })
         user?.assigned_permissions.includes('machine_view') && tmpfeatures.push({ feature: 'machines ', is_visible: true, url: "MachinePage" })
-        user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: "UpdateMachineCategoriesPage" })
+        user?.assigned_permissions.includes('machine_category_view') && tmpfeatures.push({ feature: 'machine categories ', is_visible: true, url: "MachineCategoriesPage" })
         user?.assigned_permissions.includes('dye_view') && tmpfeatures.push({ feature: 'dyes ', is_visible: true, url: "DyePage" })
-       
+        user?.assigned_permissions.includes('checklist_category_view') && tmpfeatures.push({ feature: 'Checklist Category ', is_visible: true, url: "ChecklistCategoriesPage" })
       
 
 

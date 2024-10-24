@@ -19,8 +19,8 @@ import CrmActivitiesPage from './pages/crm/CrmActivitiesReportPage.tsx'
 import PartyTargetReportsPage from './pages/erp reports/PartyTargetReportPage.tsx'
 import SaleAnalysisReport from './pages/erp reports/SaleAnalysisReport.tsx'
 import ShoeWeightPage from './pages/production/ShoeWeightPage.tsx'
-import UpdateMachineCategoriesPage from './pages/production/MachineCategoriesPage.tsx'
-import ProductionAdminPage from './pages/production/ProductionPage.tsx'
+import MachineCategoriesPage from './pages/production/MachineCategoriesPage.tsx'
+import ProductionPage from './pages/production/ProductionPage.tsx'
 import DyePage from './pages/production/DyesPage.tsx'
 import ArticlePage from './pages/production/ArticlesPage.tsx'
 import ErpStatesPage from './pages/erp reports/ErpStatesPage.tsx'
@@ -53,9 +53,9 @@ function AppRoutes() {
       {
         !user && <Route path="/Login" element={<LoginPage />} />}
 
-     
+
       {
-        user &&  <Route path="/"
+        user && <Route path="/"
           element={
             <MainDashBoardPage />
           }>
@@ -68,7 +68,7 @@ function AppRoutes() {
                 }
               />
             </Route>}
-            
+
           {user && user?.assigned_permissions.includes('feature_menu') &&
             < Route path="Features">
               <Route index
@@ -81,44 +81,42 @@ function AppRoutes() {
                   <UsersPage />
                 }>
                 </Route>}
-              <Route
-                path="ProductionAdminPage" element={
-                  <ProductionAdminPage />
+              {user?.assigned_permissions.includes('production_view') && <Route
+                path="ProductionPage" element={
+                  <ProductionPage />
                 }
-              />
-
-
-              <Route
+              />}
+              {user?.assigned_permissions.includes('shoe_weight_view') &&<Route
                 path="ShoeWeightPage" element={
                   <ShoeWeightPage />
                 }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('spare_dye_view') &&<Route
                 path="SpareDyesPage" element={
                   <SpareDyesPage />
                 }
-              />
-              <Route path="LeadsPage" element={
+              />}
+               {user?.assigned_permissions.includes('leads_view') &&<Route path="LeadsPage" element={
                 <LeadsPage />
               }
-              />
-              <Route path="RefersPage" element={
+              />}
+              {user?.assigned_permissions.includes('refer_view') &&<Route path="RefersPage" element={
                 <RefersPage />
               }
-              />
-              <Route path="RemindersPage" element={
+              />}
+              {user?.assigned_permissions.includes('reminders_view') &&<Route path="RemindersPage" element={
                 < RemindersPage />
               }
-              />
-              <Route path="CheckListPage" element={
+              />}
+              {user?.assigned_permissions.includes('checklist_view') &&<Route path="CheckListPage" element={
                 < CheckListPage />
               }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('sole_thickness_view') &&<Route
                 path="SoleThicknessPage" element={
                   <SoleThicknessPage />
                 }
-              />
+              />}
             </Route>}
 
           {user && user?.assigned_permissions.includes('report_menu') &&
@@ -128,80 +126,80 @@ function AppRoutes() {
                   <ReportDashboard />
                 }
               />
-              <Route
+              {user?.assigned_permissions.includes('thekedar_wise_production_report_view') && <Route
                 path="ThekedarWiseProductionReportPage" element={
                   <ThekedarWiseProductionReportPage />
                 }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('machine_category_wise_production_report_view') && <Route
                 path="CategoryWiseProductionReportPage" element={
                   <CategoryWiseProductionReportPage />
                 }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('machine_wise_production_report_view') && <Route
                 path="MachineWiseProductionReportPage" element={
                   <MachineWiseProductionReportPage />
                 }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('shoe_weight_report_view') && <Route
                 path="ShowWeightDifferenceReportPage" element={
                   <ShowWeightDifferenceReportPage />
                 }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('dye_status_report_view') && <Route
                 path="DyeStatusReportPage" element={
                   <DyeStatusReportPage />
                 }
-              />
-              <Route path="CrmActivitiesPage" element={
+              />}
+              {user?.assigned_permissions.includes('activities_view') && <Route path="CrmActivitiesPage" element={
                 <CrmActivitiesPage />
               }
-              />
-              <Route path="AssignedReferReportPage" element={
+              />}
+              {user?.assigned_permissions.includes('assignedrefer_view') && <Route path="AssignedReferReportPage" element={
                 <AssignedReferReportPage />
               }
-              />
-              <Route path="NewReferReportPage" element={
+              />}
+              {user?.assigned_permissions.includes('newrefer_view') && <Route path="NewReferReportPage" element={
                 <NewReferReportPage />
               }
-              />
-              <Route path="PendingOrdersReport" element={
+              />}
+              {user?.assigned_permissions.includes('pending_orders_view') && <Route path="PendingOrdersReport" element={
 
                 < PendingOrdersReport />
 
               }
-              /> <Route path="ClientSaleReportsPage" element={
+              />} {user?.assigned_permissions.includes('client_sale_report_view') && <Route path="ClientSaleReportsPage" element={
 
                 < ClientSaleReportsPage />
 
 
               }
-              />
-              <Route path="ClientSaleLastYearReportsPage" element={
+              />}
+              {user?.assigned_permissions.includes('last_year_client_sale_report_view') && <Route path="ClientSaleLastYearReportsPage" element={
 
                 < ClientSaleLastYearReportsPage />
 
 
               }
-              />
-              <Route path="BillsAgingReportPage" element={
+              />}
+              {user?.assigned_permissions.includes('bills_ageing_view') && <Route path="BillsAgingReportPage" element={
 
                 < BillsAgingReportPage />
 
 
               }
-              />
-              <Route path="PartyTargetReportsPage" element={
+              />}
+              {user?.assigned_permissions.includes('party_target_view') && <Route path="PartyTargetReportsPage" element={
 
                 < PartyTargetReportsPage />
 
 
               }
-              />
-              <Route path="SaleAnalysisReport" element={
+              />}
+              {user?.assigned_permissions.includes('sale_analysis_view') && <Route path="SaleAnalysisReport" element={
                 < SaleAnalysisReport />
               }
-              />
+              />}
             </Route>}
 
 
@@ -212,61 +210,61 @@ function AppRoutes() {
               }
               />
 
-              <Route
-                path="UpdateMachineCategoriesPage" element={
-                  <UpdateMachineCategoriesPage />
+              {user?.assigned_permissions.includes('machine_category_view') &&<Route
+                path="MachineCategoriesPage" element={
+                  <MachineCategoriesPage />
                 }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('dye_location_view') &&<Route
                 path="DyeLocationsPage" element={
                   <DyeLocationPage />
                 }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('machine_view') &&<Route
                 path="MachinePage" element={
                   <MachinePage />
                 }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('dye_view') &&<Route
                 path="DyePage" element={
                   <DyePage />
                 }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('article_view') &&<Route
                 path="ArticlePage" element={
                   <ArticlePage />
                 }
-              />
-              <Route path="CitiesPage" element={
+              />}
+              {user?.assigned_permissions.includes('city_view') &&<Route path="CitiesPage" element={
                 <CitiesPage />
               }
-              />
-              <Route path="LeadSourcesPage" element={
+              />}
+              {user?.assigned_permissions.includes('lead_source_view') &&<Route path="LeadSourcesPage" element={
                 <CrmLeadSourcesPage />
               }
-              />
-              <Route path="StagesPage" element={
+              />}
+              {user?.assigned_permissions.includes('leadstage_view') &&<Route path="StagesPage" element={
                 <CrmStagesPage />
               }
-              />
-              <Route path='CrmStatesPage' element={
+              />}
+              {user?.assigned_permissions.includes('states_view') &&<Route path='CrmStatesPage' element={
                 <CrmStatesPage />
               }
-              />
-              <Route path='LeadTypesPage' element={
+              />}
+              {user?.assigned_permissions.includes('leadtype_view') &&<Route path='LeadTypesPage' element={
                 <CrmTypesPage />
               }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('erp_state_view') &&<Route
                 path="ErpStatesPage" element={
                   <ErpStatesPage />
                 }
-              />
-              <Route
+              />}
+              {user?.assigned_permissions.includes('checklist_category_view') &&<Route
                 path="ChecklistCategoriesPage" element={
                   <ChecklistCategoriesPage />
                 }
-              />
+              />}
             </Route>}
         </Route>
       }
