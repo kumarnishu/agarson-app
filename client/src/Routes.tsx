@@ -45,6 +45,7 @@ import DyeLocationPage from './pages/dropdowns/DyeLocationPage.tsx'
 import FeatureDashboard from './dashboards/FeatureDashboard.tsx'
 import ErpEmployeesPage from './pages/reports/ErpEmployeesPage.tsx'
 import VisitReportPage from './pages/reports/VisitReportPage.tsx'
+import MaintenancePage from './pages/features/MaintenancePage.tsx'
 
 
 function AppRoutes() {
@@ -114,10 +115,18 @@ function AppRoutes() {
                 < CheckListPage />
               }
               />}
+              {user?.assigned_permissions.includes('checklist_view') && <Route path="CheckListPage" element={
+                < CheckListPage />
+              }
+              />}
               {user?.assigned_permissions.includes('sole_thickness_view') &&<Route
                 path="SoleThicknessPage" element={
                   <SoleThicknessPage />
                 }
+              />}
+              {user?.is_admin && <Route path="MaintenancePage" element={
+                <MaintenancePage />
+              }
               />}
             </Route>}
 

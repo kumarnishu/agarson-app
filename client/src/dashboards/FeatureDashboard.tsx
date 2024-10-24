@@ -21,7 +21,7 @@ function FeatureDashboard() {
 
 
         user?.is_admin && tmpfeatures.push({ feature: 'driver app system, ', is_visible: false, url: "ShoeWeightPage" })
-        user?.is_admin && tmpfeatures.push({ feature: 'maintenance ', is_visible: false, url: "ShoeWeightPage" })
+        user?.is_admin && tmpfeatures.push({ feature: 'maintenance ', is_visible: false, url: "MaintenancePage" })
         user?.is_admin && tmpfeatures.push({ feature: 'bill payments ', is_visible: false, url: "ShoeWeightPage" })
         user?.is_admin && tmpfeatures.push({ feature: 'MISC EXPENSES LIST ', is_visible: false, url: "ShoeWeightPage" })
         user?.is_admin && tmpfeatures.push({ feature: 'SALESMEN LEAVES ', is_visible: false, url: "ShoeWeightPage" })
