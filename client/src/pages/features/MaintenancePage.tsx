@@ -9,7 +9,7 @@ import {
 } from 'material-react-table';
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import {
-    
+
     useMutation,
     useQuery,
     useQueryClient,
@@ -17,6 +17,8 @@ import {
 import { type User, fakeData, usStates } from "./makeData";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+
+
 
 const MaintenancePage = () => {
     const [validationErrors, setValidationErrors] = useState<

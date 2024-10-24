@@ -2,6 +2,7 @@ import mongoose from "mongoose"
 import { IUser } from "../users/user.model"
 import { ILead } from "./lead.model"
 import { IReferredParty } from "./referred.model"
+import { IMaintenanceItem } from "../maintainence/maintainence.item.model"
 
     
 export type IRemark = {
@@ -9,6 +10,7 @@ export type IRemark = {
     remark: string,
     lead: ILead,
     refer:IReferredParty,
+    maintainable_item: IMaintenanceItem,
     created_at: Date,
     remind_date: Date,
     updated_at: Date,
@@ -52,6 +54,10 @@ const RemarkSchema = new mongoose.Schema<IRemark, mongoose.Model<IRemark, {}, {}
     lead: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Lead'
+    },
+    maintainable_item: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'MaintenanceItem'
     },
     refer: {
         type: mongoose.Schema.Types.ObjectId,

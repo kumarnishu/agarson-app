@@ -1,21 +1,17 @@
 import mongoose from "mongoose"
 import { IUser } from "../users/user.model"
-import { IMaintenanceCategory } from "./maintainence.category.model"
 import { IMachine } from "../production/machine.model"
+import { IMaintenanceCategory } from "./maintainence.category.model"
 
-export type IMaintenance = {
+export type IMaintenanceItem = {
     _id: string,
-    work: string,
-    category: IMaintenanceCategory,
-    frequency:string,
-    maintainable_item:string,
-    machines
+    machine:IMachine,   
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
     updated_by: IUser
 }
-const MaintenanceSchema = new mongoose.Schema<IMaintenance, mongoose.Model<IMaintenance, {}, {}>, {}>({
+const MaintenanceItemSchema = new mongoose.Schema<IMaintenanceItem, mongoose.Model<IMaintenanceItem, {}, {}>, {}>({
     work: {
         type: String,
         required: true,
@@ -24,7 +20,7 @@ const MaintenanceSchema = new mongoose.Schema<IMaintenance, mongoose.Model<IMain
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'MaintenanceCategory',
+        ref: 'MaintenanceItemCategory',
         required: true
     },
     frequency:String,
@@ -54,4 +50,4 @@ const MaintenanceSchema = new mongoose.Schema<IMaintenance, mongoose.Model<IMain
     }
 })
 
-export const Maintenance = mongoose.model<IMaintenance, mongoose.Model<IMaintenance, {}, {}>>("Maintenance", MaintenanceSchema)
+export const MaintenanceItem = mongoose.model<IMaintenanceItem, mongoose.Model<IMaintenanceItem, {}, {}>>("MaintenanceItem", MaintenanceItemSchema)
