@@ -757,7 +757,7 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
     dt2.setHours(0)
     dt2.setMinutes(0)
     let user_ids = req.user?.assigned_users.map((user: IUser) => { return user._id }) || []
-
+    console.log(user_ids)
     if (!Number.isNaN(limit) && !Number.isNaN(page)) {
         if (!id) {
             if (user_ids.length > 0) {
@@ -769,6 +769,7 @@ export const GetShoeWeights = async (req: Request, res: Response, next: NextFunc
                 weights = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).populate('dye').populate('machine').populate('article').populate('created_by').populate('updated_by').sort("-created_at").skip((page - 1) * limit).limit(limit)
                 count = await ShoeWeight.find({ created_at: { $gte: dt1, $lt: dt2 }, created_by: req.user?._id }).countDocuments()
             }
+            console.log(weights.length)
         }
 
 
@@ -1380,8 +1381,8 @@ export const GetMyTodaySoleThickness = async (req: Request, res: Response, next:
             size: item.size,
             left_thickness: item.left_thickness,
             right_thickness: item.right_thickness,
-            created_at: item.created_at ? moment(item.created_at).format('LT'): "",
-            updated_at: item.updated_at ? moment(item.updated_at).format('LT'): "",
+            created_at: item.created_at ? moment(item.created_at).format('LT') : "",
+            updated_at: item.updated_at ? moment(item.updated_at).format('LT') : "",
             created_by: { id: item.created_by._id, value: item.created_by.username, label: item.created_by.username },
             updated_by: { id: item.updated_by._id, value: item.updated_by.username, label: item.updated_by.username }
         }
