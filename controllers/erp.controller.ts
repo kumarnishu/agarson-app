@@ -1128,7 +1128,6 @@ export const BulkCreateVisitReportFromExcel = async (req: Request, res: Response
                 
                 let owner = await ErpEmployee.findOne({ name: employee })
                 if (owner) {
-                    console.log(visit_date)
                     await new VisitReport({
                         employee:owner,
                         visit_date: new Date(new Date(Date.UTC(1900, 0, 1)).getTime() + (Number(visit_date) - 2) * 86400000),

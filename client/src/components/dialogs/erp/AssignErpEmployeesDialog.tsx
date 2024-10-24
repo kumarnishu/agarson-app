@@ -18,7 +18,7 @@ import { GetErpEmployeeDto } from '../../../dtos/erp reports/erp.reports.dto';
 function AssignErpEmployeesDialog({ employees, flag }: { employees: GetErpEmployeeDto[], flag: number }) {
 
     const [users, setUsers] = useState<GetUserDto[]>([])
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'erp_report_menu', show_assigned_only: true }))
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission: 'dropdown_menu', show_assigned_only: false }))
 
 
 

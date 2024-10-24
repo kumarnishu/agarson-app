@@ -18,7 +18,7 @@ import { GetUserDto } from '../../../dtos/users/user.dto';
 function AssignCrmCitiesDialog({ cities, flag }: { cities: DropDownDto[], flag: number }) {
 
     const [users, setUsers] = useState<GetUserDto[]>([])
-    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission:'crm_menu',show_assigned_only:true}))
+    const { data: usersData, isSuccess: isUsersSuccess } = useQuery<AxiosResponse<GetUserDto[]>, BackendError>("users", async () => GetUsers({ hidden: 'false', permission:'dropdown_menu',show_assigned_only:true}))
 
 
 
