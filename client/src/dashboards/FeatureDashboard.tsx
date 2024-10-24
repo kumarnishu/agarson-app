@@ -28,7 +28,11 @@ function FeatureDashboard() {
         user?.is_admin && tmpfeatures.push({ feature: 'cartoon file number ', is_visible: false, url: "ShoeWeightPage" })
         user?.is_admin && tmpfeatures.push({ feature: 'documents upload ', is_visible: false, url: "ShoeWeightPage" })
         user?.is_admin && tmpfeatures.push({ feature: 'MACHINE CONDITION ', is_visible: false, url: "ShoeWeightPage" })
-      
+        tmpfeatures = tmpfeatures.sort((a, b) => {
+            if (a.feature < b.feature) return -1; 
+            if (a.feature > b.feature) return 1; 
+            return 0;
+        });
 
         
 

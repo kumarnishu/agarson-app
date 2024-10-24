@@ -73,6 +73,12 @@ function MainDashBoardPage() {
     user?.assigned_permissions.includes('feature_menu') && tmpfeatures.push({ feature: 'Features', is_visible: true, url: "/Features" })
     user?.assigned_permissions.includes('report_menu') && tmpfeatures.push({ feature: 'Reports', is_visible: true, url: "/Reports" })
     user?.assigned_permissions.includes('dropdown_menu') && tmpfeatures.push({ feature: 'DropDown', is_visible: true, url: "/DropDown" })
+
+    tmpfeatures = tmpfeatures.sort((a, b) => {
+      if (a.feature < b.feature) return -1;
+      if (a.feature > b.feature) return 1;
+      return 0;
+    });
     setFeatures(tmpfeatures)
 
   }, [user])

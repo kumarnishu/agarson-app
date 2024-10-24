@@ -9,18 +9,14 @@ import { connectDatabase } from './config/db';
 import UserRoutes from "./routes/user.routes";
 import LeadRoutes from "./routes/lead.routes";
 import CheckListkRoutes from "./routes/checklist.routes";
-import VisitRoutes from "./routes/visit.routes";
 import ErpRoutes from "./routes/erp.routes";
 import ProductionRoutes from "./routes/production.routes";
-import TodoRoutes from "./routes/todo.routes";
 import CronJobManager from "cron-job-manager";
 import path from 'path';
 import { Server } from "socket.io";
 import { getCurrentUser, userJoin, userLeave } from "./utils/handleSocketUsers";
 import { Storage } from '@google-cloud/storage';
 import morgan from 'morgan';
-import { createWhatsappClient } from './utils/CreateWhatsappClient';
-import { ReConnectWhatsapp } from './utils/RestartServices';
 
 const app = express()
 const server = createServer(app)
@@ -77,8 +73,7 @@ io.on("connection", (socket) => {
         console.log("running in room", id)
         const user = userJoin(id)
         socket.join(user.id)
-        if (io)
-            createWhatsappClient(id, io)
+       
         socket.on("disconnect", (reason) => {
             let user = getCurrentUser(id)
             if (user)
@@ -116,13 +111,10 @@ export const ReportManager = new CronJobManager()
 app.use("/api/v1", UserRoutes)
 app.use("/api/v1", LeadRoutes)
 app.use("/api/v1", CheckListkRoutes)
-app.use("/api/v1", VisitRoutes)
 app.use("/api/v1", ErpRoutes)
 app.use("/api/v1", ProductionRoutes)
-app.use("/api/v1", TodoRoutes)
 
 
-ReConnectWhatsapp()
 
 //react app handler
 if (ENV === "production") {

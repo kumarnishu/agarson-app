@@ -16,7 +16,7 @@ function ReportDashboard() {
         user?.assigned_permissions.includes('last_year_client_sale_report_view') && tmpfeatures.push({ feature: 'Client Sale Last Year report', is_visible: true, url: "ClientSaleLastYearReportsPage" }),
         user?.assigned_permissions.includes('party_target_view') && tmpfeatures.push({ feature: 'Party Target report', is_visible: true, url: "PartyTargetReportsPage" }),
         user?.assigned_permissions.includes('sale_analysis_view') && tmpfeatures.push({ feature: 'Sale Analysis report', is_visible: true, url: "SaleAnalysisReport" }),
-        setFeatures(tmpfeatures)
+        
         user?.assigned_permissions.includes('activities_view') && tmpfeatures.push({ feature: 'activities reports ', is_visible: true, url: "CrmActivitiesPage" })
         user?.assigned_permissions.includes('assignedrefer_view') && tmpfeatures.push({ feature: 'assigned refer reports', is_visible: true, url: "AssignedReferReportPage" })
         user?.assigned_permissions.includes('newrefer_view') && tmpfeatures.push({ feature: 'new customer reports ', is_visible: true, url: "NewReferReportPage" })
@@ -25,8 +25,16 @@ function ReportDashboard() {
         user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: true, url: "MachineWiseProductionReportPage" })
         user?.assigned_permissions.includes('machine_category_wise_production_report_view') && tmpfeatures.push({ feature: 'Category Wise Production report', is_visible: true, url: "CategoryWiseProductionReportPage" }),
         user?.assigned_permissions.includes('thekedar_wise_production_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production report', is_visible: true, url: "ThekedarWiseProductionReportPage" })
+        user?.assigned_permissions.includes('visit_report_view') && tmpfeatures.push({ feature: 'salesmen visit report ', is_visible: false, url: "ThekedarWiseProductionReportPage" })
+
+        tmpfeatures = tmpfeatures.sort((a, b) => {
+            if (a.feature < b.feature) return -1;
+            if (a.feature > b.feature) return 1;
+            return 0;
+        });
         
-        user?.is_admin && tmpfeatures.push({ feature: 'salesmen visit report ', is_visible: false, url: "ThekedarWiseProductionReportPage" })
+        setFeatures(tmpfeatures)
+
     }, [user])
 
     return (

@@ -18,7 +18,6 @@ export type IMenu = {
 export type GetUserDto = {
     _id: string,
     username: string,
-    company: string,
     email: string,
     mobile: string,
     dp: string,
@@ -32,6 +31,7 @@ export type GetUserDto = {
     is_multi_login: boolean,
     assigned_users: DropDownDto[]
     assigned_states: number,
+    assigned_erpEmployees: number
     assigned_crm_states: number,
     assigned_crm_cities: number,
     assigned_permissions: string[],
@@ -61,15 +61,15 @@ export type UpdatePasswordDto = {
     newPassword: string,
     confirmPassword: string
 }
-export type ResetPasswordDto={
+export type ResetPasswordDto = {
     newPassword: string,
     confirmPassword: string
 }
 export type VerifyEmailDto = {
-   email:string
+    email: string
 }
 
-export type AssignPermissionForOneUserDto={
+export type AssignPermissionForOneUserDto = {
     permissions: string[],
     user_id: string
 }

@@ -620,7 +620,31 @@ export function FetchAllPermissions() {
                     }
                 ]
             },
-
+            {
+                label: 'Visit Report',
+                permissions: [
+                    {
+                        value: 'visit_report_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'visit_report_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'visit_report_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'visit_report_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'visit_report_export',
+                        label: 'export'
+                    }
+                ]
+            },
         ]
     }
 
@@ -877,6 +901,30 @@ export function FetchAllPermissions() {
                     },
                     {
                         value: 'leadstage_export',
+                        label: 'export'
+                    }
+                ]
+            }, {
+                label: 'Erp Employees',
+                permissions: [
+                    {
+                        value: 'erp_employee_view',
+                        label: 'view'
+                    },
+                    {
+                        value: 'erp_employee_create',
+                        label: 'create'
+                    },
+                    {
+                        value: 'erp_employee_edit',
+                        label: 'edit'
+                    },
+                    {
+                        value: 'erp_employee_delete',
+                        label: 'delete'
+                    },
+                    {
+                        value: 'erp_employee_export',
                         label: 'export'
                     }
                 ]

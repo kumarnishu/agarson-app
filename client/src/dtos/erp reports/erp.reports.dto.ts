@@ -1,5 +1,37 @@
 import { DropDownDto } from "../common/dropdown.dto"
 
+
+export type GetErpEmployeeDto = {
+    _id: string,
+    name: string,
+    display_name: string,
+    assigned_employees: string,
+    created_at: string,
+    updated_at: string,
+    created_by: string,
+    updated_by: string
+}
+export type CreateOrEditErpEmployeeDto = {
+    name: string,
+    display_name: string,
+}
+
+export type GetVisitReportDto = {
+    _id: string,
+    employee: string
+    visit_date: string,
+    customer: string,
+    intime: string,
+    outtime: string,
+    visitInLocation: string,
+    visitOutLocation: string,
+    remarks: string,
+    created_at: string,
+    updated_at: string,
+    created_by: string,
+    updated_by: string,
+}
+
 export type GetErpStateDto = {
     _id: string,
     state: string,
@@ -19,7 +51,7 @@ export type GetErpStateDto = {
     updated_at: string,
     created_by: DropDownDto,
     updated_by: DropDownDto,
-    assigned_users: string[]
+    assigned_users: string
 }
 export type CreateOrEditErpStateDto = {
     state: string,
@@ -111,11 +143,11 @@ export type GetPartyTargetReportDto = {
     Cur_Feb: number,
     Last_Mar: number,
     Cur_Mar: number,
+    created_at: string,
     updated_at: string,
     created_by: DropDownDto,
     updated_by: DropDownDto,
-    status?: string,
-    created_at?: string,
+    status?: string
 }
 export type GetClientSaleLastYearReportDto = {
     _id: string,
@@ -226,7 +258,8 @@ export type GetPartyTargetReportFromExcelDto = {
     Cur_Feb: number,
     Last_Mar: number,
     Cur_Mar: number,
-    status?: string
+    status?: string,
+    created_at?: string,
 }
 
 
@@ -296,4 +329,17 @@ export type GetClientSaleReportFromExcelDto = {
     mar: number,
     status?: string,
     created_at?: string,
+}
+
+export type GetVisitReportFromExcelDto = {
+    _id: string,
+    employee: string
+    visit_date: string,
+    customer: string,
+    intime: string,
+    outtime: string,
+    visitInLocation: string,
+    visitOutLocation: string,
+    remarks: string,
+    status?: string
 }

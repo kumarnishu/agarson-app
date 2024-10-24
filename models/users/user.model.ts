@@ -5,6 +5,7 @@ import crypto from "crypto";
 import { ICRMCity } from "../leads/crm.city.model";
 import { IState } from "../erp_reports/state.model";
 import { ICRMState } from "../leads/crm.state.model";
+import { IErpEmployee } from "../erp_reports/erp.employee.model";
 
 export type Asset = {
   _id: string,
@@ -37,6 +38,7 @@ export type IUser = {
   is_multi_login: boolean,
   assigned_users: IUser[]
   assigned_states: IState[]
+  assigned_erpEmployees: IErpEmployee[]
   assigned_crm_states: ICRMState[]
   assigned_crm_cities: ICRMCity[],
   assigned_permissions: string[],
@@ -131,6 +133,13 @@ const UserSchema = new mongoose.Schema<IUser, mongoose.Model<IUser, {}, IUserMet
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      default: []
+    }
+  ],
+  assigned_erpEmployees:[
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ErpEmployee',
       default: []
     }
   ],

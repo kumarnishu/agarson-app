@@ -7,10 +7,14 @@ import { IUser, User } from "../models/users/user.model";
 import { ClientSaleLastYearReport, ClientSaleReport } from "../models/erp_reports/client_sale.model";
 import { IPartyTargetReport, PartyTargetReport } from "../models/erp_reports/partytarget.model";
 import isMongoId from "validator/lib/isMongoId";
+import isDate from "validator/lib/isDate";
 import mongoose from "mongoose";
 import { GetLastYearlyachievementBystate, GetMonthlyachievementBystate, GetMonthlytargetBystate, GetYearlyachievementBystate } from "../utils/ErpUtils";
 import moment from "moment";
-import { CreateOrEditErpStateDto, GetBillsAgingReportFromExcelDto, GetClientSaleReportFromExcelDto, GetErpStateDto, GetErpStateFromExcelDto, GetPartyTargetReportFromExcelDto, GetPendingOrdersReportFromExcelDto, GetSaleAnalysisReportDto } from "../dtos/erp reports/erp.reports.dto";
+import { CreateOrEditErpEmployeeDto, CreateOrEditErpStateDto, GetBillsAgingReportFromExcelDto, GetClientSaleReportFromExcelDto, GetErpEmployeeDto, GetErpStateDto, GetErpStateFromExcelDto, GetPartyTargetReportFromExcelDto, GetPendingOrdersReportFromExcelDto, GetSaleAnalysisReportDto, GetVisitReportDto, GetVisitReportFromExcelDto } from "../dtos/erp reports/erp.reports.dto";
+import { ErpEmployee, IErpEmployee } from "../models/erp_reports/erp.employee.model";
+import { VisitReport } from "../models/erp_reports/visit.report.model";
+import { isvalidDate } from "../utils/isValidDate";
 
 //get
 export const GetAllStates = async (req: Request, res: Response, next: NextFunction) => {
@@ -89,6 +93,70 @@ export const DeleteErpState = async (req: Request, res: Response, next: NextFunc
     return res.status(200).json({ message: "state deleted successfully" })
 }
 
+export const GetAllErpEmployees = async (req: Request, res: Response, next: NextFunction) => {
+    let result: GetErpEmployeeDto[] = []
+    let employees = await ErpEmployee.find()
+    for (let i = 0; i < employees.length; i++) {
+        let users = await User.find({ assigned_erpEmployees: employees[i]._id })
+        result.push({
+            _id: employees[i]._id,
+            name: employees[i].name,
+            display_name: employees[i].display_name,
+            created_at: moment(employees[i].created_at).format("DD/MM/YYYY"),
+            updated_at: moment(employees[i].updated_at).format("DD/MM/YYYY"),
+            created_by: employees[i].created_by.username,
+            updated_by: employees[i].updated_by.username,
+            assigned_employees: users.map((u) => { return u.username }).toString()
+        })
+    }
+    return res.status(200).json(result)
+}
+
+export const CreateErpEmployee = async (req: Request, res: Response, next: NextFunction) => {
+    const { name, display_name } = req.body as CreateOrEditErpEmployeeDto;
+    if (!name) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    if (await ErpEmployee.findOne({ name: name }))
+        return res.status(400).json({ message: "already exists this employee" })
+    let result = await new State({
+        name,
+        display_name,
+        updated_at: new Date(),
+        created_by: req.user,
+        updated_by: req.user
+    }).save()
+    return res.status(201).json(result)
+
+}
+
+export const UpdateErpEmployee = async (req: Request, res: Response, next: NextFunction) => {
+    const { name, display_name } = req.body as CreateOrEditErpEmployeeDto;
+    if (!name) {
+        return res.status(400).json({ message: "please fill all reqired fields" })
+    }
+    const id = req.params.id
+    let emp = await ErpEmployee.findById(id)
+    if (!emp)
+        return res.status(404).json({ message: "state not found" })
+    if (name !== emp.name)
+        if (await ErpEmployee.findOne({ name: name }))
+            return res.status(400).json({ message: "already exists this state" })
+    await ErpEmployee.findByIdAndUpdate(emp._id, { name, display_name, updated_by: req.user, updated_at: new Date() })
+    return res.status(200).json(emp)
+
+}
+
+export const DeleteErpEmployee = async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (!isMongoId(id)) return res.status(403).json({ message: "employee id not valid" })
+    let employee = await ErpEmployee.findById(id);
+    if (!employee) {
+        return res.status(404).json({ message: "employee not found" })
+    }
+    await employee.remove();
+    return res.status(200).json({ message: "employee deleted successfully" })
+}
 
 
 
@@ -376,6 +444,51 @@ export const AssignErpStatesToUsers = async (req: Request, res: Response, next: 
     return res.status(200).json({ message: "successfull" })
 }
 
+export const AssignErpEmployeesToUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const { emp_ids, user_ids, flag } = req.body as {
+        user_ids: string[],
+        emp_ids: string[],
+        flag: number
+    }
+    if (emp_ids && emp_ids.length === 0)
+        return res.status(400).json({ message: "please select one employee " })
+    if (user_ids && user_ids.length === 0)
+        return res.status(400).json({ message: "please select one user" })
+
+    let owners = user_ids
+
+    if (flag == 0) {
+        for (let i = 0; i < owners.length; i++) {
+            let owner = await User.findById(owners[i]).populate('assigned_erpEmployees');
+            if (owner) {
+                let oldemps = owner.assigned_erpEmployees.map((item) => { return item._id.valueOf() });
+                oldemps = oldemps.filter((item) => { return !emp_ids.includes(item) });
+                await User.findByIdAndUpdate(owner._id, {
+                    assigned_erpEmployees: oldemps
+                })
+            }
+        }
+    }
+    else for (let k = 0; k < owners.length; k++) {
+        const user = await User.findById(owners[k]).populate('assigned_erpEmployees')
+        if (user) {
+            let assigned_erpEmployees = user.assigned_erpEmployees;
+            for (let i = 0; i <= emp_ids.length; i++) {
+                if (!assigned_erpEmployees.map(i => { return i._id.valueOf() }).includes(emp_ids[i])) {
+                    let emp = await ErpEmployee.findById(emp_ids[i]);
+                    if (emp)
+                        assigned_erpEmployees.push(emp)
+                }
+            }
+
+            user.assigned_erpEmployees = assigned_erpEmployees
+            await user.save();
+        }
+
+    }
+
+    return res.status(200).json({ message: "successfull" })
+}
 export const BulkCreateAndUpdateErpStatesFromExcel = async (req: Request, res: Response, next: NextFunction) => {
     let result: GetErpStateFromExcelDto[] = []
     let statusText: string = ""
@@ -936,3 +1049,100 @@ export const BulkCreatePartyTargetReportFromExcel = async (req: Request, res: Re
     return res.status(200).json(result);
 }
 
+
+export const GetVisitReports = async (req: Request, res: Response, next: NextFunction) => {
+    let employee_ids = req.user?.assigned_erpEmployees.map((employee: IErpEmployee) => { return employee }) || []
+    let reports: GetVisitReportDto[] = (await VisitReport.find({ employee: { $in: employee_ids } }).populate('employee').populate('created_by').populate('updated_by')).map((i) => {
+        return {
+            _id: i._id,
+            employee: i.employee.name,
+            visit_date: moment(i.visit_date).format("DD/MM/YYYY"),
+            customer: i.customer,
+            intime: i.intime,
+            outtime: i.outtime,
+            visitInLocation: i.visitInLocation,
+            visitOutLocation: i.visitOutLocation,
+            remarks: i.remarks,
+            created_by: i.created_by.username,
+            updated_by: i.updated_by.username,
+            created_at: moment(i.created_at).format("DD/MM/YYYY"),
+            updated_at: moment(i.updated_at).format("DD/MM/YYYY")
+        }
+    })
+    return res.status(200).json(reports);
+}
+
+export const BulkCreateVisitReportFromExcel = async (req: Request, res: Response, next: NextFunction) => {
+    let result: GetVisitReportFromExcelDto[] = []
+    if (!req.file)
+        return res.status(400).json({
+            message: "please provide an Excel file",
+        });
+    await VisitReport.deleteMany({})
+    if (req.file) {
+        const allowedFiles = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowedFiles.includes(req.file.mimetype))
+            return res.status(400).json({ message: `${req.file.originalname} is not valid, only excel and csv are allowed to upload` })
+        if (req.file.size > 100 * 1024 * 1024)
+            return res.status(400).json({ message: `${req.file.originalname} is too large limit is :100mb` })
+        const workbook = xlsx.read(req.file.buffer);
+        let workbook_sheet = workbook.SheetNames;
+        let workbook_response: GetVisitReportFromExcelDto[] = xlsx.utils.sheet_to_json(
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        let statusText = ""
+
+        for (let i = 0; i < workbook_response.length; i++) {
+            let report = workbook_response[i]
+            let employee: string | null = report.employee
+            let visit_date: string | null = report.visit_date
+            let customer: string | null = report.customer
+            let intime: string | null = report.intime
+            let outtime: string | null = report.outtime
+            let visitInLocation: string | null = report.visitInLocation
+            let visitOutLocation: string | null = report.visitOutLocation
+            let remarks: string | null = report.remarks
+
+
+            let validated = true
+
+            if (!employee) {
+                validated = false
+                statusText = "employee required"
+            }
+            if (!visit_date) {
+                validated = false
+                statusText = "visit date required"
+            }
+            if (!validated) {
+                result.push({
+                    ...report,
+                    status: statusText
+                })
+            }
+          
+            if (validated) {
+                let owner = await ErpEmployee.findOne({ name: employee })
+                let parts = visit_date.split("-");
+                let date = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+                if (owner) {
+                    await new VisitReport({
+                        employee:owner,
+                        visit_date:date,
+                        customer,
+                        intime,
+                        outtime,
+                        visitInLocation,
+                        visitOutLocation,
+                        remarks,
+                        created_by: req.user,
+                        updated_by: req.user,
+                        created_at: new Date(),
+                        updated_at: new Date()
+                    }).save()
+                }
+            }
+        }
+    }
+    return res.status(200).json(result);
+}

@@ -1,3 +1,4 @@
+import { IErpEmployee } from "../../models/erp_reports/erp.employee.model"
 import { DropDownDto } from "../common/dropdown.dto"
 
 export type createOrEditUserDto = {
@@ -31,6 +32,7 @@ export type GetUserDto = {
     is_multi_login: boolean,
     assigned_users: DropDownDto[]
     assigned_states: number,
+    assigned_erpEmployees:number,
     assigned_crm_states: number,
     assigned_crm_cities: number,
     assigned_permissions: string[],
