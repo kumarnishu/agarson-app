@@ -15,6 +15,7 @@ import { CreateOrEditErpEmployeeDto, CreateOrEditErpStateDto, GetBillsAgingRepor
 import { ErpEmployee, IErpEmployee } from "../models/erp_reports/erp.employee.model";
 import { VisitReport } from "../models/erp_reports/visit.report.model";
 import { isvalidDate } from "../utils/isValidDate";
+import { decimalToTime } from "../utils/decimalToTime";
 
 //get
 export const GetAllStates = async (req: Request, res: Response, next: NextFunction) => {
@@ -119,7 +120,7 @@ export const CreateErpEmployee = async (req: Request, res: Response, next: NextF
     }
     if (await ErpEmployee.findOne({ name: name }))
         return res.status(400).json({ message: "already exists this employee" })
-    let result = await new State({
+    let result = await new ErpEmployee({
         name,
         display_name,
         updated_at: new Date(),
@@ -1090,6 +1091,8 @@ export const BulkCreateVisitReportFromExcel = async (req: Request, res: Response
         let workbook_response: GetVisitReportFromExcelDto[] = xlsx.utils.sheet_to_json(
             workbook.Sheets[workbook_sheet[0]]
         );
+
+
         let statusText = ""
 
         for (let i = 0; i < workbook_response.length; i++) {
@@ -1122,16 +1125,16 @@ export const BulkCreateVisitReportFromExcel = async (req: Request, res: Response
             }
           
             if (validated) {
+                
                 let owner = await ErpEmployee.findOne({ name: employee })
-                let parts = visit_date.split("-");
-                let date = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
                 if (owner) {
+                    console.log(visit_date)
                     await new VisitReport({
                         employee:owner,
-                        visit_date:date,
+                        visit_date: new Date(new Date(Date.UTC(1900, 0, 1)).getTime() + (Number(visit_date) - 2) * 86400000),
                         customer,
-                        intime,
-                        outtime,
+                        intime: intime?decimalToTime(intime):"",
+                        outtime: outtime?decimalToTime(outtime):"",
                         visitInLocation,
                         visitOutLocation,
                         remarks,

@@ -1,6 +1,6 @@
 import express from "express";
 import { isAuthenticatedUser } from "../middlewares/auth.middleware";
-import { AssignErpStatesToUsers, BulkCreateAndUpdateErpStatesFromExcel, BulkCreateBillsAgingReportFromExcel, BulkCreateClientSaleReportFromExcel, BulkCreateClientSaleReportFromExcelForLastYear, BulkCreatePartyTargetReportFromExcel,  BulkPendingOrderReportFromExcel, CreateState, DeleteErpState, GetAllStates, GetBillsAgingReports, GetClientSaleReports, GetClientSaleReportsForLastYear, GetPartyTargetReports, GetPendingOrderReports, GetSaleAnalysisReport, UpdateState } from "../controllers/erp.controller";
+import { AssignErpEmployeesToUsers, AssignErpStatesToUsers, BulkCreateAndUpdateErpStatesFromExcel, BulkCreateBillsAgingReportFromExcel, BulkCreateClientSaleReportFromExcel, BulkCreateClientSaleReportFromExcelForLastYear, BulkCreatePartyTargetReportFromExcel,  BulkCreateVisitReportFromExcel,  BulkPendingOrderReportFromExcel, CreateErpEmployee, CreateState, DeleteErpEmployee, DeleteErpState, GetAllErpEmployees, GetAllStates, GetBillsAgingReports, GetClientSaleReports, GetClientSaleReportsForLastYear, GetPartyTargetReports, GetPendingOrderReports, GetSaleAnalysisReport, GetVisitReports, UpdateErpEmployee, UpdateState } from "../controllers/erp.controller";
 import { upload } from "./user.routes";
 
 const router = express.Router()
@@ -21,5 +21,14 @@ router.route("/reports/client/sale/lastyear").get(isAuthenticatedUser, GetClient
 router.route("/reports/client/sale").put(isAuthenticatedUser, upload.single('file'), BulkCreateClientSaleReportFromExcel),
 router.route("/reports/client/sale/lastyear").put(isAuthenticatedUser, upload.single('file'), BulkCreateClientSaleReportFromExcelForLastYear)
 router.route("/bulk/assign/states").patch(isAuthenticatedUser, AssignErpStatesToUsers)
+
+router.route("/employees").get(isAuthenticatedUser, GetAllErpEmployees)
+router.route("/employees").post(isAuthenticatedUser, CreateErpEmployee)
+router.route("/employees/:id").put(isAuthenticatedUser, UpdateErpEmployee)
+    .delete(isAuthenticatedUser, DeleteErpEmployee)
+router.route("/bulk/assign/employees").patch(isAuthenticatedUser, AssignErpEmployeesToUsers)
+router.route("/reports/visits").get(isAuthenticatedUser, GetVisitReports)
+router.route("/reports/visits").put(isAuthenticatedUser, upload.single('file'), BulkCreateVisitReportFromExcel)
+
 
 export default router

@@ -197,7 +197,7 @@ export default function CrmStatesPage() {
       }
     }),
     muiTableContainerProps: (table) => ({
-      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '68vh' }
     }),
     muiTableHeadRowProps: () => ({
       sx: {

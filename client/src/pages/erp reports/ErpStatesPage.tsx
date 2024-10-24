@@ -193,7 +193,7 @@ export default function ErpStatesPage() {
       }
     }),
     muiTableContainerProps: (table) => ({
-      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '68vh' }
     }),
     muiTableHeadRowProps: () => ({
       sx: {
@@ -232,7 +232,7 @@ export default function ErpStatesPage() {
     if (isSuccess) {
       setStates(data.data);
     }
-  }, [isSuccess]);
+  }, [isSuccess,data]);
 
 
   return (

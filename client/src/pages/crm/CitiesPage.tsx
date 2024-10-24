@@ -232,7 +232,7 @@ export default function CrmCitiesPage() {
       }
     }),
     muiTableContainerProps: (table) => ({
-      sx: { height: table.table.getState().isFullScreen ? 'auto' : '400px' }
+      sx: { height: table.table.getState().isFullScreen ? 'auto' : '68vh' }
     }),
     muiTableHeadRowProps: () => ({
       sx: {

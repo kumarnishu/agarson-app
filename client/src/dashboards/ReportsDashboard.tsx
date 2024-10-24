@@ -25,14 +25,9 @@ function ReportDashboard() {
         user?.assigned_permissions.includes('machine_wise_production_report_view') && tmpfeatures.push({ feature: 'Machine Wise production report', is_visible: true, url: "MachineWiseProductionReportPage" })
         user?.assigned_permissions.includes('machine_category_wise_production_report_view') && tmpfeatures.push({ feature: 'Category Wise Production report', is_visible: true, url: "CategoryWiseProductionReportPage" }),
         user?.assigned_permissions.includes('thekedar_wise_production_report_view') && tmpfeatures.push({ feature: 'Thekedar Wise production report', is_visible: true, url: "ThekedarWiseProductionReportPage" })
-        user?.assigned_permissions.includes('visit_report_view') && tmpfeatures.push({ feature: 'salesmen visit report ', is_visible: false, url: "ThekedarWiseProductionReportPage" })
+        user?.assigned_permissions.includes('visit_report_view') && tmpfeatures.push({ feature: 'salesmen visit report ', is_visible: false, url: "VisitReportPage" })
 
-        tmpfeatures = tmpfeatures.sort((a, b) => {
-            if (a.feature < b.feature) return -1;
-            if (a.feature > b.feature) return 1;
-            return 0;
-        });
-        
+        tmpfeatures.sort((a, b) => a.feature.localeCompare(b.feature));
         setFeatures(tmpfeatures)
 
     }, [user])

@@ -1,4 +1,4 @@
-import { CreateOrEditErpStateDto, GetErpStateDto } from "../dtos/erp reports/erp.reports.dto";
+import { CreateOrEditErpEmployeeDto, CreateOrEditErpStateDto, GetErpEmployeeDto, GetErpStateDto } from "../dtos/erp reports/erp.reports.dto";
 import { apiClient } from "./utils/AxiosInterceptor";
 
 
@@ -16,6 +16,23 @@ export const CreateOreditErpState = async ({ state, body }: {
     if (state)
         return await apiClient.put(`states/${state._id}`, body);
     return await apiClient.post(`states`, body);
+
+};
+
+export const GetErpEmployees = async () => {
+    return await apiClient.get(`employees`)
+}
+
+export const BulkCreateErpEmployeeFromExcel = async (body: FormData) => {
+    return await apiClient.put(`employees`, body)
+}
+export const CreateOreditErpErpEmployee = async ({ employee, body }: {
+    employee?: GetErpEmployeeDto | undefined;
+    body: CreateOrEditErpEmployeeDto
+}) => {
+    if (employee)
+        return await apiClient.put(`employees/${employee._id}`, body);
+    return await apiClient.post(`employees`, body);
 
 };
 
@@ -39,10 +56,16 @@ export const GetBillsAgingReports = async () => {
     return await apiClient.get(`reports/bills/aging`)
 }
 
+export const GetVisitReports = async () => {
+    return await apiClient.get(`reports/visits`)
+}
 export const BulkBillsAgingreportFromExcel = async (body: FormData) => {
     return await apiClient.put(`reports/bills/aging`, body)
 }
 
+export const BulkVisitreportFromExcel = async (body: FormData) => {
+    return await apiClient.put(`reports/visits`, body)
+}
 export const GetClientSaleReports = async () => {
     return await apiClient.get(`reports/client/sale`);
 }
@@ -78,6 +101,19 @@ export const AssignErpStatesToUsers = async ({ body }: {
 }
 
 
+export const AssignErpEmployeesToUsers = async ({ body }: {
+    body: {
+        user_ids: string[],
+        emp_ids: string[],
+        flag: number
+    }
+}) => {
+    return await apiClient.patch(`bulk/assign/employees`, body)
+}
+
 export const DeleteErpState = async ({ state }: { state: GetErpStateDto }) => {
     return await apiClient.delete(`states/${state._id}`)
+}
+export const DeleteErpEmployee = async ({ employee }: { employee: GetErpEmployeeDto }) => {
+    return await apiClient.delete(`employees/${employee._id}`)
 }

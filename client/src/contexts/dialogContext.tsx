@@ -1,7 +1,7 @@
 import React, { useReducer } from "react"
 
 type UserChoices = "signup" | "reset_password_mail" | "close_user" | "new_user" | "update_user" | "update_profile" | "view_profile" | "update_password" | "reset_password" | "verify_email" | "control_access" | "delete_user" | "toogle_flow_status" | "create_or_edit_erpstate" | "update_state" | "delete_erp_state" |
-  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users" | "bulk_assign_erp_states" | "toogle_show_visitingcard" | "assign_permissions" | "bulk_assign_permissions" |"delete_role"
+  "block_user" | "unblock_user" | "make_admin" | "remove_admin" | "refresh_whatsapp" | "update_user_password" | "block_multi_login" | "reset_multi_login" | "assign_users" | "bulk_assign_erp_states" | "toogle_show_visitingcard" | "assign_permissions" | "bulk_assign_permissions" | "delete_role" | "bulk_assign_erp_employees" |"create_or_edit_erpemployee"|"delete_erp_employee"
 
 
 type GreetingChoices = "create_greeting" | "update_greeting" | "delete_greeting" | "bulk_start_greeting" | "close_greeting" | "bulk_stop_greeting" | "stop_greeting" | "start_greeting"
@@ -157,6 +157,9 @@ export enum LeadChoiceActions {
 
 export enum UserChoiceActions {
   bulk_assign_erp_states = "bulk_assign_erp_states",
+  create_or_edit_erpemployee="create_or_edit_erpemployee",
+  delete_erp_employee="delete_erp_employee",
+  bulk_assign_erp_employees ="bulk_assign_erp_employees",
   assign_users = "assign_users",
   assign_permissions="assign_permissions",
   bulk_assign_permissions= "bulk_assign_permissions",
@@ -227,6 +230,9 @@ function reducer(state: ChoiceState | null, action: Action) {
     case UserChoiceActions.bulk_assign_permissions: return type
     case UserChoiceActions.assign_permissions: return type
     case UserChoiceActions.delete_role: return type
+    case UserChoiceActions.bulk_assign_erp_employees: return type
+    case UserChoiceActions.create_or_edit_erpemployee: return type
+    case UserChoiceActions.delete_erp_employee: return type
 
     // lead dialog choices
     case LeadChoiceActions.create_or_edit_refer: return type

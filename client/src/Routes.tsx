@@ -43,6 +43,8 @@ import SpareDyesPage from './pages/production/SpareDyesPage.tsx'
 import SoleThicknessPage from './pages/production/SoleThicknessPage.tsx'
 import DyeLocationPage from './pages/production/DyeLocationPage.tsx'
 import FeatureDashboard from './dashboards/FeatureDashboard.tsx'
+import ErpEmployeesPage from './pages/erp reports/ErpEmployeesPage.tsx'
+import VisitReportPage from './pages/erp reports/VisitReportPage.tsx'
 
 
 function AppRoutes() {
@@ -126,6 +128,14 @@ function AppRoutes() {
                   <ReportDashboard />
                 }
               />
+
+              
+              {user?.assigned_permissions.includes('visit_report_view') && <Route
+                path="VisitReportPage" element={
+                  <VisitReportPage />
+                }
+              />}
+
               {user?.assigned_permissions.includes('thekedar_wise_production_report_view') && <Route
                 path="ThekedarWiseProductionReportPage" element={
                   <ThekedarWiseProductionReportPage />
@@ -258,6 +268,11 @@ function AppRoutes() {
               {user?.assigned_permissions.includes('erp_state_view') &&<Route
                 path="ErpStatesPage" element={
                   <ErpStatesPage />
+                }
+              />}
+              {user?.assigned_permissions.includes('erp_employee_view') && <Route
+                path="ErpEmployeesPage" element={
+                  <ErpEmployeesPage />
                 }
               />}
               {user?.assigned_permissions.includes('checklist_category_view') &&<Route

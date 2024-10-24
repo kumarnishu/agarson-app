@@ -332,7 +332,6 @@ export type GetClientSaleReportFromExcelDto = {
 }
 
 export type GetVisitReportFromExcelDto = {
-    _id: string,
     employee: string
     visit_date: string,
     customer: string,

@@ -106,7 +106,7 @@ export default function MachineCategoryPage() {
             }
         }),
         muiTableContainerProps: (table) => ({
-            sx: { height: table.table.getState().isFullScreen ? '62vh' : '400px' }
+            sx: { height: table.table.getState().isFullScreen ? '62vh' : '68vh' }
         }),
         muiTableHeadRowProps: () => ({
             sx: {
