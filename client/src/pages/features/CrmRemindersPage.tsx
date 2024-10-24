@@ -83,23 +83,18 @@ function CrmReminderPage() {
         size: 100,
         Cell: (cell) => <>{cell.row.original.created_by.label ? cell.row.original.created_by.label : ""}</>
       },
-      {
-        accessorKey: 'created_at',
-        header: 'TimeStamp',
-        size: 200,
-        Cell: (cell) => <>{cell.row.original.created_at ? cell.row.original.created_at : ""}</>
-      },
+      
       {
         accessorKey: 'stage',
         header: 'Stage',
-        size: 120,
+        size: 80,
         Cell: (cell) => <>{cell.row.original.stage ? cell.row.original.stage : ""}</>
       },
 
       {
         accessorKey: 'remind_date',
         header: 'Next Call',
-        size: 140,
+        size: 180,
         Cell: (cell) => <>{cell.row.original.remind_date ? cell.row.original.remind_date : ""}</>
       },
 
@@ -112,43 +107,6 @@ function CrmReminderPage() {
         filterSelectOptions: remarks && remarks.map((i) => {
           return i.name;
         }).filter(onlyUnique)
-      },
-
-
-      {
-        accessorKey: 'mobile',
-        header: 'Mobile1',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.mobile ? cell.row.original.mobile : ""}</>
-      }, {
-        accessorKey: 'alternate_mobile1',
-        header: 'Mobile2',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.alternate_mobile1 ? cell.row.original.alternate_mobile1 : ""}</>
-      }, {
-        accessorKey: 'alternate_mobile2',
-        header: 'Mobile3',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.alternate_mobile2 ? cell.row.original.alternate_mobile2 : ""}</>
-      },
-
-      {
-        accessorKey: 'referred_party_name',
-        header: 'Refer Party',
-        size: 320,
-        Cell: (cell) => <>{cell.row.original.referred_party_name ? cell.row.original.referred_party_name : ""}</>
-      },
-      {
-        accessorKey: 'referred_party_mobile',
-        header: 'Refer Mobile',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.referred_party_mobile ? cell.row.original.referred_party_mobile : ""}</>
-      },
-      {
-        accessorKey: 'referred_date',
-        header: 'Refer Date',
-        size: 120,
-        Cell: (cell) => <>{cell.row.original.referred_date ? cell.row.original.referred_date : ""}</>
       },
       {
         accessorKey: 'city',
@@ -172,6 +130,48 @@ function CrmReminderPage() {
       },
 
 
+      {
+        accessorKey: 'mobile',
+        header: 'Mobile1',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.mobile ? cell.row.original.mobile : ""}</>
+      }, {
+        accessorKey: 'alternate_mobile1',
+        header: 'Mobile2',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.alternate_mobile1 ? cell.row.original.alternate_mobile1 : ""}</>
+      }, {
+        accessorKey: 'alternate_mobile2',
+        header: 'Mobile3',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.alternate_mobile2 ? cell.row.original.alternate_mobile2 : ""}</>
+      },
+      {
+        accessorKey: 'created_at',
+        header: 'TimeStamp',
+        size: 200,
+        Cell: (cell) => <>{cell.row.original.created_at ? cell.row.original.created_at : ""}</>
+      },
+      {
+        accessorKey: 'referred_party_name',
+        header: 'Refer Party',
+        size: 320,
+        Cell: (cell) => <>{cell.row.original.referred_party_name ? cell.row.original.referred_party_name : ""}</>
+      },
+      {
+        accessorKey: 'referred_party_mobile',
+        header: 'Refer Mobile',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.referred_party_mobile ? cell.row.original.referred_party_mobile : ""}</>
+      },
+      {
+        accessorKey: 'referred_date',
+        header: 'Refer Date',
+        size: 120,
+        Cell: (cell) => <>{cell.row.original.referred_date ? cell.row.original.referred_date : ""}</>
+      },
+     
+     
       {
         accessorKey: 'customer_name',
         header: 'Customer',

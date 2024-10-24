@@ -30,6 +30,8 @@ function CreateOrEditBillForm({ lead, refer, setDisplay2, bill }: { lead?: GetLe
         (CreateOrEditBill, {
             onSuccess: () => {
                 queryClient.invalidateQueries('bills')
+                queryClient.invalidateQueries('new_refer_reports')
+                queryClient.invalidateQueries('assign_refer_reports')
             }
         })
 

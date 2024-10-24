@@ -9,7 +9,6 @@ export type IMaintenance = {
     category: IMaintenanceCategory,
     frequency:string,
     maintainable_item:string,
-    machines
     created_at: Date,
     updated_at: Date,
     created_by: IUser,

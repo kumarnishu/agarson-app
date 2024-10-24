@@ -2837,6 +2837,7 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
     let result: GetActivitiesOrRemindersDto[] = []
     let ids: string[] = []
     let filteredRemarks: IRemark[] = []
+
     remarks.forEach((rem) => {
         if (rem && rem.lead && !ids.includes(rem.lead._id)) {
             ids.push(rem.lead._id);
@@ -2844,12 +2845,18 @@ export const GetMyReminders = async (req: Request, res: Response, next: NextFunc
                 filteredRemarks.push(rem);
         }
     })
+    filteredRemarks.sort(function (a, b) {
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        //@ts-ignore
+        return new Date(b.remind_date) - new Date(a.remind_date);
+    });
 
     result = filteredRemarks.map((rem) => {
         return {
             _id: rem._id,
             remark: rem.remark,
-            created_at: rem.created_at && moment(rem.created_at).calendar(),
+            created_at: rem.created_at && moment(rem.created_at).format("DD/MM/YYYY"),
             remind_date: rem.remind_date && moment(rem.remind_date).format("DD/MM/YYYY"),
             created_by: { id: rem.created_by._id, value: rem.created_by.username, label: rem.created_by.username },
             lead_id: rem.lead && rem.lead._id,
@@ -3365,6 +3372,14 @@ export const CreateBill = async (req: Request, res: Response, next: NextFunction
         }).save()
     }
     await bill.save()
+    if (lead) {
+        let count = await Bill.find({ lead: lead }).countDocuments()
+        await Lead.findByIdAndUpdate(lead, { uploaded_bills: count })
+    }
+    if (refer) {
+        let count = await Bill.find({ refer: refer }).countDocuments()
+        await ReferredParty.findByIdAndUpdate(refer, { uploaded_bills: count })
+    }
     return res.status(201).json({ message: "success" })
 
 }
@@ -3534,25 +3549,35 @@ export const GetLeadPartyBillsHistory = async (req: Request, res: Response, next
 }
 
 export const test = async (req: Request, res: Response, next: NextFunction) => {
-    await Lead.updateMany({ referred_party: undefined, stage: 'refer' }, { stage: 'open' })
-    let leads = await Lead.find()
-    for (let i = 0; i < leads.length; i++) {
-        let lead = leads[i]._id;
-        let r = await Remark.findOne({ lead: lead }).sort("-created_at");
-        if (r) {
-            await Lead.findByIdAndUpdate(r.lead, { last_remark: r.remark })
+
+    let bills = await Bill.find();
+
+    let leadids: string[] = []
+    let referids: string[] = []
+
+    for (let i = 0; i < bills.length; i++) {
+        let bill = bills[i]
+        if (bill.lead) {
+            //@ts-ignore
+            leadids.push(bill.lead)
         }
-        console.log(leads.length, "-", i)
-    }
-    let refers = await ReferredParty.find()
-    for (let i = 0; i < refers.length; i++) {
-        let refer = refers[i]._id;
-        let r = await Remark.findOne({ refer: refer }).sort("-created_at");
-        if (r) {
-            await ReferredParty.findByIdAndUpdate(r.refer, { last_remark: r.remark })
+        if (bill.refer) {
+            //@ts-ignore
+            referids.push(bill.refer)
         }
-        console.log(refers.length, "-", i)
+
     }
+
+    for (let i = 0; i < leadids.length; i++) {
+        let count = await Bill.find({ lead: leadids[i] }).countDocuments()
+        await Lead.findByIdAndUpdate(leadids[i], { uploaded_bills: count })
+    }
+    for (let i = 0; i < referids.length; i++) {
+        let count = await Bill.find({ refer: referids[i] }).countDocuments()
+        await ReferredParty.findByIdAndUpdate(referids[i], { uploaded_bills: count })
+    }
+
+
 
     return res.status(200).json({ result: 'success' })
 }

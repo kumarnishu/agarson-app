@@ -5,27 +5,21 @@ import { IMaintenanceCategory } from "./maintainence.category.model"
 
 export type IMaintenanceItem = {
     _id: string,
-    machine:IMachine,   
+    machine: IMachine,
     created_at: Date,
     updated_at: Date,
     created_by: IUser,
     updated_by: IUser
 }
 const MaintenanceItemSchema = new mongoose.Schema<IMaintenanceItem, mongoose.Model<IMaintenanceItem, {}, {}>, {}>({
-    work: {
-        type: String,
-        required: true,
-        trim: true,
-        lowercase: true
-    },
-    category: {
+
+    machine: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'MaintenanceItemCategory',
+        ref: 'Machine',
         required: true
     },
-    frequency:String,
-    maintainable_item:String,
    
+
     created_at: {
         type: Date,
         default: new Date(),
